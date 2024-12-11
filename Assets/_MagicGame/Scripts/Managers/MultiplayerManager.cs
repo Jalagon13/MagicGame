@@ -11,7 +11,7 @@ public class MultiplayerManager : NetworkBehaviour
     [Title("Item Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
     [SerializeField] private ItemDataBaseSO _itemDataBaseSO;
     [SerializeField] private GameObject _itemBasePrefab;
-    [SerializeField] private WandProjectile _impactOrbPrefab;
+    [SerializeField] private MiningProjectile _miningProjectilePrefab;
     [SerializeField] private AudioClip _pickupClip;
 	
     private void Awake()
@@ -27,7 +27,7 @@ public class MultiplayerManager : NetworkBehaviour
     [Rpc(SendTo.Server, RequireOwnership = false)]
     private void SpawnMiningProjectileServerRpc(Vector2 spawnPoint, Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected)
     {
-        WandProjectile miningProjectile = Instantiate(_impactOrbPrefab, spawnPoint, Quaternion.identity);
+        MiningProjectile miningProjectile = Instantiate(_miningProjectilePrefab, spawnPoint, Quaternion.identity);
         miningProjectile.GetComponent<NetworkObject>().Spawn(true);
         miningProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected);
     }

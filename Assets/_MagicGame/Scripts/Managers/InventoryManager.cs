@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 
 public class InventoryManager : MonoBehaviour
 {
+    public static InventoryManager Instance { get; private set; }
     public static int HOTBAR_SLOTS_AMOUNT = 9;
 
     public event EventHandler<OnMouseItemUpdatedEventArgs> OnMouseItemUpdated;
@@ -22,7 +23,6 @@ public class InventoryManager : MonoBehaviour
         public List<InventoryItem> InventoryItems;
     }
 
-    public static InventoryManager Instance { get; private set; }
 	
     [SerializeField] private int _slotAmount;
     [SerializeField] private AudioClip _collectSound;
@@ -86,7 +86,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 	
-    public void RemoveItem(ItemObject item, int amount)
+    public void RemoveItem(ItemSO item, int amount)
     {
         _inventoryModel.RemoveItem(item, amount);
     }
@@ -183,7 +183,7 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 	
-    public void TryToCraft(RecipeObject recipe)
+    public void TryToCraft(RecipeSO recipeSO)
     {
         InventoryItem mouseItem = _mouseItemModel.MouseInventoryItem;
 
@@ -191,21 +191,21 @@ public class InventoryManager : MonoBehaviour
         if(mouseItem.HasItem)
         {
             // NOTE to future self: handle stack limits if you decide to have one
-            if(!mouseItem.Item.Stackable || mouseItem.Item.Name != recipe.OutputItem.Name) return; 
+            if(!mouseItem.Item.Stackable || mouseItem.Item.Name != recipeSO.OutputItem.Name) return; 
 			
-            _mouseItemModel.MouseInventoryItem.Quantity += recipe.OutputAmount;
+            _mouseItemModel.MouseInventoryItem.Quantity += recipeSO.OutputAmount;
 			
             // If mouse has no item, check if player has enough ingredients to craft the recipe
-            RemoveItems(recipe.ResourceList);
+            RemoveItems(recipeSO.ResourceList);
         }
         else
         {
             // Add the output item to the mouse 
-            _mouseItemModel.MouseInventoryItem.Item = recipe.OutputItem;
-            _mouseItemModel.MouseInventoryItem.Quantity += recipe.OutputAmount;
+            _mouseItemModel.MouseInventoryItem.Item = recipeSO.OutputItem;
+            _mouseItemModel.MouseInventoryItem.Quantity += recipeSO.OutputAmount;
 			
             // If mouse has no item, check if player has enough ingredients to craft the recipe
-            RemoveItems(recipe.ResourceList);
+            RemoveItems(recipeSO.ResourceList);
         }
     }
 	

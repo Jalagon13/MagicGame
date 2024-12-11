@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Pathfinding;
+// using Pathfinding;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -34,7 +34,7 @@ public class ForestGeneration : MonoBehaviour
     [SerializeField] private TileSO _stoneFloorTile;
 	
     [FoldoutGroup("Overworld Generation")]
-    [SerializeField] private WorldAsset _resourceAsset;
+    [SerializeField] private WorldObject _resourceObject;
 	
 	
     private string _seed;
@@ -46,7 +46,7 @@ public class ForestGeneration : MonoBehaviour
 
     private void SaveSystem_OnNoFileFoundToDeserialize(object sender, EventArgs e)
     {
-        if(GameWorldManager.Instance.GetActiveEnvironmentID() == _environment)
+        if(WorldManager.Instance.GetActiveEnvironmentID() == _environment)
         {
             GenerateOverworld();
         }
@@ -65,7 +65,7 @@ public class ForestGeneration : MonoBehaviour
 	
     private void GenerateNoiseMapsBasedOnSeed()
     {
-        _seed = GameWorldManager.Instance.Seed;
+        _seed = WorldManager.Instance.Seed;
 		
         // Generate noise textures using game manager seed
         _overworldGoundNoiseMap.GenerateNoiseTexture(_seed);
@@ -101,20 +101,20 @@ public class ForestGeneration : MonoBehaviour
                         float wallTilePointValue = GetNoiseMapPointValueAtCoords(_overworldWallNoiseMap, tilePosX, tilePosY);
 						
                         // Get the Tilebase for the given point value
-                        TileObjectSO groundTileObjectSO = GetOverworldGroundTileFromPointValue(groundTilePointValue);
-                        TileObjectSO wallTileObjectSO = GetOverworldWallTileFromPointValue(wallTilePointValue);
+                        TileSO groundTileSO = GetOverworldGroundTileFromPointValue(groundTilePointValue);
+                        TileSO wallTileSO = GetOverworldWallTileFromPointValue(wallTilePointValue);
 						
                         // Initialize the tile game data and store it in the chunk
-                        TryToAddTileToChunk(groundTileObjectSO, tileWorldPosition, chunkGameData.GroundTileGameDataList);
+                        TryToAddTileToChunk(groundTileSO, tileWorldPosition, chunkGameData.GroundTileGameDataList);
 						
                         // NTFS: Obviously temporary generation code for walls
                         if(wallTilePointValue >= 0.6f)
                         {
-                            TryToAddTileToChunk(wallTileObjectSO, tileWorldPosition, chunkGameData.WallTileGameDataList);
+                            TryToAddTileToChunk(wallTileSO, tileWorldPosition, chunkGameData.WallTileGameDataList);
 							
                             var centerNodePosition = new Vector2(tileWorldPosition.x + 0.5f, tileWorldPosition.y + 0.5f);
-                            var node = NodeGraphUtility.GetNodeAtPosition(centerNodePosition);
-                            node.Walkable = false;
+                            // var node = NodeGraphUtility.GetNodeAtPosition(centerNodePosition);
+                            // node.Walkable = false;
                         }
                     }
                 }
@@ -146,7 +146,7 @@ public class ForestGeneration : MonoBehaviour
             if(groundTilePointValue > 0.125f && (wallTilePointValue < 0.6f && wallTilePointValue > 0.35f))
             {
                 // Add world asset data to chunk
-                ChunkManager.Instance.AddWorldAssetDataToChunk(new Vector2Int(pointX, pointY), _resourceAsset);
+                ChunkManager.Instance.AddWorldAssetDataToChunk(new Vector2Int(pointX, pointY), _resourceObject);
             }
         }
     }
@@ -180,25 +180,25 @@ public class ForestGeneration : MonoBehaviour
     // 	// GameManager.Instance.SetStaircasePositions(SceneNames.Island, stairPositions);
     // }
 	
-    private TileObjectSO GetOverworldWallTileFromPointValue(float pointValue)
+    private TileSO GetOverworldWallTileFromPointValue(float pointValue)
     {
         if(pointValue > 0.4f ) return _stoneWallTile;
         return null;
     }	
 	
-    private TileObjectSO GetOverworldGroundTileFromPointValue(float pointValue)
+    private TileSO GetOverworldGroundTileFromPointValue(float pointValue)
     {
         if(pointValue < 0.1f) return _waterTile;
         if(pointValue < 0.125f) return _sandTile;
         return _grassTile;
     }
 	
-    private float GetNoiseMapPointValueAtCoords(NoiseMapDataObject noiseMap, int x, int y)
+    private float GetNoiseMapPointValueAtCoords(NoiseMapSO noiseMapSO, int x, int y)
     {
-        return noiseMap.NoiseTexture.GetPixel(x, y).grayscale;
+        return noiseMapSO.NoiseTexture.GetPixel(x, y).grayscale;
     }
 	
-    private void TryToAddTileToChunk(TileObjectSO tileObjectSO, Vector2Int position, List<TileGameData> chunkDataTileList)
+    private void TryToAddTileToChunk(TileSO tileObjectSO, Vector2Int position, List<TileGameData> chunkDataTileList)
     {
         if(tileObjectSO != null)
         {

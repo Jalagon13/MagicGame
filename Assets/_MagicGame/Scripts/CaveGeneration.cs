@@ -33,7 +33,7 @@ public class CaveGeneration : MonoBehaviour
 
     private void SaveSystem_OnNoFileFoundToDeserialize(object sender, EventArgs e)
     {
-        if(GameWorldManager.Instance.GetActiveEnvironmentID() == _environment)
+        if(WorldManager.Instance.GetActiveEnvironmentID() == _environment)
         {
             GenerateCave();
         }
@@ -51,7 +51,7 @@ public class CaveGeneration : MonoBehaviour
 	
     private void GenerateNoiseMapsBasedOnSeed()
     {
-        _seed = GameWorldManager.Instance.Seed;
+        _seed = WorldManager.Instance.Seed;
 		
         // Generate noise textures using game manager seed
         _caveSpaghettiCaveNoiseMap.GenerateNoiseTexture(_seed);
@@ -106,18 +106,18 @@ public class CaveGeneration : MonoBehaviour
 		
     }
 	
-    private void TryToAddTileToChunk(TileObjectSO tileObjectSO, Vector2Int position, List<TileGameData> chunkDataTileList)
+    private void TryToAddTileToChunk(TileSO tileSO, Vector2Int position, List<TileGameData> chunkDataTileList)
     {
-        if(tileObjectSO != null)
+        if(tileSO != null)
         {
-            TileGameData tileGameData = new(tileObjectSO, position);
+            TileGameData tileGameData = new(tileSO, position);
             chunkDataTileList.Add(tileGameData);
         }
     }
 	
-    private float GetNoiseMapPointValueAtCoords(NoiseMapDataObject noiseMap, int x, int y)
+    private float GetNoiseMapPointValueAtCoords(NoiseMapSO noiseMapSO, int x, int y)
     {
-        return noiseMap.NoiseTexture.GetPixel(x, y).grayscale;
+        return noiseMapSO.NoiseTexture.GetPixel(x, y).grayscale;
     }
 	
     private void OnDestroy()

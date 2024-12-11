@@ -14,7 +14,7 @@ public class SaveSystem : MonoBehaviour
     public static SaveSystem Instance { get; private set; }
 	
     [Header("Databases")]
-    [SerializeField] private WorldAssetDataBaseSO _worldAssetDatabaseSO;
+    [SerializeField] private WorldObjectDataBaseSO _worldObjectDatabaseSO;
     [SerializeField] private TileDataBaseSO _tileDataBaseSO;
 	
     private EnvironmentFileData _environmentFileData = new();
@@ -76,7 +76,7 @@ public class SaveSystem : MonoBehaviour
             // Loop through each tile in ground tiles add create a serializable TileData for it and add it to chunkData
             foreach (TileGameData tile in kvp.Value.GroundTileGameDataList)
             {
-                TileSO tileObjectSO = _tileDataBaseSO.GetTileObjectFromTileBase(tile.TileObjectSO);
+                TileSO tileObjectSO = _tileDataBaseSO.GetTileObjectFromTileBase(tile.TileSO);
                 TileFileData tileData = new()
                 {
                     Pos = tile.TilePosition,
@@ -90,7 +90,7 @@ public class SaveSystem : MonoBehaviour
             // Loop through each tile in ground tiles add create a serializable TileData for it and add it to chunkData
             foreach (TileGameData tile in kvp.Value.WallTileGameDataList)
             {
-                TileSO tileObjectSO = _tileDataBaseSO.GetTileObjectFromTileBase(tile.TileObjectSO);
+                TileSO tileObjectSO = _tileDataBaseSO.GetTileObjectFromTileBase(tile.TileSO);
                 TileFileData tileData = new()
                 {
                     Pos = tile.TilePosition,
@@ -137,7 +137,7 @@ public class SaveSystem : MonoBehaviour
                         // Create new filedata for this asset
                         WorldAssetFileData worldAssetData = new()
                         {
-                            WorldAssetId = _worldAssetDatabaseSO.GetByteIDFromWorldAsset(worldAssetGameData.Asset),
+                            WorldAssetId = _worldObjectDatabaseSO.GetByteIDFromWorldAsset(worldAssetGameData.Asset),
                             Pos = posToSend
                         };
 				
@@ -215,8 +215,8 @@ public class SaveSystem : MonoBehaviour
 		
         foreach (TileFileData data in tileFileData)
         {
-            TileObjectSO tileObjectSO = _tileDataBaseSO.TileObjectSOList.ElementAt(data.TileId);
-            TileGameData tile = new(tileObjectSO, data.Pos);
+            TileSO tileSO = _tileDataBaseSO.TileObjectSOList.ElementAt(data.TileId);
+            TileGameData tile = new(tileSO, data.Pos);
 			
             tileGameData.Add(tile);
         }
@@ -236,7 +236,7 @@ public class SaveSystem : MonoBehaviour
         foreach (WorldAssetFileData data in worldAssetFileData)
         {
             // Fetch each prefab from database
-            WorldObject worldObjectToInst = _worldAssetDatabaseSO.WorldAssetList[data.WorldAssetId];
+            WorldObject worldObjectToInst = _worldObjectDatabaseSO.WorldObjectList[data.WorldAssetId];
 			
             ChunkManager.Instance.AddWorldAssetDataToChunk(data.Pos, worldObjectToInst);
         }

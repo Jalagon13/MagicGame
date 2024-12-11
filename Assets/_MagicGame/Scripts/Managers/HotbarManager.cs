@@ -14,7 +14,7 @@ public class HotbarManager : MonoBehaviour
 
     public static HotbarManager Instance { get; private set; }
 	
-    [SerializeField] private ItemObjectDataBaseSO _itemObjectDataBaseSO;
+    [SerializeField] private ItemDataBaseSO _itemDataBaseSO;
 
     private InventoryItem _focusInventoryItem;
     private int _selectedSlotIndex;
@@ -37,11 +37,11 @@ public class HotbarManager : MonoBehaviour
 		
         if(e.MouseItem.Item != null)
         {
-            InvokeOnFocusItemSetEvent(_itemObjectDataBaseSO.GetItemIndexFromItemObject(e.MouseItem.Item), -1);
+            InvokeOnFocusItemSetEvent(_itemDataBaseSO.GetItemIndexFromItemObject(e.MouseItem.Item), -1);
         }
         else
         {
-            InvokeOnFocusItemSetEvent(_itemObjectDataBaseSO.GetItemIndexFromItemObject(_focusInventoryItem.Item), _selectedSlotIndex);
+            InvokeOnFocusItemSetEvent(_itemDataBaseSO.GetItemIndexFromItemObject(_focusInventoryItem.Item), _selectedSlotIndex);
         }
     }
 
@@ -56,7 +56,7 @@ public class HotbarManager : MonoBehaviour
         }
         else
         {
-            InvokeOnFocusItemSetEvent(_itemObjectDataBaseSO.GetItemIndexFromItemObject(_focusInventoryItem.Item), e.SelectedSlotIndex);
+            InvokeOnFocusItemSetEvent(_itemDataBaseSO.GetItemIndexFromItemObject(_focusInventoryItem.Item), e.SelectedSlotIndex);
         }
     }
 
@@ -71,7 +71,7 @@ public class HotbarManager : MonoBehaviour
         }
         else
         {
-            InvokeOnFocusItemSetEvent(_itemObjectDataBaseSO.GetItemIndexFromItemObject(_focusInventoryItem.Item), e.SelectedSlotIndex);
+            InvokeOnFocusItemSetEvent(_itemDataBaseSO.GetItemIndexFromItemObject(_focusInventoryItem.Item), e.SelectedSlotIndex);
         }
     }
 	
@@ -91,7 +91,7 @@ public class HotbarManager : MonoBehaviour
 	
     public int GetFocusItemIndex()
     {
-        return _itemObjectDataBaseSO.GetItemIndexFromItemObject(_focusInventoryItem.Item);
+        return _itemDataBaseSO.GetItemIndexFromItemObject(_focusInventoryItem.Item);
     }
 	
     private void OnDestroy()
