@@ -6,9 +6,9 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class EnvironmentTilemaps : NetworkBehaviour
+public class Environment : NetworkBehaviour
 {
-    public static EnvironmentTilemaps Instance;
+    public static Environment Instance;
 
     [SerializeField] private TilemapData _groundTilemapData;
     [SerializeField] private TilemapData _floorTilemapData;

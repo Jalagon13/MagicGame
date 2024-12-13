@@ -9,13 +9,10 @@ public class CaveGeneration : MonoBehaviour
     [SerializeField] private WorldManager.EnvironmentID _environment;
 	
     [FoldoutGroup("Cave Generation")]
-    [SerializeField] private NoiseMapSO _caveSpaghettiCaveNoiseMap;
+    [SerializeField] private NoiseMapSO _spaghettiCaveNM;
 	
     [FoldoutGroup("Cave Generation")]
-    [SerializeField] private NoiseMapSO _caveCheeseCaveNoiseMap;
-	
-    // [FoldoutGroup("Cave Generation")]
-    // [SerializeField] private TileDataBaseObject _tileDatabase;
+    [SerializeField] private NoiseMapSO _cheeseCaveNM;
 	
     [FoldoutGroup("Cave Generation")]
     [SerializeField] private TileSO _stoneWallTile;
@@ -54,8 +51,8 @@ public class CaveGeneration : MonoBehaviour
         _seed = WorldManager.Instance.Seed;
 		
         // Generate noise textures using game manager seed
-        _caveSpaghettiCaveNoiseMap.GenerateNoiseTexture(_seed);
-        _caveCheeseCaveNoiseMap.GenerateNoiseTexture(_seed);
+        _spaghettiCaveNM.GenerateNoiseTexture(_seed);
+        _cheeseCaveNM.GenerateNoiseTexture(_seed);
     }
 	
     private void GenerateCaveChunkData()
@@ -81,8 +78,8 @@ public class CaveGeneration : MonoBehaviour
                         int tilePosY = chunkCoord.y * ChunkManager.CHUNK_SIZE + y;
                         Vector2Int tileWorldPosition = new(tilePosX, tilePosY);
 						
-                        float cheeseCaveValue = GetNoiseMapPointValueAtCoords(_caveCheeseCaveNoiseMap, tilePosX, tilePosY);
-                        float spaghettiCaveValue = GetNoiseMapPointValueAtCoords(_caveSpaghettiCaveNoiseMap, tilePosX, tilePosY);
+                        float cheeseCaveValue = GetNoiseMapPointValueAtCoords(_cheeseCaveNM, tilePosX, tilePosY);
+                        float spaghettiCaveValue = GetNoiseMapPointValueAtCoords(_spaghettiCaveNM, tilePosX, tilePosY);
 						
                         if((spaghettiCaveValue >= 0.45f && spaghettiCaveValue <= 0.6f) || cheeseCaveValue >= 0.375f)
                         {

@@ -4,53 +4,53 @@ using UnityEngine;
 
 public class PlayerCamera : NetworkBehaviour
 {
-    private CinemachineConfiner2D _confiner;
-    private BoxCollider2D _cameraFrustumCollider;
-    private Camera _mainCamera;
-    private CinemachineCamera _cinemachineCam;
-    private Transform _originalFollowTarget;
-    private float _originalOrthoSize;
+	private CinemachineConfiner2D _confiner;
+	private BoxCollider2D _cameraFrustumCollider;
+	private Camera _mainCamera;
+	private CinemachineCamera _cinemachineCam;
+	private Transform _originalFollowTarget;
+	private float _originalOrthoSize;
 	
-    private void Awake() 
-    {
-        _confiner = GetComponent<CinemachineConfiner2D>();
-        _cameraFrustumCollider = GetComponent<BoxCollider2D>();
+	private void Awake() 
+	{
+		_confiner = GetComponent<CinemachineConfiner2D>();
+		_cameraFrustumCollider = GetComponent<BoxCollider2D>();
 		
-        _cinemachineCam = GetComponent<CinemachineCamera>();
-        _originalFollowTarget = _cinemachineCam.Follow;
-        _originalOrthoSize = _cinemachineCam.Lens.OrthographicSize;
+		_cinemachineCam = GetComponent<CinemachineCamera>();
+		_originalFollowTarget = _cinemachineCam.Follow;
+		_originalOrthoSize = _cinemachineCam.Lens.OrthographicSize;
 		
-        _mainCamera = Camera.main;
-    }
+		_mainCamera = Camera.main;
+	}
 
-    // NTFS: Change this dynamically when camera is widened or narrowed
-    private void Start()
-    {
-        float verticalSize = _mainCamera.orthographicSize * 2;
-        float horizontalSize = verticalSize * _mainCamera.aspect;
-        _cameraFrustumCollider.size = new Vector2(horizontalSize, verticalSize);
-        _cameraFrustumCollider.offset = Vector2.zero;
+	// NTFS: Change this dynamically when camera is widened or narrowed
+	private void Start()
+	{
+		float verticalSize = _mainCamera.orthographicSize * 2;
+		float horizontalSize = verticalSize * _mainCamera.aspect;
+		_cameraFrustumCollider.size = new Vector2(horizontalSize, verticalSize);
+		_cameraFrustumCollider.offset = Vector2.zero;
 		
-        if(NetworkManager != null)
-        {
-            NetworkManager.OnClientConnectedCallback += RegisterCameraToPlayer;
-        }
-    }
+		if(NetworkManager != null)
+		{
+			NetworkManager.OnClientConnectedCallback += RegisterCameraToPlayer;
+		}
+	}
 
-    private void RegisterCameraToPlayer(ulong clientId)
-    {
-        if(NetworkManager.LocalClientId != clientId) return;
+	private void RegisterCameraToPlayer(ulong clientId)
+	{
+		if(NetworkManager.LocalClientId != clientId) return;
 		
-        _cinemachineCam.Follow = NetworkManager.ConnectedClients[clientId].PlayerObject.transform;
-    }
+		// _cinemachineCam.Follow = NetworkManager.ConnectedClients[clientId].PlayerObject.transform;
+	}
 	
-    public override void OnDestroy() 
-    {
-        if(NetworkManager != null)
-        {
-            NetworkManager.OnClientConnectedCallback -= RegisterCameraToPlayer;
-        }
+	public override void OnDestroy() 
+	{
+		if(NetworkManager != null)
+		{
+			NetworkManager.OnClientConnectedCallback -= RegisterCameraToPlayer;
+		}
 		
-        base.OnDestroy();
-    }
+		base.OnDestroy();
+	}
 }

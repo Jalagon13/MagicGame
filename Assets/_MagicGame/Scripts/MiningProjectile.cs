@@ -114,12 +114,12 @@ public class MiningProjectile : NetworkBehaviour
 	
         if(_mouseOverWall)
         {
-            EnvironmentTilemaps.Instance.GetWallTilemapData().HitTile(tilePos, _miningPower);
+            Environment.Instance.GetWallTilemapData().HitTile(tilePos, _miningPower);
             return;
         }
         else if(_mouseOverFloor)
         {
-            EnvironmentTilemaps.Instance.GetFloorTilemapData().HitTile(tilePos, _miningPower);
+            Environment.Instance.GetFloorTilemapData().HitTile(tilePos, _miningPower);
             return;
         }
     }

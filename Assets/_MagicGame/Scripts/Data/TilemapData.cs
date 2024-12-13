@@ -72,8 +72,8 @@ public class TilemapData : NetworkBehaviour
 
 					// Make node walkable
 					var centerNodePosition = new Vector2(position.x + 0.5f, position.y + 0.5f);
-					// var node = NodeGraphUtility.GetNodeAtPosition(centerNodePosition);
-					// node.Walkable = true;
+					var node = NodeGraphUtility.GetNodeAtPosition(centerNodePosition);
+					node.Walkable = true;
 					
 					// Trigger tile destruction logic
 					DestroyTile(position, syncTileHpData.TileID);

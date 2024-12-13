@@ -290,7 +290,7 @@ public class WorldManager : NetworkBehaviour
 			for (int y = -1; y <= 1; y++)
 			{
 				Vector3Int neighborPosition = new(centerPositionInt.x + x, centerPositionInt.y + y, centerPositionInt.z);
-				EnvironmentTilemaps.Instance.GetWallTilemapData().DeleteTile(new(neighborPosition.x, neighborPosition.y));
+				Environment.Instance.GetWallTilemapData().DeleteTile(new(neighborPosition.x, neighborPosition.y));
 			}
 		}
 	}

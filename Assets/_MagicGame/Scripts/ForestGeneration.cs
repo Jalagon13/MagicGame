@@ -10,13 +10,10 @@ public class ForestGeneration : MonoBehaviour
     [SerializeField] private WorldManager.EnvironmentID _environment;
 
     [FoldoutGroup("Overworld Generation")]
-    [SerializeField] private NoiseMapSO _overworldGoundNoiseMap;
+    [SerializeField] private NoiseMapSO _forestGroundNM;
 	
     [FoldoutGroup("Overworld Generation")]
-    [SerializeField] private NoiseMapSO _overworldWallNoiseMap;
-	
-    [FoldoutGroup("Overworld Generation")]
-    [SerializeField] private TileDataBaseSO _tileDatabase;
+    [SerializeField] private NoiseMapSO _forestStoneNM;
 	
     [FoldoutGroup("Overworld Generation")]
     [SerializeField] private TileSO _grassTile;
@@ -34,7 +31,7 @@ public class ForestGeneration : MonoBehaviour
     [SerializeField] private TileSO _stoneFloorTile;
 	
     [FoldoutGroup("Overworld Generation")]
-    [SerializeField] private WorldObject _resourceObject;
+    [SerializeField] private WorldObject _treeObject;
 	
 	
     private string _seed;
@@ -68,8 +65,8 @@ public class ForestGeneration : MonoBehaviour
         _seed = WorldManager.Instance.Seed;
 		
         // Generate noise textures using game manager seed
-        _overworldGoundNoiseMap.GenerateNoiseTexture(_seed);
-        _overworldWallNoiseMap.GenerateNoiseTexture(_seed);
+        _forestGroundNM.GenerateNoiseTexture(_seed);
+        _forestStoneNM.GenerateNoiseTexture(_seed);
     }
 	
     private void GenerateOverworldChunkData()
@@ -97,8 +94,8 @@ public class ForestGeneration : MonoBehaviour
                         Vector2Int tileWorldPosition = new(tilePosX, tilePosY);
 						
                         // For the position of the tile, find out which tile to place here using its grayscale value
-                        float groundTilePointValue = GetNoiseMapPointValueAtCoords(_overworldGoundNoiseMap, tilePosX, tilePosY);
-                        float wallTilePointValue = GetNoiseMapPointValueAtCoords(_overworldWallNoiseMap, tilePosX, tilePosY);
+                        float groundTilePointValue = GetNoiseMapPointValueAtCoords(_forestGroundNM, tilePosX, tilePosY);
+                        float wallTilePointValue = GetNoiseMapPointValueAtCoords(_forestStoneNM, tilePosX, tilePosY);
 						
                         // Get the Tilebase for the given point value
                         TileSO groundTileSO = GetOverworldGroundTileFromPointValue(groundTilePointValue);
@@ -133,20 +130,20 @@ public class ForestGeneration : MonoBehaviour
         float minTreeDistance = 3f;
         float maxTreeDistance = 10f;
 		
-        List<Vector2> treePoints = PoissonDiskSampling.GeneratePoints(_overworldWallNoiseMap, minTreeDistance, maxTreeDistance, surfaceBounds, _seed);
+        List<Vector2> treePoints = PoissonDiskSampling.GeneratePoints(_forestStoneNM, minTreeDistance, maxTreeDistance, surfaceBounds, _seed);
 		
         foreach (Vector2 point in treePoints)
         {
             int pointX = Mathf.RoundToInt(point.x);
             int pointY = Mathf.RoundToInt(point.y);
 			
-            float groundTilePointValue = _overworldGoundNoiseMap.NoiseTexture.GetPixel(pointX, pointY).grayscale;
-            float wallTilePointValue = _overworldWallNoiseMap.NoiseTexture.GetPixel(pointX, pointY).grayscale;
+            float groundTilePointValue = _forestGroundNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
+            float wallTilePointValue = _forestStoneNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
 			
             if(groundTilePointValue > 0.125f && (wallTilePointValue < 0.6f && wallTilePointValue > 0.35f))
             {
                 // Add world asset data to chunk
-                ChunkManager.Instance.AddWorldAssetDataToChunk(new Vector2Int(pointX, pointY), _resourceObject);
+                // ChunkManager.Instance.AddWorldAssetDataToChunk(new Vector2Int(pointX, pointY), _treeObject);
             }
         }
     }

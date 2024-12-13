@@ -14,7 +14,7 @@ public class AssetManager : NetworkBehaviour
 		public GameObject WorldAssetGameObject;
 	}
 	
-	private NetworkList<SyncWorldAssetHPData> _syncWorldAssetDataHPNetworkList;
+	private NetworkList<SyncWorldAssetHPData> _syncWorldAssetDataHPNetworkList = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	public struct SyncWorldAssetHPData : IEquatable<SyncWorldAssetHPData>, INetworkSerializable
 	{
 		public byte WorldAssetID;
@@ -37,7 +37,6 @@ public class AssetManager : NetworkBehaviour
 	private void Awake()
 	{
 		Instance = this;
-		_syncWorldAssetDataHPNetworkList = new();
 	}
 	
 	private void Start()
