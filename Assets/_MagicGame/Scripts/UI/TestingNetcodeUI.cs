@@ -1,16 +1,34 @@
+// using Pathfinding;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TestingNetcodeUI : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private Button _startHostButton;
+    [SerializeField] private Button _startClientButton;
+	
+    private void Awake()
     {
-        
+        _startHostButton.onClick.AddListener(() => 
+        {
+            Debug.Log("HOST");
+            // GridGraph gridGraph = AstarPath.active.data.gridGraph;
+            // gridGraph.Scan();
+            NetworkManager.Singleton.StartHost();
+            WorldManager.Instance.GenerateEnvironment(WorldManager.EnvironmentID.Forest);
+            Hide();
+        });
+        _startClientButton.onClick.AddListener(() => 
+        {
+            Debug.Log("CLIENT");
+            NetworkManager.Singleton.StartClient();
+            Hide();
+        });
     }
-
-    // Update is called once per frame
-    void Update()
+	
+    private void Hide()
     {
-        
+        gameObject.SetActive(false);
     }
 }
