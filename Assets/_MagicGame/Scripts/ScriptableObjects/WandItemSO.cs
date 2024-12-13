@@ -15,7 +15,7 @@ public enum WandAttribute
 // Wand upgrades and upgrade data need to live in here and injected into WandInventoryItem somehow
 // Level system must stay in WandInventoryItem and Wand upgrade data in here
 [CreateAssetMenu(fileName = "New Wand", menuName = "Create Item/New Wand")]
-public class WandObject : ItemSO
+public class WandItemSO : ItemSO
 {
     [Space(10)]
     [Title("Mining Upgrades", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]

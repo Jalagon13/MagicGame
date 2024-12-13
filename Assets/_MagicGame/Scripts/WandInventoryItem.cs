@@ -9,12 +9,12 @@ using UnityEngine;
 [Serializable]
 public class WandInventoryItem : InventoryItem
 {
-    public WandObject WandObject => (WandObject) Item;
+    public WandItemSO WandObject => (WandItemSO) Item;
     public Dictionary<WandAttribute, int> AttributesAndLevelIndex = new(); // Holds the upgrade type and its level
 
     public WandInventoryItem(ItemSO itemObject, int quantity)
     {
-        Item = itemObject as WandObject;
+        Item = itemObject as WandItemSO;
         Quantity = quantity;
 		
         // Initialize new UpgradeStorage with default values for all upgrade types

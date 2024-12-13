@@ -41,7 +41,7 @@ public class PlayerCamera : NetworkBehaviour
 	{
 		if(NetworkManager.LocalClientId != clientId) return;
 		
-		// _cinemachineCam.Follow = NetworkManager.ConnectedClients[clientId].PlayerObject.transform;
+		_cinemachineCam.Follow = NetworkManager.ConnectedClients[clientId].PlayerObject.transform;
 	}
 	
 	public override void OnDestroy() 

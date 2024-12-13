@@ -49,7 +49,7 @@ public class ActionManager : MonoBehaviour
 		
         if(_focusItemSO == null || Pointer.IsOverUI()) return;
 		
-        if(_focusItemSO is WandObject && _miningCooldownTimer.RemainingSeconds <= 0 && PlayerInRangeOfMouse())
+        if(_focusItemSO is WandItemSO && _miningCooldownTimer.RemainingSeconds <= 0 && PlayerInRangeOfMouse())
         {
             _wandItem = HotbarManager.Instance.GetFocusInventoryItem() as WandInventoryItem;
 				

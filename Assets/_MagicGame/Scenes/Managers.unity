@@ -226,7 +226,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 314156003}
-    PlayerPrefab: {fileID: 0}
+    PlayerPrefab: {fileID: 815970926421098775, guid: f97c883a224ab4846b8446859cca2edd, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: fed4298bf13514b93be2d5406a3973a7, type: 2}
@@ -1237,11 +1237,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _dayDurationInSeconds: 0
-  _startingTime: 0
-  _isTicking: 1
+  _dayDurationInSeconds: 10
+  _startingTime: 1
+  _isTicking: 0
   _randomSeed: 0
-  _customSeed: 123
+  _customSeed: Hell world :D
   _portalPrefab: {fileID: 0}
 --- !u!1 &1942133332
 GameObject:

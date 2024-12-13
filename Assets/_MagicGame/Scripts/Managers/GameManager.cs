@@ -150,7 +150,15 @@ public class GameManager : MonoBehaviour
 	
 	public ItemSO GetItemSOFromIndex(int index)
 	{
-		return _itemDataBaseSO.ItemSOList[index];
+		if(index >= 0 && index < _itemDataBaseSO.ItemSOList.Count)
+		{
+			return _itemDataBaseSO.ItemSOList[index];
+		}
+		else
+		{
+			// Debug.LogWarning($"ItemSO for index: {index} can't be found, returning null");
+			return null;
+		}
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]

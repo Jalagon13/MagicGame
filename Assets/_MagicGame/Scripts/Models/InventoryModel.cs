@@ -72,7 +72,7 @@ public class InventoryModel
             for (int i = 0; i < amountToIterate; i++)
             {
                 // If itemToAdd isn't a WandInventoryObject and itemToAdd.Item is a WandObject, 
-                if (itemToAdd is not WandInventoryItem && itemToAdd.Item is WandObject)
+                if (itemToAdd is not WandInventoryItem && itemToAdd.Item is WandItemSO)
                 {
                     // Create itemToAdd as a WandInventoryObject and process it below
                     itemToAdd = new WandInventoryItem(itemToAdd.Item, 1);

@@ -13,9 +13,6 @@ public class SpriteAnimationHandler : MonoBehaviour
     [FoldoutGroup("Animation Clips")] [SerializeField] private AnimationClip _frontIdleClip;
     [FoldoutGroup("Animation Clips")] [SerializeField] private AnimationClip _backMoveClip;
     [FoldoutGroup("Animation Clips")] [SerializeField] private AnimationClip _backIdleClip;
-    [FoldoutGroup("Animation Clips")] [SerializeField] private AnimationClip _backMoveReverseClip;
-    [FoldoutGroup("Animation Clips")] [SerializeField] private AnimationClip _frontMoveReverseClip;
-    [FoldoutGroup("Animation Clips")] [SerializeField] private AnimationClip _sideMoveReverseClip;
 
     private Animator _animator;
 

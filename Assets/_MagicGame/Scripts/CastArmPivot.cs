@@ -15,7 +15,6 @@ public class CastArmPivot : NetworkBehaviour
         public CardinalDirection Direction;
     }
 
-    [SerializeField] private PlayerStateMachine _playerStateMachine;
     [SerializeField] private Transform _armPivot;
 	
     [FoldoutGroup("Pivots")]
@@ -102,7 +101,7 @@ public class CastArmPivot : NetworkBehaviour
             CastArmDirection = CardinalDirection.South;
         }
 		
-        if(_playerStateMachine.MovingDirection != CastArmDirection)
+        if(_thisPlayer.GetComponent<PlayerStateMachine>().MovingDirection != CastArmDirection)
         {
             OnCastingArmDirectionChanged?.Invoke(this, new OnCastingArmDirectionChangedEventArgs
             {

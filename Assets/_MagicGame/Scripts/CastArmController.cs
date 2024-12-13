@@ -51,7 +51,7 @@ public class CastArmController : NetworkBehaviour
 
     private void SwingController_OnSwingEnd(object sender, EventArgs e)
     {
-        if(_focusItemSO != null && _focusItemSO is WandObject)
+        if(_focusItemSO != null && _focusItemSO is WandItemSO)
         {
             SetCastingArmHolding();
         }
@@ -77,7 +77,7 @@ public class CastArmController : NetworkBehaviour
     {
         if(_focusItemSO == null) return;
 		
-        if(_focusItemSO is WandObject)
+        if(_focusItemSO is WandItemSO)
         {
             SetCastingArmHolding();
         }
