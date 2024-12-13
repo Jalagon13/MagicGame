@@ -226,6 +226,8 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			InventoryManager.Instance.AddItem(item);
 		}
+		
+		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
 
 	public Transform GetWandProjectileSpawnPoint()
