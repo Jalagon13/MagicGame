@@ -104,7 +104,7 @@ public class Item : NetworkBehaviour
 
                         _itemCollected = true;
 
-                        MultiplayerManager.Instance.DestroyItem(this);
+                        GameManager.Instance.DestroyItem(this);
                         return; // Exit once the item is collected
                     }
                 }

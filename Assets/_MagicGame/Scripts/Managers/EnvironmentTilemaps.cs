@@ -10,7 +10,6 @@ public class EnvironmentTilemaps : NetworkBehaviour
 {
     public static EnvironmentTilemaps Instance;
 
-    [SerializeField] private TileDataBaseSO _tileDataBaseSO;
     [SerializeField] private TilemapData _groundTilemapData;
     [SerializeField] private TilemapData _floorTilemapData;
     [SerializeField] private TilemapData _wallTilemapData;
@@ -66,7 +65,7 @@ public class EnvironmentTilemaps : NetworkBehaviour
     {
         // Debug.Log("Some Client is placing a tile");
         Vector2Int syncPos = new(pos.x, pos.y);
-        byte syncTileId = (byte)_tileDataBaseSO.GetIDFromTileObjectSO(wallTile);
+        byte syncTileId = GameManager.Instance.GetByteIDFromTileObjectSO(wallTile);
 		
         PlaceTileVisualServerRpc(syncPos, syncTileId, syncTileType);
     }
@@ -90,7 +89,7 @@ public class EnvironmentTilemaps : NetworkBehaviour
     {
         // Debug.Log("Distributing visual placement information for each client to decide if it is worth placing based on chunks being loaded");
         Vector3Int position = new(syncPos.x, syncPos.y);
-        TileSO tileToPlace = _tileDataBaseSO.GetTileObjectSOFromID(syncTileId);
+        TileSO tileToPlace = GameManager.Instance.GetTileSOFromID(syncTileId);
 
         // If ground tilemap has a tile at this location, that means the chunk is loaded and is able to accept visual changes
         if(_groundTilemapData.GetTilemap().HasTile(position))

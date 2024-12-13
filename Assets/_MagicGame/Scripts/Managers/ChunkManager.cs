@@ -28,8 +28,6 @@ public class ChunkManager : NetworkBehaviour
 
     public static ChunkManager Instance { get; private set; }
 	
-    [SerializeField] private WorldObjectDataBaseSO _worldObjectDataBaseSO;
-    [SerializeField] private TileDataBaseSO _tileDataBaseSO;
     [SerializeField] private int _chunkLoadRadiusX = 5;
     [SerializeField] private int _chunkLoadRadiusY = 4;
 	
@@ -211,7 +209,7 @@ public class ChunkManager : NetworkBehaviour
         ChunkGameData chunk = GetChunk(position);
 		
         // Add that tile data to this chunk
-        chunk.AddWallTileData(position, _tileDataBaseSO.TileObjectSOList[tileID]);
+        chunk.AddWallTileData(position, GameManager.Instance.GetTileSOFromID(tileID));
     }
 	
     public void RemoveWallTileDataFromChunk(Vector2Int position)

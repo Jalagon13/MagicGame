@@ -22,7 +22,7 @@ public class LootTable
                 ItemSO itemToSpawn = itemsToSpawnKVP.Key;
                 int amountToSpawn = itemsToSpawnKVP.Value;	
 				
-                MultiplayerManager.Instance.SpawnItem(itemToSpawn, amountToSpawn, spawnPos, true);
+                GameManager.Instance.SpawnItem(itemToSpawn, amountToSpawn, spawnPos, true);
             }
         }
     }

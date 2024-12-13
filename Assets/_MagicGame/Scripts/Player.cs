@@ -266,7 +266,7 @@ public class Player : NetworkBehaviour, IHasHealth
             return false;
         }
 		
-        ItemSO focusItem = MultiplayerManager.Instance.GetItemSOFromIndex(_focusItemIndexNetworkVariable.Value);
+        ItemSO focusItem = GameManager.Instance.GetItemSOFromIndex(_focusItemIndexNetworkVariable.Value);
 		
         return focusItem is WandObject;
     }
