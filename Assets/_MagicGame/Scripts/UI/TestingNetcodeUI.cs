@@ -1,4 +1,4 @@
-// using Pathfinding;
+using Pathfinding;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,8 +13,8 @@ public class TestingNetcodeUI : MonoBehaviour
         _startHostButton.onClick.AddListener(() => 
         {
             Debug.Log("HOST");
-            // GridGraph gridGraph = AstarPath.active.data.gridGraph;
-            // gridGraph.Scan();
+            GridGraph gridGraph = AstarPath.active.data.gridGraph;
+            gridGraph.Scan();
             NetworkManager.Singleton.StartHost();
             WorldManager.Instance.GenerateEnvironment(WorldManager.EnvironmentID.Forest);
             Hide();

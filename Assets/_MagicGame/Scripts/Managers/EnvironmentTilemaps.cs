@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-// using Pathfinding;
+using Pathfinding;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -78,8 +78,8 @@ public class EnvironmentTilemaps : NetworkBehaviour
 		
         // Update pathfinding
         var centerNodePosition = new Vector2(syncPos.x + 0.5f, syncPos.y + 0.5f);
-        // var node = NodeGraphUtility.GetNodeAtPosition(centerNodePosition);
-        // node.Walkable = false;
+        var node = NodeGraphUtility.GetNodeAtPosition(centerNodePosition);
+        node.Walkable = false;
 		
         PlaceTileVisualClientRpc(syncPos, syncTileId, syncTileType);
     }

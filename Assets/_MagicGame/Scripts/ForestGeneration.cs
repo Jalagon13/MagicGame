@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-// using Pathfinding;
+using Pathfinding;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -113,8 +113,8 @@ public class ForestGeneration : MonoBehaviour
                             TryToAddTileToChunk(wallTileSO, tileWorldPosition, chunkGameData.WallTileGameDataList);
 							
                             var centerNodePosition = new Vector2(tileWorldPosition.x + 0.5f, tileWorldPosition.y + 0.5f);
-                            // var node = NodeGraphUtility.GetNodeAtPosition(centerNodePosition);
-                            // node.Walkable = false;
+                            var node = NodeGraphUtility.GetNodeAtPosition(centerNodePosition);
+                            node.Walkable = false;
                         }
                     }
                 }
