@@ -553,11 +553,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _dayDurationInSeconds: 0
-  _startingTime: 0
-  _isTicking: 1
+  _dayDurationInSeconds: 10
+  _startingTime: 1
+  _isTicking: 0
   _randomSeed: 0
-  _customSeed: 123
+  _customSeed: Hell world :D
   _portalPrefab: {fileID: 0}
 --- !u!1 &1655249451
 GameObject:

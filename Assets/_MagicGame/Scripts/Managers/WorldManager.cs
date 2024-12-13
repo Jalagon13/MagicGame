@@ -107,7 +107,7 @@ public class WorldManager : NetworkBehaviour
 		{
 			case EnvironmentID.Forest:
 				_environmentList.Add(EnvironmentID.Forest);
-				GetComponent<ForestGeneration>().GenerateOverworld();
+				GetComponent<ForestGeneration>().GenerateForest();
 				ACTIVE_ENVIRONMENT_ID = EnvironmentID.Forest;
 				break;
 			case EnvironmentID.Cave:

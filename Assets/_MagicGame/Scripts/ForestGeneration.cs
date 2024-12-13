@@ -48,11 +48,11 @@ public class ForestGeneration : MonoBehaviour
     {
         if(WorldManager.Instance.GetActiveEnvironmentID() == _environment)
         {
-            GenerateOverworld();
+            GenerateForest();
         }
     }
 
-    public void GenerateOverworld()
+    public void GenerateForest()
     {
         Debug.Log("Generating Overworld Data...");
         ChunkManager.IS_GENERATING_ENVIRONMENT = true;
