@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 926078962f3a343ccb8701e2c808b3af, type: 3}
-  m_Name: _WorldObjectDataBaseSO
+  m_Script: {fileID: 11500000, guid: 532dbb46aad9e445e909b4f76dde1917, type: 3}
+  m_Name: MiningSpeedParameter
   m_EditorClassIdentifier: 
-  WorldObjectList:
-  - {fileID: 5804585726505844536, guid: f4caf4c5091224ab38ce3d21bbffe7bf, type: 3}
+  <ParameterName>k__BackingField: MiningSpeedParameter

@@ -56,7 +56,6 @@ public class CastArmPivot : NetworkBehaviour
             // Handles rotation of cast arm.
             Vector3 direction = ActionManager.MouseWorldPosition - (Vector2)transform.position; // Calculate direction to target.
             _angleNetworkVariable.Value = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // Calculate angle in degrees.
-            // Debug.Log(OwnerClientId);
         }
 		
         HandleRotation();

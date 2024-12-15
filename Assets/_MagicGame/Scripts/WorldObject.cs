@@ -7,21 +7,26 @@ using UnityEngine;
 [SelectionBase]
 public class WorldObject : MonoBehaviour
 {	
-    [SerializeField] private string _worldAssetName;
-    private bool _placedDownByPlayer;
+	private string _worldAssetName;
+	private bool _placedDownByPlayer;
 	
-    public void SetPlacedDownByPlayer(bool var)
-    {
-        _placedDownByPlayer = var;
-    }
+	private void Awake()
+	{
+		_worldAssetName = gameObject.name;
+	}
 	
-    public bool IsPlacedDownByPlayer()
-    {
-        return _placedDownByPlayer;
-    }
+	public void SetPlacedDownByPlayer(bool var)
+	{
+		_placedDownByPlayer = var;
+	}
 	
-    public string GetWorldAssetName()
-    {
-        return _worldAssetName;
-    }
+	public bool IsPlacedDownByPlayer()
+	{
+		return _placedDownByPlayer;
+	}
+	
+	public string GetWorldAssetName()
+	{
+		return _worldAssetName;
+	}
 }

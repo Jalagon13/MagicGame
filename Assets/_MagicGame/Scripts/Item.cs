@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Item : NetworkBehaviour
 {
-    [SerializeField] private ItemDataBaseSO _itemDataBaseSO;
     [SerializeField] private float _attractRange = 2.75f;
     [SerializeField] private float _attractSpeed = 5f;
     [SerializeField] private float _initialCollectDelay = 0.5f;
@@ -120,7 +119,7 @@ public class Item : NetworkBehaviour
 	
     private void UpdateItemDataAndVisuals()
     {
-        ItemSO itemSO = _itemDataBaseSO.ItemSOList[_itemIdNetworkVariable.Value];
+        ItemSO itemSO = GameManager.Instance.GetItemSOFromIndex(_itemIdNetworkVariable.Value);
 		
         _itemInventoryItem = new()
         {

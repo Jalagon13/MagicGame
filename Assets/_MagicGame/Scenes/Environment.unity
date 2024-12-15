@@ -640,7 +640,6 @@ Transform:
   - {fileID: 793914365}
   - {fileID: 1170602978}
   - {fileID: 1691190552}
-  - {fileID: 1058546868}
   - {fileID: 652259849}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -697,6 +696,53 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
+--- !u!1 &462286016
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 462286018}
+  - component: {fileID: 462286017}
+  m_Layer: 0
+  m_Name: ActionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &462286017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462286016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92287b7658dbc41b3819b33dbf90efe0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clickDistanceParameter:
+    Parameter: {fileID: 11400000, guid: 7d0caf3b965b54f63a502974443886c9, type: 2}
+    Value: 0
+--- !u!4 &462286018
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462286016}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &568745040
 GameObject:
   m_ObjectHideFlags: 0
@@ -1516,7 +1562,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slotAmount: 36
   _collectSound: {fileID: 0}
-  _itemCollectPlatePrefab: {fileID: 0}
+  _itemCollectPlatePrefab: {fileID: 2893883857882228170, guid: 97583e12174a6488193592c120954140, type: 3}
   _slotClickFeedbacks: {fileID: 0}
 --- !u!1 &876396785
 GameObject:
@@ -1669,7 +1715,7 @@ GameObject:
   - component: {fileID: 1058546868}
   - component: {fileID: 1058546869}
   m_Layer: 0
-  m_Name: A* Pathfinder
+  m_Name: A*
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1688,7 +1734,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 429902436}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1058546869
 MonoBehaviour:
@@ -1883,83 +1929,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!1 &1231222988
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1231222989}
-  - component: {fileID: 1231222990}
-  - component: {fileID: 1231222991}
-  m_Layer: 0
-  m_Name: WorldManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1231222989
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231222988}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1231222990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231222988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 326107854
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 0
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
---- !u!114 &1231222991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231222988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5461ac62a8e974ddbae85b4246c9638b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  _dayDurationInSeconds: 10
-  _startingTime: 1
-  _isTicking: 0
-  _randomSeed: 0
-  _customSeed: Hell world :D
-  _portalPrefab: {fileID: 0}
 --- !u!1 &1469998707
 GameObject:
   m_ObjectHideFlags: 0
@@ -2509,8 +2478,8 @@ MonoBehaviour:
   _itemDataBaseSO: {fileID: 11400000, guid: f8a736388b2c44969af16475866a4801, type: 2}
   _worldObjectDataBaseSO: {fileID: 11400000, guid: de04e42d3d1784c50ae37924da4d8a99, type: 2}
   _tileDataBaseSO: {fileID: 11400000, guid: 86b92227f4ff84b0a9aee415c11b1cbe, type: 2}
-  _itemBasePrefab: {fileID: 0}
-  _miningProjectilePrefab: {fileID: 0}
+  _itemBasePrefab: {fileID: 4324714860010554649, guid: b80d6a3337ea34052b9944957d71ebd0, type: 3}
+  _miningProjectilePrefab: {fileID: -7044577308189781429, guid: 0f801ebc91b004182a3219acb85b34d4, type: 3}
   _pickupClip: {fileID: 0}
 --- !u!1 &1669550750
 GameObject:
@@ -3247,7 +3216,7 @@ MonoBehaviour:
   _waterTile: {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
   _stoneWallTile: {fileID: 11400000, guid: c5388903dacbb4c4db84b0b22dae9c49, type: 2}
   _stoneFloorTile: {fileID: 11400000, guid: d2ceefd9a0a224533922e3657ca61e16, type: 2}
-  _treeObject: {fileID: 0}
+  _treeObject: {fileID: 5804585726505844536, guid: f4caf4c5091224ab38ce3d21bbffe7bf, type: 3}
 --- !u!114 &1937202730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3583,11 +3552,12 @@ SceneRoots:
   - {fileID: 1883046596}
   - {fileID: 832159822}
   - {fileID: 1917302445}
-  - {fileID: 1231222989}
   - {fileID: 1655249452}
+  - {fileID: 462286018}
   - {fileID: 1942133333}
   - {fileID: 314156005}
   - {fileID: 242063068}
   - {fileID: 1785759326}
+  - {fileID: 1058546868}
   - {fileID: 597565687}
   - {fileID: 429902436}

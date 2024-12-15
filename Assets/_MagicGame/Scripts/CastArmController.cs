@@ -9,110 +9,108 @@ using UnityEngine.Events;
 
 public class CastArmController : NetworkBehaviour
 {
-    public event EventHandler OnHoldingWandStart;
-    public event EventHandler<OnHoldingWandEndEventArgs> OnHoldingWandEnd;
-    public class OnHoldingWandEndEventArgs : EventArgs
-    {
-        public CardinalDirection WandHeldDirection;
-    }
+	public event EventHandler OnHoldingWandStart;
+	public event EventHandler<OnHoldingWandEndEventArgs> OnHoldingWandEnd;
+	public class OnHoldingWandEndEventArgs : EventArgs
+	{
+		public CardinalDirection WandHeldDirection;
+	}
 	
-    // NTFS: Start with this variable next time when you decide to solve this bug of the client joining the host's server and the server player not updated correctly
-    // public NetworkVariable<bool> IsHoldingWandNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	// NTFS: Start with this variable next time when you decide to solve this bug of the client joining the host's server and the server player not updated correctly
+	// public NetworkVariable<bool> IsHoldingWandNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-    [SerializeField] private SwingController _swingController;
-    [SerializeField] private CastArmPivot _castArmPivot;
-    private ItemSO _focusItemSO;
-    private Player _thisPlayer;
+	[SerializeField] private SwingController _swingController;
+	[SerializeField] private CastArmPivot _castArmPivot;
+	private ItemSO _focusItemSO;
+	private Player _thisPlayer;
 	
-    private void Awake()
-    {
-        _swingController.OnSwingEnd += SwingController_OnSwingEnd;
+	private void Awake()
+	{
+		_swingController.OnSwingEnd += SwingController_OnSwingEnd;
 		
-        if(_thisPlayer == null)
-        {
-            _thisPlayer = transform.root.GetComponent<Player>();
-            _thisPlayer.GetFocusItemIndexNetworkVariable().OnValueChanged += Player_FocusItemIndexNetworkVariable_OnValueChanged;
-        }
-    }
+		if(_thisPlayer == null)
+		{
+			_thisPlayer = transform.root.GetComponent<Player>();
+			_thisPlayer.GetFocusItemIndexNetworkVariable().OnValueChanged += Player_FocusItemIndexNetworkVariable_OnValueChanged;
+		}
+	}
 
-    public override void OnNetworkSpawn()
-    {
-        if(_thisPlayer.IsHoldingWand())
-        {
-            ShowCastArm();
-        }
-        else
-        {
-            HideCastArm();
-        }
+	public override void OnNetworkSpawn()
+	{
+		if(_thisPlayer.IsHoldingWand())
+		{
+			ShowCastArm();
+		}
+		else
+		{
+			HideCastArm();
+		}
 	
-        base.OnNetworkSpawn();
-    }
+		base.OnNetworkSpawn();
+	}
 
-    private void SwingController_OnSwingEnd(object sender, EventArgs e)
-    {
-        if(_focusItemSO != null && _focusItemSO is WandItemSO)
-        {
-            SetCastingArmHolding();
-        }
-    }
+	private void SwingController_OnSwingEnd(object sender, EventArgs e)
+	{
+		if(_focusItemSO != null && _focusItemSO is WandItemSO)
+		{
+			SetCastingArmHolding();
+		}
+	}
 
-    private void Player_FocusItemIndexNetworkVariable_OnValueChanged(int previousValue, int newValue)
-    {
-        if(newValue <= -1) 
-        {
-            HideCastArm();
-            return;
-        }
-	
-        _focusItemSO = GameManager.Instance.GetItemSOFromIndex(newValue);
+	private void Player_FocusItemIndexNetworkVariable_OnValueChanged(int previousValue, int newValue)
+	{
+		_focusItemSO = GameManager.Instance.GetItemSOFromIndex(newValue);
 		
-        if(!_thisPlayer.IsSwingGoingOn())
-        {
-            CastArmUpdate();
-        }
-    }
+		if(!_thisPlayer.IsSwingGoingOn())
+		{
+			CastArmUpdate();
+		}
+	}
 	
-    public void CastArmUpdate()
-    {
-        if(_focusItemSO == null) return;
+	public void CastArmUpdate()
+	{
+		if(_focusItemSO == null)
+		{
+			HideCastArm();
+			return;
+		}
+	
+		if(_focusItemSO is WandItemSO)
+		{
+			SetCastingArmHolding();
+		}
+		else
+		{
+			HideCastArm();
+		}
+	}
+	
+	private void SetCastingArmHolding()
+	{
+		OnHoldingWandStart?.Invoke(this, EventArgs.Empty);
+		ShowCastArm();
+	}
+	
+	private void ShowCastArm()
+	{
+		_castArmPivot.gameObject.SetActive(true);
+	}
+	
+	private void HideCastArm()
+	{
+		OnHoldingWandEnd?.Invoke(this, new OnHoldingWandEndEventArgs
+		{
+			WandHeldDirection = _castArmPivot.CastArmDirection
+		});
+	
+		_castArmPivot.gameObject.SetActive(false);
+	}
+	
+	public override void OnDestroy()
+	{
+		base.OnDestroy();
 		
-        if(_focusItemSO is WandItemSO)
-        {
-            SetCastingArmHolding();
-        }
-        else
-        {
-            OnHoldingWandEnd?.Invoke(this, new OnHoldingWandEndEventArgs
-            {
-                WandHeldDirection = _castArmPivot.CastArmDirection
-            });
-			
-            HideCastArm();
-        }
-    }
-	
-    private void SetCastingArmHolding()
-    {
-        OnHoldingWandStart?.Invoke(this, EventArgs.Empty);
-        ShowCastArm();
-    }
-	
-    private void ShowCastArm()
-    {
-        _castArmPivot.gameObject.SetActive(true);
-    }
-	
-    private void HideCastArm()
-    {
-        _castArmPivot.gameObject.SetActive(false);
-    }
-	
-    public override void OnDestroy()
-    {
-        base.OnDestroy();
-		
-        _swingController.OnSwingEnd -= SwingController_OnSwingEnd;
-        _thisPlayer.GetFocusItemIndexNetworkVariable().OnValueChanged -= Player_FocusItemIndexNetworkVariable_OnValueChanged;
-    }
+		_swingController.OnSwingEnd -= SwingController_OnSwingEnd;
+		_thisPlayer.GetFocusItemIndexNetworkVariable().OnValueChanged -= Player_FocusItemIndexNetworkVariable_OnValueChanged;
+	}
 }

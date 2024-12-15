@@ -9,12 +9,10 @@ public class ResourceObject : WorldObject
 {
     public event EventHandler OnBrokenByPlayer;
 
-    [Header("Clickable Properties")]
     [SerializeField] private WandAttribute _harvestType;
-    [SerializeField] private int _maxHitPoints;
+    [SerializeField] private int _maxHitPoints = 100;
     [SerializeField] private LootTable _lootTable;
 	
-    [Header("Feedbacks")]
     [FoldoutGroup("Feedbacks")]
     [SerializeField] private MMF_Player _clickFeedback;
     [FoldoutGroup("Feedbacks")]
