@@ -64,10 +64,8 @@ public class InventoryManager : MonoBehaviour
             _gotItemThisFrame = true;
             _gaveItemThisFrame = false;
         }
-        else
+        else if (!_gaveItemThisFrame)
         {
-            if (_gaveItemThisFrame || _mouseItemModel.MouseInventoryItem.Item == null) return;
-
             OnMouseItemUpdated?.Invoke(this, new OnMouseItemUpdatedEventArgs
             {
                 MouseItem = _mouseItemModel.MouseInventoryItem

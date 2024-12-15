@@ -4865,7 +4865,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 60437175
+  m_SortingLayerID: -1478012363
   m_SortingLayer: 2
   m_SortingOrder: 1
   m_RenderMode: 0
@@ -4912,7 +4912,7 @@ GameObject:
   - component: {fileID: 5659728193318219465}
   - component: {fileID: 8034032982623936579}
   m_Layer: 0
-  m_Name: vfx_Hit_WoodWand
+  m_Name: vfx_MiningProjectile_Hit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

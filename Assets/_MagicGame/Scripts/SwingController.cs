@@ -23,10 +23,6 @@ public class SwingController : NetworkBehaviour
     [SerializeField] private SpriteRenderer _meleeObjectSprite;
     [SerializeField] private AudioClip _wooshSound;
 	
-    [Header("Item Parameters")]
-    [SerializeField] private ItemParameter _swingSpeedParameter;
-    [SerializeField] private ItemParameter _damageParameter;
-	
     [FoldoutGroup("Animation Clips")]
     [SerializeField] private AnimationClip _swingEastClip;
 	
@@ -208,8 +204,8 @@ public class SwingController : NetworkBehaviour
 	
     private void UpdateMeleeData()
     {
-        _currentSwingDuration = _meleeItemSO != null ? _meleeItemSO.ExtractParameterValue(_swingSpeedParameter) : _defaultSwingSpeed;
-        _meleeCollider.Damage = _meleeItemSO!= null ? (int)_meleeItemSO.ExtractParameterValue(_damageParameter) : 0;
+        _currentSwingDuration = _meleeItemSO != null ? _meleeItemSO.ExtractParameterValue(GameManager.Instance.GetItemParameterDataBaseSO().SwingSpeedParameter) : _defaultSwingSpeed;
+        _meleeCollider.Damage = _meleeItemSO!= null ? (int)_meleeItemSO.ExtractParameterValue(GameManager.Instance.GetItemParameterDataBaseSO().DamageParameter) : 0;
         if(_meleeObjectSprite != null)
         {
             _meleeObjectSprite.sprite = _meleeItemSO!= null ? _meleeItemSO.UiDisplay : null;

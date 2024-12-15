@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private ItemDataBaseSO _itemDataBaseSO;
 	[SerializeField] private WorldObjectDataBaseSO _worldObjectDataBaseSO;
 	[SerializeField] private TileDataBaseSO _tileDataBaseSO;
+	[SerializeField] private ItemParameterDataBaseSO _itemParameterDataBaseSO;
+	[SerializeField] private NpcDataBaseSO _npcDataBaseSO;
 	
 	[Title("Item Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private GameObject _itemBasePrefab;
@@ -22,6 +24,27 @@ public class GameManager : MonoBehaviour
 	private void Awake()
 	{
 		Instance = this;
+	}
+	
+	public NpcSO GetNpcSOFromId(byte id)
+	{
+		return _npcDataBaseSO.NpcSOList[id];
+	}
+	
+	public byte GetIdAsByteFromNpcSO(NpcSO npcSO)
+	{
+		int index = _npcDataBaseSO.NpcSOList.IndexOf(npcSO);
+		if(index > 255 || index < 0)
+		{
+			Debug.LogError($"Warning, {npcSO.name} is returning an index value out of bounds of a byte");
+		}
+		
+		return (byte)index;
+	}	
+	
+	public ItemParameterDataBaseSO GetItemParameterDataBaseSO()
+	{
+		return _itemParameterDataBaseSO;
 	}
 	
 	public byte GetTileIdFromTileSO(TileSO tileSO)
@@ -116,7 +139,7 @@ public class GameManager : MonoBehaviour
 	{
 		if(itemToSpawn == null)
 		{
-			Debug.LogWarning($"Warning, {itemToSpawn.name} can't be spawned because it is null");
+			Debug.LogWarning($"Warning, item can't be spawned because it is null");
 			return;
 		}
 	

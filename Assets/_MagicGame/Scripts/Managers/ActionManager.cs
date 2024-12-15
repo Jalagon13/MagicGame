@@ -62,12 +62,12 @@ public class ActionManager : MonoBehaviour
 
 				if(!mouseOverFloor && !mouseOverWall && !resourceSelected) return;
 					
-				WandAttribute harvestType = GetHarvestType(mouseOverFloor, mouseOverWall, resourceSelected);
-				AttributeData hitData = _wandItem.GetAttributeData(harvestType);
+				WandAttribute wandAttribute = GetHarvestType(mouseOverFloor, mouseOverWall, resourceSelected);
+				AttributeData hitData = _wandItem.GetAttributeData(wandAttribute);
 
 				GameManager.Instance.SpawnMiningProjectile(Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, MouseWorldPosition, hitData.MiningPower, mouseOverFloor, mouseOverWall, resourceSelected);
-				
-				CalcMiningSpeed(harvestType);
+				Debug.Log("SPawning mining projectile");
+				CalcMiningSpeed(wandAttribute);
 				
 				return;
 			}

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9486b8ae30ede473d930ac44d01ec3aa, type: 3}
-  m_Name: WandItem
+  m_Name: Wand
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Wood Wand
   <UiDisplay>k__BackingField: {fileID: -1593785014, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
