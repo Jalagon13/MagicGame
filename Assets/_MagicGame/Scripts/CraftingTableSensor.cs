@@ -1,16 +1,28 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CraftingTableSensor : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    // [SerializeField] private CraftingController _craftingController;
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        
+        CraftingTable craftingTable = other.GetComponent<CraftingTable>();
+
+        if(craftingTable != null)
+        {
+            CraftingManager.Instance.AddDataBase(craftingTable.GetCraftingRecipeDB());
+        }
+    }
+	
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        CraftingTable craftingTable = other.GetComponent<CraftingTable>();
+
+        if(craftingTable != null)
+        {
+            CraftingManager.Instance.RemoveDataBase(craftingTable.GetCraftingRecipeDB());
+        }
     }
 }

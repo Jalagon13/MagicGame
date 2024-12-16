@@ -12,16 +12,13 @@ public class ActionManager : MonoBehaviour
 
 	public static ActionManager Instance { get; private set; }
 	
+	private float _actionRange = 3f;
 	
-	[SerializeField] private ItemParameter _clickDistanceParameter;
-	
-	private bool _mouseOverWall;
 	private Timer _primaryActionTimer, _secondaryActionTimer, _miningCooldownTimer;
 	private ItemSO _focusItemSO;
 	private WandInventoryItem _wandItem;
 	private float _primaryTimerDuration = 0.25f, _secondaryTimerDuration = 0.25f;
 	private ResourceObject _selectedResourceObject;
-	private float _actionRange = 1f;
 	
 	private void Awake()
 	{
@@ -164,7 +161,7 @@ public class ActionManager : MonoBehaviour
 		
 		if(_focusItemSO != null)
 		{
-			float range = HotbarManager.Instance.GetFocusInventoryItem() is WandInventoryItem wandItem ? wandItem.GetRangeValue() : _focusItemSO.ExtractParameterValue(_clickDistanceParameter);
+			float range = HotbarManager.Instance.GetFocusInventoryItem() is WandInventoryItem wandItem ? wandItem.GetRangeValue() : _focusItemSO.ExtractParameterValue(GameManager.Instance.GetItemParameterDataBaseSO().ClickDistanceParmeter);
 			_actionRange = range > 0 ? range : 1f;
 		}
 	}
@@ -177,11 +174,6 @@ public class ActionManager : MonoBehaviour
 	public float GetActionRange()
 	{
 		return _actionRange;
-	}
-	
-	public bool MouseOverWall()
-	{
-		return _mouseOverWall;
 	}
 	
 	private void OnDestroy()

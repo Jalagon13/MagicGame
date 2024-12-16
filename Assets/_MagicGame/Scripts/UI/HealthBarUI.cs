@@ -5,61 +5,61 @@ using UnityEngine;
 
 public class HealthBarUI : MonoBehaviour
 {
-    [SerializeField] private GameObject _iHasHealthGameObject;
-    [SerializeField] private bool _isVisibleToThisClient = true;
+	[SerializeField] private GameObject _iHasHealthGameObject;
+	[SerializeField] private bool _isVisibleToThisClient = true;
 	
-    private MMProgressBar _progressBar;
-    private IHasHealth _hasHealth;
+	private MMProgressBar _progressBar;
+	private IHasHealth _hasHealth;
 	
-    private void Awake()
-    {
-        _progressBar = GetComponent<MMProgressBar>();
-    }
+	private void Awake()
+	{
+		_progressBar = GetComponent<MMProgressBar>();
+	}
 	
-    private void Start()
-    {
-        _hasHealth = _iHasHealthGameObject.GetComponent<IHasHealth>();
-        if(_hasHealth == null)
-        {
-            Debug.LogError("Game Object  " + _iHasHealthGameObject + " does not have component that implements IHasHealth");
-        }
+	private void Start()
+	{
+		_hasHealth = _iHasHealthGameObject.GetComponent<IHasHealth>();
+		if(_hasHealth == null)
+		{
+			Debug.LogError("Game Object  " + _iHasHealthGameObject + " does not have component that implements IHasHealth");
+		}
 	
-        _hasHealth.OnHealthUpdated += OnHealthUpdated;
+		_hasHealth.OnHealthUpdated += OnHealthUpdated;
 		
-        Hide();
-    }
+		Hide();
+	}
 
-    private void OnHealthUpdated(object sender, IHasHealth.OnHealthUpdatedEventArgs e)
-    {
-        if(!_isVisibleToThisClient && WorldManager.Instance.NetworkManager.LocalClientId == WorldManager.Instance.OwnerClientId)
-        {
-            return;
-        }
-	
-        _progressBar.UpdateBar(e.NewValue, 0, e.MaxValue);
+	private void OnHealthUpdated(object sender, IHasHealth.OnHealthUpdatedEventArgs e)
+	{
+		if(!_isVisibleToThisClient && WorldManager.Instance.NetworkManager.LocalClientId == WorldManager.Instance.OwnerClientId)
+		{
+			return;
+		}
 		
-        if(e.NewValue <= 0 || e.NewValue >= e.MaxValue)
-        {
-            Hide();
-        }
-        else
-        {
-            Show();
-        }
-    }
+		_progressBar.UpdateBar(e.NewValue, 0, e.MaxValue);
+		
+		if(e.NewValue <= 0 || e.NewValue >= e.MaxValue)
+		{
+			Hide();
+		}
+		else
+		{
+			Show();
+		}
+	}
 	
-    private void Show()
-    {
-        gameObject.SetActive(true);
-    }
+	private void Show()
+	{
+		gameObject.SetActive(true);
+	}
 	
-    private void Hide()
-    {
-        gameObject.SetActive(false);
-    }
+	private void Hide()
+	{
+		gameObject.SetActive(false);
+	}
 	
-    private void OnDestroy()
-    {
-        _hasHealth.OnHealthUpdated -= OnHealthUpdated;
-    }
+	private void OnDestroy()
+	{
+		_hasHealth.OnHealthUpdated -= OnHealthUpdated;
+	}
 }
