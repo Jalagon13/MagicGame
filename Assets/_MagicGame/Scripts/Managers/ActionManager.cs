@@ -63,12 +63,13 @@ public class ActionManager : MonoBehaviour
 				AttributeData hitData = _wandItem.GetAttributeData(wandAttribute);
 
 				GameManager.Instance.SpawnMiningProjectile(Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, MouseWorldPosition, hitData.MiningPower, mouseOverFloor, mouseOverWall, resourceSelected);
-				Debug.Log("SPawning mining projectile");
 				CalcMiningSpeed(wandAttribute);
 				
 				return;
 			}
 		}
+		
+		if(_focusItemSO == null || Pointer.IsOverUI()) return;
 		
 		if(GameInput.Instance.GetPrimaryHeldDown() && _primaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetSecondaryHeldDown())
 		{
@@ -155,8 +156,6 @@ public class ActionManager : MonoBehaviour
 
 	private void HotbarManager_OnFocusItemSet(object sender, HotbarManager.OnFocusItemSetEventArgs e)
 	{
-		if(e.FocusItemIndex <= -1) return;
-		
 		_focusItemSO = GameManager.Instance.GetItemSOFromIndex(e.FocusItemIndex);
 		
 		if(_focusItemSO != null)

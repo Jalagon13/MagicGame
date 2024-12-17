@@ -104,8 +104,6 @@ public class SwingController : NetworkBehaviour
 	
     private void FocusItemIndexNetworkVariable_OnValueChanged(int previousValue, int newValue)
     {
-        if(newValue <= -1) return;
-	
         _focusItemSO = GameManager.Instance.GetItemSOFromIndex(newValue);
 		
         // If melee item found, set it to this item, if not to null

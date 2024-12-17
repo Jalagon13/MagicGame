@@ -102,35 +102,18 @@ public class InventoryModel
     public void RemoveItem(ItemSO itemToRemove, int amountToRemove)
     {
         // Basic funationalty, need to revisit later to fix bugs
-        if(_mouseItem.Item != null)
-        {
-            if(_mouseItem.Item.Name == itemToRemove.Name)
-            {
-                _mouseItem.Quantity -= amountToRemove;
-				
-                if(_mouseItem.Quantity <= 0)
-                {
-                    // Note to future self: BUG: You are able to remove an amount of items even if it is greater than what it is in the stack. Need to fix this later
-					
-                    _mouseItem = new();
-                }
-            }
-        }
-		
         for(int i = 0; i < _inventoryItems.Count; i++)
         {
-            InventoryItem inventoryItem = _inventoryItems[i];
-		
-            if(inventoryItem.Item == null) continue;
+            if(_inventoryItems[i].Item == null) continue;
 			
-            if(inventoryItem.Item.Name == itemToRemove.Name)
+            if(_inventoryItems[i].Item.Name == itemToRemove.Name)
             {
-                inventoryItem.Quantity -= amountToRemove;
+                _inventoryItems[i].Quantity -= amountToRemove;
 				
-                if(inventoryItem.Quantity <= 0)
+                if(_inventoryItems[i].Quantity <= 0)
                 {
                     // Note to future self: BUG: You are able to remove an amount of items even if it is greater than what it is in the stack. Need to fix this later
-                    inventoryItem = new();
+                    _inventoryItems[i] = new();
                 }
 				
                 break;

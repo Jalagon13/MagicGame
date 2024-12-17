@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
 	{
 		foreach (WorldObject asset in _worldObjectDataBaseSO.WorldObjectList)
 		{
-			if(asset.GetWorldAssetName() == worldAsset.GetWorldAssetName())
+			if(asset == worldAsset)
 			{
 				return (byte)_worldObjectDataBaseSO.WorldObjectList.IndexOf(asset);
 			}

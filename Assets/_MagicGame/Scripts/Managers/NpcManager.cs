@@ -101,7 +101,7 @@ public class NpcManager : NetworkBehaviour
 		{
 			// Npc to spawn can fit in the remaining npc slot space
 			_activeNpcSlotAmount += npcToSpawn.SlotAmount;
-			Debug.Log($"[Client {NetworkManager.LocalClientId}] Adding {npcToSpawn.name} slot amount ({npcToSpawn.SlotAmount}) to active npc slots on this client. New amount: {_activeNpcSlotAmount}");
+			// Debug.Log($"[Client {NetworkManager.LocalClientId}] Adding {npcToSpawn.name} slot amount ({npcToSpawn.SlotAmount}) to active npc slots on this client. New amount: {_activeNpcSlotAmount}");
 			
 			byte npcId = GameManager.Instance.GetIdAsByteFromNpcSO(npcToSpawn);
 
@@ -129,7 +129,7 @@ public class NpcManager : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void DespawnNpcServerRpc(byte npcId, NetworkObjectReference npcToRemoveNetworkObjectReference, ulong spawningClientId, bool killNpc)
 	{
-		Debug.Log($"[Client {NetworkManager.LocalClientId}] Removing NPC from active npc list");
+		// Debug.Log($"[Client {NetworkManager.LocalClientId}] Removing NPC from active npc list");
 			
 		_activeNpcNetworkList.Remove(npcToRemoveNetworkObjectReference);
 		
@@ -142,7 +142,7 @@ public class NpcManager : NetworkBehaviour
 			// NTFS: Handle other death stuff here
 			npc.DropLoot();
 		}
-		Debug.Log($"[Client {NetworkManager.LocalClientId}] Destroying Npc from game");
+		// Debug.Log($"[Client {NetworkManager.LocalClientId}] Destroying Npc from game");
 		npc.DestroySelf();
 		
 		UpdateActiveNpcSlotAmountClientRpc(npcId, RpcTarget.Single(spawningClientId, RpcTargetUse.Persistent));
@@ -154,7 +154,7 @@ public class NpcManager : NetworkBehaviour
 		NpcSO npc = GameManager.Instance.GetNpcSOFromId(npcId);
 	
 		_activeNpcSlotAmount -= npc.SlotAmount;
-		Debug.Log($"[Client {NetworkManager.LocalClientId}] Removing {npc.name} slot amount ({npc.SlotAmount}) from active npc slots on this client. New amount: {_activeNpcSlotAmount}");
+		// Debug.Log($"[Client {NetworkManager.LocalClientId}] Removing {npc.name} slot amount ({npc.SlotAmount}) from active npc slots on this client. New amount: {_activeNpcSlotAmount}");
 	}
 	
 	private bool SpawnSpotIsValid(Vector2 potentialSpawnPoint)

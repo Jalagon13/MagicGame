@@ -110,7 +110,7 @@ public class NpcNetworkComponent : NetworkBehaviour
         _despawnTimer.OnTimerEnd -= HandleDespawnTimerEnd;
         _despawnTimer = null;
 
-        Debug.Log($"[Client {NetworkManager.LocalClientId}] Despawn timer ended, despawning NPC");
+        // Debug.Log($"[Client {NetworkManager.LocalClientId}] Despawn timer ended, despawning NPC");
         DespawnNpc();
     }
 
@@ -163,7 +163,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 
     private void DespawnNpc()
     {
-        Debug.Log($"[Client {NetworkManager.LocalClientId}] Despawning NPC.");
+        // Debug.Log($"[Client {NetworkManager.LocalClientId}] Despawning NPC.");
         _npcIsBeingRemoved = true;
         NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, false);
     }
@@ -176,7 +176,7 @@ public class NpcNetworkComponent : NetworkBehaviour
             _npc.OnNpcKilled -= Npc_OnNpcKilled;
         }
 
-        Debug.Log($"OnNetworkDespawn callback on {gameObject.name} for client: {NetworkManager.LocalClientId}");
+        // Debug.Log($"OnNetworkDespawn callback on {gameObject.name} for client: {NetworkManager.LocalClientId}");
         base.OnNetworkDespawn();
     }
 }
