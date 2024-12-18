@@ -35,7 +35,6 @@ public class WorldManager : NetworkBehaviour
 	
 	// Class globals
 	private List<EnvironmentID> _environmentList = new(); // Used to keep track which environments have been generated or not
-	// private Dictionary<EnvironmentID, List<PortalData>> _environmentPortalDataDict = new(); // Used to keep track of portal data across the whole game
 	private float _currentTime;
 	private bool _anEnvironmentIsActive;
 	

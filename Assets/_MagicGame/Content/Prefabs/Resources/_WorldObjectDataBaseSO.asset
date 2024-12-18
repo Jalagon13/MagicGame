@@ -15,3 +15,4 @@ MonoBehaviour:
   WorldObjectList:
   - {fileID: 5804585726505844536, guid: f4caf4c5091224ab38ce3d21bbffe7bf, type: 3}
   - {fileID: 6290587451616296401, guid: e9eb770362141454f8cd8a3e777aa608, type: 3}
+  - {fileID: 821165274625048597, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
