@@ -48,11 +48,6 @@ public class ResourceObject : WorldObject
         Destroy(gameObject);
     }
 	
-    public void DestroySelf()
-    {
-        Destroy(gameObject);
-    }
-	
     public int GetMaxHitPoints()
     {
         return _maxHitPoints;

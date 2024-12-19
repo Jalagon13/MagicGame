@@ -31,18 +31,17 @@ public class WorldManager : NetworkBehaviour
 	[Title("World Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private bool _randomSeed = false;
 	[SerializeField] private string _customSeed = 123.ToString();
-	[SerializeField] private Portal _portalPrefab;
+	[SerializeField] private WorldObject _portalObjectPrefab;
 	
 	// Class globals
 	private List<EnvironmentID> _environmentList = new(); // Used to keep track which environments have been generated or not
 	private float _currentTime;
 	private bool _anEnvironmentIsActive;
 	
-	// Properties
-	public Dictionary<string, List<Vector2Int>> StaircasePositionsByScene = new();
+	// public float CurrentDayRatio => _currentTime / _dayDurationInSeconds;
 	// public DayCycleHandler DayCycleHandler { get; set; }
 	// public LightMap LightMap { get; set; }
-	public float CurrentDayRatio => _currentTime / _dayDurationInSeconds;
+	
 	public string Seed 
 	{ 
 		get 
@@ -54,11 +53,6 @@ public class WorldManager : NetworkBehaviour
 	private void Awake()
 	{
 		Instance = this;
-		
-		foreach (EnvironmentID id in Enum.GetValues(typeof(EnvironmentID)))
-		{
-			// _environmentPortalDataDict.Add(id, new());
-		}
 	}
 	
 	private IEnumerator Start()
@@ -118,7 +112,7 @@ public class WorldManager : NetworkBehaviour
 	}
 	
 	[Button("Load Environment")]
-	public async void LoadEnvironment(EnvironmentID environmentID, string portalID)
+	public async void LoadEnvironment(EnvironmentID environmentID, Vector2 portalPosition)
 	{
 		if(environmentID == ACTIVE_ENVIRONMENT_ID)
 		{
@@ -130,17 +124,16 @@ public class WorldManager : NetworkBehaviour
 		
 		// NTFS: make sure player is not able to move during this process and add a loading screen
 		
-		// Save the current environment to file
-		await SaveSystem.Instance.SerializeDataAndWriteToFile();
-		
-		// Clear all Entities
-		// NpcSpawnManager.Instance.ClearAllEntities();
-		
-		// Clear all active assets
-		// AssetManager.Instance.ClearAllCurrentEnvironmentAssets();
+		// Teleport player to portal he is entering
+		PlacePlayerAt(portalPosition);
 		
 		// Clear all player chunks
 		ChunkManager.Instance.UnloadAllPlayerChunks();
+		AssetManager.Instance.ClearAllEnvironmentObjects();
+		// NpcSpawnManager.Instance.ClearAllEntities();
+		
+		// Save the current environment to file
+		await SaveSystem.Instance.SerializeDataAndWriteToFile();
 		
 		// Change environment
 		ACTIVE_ENVIRONMENT_ID = environmentID;
@@ -148,63 +141,73 @@ public class WorldManager : NetworkBehaviour
 		// Load or generate new environment data depending on the environment
 		await SaveSystem.Instance.DeserializeAndDispatchData();
 		
-		// Portal spawning logic
-		SpawnPortals();
-		SpawnPlayerAtPortal(portalID);
+		ChunkManager.Instance.UpdateChunksAroundPlayer();
+		
+		// If there is a portal in lets say a 10 tile radius, grab it's position, and teleport player to that portal
+		if(TryFindPortalToTeleportTo(portalPosition, out Vector2 foundPortal))
+		{
+			Debug.Log("Portal Found, and placing player there");
+			PlacePlayerAt(foundPortal);
+		}
+		else
+		{
+			Debug.Log("Portal NOT found. Placing player at new portal that is spawned");
+			SpawnPortal(portalPosition);
+		}
+		
+		// If not, spawn a portal where the player is
 		
 		_anEnvironmentIsActive = true;
 	}
-	
-	private void SpawnPlayerAtPortal(string portalID)
-	{
-		// foreach (PortalData portalData in _environmentPortalDataDict[ACTIVE_ENVIRONMENT_ID])
-		// {
-		// 	if(portalData.PortalID == portalID)
-		// 	{
-		// 		// Spawn player at this location
-		// 		Player.LocalClientInstance.transform.SetPositionAndRotation(new(portalData.PortalPosition.x + 0.5f, portalData.PortalPosition.y - 0.5f), Quaternion.identity);
-		// 	}
-		// }
-	}
-	
-	private void SpawnPortals()
-	{
-		// Debug.Log($"Number Of Portals in {ACTIVE_ENVIRONMENT_ID}: {_environmentPortalDataDict[ACTIVE_ENVIRONMENT_ID].Count}");
-		// foreach (PortalData portalData in _environmentPortalDataDict[ACTIVE_ENVIRONMENT_ID])
-		// {
-		// 	if(!portalData.IsDestructable)
-		// 	{
-		// 		if(!PortalExistsAt(portalData.PortalPosition))
-		// 		{
-		// 			// Create copy of this portal, set the appropriate destination, and make it nondestructable
-		// 			GameObject portalGameObject = Instantiate(_portalPrefab.gameObject, portalData.PortalPosition, Quaternion.identity);
-		// 			Portal portal = portalGameObject.GetComponent<Portal>();
 
-		// 			portal.SetDestructable(portalData.IsDestructable);
-		// 			portal.SetDestination(portalData.DestinationID);
-					
-		// 			// Destroy tiles around the portal
-		// 			DeleteNeighborWallsAroundPoint(portalData.PortalPosition);
-		// 		}
-		// 	}
-		// }
+	private bool TryFindPortalToTeleportTo(Vector2 portalPosition, out Vector2 newPortalPosition)
+	{
+		// Define the search radius (in tiles)
+		int searchRadius = 10; // Adjust this value as needed
+
+		// Convert the portal position to integer tile coordinates
+		Vector2Int centerTile = Vector2Int.FloorToInt(portalPosition);
+
+		// Loop through a square area that bounds the circle
+		for (int x = -searchRadius; x <= searchRadius; x++)
+		{
+			for (int y = -searchRadius; y <= searchRadius; y++)
+			{
+				// Calculate the position of the current tile
+				Vector2Int currentTile = new Vector2Int(centerTile.x + x, centerTile.y + y);
+
+				// Check if the current tile is within the circular area
+				if (Vector2.Distance(centerTile, currentTile) <= searchRadius)
+				{
+					// Convert back to world position
+					Vector3 worldPosition = new Vector3(currentTile.x, currentTile.y, 0);
+
+					// Check if a portal exists at this position
+					if (PortalExistsAt(worldPosition))
+					{
+						// If found, return true and set the output portal position
+						newPortalPosition = currentTile;
+						return true;
+					}
+				}
+			}
+		}
+
+		// No portal was found
+		newPortalPosition = Vector2.zero;
+		return false;
 	}
 	
-	// public bool PortalDataPositionExistsAt(Vector3 position, out PortalData portalDataInstance)
-	// {
-	// 	// foreach (PortalData portalData in _environmentPortalDataDict[ACTIVE_ENVIRONMENT_ID])
-	// 	// {
-	// 	// 	if(portalData.PortalPosition == position)
-	// 	// 	{
-	// 	// 		// Portal already exists at this location
-	// 	// 		portalDataInstance = portalData;
-	// 	// 		return true;
-	// 	// 	}
-	// 	// }
-		
-	// 	portalDataInstance = default;
-	// 	return false;
-	// }
+	private void SpawnPortal(Vector2 portalPosition)
+	{
+		Vector2Int v2IntPos = new(Mathf.RoundToInt(portalPosition.x), Mathf.RoundToInt(portalPosition.y));
+		AssetManager.Instance.PlaceResourceAsset(v2IntPos, _portalObjectPrefab);
+	}
+	
+	private void PlacePlayerAt(Vector2 portalPosition)
+	{
+		Player.LocalClientInstance.transform.SetPositionAndRotation(new(portalPosition.x + 0.5f, portalPosition.y - 0.5f), Quaternion.identity);
+	}
 	
 	private bool PortalExistsAt(Vector3 position)
 	{
@@ -219,53 +222,6 @@ public class WorldManager : NetworkBehaviour
 		}
 		
 		return false;
-	}
-	
-	public void LinkPortal(EnvironmentID destinationEnvironmentID, string uniqueID, Vector3 portalPosition)
-	{
-		// Register portal to destination environment
-		AddPortalLink(ACTIVE_ENVIRONMENT_ID, destinationEnvironmentID, true, uniqueID, portalPosition);
-		
-		// Register a portal in destination environment to current environment
-		AddPortalLink(destinationEnvironmentID, ACTIVE_ENVIRONMENT_ID, false, uniqueID, portalPosition);
-		Debug.Log("Portals Linked");
-	}
-	
-	public void UnLinkPortal(string portalID)
-	{
-		// for (int i = _environmentPortalDataDict[ACTIVE_ENVIRONMENT_ID].Count - 1; i >= 0; i--)
-		// {
-		// 	PortalData startLinkPortalData = _environmentPortalDataDict[ACTIVE_ENVIRONMENT_ID][i];
-			
-		// 	if(startLinkPortalData.PortalID == portalID)
-		// 	{
-		// 		for (int y = _environmentPortalDataDict[startLinkPortalData.DestinationID].Count - 1; y >= 0; y--)
-		// 		{
-		// 			PortalData endLinkPortalData = _environmentPortalDataDict[startLinkPortalData.DestinationID][y];
-					
-		// 			if(startLinkPortalData.PortalID == endLinkPortalData.PortalID)
-		// 			{
-		// 				_environmentPortalDataDict[startLinkPortalData.DestinationID].Remove(endLinkPortalData);
-		// 				_environmentPortalDataDict[ACTIVE_ENVIRONMENT_ID].Remove(startLinkPortalData);
-		// 				Debug.Log("Portals to unlink found and unlinked");
-		// 				return;
-		// 			}
-		// 		}
-		// 	}
-		// }
-		
-		// Debug.LogError("Did not find any portals to unlink");
-	}
-	
-	private void AddPortalLink(EnvironmentID startLinkEnvironment, EnvironmentID endLinkEnvironment, bool isDestructable, string uniqueID, Vector3 portalPosition)
-	{	
-		// _environmentPortalDataDict[startLinkEnvironment].Add(new PortalData()
-		// {
-		// 	PortalID = uniqueID,
-		// 	DestinationID = endLinkEnvironment,
-		// 	IsDestructable = isDestructable,
-		// 	PortalPosition = portalPosition
-		// });
 	}
 	
 	private void Tick()

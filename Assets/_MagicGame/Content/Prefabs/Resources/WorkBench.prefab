@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd0317ec138084df9b0828660d7c4d81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _worldObjectName: WorkBench
   _harvestType: 1
   _maxHitPoints: 10
   _lootTable:

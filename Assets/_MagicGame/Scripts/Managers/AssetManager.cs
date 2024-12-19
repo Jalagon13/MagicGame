@@ -8,6 +8,7 @@ public class AssetManager : NetworkBehaviour
 {
 	public static AssetManager Instance;
 	
+	public event EventHandler OnClearAllEnvironmentObjects;
 	public event EventHandler<OnWorldAssetSpawnedEventArgs> OnWorldAssetSpawned;
 	public class OnWorldAssetSpawnedEventArgs : EventArgs 
 	{
@@ -48,7 +49,7 @@ public class AssetManager : NetworkBehaviour
 	private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)
 	{
 		if(e.Chunk.WorldAssetGameDataList.Count <= 0) return;
-	
+		
 		foreach (WorldAssetGameData assetData in e.Chunk.WorldAssetGameDataList)
 		{	
 			// Instantiate the visual asset
@@ -75,9 +76,14 @@ public class AssetManager : NetworkBehaviour
 		}
 	}
 	
+	public void ClearAllEnvironmentObjects()
+	{
+		OnClearAllEnvironmentObjects?.Invoke(this, new EventArgs());
+	}
+	
 	public void PlaceResourceAsset(Vector2Int position, WorldObject worldObject)
 	{
-		byte assetID = GameManager.Instance.GetByteIDFromWorldAsset(worldObject);
+		byte assetID = GameManager.Instance.GetByteIDFromWorldObject(worldObject);
 	
 		PlaceResourceAssetServerRpc(position, assetID);
 	}
@@ -100,13 +106,18 @@ public class AssetManager : NetworkBehaviour
 		
 		GameObject placedAsset = Instantiate(worldAsset.gameObject, (Vector2)position, Quaternion.identity);
 		placedAsset.GetComponent<WorldObject>().SetPlacedDownByPlayer(true);
+		
+		OnWorldAssetSpawned?.Invoke(this, new OnWorldAssetSpawnedEventArgs
+		{
+			WorldAssetGameObject = placedAsset
+		});
 	}
 
 	public void HitResourceAsset(Vector2Int position, ushort incomingDamage)
 	{
 		if(ResourceAssetFoundAtPosition(position, out ResourceObject resourceObjectFound))
 		{
-			byte assetID = GameManager.Instance.GetByteIDFromWorldAsset(resourceObjectFound);
+			byte assetID = GameManager.Instance.GetByteIDFromWorldObject(resourceObjectFound);
 			
 			DamageWorldAssetServerRpc(position, assetID, incomingDamage);
 		}
@@ -159,7 +170,7 @@ public class AssetManager : NetworkBehaviour
 			// If tile hp after damage is above 0, just add as usual
 			_syncWorldAssetDataHPNetworkList.Add(new SyncWorldAssetHPData()
 			{
-				WorldAssetID = GameManager.Instance.GetByteIDFromWorldAsset(resourceAsset),
+				WorldAssetID = GameManager.Instance.GetByteIDFromWorldObject(resourceAsset),
 				CurrentWorldAssetHP = currentAssetHPAfterDamage,
 				Position = position
 			});

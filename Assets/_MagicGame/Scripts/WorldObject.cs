@@ -7,13 +7,8 @@ using UnityEngine;
 [SelectionBase]
 public class WorldObject : MonoBehaviour
 {	
-	private string _worldAssetName;
+	[SerializeField] private string _worldObjectName;
 	private bool _placedDownByPlayer;
-	
-	private void Awake()
-	{
-		_worldAssetName = gameObject.name;
-	}
 	
 	public void SetPlacedDownByPlayer(bool var)
 	{
@@ -25,8 +20,13 @@ public class WorldObject : MonoBehaviour
 		return _placedDownByPlayer;
 	}
 	
-	public string GetWorldAssetName()
+	public string GetWorldObjectName()
 	{
-		return _worldAssetName;
+		return _worldObjectName;
+	}
+	
+	public void DestroySelf()
+	{
+		Destroy(gameObject);
 	}
 }

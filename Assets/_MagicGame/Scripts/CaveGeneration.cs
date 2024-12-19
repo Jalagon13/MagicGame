@@ -42,7 +42,6 @@ public class CaveGeneration : MonoBehaviour
         GenerateNoiseMapsBasedOnSeed();
         GenerateCaveChunkData();
         GenerateStaircases();
-        ChunkManager.Instance.SinglePlayerUpdatePlayerChunks();
         Debug.Log("Cave Generation Complete!");
     }
 	

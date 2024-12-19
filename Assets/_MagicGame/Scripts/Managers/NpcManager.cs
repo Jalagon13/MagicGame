@@ -49,7 +49,7 @@ public class NpcManager : NetworkBehaviour
 		_localPlayerTransform = NetworkManager.ConnectedClients[clientId].PlayerObject.transform;
 		_activeNpcSlotAmount = 0;
 		
-		InvokeRepeating(nameof(TrySpawnEntity), 1, _tickTime);
+		// InvokeRepeating(nameof(TrySpawnEntity), 1, _tickTime);
 	}
 	
 	public void TrySpawnEntity()

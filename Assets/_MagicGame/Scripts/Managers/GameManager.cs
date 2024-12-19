@@ -73,17 +73,17 @@ public class GameManager : MonoBehaviour
 		return _worldObjectDataBaseSO.WorldObjectList[id];
 	}
 	
-	public byte GetByteIDFromWorldAsset(WorldObject worldAsset)
+	public byte GetByteIDFromWorldObject(WorldObject worldObject)
 	{
-		foreach (WorldObject asset in _worldObjectDataBaseSO.WorldObjectList)
+		foreach (WorldObject wo in _worldObjectDataBaseSO.WorldObjectList)
 		{
-			if(asset == worldAsset)
+			if(wo.GetWorldObjectName() == worldObject.GetWorldObjectName())
 			{
-				return (byte)_worldObjectDataBaseSO.WorldObjectList.IndexOf(asset);
+				return (byte)_worldObjectDataBaseSO.WorldObjectList.IndexOf(wo);
 			}
 		}
 		
-		Debug.LogError($"Cannot find {worldAsset} in WorldAssetList. Warning returning 0");
+		Debug.LogError($"Cannot find {worldObject} in WorldAssetList. Warning returning 0");
 		return 0;
 	}
 	
