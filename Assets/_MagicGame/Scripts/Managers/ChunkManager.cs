@@ -67,6 +67,8 @@ public class ChunkManager : NetworkBehaviour
 	
 	public void UpdateChunksAroundPlayer()
 	{
+		if(WorldManager.Instance.GetIsTransitioningEnvironment()) return;
+	
 		if(Player.LocalClientInstance.IsHost)
 		{
 			SinglePlayerUpdatePlayerChunks();
@@ -182,6 +184,8 @@ public class ChunkManager : NetworkBehaviour
 		if(!IsServer) return;
 		
 		ChunkGameData chunk = GetChunk(position);
+		// Debug.Log(chunk == null);
+		// Debug.Log(worldObject == null);
 		chunk.AddWorldAssetData(position, worldObject);
 	}
 	

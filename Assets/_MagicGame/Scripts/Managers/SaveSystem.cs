@@ -9,6 +9,9 @@ using UnityEngine.Tilemaps;
 
 public class SaveSystem : MonoBehaviour
 {
+	public event EventHandler OnSerializationFinished;
+	public event EventHandler OnDeserializationFinished;
+
 	public event EventHandler OnNoFileFoundToDeserialize;
 
 	public static SaveSystem Instance { get; private set; }
@@ -48,6 +51,8 @@ public class SaveSystem : MonoBehaviour
 		
 		// Log the completion
 		Debug.Log($"<color=orange>Environment: </color>{WorldManager.Instance.GetActiveEnvironmentID()}<color=orange> writing data to file complete!</color>");
+		
+		OnSerializationFinished?.Invoke(this, EventArgs.Empty);
 	}
 
 	private void SerializeChunkDataOfCurrentEnvironment()
@@ -161,6 +166,8 @@ public class SaveSystem : MonoBehaviour
 			DeserializeAssetData();
 			
 			Debug.Log($"<color=orange>Chunk and Asset Data of: </color>{WorldManager.Instance.GetActiveEnvironmentID()}<color=orange> Deserialized! </color>");
+			
+			OnDeserializationFinished?.Invoke(this, EventArgs.Empty);
 		}
 		else
 		{

@@ -143,7 +143,7 @@ public class ForestGeneration : MonoBehaviour
 			if(groundTilePointValue > 0.125f && (wallTilePointValue < 0.6f && wallTilePointValue > 0.35f))
 			{
 				// Add world asset data to chunk
-				ChunkManager.Instance.AddWorldAssetDataToChunk(new Vector2Int(pointX, pointY), _treeObject);
+				// ChunkManager.Instance.AddWorldAssetDataToChunk(new Vector2Int(pointX, pointY), _treeObject);
 			}
 		}
 	}

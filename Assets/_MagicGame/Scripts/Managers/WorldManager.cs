@@ -36,7 +36,7 @@ public class WorldManager : NetworkBehaviour
 	// Class globals
 	private List<EnvironmentID> _environmentList = new(); // Used to keep track which environments have been generated or not
 	private float _currentTime;
-	private bool _anEnvironmentIsActive;
+	private bool _isTransitioningEnvironment;
 	
 	// public float CurrentDayRatio => _currentTime / _dayDurationInSeconds;
 	// public DayCycleHandler DayCycleHandler { get; set; }
@@ -120,7 +120,7 @@ public class WorldManager : NetworkBehaviour
 			return;
 		}
 		
-		_anEnvironmentIsActive = false;
+		_isTransitioningEnvironment = true;
 		
 		// NTFS: make sure player is not able to move during this process and add a loading screen
 		
@@ -140,66 +140,59 @@ public class WorldManager : NetworkBehaviour
 		
 		// Load or generate new environment data depending on the environment
 		await SaveSystem.Instance.DeserializeAndDispatchData();
+
+		_isTransitioningEnvironment = false;
 		
 		ChunkManager.Instance.UpdateChunksAroundPlayer();
 		
 		// If there is a portal in lets say a 10 tile radius, grab it's position, and teleport player to that portal
-		if(TryFindPortalToTeleportTo(portalPosition, out Vector2 foundPortal))
-		{
-			Debug.Log("Portal Found, and placing player there");
-			PlacePlayerAt(foundPortal);
-		}
-		else
-		{
-			Debug.Log("Portal NOT found. Placing player at new portal that is spawned");
-			SpawnPortal(portalPosition);
-		}
-		
-		// If not, spawn a portal where the player is
-		
-		_anEnvironmentIsActive = true;
-	}
+		// Define the radius for the portal search area
+		float searchRadius = 10f; // Adjust radius as needed
 
-	private bool TryFindPortalToTeleportTo(Vector2 portalPosition, out Vector2 newPortalPosition)
-	{
-		// Define the search radius (in tiles)
-		int searchRadius = 10; // Adjust this value as needed
+		// Find all colliders in the circular search area
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(portalPosition, searchRadius);
 
-		// Convert the portal position to integer tile coordinates
-		Vector2Int centerTile = Vector2Int.FloorToInt(portalPosition);
+		// Initialize variables to track the closest portal
+		Portal closestPortal = null;
+		float closestDistance = float.MaxValue;
 
-		// Loop through a square area that bounds the circle
-		for (int x = -searchRadius; x <= searchRadius; x++)
+		// Loop through the colliders to find portals and the closest one
+		foreach (var collider in colliders)
 		{
-			for (int y = -searchRadius; y <= searchRadius; y++)
+			// Check if the collider has a Portal component
+			Portal portal = collider.GetComponent<Portal>();
+			if (portal != null)
 			{
-				// Calculate the position of the current tile
-				Vector2Int currentTile = new Vector2Int(centerTile.x + x, centerTile.y + y);
+				// Calculate the distance from the portal to the given portal position
+				float distance = Vector2.Distance(portal.transform.position, portalPosition);
 
-				// Check if the current tile is within the circular area
-				if (Vector2.Distance(centerTile, currentTile) <= searchRadius)
+				// Update the closest portal if this one is closer
+				if (distance < closestDistance)
 				{
-					// Convert back to world position
-					Vector3 worldPosition = new Vector3(currentTile.x, currentTile.y, 0);
-
-					// Check if a portal exists at this position
-					if (PortalExistsAt(worldPosition))
-					{
-						// If found, return true and set the output portal position
-						newPortalPosition = currentTile;
-						return true;
-					}
+					closestPortal = portal;
+					closestDistance = distance;
 				}
 			}
 		}
 
-		// No portal was found
-		newPortalPosition = Vector2.zero;
-		return false;
+		// If a closest portal was found, do something with it
+		if (closestPortal != null)
+		{
+			// Example: Log the closest portal's position (you can replace this with your desired logic)
+			Debug.Log($"Closest portal found at: {closestPortal.transform.position}");
+			PlacePlayerAt(closestPortal.transform.position);
+			// Your custom logic here (e.g., teleport the player to this portal)
+		}
+		else
+		{
+			Debug.Log("No portal found within the search radius.");
+			SpawnPortal(portalPosition);
+		}
 	}
 	
 	private void SpawnPortal(Vector2 portalPosition)
 	{
+		Debug.Log("Portal NOT found. Placing player at new portal that is spawned");
 		Vector2Int v2IntPos = new(Mathf.RoundToInt(portalPosition.x), Mathf.RoundToInt(portalPosition.y));
 		AssetManager.Instance.PlaceResourceAsset(v2IntPos, _portalObjectPrefab);
 	}
@@ -207,21 +200,6 @@ public class WorldManager : NetworkBehaviour
 	private void PlacePlayerAt(Vector2 portalPosition)
 	{
 		Player.LocalClientInstance.transform.SetPositionAndRotation(new(portalPosition.x + 0.5f, portalPosition.y - 0.5f), Quaternion.identity);
-	}
-	
-	private bool PortalExistsAt(Vector3 position)
-	{
-		Collider2D[] colliders = Physics2D.OverlapPointAll(new(position.x + 0.5f, position.y + 0.5f));
-		for (int i = 0; i < colliders.Length; i++)
-		{
-			var portal = colliders[i].GetComponent<Portal>();
-			if(portal != null)
-			{
-				return true;
-			}
-		}
-		
-		return false;
 	}
 	
 	private void Tick()
@@ -279,18 +257,13 @@ public class WorldManager : NetworkBehaviour
 		return minute;
 	}
 	
+	public bool GetIsTransitioningEnvironment()
+	{
+		return _isTransitioningEnvironment;
+	}
+	
 	public EnvironmentID GetActiveEnvironmentID()
 	{
 		return ACTIVE_ENVIRONMENT_ID;
-	}
-	
-	public bool GetAnEnvironmentIsActive()
-	{
-		return _anEnvironmentIsActive;
-	}
-	
-	public void SetAnEnvironmentIsActive(bool var)
-	{
-		_anEnvironmentIsActive = var;
 	}
 }
