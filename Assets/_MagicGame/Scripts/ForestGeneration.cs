@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 
 public class ForestGeneration : MonoBehaviour
 {
-	[SerializeField] private WorldManager.EnvironmentID _environment;
+	[SerializeField] private EnvironmentID _environment;
 
 	[FoldoutGroup("Overworld Generation")]
 	[SerializeField] private NoiseMapSO _forestGroundNM;
@@ -143,39 +143,10 @@ public class ForestGeneration : MonoBehaviour
 			if(groundTilePointValue > 0.125f && (wallTilePointValue < 0.6f && wallTilePointValue > 0.35f))
 			{
 				// Add world asset data to chunk
-				// ChunkManager.Instance.AddWorldAssetDataToChunk(new Vector2Int(pointX, pointY), _treeObject);
+				ChunkManager.Instance.AddWorldAssetDataToChunk(new Vector2Int(pointX, pointY), _treeObject);
 			}
 		}
 	}
-	
-	// NTFS: Maybe use this for something else later. Right now not in use
-	// private void GenerateTransitions()
-	// {
-	// 	// Spawn staircases randomly using Possion Disk Sampling
-	// 	Vector2Int surfaceBounds = new Vector2Int(256, 256);
-		
-	// 	float minStaircaseDistance = 40f;
-	// 	float maxStaircaseDistance = 40f;
-		
-	// 	List<Vector2> points = PoissonDiskSampling.GeneratePoints(_overworldGoundNoiseMap, minStaircaseDistance, maxStaircaseDistance, surfaceBounds, _seed);
-	// 	List<Vector2Int> stairPositions = new();
-		
-	// 	// Loop through all points and only generate ones that fit in the island elevation
-	// 	foreach (Vector2 point in points)
-	// 	{
-	// 		int pointX = Mathf.RoundToInt(point.x);
-	// 		int pointY = Mathf.RoundToInt(point.y);
-	// 		float groundTilePointValue = _overworldGoundNoiseMap.NoiseTexture.GetPixel(pointX, pointY).grayscale;
-			
-	// 		if(groundTilePointValue > 0.2f)
-	// 		{
-	// 			// Instantiate(_environmentTransitionAsset.gameObject, new(pointX, pointY), Quaternion.identity);
-	// 		}
-	// 	}
-		
-	// 	// Take all stair positions and "push" them to GameManager
-	// 	// GameManager.Instance.SetStaircasePositions(SceneNames.Island, stairPositions);
-	// }
 	
 	private TileSO GetOverworldWallTileFromPointValue(float pointValue)
 	{

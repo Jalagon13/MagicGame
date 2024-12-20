@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class CaveGeneration : MonoBehaviour
 {
-    [SerializeField] private WorldManager.EnvironmentID _environment;
+    [SerializeField] private EnvironmentID _environment;
 	
     [FoldoutGroup("Cave Generation")]
     [SerializeField] private NoiseMapSO _spaghettiCaveNM;

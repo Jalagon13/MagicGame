@@ -11,15 +11,15 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[Flags]
+public enum EnvironmentID // NTFS: when adding new IDs remember to put the value to the next power of 2
+{
+	Forest = 0,
+	Cave = 1
+}
+
 public class WorldManager : NetworkBehaviour
 {
-	[Flags]
-	public enum EnvironmentID // NTFS: when adding new IDs remember to put the value to the next power of 2
-	{
-		Forest = 0,
-		Cave = 1
-	}
-	
 	public static WorldManager Instance { get; private set; }
 	private static EnvironmentID ACTIVE_ENVIRONMENT_ID;
 
@@ -127,10 +127,10 @@ public class WorldManager : NetworkBehaviour
 		// Teleport player to portal he is entering
 		PlacePlayerAt(portalPosition);
 		
-		// Clear all player chunks
-		ChunkManager.Instance.UnloadAllPlayerChunks();
-		AssetManager.Instance.ClearAllEnvironmentObjects();
-		// NpcSpawnManager.Instance.ClearAllEntities();
+		// Clear all client visuals
+		ChunkManager.Instance.ClearChunkVisuals();
+		AssetManager.Instance.ClearAllEnvironmentObjectVisuals();
+		// NpcManager.Instance.HideAllEnvironmentNPCs();
 		
 		// Save the current environment to file
 		await SaveSystem.Instance.SerializeDataAndWriteToFile();

@@ -16,7 +16,7 @@ public class TestingNetcodeUI : MonoBehaviour
             GridGraph gridGraph = AstarPath.active.data.gridGraph;
             gridGraph.Scan();
             NetworkManager.Singleton.StartHost();
-            WorldManager.Instance.GenerateEnvironment(WorldManager.EnvironmentID.Forest);
+            WorldManager.Instance.GenerateEnvironment(EnvironmentID.Forest);
             Hide();
         });
         _startClientButton.onClick.AddListener(() => 

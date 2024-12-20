@@ -76,7 +76,7 @@ public class AssetManager : NetworkBehaviour
 		}
 	}
 	
-	public void ClearAllEnvironmentObjects()
+	public void ClearAllEnvironmentObjectVisuals()
 	{
 		OnClearAllEnvironmentObjects?.Invoke(this, new EventArgs());
 	}

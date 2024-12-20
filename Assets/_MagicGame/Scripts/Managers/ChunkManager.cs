@@ -116,7 +116,7 @@ public class ChunkManager : NetworkBehaviour
 		});
 	}
 	
-	public void UnloadAllPlayerChunks()
+	public void ClearChunkVisuals()
 	{
 		for (int i = _loadedPlayerChunks.Count - 1; i >= 0; i--)
 		{
@@ -169,9 +169,9 @@ public class ChunkManager : NetworkBehaviour
 	{
 		switch(WorldManager.Instance.GetActiveEnvironmentID())
 		{
-			case WorldManager.EnvironmentID.Forest:
+			case EnvironmentID.Forest:
 				return _forestChunks.ContainsKey(chunkPosition) ? _forestChunks[chunkPosition] : null;
-			case WorldManager.EnvironmentID.Cave:
+			case EnvironmentID.Cave:
 				return _caveChunks.ContainsKey(chunkPosition) ? _caveChunks[chunkPosition] : null;
 		}
 		
@@ -257,9 +257,9 @@ public class ChunkManager : NetworkBehaviour
 	{
 		switch(WorldManager.Instance.GetActiveEnvironmentID())
 		{
-			case WorldManager.EnvironmentID.Forest:
+			case EnvironmentID.Forest:
 				return _forestChunks;
-			case WorldManager.EnvironmentID.Cave:
+			case EnvironmentID.Cave:
 				return _caveChunks;
 		}
 		
@@ -271,10 +271,10 @@ public class ChunkManager : NetworkBehaviour
 	{
 		switch(WorldManager.Instance.GetActiveEnvironmentID())
 		{
-			case WorldManager.EnvironmentID.Forest:
+			case EnvironmentID.Forest:
 				_forestChunks = newChunks;
 				return;
-			case WorldManager.EnvironmentID.Cave:
+			case EnvironmentID.Cave:
 				_caveChunks = newChunks;
 				return;
 		}

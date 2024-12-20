@@ -37,14 +37,14 @@ public class Portal : MonoBehaviour
 	[Button("Load Forest")]
 	public void LoadForest()
 	{
-		WorldManager.Instance.LoadEnvironment(WorldManager.EnvironmentID.Forest, transform.position);
+		WorldManager.Instance.LoadEnvironment(EnvironmentID.Forest, transform.position);
 	}
 	
 
 	[Button("Load Cave")]
 	public void LoadCave()
 	{
-		WorldManager.Instance.LoadEnvironment(WorldManager.EnvironmentID.Cave, transform.position);
+		WorldManager.Instance.LoadEnvironment(EnvironmentID.Cave, transform.position);
 	}
 	
 	private void OnDestroy()

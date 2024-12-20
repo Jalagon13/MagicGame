@@ -105,12 +105,12 @@ public class NpcManager : NetworkBehaviour
 			
 			byte npcId = GameManager.Instance.GetIdAsByteFromNpcSO(npcToSpawn);
 
-			SpawnNpcServerRpc(npcId, NetworkManager.LocalClientId, spawnPosition);
+			SpawnNpcServerRpc(WorldManager.Instance.GetActiveEnvironmentID(), npcId, NetworkManager.LocalClientId, spawnPosition);
 		}
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnNpcServerRpc(byte npcId, ulong spawningClientId,Vector2 position)
+	private void SpawnNpcServerRpc(EnvironmentID environmentToSpawnIn, byte npcId, ulong spawningClientId,Vector2 position)
 	{
 		NpcSO npcSO = GameManager.Instance.GetNpcSOFromId(npcId);
 		
@@ -123,6 +123,7 @@ public class NpcManager : NetworkBehaviour
 		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
 		npcPrefabNetworkObject.Spawn(true);
 		
+		// replace this with dimension specific entity list that contains mobs and projectiles for entities
 		_activeNpcNetworkList.Add(npcPrefabNetworkObject);
 	}
 	
