@@ -13,6 +13,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	}
 
 	public static Player LocalClientInstance { get; private set; }
+	private EnvironmentID _playerEnvironment;
 	
 	public event EventHandler<PlayerIdEventArgs> OnRespawn;
 	public event EventHandler<PlayerIdEventArgs> OnDeath;
@@ -61,6 +62,8 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		if(IsOwner)
 		{
+			_playerEnvironment = EnvironmentID.Forest; // For now all players will spawn in the forest
+		
 			LocalClientInstance = this;
 			
 			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnFocusSlotUpdated;
@@ -272,6 +275,17 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		
 		return focusItem is WandItemSO;
+	}
+	
+	public EnvironmentID GetPlayerEnvironment()
+	{
+		return _playerEnvironment;
+	}
+	
+	public void SetPlayerEnvironment(EnvironmentID environment)
+	{
+		Debug.Log($"Setting player {OwnerClientId} environement to: {environment}");
+		_playerEnvironment = environment;
 	}
 
 	public override void OnDestroy()

@@ -21,7 +21,6 @@ public enum EnvironmentID // NTFS: when adding new IDs remember to put the value
 public class WorldManager : NetworkBehaviour
 {
 	public static WorldManager Instance { get; private set; }
-	private static EnvironmentID ACTIVE_ENVIRONMENT_ID;
 
 	[Title("Bounaries", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private float _dayDurationInSeconds;
@@ -101,26 +100,24 @@ public class WorldManager : NetworkBehaviour
 			case EnvironmentID.Forest:
 				_environmentList.Add(EnvironmentID.Forest);
 				GetComponent<ForestGeneration>().GenerateForest();
-				ACTIVE_ENVIRONMENT_ID = EnvironmentID.Forest;
+				Player.LocalClientInstance.SetPlayerEnvironment(EnvironmentID.Forest);
 				break;
 			case EnvironmentID.Cave:
 				_environmentList.Add(EnvironmentID.Cave);
 				GetComponent<CaveGeneration>().GenerateCave();
-				ACTIVE_ENVIRONMENT_ID = EnvironmentID.Cave;
+				Player.LocalClientInstance.SetPlayerEnvironment(EnvironmentID.Cave);
 				break;
 		}
 	}
 	
 	[Button("Load Environment")]
-	public async void LoadEnvironment(EnvironmentID environmentID, Vector2 portalPosition)
+	public void LoadEnvironment(EnvironmentID targetEnvironment, Vector2 portalPosition)
 	{
-		if(environmentID == ACTIVE_ENVIRONMENT_ID)
+		if(targetEnvironment == Player.LocalClientInstance.GetPlayerEnvironment())
 		{
-			Debug.LogError($"Should not be trying to load an environment you are already in. environmentID: {environmentID}, ACTIVE_ENVIRONMENT_ID: {ACTIVE_ENVIRONMENT_ID}");
+			Debug.LogError($"Should not be trying to load an environment you are already in. environmentID: {targetEnvironment}, ACTIVE_ENVIRONMENT_ID: {Player.LocalClientInstance.GetPlayerEnvironment()}");
 			return;
 		}
-		
-		_isTransitioningEnvironment = true;
 		
 		// NTFS: make sure player is not able to move during this process and add a loading screen
 		
@@ -132,17 +129,65 @@ public class WorldManager : NetworkBehaviour
 		AssetManager.Instance.ClearAllEnvironmentObjectVisuals();
 		// NpcManager.Instance.HideAllEnvironmentNPCs();
 		
-		// Save the current environment to file
-		await SaveSystem.Instance.SerializeDataAndWriteToFile();
+		if(Player.LocalClientInstance.IsHost)
+		{
+			HostLoadEnvironment(targetEnvironment, portalPosition);
+		}
+		else
+		{
+			Player.LocalClientInstance.SetPlayerEnvironment(targetEnvironment);
+		
+			ClientLoadEnvironmentServerRpc(targetEnvironment, portalPosition);
+		}
+	}
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void ClientLoadEnvironmentServerRpc(EnvironmentID targetEnvironment, Vector2 portalPosition, RpcParams rpcParams = default)
+	{
+		AsyncClientLoadEnvironment(targetEnvironment, portalPosition, rpcParams);
+	}
+	
+	private async void AsyncClientLoadEnvironment(EnvironmentID targetEnvironment, Vector2 portalPosition, RpcParams rpcParams = default)
+	{
+		// If chunks of target environment is empty (no chunks loaded), host needs to deserialize
+		if(ChunkManager.Instance.GetEnvironmentChunks(targetEnvironment).Count <= 0)
+		{
+			// Chunks of target environment are not generated or deserialized
+			await SaveSystem.Instance.DeserializeAndDispatchData(targetEnvironment);
+		}
+		
+		UpdateChunksAndHandlePortalClientRpc(portalPosition, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+	}
+
+	[Rpc(SendTo.SpecifiedInParams)]
+	private void UpdateChunksAndHandlePortalClientRpc(Vector2 portalPosition, RpcParams rpcParams)
+	{
+		UpdateChunksAndHandlePortal(portalPosition);
+	}
+
+	private async void HostLoadEnvironment(EnvironmentID targetEnvironment, Vector2 portalPosition)
+	{
+		_isTransitioningEnvironment = true;
+		
+		// If host, save the scene you just left
+		await SaveSystem.Instance.SerializeDataAndWriteToFile(Player.LocalClientInstance.GetPlayerEnvironment());
 		
 		// Change environment
-		ACTIVE_ENVIRONMENT_ID = environmentID;
+		Player.LocalClientInstance.SetPlayerEnvironment(targetEnvironment);
 		
-		// Load or generate new environment data depending on the environment
-		await SaveSystem.Instance.DeserializeAndDispatchData();
+		// If chunks for target environment does not exist, deserialize the environment 
+		if(ChunkManager.Instance.GetEnvironmentChunks(targetEnvironment).Count <= 0)
+		{
+			await SaveSystem.Instance.DeserializeAndDispatchData(targetEnvironment);
+		}
 
 		_isTransitioningEnvironment = false;
 		
+		UpdateChunksAndHandlePortal(portalPosition);
+	}
+	
+	private void UpdateChunksAndHandlePortal(Vector2 portalPosition)
+	{
 		ChunkManager.Instance.UpdateChunksAroundPlayer();
 		
 		// If there is a portal in lets say a 10 tile radius, grab it's position, and teleport player to that portal
@@ -189,7 +234,7 @@ public class WorldManager : NetworkBehaviour
 			SpawnPortal(portalPosition);
 		}
 	}
-	
+
 	private void SpawnPortal(Vector2 portalPosition)
 	{
 		Debug.Log("Portal NOT found. Placing player at new portal that is spawned");
@@ -260,10 +305,5 @@ public class WorldManager : NetworkBehaviour
 	public bool GetIsTransitioningEnvironment()
 	{
 		return _isTransitioningEnvironment;
-	}
-	
-	public EnvironmentID GetActiveEnvironmentID()
-	{
-		return ACTIVE_ENVIRONMENT_ID;
 	}
 }

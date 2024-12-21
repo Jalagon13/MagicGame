@@ -43,13 +43,13 @@ public class ForestGeneration : MonoBehaviour
 
 	private void SaveSystem_OnNoFileFoundToDeserialize(object sender, EventArgs e)
 	{
-		if(WorldManager.Instance.GetActiveEnvironmentID() == _environment)
+		if(Player.LocalClientInstance.GetPlayerEnvironment() == _environment)
 		{
 			GenerateForest();
 		}
 	}
 
-	public void GenerateForest()
+	public async void GenerateForest()
 	{
 		Debug.Log("Generating Overworld Data...");
 		ChunkManager.IS_GENERATING_ENVIRONMENT = true;
@@ -58,6 +58,8 @@ public class ForestGeneration : MonoBehaviour
 		GenerateTrees();
 		ChunkManager.IS_GENERATING_ENVIRONMENT = false;
 		Debug.Log("Overworld Data Generation Complete!");
+		
+		await SaveSystem.Instance.SerializeDataAndWriteToFile(_environment);
 	}
 	
 	private void GenerateNoiseMapsBasedOnSeed()
@@ -71,7 +73,7 @@ public class ForestGeneration : MonoBehaviour
 	
 	private void GenerateOverworldChunkData()
 	{
-		ChunkManager.Instance.GetForestChunks().Clear();
+		ChunkManager.Instance.GetEnvironmentChunks(EnvironmentID.Forest).Clear();
 		
 		// Loop through all chunks
 		int chunkSideAmount = ChunkManager.ENVIRONMENT_SIDE_LENGTH / ChunkManager.CHUNK_SIZE;
@@ -117,7 +119,7 @@ public class ForestGeneration : MonoBehaviour
 				}
 				
 				// Populate the overworld chunk data
-				ChunkManager.Instance.GetForestChunks().Add(chunkCoord, chunkGameData);
+				ChunkManager.Instance.GetEnvironmentChunks(EnvironmentID.Forest).Add(chunkCoord, chunkGameData);
 			}
 		}
 	}

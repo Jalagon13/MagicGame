@@ -25,14 +25,14 @@ public class SaveSystem : MonoBehaviour
 	}
 	
 	[Button("Serialize data of current environment and write to file")]
-	public async Task SerializeDataAndWriteToFile()
+	public async Task SerializeDataAndWriteToFile(EnvironmentID environmentToSerialize)
 	{
-		_path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{WorldManager.Instance.GetActiveEnvironmentID()}_data.json";
-	
+		_path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToSerialize}_data.json";
+		Debug.Log($"Path: " + Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToSerialize}_data.json");
 		Debug.Log($"<color=orange>=============================================</color>");
 		// Serialize Assets and Chunks
-		SerializeAssetDataOfCurrentEnvironment();
-		SerializeChunkDataOfCurrentEnvironment();
+		SerializeAssetDataOfCurrentEnvironment(environmentToSerialize);
+		SerializeChunkDataOfCurrentEnvironment(environmentToSerialize);
 		
 		// Write the data to file
 		await WriteCurrentEnvironmentDataToFile();
@@ -44,18 +44,18 @@ public class SaveSystem : MonoBehaviour
 		string json = JsonUtility.ToJson(_environmentFileData);
 		
 		// Log the saving
-		Debug.Log($"<color=orange>Writing Environment Data of: </color>{WorldManager.Instance.GetActiveEnvironmentID()}<color=orange> to file...</color>");
+		Debug.Log($"<color=orange>Writing Environment Data of: </color>{Player.LocalClientInstance.GetPlayerEnvironment()}<color=orange> to file...</color>");
 		
 		// Write JSON data to file asynchronously
 		await File.WriteAllTextAsync(_path, json);
 		
 		// Log the completion
-		Debug.Log($"<color=orange>Environment: </color>{WorldManager.Instance.GetActiveEnvironmentID()}<color=orange> writing data to file complete!</color>");
+		Debug.Log($"<color=orange>Environment: </color>{Player.LocalClientInstance.GetPlayerEnvironment()}<color=orange> writing data to file complete!</color>");
 		
 		OnSerializationFinished?.Invoke(this, EventArgs.Empty);
 	}
 
-	private void SerializeChunkDataOfCurrentEnvironment()
+	private void SerializeChunkDataOfCurrentEnvironment(EnvironmentID environmentToSerialize)
 	{
 		// Clear world chunks for new data
 		_environmentFileData.WorldChunks.Clear();
@@ -108,10 +108,10 @@ public class SaveSystem : MonoBehaviour
 		
 		// Push chunk scene data to current SceneSaveHandler
 		_environmentFileData.WorldChunks = sceneDataChunks;
-		Debug.Log($"<color=orange>Chunk Data of </color>{WorldManager.Instance.GetActiveEnvironmentID()}<color=orange> Serialized</color>");
+		Debug.Log($"<color=orange>Chunk Data of </color>{environmentToSerialize}<color=orange> Serialized</color>");
 	}
 	
-	private void SerializeAssetDataOfCurrentEnvironment()
+	private void SerializeAssetDataOfCurrentEnvironment(EnvironmentID environmentToSerialize)
 	{
 		// Clear assets
 		_environmentFileData.WorldAssets.Clear();
@@ -142,18 +142,18 @@ public class SaveSystem : MonoBehaviour
 			}
 		}
 		
-		Debug.Log($"<color=orange>Asset Data of </color>{WorldManager.Instance.GetActiveEnvironmentID()}<color=orange> Serialized</color>");
+		Debug.Log($"<color=orange>Asset Data of </color>{environmentToSerialize}<color=orange> Serialized</color>");
 	}
 	
 	[Button("Deserialize data of current environment and dispatch updated data to game")]
-	public async Task DeserializeAndDispatchData()
+	public async Task DeserializeAndDispatchData(EnvironmentID environmentToDeserialize)
 	{
-		_path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{WorldManager.Instance.GetActiveEnvironmentID()}_data.json";
-		
+		_path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToDeserialize}_data.json";
+		Debug.Log($"Path: " + Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToDeserialize}_data.json");
 		if (File.Exists(_path))
 		{
 			Debug.Log($"<color=orange>=============================================</color>");
-			Debug.Log($"<color=orange>Deserializing </color>{WorldManager.Instance.GetActiveEnvironmentID()}<color=orange> Data From File...</color>");
+			Debug.Log($"<color=orange>Deserializing </color>{environmentToDeserialize}<color=orange> Data From File...</color>");
 			
 			// Read JSON data from file asynchronously
 			string json = await File.ReadAllTextAsync(_path);
@@ -162,10 +162,10 @@ public class SaveSystem : MonoBehaviour
 			_environmentFileData = JsonUtility.FromJson<EnvironmentFileData>(json);
 			
 			// Dispatch the data
-			DeserializeChunkData();
-			DeserializeAssetData();
+			DeserializeChunkData(environmentToDeserialize);
+			DeserializeAssetData(environmentToDeserialize);
 			
-			Debug.Log($"<color=orange>Chunk and Asset Data of: </color>{WorldManager.Instance.GetActiveEnvironmentID()}<color=orange> Deserialized! </color>");
+			Debug.Log($"<color=orange>Chunk and Asset Data of: </color>{environmentToDeserialize}<color=orange> Deserialized! </color>");
 			
 			OnDeserializationFinished?.Invoke(this, EventArgs.Empty);
 		}
@@ -177,7 +177,7 @@ public class SaveSystem : MonoBehaviour
 		// NTFS: Write condition for non existant path
 	}
 	
-	private void DeserializeChunkData()
+	private void DeserializeChunkData(EnvironmentID environmentToDeserialize)
 	{
 		// Unpack chunk data
 		List<ChunkFileData> chunkFileData = _environmentFileData.WorldChunks;
@@ -201,7 +201,7 @@ public class SaveSystem : MonoBehaviour
 		ChunkManager.Instance.SetChunksFromActiveEnvironment(deserializedChunks);
 		// ChunkManager.Instance.SinglePlayerUpdatePlayerChunks();
 		
-		Debug.Log($"<color=orange>Chunk Data of: </color>{WorldManager.Instance.GetActiveEnvironmentID()}<color=orange> Deserialized And Updated </color>");
+		Debug.Log($"<color=orange>Chunk Data of: </color>{environmentToDeserialize}<color=orange> Deserialized And Updated </color>");
 	}
 	
 	// Convert tile file data to tile game data
@@ -220,7 +220,7 @@ public class SaveSystem : MonoBehaviour
 		return tileGameData;
 	}
 	
-	private void DeserializeAssetData()
+	private void DeserializeAssetData(EnvironmentID environmentToDeserialize)
 	{
 		// Unpack asset data need to make a new list to avoid error that said I was modifying this list as it was being processed
 		List<WorldAssetFileData> worldAssetFileData = new(_environmentFileData.WorldAssets);
@@ -237,6 +237,6 @@ public class SaveSystem : MonoBehaviour
 			ChunkManager.Instance.AddWorldAssetDataToChunk(data.Pos, worldObjectToInst);
 		}
 		
-		Debug.Log($"<color=orange>Asset Data of: </color>{WorldManager.Instance.GetActiveEnvironmentID()}<color=orange> Deserialized</color>");
+		Debug.Log($"<color=orange>Asset Data of: </color>{environmentToDeserialize}<color=orange> Deserialized</color>");
 	}
 }

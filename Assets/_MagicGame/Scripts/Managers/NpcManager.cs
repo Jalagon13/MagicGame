@@ -105,7 +105,7 @@ public class NpcManager : NetworkBehaviour
 			
 			byte npcId = GameManager.Instance.GetIdAsByteFromNpcSO(npcToSpawn);
 
-			SpawnNpcServerRpc(WorldManager.Instance.GetActiveEnvironmentID(), npcId, NetworkManager.LocalClientId, spawnPosition);
+			SpawnNpcServerRpc(Player.LocalClientInstance.GetPlayerEnvironment(), npcId, NetworkManager.LocalClientId, spawnPosition);
 		}
 	}
 	

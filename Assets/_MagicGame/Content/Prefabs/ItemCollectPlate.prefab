@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 2893883857882228170}
   m_Layer: 0
   m_Name: ItemCollectPlate
-  m_TagString: Untagged
+  m_TagString: ItemNamePlate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

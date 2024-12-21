@@ -71,15 +71,15 @@ public class ChunkManager : NetworkBehaviour
 	
 		if(Player.LocalClientInstance.IsHost)
 		{
-			SinglePlayerUpdatePlayerChunks();
+			HostUpdatePlayerChunks();
 		}
 		else
 		{
-			_chunkNetworkManager.MultiplayerUpdatePlayerChunks();
+			_chunkNetworkManager.ClientUpdatePlayerChunks(Player.LocalClientInstance.GetPlayerEnvironment());
 		}
 	}
 	
-	private void SinglePlayerUpdatePlayerChunks()
+	private void HostUpdatePlayerChunks()
 	{
 		// Debug.Log("Updating Chunks as Host");
 	
@@ -121,19 +121,19 @@ public class ChunkManager : NetworkBehaviour
 		for (int i = _loadedPlayerChunks.Count - 1; i >= 0; i--)
 		{
 			var chunk = _loadedPlayerChunks.ElementAt(i);
-			TryToUnloadChunk(chunk.Key);
+			InvokeOnUnloadChunk(chunk.Value);
 		}
 	}
 	
 	private void TryToUnloadChunk(Vector2Int chunkPos)
 	{
-		ChunkGameData chunkToUnload = GetChunkDataFromChunkPosition(chunkPos);
+		ChunkGameData chunkToUnload = GetChunkDataFromChunkPosition(Player.LocalClientInstance.GetPlayerEnvironment(), chunkPos);
 		InvokeOnUnloadChunk(chunkToUnload);
 	}
 	
 	private void TryToLoadChunk(Vector2Int chunkPos)
 	{
-		ChunkGameData chunkToLoad = GetChunkDataFromChunkPosition(chunkPos);
+		ChunkGameData chunkToLoad = GetChunkDataFromChunkPosition(Player.LocalClientInstance.GetPlayerEnvironment(), chunkPos);
 		InvokeOnLoadChunk(chunkToLoad);
 	}
 	
@@ -165,9 +165,9 @@ public class ChunkManager : NetworkBehaviour
 		}
 	}
 	
-	public ChunkGameData GetChunkDataFromChunkPosition(Vector2Int chunkPosition)
+	public ChunkGameData GetChunkDataFromChunkPosition(EnvironmentID environment, Vector2Int chunkPosition)
 	{
-		switch(WorldManager.Instance.GetActiveEnvironmentID())
+		switch(environment)
 		{
 			case EnvironmentID.Forest:
 				return _forestChunks.ContainsKey(chunkPosition) ? _forestChunks[chunkPosition] : null;
@@ -255,7 +255,7 @@ public class ChunkManager : NetworkBehaviour
 	
 	public Dictionary<Vector2Int, ChunkGameData> GetChunksFromActiveEnvironment()
 	{
-		switch(WorldManager.Instance.GetActiveEnvironmentID())
+		switch(Player.LocalClientInstance.GetPlayerEnvironment())
 		{
 			case EnvironmentID.Forest:
 				return _forestChunks;
@@ -269,7 +269,7 @@ public class ChunkManager : NetworkBehaviour
 	
 	public void SetChunksFromActiveEnvironment(Dictionary<Vector2Int, ChunkGameData> newChunks)
 	{
-		switch(WorldManager.Instance.GetActiveEnvironmentID())
+		switch(Player.LocalClientInstance.GetPlayerEnvironment())
 		{
 			case EnvironmentID.Forest:
 				_forestChunks = newChunks;
@@ -312,14 +312,18 @@ public class ChunkManager : NetworkBehaviour
 		_maxLoadedTilePos = maxLoadedTilePos;
 	}
 	
-	public Dictionary<Vector2Int, ChunkGameData> GetForestChunks()
+	public Dictionary<Vector2Int, ChunkGameData> GetEnvironmentChunks(EnvironmentID environmentToGet)
 	{
-		return _forestChunks;
-	}
-	
-	public Dictionary<Vector2Int, ChunkGameData> GetCaveChunks()
-	{
-		return _caveChunks;
+		switch(environmentToGet)
+		{
+			case EnvironmentID.Forest:
+				return _forestChunks;
+			case EnvironmentID.Cave:
+				return _caveChunks;
+		}
+		
+		Debug.LogError($"Environment {environmentToGet} should exist but doesn't, add environment chunks to ChunkManager");
+		return null;
 	}
 	
 	public Dictionary<Vector2Int, ChunkGameData> GetLoadedPlayerChunks()

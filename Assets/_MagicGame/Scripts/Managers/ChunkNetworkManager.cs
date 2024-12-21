@@ -11,7 +11,7 @@ public class ChunkNetworkManager : NetworkBehaviour
 	private int _chunksToLoadAmount;
 	private List<Vector2Int> _playerChunksToLoadAroundPlayer;
 	
-	public void MultiplayerUpdatePlayerChunks()
+	public void ClientUpdatePlayerChunks(EnvironmentID environmentToRequest)
 	{
 		// Debug.Log("Updating Chunks as Client");
 		
@@ -25,7 +25,7 @@ public class ChunkNetworkManager : NetworkBehaviour
 		{
 			if(!ChunkManager.Instance.GetLoadedPlayerChunks().ContainsKey(chunkPosition))
 			{
-				RequestChunkDataServerRpc(chunkPosition);
+				RequestChunkDataServerRpc(environmentToRequest, chunkPosition);
 			}
 			else
 			{
@@ -34,10 +34,11 @@ public class ChunkNetworkManager : NetworkBehaviour
 		}
 	}
 	
-	[Rpc(SendTo.Server)]
-	private void RequestChunkDataServerRpc(Vector2Int chunkPosition, RpcParams rpcParams = default)
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void RequestChunkDataServerRpc(EnvironmentID environmentToRequest, Vector2Int chunkPosition, RpcParams rpcParams = default)
 	{
-		var chunkData = GetChunkGameData(chunkPosition);
+		var chunkData = GetChunkGameData(environmentToRequest, chunkPosition);
+		
 		var syncChunkData = ConvertToSyncChunkData(chunkData);
 		
 		SendChunkDataToClientRpc(syncChunkData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
@@ -69,9 +70,9 @@ public class ChunkNetworkManager : NetworkBehaviour
 		}
 	}
 
-	private ChunkGameData GetChunkGameData(Vector2Int chunkPosition)
+	private ChunkGameData GetChunkGameData(EnvironmentID environmentToRequest, Vector2Int chunkPosition)
 	{
-		return ChunkManager.Instance.GetChunkDataFromChunkPosition(chunkPosition);
+		return ChunkManager.Instance.GetChunkDataFromChunkPosition(environmentToRequest, chunkPosition);
 	}
 	
 	private SyncChunkData ConvertToSyncChunkData(ChunkGameData chunkGameData)

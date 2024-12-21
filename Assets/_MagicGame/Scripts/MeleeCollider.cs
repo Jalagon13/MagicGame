@@ -52,6 +52,11 @@ public class MeleeCollider : NetworkBehaviour
 			// If this collider, is it's own, skip it
 			if(collision == _thisPlayer.GetComponent<Collider2D>()) return;
 			
+			if(_entitiesFoundThisSwing == null)
+			{
+				_entitiesFoundThisSwing = new();
+			}
+			
 			_entitiesFoundThisSwing.Add(iHasHealth);
 		}
 	}
