@@ -23,24 +23,24 @@ public class PlayerNetworkComponent : NetworkBehaviour
 		
 		if(clientId == OwnerClientId) return true;
 		
-		return NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().GetPlayerEnvironment() == NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().GetPlayerEnvironment();
+		var nonClientIdPlayerObject = NetworkManager.ConnectedClients[clientId].PlayerObject;
+		var nonClientIdPlayerEnvironment = nonClientIdPlayerObject.GetComponent<Player>().GetPlayerEnvironment();
+		var ownerClientEnvironment = NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().GetPlayerEnvironment();
+		
+		return ownerClientEnvironment == nonClientIdPlayerEnvironment;
 	}
 
 	private void HandleNetworkTick()
 	{
-		var ownerClientEnvironment = NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().GetPlayerEnvironment();
-		
 		foreach (var clientId in NetworkManager.ConnectedClientsIds)
 		{
 			if(clientId == OwnerClientId) continue;
 			
 			// Now testing non owner client's ids
-			var nonClientIdPlayerEnvironment = NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().GetPlayerEnvironment();
+			var shouldBeVisible = CheckVisibility(clientId);
+			var isVisibile = NetworkObject.IsNetworkVisibleTo(clientId);
 			
-			var isInSameEnvironment = ownerClientEnvironment == nonClientIdPlayerEnvironment;
-			var isVisibile = NetworkManager.ConnectedClients[clientId].PlayerObject.IsNetworkVisibleTo(OwnerClientId);
-			
-			if(isInSameEnvironment && !isVisibile)
+			if(shouldBeVisible && !isVisibile)
 			{
 				Debug.Log($"Showing {clientId}'s player from {OwnerClientId}");
 				if(OwnerClientId == NetworkManager.ServerClientId)
@@ -48,9 +48,9 @@ public class PlayerNetworkComponent : NetworkBehaviour
 					NetworkManager.ConnectedClients[clientId].PlayerObject.gameObject.SetActive(true);
 				}
 				
-				NetworkManager.ConnectedClients[clientId].PlayerObject.NetworkShow(OwnerClientId);
+				NetworkObject.NetworkShow(clientId);
 			}
-			else if(!isInSameEnvironment && isVisibile)
+			else if(!shouldBeVisible && isVisibile)
 			{
 				Debug.Log($"Hiding {clientId}'s player from {OwnerClientId}");
 				if(OwnerClientId == NetworkManager.ServerClientId)
@@ -58,7 +58,7 @@ public class PlayerNetworkComponent : NetworkBehaviour
 					NetworkManager.ConnectedClients[clientId].PlayerObject.gameObject.SetActive(false);
 				}
 				
-				NetworkManager.ConnectedClients[clientId].PlayerObject.NetworkHide(OwnerClientId);
+				NetworkObject.NetworkHide(clientId);
 			}
 		}
 	}
