@@ -13,7 +13,6 @@ public class Player : NetworkBehaviour, IHasHealth
 	}
 
 	public static Player LocalClientInstance { get; private set; }
-	private EnvironmentID _playerEnvironment;
 	
 	public event EventHandler<PlayerIdEventArgs> OnRespawn;
 	public event EventHandler<PlayerIdEventArgs> OnDeath;
@@ -39,6 +38,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	[SerializeField] private Transform _wandProjectileSpawnPoint;
 	[SerializeField] private List<InventoryItem> _startingItems = new();
 	
+	private NetworkVariable<EnvironmentID> _playerEnvironment = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private NetworkVariable<int> _focusItemIndexNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private NetworkVariable<int> _healthNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private NetworkVariable<int> _manaNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -62,7 +62,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		if(IsOwner)
 		{
-			_playerEnvironment = EnvironmentID.Forest; // For now all players will spawn in the forest
+			_playerEnvironment.Value = EnvironmentID.Forest; // For now all players will spawn in the forest
 		
 			LocalClientInstance = this;
 			
@@ -279,13 +279,13 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	public EnvironmentID GetPlayerEnvironment()
 	{
-		return _playerEnvironment;
+		return _playerEnvironment.Value;
 	}
 	
 	public void SetPlayerEnvironment(EnvironmentID environment)
 	{
 		Debug.Log($"Setting player {OwnerClientId} environement to: {environment}");
-		_playerEnvironment = environment;
+		_playerEnvironment.Value = environment;
 	}
 
 	public override void OnDestroy()
