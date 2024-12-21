@@ -267,9 +267,9 @@ public class ChunkManager : NetworkBehaviour
 		return null;
 	}
 	
-	public void SetChunksFromActiveEnvironment(Dictionary<Vector2Int, ChunkGameData> newChunks)
+	public void SetChunksForEnvironment(EnvironmentID environmentToSetChunksFor, Dictionary<Vector2Int, ChunkGameData> newChunks)
 	{
-		switch(Player.LocalClientInstance.GetPlayerEnvironment())
+		switch(environmentToSetChunksFor)
 		{
 			case EnvironmentID.Forest:
 				_forestChunks = newChunks;

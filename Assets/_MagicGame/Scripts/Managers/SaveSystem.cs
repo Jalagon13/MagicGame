@@ -198,7 +198,7 @@ public class SaveSystem : MonoBehaviour
 		}
 		
 		// Update player chunks so assets can deserialize properly
-		ChunkManager.Instance.SetChunksFromActiveEnvironment(deserializedChunks);
+		ChunkManager.Instance.SetChunksForEnvironment(environmentToDeserialize, deserializedChunks);
 		// ChunkManager.Instance.SinglePlayerUpdatePlayerChunks();
 		
 		Debug.Log($"<color=orange>Chunk Data of: </color>{environmentToDeserialize}<color=orange> Deserialized And Updated </color>");

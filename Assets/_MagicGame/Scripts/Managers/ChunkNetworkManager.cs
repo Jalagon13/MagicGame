@@ -65,7 +65,7 @@ public class ChunkNetworkManager : NetworkBehaviour
 				}
 			}
 			
-			// ChunkManager.Instance.InvokeOnLoadedPlayerChunksUpdated();
+			ChunkManager.Instance.InvokeOnLoadedPlayerChunksUpdated();
 			_chunkCountIterator = 0;
 		}
 	}

@@ -136,7 +136,9 @@ public class WorldManager : NetworkBehaviour
 		else
 		{
 			Player.LocalClientInstance.SetPlayerEnvironment(targetEnvironment);
-		
+
+			ChunkManager.Instance.OnLoadedPlayerChunksUpdated += OnClientEnvironmentTransitionEnd;
+			
 			ClientLoadEnvironmentServerRpc(targetEnvironment, portalPosition);
 		}
 	}
@@ -162,7 +164,14 @@ public class WorldManager : NetworkBehaviour
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void UpdateChunksAndHandlePortalClientRpc(Vector2 portalPosition, RpcParams rpcParams)
 	{
-		UpdateChunksAndHandlePortal(portalPosition);
+		ChunkManager.Instance.UpdateChunksAroundPlayer();
+	}
+	
+	private void OnClientEnvironmentTransitionEnd(object sender, ChunkManager.OnActiveChunksUpdatedEventArgs e)
+	{
+		ChunkManager.Instance.OnLoadedPlayerChunksUpdated -= OnClientEnvironmentTransitionEnd;
+		
+		SearchForPortal(Player.LocalClientInstance.transform.position);
 	}
 
 	private async void HostLoadEnvironment(EnvironmentID targetEnvironment, Vector2 portalPosition)
@@ -183,13 +192,13 @@ public class WorldManager : NetworkBehaviour
 
 		_isTransitioningEnvironment = false;
 		
-		UpdateChunksAndHandlePortal(portalPosition);
-	}
-	
-	private void UpdateChunksAndHandlePortal(Vector2 portalPosition)
-	{
 		ChunkManager.Instance.UpdateChunksAroundPlayer();
 		
+		SearchForPortal(portalPosition);
+	}
+	
+	private void SearchForPortal(Vector2 portalPosition)
+	{
 		// If there is a portal in lets say a 10 tile radius, grab it's position, and teleport player to that portal
 		// Define the radius for the portal search area
 		float searchRadius = 10f; // Adjust radius as needed
