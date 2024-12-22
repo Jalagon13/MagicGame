@@ -38,7 +38,7 @@ public class PlayerNetworkComponent : NetworkBehaviour
 			
 			// Now testing non owner client's ids
 			var shouldBeVisible = CheckVisibility(clientId);
-			var isVisibile = NetworkObject.IsNetworkVisibleTo(clientId);
+			var isVisibile = NetworkObjectVisibleTo(clientId);
 			
 			if(shouldBeVisible && !isVisibile)
 			{
@@ -60,6 +60,18 @@ public class PlayerNetworkComponent : NetworkBehaviour
 				
 				NetworkObject.NetworkHide(clientId);
 			}
+		}
+	}
+	
+	private bool NetworkObjectVisibleTo(ulong clientId)
+	{
+		if(OwnerClientId == NetworkManager.ServerClientId)
+		{
+			return NetworkManager.ConnectedClients[clientId].PlayerObject.gameObject.activeInHierarchy;
+		}
+		else
+		{
+			return NetworkObject.IsNetworkVisibleTo(clientId);
 		}
 	}
 

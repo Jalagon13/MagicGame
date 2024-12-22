@@ -60,9 +60,12 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	public override void OnNetworkSpawn()
 	{
+		gameObject.name = $"Player_{OwnerClientId}";
+		
 		if(IsOwner)
 		{
 			_playerEnvironment.Value = EnvironmentID.Forest; // For now all players will spawn in the forest
+			Debug.Log($"Environment of {gameObject.name} set to {_playerEnvironment.Value}");
 		
 			LocalClientInstance = this;
 			
@@ -84,7 +87,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		RefreshUI();
 		
-		gameObject.name = $"Player_{OwnerClientId}";
 	}
 	
 	private void Update()
