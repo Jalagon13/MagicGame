@@ -5,8 +5,8 @@ public class WorldAssetHolder : MonoBehaviour
 {
 	private void Start()
 	{
-		AssetManager.Instance.OnWorldAssetSpawned += AssetManager_OnWorldAssetSpawned;
-		AssetManager.Instance.OnClearAllEnvironmentObjects += AssetManager_OnClearAllEnvironmentObjects;
+		ObjectManager.Instance.OnWorldObjectSpawned += AssetManager_OnWorldAssetSpawned;
+		ObjectManager.Instance.OnClearAllEnvironmentObjects += AssetManager_OnClearAllEnvironmentObjects;
 	}
 
 	private void AssetManager_OnClearAllEnvironmentObjects(object sender, EventArgs e)
@@ -31,14 +31,14 @@ public class WorldAssetHolder : MonoBehaviour
 		}
 	}
 
-	private void AssetManager_OnWorldAssetSpawned(object sender, AssetManager.OnWorldAssetSpawnedEventArgs e)
+	private void AssetManager_OnWorldAssetSpawned(object sender, ObjectManager.OnWorldAssetSpawnedEventArgs e)
 	{
-		e.WorldAssetGameObject.transform.SetParent(transform);
+		e.WorldObjectGameObject.transform.SetParent(transform);
 	}
 
 	private void OnDestroy()
 	{
-		AssetManager.Instance.OnWorldAssetSpawned -= AssetManager_OnWorldAssetSpawned;
-		AssetManager.Instance.OnClearAllEnvironmentObjects += AssetManager_OnClearAllEnvironmentObjects;
+		ObjectManager.Instance.OnWorldObjectSpawned -= AssetManager_OnWorldAssetSpawned;
+		ObjectManager.Instance.OnClearAllEnvironmentObjects += AssetManager_OnClearAllEnvironmentObjects;
 	}
 }

@@ -48,7 +48,7 @@ public class ChunkManager : NetworkBehaviour
 	
 	private void Update()
 	{
-		if(Player.LocalClientInstance == null || IS_GENERATING_ENVIRONMENT) return;
+		if(Player.LocalClientInstance == null || IS_GENERATING_ENVIRONMENT || SaveSystem.Instance.IsDeserializing) return;
 		
 		Vector3Int playerTilePos = GetPlayerTilePos();
 		

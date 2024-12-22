@@ -21,7 +21,7 @@ public class DeployItemSO : ItemSO
 		{
 			Vector2Int spawnPosition = new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
 				
-			AssetManager.Instance.PlaceResourceAsset(spawnPosition, _deployObjectPrefab);
+			ObjectManager.Instance.PlaceResourceAsset(spawnPosition, _deployObjectPrefab);
 			
 			InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 		

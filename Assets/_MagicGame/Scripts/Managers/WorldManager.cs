@@ -126,7 +126,7 @@ public class WorldManager : NetworkBehaviour
 		
 		// Clear all client visuals
 		ChunkManager.Instance.ClearChunkVisuals();
-		AssetManager.Instance.ClearAllEnvironmentObjectVisuals();
+		ObjectManager.Instance.ClearAllEnvironmentObjectVisuals();
 		// NpcManager.Instance.HideAllEnvironmentNPCs();
 		
 		if(Player.LocalClientInstance.IsHost)
@@ -248,7 +248,7 @@ public class WorldManager : NetworkBehaviour
 	{
 		Debug.Log("Portal NOT found. Placing player at new portal that is spawned");
 		Vector2Int v2IntPos = new(Mathf.RoundToInt(portalPosition.x), Mathf.RoundToInt(portalPosition.y));
-		AssetManager.Instance.PlaceResourceAsset(v2IntPos, _portalObjectPrefab);
+		ObjectManager.Instance.PlaceResourceAsset(v2IntPos, _portalObjectPrefab);
 	}
 	
 	private void PlacePlayerAt(Vector2 portalPosition)

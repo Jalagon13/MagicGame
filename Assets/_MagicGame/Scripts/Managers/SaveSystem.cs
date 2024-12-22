@@ -19,14 +19,26 @@ public class SaveSystem : MonoBehaviour
 	private EnvironmentFileData _environmentFileData = new();
 	private string _path;
 	
+	public bool IsSerializing { get; private set; }
+	public bool IsDeserializing { get; private set; }
+	
 	private void Awake()
 	{
 		Instance = this;
 	}
 	
+	public bool EnvironmentDataExists(EnvironmentID environment)
+	{
+		string path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environment}_data.json";
+		
+		return File.Exists(path);
+	}
+	
 	[Button("Serialize data of current environment and write to file")]
 	public async Task SerializeDataAndWriteToFile(EnvironmentID environmentToSerialize)
 	{
+		IsSerializing = true;
+	
 		_path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToSerialize}_data.json";
 		Debug.Log($"Path: " + Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToSerialize}_data.json");
 		Debug.Log($"<color=orange>=============================================</color>");
@@ -53,6 +65,8 @@ public class SaveSystem : MonoBehaviour
 		Debug.Log($"<color=orange>Environment: </color>{Player.LocalClientInstance.GetPlayerEnvironment()}<color=orange> writing data to file complete!</color>");
 		
 		OnSerializationFinished?.Invoke(this, EventArgs.Empty);
+		
+		IsSerializing = false;
 	}
 
 	private void SerializeChunkDataOfCurrentEnvironment(EnvironmentID environmentToSerialize)
@@ -148,6 +162,8 @@ public class SaveSystem : MonoBehaviour
 	[Button("Deserialize data of current environment and dispatch updated data to game")]
 	public async Task DeserializeAndDispatchData(EnvironmentID environmentToDeserialize)
 	{
+		IsDeserializing = true;
+	
 		_path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToDeserialize}_data.json";
 		Debug.Log($"Path: " + Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToDeserialize}_data.json");
 		if (File.Exists(_path))
@@ -173,6 +189,8 @@ public class SaveSystem : MonoBehaviour
 		{
 			OnNoFileFoundToDeserialize?.Invoke(this, EventArgs.Empty);
 		}
+		
+		IsDeserializing = false;
 		
 		// NTFS: Write condition for non existant path
 	}

@@ -4,34 +4,34 @@ using Mono.Cecil;
 using Unity.Netcode;
 using UnityEngine;
 
-public class AssetManager : NetworkBehaviour
+public class ObjectManager : NetworkBehaviour
 {
-	public static AssetManager Instance;
+	public static ObjectManager Instance;
 	
 	public event EventHandler OnClearAllEnvironmentObjects;
-	public event EventHandler<OnWorldAssetSpawnedEventArgs> OnWorldAssetSpawned;
+	public event EventHandler<OnWorldAssetSpawnedEventArgs> OnWorldObjectSpawned;
 	public class OnWorldAssetSpawnedEventArgs : EventArgs 
 	{
-		public GameObject WorldAssetGameObject;
+		public GameObject WorldObjectGameObject;
 	}
 	
-	private NetworkList<SyncWorldAssetHPData> _syncWorldAssetDataHPNetworkList = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	public struct SyncWorldAssetHPData : IEquatable<SyncWorldAssetHPData>, INetworkSerializable
+	private NetworkList<SyncWorldObjectHPData> _syncWorldObjectDataHPNetworkList = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	public struct SyncWorldObjectHPData : IEquatable<SyncWorldObjectHPData>, INetworkSerializable
 	{
-		public byte WorldAssetID;
-		public ushort CurrentWorldAssetHP;
+		public byte WorldObjectID;
+		public ushort CurrentWorldObjectHP;
 		public Vector2Int Position;
 
-		public bool Equals(SyncWorldAssetHPData other)
+		public bool Equals(SyncWorldObjectHPData other)
 		{
-			return Position.Equals(other.Position) && WorldAssetID == other.WorldAssetID;
+			return Position.Equals(other.Position) && WorldObjectID == other.WorldObjectID;
 		}
 	
 		public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
 		{
-			serializer.SerializeValue(ref CurrentWorldAssetHP);
+			serializer.SerializeValue(ref CurrentWorldObjectHP);
 			serializer.SerializeValue(ref Position);
-			serializer.SerializeValue(ref WorldAssetID);
+			serializer.SerializeValue(ref WorldObjectID);
 		}
 	}
 	
@@ -55,9 +55,9 @@ public class AssetManager : NetworkBehaviour
 			// Instantiate the visual asset
 			GameObject assetGO = Instantiate(assetData.Asset.gameObject, (Vector2)assetData.Position, Quaternion.identity);
 			
-			OnWorldAssetSpawned?.Invoke(this, new OnWorldAssetSpawnedEventArgs
+			OnWorldObjectSpawned?.Invoke(this, new OnWorldAssetSpawnedEventArgs
 			{
-				WorldAssetGameObject = assetGO
+				WorldObjectGameObject = assetGO
 			});
 		}
 	}
@@ -69,7 +69,7 @@ public class AssetManager : NetworkBehaviour
 		foreach (WorldAssetGameData assetData in e.Chunk.WorldAssetGameDataList)
 		{
 			// If asset visually exists, just delete it
-			if(ResourceAssetFoundAtPosition(assetData.Position, out ResourceObject resourceObject))
+			if(ResourceObjectFoundAtPosition(assetData.Position, out ResourceObject resourceObject))
 			{
 				resourceObject.DestroySelf();
 			}
@@ -85,21 +85,21 @@ public class AssetManager : NetworkBehaviour
 	{
 		byte assetID = GameManager.Instance.GetByteIDFromWorldObject(worldObject);
 	
-		PlaceResourceAssetServerRpc(position, assetID);
+		PlaceResourceObjectServerRpc(position, assetID);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void PlaceResourceAssetServerRpc(Vector2Int position, byte assetID)
+	private void PlaceResourceObjectServerRpc(Vector2Int position, byte assetID)
 	{
 		// While on server, add the data to chunks
 		WorldObject asset = GameManager.Instance.GetWorldObjectFromID(assetID);
 		ChunkManager.Instance.AddWorldAssetDataToChunk(position, asset);
 		
-		PlaceResourceAssetClientRpc(position, assetID);
+		PlaceResourceObjectClientRpc(position, assetID);
 	}
 
 	[Rpc(SendTo.Everyone)]
-	private void PlaceResourceAssetClientRpc(Vector2Int position, byte assetID)
+	private void PlaceResourceObjectClientRpc(Vector2Int position, byte assetID)
 	{
 		// Visually place it down for everyone
 		WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);
@@ -107,52 +107,52 @@ public class AssetManager : NetworkBehaviour
 		GameObject placedAsset = Instantiate(worldAsset.gameObject, (Vector2)position, Quaternion.identity);
 		placedAsset.GetComponent<WorldObject>().SetPlacedDownByPlayer(true);
 		
-		OnWorldAssetSpawned?.Invoke(this, new OnWorldAssetSpawnedEventArgs
+		OnWorldObjectSpawned?.Invoke(this, new OnWorldAssetSpawnedEventArgs
 		{
-			WorldAssetGameObject = placedAsset
+			WorldObjectGameObject = placedAsset
 		});
 	}
 
-	public void HitResourceAsset(Vector2Int position, ushort incomingDamage)
+	public void HitResourceObject(Vector2Int position, ushort incomingDamage)
 	{
-		if(ResourceAssetFoundAtPosition(position, out ResourceObject resourceObjectFound))
+		if(ResourceObjectFoundAtPosition(position, out ResourceObject resourceObjectFound))
 		{
 			byte assetID = GameManager.Instance.GetByteIDFromWorldObject(resourceObjectFound);
 			
-			DamageWorldAssetServerRpc(position, assetID, incomingDamage);
+			DamageWorldObjectServerRpc(position, assetID, incomingDamage);
 		}
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void DamageWorldAssetServerRpc(Vector2Int position, byte assetID, ushort incomingDamage)
+	private void DamageWorldObjectServerRpc(Vector2Int position, byte assetID, ushort incomingDamage)
 	{
-		if(!SyncWorldAssetHPDataListContainsPosition(position))
+		if(!SyncWorldObjectHPDataListContainsPosition(position))
 		{
 			AddAssetToNetworkListDamaged(position, assetID, incomingDamage);
 			return;
 		}
 		
-		for (int i = 0; i < _syncWorldAssetDataHPNetworkList.Count; i++)
+		for (int i = 0; i < _syncWorldObjectDataHPNetworkList.Count; i++)
 		{
-			var syncWorldAssetHpData = _syncWorldAssetDataHPNetworkList[i];
+			var syncWorldObjectHpData = _syncWorldObjectDataHPNetworkList[i];
 
-			if (syncWorldAssetHpData.Position == position)
+			if (syncWorldObjectHpData.Position == position)
 			{
 				// If damage is greater than current hp for this incoming attack, destroy the tile
-				if (incomingDamage > syncWorldAssetHpData.CurrentWorldAssetHP)
+				if (incomingDamage > syncWorldObjectHpData.CurrentWorldObjectHP)
 				{
 					// Remove the tile if destroyed
-					_syncWorldAssetDataHPNetworkList.RemoveAt(i);
+					_syncWorldObjectDataHPNetworkList.RemoveAt(i);
 					
 					// Trigger tile destruction logic
-					DestroyAssetClientRpc(position);
+					DestroyObjectClientRpc(position);
 				}
 				else
 				{
 					// Update the modified struct in the list
-					syncWorldAssetHpData.CurrentWorldAssetHP -= incomingDamage;
+					syncWorldObjectHpData.CurrentWorldObjectHP -= incomingDamage;
 					// Debug.Log("Found tile callback, tile hp after damage: " + syncTileHpData.CurrentTileHP);
-					_syncWorldAssetDataHPNetworkList[i] = syncWorldAssetHpData;
+					_syncWorldObjectDataHPNetworkList[i] = syncWorldObjectHpData;
 				}
 
 				return; // Exit after finding the tile
@@ -168,25 +168,25 @@ public class AssetManager : NetworkBehaviour
 		if(currentAssetHPAfterDamage > 0)
 		{
 			// If tile hp after damage is above 0, just add as usual
-			_syncWorldAssetDataHPNetworkList.Add(new SyncWorldAssetHPData()
+			_syncWorldObjectDataHPNetworkList.Add(new SyncWorldObjectHPData()
 			{
-				WorldAssetID = GameManager.Instance.GetByteIDFromWorldObject(resourceAsset),
-				CurrentWorldAssetHP = currentAssetHPAfterDamage,
+				WorldObjectID = GameManager.Instance.GetByteIDFromWorldObject(resourceAsset),
+				CurrentWorldObjectHP = currentAssetHPAfterDamage,
 				Position = position
 			});
 		}
 		else
 		{
 			// If tile hp is destroyed, destroy tile
-			DestroyAssetClientRpc(position);
+			DestroyObjectClientRpc(position);
 		}
 	}
 
 	[Rpc(SendTo.Everyone)]
-	private void DestroyAssetClientRpc(Vector2Int position)
+	private void DestroyObjectClientRpc(Vector2Int position)
 	{
 		// If resource is not found that means it is disabled and therefore should not be destroyed, if so it is enabled and should be destroyed
-		if(ResourceAssetFoundAtPosition(position, out ResourceObject resourceObjectFound))
+		if(ResourceObjectFoundAtPosition(position, out ResourceObject resourceObjectFound))
 		{
 			resourceObjectFound.DestroyResourceAsset();
 		}
@@ -195,9 +195,9 @@ public class AssetManager : NetworkBehaviour
 		ChunkManager.Instance.RemoveWorldAssetDataFromChunk(position);
 	}
 
-	private bool SyncWorldAssetHPDataListContainsPosition(Vector2Int position)
+	private bool SyncWorldObjectHPDataListContainsPosition(Vector2Int position)
 	{
-		foreach (SyncWorldAssetHPData hpData in _syncWorldAssetDataHPNetworkList)
+		foreach (SyncWorldObjectHPData hpData in _syncWorldObjectDataHPNetworkList)
 		{
 			if(hpData.Position == position)
 			{
@@ -208,7 +208,7 @@ public class AssetManager : NetworkBehaviour
 		return false;
 	}
 
-	private bool ResourceAssetFoundAtPosition(Vector2Int position, out ResourceObject resourceObject)
+	private bool ResourceObjectFoundAtPosition(Vector2Int position, out ResourceObject resourceObject)
 	{
 		// Convert the tile position to world space if necessary
 		Vector2 worldPosition = (Vector2)position + new Vector2(0.5f, 0.5f); // Center of the tile
@@ -233,9 +233,9 @@ public class AssetManager : NetworkBehaviour
 		return false;
 	}
 	
-	public NetworkList<SyncWorldAssetHPData> GetSyncWorldAssetDataHPNetworkList()
+	public NetworkList<SyncWorldObjectHPData> GetSyncWorldObjectDataHPNetworkList()
 	{
-		return _syncWorldAssetDataHPNetworkList;
+		return _syncWorldObjectDataHPNetworkList;
 	}
 	
 	public override void OnDestroy()

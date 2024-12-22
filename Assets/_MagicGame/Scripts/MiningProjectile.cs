@@ -93,7 +93,7 @@ public class MiningProjectile : NetworkBehaviour
 				
 						// Register hit.
 						Vector2Int resourcePosition = new(Mathf.RoundToInt(resourceAsset.transform.position.x), Mathf.RoundToInt(resourceAsset.transform.position.y));
-						AssetManager.Instance.HitResourceAsset(resourcePosition, (ushort)_miningPower);
+						ObjectManager.Instance.HitResourceObject(resourcePosition, (ushort)_miningPower);
 				
 						// Spawn hit prefab.
 						SpawnHitPrefab();
