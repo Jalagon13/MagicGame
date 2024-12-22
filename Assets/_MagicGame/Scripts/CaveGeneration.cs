@@ -57,7 +57,7 @@ public class CaveGeneration : MonoBehaviour
 	
 	private void GenerateCaveChunkData()
 	{
-		ChunkManager.Instance.GetEnvironmentChunks(EnvironmentID.Cave);
+		ChunkManager.Instance.GetChunksFromEnvironment(EnvironmentID.Cave);
 		
 		int chunkSideAmount = ChunkManager.ENVIRONMENT_SIDE_LENGTH / ChunkManager.CHUNK_SIZE;
 		for (int chunkX = 0; chunkX < chunkSideAmount; chunkX++)
@@ -93,7 +93,7 @@ public class CaveGeneration : MonoBehaviour
 				}
 				
 				// Populate the overworld chunk data
-				ChunkManager.Instance.GetEnvironmentChunks(EnvironmentID.Cave)[chunkCoord] = chunkGameData;
+				ChunkManager.Instance.GetChunksFromEnvironment(EnvironmentID.Cave)[chunkCoord] = chunkGameData;
 			}
 		}
 	}

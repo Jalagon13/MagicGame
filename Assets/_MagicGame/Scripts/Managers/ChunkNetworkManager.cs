@@ -101,7 +101,7 @@ public class ChunkNetworkManager : NetworkBehaviour
 		}
 
 		// Convert world asset game data to agnostic sync data
-		foreach (var asset in chunkGameData.WorldAssetGameDataList)
+		foreach (var asset in chunkGameData.WorldObjectGameDataList)
 		{
 			byte id = GameManager.Instance.GetByteIDFromWorldObject(asset.Asset);
 			syncChunkData.SyncWorldAssetDataList.Add(ConvertGameDataIntoGenericSyncData(asset.Position, id));
@@ -142,8 +142,8 @@ public class ChunkNetworkManager : NetworkBehaviour
 		ConvertSyncDataList(syncChunkData.SyncWorldAssetDataList, (syncAsset) =>
 		{
 			WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(syncAsset.ID);
-			return new WorldAssetGameData(worldObject, syncAsset.Position);
-		}, ref chunkGameData.WorldAssetGameDataList);
+			return new WorldObjectGameData(worldObject, syncAsset.Position);
+		}, ref chunkGameData.WorldObjectGameDataList);
 
 		return chunkGameData;
 	}

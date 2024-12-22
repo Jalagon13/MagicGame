@@ -73,7 +73,7 @@ public class ForestGeneration : MonoBehaviour
 	
 	private void GenerateOverworldChunkData()
 	{
-		ChunkManager.Instance.GetEnvironmentChunks(EnvironmentID.Forest).Clear();
+		ChunkManager.Instance.GetChunksFromEnvironment(EnvironmentID.Forest).Clear();
 		
 		// Loop through all chunks
 		int chunkSideAmount = ChunkManager.ENVIRONMENT_SIDE_LENGTH / ChunkManager.CHUNK_SIZE;
@@ -119,7 +119,7 @@ public class ForestGeneration : MonoBehaviour
 				}
 				
 				// Populate the overworld chunk data
-				ChunkManager.Instance.GetEnvironmentChunks(EnvironmentID.Forest).Add(chunkCoord, chunkGameData);
+				ChunkManager.Instance.GetChunksFromEnvironment(EnvironmentID.Forest).Add(chunkCoord, chunkGameData);
 			}
 		}
 	}
@@ -145,7 +145,7 @@ public class ForestGeneration : MonoBehaviour
 			if(groundTilePointValue > 0.125f && (wallTilePointValue < 0.6f && wallTilePointValue > 0.35f))
 			{
 				// Add world asset data to chunk
-				ChunkManager.Instance.AddWorldAssetDataToChunk(new Vector2Int(pointX, pointY), _treeObject);
+				ChunkManager.Instance.AddObjectDataToChunk(new Vector2Int(pointX, pointY), _treeObject, EnvironmentID.Forest);
 			}
 		}
 	}

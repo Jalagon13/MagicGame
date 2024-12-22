@@ -48,9 +48,9 @@ public class ObjectManager : NetworkBehaviour
 
 	private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)
 	{
-		if(e.Chunk.WorldAssetGameDataList.Count <= 0) return;
+		if(e.Chunk.WorldObjectGameDataList.Count <= 0) return;
 		
-		foreach (WorldAssetGameData assetData in e.Chunk.WorldAssetGameDataList)
+		foreach (WorldObjectGameData assetData in e.Chunk.WorldObjectGameDataList)
 		{	
 			// Instantiate the visual asset
 			GameObject assetGO = Instantiate(assetData.Asset.gameObject, (Vector2)assetData.Position, Quaternion.identity);
@@ -64,9 +64,9 @@ public class ObjectManager : NetworkBehaviour
 
 	private void ChunkManager_OnUnloadChunk(object sender, ChunkManager.ChunkEventArgs e)
 	{
-		if(e.Chunk.WorldAssetGameDataList.Count <= 0) return;
+		if(e.Chunk.WorldObjectGameDataList.Count <= 0) return;
 		
-		foreach (WorldAssetGameData assetData in e.Chunk.WorldAssetGameDataList)
+		foreach (WorldObjectGameData assetData in e.Chunk.WorldObjectGameDataList)
 		{
 			// If asset visually exists, just delete it
 			if(ResourceObjectFoundAtPosition(assetData.Position, out ResourceObject resourceObject))
@@ -81,54 +81,67 @@ public class ObjectManager : NetworkBehaviour
 		OnClearAllEnvironmentObjects?.Invoke(this, new EventArgs());
 	}
 	
-	public void PlaceResourceAsset(Vector2Int position, WorldObject worldObject)
+	public void PlaceObject(Vector2Int position, WorldObject worldObject, EnvironmentID environmentToPlaceIn)
 	{
 		byte assetID = GameManager.Instance.GetByteIDFromWorldObject(worldObject);
 	
-		PlaceResourceObjectServerRpc(position, assetID);
+		PlaceResourceObjectServerRpc(position, assetID, environmentToPlaceIn);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void PlaceResourceObjectServerRpc(Vector2Int position, byte assetID)
+	private void PlaceResourceObjectServerRpc(Vector2Int position, byte assetID, EnvironmentID environmentToPlaceIn)
 	{
 		// While on server, add the data to chunks
 		WorldObject asset = GameManager.Instance.GetWorldObjectFromID(assetID);
-		ChunkManager.Instance.AddWorldAssetDataToChunk(position, asset);
+		ChunkManager.Instance.AddObjectDataToChunk(position, asset, environmentToPlaceIn);
 		
-		PlaceResourceObjectClientRpc(position, assetID);
+		HandleObjectVisualsClientRpc(position, assetID, environmentToPlaceIn);
 	}
 
-	[Rpc(SendTo.Everyone)]
-	private void PlaceResourceObjectClientRpc(Vector2Int position, byte assetID)
+	[Rpc(SendTo.ClientsAndHost)]
+	private void HandleObjectVisualsClientRpc(Vector2Int position, byte assetID, EnvironmentID objectEnvironment)
 	{
-		// Visually place it down for everyone
-		WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);
-		
-		GameObject placedAsset = Instantiate(worldAsset.gameObject, (Vector2)position, Quaternion.identity);
-		placedAsset.GetComponent<WorldObject>().SetPlacedDownByPlayer(true);
-		
-		OnWorldObjectSpawned?.Invoke(this, new OnWorldAssetSpawnedEventArgs
+		if(objectEnvironment == Player.LocalClientInstance.GetPlayerEnvironment() && ObjectPositionInLoadedChunks(position))
 		{
-			WorldObjectGameObject = placedAsset
-		});
+			// Visually place it down for everyone
+			WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);
+		
+			GameObject placedAsset = Instantiate(worldAsset.gameObject, (Vector2)position, Quaternion.identity);
+			placedAsset.GetComponent<WorldObject>().SetPlacedDownByPlayer(true);
+		
+			OnWorldObjectSpawned?.Invoke(this, new OnWorldAssetSpawnedEventArgs
+			{
+				WorldObjectGameObject = placedAsset
+			});
+		}
+	}
+	
+	private bool ObjectPositionInLoadedChunks(Vector2Int position)
+	{
+		var minLoadedTilePos = ChunkManager.Instance.MinLoadedTilePosition;
+		var maxLoadedTilePos = ChunkManager.Instance.MaxLoadedTilePosition;
+
+		// Check if the position is within the bounds
+		return position.x >= minLoadedTilePos.x && position.x <= maxLoadedTilePos.x &&
+			   position.y >= minLoadedTilePos.y && position.y <= maxLoadedTilePos.y;
 	}
 
-	public void HitResourceObject(Vector2Int position, ushort incomingDamage)
+	public void DamageObject(Vector2Int position, ushort incomingDamage, EnvironmentID environment)
 	{
 		if(ResourceObjectFoundAtPosition(position, out ResourceObject resourceObjectFound))
 		{
 			byte assetID = GameManager.Instance.GetByteIDFromWorldObject(resourceObjectFound);
 			
-			DamageWorldObjectServerRpc(position, assetID, incomingDamage);
+			DamageWorldObjectServerRpc(position, assetID, incomingDamage, environment);
 		}
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void DamageWorldObjectServerRpc(Vector2Int position, byte assetID, ushort incomingDamage)
+	private void DamageWorldObjectServerRpc(Vector2Int position, byte assetID, ushort incomingDamage, EnvironmentID environment)
 	{
 		if(!SyncWorldObjectHPDataListContainsPosition(position))
 		{
-			AddAssetToNetworkListDamaged(position, assetID, incomingDamage);
+			AddObjectToNetworkListDamaged(position, assetID, incomingDamage, environment);
 			return;
 		}
 		
@@ -145,7 +158,8 @@ public class ObjectManager : NetworkBehaviour
 					_syncWorldObjectDataHPNetworkList.RemoveAt(i);
 					
 					// Trigger tile destruction logic
-					DestroyObjectClientRpc(position);
+					ChunkManager.Instance.RemoveObjectDataFromChunk(position, environment);
+					DestroyObjectVisualsClientRpc(position);
 				}
 				else
 				{
@@ -160,7 +174,7 @@ public class ObjectManager : NetworkBehaviour
 		}
 	}
 
-	private void AddAssetToNetworkListDamaged(Vector2Int position, byte assetID, ushort damageAmount)
+	private void AddObjectToNetworkListDamaged(Vector2Int position, byte assetID, ushort damageAmount, EnvironmentID environment)
 	{
 		ResourceObject resourceAsset = GameManager.Instance.GetWorldObjectFromID(assetID) as ResourceObject;
 		
@@ -178,21 +192,19 @@ public class ObjectManager : NetworkBehaviour
 		else
 		{
 			// If tile hp is destroyed, destroy tile
-			DestroyObjectClientRpc(position);
+			ChunkManager.Instance.RemoveObjectDataFromChunk(position, environment);
+			DestroyObjectVisualsClientRpc(position);
 		}
 	}
 
-	[Rpc(SendTo.Everyone)]
-	private void DestroyObjectClientRpc(Vector2Int position)
+	[Rpc(SendTo.ClientsAndHost)]
+	private void DestroyObjectVisualsClientRpc(Vector2Int position)
 	{
 		// If resource is not found that means it is disabled and therefore should not be destroyed, if so it is enabled and should be destroyed
 		if(ResourceObjectFoundAtPosition(position, out ResourceObject resourceObjectFound))
 		{
 			resourceObjectFound.DestroyResourceAsset();
 		}
-		
-		// Handle internal data deletion here
-		ChunkManager.Instance.RemoveWorldAssetDataFromChunk(position);
 	}
 
 	private bool SyncWorldObjectHPDataListContainsPosition(Vector2Int position)

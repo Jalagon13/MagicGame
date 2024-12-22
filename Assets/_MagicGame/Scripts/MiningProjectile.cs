@@ -93,7 +93,7 @@ public class MiningProjectile : NetworkBehaviour
 				
 						// Register hit.
 						Vector2Int resourcePosition = new(Mathf.RoundToInt(resourceAsset.transform.position.x), Mathf.RoundToInt(resourceAsset.transform.position.y));
-						ObjectManager.Instance.HitResourceObject(resourcePosition, (ushort)_miningPower);
+						ObjectManager.Instance.DamageObject(resourcePosition, (ushort)_miningPower, Player.LocalClientInstance.GetPlayerEnvironment());
 				
 						// Spawn hit prefab.
 						SpawnHitPrefab();
@@ -114,12 +114,12 @@ public class MiningProjectile : NetworkBehaviour
 	
 		if(_mouseOverWall)
 		{
-			Environment.Instance.GetWallTilemapData().HitTile(tilePos, _miningPower);
+			Environment.Instance.GetWallTilemapData().HitTile(tilePos, _miningPower, Player.LocalClientInstance.GetPlayerEnvironment());
 			return;
 		}
 		else if(_mouseOverFloor)
 		{
-			Environment.Instance.GetFloorTilemapData().HitTile(tilePos, _miningPower);
+			Environment.Instance.GetFloorTilemapData().HitTile(tilePos, _miningPower, Player.LocalClientInstance.GetPlayerEnvironment());
 			return;
 		}
 	}

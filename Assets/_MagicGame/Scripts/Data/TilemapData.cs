@@ -36,7 +36,7 @@ public class TilemapData : NetworkBehaviour
 		_syncTileHPDataNetworkList = new();
 	}
 
-	public void HitTile(Vector2Int position, int amount)
+	public void HitTile(Vector2Int position, int amount, EnvironmentID environment)
 	{
 		// Debug.Log("HitTile callback");
 		var vector3IntPos = new Vector3Int(position.x, position.y);
@@ -44,17 +44,17 @@ public class TilemapData : NetworkBehaviour
 		if(_tilemap.HasTile(vector3IntPos) && _canMine)
 		{
 			var tileId = GameManager.Instance.GetTileIDFromTilemapTilePosition(_tilemap, vector3IntPos);
-			DamageTileServerRpc(position, tileId, (ushort)amount);
+			DamageTileServerRpc(position, tileId, (ushort)amount, environment);
 		}
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void DamageTileServerRpc(Vector2Int position, byte tileId, ushort incomingDamage)
+	private void DamageTileServerRpc(Vector2Int position, byte tileId, ushort incomingDamage, EnvironmentID environment)
 	{
 		// If it doesn't contain an entry, add it and damage it
 		if(!HpDataListContainsPosition(position))
 		{
-			AddTileToNetworkListDamaged(position, tileId, incomingDamage);
+			AddTileToNetworkListDamaged(position, tileId, incomingDamage, environment);
 			return;
 		}
 		// Find the index of the tile in the list
@@ -76,7 +76,7 @@ public class TilemapData : NetworkBehaviour
 					node.Walkable = true;
 					
 					// Trigger tile destruction logic
-					DestroyTile(position, syncTileHpData.TileID);
+					DestroyTile(position, syncTileHpData.TileID, environment);
 				}
 				else
 				{
@@ -91,7 +91,7 @@ public class TilemapData : NetworkBehaviour
 		}
 	}
 
-	private void AddTileToNetworkListDamaged(Vector2Int position, byte tileId, ushort damageAmount)
+	private void AddTileToNetworkListDamaged(Vector2Int position, byte tileId, ushort damageAmount, EnvironmentID environment)
 	{
 		TileSO tileSO = GameManager.Instance.GetTileSOFromID(tileId);
 		
@@ -112,15 +112,16 @@ public class TilemapData : NetworkBehaviour
 		else
 		{
 			// If tile hp is destroyed, destroy tile
-			DestroyTile(position, tileId);
+			DestroyTile(position, tileId, environment);
 		}
 	}
 	
-	private void DestroyTile(Vector2Int position, byte tileId)
+	private void DestroyTile(Vector2Int position, byte tileId, EnvironmentID environment)
 	{
 		ItemSO dropItem = GameManager.Instance.GetTileSOFromID(tileId).DropItem;
 		GameManager.Instance.SpawnItem(dropItem, 3, position);
-			
+		
+		ChunkManager.Instance.RemoveWallTileDataFromChunk(position, environment);
 		DestroyTileClientRpc(position);
 	}
 
@@ -135,8 +136,6 @@ public class TilemapData : NetworkBehaviour
 		{
 			_tilemap.SetTile(pos, null);
 		}
-	
-		ChunkManager.Instance.RemoveWallTileDataFromChunk(position);
 	}
 	
 	public WandAttribute GetHarvestType(Vector2Int position)
@@ -145,7 +144,7 @@ public class TilemapData : NetworkBehaviour
 	}
 	
 	// NTFS: This could be bugged
-	public void DeleteTile(Vector2Int position)
+	public void DeleteTile(Vector2Int position, EnvironmentID environment)
 	{
 		var vector3IntPos = new Vector3Int(position.x, position.y);
 	
@@ -157,7 +156,7 @@ public class TilemapData : NetworkBehaviour
 				
 				_syncTileHPDataNetworkList.Remove(GetSyncTileHpDataFromPosition(position));
 				
-				ChunkManager.Instance.RemoveWallTileDataFromChunk(position);
+				ChunkManager.Instance.RemoveWallTileDataFromChunk(position, environment);
 			}
 		}
 	}

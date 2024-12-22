@@ -36,9 +36,10 @@ public class ChunkManager : NetworkBehaviour
 	private Dictionary<Vector2Int, ChunkGameData> _caveChunks = new();
 	private Vector2 _lastPlayerPosition;
 	private Vector2Int _playerChunkCoord;
-	private Vector2Int _minLoadedTilePos;
-	private Vector2Int _maxLoadedTilePos;
 	private ChunkNetworkManager _chunkNetworkManager;
+	
+	public Vector2Int MinLoadedTilePosition { get; private set; }
+	public Vector2Int MaxLoadedTilePosition { get; private set; }
 	
 	private void Awake()
 	{
@@ -111,8 +112,8 @@ public class ChunkManager : NetworkBehaviour
 		
 		OnLoadedPlayerChunksUpdated?.Invoke(this, new OnActiveChunksUpdatedEventArgs
 		{
-			MinLoadedTilePos = _minLoadedTilePos,
-			MaxLoadedTilePos = _maxLoadedTilePos
+			MinLoadedTilePos = MinLoadedTilePosition,
+			MaxLoadedTilePos = MaxLoadedTilePosition
 		});
 	}
 	
@@ -179,53 +180,52 @@ public class ChunkManager : NetworkBehaviour
 		return null;
 	}
 	
-	public void AddWorldAssetDataToChunk(Vector2Int position, WorldObject worldObject)
+	public void AddObjectDataToChunk(Vector2Int position, WorldObject worldObject, EnvironmentID environmentToPlaceIn)
 	{
 		if(!IsServer) return;
 		
-		ChunkGameData chunk = GetChunk(position);
-		// Debug.Log(chunk == null);
-		// Debug.Log(worldObject == null);
-		chunk.AddWorldAssetData(position, worldObject);
+		ChunkGameData chunk = GetChunk(position, environmentToPlaceIn);
+		
+		chunk.AddObjectData(position, worldObject);
 	}
 	
-	public void RemoveWorldAssetDataFromChunk(Vector2Int position)
+	public void RemoveObjectDataFromChunk(Vector2Int position, EnvironmentID environmentToRemoveFrom)
 	{
 		if(!IsServer) return;
 		
-		ChunkGameData chunk = GetChunk(position);
+		ChunkGameData chunk = GetChunk(position, environmentToRemoveFrom);
 		
-		chunk.RemoveWorldAssetData(position);
+		chunk.RemoveObjectData(position);
 	}
 	
-	public void AddWallTileDataToChunk(Vector2Int position, byte tileID)
+	public void AddWallTileDataToChunk(Vector2Int position, byte tileID, EnvironmentID environmentToAddTileData)
 	{
 		if(!IsServer) return;
 	
 		// Get chunk tile was placed in
-		ChunkGameData chunk = GetChunk(position);
+		ChunkGameData chunk = GetChunk(position, environmentToAddTileData);
 		
 		// Add that tile data to this chunk
 		chunk.AddWallTileData(position, GameManager.Instance.GetTileSOFromID(tileID));
 	}
 	
-	public void RemoveWallTileDataFromChunk(Vector2Int position)
+	public void RemoveWallTileDataFromChunk(Vector2Int position, EnvironmentID environmentToRemoveTileData)
 	{
 		if(!IsServer) return;
 	
 		// Get chunk tile was destroyed in
-		ChunkGameData chunk = GetChunk(position);
+		ChunkGameData chunk = GetChunk(position, environmentToRemoveTileData);
 		
 		// Delete that tile data from this chunk
 		chunk.RemoveWallTileData(position);
 	}
 	
-	public ChunkGameData GetChunk(Vector2Int position)
+	public ChunkGameData GetChunk(Vector2Int position, EnvironmentID environmentToGetChunkFrom)
 	{
 		Vector2Int chunkCoord = GetChunkCoordFromPosition(position);
 		
-		var activeEnvironmentChunks = GetChunksFromActiveEnvironment();
-		activeEnvironmentChunks.TryGetValue(chunkCoord, out ChunkGameData chunk);
+		var chunks = GetChunksFromEnvironment(environmentToGetChunkFrom);
+		chunks.TryGetValue(chunkCoord, out ChunkGameData chunk);
 		
 		return chunk;
 	}
@@ -252,10 +252,10 @@ public class ChunkManager : NetworkBehaviour
 		int chunkY = Mathf.FloorToInt(position.y / CHUNK_SIZE);
 		return new Vector2Int(chunkX, chunkY);
 	}
-	
-	public Dictionary<Vector2Int, ChunkGameData> GetChunksFromActiveEnvironment()
+
+	public Dictionary<Vector2Int, ChunkGameData> GetChunksFromEnvironment(EnvironmentID environmentToGet)
 	{
-		switch(Player.LocalClientInstance.GetPlayerEnvironment())
+		switch(environmentToGet)
 		{
 			case EnvironmentID.Forest:
 				return _forestChunks;
@@ -263,10 +263,11 @@ public class ChunkManager : NetworkBehaviour
 				return _caveChunks;
 		}
 		
-		Debug.LogError("No Environment found for _activeEnvironment variable");
+		Debug.LogError($"Environment {environmentToGet} should exist but doesn't, add environment chunks to ChunkManager");
 		return null;
 	}
 	
+
 	public void SetChunksForEnvironment(EnvironmentID environmentToSetChunksFor, Dictionary<Vector2Int, ChunkGameData> newChunks)
 	{
 		switch(environmentToSetChunksFor)
@@ -281,6 +282,7 @@ public class ChunkManager : NetworkBehaviour
 		
 		Debug.LogError("No Environment found for _activeEnvironment variable");
 	}
+	
 	
 	private Vector3Int GetPlayerTilePos()
 	{
@@ -308,22 +310,8 @@ public class ChunkManager : NetworkBehaviour
 		maxLoadedTilePos += new Vector2Int(CHUNK_SIZE, CHUNK_SIZE);
 
 		// Set the final values
-		_minLoadedTilePos = minLoadedTilePos;
-		_maxLoadedTilePos = maxLoadedTilePos;
-	}
-	
-	public Dictionary<Vector2Int, ChunkGameData> GetEnvironmentChunks(EnvironmentID environmentToGet)
-	{
-		switch(environmentToGet)
-		{
-			case EnvironmentID.Forest:
-				return _forestChunks;
-			case EnvironmentID.Cave:
-				return _caveChunks;
-		}
-		
-		Debug.LogError($"Environment {environmentToGet} should exist but doesn't, add environment chunks to ChunkManager");
-		return null;
+		MinLoadedTilePosition = minLoadedTilePos;
+		MaxLoadedTilePosition = maxLoadedTilePos;
 	}
 	
 	public Dictionary<Vector2Int, ChunkGameData> GetLoadedPlayerChunks()

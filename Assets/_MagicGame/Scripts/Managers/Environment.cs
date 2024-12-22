@@ -59,31 +59,31 @@ public class Environment : NetworkBehaviour
 	}
 	
 	// Handles placing the visual of the tile, NOT the tile data that is being synced
-	public void PlaceTile(Vector3Int pos, TileSO wallTile, TileType syncTileType)
+	public void PlaceTile(Vector3Int pos, TileSO wallTile, TileType syncTileType, EnvironmentID environment)
 	{
 		// Debug.Log("Some Client is placing a tile");
 		Vector2Int syncPos = new(pos.x, pos.y);
 		byte syncTileId = GameManager.Instance.GetByteIDFromTileObjectSO(wallTile);
 		
-		PlaceTileVisualServerRpc(syncPos, syncTileId, syncTileType);
+		AddTileDataServerRpc(syncPos, syncTileId, syncTileType, environment);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void PlaceTileVisualServerRpc(Vector2Int syncPos, byte syncTileId, TileType syncTileType)
+	private void AddTileDataServerRpc(Vector2Int syncPos, byte syncTileId, TileType syncTileType, EnvironmentID environment)
 	{
 		// Debug.Log("Server is adding tile data to official world data");
-		ChunkManager.Instance.AddWallTileDataToChunk(new(syncPos.x, syncPos.y), syncTileId);
+		ChunkManager.Instance.AddWallTileDataToChunk(new(syncPos.x, syncPos.y), syncTileId, environment);
 		
 		// Update pathfinding
 		var centerNodePosition = new Vector2(syncPos.x + 0.5f, syncPos.y + 0.5f);
 		var node = NodeGraphUtility.GetNodeAtPosition(centerNodePosition);
 		node.Walkable = false;
 		
-		PlaceTileVisualClientRpc(syncPos, syncTileId, syncTileType);
+		HandleTileVisualClientRpc(syncPos, syncTileId, syncTileType);
 	}
 	
-	[Rpc(SendTo.Everyone)]
-	private void PlaceTileVisualClientRpc(Vector2Int syncPos, byte syncTileId, TileType syncTileType)
+	[Rpc(SendTo.ClientsAndHost)]
+	private void HandleTileVisualClientRpc(Vector2Int syncPos, byte syncTileId, TileType syncTileType)
 	{
 		// Debug.Log("Distributing visual placement information for each client to decide if it is worth placing based on chunks being loaded");
 		Vector3Int position = new(syncPos.x, syncPos.y);

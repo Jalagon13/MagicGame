@@ -22,7 +22,7 @@ public class BuildItemSO : ItemSO
 		
         if(IsClear(new(pos.x, pos.y)) && !wallTmHasTile && ActionManager.Instance.PlayerInRangeOfMouse())
         {
-            Environment.Instance.PlaceTile(pos, _wallTile, TileType.Wall);
+            Environment.Instance.PlaceTile(pos, _wallTile, TileType.Wall, Player.LocalClientInstance.GetPlayerEnvironment());
 			
             InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 			
@@ -40,7 +40,7 @@ public class BuildItemSO : ItemSO
 		
         if(!floorTmHasTile && ActionManager.Instance.PlayerInRangeOfMouse())
         {
-            Environment.Instance.PlaceTile(pos, _floorTile, TileType.Floor);
+            Environment.Instance.PlaceTile(pos, _floorTile, TileType.Floor, Player.LocalClientInstance.GetPlayerEnvironment());
 			
             InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 			

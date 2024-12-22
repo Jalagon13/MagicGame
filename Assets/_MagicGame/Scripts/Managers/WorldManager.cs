@@ -152,7 +152,7 @@ public class WorldManager : NetworkBehaviour
 	private async void AsyncClientLoadEnvironment(EnvironmentID targetEnvironment, Vector2 portalPosition, RpcParams rpcParams = default)
 	{
 		// If chunks of target environment is empty (no chunks loaded), host needs to deserialize
-		if(ChunkManager.Instance.GetEnvironmentChunks(targetEnvironment).Count <= 0)
+		if(ChunkManager.Instance.GetChunksFromEnvironment(targetEnvironment).Count <= 0)
 		{
 			// Chunks of target environment are not generated or deserialized
 			await SaveSystem.Instance.DeserializeAndDispatchData(targetEnvironment);
@@ -185,7 +185,7 @@ public class WorldManager : NetworkBehaviour
 		Player.LocalClientInstance.SetPlayerEnvironment(targetEnvironment);
 		
 		// If chunks for target environment does not exist, deserialize the environment 
-		if(ChunkManager.Instance.GetEnvironmentChunks(targetEnvironment).Count <= 0)
+		if(ChunkManager.Instance.GetChunksFromEnvironment(targetEnvironment).Count <= 0)
 		{
 			await SaveSystem.Instance.DeserializeAndDispatchData(targetEnvironment);
 		}
@@ -248,7 +248,7 @@ public class WorldManager : NetworkBehaviour
 	{
 		Debug.Log("Portal NOT found. Placing player at new portal that is spawned");
 		Vector2Int v2IntPos = new(Mathf.RoundToInt(portalPosition.x), Mathf.RoundToInt(portalPosition.y));
-		ObjectManager.Instance.PlaceResourceAsset(v2IntPos, _portalObjectPrefab);
+		ObjectManager.Instance.PlaceObject(v2IntPos, _portalObjectPrefab, Player.LocalClientInstance.GetPlayerEnvironment());
 	}
 	
 	private void PlacePlayerAt(Vector2 portalPosition)
@@ -277,7 +277,7 @@ public class WorldManager : NetworkBehaviour
 			for (int y = -1; y <= 1; y++)
 			{
 				Vector3Int neighborPosition = new(centerPositionInt.x + x, centerPositionInt.y + y, centerPositionInt.z);
-				Environment.Instance.GetWallTilemapData().DeleteTile(new(neighborPosition.x, neighborPosition.y));
+				Environment.Instance.GetWallTilemapData().DeleteTile(new(neighborPosition.x, neighborPosition.y), Player.LocalClientInstance.GetPlayerEnvironment());
 			}
 		}
 	}

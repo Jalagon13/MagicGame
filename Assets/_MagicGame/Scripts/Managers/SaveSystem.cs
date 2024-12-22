@@ -78,7 +78,7 @@ public class SaveSystem : MonoBehaviour
 		List<ChunkFileData> sceneDataChunks = new();
 		
 		// Convert chunks into ChunkData for serialization
-		foreach (var kvp in ChunkManager.Instance.GetChunksFromActiveEnvironment())
+		foreach (var kvp in ChunkManager.Instance.GetChunksFromEnvironment(environmentToSerialize))
 		{
 			ChunkFileData chunkData = new()
 			{
@@ -131,13 +131,13 @@ public class SaveSystem : MonoBehaviour
 		_environmentFileData.WorldAssets.Clear();
 		
 		// Loop through all assets and push them to _sceneData before serializing it
-		foreach (var chunkPosChunkDataKVP in ChunkManager.Instance.GetChunksFromActiveEnvironment())
+		foreach (var chunkPosChunkDataKVP in ChunkManager.Instance.GetChunksFromEnvironment(environmentToSerialize))
 		{
-			var worldAssetGameDataList = chunkPosChunkDataKVP.Value.WorldAssetGameDataList;
+			var worldObjectGameDataList = chunkPosChunkDataKVP.Value.WorldObjectGameDataList;
 		
-			if(worldAssetGameDataList.Count > 0)
+			if(worldObjectGameDataList.Count > 0)
 			{
-				foreach (var worldAssetGameData in worldAssetGameDataList)
+				foreach (var worldAssetGameData in worldObjectGameDataList)
 				{
 					// If so, serialize it
 					if(worldAssetGameData.Asset != null)
@@ -252,7 +252,7 @@ public class SaveSystem : MonoBehaviour
 		{
 			// Fetch each prefab from database
 			WorldObject worldObjectToInst = GameManager.Instance.GetWorldObjectFromID(data.WorldAssetId);
-			ChunkManager.Instance.AddWorldAssetDataToChunk(data.Pos, worldObjectToInst);
+			ChunkManager.Instance.AddObjectDataToChunk(data.Pos, worldObjectToInst, environmentToDeserialize);
 		}
 		
 		Debug.Log($"<color=orange>Asset Data of: </color>{environmentToDeserialize}<color=orange> Deserialized</color>");

@@ -10,7 +10,7 @@ public class ChunkGameData
     public Vector2Int ChunkPosition { get; private set; }
     public List<TileGameData> GroundTileGameDataList;
     public List<TileGameData> WallTileGameDataList;// Note to future self: Make floor serializable too later
-    public List<WorldAssetGameData> WorldAssetGameDataList;
+    public List<WorldObjectGameData> WorldObjectGameDataList;
     public int Size { get; private set; }
 
     public ChunkGameData(int chunkSize, Vector2Int chunkPosition)
@@ -19,7 +19,7 @@ public class ChunkGameData
         ChunkPosition = chunkPosition;
         GroundTileGameDataList = new();
         WallTileGameDataList = new();
-        WorldAssetGameDataList = new();
+        WorldObjectGameDataList = new();
     }
 	
     // When a tile is destroyed, delete the tile data in chunk
@@ -49,32 +49,32 @@ public class ChunkGameData
         WallTileGameDataList.Add(tileToAdd);
     }
 
-    public void AddWorldAssetData(Vector2Int position, WorldObject worldObject)
+    public void AddObjectData(Vector2Int position, WorldObject worldObject)
     {
-        WorldAssetGameData worldAssetToAdd = new(worldObject, position);
+        WorldObjectGameData worldAssetToAdd = new(worldObject, position);
 		
-        WorldAssetGameDataList.Add(worldAssetToAdd);
+        WorldObjectGameDataList.Add(worldAssetToAdd);
     }
 
-    public void RemoveWorldAssetData(Vector2Int position)
+    public void RemoveObjectData(Vector2Int position)
     {
-        foreach (WorldAssetGameData assetGameData in WorldAssetGameDataList)
+        foreach (WorldObjectGameData assetGameData in WorldObjectGameDataList)
         {
             if(assetGameData.Position == position)
             {
-                WorldAssetGameDataList.Remove(assetGameData);
+                WorldObjectGameDataList.Remove(assetGameData);
                 return;
             }
         }
     }
 }
 
-public struct WorldAssetGameData
+public struct WorldObjectGameData
 {
     public WorldObject Asset { get; private set; }
     public Vector2Int Position { get; private set; }
 	
-    public WorldAssetGameData(WorldObject worldObject, Vector2Int position)
+    public WorldObjectGameData(WorldObject worldObject, Vector2Int position)
     {
         Asset = worldObject;
         Position = position;
