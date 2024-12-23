@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Pathfinding;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -40,8 +41,8 @@ public class SaveSystem : MonoBehaviour
 		IsSerializing = true;
 	
 		_path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToSerialize}_data.json";
-		Debug.Log($"Path: " + Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToSerialize}_data.json");
 		Debug.Log($"<color=orange>=============================================</color>");
+		Debug.Log($"Path: " + Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToSerialize}_data.json");
 		// Serialize Assets and Chunks
 		SerializeAssetDataOfCurrentEnvironment(environmentToSerialize);
 		SerializeChunkDataOfCurrentEnvironment(environmentToSerialize);
@@ -165,10 +166,11 @@ public class SaveSystem : MonoBehaviour
 		IsDeserializing = true;
 	
 		_path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToDeserialize}_data.json";
-		Debug.Log($"Path: " + Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToDeserialize}_data.json");
+		
 		if (File.Exists(_path))
 		{
 			Debug.Log($"<color=orange>=============================================</color>");
+			Debug.Log($"Path: " + Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToDeserialize}_data.json");
 			Debug.Log($"<color=orange>Deserializing </color>{environmentToDeserialize}<color=orange> Data From File...</color>");
 			
 			// Read JSON data from file asynchronously
@@ -176,6 +178,8 @@ public class SaveSystem : MonoBehaviour
 			
 			// Deserialize JSON data into SceneData object
 			_environmentFileData = JsonUtility.FromJson<EnvironmentFileData>(json);
+			
+			NodeGraphUtility.TryToCreateGridGraph(environmentToDeserialize);
 			
 			// Dispatch the data
 			DeserializeChunkData(environmentToDeserialize);
@@ -211,6 +215,15 @@ public class SaveSystem : MonoBehaviour
 				GroundTileGameDataList = ConvertTileFileDataToGameData(data.GroundTiles),
 				WallTileGameDataList = ConvertTileFileDataToGameData(data.WallTiles),
 			};
+			
+			// Set up Nodes to be walkable for pathfinding
+			foreach (TileGameData wallTileGameData in chunk.WallTileGameDataList)
+			{
+				var tileWorldPosition = wallTileGameData.TilePosition;
+				var centerNodePosition = new Vector2(tileWorldPosition.x + 0.5f, tileWorldPosition.y + 0.5f);
+			
+				NodeGraphUtility.SetNodeToWalkable(centerNodePosition, environmentToDeserialize, false);
+			}
 			
 			deserializedChunks.Add(data.ChunkPosition, chunk);
 		}

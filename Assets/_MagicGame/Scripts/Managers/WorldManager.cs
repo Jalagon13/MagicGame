@@ -78,14 +78,14 @@ public class WorldManager : NetworkBehaviour
 	}
 	
 	[Button("Generate Environment")]
-	public void GenerateEnvironment(EnvironmentID environmentID)
+	public void GenerateEnvironment(EnvironmentID environmentToGenerate)
 	{
 		// Check if environment is already generated
 		if(_environmentList.Count > 0)
 		{
 			foreach (EnvironmentID environment in _environmentList)
 			{
-				if(environment == environmentID)
+				if(environment == environmentToGenerate)
 				{
 					// Environment found, should not generate an environment already found
 					Debug.LogError("Should not be trying to generate an environment that is already generated");
@@ -95,7 +95,7 @@ public class WorldManager : NetworkBehaviour
 		}
 		
 		// Generate environment based on ID
-		switch(environmentID)
+		switch(environmentToGenerate)
 		{
 			case EnvironmentID.Forest:
 				_environmentList.Add(EnvironmentID.Forest);

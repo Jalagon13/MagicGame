@@ -13,8 +13,6 @@ public class TestingNetcodeUI : MonoBehaviour
 		_startHostButton.onClick.AddListener(async () => 
 		{
 			Debug.Log("HOST");
-			GridGraph gridGraph = AstarPath.active.data.gridGraph;
-			gridGraph.Scan();
 			NetworkManager.Singleton.StartHost();
 			
 			if(SaveSystem.Instance.EnvironmentDataExists(EnvironmentID.Forest))
@@ -25,6 +23,7 @@ public class TestingNetcodeUI : MonoBehaviour
 			{
 				WorldManager.Instance.GenerateEnvironment(EnvironmentID.Forest);
 			}
+			
 			
 			Hide();
 		});

@@ -117,6 +117,7 @@ public class NpcManager : NetworkBehaviour
 		GameObject npcPrefab = Instantiate(npcSO.Prefab, position, Quaternion.identity);
 		
 		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
+		npcNetworkComponent.SetNpcEnvironment(environmentToSpawnIn);
 		npcNetworkComponent.SetSpawningClientId(spawningClientId);
 		npcNetworkComponent.SetNpcId(npcId);
 		

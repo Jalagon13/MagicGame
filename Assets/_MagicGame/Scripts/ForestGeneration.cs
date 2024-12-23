@@ -53,12 +53,20 @@ public class ForestGeneration : MonoBehaviour
 	{
 		Debug.Log("Generating Overworld Data...");
 		ChunkManager.IS_GENERATING_ENVIRONMENT = true;
+		
+		// Create gridgraph for pathfinding for environment if haven't done so already
+		NodeGraphUtility.TryToCreateGridGraph(_environment);
+		
+		// Generate World Data
 		GenerateNoiseMapsBasedOnSeed();
 		GenerateOverworldChunkData();
 		GenerateTrees();
+		
 		ChunkManager.IS_GENERATING_ENVIRONMENT = false;
+		
 		Debug.Log("Overworld Data Generation Complete!");
 		
+		// Save it after its done
 		await SaveSystem.Instance.SerializeDataAndWriteToFile(_environment);
 	}
 	
@@ -112,8 +120,7 @@ public class ForestGeneration : MonoBehaviour
 							TryToAddTileToChunk(wallTileSO, tileWorldPosition, chunkGameData.WallTileGameDataList);
 							
 							var centerNodePosition = new Vector2(tileWorldPosition.x + 0.5f, tileWorldPosition.y + 0.5f);
-							var node = NodeGraphUtility.GetNodeAtPosition(centerNodePosition);
-							node.Walkable = false;
+							NodeGraphUtility.SetNodeToWalkable(centerNodePosition, _environment, false);
 						}
 					}
 				}

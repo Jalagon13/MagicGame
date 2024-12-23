@@ -39,8 +39,17 @@ public class CaveGeneration : MonoBehaviour
 	public async void GenerateCave()
 	{
 		Debug.Log("Generating Cave...");
+		ChunkManager.IS_GENERATING_ENVIRONMENT = true;
+		
+		// Create gridgraph for pathfinding for environment if haven't done so already
+		NodeGraphUtility.TryToCreateGridGraph(_environment);
+		
+		// Generate World Data
 		GenerateNoiseMapsBasedOnSeed();
 		GenerateCaveChunkData();
+		
+		ChunkManager.IS_GENERATING_ENVIRONMENT = false;
+		
 		Debug.Log("Cave Generation Complete!");
 		
 		await SaveSystem.Instance.SerializeDataAndWriteToFile(_environment);
@@ -57,7 +66,7 @@ public class CaveGeneration : MonoBehaviour
 	
 	private void GenerateCaveChunkData()
 	{
-		ChunkManager.Instance.GetChunksFromEnvironment(EnvironmentID.Cave);
+		ChunkManager.Instance.GetChunksFromEnvironment(EnvironmentID.Cave).Clear();
 		
 		int chunkSideAmount = ChunkManager.ENVIRONMENT_SIDE_LENGTH / ChunkManager.CHUNK_SIZE;
 		for (int chunkX = 0; chunkX < chunkSideAmount; chunkX++)
@@ -88,6 +97,9 @@ public class CaveGeneration : MonoBehaviour
 						else
 						{
 							TryToAddTileToChunk(_stoneWallTile, tileWorldPosition, chunkGameData.WallTileGameDataList);
+							
+							var centerNodePosition = new Vector2(tileWorldPosition.x + 0.5f, tileWorldPosition.y + 0.5f);
+							NodeGraphUtility.SetNodeToWalkable(centerNodePosition, _environment, false);
 						}
 					}
 				}

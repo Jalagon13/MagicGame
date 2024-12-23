@@ -13,6 +13,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 	private bool _npcIsBeingRemoved;
 	private Npc _npc;
 	private byte _npcId;
+	private EnvironmentID _npcEnvironment;
 
 	public override void OnNetworkSpawn()
 	{
@@ -24,29 +25,15 @@ public class NpcNetworkComponent : NetworkBehaviour
 			_despawnTimer = new Timer(DESPAWN_TIMER_DURATION);
 			_despawnTimer.OnTimerEnd += HandleDespawnTimerEnd;
 		
-			NetworkObject.CheckObjectVisibility += CheckVisibility;
-
 			if (_continuallyCheckVisibility)
 			{
-				NetworkManager.NetworkTickSystem.Tick += HandleNetworkTick;
+				NetworkManager.NetworkTickSystem.Tick += NpcNetworkTick;
 			}
 		}
 		base.OnNetworkSpawn();
 	}
 	
-	private bool CheckVisibility(ulong clientId)
-	{
-		// If not spawned, then always return false
-		if (!IsSpawned)
-		{
-			return false;
-		}
-
-		// NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>();
-
-		// // We can do a simple distance check between the NetworkObject instance position and the client
-		return Vector3.Distance(NetworkManager.ConnectedClients[clientId].PlayerObject.transform.position, transform.position) <= 1;
-	}
+	
 
 	private void Npc_OnNpcKilled(object sender, EventArgs e)
 	{
@@ -70,8 +57,13 @@ public class NpcNetworkComponent : NetworkBehaviour
 	{
 		_npcId = npcId;
 	}
+	
+	public void SetNpcEnvironment(EnvironmentID environment)
+	{
+		_npcEnvironment = environment;
+	}
 
-	private bool DetermineIfInSpawnZone(ulong clientId)
+	private bool CheckIfInSpawnZone(ulong clientId)
 	{
 		if (!IsSpawned) return false;
 
@@ -79,10 +71,90 @@ public class NpcNetworkComponent : NetworkBehaviour
 		return IsPointInRectangle(transform.position, playerPos, NpcManager.SPAWN_ZONE_WIDTH, NpcManager.SPAWN_ZONE_HEIGHT);
 	}
 
-	private void HandleNetworkTick()
+	private void NpcNetworkTick()
 	{
-		UpdateNpcVisibility();
-		UpdateDespawnTimer();
+		HandleNpcEnvironmentVisibility();
+		// HandleNpcSpawnZoneVisibility();
+		// UpdateDespawnTimer();
+	}
+
+	private void HandleNpcEnvironmentVisibility()
+	{
+		foreach (var clientId in NetworkManager.ConnectedClientsIds)
+		{
+			var isInSameEnvironment = CheckIfInSameEnvironment(clientId);
+			var isVisibile = NetworkObjectVisibleTo(clientId);
+			
+			if(isInSameEnvironment && !isVisibile)
+			{
+				ShowNpc(clientId);
+			}
+			else if(!isInSameEnvironment && isVisibile)
+			{
+				HideNpc(clientId);
+			}
+		}
+	}
+	
+	private void ShowNpc(ulong clientId)
+	{
+		Debug.Log($"Showing {gameObject.name} to player {clientId}");
+		if(OwnerClientId == NetworkManager.ServerClientId)
+		{
+			gameObject.SetActive(true);
+		}
+				
+		NetworkObject.NetworkShow(clientId);
+	}
+	
+	private void HideNpc(ulong clientId)
+	{
+		Debug.Log($"Hiding {gameObject.name} to player {clientId}");
+		if(OwnerClientId == NetworkManager.ServerClientId)
+		{
+			gameObject.SetActive(false);
+		}
+				
+		NetworkObject.NetworkHide(clientId);
+	}
+	
+	private bool NetworkObjectVisibleTo(ulong clientId)
+	{
+		if(OwnerClientId == NetworkManager.ServerClientId)
+		{
+			return gameObject.activeInHierarchy;
+		}
+		else
+		{
+			return NetworkObject.IsNetworkVisibleTo(clientId);
+		}
+	}
+
+	private void HandleNpcSpawnZoneVisibility()
+	{
+		foreach (var clientId in NetworkManager.ConnectedClientsIds)
+		{
+			// If clientId is not the same environment as this NPC, skip it
+			if(!CheckIfInSameEnvironment(clientId)) continue;
+			
+			bool isInSpawnZone = CheckIfInSpawnZone(clientId);
+
+			if (!isInSpawnZone && !_npcIsBeingRemoved)
+			{
+				if (!IsNpcVisibleToAnyOtherClient(clientId))
+				{
+					// If NPC is NOT visible to any other client once it reaches outside the spawn zone of this client, despawn it
+					DespawnNpc();
+				}
+			}
+		}
+	}
+
+	private bool CheckIfInSameEnvironment(ulong clientId)
+	{
+		var clientEnvironment = NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().GetPlayerEnvironment();
+	
+		return clientEnvironment == _npcEnvironment;
 	}
 
 	private void UpdateDespawnTimer()
@@ -91,6 +163,9 @@ public class NpcNetworkComponent : NetworkBehaviour
 
 		foreach (var clientId in NetworkManager.ConnectedClientsIds)
 		{
+			// If clientId is not the same environment as this NPC, skip it
+			if(!CheckIfInSameEnvironment(clientId)) continue;
+		
 			var playerPos = NetworkManager.ConnectedClients[clientId].PlayerObject.transform.position;
 			if (IsPointInRectangle(transform.position, playerPos, NpcManager.NO_SPAWN_ZONE_WIDTH, NpcManager.NO_SPAWN_ZONE_HEIGHT))
 			{
@@ -124,28 +199,6 @@ public class NpcNetworkComponent : NetworkBehaviour
 		DespawnNpc();
 	}
 
-	private void UpdateNpcVisibility()
-	{
-		foreach (var clientId in NetworkManager.ConnectedClientsIds)
-		{
-			bool isInSpawnZone = DetermineIfInSpawnZone(clientId);
-
-			if (!isInSpawnZone && !_npcIsBeingRemoved)
-			{
-				HideNpc(clientId);
-			}
-		}
-	}
-
-	private void HideNpc(ulong clientId)
-	{
-		if (!IsNpcVisibleToAnyOtherClient(clientId))
-		{
-			// If NPC is NOT visible to any other client once it reaches outside the spawn zone of this client, despawn it
-			DespawnNpc();
-		}
-	}
-
 	private bool IsNpcVisibleToAnyOtherClient(ulong excludedClientId)
 	{
 		int clientsFound = 0;
@@ -154,7 +207,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 		{
 			if (clientId == excludedClientId) continue;
 			
-			bool isInSpawnZone = DetermineIfInSpawnZone(clientId);
+			bool isInSpawnZone = CheckIfInSpawnZone(clientId);
 			
 			if(isInSpawnZone)
 			{
@@ -164,7 +217,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 		
 		if(clientsFound > 0)
 		{
-			// There exists anther client that wants to show this NPC, so do some local un-rendering on THIS client and not the client that wants to show the NPC
+			// There exists another client that wants to show this NPC, so do some local un-rendering on THIS client and not the client that wants to show the NPC
 			return true;
 		}
 		
@@ -182,8 +235,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 	{
 		if (IsServer)
 		{
-			NetworkManager.NetworkTickSystem.Tick -= HandleNetworkTick;
-			NetworkObject.CheckObjectVisibility -= CheckVisibility;
+			NetworkManager.NetworkTickSystem.Tick -= NpcNetworkTick;
 			_npc.OnNpcKilled -= Npc_OnNpcKilled;
 		}
 

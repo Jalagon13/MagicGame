@@ -76,8 +76,7 @@ public class Environment : NetworkBehaviour
 		
 		// Update pathfinding
 		var centerNodePosition = new Vector2(syncPos.x + 0.5f, syncPos.y + 0.5f);
-		var node = NodeGraphUtility.GetNodeAtPosition(centerNodePosition);
-		node.Walkable = false;
+		NodeGraphUtility.SetNodeToWalkable(centerNodePosition, environment, false);
 		
 		HandleTileVisualClientRpc(syncPos, syncTileId, syncTileType);
 	}

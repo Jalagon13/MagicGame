@@ -9,7 +9,7 @@ public class PlayerNetworkComponent : NetworkBehaviour
 		if (IsServer)
 		{
 			NetworkObject.CheckObjectVisibility += CheckVisibility;
-			NetworkManager.NetworkTickSystem.Tick += HandleNetworkTick;
+			NetworkManager.NetworkTickSystem.Tick += HandleOtherPlayerVisibility;
 		}
 		base.OnNetworkSpawn();
 	}
@@ -30,7 +30,7 @@ public class PlayerNetworkComponent : NetworkBehaviour
 		return ownerClientEnvironment == nonClientIdPlayerEnvironment;
 	}
 
-	private void HandleNetworkTick()
+	private void HandleOtherPlayerVisibility()
 	{
 		foreach (var clientId in NetworkManager.ConnectedClientsIds)
 		{
@@ -42,7 +42,7 @@ public class PlayerNetworkComponent : NetworkBehaviour
 			
 			if(shouldBeVisible && !isVisibile)
 			{
-				Debug.Log($"Showing {clientId}'s player from {OwnerClientId}");
+				// Debug.Log($"Showing {clientId}'s player from {OwnerClientId}");
 				if(OwnerClientId == NetworkManager.ServerClientId)
 				{
 					NetworkManager.ConnectedClients[clientId].PlayerObject.gameObject.SetActive(true);
@@ -52,7 +52,7 @@ public class PlayerNetworkComponent : NetworkBehaviour
 			}
 			else if(!shouldBeVisible && isVisibile)
 			{
-				Debug.Log($"Hiding {clientId}'s player from {OwnerClientId}");
+				// Debug.Log($"Hiding {clientId}'s player from {OwnerClientId}");
 				if(OwnerClientId == NetworkManager.ServerClientId)
 				{
 					NetworkManager.ConnectedClients[clientId].PlayerObject.gameObject.SetActive(false);
@@ -80,7 +80,7 @@ public class PlayerNetworkComponent : NetworkBehaviour
 		if (IsServer)
 		{
 			NetworkObject.CheckObjectVisibility -= CheckVisibility;
-			NetworkManager.NetworkTickSystem.Tick -= HandleNetworkTick;
+			NetworkManager.NetworkTickSystem.Tick -= HandleOtherPlayerVisibility;
 		}
 
 		base.OnNetworkDespawn();
