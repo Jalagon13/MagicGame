@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
 	public static GameManager Instance { get; private set; }
 	
@@ -124,15 +124,27 @@ public class GameManager : MonoBehaviour
 	
 	public void SpawnMiningProjectile(Vector2 spawnPoint, Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected)
 	{
-		SpawnMiningProjectileServerRpc(spawnPoint, travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected);
+		if(!Player.LocalClientInstance.IsHost)
+		{
+			// If player is not host, spawn the fake projectile and hide the actual server projectile
+			MiningProjectile dummyProjectile = Instantiate(_miningProjectilePrefab, spawnPoint, Quaternion.identity);
+			dummyProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected);
+		}
+		
+		SpawnMiningProjectileServerRpc(spawnPoint, travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.IsHost);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnMiningProjectileServerRpc(Vector2 spawnPoint, Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected)
+	private void SpawnMiningProjectileServerRpc(Vector2 spawnPoint, Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected, ulong clientSenderId, bool isHost)
 	{
 		MiningProjectile miningProjectile = Instantiate(_miningProjectilePrefab, spawnPoint, Quaternion.identity);
 		miningProjectile.GetComponent<NetworkObject>().Spawn(true);
 		miningProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected);
+		
+		if(!isHost)
+		{
+			miningProjectile.GetComponent<NetworkObject>().NetworkHide(clientSenderId);
+		}
 	}
 	
 	public void SpawnItem(ItemSO itemToSpawn, int amount, Vector2 spawnPos, bool playAudio = true)

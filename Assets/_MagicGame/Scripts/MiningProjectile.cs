@@ -67,9 +67,12 @@ public class MiningProjectile : NetworkBehaviour
 			
 				// Spawn hit prefab.
 				SpawnHitPrefab();
-				
-				// HitTilemap
-				HitTilemap();
+			
+				if(IsServer)
+				{
+					// HitTilemap
+					HitTilemap();
+				}
 			
 				// Just destroy gameobject if clickable is destroyed already.
 				StopProjectile();
@@ -90,10 +93,12 @@ public class MiningProjectile : NetworkBehaviour
 					if(_spellCollider.IsTouching(collider))
 					{
 						// StatManager.Instance.RemoveFromStat(StatManager.Stat.Mana, 1);// Change hard coded 1 in the future
-				
-						// Register hit.
-						Vector2Int resourcePosition = new(Mathf.RoundToInt(resourceAsset.transform.position.x), Mathf.RoundToInt(resourceAsset.transform.position.y));
-						ObjectManager.Instance.DamageObject(resourcePosition, (ushort)_miningPower, Player.LocalClientInstance.GetPlayerEnvironment());
+						if(IsServer)
+						{
+							// Register hit.
+							Vector2Int resourcePosition = new(Mathf.RoundToInt(resourceAsset.transform.position.x), Mathf.RoundToInt(resourceAsset.transform.position.y));
+							ObjectManager.Instance.DamageObject(resourcePosition, (ushort)_miningPower, Player.LocalClientInstance.GetPlayerEnvironment());
+						}
 				
 						// Spawn hit prefab.
 						SpawnHitPrefab();
