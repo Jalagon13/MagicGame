@@ -33,6 +33,7 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 	private Rigidbody2D _rb;
 	private CardinalDirection _previousDirection;
 	private CardinalDirection _currentDirection;
+	private GridGraph _gridGraph;
 
 	public Vector3 ThreatSource { get; private set; }
 	public AIPath Agent { get; private set; }
@@ -43,41 +44,41 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 	public int FleeSpeed => _fleeSpeed;
 	public int WanderSpeed => _wanderSpeed;
 	public bool IsMoving { get; set; }
+	public GridGraph NpcGridGraph => _gridGraph;
 
 	public override void OnNetworkSpawn()
 	{
-		if(IsServer)
-		{
-			InitializeServerComponents();
-		}
-	
-		base.OnNetworkSpawn();
-	}
-	
-	private void InitializeServerComponents()
-	{
-		// Populate dictionary with livestock states
-		_states[LivestockState.Idle] = new LivestockIdleState(LivestockState.Idle, this);
-		_states[LivestockState.Wandering] = new LivestockWanderingState(LivestockState.Wandering, this);
-		_states[LivestockState.Fleeing] = new LivestockFleeingState(LivestockState.Fleeing, this);
-		_currentState = _states[LivestockState.Idle];
-		
-		// Get knockback component for dealing damage and knockback
-		_knockback = GetComponent<Knockback>();
-		_knockback.OnKnockbackStart += Knockback_OnKnockbackStart;
-		_knockback.OnKnockbackEnd += Knockback_OnKnockbackEnd;
-		
-		// Rigidbody setup
-		_rb = GetComponent<Rigidbody2D>();
-		_rb.linearDamping = _knockbackResist;
-		
 		// Get AIPath component for movement
 		Agent = GetComponent<AIPath>();
 		Agent.maxSpeed = _wanderSpeed;
+	
+		if(IsServer)
+		{
+			// Populate dictionary with livestock states
+			_states[LivestockState.Idle] = new LivestockIdleState(LivestockState.Idle, this);
+			_states[LivestockState.Wandering] = new LivestockWanderingState(LivestockState.Wandering, this);
+			_states[LivestockState.Fleeing] = new LivestockFleeingState(LivestockState.Fleeing, this);
+			_currentState = _states[LivestockState.Idle];
 		
-		// Set up Npc on death
-		_npc = GetComponent<Npc>();
-		_npc.OnNpcKilled += Npc_OnNpcKilled;
+			// Get knockback component for dealing damage and knockback
+			_knockback = GetComponent<Knockback>();
+			_knockback.OnKnockbackStart += Knockback_OnKnockbackStart;
+			_knockback.OnKnockbackEnd += Knockback_OnKnockbackEnd;
+		
+			// Rigidbody setup
+			_rb = GetComponent<Rigidbody2D>();
+			_rb.linearDamping = _knockbackResist;
+		
+			// Set up Npc on death
+			_npc = GetComponent<Npc>();
+			_npc.OnNpcKilled += Npc_OnNpcKilled;
+		
+			// Set up the environment of the NPC so it knows how to pathfind itself
+			var npcEnvironment = GetComponent<NpcNetworkComponent>().GetNpcEnvironment();
+			_gridGraph = NodeGraphUtility.GetGridGraph(npcEnvironment);
+		}
+	
+		base.OnNetworkSpawn();
 	}
 
 	protected override void Start()
@@ -89,10 +90,12 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 
 	protected override void FixedUpdate()
 	{
-		if(!IsServer) return;
+		if(IsServer)
+		{
+			base.FixedUpdate();
+		}
 	
-		base.FixedUpdate();
-	
+		// Make it check the velocity of the game object itself somehow
 		if(Agent.desiredVelocity.magnitude > 0.1f)
 		{
 			// Get the current velocity and convert it to a cardinal direction.

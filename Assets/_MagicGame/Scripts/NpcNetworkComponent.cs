@@ -14,16 +14,21 @@ public class NpcNetworkComponent : NetworkBehaviour
 	private Npc _npc;
 	private byte _npcId;
 	private EnvironmentID _npcEnvironment;
+	private GameObject _npcGameObject;
+	private Collider2D _npcCollider;
 
 	public override void OnNetworkSpawn()
 	{
 		if (IsServer)
 		{
+			_npcGameObject = transform.GetChild(0).gameObject;
 			_npc = GetComponent<Npc>();
 			_npc.OnNpcKilled += Npc_OnNpcKilled;
 		
 			_despawnTimer = new Timer(DESPAWN_TIMER_DURATION);
 			_despawnTimer.OnTimerEnd += HandleDespawnTimerEnd;
+			
+			_npcCollider = GetComponent<Collider2D>();
 		
 			if (_continuallyCheckVisibility)
 			{
@@ -99,9 +104,13 @@ public class NpcNetworkComponent : NetworkBehaviour
 	private void ShowNpc(ulong clientId)
 	{
 		Debug.Log($"Showing {gameObject.name} to player {clientId}");
-		if(OwnerClientId == NetworkManager.ServerClientId)
+		if(clientId == NetworkManager.ServerClientId)
 		{
-			gameObject.SetActive(true);
+			_npcGameObject.SetActive(true);
+			if(_npcCollider != null)
+			{
+				_npcCollider.enabled = true;
+			}
 		}
 				
 		NetworkObject.NetworkShow(clientId);
@@ -110,9 +119,10 @@ public class NpcNetworkComponent : NetworkBehaviour
 	private void HideNpc(ulong clientId)
 	{
 		Debug.Log($"Hiding {gameObject.name} to player {clientId}");
-		if(OwnerClientId == NetworkManager.ServerClientId)
+		if(clientId == NetworkManager.ServerClientId)
 		{
-			gameObject.SetActive(false);
+			_npcGameObject.SetActive(false);
+			_npcCollider.enabled = false;
 		}
 				
 		NetworkObject.NetworkHide(clientId);
@@ -120,14 +130,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 	
 	private bool NetworkObjectVisibleTo(ulong clientId)
 	{
-		if(OwnerClientId == NetworkManager.ServerClientId)
-		{
-			return gameObject.activeInHierarchy;
-		}
-		else
-		{
-			return NetworkObject.IsNetworkVisibleTo(clientId);
-		}
+		return clientId == NetworkManager.ServerClientId ? _npcGameObject.activeInHierarchy : NetworkObject.IsNetworkVisibleTo(clientId);
 	}
 
 	private void HandleNpcSpawnZoneVisibility()
@@ -222,6 +225,11 @@ public class NpcNetworkComponent : NetworkBehaviour
 		}
 		
 		return false;
+	}
+	
+	public EnvironmentID GetNpcEnvironment()
+	{
+		return _npcEnvironment;
 	}
 
 	private void DespawnNpc()

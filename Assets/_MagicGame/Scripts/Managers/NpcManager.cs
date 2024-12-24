@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class NpcManager : NetworkBehaviour
 {
+	public event EventHandler<OnNpcSpawnEventArgs> OnNpcSpawn;
+	public class OnNpcSpawnEventArgs : EventArgs 
+	{
+		public GameObject NpcGameObject;
+	}
+
 	public static int SPAWN_ZONE_WIDTH = 48;
 	public static int SPAWN_ZONE_HEIGHT = 28;
 	public static int NO_SPAWN_ZONE_WIDTH = 35;
@@ -52,7 +58,7 @@ public class NpcManager : NetworkBehaviour
 		// InvokeRepeating(nameof(TrySpawnEntity), 1, _tickTime);
 	}
 	
-	public void TrySpawnEntity()
+	public void AttemptToSpawnNpc()
 	{
 		// If there is no chunks loaded, then don't try to spawn anything
 		// NTFS: This might not work, first place to look if mob spawning is bugged
@@ -126,6 +132,11 @@ public class NpcManager : NetworkBehaviour
 		
 		// replace this with dimension specific entity list that contains mobs and projectiles for entities
 		_activeNpcNetworkList.Add(npcPrefabNetworkObject);
+		
+		OnNpcSpawn?.Invoke(this, new OnNpcSpawnEventArgs
+		{
+			NpcGameObject = npcPrefab
+		});
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]

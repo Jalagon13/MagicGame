@@ -4,6 +4,27 @@ using UnityEngine;
 
 public static class NodeGraphUtility
 {
+	public static GridGraph GetGridGraph(EnvironmentID environment)
+	{
+		// Get the A* Pathfinding Graphs instance
+		AstarData astarData = AstarPath.active.data;
+
+		// Find the GridGraph for the specified environment
+		string environmentGraphName = environment.ToString();
+
+		foreach (NavGraph graph in astarData.graphs)
+		{
+			if (graph is GridGraph gridGraph && gridGraph.name == environmentGraphName)
+			{
+				return gridGraph; // Return the matching GridGraph
+			}
+		}
+
+		// If no matching GridGraph is found, log a warning and return null
+		Debug.LogWarning($"No GridGraph found for environment {environment}!");
+		return null;
+	}
+
 	public static void TryToCreateGridGraph(EnvironmentID environment)
 	{
 		// If a grid graph for this environment exists, don't do anything
@@ -91,7 +112,6 @@ public static class NodeGraphUtility
 	public static void SetNodeToWalkable(Vector2 centerNodePosition, EnvironmentID environment, bool isWalkable)
 	{
 		var node = GetNodeAtPosition(centerNodePosition, environment);
-		Debug.Log($"Setting node at {centerNodePosition} in {environment} to Walkabe = {isWalkable}");
 		node.Walkable = isWalkable;
 	}
 
