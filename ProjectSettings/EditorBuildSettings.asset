@@ -8,6 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_MagicGame/Scenes/GameScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/_MagicGame/Scenes/LoadingScene.unity
+    guid: 11a9694e42f194d3aa6b341dccb72d60
+  - enabled: 1
+    path: Assets/_MagicGame/Scenes/MainMenuScene.unity
+    guid: 3623c1bb99cfb4d158262f327d9101db
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 888e4674763de4b2bab2c9075890e78f, type: 3}
   m_UseUCBPForAssetBundles: 0

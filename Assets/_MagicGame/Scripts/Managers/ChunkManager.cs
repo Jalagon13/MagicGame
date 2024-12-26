@@ -43,6 +43,7 @@ public class ChunkManager : NetworkBehaviour
 	
 	private void Awake()
 	{
+		_loadedPlayerChunks = new();
 		Instance = this;
 		_chunkNetworkManager = GetComponent<ChunkNetworkManager>();
 	}

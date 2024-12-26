@@ -1,13 +1,23 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using MoreMountains.Tools;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class GameManager : NetworkBehaviour
 {
 	public static GameManager Instance { get; private set; }
+	
+	
+	[Title("Item Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
+	[SerializeField] private GameObject _itemBasePrefab;
+	[SerializeField] private GameObject _playerPrefab;
+	[SerializeField] private MiningProjectile _miningProjectilePrefab;
+	[SerializeField] private AudioClip _pickupClip;
 	
 	[Title("Database Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private ItemDataBaseSO _itemDataBaseSO;
@@ -16,16 +26,37 @@ public class GameManager : NetworkBehaviour
 	[SerializeField] private ItemParameterDataBaseSO _itemParameterDataBaseSO;
 	[SerializeField] private NpcDataBaseSO _npcDataBaseSO;
 	
-	[Title("Item Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
-	[SerializeField] private GameObject _itemBasePrefab;
-	[SerializeField] private MiningProjectile _miningProjectilePrefab;
-	[SerializeField] private AudioClip _pickupClip;
-	
 	private void Awake()
 	{
 		Instance = this;
 	}
+
+	private void Start()
+	{
+		Transform playerTransform = Instantiate(_playerPrefab.transform);
+		playerTransform.GetComponent<NetworkObject>().SpawnAsPlayerObject(OwnerClientId, true);
+		
+		if(IsHost)
+		{
+			LoadEnvironment();
+		}
+	}
 	
+	private async void LoadEnvironment()
+	{
+		if(IsHost)
+		{
+			if(SaveSystem.Instance.EnvironmentDataExists(EnvironmentID.Forest))
+			{
+				await SaveSystem.Instance.DeserializeAndDispatchData(EnvironmentID.Forest);
+			}
+			else
+			{
+				WorldManager.Instance.GenerateEnvironment(EnvironmentID.Forest);
+			}
+		}
+	}
+
 	public NpcSO GetNpcSOFromId(byte id)
 	{
 		return _npcDataBaseSO.NpcSOList[id];
