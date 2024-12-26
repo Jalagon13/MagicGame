@@ -41,7 +41,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	private NetworkVariable<EnvironmentID> _playerEnvironment = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private NetworkVariable<int> _focusItemIndexNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private NetworkVariable<int> _healthNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	private NetworkVariable<int> _manaNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	private NetworkVariable<int> _manaNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private Knockback _knockback;
 	private Rigidbody2D _rb;
 	private Timer _respawnTimer;
@@ -94,6 +94,16 @@ public class Player : NetworkBehaviour, IHasHealth
 		if(IsDead() && NetworkManager.LocalClientId == OwnerClientId)
 		{
 			_respawnTimer.Tick(Time.deltaTime);
+		}
+	}
+	
+	public void RemoveMana(int amount)
+	{
+		_manaNetworkVariable.Value -= amount;
+		
+		if(_manaNetworkVariable.Value < 0)
+		{
+			_manaNetworkVariable.Value = 0;
 		}
 	}
 	

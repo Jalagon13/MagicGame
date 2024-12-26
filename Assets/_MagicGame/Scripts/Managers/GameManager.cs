@@ -128,7 +128,7 @@ public class GameManager : NetworkBehaviour
 		{
 			// If player is not host, spawn the fake projectile and hide the actual server projectile
 			MiningProjectile dummyProjectile = Instantiate(_miningProjectilePrefab, spawnPoint, Quaternion.identity);
-			dummyProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected);
+			dummyProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected, Player.LocalClientInstance.OwnerClientId);
 		}
 		
 		SpawnMiningProjectileServerRpc(spawnPoint, travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.IsHost);
@@ -139,7 +139,7 @@ public class GameManager : NetworkBehaviour
 	{
 		MiningProjectile miningProjectile = Instantiate(_miningProjectilePrefab, spawnPoint, Quaternion.identity);
 		miningProjectile.GetComponent<NetworkObject>().Spawn(true);
-		miningProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected);
+		miningProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected, clientSenderId);
 		
 		if(!isHost)
 		{

@@ -18,6 +18,7 @@ public class MiningProjectile : NetworkBehaviour
 	private Collider2D _spellCollider;
 	private int _miningPower;
 	private bool _projectileEnd = true;
+	private ulong _senderId;
 	private bool _mouseOverFloor, _mouseOverWall, _resourceSelected;
 	
 	private void Awake()
@@ -41,7 +42,7 @@ public class MiningProjectile : NetworkBehaviour
 		}
 	}
 	
-	public void InitializeMiningSpell(Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected)
+	public void InitializeMiningSpell(Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected, ulong senderId)
 	{
 		_travelPoint = travelPoint;
 		_miningPower = miningPower;
@@ -49,6 +50,7 @@ public class MiningProjectile : NetworkBehaviour
 		_mouseOverWall = mouseOverWall;
 		_resourceSelected = resourceSelected;
 		_projectileEnd = false;
+		_senderId = senderId;
 	}
 	
 	private void FixedUpdate()
@@ -72,6 +74,7 @@ public class MiningProjectile : NetworkBehaviour
 				{
 					// HitTilemap
 					HitTilemap();
+					RemoveManaClientRpc();
 				}
 			
 				// Just destroy gameobject if clickable is destroyed already.
@@ -92,12 +95,13 @@ public class MiningProjectile : NetworkBehaviour
 				{
 					if(_spellCollider.IsTouching(collider))
 					{
-						// StatManager.Instance.RemoveFromStat(StatManager.Stat.Mana, 1);// Change hard coded 1 in the future
 						if(IsServer)
 						{
 							// Register hit.
 							Vector2Int resourcePosition = new(Mathf.RoundToInt(resourceAsset.transform.position.x), Mathf.RoundToInt(resourceAsset.transform.position.y));
 							ObjectManager.Instance.DamageObject(resourcePosition, (ushort)_miningPower, Player.LocalClientInstance.GetPlayerEnvironment());
+							
+							RemoveManaClientRpc(RpcTarget.Single(_senderId, RpcTargetUse.Persistent));
 						}
 				
 						// Spawn hit prefab.
@@ -111,6 +115,13 @@ public class MiningProjectile : NetworkBehaviour
 				}
 			}
 		}
+	}
+	
+	[Rpc(SendTo.SpecifiedInParams)]
+	private void RemoveManaClientRpc(RpcParams rpcParams = default)
+	{
+		Player.LocalClientInstance.RemoveMana(1);
+		Debug.Log($"Removing 1 mana from player {Player.LocalClientInstance.OwnerClientId}");
 	}
 
 	private void HitTilemap()
