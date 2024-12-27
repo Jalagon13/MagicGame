@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using MoreMountains.Tools;
@@ -26,34 +27,48 @@ public class GameManager : NetworkBehaviour
 	[SerializeField] private ItemParameterDataBaseSO _itemParameterDataBaseSO;
 	[SerializeField] private NpcDataBaseSO _npcDataBaseSO;
 	
+	private bool _isFirstUpdate = true;
+	
 	private void Awake()
 	{
 		Instance = this;
 	}
-
-	private void Start()
+	
+	private void OnEnable()
 	{
-		Transform playerTransform = Instantiate(_playerPrefab.transform);
-		playerTransform.GetComponent<NetworkObject>().SpawnAsPlayerObject(OwnerClientId, true);
+		// Subscribe to the sceneLoaded event
+		SceneManager.sceneLoaded += OnSceneLoaded;
+	}
+
+	private void OnDisable()
+	{
+		// Unsubscribe from the sceneLoaded event to avoid memory leaks
+		SceneManager.sceneLoaded -= OnSceneLoaded;
+	}
+
+	// This function is called whenever a scene has finished loading
+	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	{
+		Debug.Log($"Scene {scene.name} has finished loading.");
+		Debug.Log(HotbarManager.Instance == null);
+		NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(_playerPrefab.GetComponent<NetworkObject>(), OwnerClientId, isPlayerObject: true, position: new Vector3(128, 128), rotation: Quaternion.identity);
 		
-		if(IsHost)
+		if(OwnerClientId == NetworkManager.ServerClientId)
 		{
-			LoadEnvironment();
+		Debug.Log("hostin it up");
+			HandleEnvironment();
 		}
 	}
 	
-	private async void LoadEnvironment()
+	private async void HandleEnvironment()
 	{
-		if(IsHost)
+		if(SaveSystem.Instance.EnvironmentDataExists(EnvironmentID.Forest))
 		{
-			if(SaveSystem.Instance.EnvironmentDataExists(EnvironmentID.Forest))
-			{
-				await SaveSystem.Instance.DeserializeAndDispatchData(EnvironmentID.Forest);
-			}
-			else
-			{
-				WorldManager.Instance.GenerateEnvironment(EnvironmentID.Forest);
-			}
+			await SaveSystem.Instance.DeserializeAndDispatchData(EnvironmentID.Forest);
+		}
+		else
+		{
+			WorldManager.Instance.GenerateEnvironment(EnvironmentID.Forest);
 		}
 	}
 

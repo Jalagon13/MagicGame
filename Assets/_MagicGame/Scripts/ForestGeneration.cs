@@ -51,7 +51,7 @@ public class ForestGeneration : MonoBehaviour
 
 	public async void GenerateForest()
 	{
-		Debug.Log("Generating Overworld Data...");
+		Debug.Log("Generating Forest Data...");
 		ChunkManager.IS_GENERATING_ENVIRONMENT = true;
 		
 		// Create gridgraph for pathfinding for environment if haven't done so already
@@ -64,7 +64,7 @@ public class ForestGeneration : MonoBehaviour
 		
 		ChunkManager.IS_GENERATING_ENVIRONMENT = false;
 		
-		Debug.Log("Overworld Data Generation Complete!");
+		Debug.Log("Forest Data Generation Complete!");
 		
 		// Save it after its done
 		await SaveSystem.Instance.SerializeDataAndWriteToFile(_environment);
