@@ -74,7 +74,7 @@ public class MiningProjectile : NetworkBehaviour
 				{
 					// HitTilemap
 					HitTilemap();
-					RemoveManaClientRpc();
+					RemoveManaClientRpc(_senderId);
 				}
 			
 				// Just destroy gameobject if clickable is destroyed already.
@@ -101,7 +101,7 @@ public class MiningProjectile : NetworkBehaviour
 							Vector2Int resourcePosition = new(Mathf.RoundToInt(resourceAsset.transform.position.x), Mathf.RoundToInt(resourceAsset.transform.position.y));
 							ObjectManager.Instance.DamageObject(resourcePosition, (ushort)_miningPower, Player.LocalClientInstance.GetPlayerEnvironment());
 							
-							RemoveManaClientRpc(RpcTarget.Single(_senderId, RpcTargetUse.Persistent));
+							RemoveManaClientRpc(_senderId);
 						}
 				
 						// Spawn hit prefab.
@@ -117,9 +117,11 @@ public class MiningProjectile : NetworkBehaviour
 		}
 	}
 	
-	[Rpc(SendTo.SpecifiedInParams)]
-	private void RemoveManaClientRpc(RpcParams rpcParams = default)
+	[Rpc(SendTo.ClientsAndHost)]
+	private void RemoveManaClientRpc(ulong clientId)
 	{
+		if(clientId != NetworkManager.Singleton.LocalClientId) return;
+	
 		Player.LocalClientInstance.RemoveMana(1);
 		Debug.Log($"Removing 1 mana from player {Player.LocalClientInstance.OwnerClientId}");
 	}

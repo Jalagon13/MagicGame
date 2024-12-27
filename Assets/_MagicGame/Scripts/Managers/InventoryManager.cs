@@ -26,13 +26,13 @@ public class InventoryManager : MonoBehaviour
 	
 	[SerializeField] private int _slotAmount;
 	[SerializeField] private AudioClip _collectSound;
-	[SerializeField] private ItemCollectPlate _itemCollectPlatePrefab;
+	[SerializeField] private ItemCollectWorldUI _itemCollectPlatePrefab;
 	[SerializeField] private MMF_Player _slotClickFeedbacks;
 	
 	private InventoryModel _inventoryModel;
 	private MouseItemModel _mouseItemModel;
 	private Queue<InventoryItem> _itemQueue = new();
-	private Dictionary<string, ItemCollectPlate> _itemPlates = new(); // Maybe replace string with an item id if I decide to make that later
+	private Dictionary<string, ItemCollectWorldUI> _itemPlates = new(); // Maybe replace string with an item id if I decide to make that later
 	private bool _gotItemThisFrame, _gaveItemThisFrame, _isCollecting;
 	
 	private void Awake()
@@ -160,7 +160,7 @@ public class InventoryManager : MonoBehaviour
 	private void SpawnItemCollectPlate(InventoryItem itemToCollect)
 	{
 		string itemName = itemToCollect.Item.Name;
-		ItemCollectPlate itemPlate = Instantiate(_itemCollectPlatePrefab, Player.LocalClientInstance.transform.position, Quaternion.identity);
+		ItemCollectWorldUI itemPlate = Instantiate(_itemCollectPlatePrefab, Player.LocalClientInstance.transform.position, Quaternion.identity);
 		itemPlate.DisplayedItem = itemToCollect;
 		itemPlate.OnAnimationComplete += () => 
 		{

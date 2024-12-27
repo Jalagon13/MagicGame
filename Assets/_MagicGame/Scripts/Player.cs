@@ -65,6 +65,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		if(IsOwner)
 		{
 			_playerEnvironment.Value = EnvironmentID.Forest; // For now all players will spawn in the forest
+			_manaNetworkVariable.Value = _startingMana;
 			Debug.Log($"Environment of {gameObject.name} set to {_playerEnvironment.Value}");
 		
 			LocalClientInstance = this;
@@ -77,7 +78,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		if(IsServer)
 		{
 			_healthNetworkVariable.Value = _startingHealth;
-			_manaNetworkVariable.Value = _startingMana;
 		}
 		
 		OnAnyPlayerSpawned?.Invoke(this, new PlayerIdEventArgs

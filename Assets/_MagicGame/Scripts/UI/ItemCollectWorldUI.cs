@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 
 // Facilitates destination of item collect plate
-public class ItemCollectPlate : MonoBehaviour
+public class ItemCollectWorldUI : MonoBehaviour
 {
     public event Action OnAnimationComplete;
 
@@ -101,7 +101,7 @@ public class ItemCollectPlate : MonoBehaviour
         foreach(Collider2D col in colliders)
         {
             // If plate is found on this collider,
-            if(col.CompareTag("ItemNamePlate"))
+            if(col.TryGetComponent(out ItemCollectWorldUITag tag))
             {
                 // Space is not free, return false
                 return false;

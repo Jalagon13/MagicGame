@@ -38,6 +38,7 @@ public class GameManager : NetworkBehaviour
 	{
 		// Subscribe to the sceneLoaded event
 		SceneManager.sceneLoaded += OnSceneLoaded;
+		
 	}
 
 	private void OnDisable()
@@ -50,15 +51,30 @@ public class GameManager : NetworkBehaviour
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		Debug.Log($"Scene {scene.name} has finished loading.");
-		Debug.Log(HotbarManager.Instance == null);
-		NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(_playerPrefab.GetComponent<NetworkObject>(), OwnerClientId, isPlayerObject: true, position: new Vector3(128, 128), rotation: Quaternion.identity);
+		// Debug.Log(HotbarManager.Instance == null);
+		// NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(_playerPrefab.GetComponent<NetworkObject>(), OwnerClientId, isPlayerObject: true, position: new Vector3(128, 128), rotation: Quaternion.identity);
 		
-		if(OwnerClientId == NetworkManager.ServerClientId)
+		NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+		
+		if(Loader.IsHost)
 		{
-		Debug.Log("hostin it up");
-			HandleEnvironment();
+			Debug.Log("Host");
+			NetworkManager.Singleton.StartHost();
+		}
+		else
+		{
+			Debug.Log("Client");
+			NetworkManager.Singleton.StartClient();
 		}
 	}
+
+    private void OnClientConnected(ulong clientId)
+    {
+        if(clientId == NetworkManager.ServerClientId)
+		{
+			HandleEnvironment();
+		}
+    }
 	
 	private async void HandleEnvironment()
 	{

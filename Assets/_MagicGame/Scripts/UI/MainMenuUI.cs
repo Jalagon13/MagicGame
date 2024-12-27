@@ -16,7 +16,6 @@ public class MainMenuUI : MonoBehaviour
 		_hostButton.onClick.AddListener(() => 
 		{
 			_relay.CreateRelay();
-			
 		});
 		
 		_joinButton.onClick.AddListener(() => 
