@@ -85,6 +85,10 @@ namespace MoreMountains.Feedbacks
 		protected override void CustomInitialization(MMF_Player owner)
 		{
 			base.CustomInitialization(owner);
+			if (RandomParticleSystems == null)
+			{
+				RandomParticleSystems = new List<ParticleSystem>();
+			}
 			if (StopSystemOnInit)
 			{
 				StopParticles();

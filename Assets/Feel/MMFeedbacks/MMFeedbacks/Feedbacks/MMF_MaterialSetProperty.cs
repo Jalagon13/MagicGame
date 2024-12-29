@@ -122,6 +122,12 @@ namespace MoreMountains.Feedbacks
 
 			_propertyID = Shader.PropertyToID(PropertyID);
 			
+			if (TargetRenderer == null)
+			{
+				Debug.LogWarning("[Material Set Property Feedback] The material set property feedback on "+Owner.name+" doesn't have a target renderer, it won't work. You need to specify a renderer in its inspector.");
+				return;
+			}
+			
 			// we store the initial value of the property based on its type
 			if (Active)
 			{

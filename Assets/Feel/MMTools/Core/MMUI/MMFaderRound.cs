@@ -15,31 +15,40 @@ namespace MoreMountains.Tools
 		public CameraModes CameraMode = CameraModes.Main;
 		[MMEnumCondition("CameraMode",(int)CameraModes.Override)]
 		/// the camera to pick the position from (usually the "regular" game camera)
+		[Tooltip("the camera to pick the position from (usually the \"regular\" game camera)")]
 		public Camera TargetCamera;
-		/// the background to fade 
+		/// the background to fade
+		[Tooltip("the background to fade")] 
 		public RectTransform FaderBackground;
 		/// the mask used to draw a hole in the background that will get faded / scaled
+		[Tooltip("the mask used to draw a hole in the background that will get faded / scaled")]
 		public RectTransform FaderMask;
 
 		[MMInspectorGroup("Identification", true, 122)] 
 		/// the ID for this fader (0 is default), set more IDs if you need more than one fader
+		[Tooltip("the ID for this fader (0 is default), set more IDs if you need more than one fader")]
 		public int ID;
 		
 		[MMInspectorGroup("Mask", true, 127)]
 		[MMVector("min", "max")]
 		/// the mask's scale at minimum and maximum opening
+		[Tooltip("the mask's scale at minimum and maximum opening")]
 		public Vector2 MaskScale;
 		
 		[MMInspectorGroup("Timing", true, 124)]
 		/// the default duration of the fade in/out
+		[Tooltip("the default duration of the fade in/out")]
 		public float DefaultDuration = 0.2f;
 		/// the default curve to use for this fader
+		[Tooltip("the default curve to use for this fader")]
 		public MMTweenType DefaultTween = new MMTweenType(MMTween.MMTweenCurve.LinearTween);
-		/// whether or not the fade should happen in unscaled time 
+		/// whether or not the fade should happen in unscaled time
+		[Tooltip("whether or not the fade should happen in unscaled time")] 
 		public bool IgnoreTimescale = true;
 		
 		[MMInspectorGroup("Interaction", true, 125)]
 		/// whether or not the fader should block raycasts when visible
+		[Tooltip("whether or not the fader should block raycasts when visible")]
 		public bool ShouldBlockRaycasts = false;
 		
 		[MMInspectorGroup("Debug", true, 126)]
@@ -49,14 +58,12 @@ namespace MoreMountains.Tools
 			new bool[] { true, true, true, true },
 			new string[] { "main-call-to-action", "", "", "" })]
 		public bool DebugToolbar;
+		
 		protected CanvasGroup _canvasGroup;
-
 		protected float _initialScale;
 		protected float _currentTargetScale;
-
 		protected float _currentDuration;
 		protected MMTweenType _currentCurve;
-
 		protected bool _fading = false;
 		protected float _fadeStartedAt;
 

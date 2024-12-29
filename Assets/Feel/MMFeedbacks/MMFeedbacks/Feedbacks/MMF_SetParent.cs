@@ -50,7 +50,7 @@ namespace MoreMountains.Feedbacks
 			}
 			if (ObjectToParent == null)
 			{
-				Debug.LogWarning("No object to parent was set for " + Owner.name);
+				Debug.LogWarning("[SetParent Feedback] The set parent feedback on "+Owner.name+" doesn't have an ObjectToParent, it won't work. You need to specify one in its inspector.");
 				return;
 			}
 			ObjectToParent.SetParent(NewParent, WorldPositionStays);

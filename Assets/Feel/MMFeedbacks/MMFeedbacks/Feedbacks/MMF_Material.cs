@@ -88,6 +88,10 @@ namespace MoreMountains.Feedbacks
 
 		protected virtual void InitializeMaterials()
 		{
+			if (Materials == null)
+			{
+				Materials = new List<Material>();
+			}
 			if (TargetRenderer == null)
 			{
 				return;
@@ -126,7 +130,7 @@ namespace MoreMountains.Feedbacks
             
 			if (Materials.Count == 0)
 			{
-				Debug.LogError("[MMFeedbackMaterial on " + Owner.name + "] The Materials array is empty.");
+				Debug.LogWarning("[Material Feedback] The material feedback on "+Owner.name+" has an empty Materials array.");
 				return;
 			}
 
@@ -134,7 +138,7 @@ namespace MoreMountains.Feedbacks
 
 			if (Materials[newIndex] == null)
 			{
-				Debug.LogError("[MMFeedbackMaterial on " + Owner.name + "] Attempting to switch to a null material.");
+				Debug.LogWarning("[Material Feedback] The material feedback on "+Owner.name+" is attempting to switch to a null material.");
 				return;
 			}
 

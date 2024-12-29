@@ -96,6 +96,12 @@ namespace MoreMountains.Feedbacks
 		protected override void CustomInitialization(MMF_Player owner)
 		{
 			base.CustomInitialization(owner);
+			
+			if (TargetImage == null)
+			{
+				Debug.LogWarning("[Image Texture Offset Feedback] The image texture offset feedback on "+Owner.name+" doesn't have a TargetImage, it won't work. You need to specify an Image in its inspector.");
+				return;
+			}
 
 			_material = TargetImage.materialForRendering;
 
@@ -117,7 +123,7 @@ namespace MoreMountains.Feedbacks
 		/// <param name="feedbacksIntensity"></param>
 		protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
 		{
-			if (!Active || !FeedbackTypeAuthorized)
+			if (!Active || !FeedbackTypeAuthorized || (TargetImage == null))
 			{
 				return;
 			}

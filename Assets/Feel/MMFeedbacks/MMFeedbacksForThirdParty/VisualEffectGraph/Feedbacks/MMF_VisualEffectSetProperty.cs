@@ -127,6 +127,11 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// </summary>
 		protected virtual void GetInitialValue()
 		{
+			if (TargetVisualEffect == null)
+			{
+				return;
+			}
+			
 			switch (PropertyType)
 			{
 				case PropertyTypes.AnimationCurve:

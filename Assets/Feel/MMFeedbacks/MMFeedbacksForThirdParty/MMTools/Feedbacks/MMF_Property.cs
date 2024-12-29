@@ -93,6 +93,12 @@ namespace MoreMountains.Feedbacks
 		protected override void CustomInitialization(MMF_Player owner)
 		{
 			base.CustomInitialization(owner);
+			
+			if (Target == null)
+			{
+				Debug.LogWarning("[Property Feedback] The property feedback on "+Owner.name+" doesn't have a Target, it won't work. You need to specify one in its inspector.");
+				return;
+			}
 
 			Target.Initialization(Owner.gameObject);
 			GetInitialIntensity(); 
@@ -121,7 +127,7 @@ namespace MoreMountains.Feedbacks
 		/// <param name="feedbacksIntensity"></param>
 		protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
 		{
-			if (!Active || !FeedbackTypeAuthorized)
+			if (!Active || !FeedbackTypeAuthorized || (Target == null))
 			{
 				return;
 			}

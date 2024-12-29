@@ -55,6 +55,16 @@ namespace MoreMountains.Feedbacks
 		{
 			OnEvent?.Invoke(timeScaleMethod, timeScale, duration, lerp, lerpSpeed, infinite, timeScaleLerpMode, timeScaleLerpCurve, timeScaleLerpDuration, timeScaleLerpOnReset, timeScaleLerpCurveOnReset, timeScaleLerpDurationOnReset);
 		}
+		
+		static public void Unfreeze()
+		{
+			OnEvent?.Invoke(MMTimeScaleMethods.Unfreeze, 0f, 0f, false, 0f, false);
+		}
+		
+		static public void Reset()
+		{
+			OnEvent?.Invoke(MMTimeScaleMethods.Reset, 0f, 0f, false, 0f, false);
+		}
 	}
     
 	public struct MMFreezeFrameEvent
@@ -291,7 +301,7 @@ namespace MoreMountains.Feedbacks
 		/// <summary>
 		/// Resets the time scale to the stored normal time scale
 		/// </summary>
-		protected virtual void ResetTimeScale()
+		public virtual void ResetTimeScale()
 		{
 			SetTimeScale(NormalTimeScale);
 		}
@@ -299,7 +309,7 @@ namespace MoreMountains.Feedbacks
 		/// <summary>
 		/// Resets the time scale to the last saved time scale.
 		/// </summary>
-		protected virtual void Unfreeze()
+		public virtual void Unfreeze()
 		{
 			if (_timeScaleProperties.Count > 0)
 			{

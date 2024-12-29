@@ -28,6 +28,7 @@ namespace MoreMountains.Feedbacks
 			public VisualElement HeaderContainer;
 			public VisualElement SetupRequiredWarningBox;
 			public VisualElement ProgressBar;
+			public Type FeedbackType;
 		}
 
 		public class MMFFeedbackGroupExtrasContainerData
@@ -52,6 +53,7 @@ namespace MoreMountains.Feedbacks
 		public Sprite ContextlMenuIcon;
 		public Sprite SetupRequiredIcon;
 		public Sprite EmptyListImage;
+		public Sprite ScriptIcon;
 
 		// Properties
 		public MMF_Player TargetMmfPlayer;
@@ -76,6 +78,7 @@ namespace MoreMountains.Feedbacks
 		protected Length _progressBarLength;
 		protected VisualElement _emptyFeedbackListContainer;
 		protected VisualElement _automaticShakerSetupButtonContainer;
+		protected StyleBackground _styleBackgroundGearIcon;
 
 		protected Dictionary<MMF_Feedback, FeedbackHeaderContainersData> FeedbackHeaderContainersDictionary;
 		protected Dictionary<MMFInspectorGroupData, MMFFeedbackGroupExtrasContainerData> FeedbackGroupsDictionary;
@@ -114,9 +117,11 @@ namespace MoreMountains.Feedbacks
 		protected const string _duplicateText = "Duplicate";
 		protected const string _copyText = "Copy";
 		protected const string _pasteText = "Paste";
+		protected const string _editScriptText = "Edit Script";
 		protected const string _skipText = "SkipToTheEnd";
 		protected const string _restoreText = "RestoreInitialValues";
 		protected const string _keepPlaymodeChangesText = "Keep Play Mode Changes";
+		protected const string _scriptEditLabelText = "Script";
 
 		protected const string _scriptDrivenInProgressText =
 			"Script driven pause in progress, call ResumeFeedbacks() or press the button below to exit pause";
@@ -168,6 +173,7 @@ namespace MoreMountains.Feedbacks
 		protected const string _canPlayWhileAlreadyPlayingPropertyName = "CanPlayWhileAlreadyPlaying";
 		protected const string _performanceModePropertyName = "PerformanceMode";
 		protected const string _stopFeedbacksOnDisablePropertyName = "StopFeedbacksOnDisable";
+		protected const string _restoreInitialValuesOnDisablePropertyName = "RestoreInitialValuesOnDisable";
 		protected const string _playCountPropertyName = "PlayCount";
 		protected const string _labelPropertyName = "Label";
 		protected const string _infiniteLoopPropertyName = "InfiniteLoop";
@@ -177,10 +183,11 @@ namespace MoreMountains.Feedbacks
 		public const string _iconClassName = "mm-icon";
 		public const string _setupRequiredIconClassName = "mm-setup-required-icon";
 		public const string _foldoutToggleClassName = "mm-foldout-toggle";
+		protected const string _objectSelectorClassName = "unity-object-field__selector";
 		protected const string _mmfEditorClassName = "mmf-editor";
 		protected const string _settingsFoldoutSuffix = "- SettingsFoldout";
 		protected const string _settingsFoldoutSubClassName = "mm-settings-foldout-sub";
-		protected const string _settingsFoldoutSubToggleClassName = "mm-settings-foldout-sub-toggle";
+		protected const string _settingsFoldoutSubToggleClassName = "mm-settings-foldout-sub-toggle"; 
 		protected const string _settingsFoldoutToggleClassName = "mm-settings-foldout-toggle";
 		protected const string _settingsFoldoutClassName = "mm-settings-foldout";
 		protected const string _iconSettingsClassName = "mm-settings-icon";
@@ -218,6 +225,9 @@ namespace MoreMountains.Feedbacks
 		protected const string _settingsFoldoutClassNameSuffix = "- SettingsFoldout - ";
 		protected const string _feedbackHelpBoxClassName = "mm-feedback-help-box";
 		protected const string _feedbackHelpLabelClassName = "mm-feedback-help-label";
+		protected const string _feedbackEditScriptButtonContainerClassName = "mm-feedback-edit-script-button-container";
+		protected const string _feedbackEditScriptButtonLabelClassName = "mm-feedback-edit-script-button-label";
+		protected const string _feedbackEditScriptButtonBoxClassName = "mm-feedback-edit-script-button-box";
 		protected const string _feedbackProgressLineContainerClassName = "mm-feedback-progress-line-container";
 		protected const string _feedbackProgressLineClassName = "mm-feedback-progress-line";
 		protected const string _feedbackSetupRequiredBoxClassName = "mm-feedback-setup-required-box";
@@ -389,6 +399,8 @@ namespace MoreMountains.Feedbacks
 			FeedbackHeaderContainersDictionary = new Dictionary<MMF_Feedback, FeedbackHeaderContainersData>();
 			FeedbackGroupsDictionary = new Dictionary<MMFInspectorGroupData, MMFFeedbackGroupExtrasContainerData>();
 
+			_styleBackgroundGearIcon = new StyleBackground(GearIcon);
+
 			_progressBarLength = new Length(0f, LengthUnit.Percent);
 
 			// draw the root
@@ -538,7 +550,7 @@ namespace MoreMountains.Feedbacks
 			VisualElement settingsIcon = new VisualElement();
 			settingsIcon.AddToClassList(_iconClassName);
 			settingsIcon.AddToClassList(_iconSettingsClassName);
-			settingsIcon.style.backgroundImage = new StyleBackground(GearIcon);
+			settingsIcon.style.backgroundImage = _styleBackgroundGearIcon;
 			VisualElement foldoutLabel = _settingsFoldout.Q<VisualElement>(className: _unityFoldoutTextClassName);
 			foldoutLabel.style.flexGrow = 1;
 			foldoutLabel.parent.Insert(0, settingsIcon);
@@ -675,6 +687,7 @@ namespace MoreMountains.Feedbacks
 					settingsPlaySettingsFoldout);
 				MMUIToolkit.CreateAndBindPropertyField(_stopFeedbacksOnDisablePropertyName, serializedObject,
 					settingsPlaySettingsFoldout);
+				MMUIToolkit.CreateAndBindPropertyField(_restoreInitialValuesOnDisablePropertyName, serializedObject, settingsPlaySettingsFoldout);
 
 				if (Application.isPlaying)
 				{
@@ -833,6 +846,8 @@ namespace MoreMountains.Feedbacks
 
 			_feedbacksListView.bindItem = (element, index) =>
 			{
+				Type feedbackType = TargetMmfPlayer.FeedbacksList[index].GetType();
+				
 				// to prevent double bindings during list reorders, we return if we've already bound this feedback
 				if (FeedbackHeaderContainersDictionary.ContainsKey(TargetMmfPlayer.FeedbacksList[index]))
 				{
@@ -842,16 +857,16 @@ namespace MoreMountains.Feedbacks
 				// feedback foldout
 				Foldout foldout = (element as Foldout);
 				foldout.AddToClassList(_feedbackFoldoutClassName);
-				foldout.text = DetermineFeedbackLabel(index);
+				foldout.text = DetermineFeedbackLabel(index, feedbackType);
 				foldout.Clear();
 				foldout.value = TargetMmfPlayer.FeedbacksList[index].IsExpanded;
 				foldout.viewDataKey = TargetMmfPlayer.name + "-" + TargetMmfPlayer.FeedbacksList[index].UniqueID;
-
+				
 				// help box 
 				if (MMMenuHelp.HelpEnabled)
 				{
 					string helpText =
-						FeedbackHelpAttribute.GetFeedbackHelpText(TargetMmfPlayer.FeedbacksList[index].GetType());
+						FeedbackHelpAttribute.GetFeedbackHelpText(feedbackType);
 					if (!string.IsNullOrEmpty(helpText))
 					{
 						VisualElement helpBox = new VisualElement();
@@ -863,6 +878,27 @@ namespace MoreMountains.Feedbacks
 						foldout.Add(helpBox);
 					}
 				}
+				
+				// script edit button 
+				PropertyField scriptEditContainer = new PropertyField();
+				scriptEditContainer.AddToClassList(_feedbackEditScriptButtonContainerClassName);
+				Label scriptEditLabel = new Label(_scriptEditLabelText); 
+				scriptEditLabel.AddToClassList(_feedbackEditScriptButtonLabelClassName);
+				scriptEditContainer.Add(scriptEditLabel);
+				VisualElement scriptEditButtonBox = new VisualElement();
+				scriptEditButtonBox.AddToClassList(_feedbackEditScriptButtonBoxClassName);
+				scriptEditContainer.Add(scriptEditButtonBox);
+				VisualElement scriptIcon = new VisualElement();
+				scriptIcon.AddToClassList(_iconClassName);
+				scriptIcon.style.backgroundImage = new StyleBackground(ScriptIcon);
+				scriptEditButtonBox.Add(scriptIcon);
+				Button scriptEditButton = new Button(() => EditScript(feedbackType));
+				scriptEditButton.text = feedbackType.Name; 
+				scriptEditButtonBox.Add(scriptEditButton);
+				VisualElement scriptEditSelectorIcon = new VisualElement();
+				scriptEditSelectorIcon.AddToClassList(_objectSelectorClassName); 
+				scriptEditButtonBox.Add(scriptEditSelectorIcon);
+				foldout.Add(scriptEditContainer);
 
 				// progress line
 				VisualElement feedbackProgressBarContainer = new VisualElement();
@@ -920,14 +956,14 @@ namespace MoreMountains.Feedbacks
 				PropertyField labelField = feedbackInspectorContainer.Q<PropertyField>(_labelPropertyName);
 				labelField?.RegisterCallback<ChangeEvent<string>>(evt =>
 				{
-					foldout.text = DetermineFeedbackLabel(index);
+					foldout.text = DetermineFeedbackLabel(index, feedbackType);
 				});
 
 				PropertyField infiniteLoopField =
 					feedbackInspectorContainer.Q<PropertyField>(_infiniteLoopPropertyName);
 				infiniteLoopField?.RegisterCallback<ChangeEvent<bool>>(evt =>
 				{
-					foldout.text = DetermineFeedbackLabel(index);
+					foldout.text = DetermineFeedbackLabel(index, feedbackType);
 				});
 
 				// setting the left bar border color
@@ -986,6 +1022,7 @@ namespace MoreMountains.Feedbacks
 				feedbackHeaderContainersData.HeaderContainer = feedbackHeaderContainer;
 				feedbackHeaderContainersData.SetupRequiredWarningBox = setupRequiredWarningBox;
 				feedbackHeaderContainersData.ProgressBar = feedbackProgressBar;
+				feedbackHeaderContainersData.FeedbackType = feedbackType;
 				FeedbackHeaderContainersDictionary.Add(TargetMmfPlayer.FeedbacksList[index],
 					feedbackHeaderContainersData);
 				DrawFeedbackHeaderContainer(feedbackHeaderContainersData);
@@ -993,7 +1030,7 @@ namespace MoreMountains.Feedbacks
 				// context menu - right click
 				ContextualMenuManipulator contextualMenuManipulator = new ContextualMenuManipulator((evt) =>
 				{
-					FillContextualMenu(evt.menu, index);
+					FillContextualMenu(evt.menu, index, feedbackType);
 				});
 				toggle.AddManipulator(contextualMenuManipulator);
 
@@ -1015,6 +1052,26 @@ namespace MoreMountains.Feedbacks
 
 				feedbackControlButtons.RegisterCallback<PointerDownEvent>(evt => { evt.StopPropagation(); });
 			};
+		}
+
+		protected virtual void EditScript(Type feedbackType)
+		{
+			string[] guids = AssetDatabase.FindAssets(feedbackType.Name + " t:script");
+			if (guids.Length == 0)
+			{
+				Debug.LogError("Script not found for type: " + feedbackType.Name); 
+				return;
+			}
+			foreach (string guid in guids)
+			{
+				string path = AssetDatabase.GUIDToAssetPath(guid);
+				string fileName = System.IO.Path.GetFileNameWithoutExtension(path);
+				if (string.Equals(fileName, feedbackType.Name, System.StringComparison.Ordinal))
+				{
+					MonoScript script = AssetDatabase.LoadAssetAtPath<MonoScript>(AssetDatabase.GUIDToAssetPath(guid));
+					AssetDatabase.OpenAsset(script);
+				}
+			}
 		}
 
 		protected virtual void ClearDictionaries()
@@ -1053,8 +1110,8 @@ namespace MoreMountains.Feedbacks
 			// context menu button 
 			var toolbar = new ToolbarMenu();
 			toolbar.AddToClassList(_feedbackContextualMenuButtonClassName);
-			FillContextualMenu(toolbar.menu, index);
-			toolbar.RegisterCallback<PointerDownEvent>(evt => { FillContextualMenu(toolbar.menu, index); },
+			FillContextualMenu(toolbar.menu, index, feedbackHeaderContainersData.FeedbackType);
+			toolbar.RegisterCallback<PointerDownEvent>(evt => { FillContextualMenu(toolbar.menu, index, feedbackHeaderContainersData.FeedbackType); },
 				TrickleDown.TrickleDown);
 			feedbackHeaderContainersData.HeaderContainer.Add(toolbar);
 
@@ -1096,9 +1153,13 @@ namespace MoreMountains.Feedbacks
 
 					timingInfo += " + " + TargetMmfPlayer.FeedbacksList[index].Timing.NumberOfRepeats.ToString() +
 					              " x ";
+					
+					timingInfo += "(" + TargetMmfPlayer.FeedbacksList[index].FeedbackDuration.ToString() +
+					              "s + ";
+					
 					timingInfo +=
 						TargetMmfPlayer.ApplyTimeMultiplier(TargetMmfPlayer.FeedbacksList[index].Timing
-							.DelayBetweenRepeats) + "s";
+							.DelayBetweenRepeats) + "s)";
 					displayTotal = true;
 				}
 
@@ -1145,15 +1206,15 @@ namespace MoreMountains.Feedbacks
 			return null;
 		}
 
-		protected virtual string DetermineFeedbackLabel(int index)
+		protected virtual string DetermineFeedbackLabel(int index, Type feedbackType)
 		{
-			_feedbackLabel = TargetMmfPlayer.FeedbacksList[index].Label;
+			_feedbackLabel = TargetMmfPlayer.FeedbacksList[index].GetLabel();
 			if (TargetMmfPlayer.FeedbacksList[index].Label != TargetMmfPlayer.FeedbacksList[index].OriginalLabel)
 			{
 				if (TargetMmfPlayer.FeedbacksList[index].OriginalLabel == "")
 				{
 					TargetMmfPlayer.FeedbacksList[index].OriginalLabel =
-						FeedbackPathAttribute.GetFeedbackDefaultName(TargetMmfPlayer.FeedbacksList[index].GetType());
+						FeedbackPathAttribute.GetFeedbackDefaultName(feedbackType);
 				}
 
 				if (TargetMmfPlayer.FeedbacksList[index].OriginalLabel != "")
@@ -1180,7 +1241,7 @@ namespace MoreMountains.Feedbacks
 			return _feedbackLabel;
 		}
 
-		protected virtual void FillContextualMenu(DropdownMenu menu, int index)
+		protected virtual void FillContextualMenu(DropdownMenu menu, int index, Type feedbackType)
 		{
 			menu.ClearItems();
 			DropdownMenuAction.Status playStatus = Application.isPlaying
@@ -1197,15 +1258,17 @@ namespace MoreMountains.Feedbacks
 				? DropdownMenuAction.Status.Normal
 				: DropdownMenuAction.Status.Disabled;
 			menu.AppendAction(_pasteText, action => PasteAsNew(), copyStatus);
+			menu.AppendSeparator();
+			menu.AppendAction(_editScriptText, action => EditScript(feedbackType));
 		}
 
-		protected virtual void RedrawFeedbacksList()
+		protected virtual void RedrawFeedbacksList() 
 		{
 			serializedObject.Update();
 			ClearDictionaries();
 			DrawEmptyListState();
 			BindListViewToData();
-			DrawAutomaticShakerSetupButton();
+			DrawAutomaticShakerSetupButton(); 
 			_feedbacksListView.Rebuild();
 			UpdateFeedbacksListLabel();
 		}

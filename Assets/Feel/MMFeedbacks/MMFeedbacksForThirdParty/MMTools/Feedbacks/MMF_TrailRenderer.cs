@@ -90,7 +90,7 @@ namespace MoreMountains.Feedbacks
 			{
 				if (TargetTrailRenderer == null)
 				{
-					Debug.LogError(Owner.name+ " trail renderer feedback: you need to set a TargetTrailRenderer in the inspector for this feedback to be able to operate.");
+					Debug.LogWarning("[Trail Renderer Feedback] The trail renderer feedback on "+Owner.name+" doesn't have a TargetTrailRenderer, it won't work. You need to specify one in its inspector.");
 					return;
 				}
 				
@@ -107,7 +107,7 @@ namespace MoreMountains.Feedbacks
 		/// <param name="feedbacksIntensity"></param>
 		protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
 		{
-			if (!Active || !FeedbackTypeAuthorized)
+			if (!Active || !FeedbackTypeAuthorized || (TargetTrailRenderer == null))
 			{
 				return;
 			}

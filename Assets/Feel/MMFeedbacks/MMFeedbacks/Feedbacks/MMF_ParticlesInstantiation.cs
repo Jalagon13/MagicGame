@@ -149,6 +149,11 @@ namespace MoreMountains.Feedbacks
 				return;
 			}
 
+			if (RandomParticlePrefabs == null)
+			{
+				RandomParticlePrefabs = new List<ParticleSystem>();
+			}
+
 			if ((ParticlesPrefab == null) && (RandomParticlePrefabs.Count == 0))
 			{
 				return;

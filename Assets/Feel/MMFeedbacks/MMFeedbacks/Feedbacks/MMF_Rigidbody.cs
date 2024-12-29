@@ -77,9 +77,12 @@ namespace MoreMountains.Feedbacks
 			}
 			
 			ApplyForce(TargetRigidbody);
-			foreach (Rigidbody rb in ExtraTargetRigidbodies)
+			if (ExtraTargetRigidbodies != null)
 			{
-				ApplyForce(rb);
+				foreach (Rigidbody rb in ExtraTargetRigidbodies)
+				{
+					ApplyForce(rb);
+				}	
 			}
 		}
 

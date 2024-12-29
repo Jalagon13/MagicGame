@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 #endif
 using UnityEngine.Scripting.APIUpdating;
+using UnityEngine.Serialization;
 
 namespace MoreMountains.Feedbacks
 {
@@ -42,7 +43,7 @@ namespace MoreMountains.Feedbacks
 		[MMFInspectorGroup("Paragraph Spacing", true, 21)]
 		/// the curve to tween on
 		[Tooltip("the curve to tween on")]
-		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime)]
+		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime, (int)Modes.ToDestination)]
 		public MMTweenType ParagraphSpacingCurve = new MMTweenType(new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0)));
 		/// the value to remap the curve's 0 to
 		[Tooltip("the value to remap the curve's 0 to")]
@@ -55,7 +56,11 @@ namespace MoreMountains.Feedbacks
 		/// the value to move to in instant mode
 		[Tooltip("the value to move to in instant mode")]
 		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.Instant)]
-		public float InstantFontSize;
+		public float InstantParagraphSpacing;
+		/// the value to move to in destination mode
+		[Tooltip("the value to move to in destination mode")]
+		[MMFEnumCondition("Mode", (int)Modes.ToDestination)]
+		public float DestinationParagraphSpacing;
         
 		protected override void FillTargets()
 		{
@@ -75,7 +80,8 @@ namespace MoreMountains.Feedbacks
 			target.LevelCurve = ParagraphSpacingCurve;
 			target.RemapLevelZero = RemapZero;
 			target.RemapLevelOne = RemapOne;
-			target.InstantLevel = InstantFontSize;
+			target.InstantLevel = InstantParagraphSpacing;
+			target.ToDestinationLevel = DestinationParagraphSpacing;
 
 			_targets.Add(target);
 			#endif

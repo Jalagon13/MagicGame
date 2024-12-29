@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using System.Threading.Tasks;
 using MoreMountains.Tools;
@@ -293,6 +294,11 @@ namespace MoreMountains.Feedbacks
 			HandleSO();
 
 			_lastPlayedClip = null;
+
+			if (RandomSfx == null)
+			{
+				RandomSfx = Array.Empty<AudioClip>();
+			}
 			
 			if (RandomUnique)
 			{

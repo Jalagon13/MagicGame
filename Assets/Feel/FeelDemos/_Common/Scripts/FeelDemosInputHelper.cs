@@ -8,8 +8,10 @@ namespace MoreMountains.Feel
 	/// <summary>
 	/// This class contains a number of helper methods that will check for input in both the old and the new input system.
 	/// </summary>
-	public static class FeelDemosInputHelper 
+	public static class FeelDemosInputHelper
 	{
+		public static bool ScriptInput = false;
+		public static bool ScriptInputThisFrame = false;
 		private const string _horizontalAxis = "Horizontal";
 		private const string _verticalAxis = "Vertical";
 		
@@ -19,13 +21,16 @@ namespace MoreMountains.Feel
 			
 			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 			input = Keyboard.current.spaceKey.wasPressedThisFrame
-			        || Mouse.current.leftButton.wasPressedThisFrame;
+			        || Mouse.current.leftButton.wasPressedThisFrame
+					|| ScriptInput;
 			#else
 			input = (Input.GetKeyDown(KeyCode.Space) 
 			         || Input.GetKeyDown(KeyCode.Joystick1Button0) 
-			         || Input.GetMouseButtonDown(0));
+			         || Input.GetMouseButtonDown(0)
+			         || ScriptInputThisFrame);
 			#endif
 
+			ScriptInputThisFrame = false;
 			return input;
 		}
 		public static bool CheckMainActionInputPressed()
@@ -38,7 +43,8 @@ namespace MoreMountains.Feel
 			#else
 			input = (Input.GetKey(KeyCode.Space) 
 			         || Input.GetKey(KeyCode.Joystick1Button0) 
-			         || Input.GetMouseButton(0));
+			         || Input.GetMouseButton(0)
+			         || ScriptInput);
 			#endif
 
 			return input;

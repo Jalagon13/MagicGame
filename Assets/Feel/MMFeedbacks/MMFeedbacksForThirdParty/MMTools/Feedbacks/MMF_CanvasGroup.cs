@@ -31,7 +31,7 @@ namespace MoreMountains.Feedbacks
         
 		/// the curve to tween the opacity on
 		[Tooltip("the curve to tween the opacity on")]
-		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime)]
+		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime, (int)Modes.ToDestination)] 
 		public MMTweenType AlphaCurve = new MMTweenType(new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0)));
 		/// the value to remap the opacity curve's 0 to
 		[Tooltip("the value to remap the opacity curve's 0 to")]
@@ -45,6 +45,10 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("the value to move the opacity to in instant mode")]
 		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.Instant)]
 		public float InstantAlpha;
+		/// the value to move the opacity to in destination mode
+		[Tooltip("the value to move the opacity to in destination mode")]
+		[MMFEnumCondition("Mode", (int)Modes.ToDestination)]
+		public float DestinationAlpha;
 
 		public override void OnAddFeedback()
 		{
@@ -70,6 +74,7 @@ namespace MoreMountains.Feedbacks
 			target.RemapLevelZero = RemapZero;
 			target.RemapLevelOne = RemapOne;
 			target.InstantLevel = InstantAlpha;
+			target.ToDestinationLevel = DestinationAlpha;
 
 			_targets.Add(target);
 		}

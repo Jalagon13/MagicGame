@@ -29,6 +29,9 @@ namespace MoreMountains.Feedbacks
 		/// if this is true, the inspector won't refresh while the feedback plays, this saves on performance but feedback inspectors' progress bars for example won't look as smooth
 		[Tooltip("if this is true, the inspector won't refresh while the feedback plays, this saves on performance but feedback inspectors' progress bars for example won't look as smooth")]
 		public bool PerformanceMode = false;
+		/// if this is true, RestoreInitialValues will be called on all feedbacks on Disable
+		[Tooltip("if this is true, RestoreInitialValues will be called on all feedbacks on Disable")]
+		public bool RestoreInitialValuesOnDisable = false;
 		/// if this is true, StopFeedbacks will be called on all feedbacks on Disable
 		[Tooltip("if this is true, StopFeedbacks will be called on all feedbacks on Disable")]
 		public bool StopFeedbacksOnDisable = false;
@@ -1137,6 +1140,7 @@ namespace MoreMountains.Feedbacks
 				if ((FeedbacksList[i].IsPlaying
 				     && !FeedbacksList[i].Timing.ExcludeFromHoldingPauses)
 				    || FeedbacksList[i].Timing.RepeatForever
+				    || FeedbacksList[i].InInitialDelay
 				    || ((FeedbacksList[i].Timing.NumberOfRepeats > 0) && (FeedbacksList[i].PlaysLeft > 0)))
 				{
 					return true;
@@ -1481,6 +1485,8 @@ namespace MoreMountains.Feedbacks
 		/// </summary>
 		protected override void OnDisable()
 		{
+			Events.TriggerOnDisable(this);
+			
 			if (OnlyPlayIfWithinRange)
 			{
 				MMSetFeedbackRangeCenterEvent.Unregister(OnMMSetFeedbackRangeCenterEvent);	
@@ -1491,6 +1497,10 @@ namespace MoreMountains.Feedbacks
 				if (StopFeedbacksOnDisable)
 				{
 					StopFeedbacks();    
+				}
+				if (RestoreInitialValuesOnDisable)
+				{
+					RestoreInitialValues();
 				}
 				StopAllCoroutines();
 				for (int i = FeedbacksList.Count - 1; i >= 0; i--)

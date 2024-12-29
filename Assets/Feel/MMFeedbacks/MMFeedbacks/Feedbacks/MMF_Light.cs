@@ -40,6 +40,9 @@ namespace MoreMountains.Feedbacks
 		/// the light to affect when playing the feedback
 		[Tooltip("the light to affect when playing the feedback")]
 		public Light BoundLight;
+		/// a list of optional extra lights to also affect when playing the feedback
+		[Tooltip("a list of optional extra lights to also affect when playing the feedback")]
+		public List<Light> ExtraLights;
 		/// whether the feedback should affect the light instantly or over a period of time
 		[Tooltip("whether the feedback should affect the light instantly or over a period of time")]
 		public Modes Mode = Modes.OverTime;
@@ -189,6 +192,16 @@ namespace MoreMountains.Feedbacks
 		{
 			base.CustomInitialization(owner);
 
+			if (ExtraLights == null)
+			{
+				ExtraLights = new List<Light>();
+			}
+
+			if (ColorOverTime == null)
+			{
+				ColorOverTime = new Gradient();
+			}
+
 			if (BoundLight == null)
 			{
 				return;
@@ -244,7 +257,17 @@ namespace MoreMountains.Feedbacks
 					if (ModifyColor)
 					{
 						BoundLight.color = NormalPlayDirection ? InstantColor : _initialColor;
-					}                        
+					}
+					foreach (Light light in ExtraLights)
+					{
+						light.intensity = BoundLight.intensity;
+						light.shadowStrength = BoundLight.shadowStrength;
+						light.range = BoundLight.range;
+						if (ModifyColor)
+						{
+							light.color = BoundLight.color;
+						}
+					}
 					break;
 				case Modes.OverTime:
 				case Modes.ToDestination:
@@ -328,19 +351,47 @@ namespace MoreMountains.Feedbacks
 
 			if (ModifyIntensity)
 			{
-				BoundLight.intensity = intensity * intensityMultiplier;	
+				if (BoundLight != null)
+				{
+					BoundLight.intensity = intensity * intensityMultiplier;	
+				}
+				foreach (Light light in ExtraLights)
+				{
+					light.intensity = intensity * intensityMultiplier;
+				}
 			}
 			if (ModifyRange)
 			{
-				BoundLight.range = range;	
+				if (BoundLight != null)
+				{
+					BoundLight.range = range;	
+				}
+				foreach (Light light in ExtraLights)
+				{
+					light.range = range;
+				}
 			}
 			if (ModifyShadowStrength)
 			{
-				BoundLight.shadowStrength = Mathf.Clamp01(shadowStrength);	
+				if (BoundLight != null)
+				{
+					BoundLight.shadowStrength = Mathf.Clamp01(shadowStrength);	
+				}
+				foreach (Light light in ExtraLights)
+				{
+					light.shadowStrength = Mathf.Clamp01(shadowStrength);
+				}
 			}
 			if (ModifyColor)
 			{
-				BoundLight.color = _targetColor;
+				if (BoundLight != null)
+				{
+					BoundLight.color = _targetColor;
+				}
+				foreach (Light light in ExtraLights)
+				{
+					light.color = _targetColor;
+				}
 			}
 		}
 
@@ -375,7 +426,14 @@ namespace MoreMountains.Feedbacks
 		/// <param name="status"></param>
 		protected virtual void Turn(bool status)
 		{
-			BoundLight.enabled = status;
+			if (BoundLight != null)
+			{
+				BoundLight.enabled = status;	
+			}
+			foreach (Light light in ExtraLights)
+			{
+				light.enabled = status;
+			}
 		}
 		
 		/// <summary>
@@ -392,6 +450,14 @@ namespace MoreMountains.Feedbacks
 			BoundLight.shadowStrength = _initialShadowStrength;
 			BoundLight.intensity = _initialIntensity;
 			BoundLight.color = _initialColor;
+			
+			foreach (Light light in ExtraLights)
+			{
+				light.range = _initialRange;
+				light.shadowStrength = _initialShadowStrength;
+				light.intensity = _initialIntensity;
+				light.color = _initialColor;
+			}
 
 			if (StartsOff)
 			{

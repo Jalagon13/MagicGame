@@ -128,6 +128,11 @@ namespace MoreMountains.Feedbacks
 				_initialInstantStartDistance = RenderSettings.fogStartDistance;
 				_initialInstantEndDistance = RenderSettings.fogEndDistance;
 				_initialInstantDensity = RenderSettings.fogDensity;
+
+				if (ColorOverTime == null)
+				{
+					ColorOverTime = new Gradient();
+				}
 			}
 		}
 

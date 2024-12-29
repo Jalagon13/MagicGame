@@ -80,7 +80,7 @@ namespace MoreMountains.Feedbacks
 			{
 				if (TargetLineRenderer == null)
 				{
-					Debug.LogError(Owner.name+ " line renderer feedback: you need to set a TargetLineRenderer in the inspector for this feedback to be able to operate.");
+					Debug.LogWarning("[Line Renderer Feedback] The line renderer feedback on "+Owner.name+" doesn't have a TargetLineRenderer, it won't work. You need to specify one in its inspector.");
 					return;
 				}
 				
@@ -96,7 +96,7 @@ namespace MoreMountains.Feedbacks
 		/// <param name="feedbacksIntensity"></param>
 		protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
 		{
-			if (!Active || !FeedbackTypeAuthorized)
+			if (!Active || !FeedbackTypeAuthorized || (TargetLineRenderer == null))
 			{
 				return;
 			}

@@ -175,12 +175,23 @@ namespace MoreMountains.Feedbacks
 		protected override void CustomInitialization(MMF_Player owner)
 		{
 			base.CustomInitialization(owner);
+			
 			_triggerParameter = Animator.StringToHash(TriggerParameterName);
 			_boolParameter = Animator.StringToHash(BoolParameterName);
 			_intParameter = Animator.StringToHash(IntParameterName);
 			_floatParameter = Animator.StringToHash(FloatParameterName);
+			
+			if (RandomTriggerParameterNames == null)
+			{
+				RandomTriggerParameterNames = new List<string>();
+			}
+			if (RandomBoolParameterNames == null)
+			{
+				RandomBoolParameterNames = new List<string>();
+			}
 
 			_randomTriggerParameters = new List<int>();
+			
 			foreach (string name in RandomTriggerParameterNames)
 			{
 				_randomTriggerParameters.Add(Animator.StringToHash(name));
@@ -207,7 +218,7 @@ namespace MoreMountains.Feedbacks
 
 			if (BoundAnimator == null)
 			{
-				Debug.LogWarning("No animator was set for " + Owner.name);
+				Debug.LogWarning("[Animation Feedback] The animation feedback on "+Owner.name+" doesn't have a BoundAnimator, it won't work. You need to specify one in its inspector.");
 				return;
 			}
 

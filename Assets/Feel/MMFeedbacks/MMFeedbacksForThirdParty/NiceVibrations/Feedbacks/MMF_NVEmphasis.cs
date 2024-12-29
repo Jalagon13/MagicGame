@@ -57,7 +57,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// <param name="feedbacksIntensity"></param>
 		protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
 		{
-			if (!Active || !FeedbackTypeAuthorized || !HapticSettings.CanPlay())
+			if (!Active || !FeedbackTypeAuthorized || HapticSettings == null || !HapticSettings.CanPlay())
 			{
 				return;
 			}

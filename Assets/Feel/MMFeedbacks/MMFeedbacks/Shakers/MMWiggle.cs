@@ -261,6 +261,10 @@ namespace MoreMountains.Feedbacks
 		/// </summary>
 		public virtual void Initialization()
 		{
+			if (PositionWiggleProperties == null) { PositionWiggleProperties = new WiggleProperties(); }
+			if (RotationWiggleProperties == null) { RotationWiggleProperties = new WiggleProperties(); }
+			if (ScaleWiggleProperties == null) { ScaleWiggleProperties = new WiggleProperties(); }
+			
 			_positionInternalProperties.initialValue = transform.localPosition;
 			_positionInternalProperties.startValue = this.transform.localPosition;
 

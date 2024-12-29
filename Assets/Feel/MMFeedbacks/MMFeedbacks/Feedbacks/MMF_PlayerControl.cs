@@ -113,6 +113,10 @@ namespace MoreMountains.Feedbacks
 		protected override void CustomInitialization(MMF_Player owner)
 		{
 			base.CustomInitialization(owner);
+			if (TargetPlayers == null)
+			{
+				TargetPlayers = new List<MMF_Player>();
+			}
 		}
 
 		/// <summary>

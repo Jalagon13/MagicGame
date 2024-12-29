@@ -74,6 +74,10 @@ namespace MoreMountains.Feedbacks
 			base.CustomInitialization(owner);
 			InInfiniteLoop = InfiniteLoop;
 			NumberOfLoopsLeft = NumberOfLoops;
+			if (OnLoop == null)
+			{
+				OnLoop = new UnityEvent();
+			}
 		}
 
 		/// <summary>

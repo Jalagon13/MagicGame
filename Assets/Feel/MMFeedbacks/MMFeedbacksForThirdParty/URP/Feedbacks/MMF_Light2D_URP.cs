@@ -220,6 +220,11 @@ namespace MoreMountains.FeedbacksForThirdParty
 			{
 				return;
 			}
+
+			if (ColorOverTime == null)
+			{
+				ColorOverTime = new Gradient();
+			}
             
 			_initialFalloff = BoundLight.shapeLightFalloffSize ;
 			_initialShadowStrength = BoundLight.shadowIntensity;
@@ -248,7 +253,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// <param name="feedbacksIntensity"></param>
 		protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
 		{
-			if (!Active || !FeedbackTypeAuthorized)
+			if (!Active || !FeedbackTypeAuthorized || (BoundLight == null))
 			{
 				return;
 			}

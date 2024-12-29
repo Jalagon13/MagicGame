@@ -110,6 +110,11 @@ namespace MoreMountains.Feedbacks
 		/// <param name="owner"></param>
 		protected override void CustomInitialization(MMF_Player owner)
 		{
+			if (TargetShaderControllerList == null)
+			{
+				TargetShaderControllerList = new List<ShaderController>();
+			}
+			
 			if (Active && (TargetShaderController != null))
 			{
 				_oneTimeDurationStorage = TargetShaderController.OneTimeDuration;

@@ -84,6 +84,12 @@ namespace MoreMountains.Feedbacks
 		protected override void CustomInitialization(MMF_Player owner)
 		{
 			base.CustomInitialization(owner);
+			
+			if (BoundImage == null)
+			{
+				Debug.LogWarning("[Image Fill Feedback] The image fill feedback on "+Owner.name+" doesn't have a bound image, it won't work. You need to specify an image in its inspector.");
+				return;
+			}
 
 			if (Active)
 			{
@@ -98,7 +104,7 @@ namespace MoreMountains.Feedbacks
 		/// <param name="feedbacksIntensity"></param>
 		protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
 		{
-			if (!Active || !FeedbackTypeAuthorized)
+			if (!Active || !FeedbackTypeAuthorized || (BoundImage == null))
 			{
 				return;
 			}

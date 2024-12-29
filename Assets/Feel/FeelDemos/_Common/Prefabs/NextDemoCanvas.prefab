@@ -440,7 +440,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: v5.1
+  m_Text: v5.2
 --- !u!1 &8516721323258378253
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,6 +688,7 @@ MonoBehaviour:
   - rid: 4503284173417480197
   KeepPlayModeChanges: 0
   PerformanceMode: 0
+  RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
   references:

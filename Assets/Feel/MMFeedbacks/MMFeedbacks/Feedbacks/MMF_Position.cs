@@ -160,7 +160,7 @@ namespace MoreMountains.Feedbacks
 			{
 				if (AnimatePositionTarget == null)
 				{
-					Debug.LogWarning("The animate position target for " + this + " is null, you have to define it in the inspector");
+					Debug.LogWarning("[Position Feedback] The position feedback on "+Owner.name+" doesn't have an AnimatePositionTarget, it won't work. You need to specify one in its inspector.");
 					return;
 				}
 

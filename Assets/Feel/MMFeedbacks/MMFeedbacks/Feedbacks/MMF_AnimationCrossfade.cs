@@ -112,7 +112,7 @@ namespace MoreMountains.Feedbacks
 
 			if (BoundAnimator == null)
 			{
-				Debug.LogWarning("No animator was set for " + Owner.name);
+				Debug.LogWarning("[Animation Crossfade Feedback] The animation crossfade feedback on "+Owner.name+" doesn't have a BoundAnimator, it won't work. You need to specify one in its inspector.");
 				return;
 			}
 

@@ -23,6 +23,7 @@ MonoImporter:
   - SetupRequiredIcon: {fileID: 21300000, guid: 69bdc1f611c0f8d4dbc71613a9b04b9b,
       type: 3}
   - EmptyListImage: {fileID: 21300000, guid: e305d4ff6fcb66148a89b78f93cc03fa, type: 3}
+  - ScriptIcon: {fileID: 21300000, guid: d9d54e48cd32e274287fb32bbb13da24, type: 3}
   - TargetMmfPlayer: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
@@ -33,6 +34,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 183370
   packageName: Feel
-  packageVersion: 5.1
+  packageVersion: 5.2
   assetPath: Assets/Feel/MMFeedbacks/Editor/Core/UIToolkit/MMF_PlayerEditorUITK.cs
-  uploadId: 709698
+  uploadId: 718861

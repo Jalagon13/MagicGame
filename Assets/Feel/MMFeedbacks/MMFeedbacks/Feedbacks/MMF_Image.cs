@@ -93,7 +93,15 @@ namespace MoreMountains.Feedbacks
 				{
 					Turn(false);
 				}
-				_initialInstantColor = BoundImage.color;
+
+				if (BoundImage == null)
+				{
+					Debug.LogWarning("[Image Feedback] The image feedback on "+Owner.name+" doesn't have a BoundImage, it won't work. You need to specify an Image in its inspector.");
+				}
+				else
+				{
+					_initialInstantColor = BoundImage.color;
+				}
 			}
 		}
 
@@ -104,7 +112,7 @@ namespace MoreMountains.Feedbacks
 		/// <param name="feedbacksIntensity"></param>
 		protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
 		{
-			if (!Active || !FeedbackTypeAuthorized)
+			if (!Active || !FeedbackTypeAuthorized || (BoundImage == null))
 			{
 				return;
 			}

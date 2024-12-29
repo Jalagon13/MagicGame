@@ -156,9 +156,16 @@ namespace MoreMountains.Tools
 					
 					if (allPlayed)
 					{
-						while (newIndex == currentSongIndex)
+						if (Songs.Count > 1)
 						{
-							newIndex = Random.Range(0, Songs.Count);
+							while (newIndex == currentSongIndex)
+							{
+								newIndex = Random.Range(0, Songs.Count);
+							}	
+						}
+						else
+						{
+							newIndex = 0;
 						}
 					}
 					else

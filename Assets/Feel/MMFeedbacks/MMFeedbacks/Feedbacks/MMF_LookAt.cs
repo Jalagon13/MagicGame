@@ -170,6 +170,11 @@ namespace MoreMountains.Feedbacks
 		/// <param name="position"></param>
 		protected virtual void InitiateLookAt(Vector3 position)
 		{
+			if (TransformToRotate == null)
+			{
+				return;
+			}
+			
 			_initialRotation = TransformToRotate.transform.rotation;
 			
 			switch (Mode)

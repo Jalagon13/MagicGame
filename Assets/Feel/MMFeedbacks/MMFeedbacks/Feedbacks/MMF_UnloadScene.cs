@@ -93,7 +93,7 @@ namespace MoreMountains.Feedbacks
 			{
 				if (OutputWarningsIfNeeded)
 				{
-					Debug.LogWarning("Unload Scene Feedback : you're trying to unload a scene that hasn't been loaded.");    
+					Debug.LogWarning("[Unload Scene Feedback] The unload scene feedback on "+Owner.name+" is trying to unload a scene that hasn't been loaded.");   
 				}
 			}
 		}

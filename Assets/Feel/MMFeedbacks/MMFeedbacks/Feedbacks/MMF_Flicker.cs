@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
@@ -99,6 +100,15 @@ namespace MoreMountains.Feedbacks
 		/// <param name="owner"></param>
 		protected override void CustomInitialization(MMF_Player owner)
 		{
+			if (MaterialIndexes == null)
+			{
+				MaterialIndexes = Array.Empty<int>();
+			}
+			if (ExtraBoundRenderers == null)
+			{
+				ExtraBoundRenderers = new List<Renderer>();
+			}
+			
 			// init material indexes
 			if (MaterialIndexes.Length == 0)
 			{
@@ -175,10 +185,14 @@ namespace MoreMountains.Feedbacks
 			}
 			if (BoundRenderer == null)
 			{
-				Debug.LogWarning("[MMFeedbackFlicker] The flicker feedback on "+Owner.name+" doesn't have a bound renderer, it won't work. You need to specify a renderer to flicker in its inspector.");
+				Debug.LogWarning("[Flicker Feedback] The flicker feedback on "+Owner.name+" doesn't have a bound renderer, it won't work. You need to specify a renderer to flicker in its inspector.");
+			}
+
+			if (BoundRenderer != null)
+			{
+				_spriteRenderer = BoundRenderer.GetComponent<SpriteRenderer>();	
 			}
 			
-			_spriteRenderer = BoundRenderer.GetComponent<SpriteRenderer>();
 			_spriteRenderers = new List<SpriteRenderer>();
 			foreach (Renderer renderer in ExtraBoundRenderers)
 			{

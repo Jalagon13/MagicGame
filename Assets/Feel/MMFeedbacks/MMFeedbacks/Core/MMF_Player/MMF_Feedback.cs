@@ -29,6 +29,9 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("the name of this feedback to display in the inspector")]
 		public string Label = "MMFeedback";
 
+		/// you can override this when creating a custom feedback to have it behave differently and display a different label 
+		public virtual string GetLabel() => Label;
+
 		/// the original label of this feedback, used to display next to the custom label in case we set one
 		[MMFHidden]
 		public string OriginalLabel = "";
@@ -420,6 +423,8 @@ namespace MoreMountains.Feedbacks
 
 		/// a ChannelData object, ready to pass to an event
 		public virtual MMChannelData ChannelData => _channelData.Set(ChannelMode, Channel, MMChannelDefinition);
+		
+		public virtual bool InInitialDelay { get; set; }
 
 		protected float _lastPlayTimestamp = -float.MaxValue;
 		protected int _playsLeft;
@@ -471,6 +476,7 @@ namespace MoreMountains.Feedbacks
 
 			SetIndexInFeedbacksList(index);
 			ResetCooldown();
+			InInitialDelay = false;
 			Timing.PlayCount = 0;
 			_initialized = true;
 			Owner = owner;
@@ -613,7 +619,9 @@ namespace MoreMountains.Feedbacks
 		/// <returns></returns>
 		protected virtual IEnumerator PlayCoroutine(Vector3 position, float feedbacksIntensity = 1.0f)
 		{
+			InInitialDelay = true;
 			yield return WaitFor(ApplyTimeMultiplier(Timing.InitialDelay));
+			InInitialDelay = false;
 			RegularPlay(position, feedbacksIntensity);
 		}
 
@@ -1066,7 +1074,7 @@ namespace MoreMountains.Feedbacks
 			{
 				float delayBetweenRepeats = ApplyTimeMultiplier(Timing.DelayBetweenRepeats);
 
-				totalTime += (Timing.NumberOfRepeats * delayBetweenRepeats);
+				totalTime += Timing.NumberOfRepeats * (FeedbackDuration + delayBetweenRepeats);
 			}
 				
 			_totalDuration = totalTime;
