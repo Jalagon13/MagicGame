@@ -54,6 +54,7 @@ public class GameManager : NetworkBehaviour
 		// Debug.Log(HotbarManager.Instance == null);
 		// NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(_playerPrefab.GetComponent<NetworkObject>(), OwnerClientId, isPlayerObject: true, position: new Vector3(128, 128), rotation: Quaternion.identity);
 		
+		if(NetworkManager.Singleton == null) return;
 		NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
 		
 		if(Loader.IsHost)
@@ -68,13 +69,13 @@ public class GameManager : NetworkBehaviour
 		}
 	}
 
-    private void OnClientConnected(ulong clientId)
-    {
-        if(clientId == NetworkManager.ServerClientId)
+	private void OnClientConnected(ulong clientId)
+	{
+		if(clientId == NetworkManager.ServerClientId)
 		{
 			HandleEnvironment();
 		}
-    }
+	}
 	
 	private async void HandleEnvironment()
 	{

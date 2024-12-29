@@ -37,7 +37,7 @@ public class NpcManager : NetworkBehaviour
 	
 	private void Start()
 	{
-		NetworkManager.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+		// NetworkManager.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
 	}
 	
 	private void FixedUpdate()
