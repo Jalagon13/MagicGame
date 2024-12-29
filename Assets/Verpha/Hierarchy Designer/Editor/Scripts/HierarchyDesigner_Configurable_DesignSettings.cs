@@ -61,6 +61,7 @@ namespace Verpha.HierarchyDesigner
             public TextAnchor SeparatorDefaultTextAnchor = TextAnchor.MiddleCenter;
             public HierarchyDesigner_Configurable_Separators.SeparatorImageType SeparatorDefaultImageType = HierarchyDesigner_Configurable_Separators.SeparatorImageType.Default;
             public int SeparatorLeftSideTextAnchorOffset = 3;
+            public int SeparatorCenterTextAnchorOffset = -15;
             public int SeparatorRightSideTextAnchorOffset = 36;
             #endregion
 
@@ -104,6 +105,7 @@ namespace Verpha.HierarchyDesigner
             HierarchyDesigner_Manager_GameObject.TagLayerSpacingCache = TagLayerSpacing;
             HierarchyDesigner_Manager_GameObject.HierarchyLineColorCache = HierarchyLineColor;
             HierarchyDesigner_Manager_GameObject.HierarchyLineThicknessCache = HierarchyLineThickness;
+            HierarchyDesigner_Manager_GameObject.SeparatorCenterTextAnchorOffsetCache = SeparatorCenterTextAnchorOffset;
             HierarchyDesigner_Manager_GameObject.SeparatorLeftSideTextAnchorOffsetCache = SeparatorLeftSideTextAnchorOffset;
             HierarchyDesigner_Manager_GameObject.SeparatorRightSideTextAnchorOffsetCache = SeparatorRightSideTextAnchorOffset;
             HierarchyDesigner_Manager_GameObject.LockColorCache = LockColor;
@@ -565,6 +567,20 @@ namespace Verpha.HierarchyDesigner
             }
         }
 
+        public static int SeparatorCenterTextAnchorOffset
+        {
+            get => designSettings.SeparatorCenterTextAnchorOffset;
+            set
+            {
+                int clampedValue = Mathf.Clamp(value, -66, 66);
+                if (designSettings.SeparatorCenterTextAnchorOffset != clampedValue)
+                {
+                    designSettings.SeparatorCenterTextAnchorOffset = clampedValue;
+                    HierarchyDesigner_Manager_GameObject.SeparatorCenterTextAnchorOffsetCache = clampedValue;
+                }
+            }
+        }
+
         public static int SeparatorRightSideTextAnchorOffset
         {
             get => designSettings.SeparatorRightSideTextAnchorOffset;
@@ -698,6 +714,7 @@ namespace Verpha.HierarchyDesigner
                 SeparatorDefaultTextAnchor = TextAnchor.MiddleCenter,
                 SeparatorDefaultImageType = HierarchyDesigner_Configurable_Separators.SeparatorImageType.Default,
                 SeparatorLeftSideTextAnchorOffset = 3,
+                SeparatorCenterTextAnchorOffset = -15,
                 SeparatorRightSideTextAnchorOffset = 36,
                 LockColor = Color.white,
                 LockTextAnchor = TextAnchor.MiddleCenter,

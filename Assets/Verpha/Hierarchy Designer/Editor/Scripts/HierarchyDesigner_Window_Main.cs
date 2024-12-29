@@ -54,7 +54,7 @@ namespace Verpha.HierarchyDesigner
 
         private const string additionalNotesText =
             "Hierarchy Designer is currently in development, and more features and improvements are coming soon.\n\n" +
-            "Hierarchy Designer is an Editor-Only tool (with the exception of the Hierarchy Designer Folder script) and will not affect your build or game.\n" +
+            "Hierarchy Designer is an Editor-Only tool (with the exception of the Hierarchy Designer Folder script) and will not affect your build or game.\n\n" +
             "Like most editor tool, it will slightly affect performance (EDITOR ONLY). Disabling features you don't use or setting their update values to 'smart' will greatly improve performance, especially in larger scenes.\n\n" +
             "If you have any questions or would like to report a bug, you may email me at: VerphaSuporte@outlook.com.\n\nIf you like Hierarchy Designer, please rate it on the Store.";
         #endregion
@@ -197,6 +197,7 @@ namespace Verpha.HierarchyDesigner
         private TextAnchor tempSeparatorDefaultTextAnchor;
         private HierarchyDesigner_Configurable_Separators.SeparatorImageType tempSeparatorDefaultImageType;
         private int tempSeparatorLeftSideTextAnchorOffset;
+        private int tempSeparatorCenterTextAnchorOffset;
         private int tempSeparatorRightSideTextAnchorOffset;
         private Color tempLockColor;
         private TextAnchor tempLockTextAnchor;
@@ -418,7 +419,6 @@ namespace Verpha.HierarchyDesigner
                 SelectSeparatorsWindow();
             }
 
-            
             GUILayout.Label("│", HierarchyDesigner_Shared_GUI.DivisorLabelStyle, GUILayout.Width(15), GUILayout.Height(primaryButtonsHeight));
 
             if (GUILayout.Button("HOME", HierarchyDesigner_Shared_GUI.HeaderButtonStyle, GUILayout.Height(primaryButtonsHeight)))
@@ -620,7 +620,7 @@ namespace Verpha.HierarchyDesigner
             GUILayout.Label("Separators", HierarchyDesigner_Shared_GUI.MiniBoldLabelStyle);
             GUILayout.Label(separatorText, HierarchyDesigner_Shared_GUI.RegularLabelStyle);
 
-            GUILayout.Label("Additional Notes", HierarchyDesigner_Shared_GUI.MiniBoldLabelStyle);
+            GUILayout.Label("Additional Notes", HierarchyDesigner_Shared_GUI.FieldsCategoryLabelStyle);
             GUILayout.Label(additionalNotesText, HierarchyDesigner_Shared_GUI.RegularLabelStyle);
 
             EditorGUILayout.EndVertical();
@@ -643,7 +643,7 @@ namespace Verpha.HierarchyDesigner
         private void DrawMyOtherAssets()
         {
             EditorGUILayout.BeginHorizontal(HierarchyDesigner_Shared_GUI.SecondaryPanelStyle);
-            aboutMyOtherAssetsScroll = EditorGUILayout.BeginScrollView(aboutMyOtherAssetsScroll, GUILayout.MinHeight(170), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            aboutMyOtherAssetsScroll = EditorGUILayout.BeginScrollView(aboutMyOtherAssetsScroll, GUILayout.MinHeight(200), GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
             EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             GUILayout.Label("My Other Assets", HierarchyDesigner_Shared_GUI.FieldsCategoryCenterLabelStyle);
@@ -664,7 +664,7 @@ namespace Verpha.HierarchyDesigner
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
             GUILayout.Space(10);
-            GUILayout.Label("An image editor and screenshot tool.", HierarchyDesigner_Shared_GUI.RegularLabelCenterStyle);
+            GUILayout.Label("An image editor, map generator and screenshot tool.", HierarchyDesigner_Shared_GUI.RegularLabelCenterStyle);
             EditorGUILayout.EndVertical();
             #endregion
 
@@ -2098,6 +2098,7 @@ namespace Verpha.HierarchyDesigner
             tempSeparatorDefaultTextAnchor = HierarchyDesigner_Shared_GUI.DrawEnumPopup("Default Text Anchor", designSettingslabelWidth, tempSeparatorDefaultTextAnchor, TextAnchor.MiddleCenter, true, "The text anchor for separators that are not present in your separators list, as well as the default text anchor value in the separator creation field.");
             tempSeparatorDefaultImageType = HierarchyDesigner_Shared_GUI.DrawEnumPopup("Default Image Type", designSettingslabelWidth, tempSeparatorDefaultImageType, HierarchyDesigner_Configurable_Separators.SeparatorImageType.Default, true, "The image type for separators that are not present in your separators list, as well as the default image type value in the separator creation field.");
             tempSeparatorLeftSideTextAnchorOffset = HierarchyDesigner_Shared_GUI.DrawIntSlider("Left Side Text Anchor Offset", designSettingslabelWidth, tempSeparatorLeftSideTextAnchorOffset, 3, 0, 33, true, "The horizontal left-side offset for separators with the following text anchor values: Upper Left, Middle Left, and Lower Left.");
+            tempSeparatorCenterTextAnchorOffset = HierarchyDesigner_Shared_GUI.DrawIntSlider("Center Text Anchor Offset", designSettingslabelWidth, tempSeparatorCenterTextAnchorOffset, -15, -66, 66, true, "The horizontal center offset for separators with the following text anchor values: Middle Center, Upper Center, and Lower Center.");
             tempSeparatorRightSideTextAnchorOffset = HierarchyDesigner_Shared_GUI.DrawIntSlider("Right Side Text Anchor Offset", designSettingslabelWidth, tempSeparatorRightSideTextAnchorOffset, 36, 33, 66, true, "The horizontal right-side offset for separators with the following text anchor values: Upper Right, Middle Right, and Lower Right.");
             if (EditorGUI.EndChangeCheck()) { designSettingsHasModifiedChanges = true; }
             EditorGUILayout.EndVertical();
@@ -2153,6 +2154,7 @@ namespace Verpha.HierarchyDesigner
             HierarchyDesigner_Configurable_DesignSettings.SeparatorDefaultTextAnchor = tempSeparatorDefaultTextAnchor;
             HierarchyDesigner_Configurable_DesignSettings.SeparatorDefaultImageType = tempSeparatorDefaultImageType;
             HierarchyDesigner_Configurable_DesignSettings.SeparatorLeftSideTextAnchorOffset = tempSeparatorLeftSideTextAnchorOffset;
+            HierarchyDesigner_Configurable_DesignSettings.SeparatorCenterTextAnchorOffset = tempSeparatorCenterTextAnchorOffset;
             HierarchyDesigner_Configurable_DesignSettings.SeparatorRightSideTextAnchorOffset = tempSeparatorRightSideTextAnchorOffset;
             HierarchyDesigner_Configurable_DesignSettings.LockColor = tempLockColor;
             HierarchyDesigner_Configurable_DesignSettings.LockTextAnchor = tempLockTextAnchor;
@@ -2198,6 +2200,7 @@ namespace Verpha.HierarchyDesigner
             tempSeparatorDefaultTextAnchor = HierarchyDesigner_Configurable_DesignSettings.SeparatorDefaultTextAnchor;
             tempSeparatorDefaultImageType = HierarchyDesigner_Configurable_DesignSettings.SeparatorDefaultImageType;
             tempSeparatorLeftSideTextAnchorOffset = HierarchyDesigner_Configurable_DesignSettings.SeparatorLeftSideTextAnchorOffset;
+            tempSeparatorCenterTextAnchorOffset = HierarchyDesigner_Configurable_DesignSettings.SeparatorCenterTextAnchorOffset;
             tempSeparatorRightSideTextAnchorOffset = HierarchyDesigner_Configurable_DesignSettings.SeparatorRightSideTextAnchorOffset;
             tempLockColor = HierarchyDesigner_Configurable_DesignSettings.LockColor;
             tempLockTextAnchor = HierarchyDesigner_Configurable_DesignSettings.LockTextAnchor;

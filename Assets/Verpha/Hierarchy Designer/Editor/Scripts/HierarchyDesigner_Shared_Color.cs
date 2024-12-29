@@ -30,8 +30,8 @@ namespace Verpha.HierarchyDesigner
         #endregion
 
         #region Hierarchy Designer
-        public static readonly Color PrimaryFontColorDark = HexToColor("#F2F2F2");
-        public static readonly Color PrimaryFontColorLight = HexToColor("#0D0D0D");
+        public static readonly Color PrimaryFontColorDark = HexToColor("#FFFFFF");
+        public static readonly Color PrimaryFontColorLight = HexToColor("#000000");
         public static readonly Color PrimaryFontColorFadedDark = HexToColor("#F2F2F280");
         public static readonly Color PrimaryFontColorFadedLight = HexToColor("#0D0D0D80");
         public static readonly Color SecondaryFontColorDark = HexToColor("#6AFF5A");
@@ -40,12 +40,12 @@ namespace Verpha.HierarchyDesigner
         public static readonly Color SecondaryFontColorFadedLight = HexToColor("#50C04480");
         public static readonly Color TertiaryFontColorDark = HexToColor("#FFF35A");
         public static readonly Color TertiaryFontColorLight = HexToColor("#C0B744");
-        public static readonly Color PrimaryPanelColorTopDark = HexToColor("#1E1E1E");
-        public static readonly Color PrimaryPanelColorTopLight = HexToColor("#E1E1E1");
-        public static readonly Color PrimaryPanelColorMiddleDark = HexToColor("#191919");
-        public static readonly Color PrimaryPanelColorMiddleLight = HexToColor("#E6E6E6");
-        public static readonly Color PrimaryPanelColorBottomDark = HexToColor("#141414");
-        public static readonly Color PrimaryPanelColorBottomLight = HexToColor("#EBEBEB");
+        public static readonly Color PrimaryPanelColorTopDark = HexToColor("#181818"); 
+        public static readonly Color PrimaryPanelColorTopLight = HexToColor("#E7E7E7");
+        public static readonly Color PrimaryPanelColorMiddleDark = HexToColor("#141414");
+        public static readonly Color PrimaryPanelColorMiddleLight = HexToColor("#EBEBEB");
+        public static readonly Color PrimaryPanelColorBottomDark = HexToColor("#121212");
+        public static readonly Color PrimaryPanelColorBottomLight = HexToColor("#EDEDED");
         public static readonly Color SecondaryPanelColorTopDark = HexToColor("#282828");
         public static readonly Color SecondaryPanelColorTopLight = HexToColor("#D7D7D7");
         public static readonly Color SecondaryPanelColorBottomDark = HexToColor("#232323");

@@ -162,6 +162,7 @@ namespace Verpha.HierarchyDesigner
         private static Color hierarchyLineColor;
         private static int hierarchyLineThickness;
         private static int separatorLeftSideTextAnchorOffset;
+        private static int separatorCenterTextAnchorOffset;
         private static int separatorRightSideTextAnchorOffset;
         private static Color lockColor;
         private static TextAnchor lockTextAnchor;
@@ -1127,7 +1128,7 @@ namespace Verpha.HierarchyDesigner
                 Rect tagRect = CalculateTagRect(gameObject, selectionRect, instanceID);
                 if (tagRect.Contains(mousePosition))
                 {
-                    HierarchyDesigner_Window_GameObject.OpenWindow(gameObject, true, Event.current.mousePosition);
+                    HierarchyDesigner_Window_TagLayer.OpenWindow(gameObject, true, Event.current.mousePosition);
                     Event.current.Use();
                 }
             }
@@ -1136,7 +1137,7 @@ namespace Verpha.HierarchyDesigner
                 Rect layerRect = CalculateLayerRect(gameObject, selectionRect, instanceID);
                 if (layerRect.Contains(mousePosition))
                 {
-                    HierarchyDesigner_Window_GameObject.OpenWindow(gameObject, false, Event.current.mousePosition);
+                    HierarchyDesigner_Window_TagLayer.OpenWindow(gameObject, false, Event.current.mousePosition);
                     Event.current.Use();
                 }
             }
@@ -1297,11 +1298,16 @@ namespace Verpha.HierarchyDesigner
         private static Rect AdjustRect(Rect rect, TextAnchor textAlignment)
         {
             switch (textAlignment)
-            {
+            {     
                 case TextAnchor.MiddleLeft:
                 case TextAnchor.UpperLeft:
                 case TextAnchor.LowerLeft:
                     rect.x += separatorLeftSideTextAnchorOffset;
+                    break;
+                case TextAnchor.MiddleCenter:
+                case TextAnchor.UpperCenter:
+                case TextAnchor.LowerCenter:
+                    rect.x += separatorCenterTextAnchorOffset;
                     break;
                 case TextAnchor.MiddleRight:
                 case TextAnchor.UpperRight:
@@ -1782,6 +1788,14 @@ namespace Verpha.HierarchyDesigner
             set
             {
                 separatorLeftSideTextAnchorOffset = value;
+            }
+        }
+
+        public static int SeparatorCenterTextAnchorOffsetCache
+        {
+            set
+            {
+                separatorCenterTextAnchorOffset = value;
             }
         }
 

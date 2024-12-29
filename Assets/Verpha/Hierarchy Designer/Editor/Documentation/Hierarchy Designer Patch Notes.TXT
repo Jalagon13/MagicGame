@@ -1,3 +1,11 @@
+| Version 1.1.9.1
+• (New) Added the following presets: 'Ho Ho Ho' and 'Snow'.
+• (New) Created a new design setting: Separator Center Text Anchor Offset.
+• (Bug Fix) Corrected the center alignments for separators, which were previously slightly shifted to the right.
+• (Other) Made minor GUI adjustments.
+• (Other) Renamed 'HierarchyDesigner_Inspector_Folder' to 'HierarchyDesigner_Window_Folder'.
+• (Other) Renamed 'HierarchyDesigner_Window_GameObject' to 'HierarchyDesigner_Window_TagLayer'.
+
 | Version 1.1.9
 • (Rework) Reworked the Hierarchy Designer's interface.
 • (New) Added tooltips to Hierarchy Designer fields.

@@ -123,6 +123,7 @@ namespace Verpha.HierarchyDesigner
                 DunesPreset(),
                 FreshSwampPreset(),
                 FrostyFogPreset(),
+                HoHoHoPreset(),
                 IronCinderPreset(),
                 JadeLakePreset(),
                 LittleRedPreset(),
@@ -134,6 +135,7 @@ namespace Verpha.HierarchyDesigner
                 PrettyPinkPreset(),
                 PrismaticPreset(),
                 RedDawnPreset(),
+                SnowPreset(),
                 StrawberrySalmonPreset(),
                 SunflowerPreset(),
                 TheTwoRealmsPreset(),
@@ -484,6 +486,40 @@ namespace Verpha.HierarchyDesigner
                 HierarchyDesigner_Shared_Color.HexToColor("#C4E5F1"),
                 11,
                 FontStyle.BoldAndItalic,
+                TextAnchor.MiddleCenter
+            );
+        }
+
+        private static HierarchyDesigner_Preset HoHoHoPreset()
+        {
+            return new(
+                "Ho Ho Ho",
+                HierarchyDesigner_Shared_Color.HexToColor("#FFFFFF"),
+                11,
+                FontStyle.Bold,
+                HierarchyDesigner_Shared_Color.HexToColor("#E02D3C"),
+                HierarchyDesigner_Configurable_Folders.FolderImageType.ModernIII,
+                HierarchyDesigner_Shared_Color.HexToColor("#FFFFFF"),
+                false,
+                HierarchyDesigner_Shared_Color.HexToColor("#E02D3CF0"),
+                new Gradient(),
+                FontStyle.Bold,
+                12,
+                TextAnchor.LowerCenter,
+                HierarchyDesigner_Configurable_Separators.SeparatorImageType.ModernI,
+                HierarchyDesigner_Shared_Color.HexToColor("#FFFFFF"),
+                FontStyle.Bold,
+                10,
+                TextAnchor.MiddleRight,
+                HierarchyDesigner_Shared_Color.HexToColor("#FF5564"),
+                FontStyle.Bold,
+                10,
+                TextAnchor.MiddleLeft,
+                HierarchyDesigner_Shared_Color.HexToColor("#FFFFFF"),
+                HierarchyDesigner_Shared_Color.HexToColor("#00000080"),
+                HierarchyDesigner_Shared_Color.HexToColor("#E7E7E7"),
+                11,
+                FontStyle.Bold,
                 TextAnchor.MiddleCenter
             );
         }
@@ -867,6 +903,40 @@ namespace Verpha.HierarchyDesigner
                 11,
                 FontStyle.Italic,
                 TextAnchor.MiddleRight
+            );
+        }
+
+        private static HierarchyDesigner_Preset SnowPreset()
+        {
+            return new(
+                "Snow",
+                HierarchyDesigner_Shared_Color.HexToColor("#FFFFFF"),
+                12,
+                FontStyle.BoldAndItalic,
+                HierarchyDesigner_Shared_Color.HexToColor("#E9FCFE"),
+                HierarchyDesigner_Configurable_Folders.FolderImageType.Default,
+                HierarchyDesigner_Shared_Color.HexToColor("#9CD4DB"),
+                true,
+                HierarchyDesigner_Shared_Color.HexToColor("#FFFFFF"),
+                HierarchyDesigner_Shared_Color.CreateGradient(GradientMode.Blend, ("#FFFFFF", 240, 0f), ("#E1FDFF", 255, 50f), ("#FFFFFF", 240, 100f)),
+                FontStyle.BoldAndItalic,
+                12,
+                TextAnchor.MiddleCenter,
+                HierarchyDesigner_Configurable_Separators.SeparatorImageType.NeoI,
+                HierarchyDesigner_Shared_Color.HexToColor("#FFFFFF"),
+                FontStyle.BoldAndItalic,
+                10,
+                TextAnchor.MiddleCenter,
+                HierarchyDesigner_Shared_Color.HexToColor("#E6FDFE"),
+                FontStyle.BoldAndItalic,
+                10,
+                TextAnchor.MiddleCenter,
+                HierarchyDesigner_Shared_Color.HexToColor("#FFFFFF"),
+                HierarchyDesigner_Shared_Color.HexToColor("#E6FDFE80"),
+                HierarchyDesigner_Shared_Color.HexToColor("#FFFFFF"),
+                11,
+                FontStyle.Bold,
+                TextAnchor.MiddleCenter
             );
         }
 
