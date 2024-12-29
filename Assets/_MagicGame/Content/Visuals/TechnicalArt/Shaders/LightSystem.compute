@@ -1,0 +1,271 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+struct Tile
+{
+    //string name;
+    float4 color;
+    //bool isLightSource;
+    //public boolIsLightSource;
+};
+
+
+//int worldWidth = 64;
+
+RWStructuredBuffer<Tile> tiles;
+RWTexture2D<float4> Result;
+
+float3 CalculateLight(int targetTile, int startTileX, int startTileY, float3 color, float iteration)
+{
+    int worldWidth = 104*4;
+    
+    int targetTileX = targetTile % worldWidth;
+    int targetTileY = targetTile / worldWidth;
+
+    int xDiff = targetTileX - startTileX;
+    float xDiffFloat;
+    int yDiff = targetTileY - startTileY;
+    float yDiffFloat;
+
+    if (xDiff < 0 && abs(xDiff) > abs(yDiff))
+    {
+        yDiff = startTileY - targetTileY;
+    }
+    if (yDiff <= 0 && abs(yDiff) >= abs(xDiff))
+    {
+        xDiff = startTileX - targetTileX;
+    }
+    
+    int iterations;
+    
+    if (abs(xDiff) > abs(yDiff))
+    {
+        yDiffFloat = (1.0 * yDiff) / (1.0 * xDiff);
+        if (xDiff > 0)
+        {
+            xDiffFloat = 1.0;
+        }
+        else
+        {
+            xDiffFloat = -1.0;
+        }
+        
+        iterations = abs(xDiff);
+    }
+    else
+    {
+        xDiffFloat = (1.0 * xDiff) / (1.0 * yDiff);
+        if (yDiff > 0)
+        {
+            yDiffFloat = 1.0;
+        }
+        else
+        {
+            yDiffFloat = -1.0;
+        }
+        iterations = abs(yDiff);
+    }
+    
+    float startTileXFloat = startTileX;
+    float startTileYFloat = startTileY;
+    int hitWall = 3;
+    
+    for (int i = 0; i < iterations; i++)
+    {
+        Tile targetTile = tiles[round(startTileXFloat) + (round(startTileYFloat) * worldWidth)];
+        if (targetTile.color.r < 0 ||
+            targetTile.color.g < 0 ||
+            targetTile.color.b < 0) //Hit wall; decrease majorly
+        {
+            if (hitWall > 0)
+            {
+                hitWall--;
+            }
+            else
+            {
+                color.r *= 0.5;
+                color.g *= 0.5;
+                color.b *= 0.5;
+            }
+            //if (currentAlpha < 0.0)
+            //{
+               // return 0.0;
+            //}
+        }
+        else //Nothing blocking the path; decrease only slightly
+        {
+            color.r *= 0.98;
+            color.g *= 0.98;
+            color.b *= 0.98;
+        }
+        startTileXFloat += xDiffFloat;
+        startTileYFloat += yDiffFloat;
+    }
+    iteration = 1.0 - iteration;
+    color.r *= iteration;
+    color.g *= iteration;
+    color.b *= iteration;
+    
+    
+    return color;
+
+}
+
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    //float4 pixel;
+    //float alpha = 0.0;
+    float3 color = float3(0.0, 0.0, 0.0);
+    int worldWidth = 104*4;
+    int myId = id.x + id.y * worldWidth;
+    int iterations = 45;
+    int xAxis;
+    int yAxis;
+    float3 highestIntensity = float3(0.0, 0.0, 0.0);
+    
+    for (int i = 0; i < iterations; i++)
+    {
+        int x = 0;
+        while (x <= i)
+        {
+            if ((tiles[myId + i - x - (worldWidth * x)].color.r > 0 ||
+                tiles[myId + i - x - (worldWidth * x)].color.g > 0 ||
+                tiles[myId + i - x - (worldWidth * x)].color.b > 0) &&
+                (myId + i - x - (worldWidth * x)) % worldWidth != id.x) //Top left
+            {
+                int targetTile = myId + i - x - (worldWidth * x);
+                float3 calculatedColor = CalculateLight(targetTile, id.x, id.y, tiles[targetTile].color.rgb, 1.0 * i / iterations);
+                float totalCalculatedIntensity = calculatedColor.r + calculatedColor.g + calculatedColor.b;
+                float totalCurrentIntensity = color.r + color.g + color.b;
+                float ratio;
+                if (calculatedColor.r > highestIntensity.r) //The light we just found is greater than our current
+                {
+                    highestIntensity.r = calculatedColor.r;
+                }
+                if (calculatedColor.g > highestIntensity.g)
+                {
+                    highestIntensity.g = calculatedColor.g;
+                }
+                if (calculatedColor.b > highestIntensity.b)
+                {
+                    highestIntensity.b = calculatedColor.b;
+                }
+                
+                color.r = (color.r + calculatedColor.r);
+
+                color.g = (color.g + calculatedColor.g);
+
+                color.b = (color.b + calculatedColor.b);
+            }
+
+            if ((tiles[myId - i + x - (worldWidth * x)].color.r > 0 ||
+                tiles[myId - i + x - (worldWidth * x)].color.g > 0 ||
+                tiles[myId - i + x - (worldWidth * x)].color.b > 0) &&
+                (myId - i + x - (worldWidth * x)) / worldWidth != id.y) //Top right
+            {
+                int targetTile = myId - i + x - (worldWidth * x);
+                float3 calculatedColor = CalculateLight(targetTile, id.x, id.y, tiles[targetTile].color.rgb, 1.0 * i / iterations);
+                float totalCalculatedIntensity = calculatedColor.r + calculatedColor.g + calculatedColor.b;
+                float totalCurrentIntensity = color.r + color.g + color.b;
+                float ratio;
+                if (calculatedColor.r > highestIntensity.r) //The light we just found is greater than our current
+                {
+                    highestIntensity.r = calculatedColor.r;
+                }
+                if (calculatedColor.g > highestIntensity.g)
+                {
+                    highestIntensity.g = calculatedColor.g;
+                }
+                if (calculatedColor.b > highestIntensity.b)
+                {
+                    highestIntensity.b = calculatedColor.b;
+                }
+                
+                color.r = (color.r + calculatedColor.r);
+
+                color.g = (color.g + calculatedColor.g);
+
+                color.b = (color.b + calculatedColor.b);
+            }
+
+            if ((tiles[myId - i + x + (worldWidth * x)].color.r > 0 ||
+                tiles[myId - i + x + (worldWidth * x)].color.g > 0 ||
+                tiles[myId - i + x + (worldWidth * x)].color.b > 0) &&
+                (myId - i + x + (worldWidth * x)) % worldWidth != id.x) //Bottom right
+            {
+                int targetTile = myId - i + x + (worldWidth * x);
+                float3 calculatedColor = CalculateLight(targetTile, id.x, id.y, tiles[targetTile].color.rgb, 1.0 * i / iterations);
+                float totalCalculatedIntensity = calculatedColor.r + calculatedColor.g + calculatedColor.b;
+                float totalCurrentIntensity = color.r + color.g + color.b;
+                float ratio;
+                if (calculatedColor.r > highestIntensity.r) //The light we just found is greater than our current
+                {
+                    highestIntensity.r = calculatedColor.r;
+                }
+                if (calculatedColor.g > highestIntensity.g)
+                {
+                    highestIntensity.g = calculatedColor.g;
+                }
+                if (calculatedColor.b > highestIntensity.b)
+                {
+                    highestIntensity.b = calculatedColor.b;
+                }
+                
+                color.r = (color.r + calculatedColor.r);
+
+                color.g = (color.g + calculatedColor.g);
+
+                color.b = (color.b + calculatedColor.b);
+            }
+
+            if ((tiles[myId + i - x + (worldWidth * x)].color.r > 0 ||
+                tiles[myId + i - x + (worldWidth * x)].color.g > 0 ||
+                tiles[myId + i - x + (worldWidth * x)].color.b > 0) &&
+                (myId + i - x + (worldWidth * x)) / worldWidth != id.y)//Bottom left
+            {
+                int targetTile = myId + i - x + (worldWidth * x);
+                float3 calculatedColor = CalculateLight(targetTile, id.x, id.y, tiles[targetTile].color.rgb, 1.0 * i / iterations);
+                float totalCalculatedIntensity = calculatedColor.r + calculatedColor.g + calculatedColor.b;
+                float totalCurrentIntensity = color.r + color.g + color.b;
+                float ratio;
+                if (calculatedColor.r > highestIntensity.r) //The light we just found is greater than our current
+                {
+                    highestIntensity.r = calculatedColor.r;
+                }
+                if (calculatedColor.g > highestIntensity.g)
+                {
+                    highestIntensity.g = calculatedColor.g;
+                }
+                if (calculatedColor.b > highestIntensity.b)
+                {
+                    highestIntensity.b = calculatedColor.b;
+                }
+                
+                color.r = (color.r + calculatedColor.r);
+
+                color.g = (color.g + calculatedColor.g);
+
+                color.b = (color.b + calculatedColor.b);
+            }
+                
+            x++;
+        }
+    }
+    
+    float ratio;
+    
+    ratio = highestIntensity.r / color.r;
+    color.r *= ratio;
+    ratio = highestIntensity.g / color.g;
+    color.g *= ratio;
+    ratio = highestIntensity.b / color.b;
+    color.b *= ratio;
+    
+
+    Result[id.xy] = float4(color.r, color.g, color.b, 1.0);
+    
+}
+
