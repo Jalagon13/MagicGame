@@ -5759,7 +5759,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c643114640af1425d9aa6fcfe802f2f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lightmapRenderTexture: {fileID: 8400000, guid: 258d8f459bea14ec5ab1de9a10accec2, type: 2}
+  _lightmapComputeShader: {fileID: 7200000, guid: 26fe7936a0e164328b7f319d2182e7ed, type: 3}
 --- !u!114 &1686029316
 MonoBehaviour:
   m_ObjectHideFlags: 0

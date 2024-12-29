@@ -4,9 +4,10 @@ using UnityEngine.UI;
 
 public class LightmapOverlay : MonoBehaviour
 {
-	[SerializeField] private RenderTexture _lightmapRenderTexture; // RenderTexture for the lightmap
+	[SerializeField] private ComputeShader _lightmapComputeShader;
 
 	private RawImage _lightMapRawImage;
+	private RenderTexture _lightmapRenderTexture;
 
 	private void Awake()
 	{
@@ -15,17 +16,8 @@ public class LightmapOverlay : MonoBehaviour
 
 	private void Start()
 	{
-		// Create and set up the RawImage for displaying the RenderTexture
-		CreateLightmapOverlay();
-
 		// Subscribe to the event to update overlay bounds
 		ChunkManager.Instance.OnLoadedPlayerChunksUpdated += ChunkManager_OnLoadedPlayerChunksUpdated;
-	}
-
-	private void CreateLightmapOverlay()
-	{
-		_lightMapRawImage.texture = _lightmapRenderTexture;
-		_lightMapRawImage.color = new Color(1, 1, 1, 0.5f); // Semi-transparent white
 	}
 
 	private void ChunkManager_OnLoadedPlayerChunksUpdated(object sender, ChunkManager.OnActiveChunksUpdatedEventArgs e)
@@ -33,23 +25,6 @@ public class LightmapOverlay : MonoBehaviour
 		// Get the bounds of the loaded tiles
 		Vector2Int minLoadedTilePos = e.MinLoadedTilePos;
 		Vector2Int maxLoadedTilePos = e.MaxLoadedTilePos;
-
-		// Update the RenderTexture size dynamically based on the tile bounds
-		int renderTextureWidth = (maxLoadedTilePos.x + 1 - minLoadedTilePos.x) * 4;
-		int renderTextureHeight = (maxLoadedTilePos.y + 1 - minLoadedTilePos.y) * 4;
-
-		if (_lightmapRenderTexture != null)
-		{
-			_lightmapRenderTexture.Release();
-		}
-
-		_lightmapRenderTexture = new RenderTexture(renderTextureWidth, renderTextureHeight, 1)
-		{
-			enableRandomWrite = true,
-			filterMode = FilterMode.Point
-		};
-		_lightmapRenderTexture.Create();
-		_lightMapRawImage.texture = _lightmapRenderTexture;
 
 		// Convert tile positions to world space
 		Vector2 tileWorldSize = GetTileWorldSize();
@@ -63,14 +38,41 @@ public class LightmapOverlay : MonoBehaviour
 			maxWorldPos.y - minWorldPos.y
 		);
 
-		// Multiply world size by 4 to ensure it matches the RenderTexture scaling
-		Vector2 scaledWorldSize = sizeWorld * 1;
-
 		// Update the RectTransform
 		RectTransform overlayRect = _lightMapRawImage.rectTransform;
 		overlayRect.position = centerWorldPos; // Center position in world space
-		overlayRect.sizeDelta = scaledWorldSize; // Set the scaled size in world units
+		overlayRect.sizeDelta = sizeWorld; // Set the scaled size in world units
 		overlayRect.localScale = Vector3.one; // Keep scale uniform
+		
+		
+		
+		// Update the RenderTexture size dynamically based on the tile bounds
+		int renderTextureWidth = (maxLoadedTilePos.x - minLoadedTilePos.x);
+		int renderTextureHeight = (maxLoadedTilePos.y - minLoadedTilePos.y);
+		Debug.Log($"RenderTexture size: {renderTextureWidth}x{renderTextureHeight}");
+		if (_lightmapRenderTexture != null)
+		{
+			_lightmapRenderTexture.Release();
+		}
+
+		_lightmapRenderTexture = new RenderTexture(renderTextureWidth, renderTextureHeight, 1)
+		{
+			enableRandomWrite = true,
+			filterMode = FilterMode.Point
+		};
+		_lightmapRenderTexture.Create();
+		
+		int kernelIndex = _lightmapComputeShader.FindKernel("CSMain");
+		_lightmapComputeShader.SetTexture(kernelIndex, "Result", _lightmapRenderTexture);
+		
+		_lightmapComputeShader.SetInt("Width", renderTextureWidth);
+		_lightmapComputeShader.SetInt("Height", renderTextureHeight);
+		
+		int threadGroupsX = Mathf.CeilToInt((float)renderTextureWidth / 8f);
+		int threadGroupsY = Mathf.CeilToInt((float)renderTextureHeight / 8f);
+		_lightmapComputeShader.Dispatch(kernelIndex, threadGroupsX, threadGroupsY, 1);
+		
+		_lightMapRawImage.texture = _lightmapRenderTexture;
 	}
 
 	private Vector2 GetTileWorldSize()

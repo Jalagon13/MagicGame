@@ -1,105 +1,28 @@
-// Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel CSMain
 
-// Struct to define tile properties
-struct Tile
-{
-    float4 color;
-};
-
-// RW buffers for tiles and the result texture
-RWStructuredBuffer<Tile> tiles;
+// RWTexture2D for writing the output
 RWTexture2D<float4> Result;
 
-int worldWidth = 104 * 4; // Define world width globally
+// Texture dimensions
+int Width;
+int Height;
 
-// Efficient light calculation function
-float3 CalculateLight(int targetTile, int startTileX, int startTileY, float3 color, float iteration)
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
 {
-    int targetTileX = targetTile % worldWidth;
-    int targetTileY = targetTile / worldWidth;
+    // Bounds checking
+    if (id.x >= Width || id.y >= Height)
+        return;
 
-    int xDiff = targetTileX - startTileX;
-    int yDiff = targetTileY - startTileY;
+    // Checkerboard logic
+    int x = id.x;
+    int y = id.y;
 
-    int iterations = max(abs(xDiff), abs(yDiff));
-    
-    float3 finalColor = color;
-    int hitWall = 3;
+    // Check if the sum of x and y is even or odd
+    bool isWhite = ((x / 8 + y / 8) % 2) == 0;
 
-    // Calculate step direction
-    float xDiffFloat = (xDiff == 0) ? 0 : (xDiff > 0 ? 1.0 : -1.0);
-    float yDiffFloat = (yDiff == 0) ? 0 : (yDiff > 0 ? 1.0 : -1.0);
-    
-    // Start traversal along the line
-    for (int i = 0; i < iterations; i++)
-    {
-        int currentTile = round(startTileX) + round(startTileY) * worldWidth;
-        Tile tile = tiles[currentTile];
+    // Assign white or black color based on checkerboard pattern
+    float4 color = isWhite ? float4(1.0, 1.0, 1.0, 0.5) : float4(0.0, 0.0, 0.0, 0.5);
 
-        // Check for wall (negative color values)
-        if (tile.color.r < 0 || tile.color.g < 0 || tile.color.b < 0)
-        {
-            if (hitWall > 0)
-                hitWall--;
-            else
-                finalColor *= 0.5; // Apply significant decrease after hitting wall
-        }
-        else
-        {
-            finalColor *= 0.98; // Apply slight decrease when no wall hit
-        }
-
-        // Move to next tile
-        startTileX += xDiffFloat;
-        startTileY += yDiffFloat;
-    }
-    
-    // Adjust intensity based on the iteration
-    return finalColor * (1.0 - iteration);
-}
-
-[numthreads(8, 8, 1)]
-void CSMain(uint3 id : SV_DispatchThreadID)
-{
-    int myId = id.x + id.y * worldWidth;
-    float3 color = float3(0.0, 0.0, 0.0);
-    float3 highestIntensity = float3(0.0, 0.0, 0.0);
-    int iterations = 45;
-
-    // Loop to accumulate light from neighboring tiles
-    for (int i = 0; i < iterations; i++)
-    {
-        int x = 0;
-        while (x <= i)
-        {
-            // Loop for checking each neighboring tile in 4 directions (Top-left, Top-right, Bottom-right, Bottom-left)
-            for (int direction = 0; direction < 4; direction++)
-            {
-                int targetTile = myId + (i - x) + ((worldWidth * x) * (direction == 0 ? 1 : (direction == 1 ? -1 : (direction == 2 ? 1 : -1))));
-
-                if (tiles[targetTile].color.r > 0 || tiles[targetTile].color.g > 0 || tiles[targetTile].color.b > 0)
-                {
-                    float3 calculatedColor = CalculateLight(targetTile, id.x, id.y, tiles[targetTile].color.rgb, 1.0 * i / iterations);
-
-                    highestIntensity = max(highestIntensity, calculatedColor);
-                    color += calculatedColor;
-                }
-            }
-            x++;
-        }
-    }
-
-    // Normalize the final color based on highest intensity
-    float ratio = max(1.0, highestIntensity.r / color.r);
-    color *= ratio;
-
-    ratio = max(1.0, highestIntensity.g / color.g);
-    color *= ratio;
-
-    ratio = max(1.0, highestIntensity.b / color.b);
-    color *= ratio;
-
-    // Write final color to result texture
-    Result[id.xy] = float4(color.r, color.g, color.b, 1.0);
+    Result[id.xy] = color;
 }
