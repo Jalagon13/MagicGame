@@ -6,6 +6,11 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+public struct TileVisibility
+{
+	public int Visibility; // 0 = transparent, 1 = opaque
+}
+
 public class Environment : NetworkBehaviour
 {
 	public static Environment Instance;
@@ -13,6 +18,8 @@ public class Environment : NetworkBehaviour
 	[SerializeField] private TilemapData _groundTilemapData;
 	[SerializeField] private TilemapData _floorTilemapData;
 	[SerializeField] private TilemapData _wallTilemapData;
+
+	private Dictionary<Vector3Int, TileVisibility> _tileVisibilityDictionary = new();
 
 	private void Awake()
 	{
@@ -32,6 +39,13 @@ public class Environment : NetworkBehaviour
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			_groundTilemapData.GetTilemap().SetTile(tilePosV3Int, tile.TileSO);
+			
+			// Populate Dicionary with tile visibility
+			if(!_tileVisibilityDictionary.ContainsKey(tilePosV3Int))
+			{
+				var isOpaque = e.Chunk.WallTileGameDataList.Exists(wallTile => wallTile.TilePosition == tile.TilePosition);
+				_tileVisibilityDictionary.Add(tilePosV3Int, new TileVisibility {Visibility = isOpaque ? 1 : 0});
+			}
 		}
 			
 		// loop through all wall tiles and set them on tilemap
@@ -49,6 +63,11 @@ public class Environment : NetworkBehaviour
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			_groundTilemapData.GetTilemap().SetTile(tilePosV3Int, null);
+			
+			if(_tileVisibilityDictionary.ContainsKey(tilePosV3Int))
+			{
+				_tileVisibilityDictionary.Remove(tilePosV3Int);
+			}
 		}
 		
 		foreach (TileGameData tile in e.Chunk.WallTileGameDataList)
@@ -126,6 +145,11 @@ public class Environment : NetworkBehaviour
 	public TilemapData GetWallTilemapData()
 	{
 		return _wallTilemapData;
+	}
+	
+	public Dictionary<Vector3Int, TileVisibility> GetTileVisibilityDictionary()
+	{
+		return _tileVisibilityDictionary;
 	}
 	
 	public override void OnDestroy()

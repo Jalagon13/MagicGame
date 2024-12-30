@@ -1,28 +1,69 @@
+// Define thread group size
 #pragma kernel CSMain
 
-// RWTexture2D for writing the output
+// Tile data (0 = opaque, 1 = transparent)
+StructuredBuffer<uint> TileData;
+
+// Light sources (position, intensity, radius)
+StructuredBuffer<float4> LightSources; // Each float4 is (x, y, intensity, radius)
+
+// Output lightmap
 RWTexture2D<float4> Result;
 
-// Texture dimensions
+// World/tilemap dimensions
 int Width;
 int Height;
+int NumLights;
 
-[numthreads(8,8,1)]
-void CSMain (uint3 id : SV_DispatchThreadID)
+// Light absorption factor for opaque tiles (0 = full block, 1 = no block)
+float AbsorptionFactor = 0.75; // Adjust this value to control the amount of light absorption by opaque tiles
+
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID) 
 {
-    // Bounds checking
-    if (id.x >= Width || id.y >= Height)
-        return;
+    // Ensure we're within bounds
+    if (id.x >= Width || id.y >= Height) return;
 
-    // Checkerboard logic
+    // Get pixel coordinates
     int x = id.x;
     int y = id.y;
 
-    // Check if the sum of x and y is even or odd
-    bool isWhite = ((x / 8 + y / 8) % 2) == 0;
+    // Calculate the 1D index of the tile in the buffer
+    int tileIndex = y * Width + x;
 
-    // Assign white or black color based on checkerboard pattern
-    float4 color = isWhite ? float4(1.0, 1.0, 1.0, 0.5) : float4(0.0, 0.0, 0.0, 0.5);
+    // Start with no light
+    float4 pixelColor = float4(0, 0, 0, 1);
 
-    Result[id.xy] = color;
+    // Read tile transparency (1 = opaque, 0 = transparent)
+    uint tileTransparency = TileData[tileIndex];
+    
+    // Process all lights
+    for (int i = 0; i < NumLights; ++i)
+    {
+        float4 lightSource = LightSources[i];
+
+        // Calculate distance from the light source
+        float distance = length(float2(x, y) - lightSource.xy);
+
+        // Light falls off based on distance and radius
+        if (distance < lightSource.w) // w = radius
+        {
+            float intensity = lightSource.z * (1.0 - distance / lightSource.w); // Linear falloff
+
+            // If the tile is opaque, reduce the intensity by the absorption factor
+            if (tileTransparency == 1)
+            {
+                intensity -= 0.15;
+            }
+
+            // Accumulate light, allowing it to pass through opaque tiles with reduced intensity
+            pixelColor.rgb += float3(intensity, intensity, intensity);
+        }
+    }
+
+    // Clamp light to [0, 1] range
+    pixelColor.rgb = clamp(pixelColor.rgb, 0.0, 1.0);
+
+    // Write the final color
+    Result[int2(x, y)] = pixelColor;
 }
