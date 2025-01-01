@@ -1,7 +1,6 @@
-// Define thread group size
 #pragma kernel CSMain
 
-// Tile data (0 = opaque, 1 = transparent)
+// Tile data (1 = opaque, 0 = transparent)
 StructuredBuffer<uint> TileData;
 
 // Light sources (position, intensity, radius)
@@ -15,8 +14,89 @@ int Width;
 int Height;
 int NumLights;
 
-// Light absorption factor for opaque tiles (0 = full block, 1 = no block)
-float AbsorptionFactor = 0.75; // Adjust this value to control the amount of light absorption by opaque tiles
+// Function to calculate light contribution for a pixel
+float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
+{
+    float2 lightPos = lightSource.xy;
+    float intensity = lightSource.z; // Float between 0 and 1
+    float radius = lightSource.w;   // Light radius
+
+    float distance = length(targetPos - lightPos);
+
+    float currentIntensity = intensity;
+
+    int opaqueTilesFound = 0;        // Tracks the number of opaque tiles encountered
+    int opaqueTilesTolerance = 2;   // Tolerance for light bleeding
+
+    // Differences in x and y
+    float xDiff = targetPos.x - lightPos.x;
+    float yDiff = targetPos.y - lightPos.y;
+
+    // Determine dominant axis and step sizes
+    float xStep, yStep;
+    int iterations;
+
+    if (abs(xDiff) > abs(yDiff))
+    {
+        xStep = xDiff > 0 ? 1.0 : -1.0;
+        yStep = yDiff / abs(xDiff); // Proportional step in y
+        iterations = abs(xDiff);   // Number of steps along x
+    }
+    else
+    {
+        yStep = yDiff > 0 ? 1.0 : -1.0;
+        xStep = xDiff / abs(yDiff); // Proportional step in x
+        iterations = abs(yDiff); // Number of steps along y
+    }
+
+    // Start traversing from the light source position
+    float2 currentPos = lightPos;
+
+    for (int i = 0; i < iterations; ++i)
+    {
+        // Calculate the current tile position
+        int tileX = int(round(currentPos.x));
+        int tileY = int(round(currentPos.y));
+        int tileIndex = tileY * Width + tileX;
+
+        // Check tile transparency
+        uint tileTransparency = TileData[tileIndex];
+
+        if (tileTransparency == 1) // Opaque tile
+        {
+            if (opaqueTilesFound < opaqueTilesTolerance)
+            {
+                opaqueTilesFound++;
+                currentIntensity *= 0.98; // Minor reduction
+            }
+            else
+            {
+                currentIntensity *= 0.65; // Major reduction
+            }
+        }
+        else // Transparent tile
+        {
+            currentIntensity *= 0.98; // Minor reduction
+        }
+
+        // Stop if intensity is too low
+        if (currentIntensity < 0.01)
+        {
+            return float3(0, 0, 0);
+        }
+
+        // Move to the next position
+        currentPos += float2(xStep, yStep);
+    }
+
+    // Apply distance-based attenuation
+    float normalizedDistance = distance / radius;
+    float attenuation = (1.0 - normalizedDistance) * (1.0 - normalizedDistance); // Quadratic falloff
+    attenuation = max(attenuation, 0.0); // Ensure it doesn't go negative
+    currentIntensity *= attenuation;
+
+    return float3(currentIntensity, currentIntensity, currentIntensity);
+}
 
 [numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID) 
@@ -32,7 +112,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     int tileIndex = y * Width + x;
 
     // Start with no light
-    float4 pixelColor = float4(0, 0, 0, 1);
+    float4 pixelColor = float4(0.005, 0.005, 0.005, 1);
 
     // Read tile transparency (1 = opaque, 0 = transparent)
     uint tileTransparency = TileData[tileIndex];
@@ -46,18 +126,12 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         float distance = length(float2(x, y) - lightSource.xy);
 
         // Light falls off based on distance and radius
-        if (distance < lightSource.w) // w = radius
+        if (distance <= lightSource.w) // w = radius
         {
-            float intensity = lightSource.z * (1.0 - distance / lightSource.w); // Linear falloff
+             // Pixel falls within the light radius
+            pixelColor.rgb += CalculateLightContribution(float2(x, y), lightSource);
 
-            // If the tile is opaque, reduce the intensity by the absorption factor
-            if (tileTransparency == 1)
-            {
-                intensity -= 0.15;
-            }
-
-            // Accumulate light, allowing it to pass through opaque tiles with reduced intensity
-            pixelColor.rgb += float3(intensity, intensity, intensity);
+            break; // Just process the one light it finds for now for testing for one light for now
         }
     }
 

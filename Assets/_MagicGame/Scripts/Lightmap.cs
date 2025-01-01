@@ -4,17 +4,24 @@ using UnityEngine.UI;
 
 public class Lightmap : MonoBehaviour
 {
+	public static Lightmap Instance { get; private set; }
+
 	[SerializeField] private ComputeShader _lightmapComputeShader;
 	[SerializeField] private int _lightmapScale = 1;
-	[SerializeField] private GameObject _testLight;
+	[SerializeField] private LightSource _testLightSource;
+	[SerializeField] private bool _usePointFilter;
 
 	private RawImage _lightMapRawImage;
 	private RenderTexture _lightmapRenderTexture;
 	private RectTransform _overlayRect;
 	private Vector2 _tileWorldSize = new Vector2(1f, 1f); // Assuming tiles are 1x1 units
+	private Vector2Int _minLoadedTilePos;
+	private Vector2Int _maxLoadedTilePos;
 
 	private void Awake()
 	{
+		Instance = this;
+	
 		_lightMapRawImage = transform.GetChild(0).GetComponent<RawImage>();
 		_overlayRect = _lightMapRawImage.rectTransform;
 	}
@@ -28,24 +35,24 @@ public class Lightmap : MonoBehaviour
 	private void ChunkManager_OnLoadedPlayerChunksUpdated(object sender, ChunkManager.OnActiveChunksUpdatedEventArgs e)
 	{
 		// Get the bounds of the loaded tiles
-		Vector2Int minLoadedTilePos = e.MinLoadedTilePos;
-		Vector2Int maxLoadedTilePos = e.MaxLoadedTilePos;
+		_minLoadedTilePos = e.MinLoadedTilePos;
+		_maxLoadedTilePos = e.MaxLoadedTilePos;
 
 		// Calculate center and size in world space
-		UpdateOverlayRect(minLoadedTilePos, maxLoadedTilePos);
+		UpdateOverlayRect();
 
 		// Update the RenderTexture size dynamically based on the tile bounds
-		UpdateRenderTexture(minLoadedTilePos, maxLoadedTilePos);
+		UpdateRenderTexture();
 
 		// Set up and dispatch the compute shader
-		DispatchComputeShader(minLoadedTilePos, maxLoadedTilePos);
+		DispatchComputeShader();
 	}
 
-	private void UpdateOverlayRect(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos)
+	private void UpdateOverlayRect()
 	{
 		// Convert tile positions to world space
-		Vector2 minWorldPos = TileToWorldPosition(minLoadedTilePos);
-		Vector2 maxWorldPos = TileToWorldPosition(maxLoadedTilePos);
+		Vector2 minWorldPos = TileToWorldPosition(_minLoadedTilePos);
+		Vector2 maxWorldPos = TileToWorldPosition(_maxLoadedTilePos);
 
 		// Calculate center and size in world space
 		Vector2 centerWorldPos = (minWorldPos + maxWorldPos) / 2; // Center of the overlay
@@ -57,10 +64,10 @@ public class Lightmap : MonoBehaviour
 		_overlayRect.localScale = Vector3.one; // Keep scale uniform
 	}
 
-	private void UpdateRenderTexture(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos)
+	private void UpdateRenderTexture()
 	{
-		int renderTextureWidth = (maxLoadedTilePos.x - minLoadedTilePos.x) * _lightmapScale;
-		int renderTextureHeight = (maxLoadedTilePos.y - minLoadedTilePos.y) * _lightmapScale;
+		int renderTextureWidth = (_maxLoadedTilePos.x - _minLoadedTilePos.x) * _lightmapScale;
+		int renderTextureHeight = (_maxLoadedTilePos.y - _minLoadedTilePos.y) * _lightmapScale;
 
 		// Release old render texture if it exists
 		if (_lightmapRenderTexture != null)
@@ -72,12 +79,12 @@ public class Lightmap : MonoBehaviour
 		_lightmapRenderTexture = new RenderTexture(renderTextureWidth, renderTextureHeight, 1)
 		{
 			enableRandomWrite = true,
-			filterMode = FilterMode.Point
+			filterMode = _usePointFilter ? FilterMode.Point : FilterMode.Bilinear,
 		};
 		_lightmapRenderTexture.Create();
 	}
 
-	private void DispatchComputeShader(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos)
+	public void DispatchComputeShader()
 	{
 		int renderTextureWidth = _lightmapRenderTexture.width;
 		int renderTextureHeight = _lightmapRenderTexture.height;
@@ -85,28 +92,24 @@ public class Lightmap : MonoBehaviour
 		int kernelIndex = _lightmapComputeShader.FindKernel("CSMain");
 
 		// Convert _testLight world position to texture coordinates
-		Vector2 worldPosition = new Vector2(_testLight.transform.position.x, _testLight.transform.position.y);
-		Vector2 lightTextureCoord = WorldToRenderTextureCoords(worldPosition, minLoadedTilePos, maxLoadedTilePos);
-
-		// Set up light properties
-		float lightIntensity = 1.0f; // Example value
-		float lightRadius = 5.0f;    // Example value
+		Vector2 worldPosition = new Vector2(_testLightSource.transform.position.x, _testLightSource.transform.position.y);
+		Vector2 lightTextureCoord = WorldToRenderTextureCoords(worldPosition);
 
 		// Adjust light radius based on the lightmap scale (invert the scale to keep the radius consistent in world space)
-		float adjustedLightRadius = lightRadius * _lightmapScale;
+		float adjustedLightRadius = _testLightSource.GetRadius() * _lightmapScale;
 
 		// Create the light data (adjusted light radius)
-		Vector4 lightData = new Vector4(lightTextureCoord.x, lightTextureCoord.y, lightIntensity, adjustedLightRadius);
+		Vector4 lightData = new Vector4(lightTextureCoord.x, lightTextureCoord.y, _testLightSource.GetIntensity(), adjustedLightRadius);
 
 		// Create and set structured buffers for light sources and colors
 		Vector4[] lightSourceArray = new Vector4[1] { lightData };
 		ComputeBuffer lightSourceBuffer = new ComputeBuffer(lightSourceArray.Length, sizeof(float) * 4);
 		lightSourceBuffer.SetData(lightSourceArray);
 		_lightmapComputeShader.SetBuffer(kernelIndex, "LightSources", lightSourceBuffer);
-    
+	
 		// Set up the tile visibility array and compute buffer
 		TileVisibility[] tileVisibilityArray = new TileVisibility[renderTextureWidth * renderTextureHeight];
-		PopulateTileVisibilityArray(minLoadedTilePos, maxLoadedTilePos, _lightmapScale, tileVisibilityArray, renderTextureWidth);
+		PopulateTileVisibilityArray(_minLoadedTilePos, _maxLoadedTilePos, _lightmapScale, tileVisibilityArray, renderTextureWidth);
 
 		// Create and set the compute buffer
 		ComputeBuffer tileDataBuffer = new ComputeBuffer(tileVisibilityArray.Length, sizeof(uint));
@@ -134,14 +137,14 @@ public class Lightmap : MonoBehaviour
 		_lightMapRawImage.texture = _lightmapRenderTexture;
 	}
 	
-	private Vector2 WorldToRenderTextureCoords(Vector2 worldPos, Vector2Int minTilePos, Vector2Int maxTilePos)
+	public Vector2 WorldToRenderTextureCoords(Vector2 worldPos)
 	{
 		// Map world position to tile indices
 		Vector2 tilePos = new Vector2(worldPos.x / _tileWorldSize.x, worldPos.y / _tileWorldSize.y);
 
 		// Normalize to render texture coordinates
-		float x = (tilePos.x - minTilePos.x) / (maxTilePos.x - minTilePos.x);
-		float y = (tilePos.y - minTilePos.y) / (maxTilePos.y - minTilePos.y);
+		float x = (tilePos.x - _minLoadedTilePos.x) / (_maxLoadedTilePos.x - _minLoadedTilePos.x);
+		float y = (tilePos.y - _minLoadedTilePos.y) / (_maxLoadedTilePos.y - _minLoadedTilePos.y);
 
 		// Scale to render texture dimensions
 		return new Vector2(x * _lightmapRenderTexture.width, y * _lightmapRenderTexture.height);
@@ -174,6 +177,16 @@ public class Lightmap : MonoBehaviour
 	private Vector2 TileToWorldPosition(Vector2Int tilePos)
 	{
 		return new Vector2(tilePos.x * _tileWorldSize.x, tilePos.y * _tileWorldSize.y);
+	}
+	
+	public RenderTexture GetRenderTexture()
+	{
+		return _lightmapRenderTexture;
+	}
+	
+	public int GetLightmapScale()
+	{
+		return _lightmapScale;
 	}
 
 	private void OnDestroy()
