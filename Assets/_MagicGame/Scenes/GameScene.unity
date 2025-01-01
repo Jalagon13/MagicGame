@@ -932,7 +932,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d05865aebbc4494eb5bd122e7ee263f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lightIntensity: 0.5
+  _lightIntensity: 1
   _lightRadius: 10
 --- !u!1 &242063066
 GameObject:
@@ -2407,8 +2407,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lightmapComputeShader: {fileID: 7200000, guid: 26fe7936a0e164328b7f319d2182e7ed, type: 3}
-  _lightmapScale: 2
+  _lightmapScale: 4
   _testLightSource: {fileID: 240760914}
+  _usePointFilter: 0
 --- !u!1 &652259848
 GameObject:
   m_ObjectHideFlags: 0
