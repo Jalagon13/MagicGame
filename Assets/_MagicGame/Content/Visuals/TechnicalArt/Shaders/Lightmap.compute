@@ -13,6 +13,7 @@ RWTexture2D<float4> Result;
 int Width;
 int Height;
 int NumLights;
+int OpaqueTileTolerance;
 
 // Function to calculate light contribution for a pixel
 float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
@@ -26,7 +27,6 @@ float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
     float currentIntensity = intensity;
 
     int opaqueTilesFound = 0;        // Tracks the number of opaque tiles encountered
-    int opaqueTilesTolerance = 4;   // Tolerance for light bleeding
 
     // Differences in x and y
     float xDiff = targetPos.x - lightPos.x;
@@ -69,14 +69,13 @@ float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
 
         if (tileTransparency == 1) // Opaque tile
         {
-            if (opaqueTilesFound < opaqueTilesTolerance)
+            if (opaqueTilesFound < OpaqueTileTolerance)
             {
                 opaqueTilesFound++;
-                currentIntensity *= lerp(0.5, 0.98, attenuation); // Minor reduction
             }
             else
             {
-                currentIntensity *= lerp(0.0, 0.68, attenuation); // Major reduction
+                currentIntensity *= 0.65; // Major reduction
             }
         }
         else // Transparent tile
@@ -94,7 +93,6 @@ float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
         currentPos += float2(xStep, yStep);
     }
 
-    
     currentIntensity *= attenuation;
 
     return float3(currentIntensity, currentIntensity, currentIntensity);
@@ -110,36 +108,44 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     int x = id.x;
     int y = id.y;
 
+    // Initialize ambient light (very dim base color)
+    float3 pixelLight = float3(0.01, 0.01, 0.01);
+
+    // Check if there are no lights
+    if (NumLights == 0)
+    {
+        // Write only ambient light and exit
+        Result[id.xy] = float4(pixelLight, 1.0); // Ambient light only
+        return;
+    }
+
     // Calculate the 1D index of the tile in the buffer
     int tileIndex = y * Width + x;
-
-    // Start with no light
-    float4 pixelColor = float4(0.005, 0.005, 0.005, 1);
 
     // Read tile transparency (1 = opaque, 0 = transparent)
     uint tileTransparency = TileData[tileIndex];
     
-    // Process all lights
+    // Process light sources
     for (int i = 0; i < NumLights; ++i)
     {
         float4 lightSource = LightSources[i];
 
-        // Calculate distance from the light source
+        // Calculate distance from light to pixel
         float distance = length(float2(x, y) - lightSource.xy);
 
-        // Light falls off based on distance and radius
-        if (distance <= lightSource.w) // w = radius
-        {
-             // Pixel falls within the light radius
-            pixelColor.rgb += CalculateLightContribution(float2(x, y), lightSource);
+        // Skip lights that don't affect this pixel
+        if (distance > lightSource.w) continue;
 
-            break; // Just process the one light it finds for now for testing for one light for now
-        }
+        // Add the light contribution
+        float3 lightContribution = CalculateLightContribution(float2(x, y), lightSource);
+
+        // Accumulate light contributions
+        pixelLight += lightContribution;
     }
 
-    // Clamp light to [0, 1] range
-    pixelColor.rgb = clamp(pixelColor.rgb, 0.0, 1.0);
+    // Clamp the final light value to [0, 1] range
+    pixelLight = clamp(pixelLight, 0.0, 1.0);
 
-    // Write the final color
-    Result[int2(x, y)] = pixelColor;
+    // Write the final color to the output texture
+    Result[id.xy] = float4(pixelLight, 1.0);
 }

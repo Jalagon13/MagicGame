@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,9 +7,9 @@ public class Lightmap : MonoBehaviour
 {
 	public static Lightmap Instance { get; private set; }
 
+	[SerializeField] private Gradient _dayLightGradient;
 	[SerializeField] private ComputeShader _lightmapComputeShader;
 	[SerializeField] private int _lightmapScale = 1;
-	[SerializeField] private LightSource _testLightSource;
 	[SerializeField] private bool _usePointFilter;
 
 	private RawImage _lightMapRawImage;
@@ -17,6 +18,7 @@ public class Lightmap : MonoBehaviour
 	private Vector2 _tileWorldSize = new Vector2(1f, 1f); // Assuming tiles are 1x1 units
 	private Vector2Int _minLoadedTilePos;
 	private Vector2Int _maxLoadedTilePos;
+	private List<LightSource> _lightSources = new List<LightSource>();
 
 	private void Awake()
 	{
@@ -30,6 +32,60 @@ public class Lightmap : MonoBehaviour
 	{
 		// Subscribe to the event to update overlay bounds
 		ChunkManager.Instance.OnLoadedPlayerChunksUpdated += ChunkManager_OnLoadedPlayerChunksUpdated;
+		WorldManager.Instance.OnTick += WorldManager_OnTick;
+	}
+
+	private void WorldManager_OnTick(object sender, WorldManager.OnTickEventArgs e)
+	{
+		float ratio = e.CurrentDayRatio;
+		
+		Color dayLightColor = _dayLightGradient.Evaluate(ratio);
+		
+		SetColorBasedOnBrightness(dayLightColor);
+	}
+	
+	// Method to set color and adjust opacity
+	public void SetColorBasedOnBrightness(Color color)
+	{
+		// Calculate the brightness of the color (0 = darkest, 1 = brightest)
+		float brightness = CalculateBrightness(color);
+
+		// Map brightness to opacity (alpha) - you can adjust this formula
+		float opacity = 1 - brightness;
+
+		// Set the sprite renderer's color with the new alpha value
+		Color spriteColor = _lightMapRawImage.color;
+		spriteColor.a = Mathf.Clamp(opacity, 0, 0.995f);
+		_lightMapRawImage.color = spriteColor;
+	}
+	
+	// Method to calculate perceived brightness
+	private float CalculateBrightness(Color color)
+	{
+		// The formula for perceived brightness:
+		// 0.2126 * R + 0.7152 * G + 0.0722 * B
+		// These weights are based on human perception of color brightness
+		return 0.2126f * color.r + 0.7152f * color.g + 0.0722f * color.b;
+	}
+
+	public void RegisterLightSource(LightSource lightSource)
+	{
+		if(!_lightSources.Contains(lightSource))
+		{
+			_lightSources.Add(lightSource);
+			
+			DispatchComputeShader();
+		}
+	}
+	
+	public void DeregisterLightSource(LightSource lightSource)
+	{
+		if(_lightSources.Contains(lightSource))
+		{
+			_lightSources.Remove(lightSource);
+			
+			DispatchComputeShader();
+		}
 	}
 
 	private void ChunkManager_OnLoadedPlayerChunksUpdated(object sender, ChunkManager.OnActiveChunksUpdatedEventArgs e)
@@ -91,27 +147,19 @@ public class Lightmap : MonoBehaviour
 
 		int kernelIndex = _lightmapComputeShader.FindKernel("CSMain");
 
-		// Convert _testLight world position to texture coordinates
-		Vector2 worldPosition = new Vector2(_testLightSource.transform.position.x, _testLightSource.transform.position.y);
-		Vector2 lightTextureCoord = WorldToRenderTextureCoords(worldPosition);
+		// Create a list to hold the light data for all light sources
+		List<Vector4> lightSourceList = CreateLightSourceGPUData();
 
-		// Adjust light radius based on the lightmap scale (invert the scale to keep the radius consistent in world space)
-		float adjustedLightRadius = _testLightSource.GetRadius() * _lightmapScale;
-
-		// Create the light data (adjusted light radius)
-		Vector4 lightData = new Vector4(lightTextureCoord.x, lightTextureCoord.y, _testLightSource.GetIntensity(), adjustedLightRadius);
-
-		// Create and set structured buffers for light sources and colors
-		Vector4[] lightSourceArray = new Vector4[1] { lightData };
-		ComputeBuffer lightSourceBuffer = new ComputeBuffer(lightSourceArray.Length, sizeof(float) * 4);
-		lightSourceBuffer.SetData(lightSourceArray);
+		// Create and set structured buffer for light sources if there are any
+		ComputeBuffer lightSourceBuffer = new ComputeBuffer(lightSourceList.Count == 0 ? 1 : lightSourceList.Count, sizeof(float) * 4);
+		lightSourceBuffer.SetData(lightSourceList.ToArray());
 		_lightmapComputeShader.SetBuffer(kernelIndex, "LightSources", lightSourceBuffer);
-	
+
 		// Set up the tile visibility array and compute buffer
 		TileVisibility[] tileVisibilityArray = new TileVisibility[renderTextureWidth * renderTextureHeight];
 		PopulateTileVisibilityArray(_minLoadedTilePos, _maxLoadedTilePos, _lightmapScale, tileVisibilityArray, renderTextureWidth);
 
-		// Create and set the compute buffer
+		// Create and set the compute buffer for tile visibility
 		ComputeBuffer tileDataBuffer = new ComputeBuffer(tileVisibilityArray.Length, sizeof(uint));
 		tileDataBuffer.SetData(tileVisibilityArray);
 		_lightmapComputeShader.SetBuffer(kernelIndex, "TileData", tileDataBuffer);
@@ -119,7 +167,9 @@ public class Lightmap : MonoBehaviour
 		// Set shader parameters
 		_lightmapComputeShader.SetInt("Width", renderTextureWidth);
 		_lightmapComputeShader.SetInt("Height", renderTextureHeight);
-		_lightmapComputeShader.SetInt("NumLights", lightSourceArray.Length);
+		_lightmapComputeShader.SetInt("OpaqueTileTolerance", _lightmapScale);
+		_lightmapComputeShader.SetInt("NumLights", lightSourceList.Count);
+		Debug.Log($"Width: {renderTextureWidth}, Height: {renderTextureHeight}, NumLights: {lightSourceList.Count}, OpaqueTileTolerance: {_lightmapScale}");
 
 		// Set the output texture
 		_lightmapComputeShader.SetTexture(kernelIndex, "Result", _lightmapRenderTexture);
@@ -129,12 +179,36 @@ public class Lightmap : MonoBehaviour
 		int threadGroupsY = Mathf.CeilToInt((float)renderTextureHeight / 8f);
 		_lightmapComputeShader.Dispatch(kernelIndex, threadGroupsX, threadGroupsY, 1);
 
-		// Release buffer after use
+		// Release buffers after use
 		tileDataBuffer.Release();
 		lightSourceBuffer.Release();
 
 		// Set the texture on the RawImage component
 		_lightMapRawImage.texture = _lightmapRenderTexture;
+	}
+	
+	private List<Vector4> CreateLightSourceGPUData()
+	{
+		List<Vector4> lightSourceList = new List<Vector4>();
+	
+		// Iterate over all light sources and populate the lightSourceList
+		foreach (var lightSource in _lightSources)
+		{
+			// Convert world position to texture coordinates
+			Vector2 worldPosition = new Vector2(lightSource.transform.position.x, lightSource.transform.position.y);
+			Vector2 lightTextureCoord = WorldToRenderTextureCoords(worldPosition);
+
+			// Adjust light radius based on the lightmap scale (invert the scale to keep the radius consistent in world space)
+			float adjustedLightRadius = lightSource.GetRadius() * _lightmapScale;
+
+			// Create light data (x, y position, intensity, adjusted radius)
+			Vector4 lightData = new Vector4(lightTextureCoord.x, lightTextureCoord.y, lightSource.GetIntensity(), adjustedLightRadius);
+
+			// Add to the list
+			lightSourceList.Add(lightData);
+		}
+		
+		return lightSourceList;
 	}
 	
 	public Vector2 WorldToRenderTextureCoords(Vector2 worldPos)
@@ -193,5 +267,6 @@ public class Lightmap : MonoBehaviour
 	{
 		// Unsubscribe from the event
 		ChunkManager.Instance.OnLoadedPlayerChunksUpdated -= ChunkManager_OnLoadedPlayerChunksUpdated;
+		WorldManager.Instance.OnTick -= WorldManager_OnTick;
 	}
 }

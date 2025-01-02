@@ -21,6 +21,11 @@ public enum EnvironmentID // NTFS: when adding new IDs remember to put the value
 public class WorldManager : NetworkBehaviour
 {
 	public static WorldManager Instance { get; private set; }
+	public event EventHandler<OnTickEventArgs> OnTick;
+	public class OnTickEventArgs : EventArgs 
+	{
+		public float CurrentDayRatio;
+	}
 
 	[Title("Bounaries", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private float _dayDurationInSeconds;
@@ -36,10 +41,6 @@ public class WorldManager : NetworkBehaviour
 	private List<EnvironmentID> _environmentList = new(); // Used to keep track which environments have been generated or not
 	private float _currentTime;
 	private bool _isTransitioningEnvironment;
-	
-	// public float CurrentDayRatio => _currentTime / _dayDurationInSeconds;
-	// public DayCycleHandler DayCycleHandler { get; set; }
-	// public LightMap LightMap { get; set; }
 	
 	public string Seed 
 	{ 
@@ -77,7 +78,21 @@ public class WorldManager : NetworkBehaviour
 			Tick();
 	}
 	
-	[Button("Generate Environment")]
+	private void Tick()
+	{
+		_currentTime += Time.deltaTime;
+
+		while (_currentTime > _dayDurationInSeconds)
+		{
+			_currentTime -= _dayDurationInSeconds;
+		}
+	
+		OnTick?.Invoke(this, new OnTickEventArgs
+		{
+			CurrentDayRatio = _currentTime / _dayDurationInSeconds
+		});
+	}
+	
 	public void GenerateEnvironment(EnvironmentID environmentToGenerate)
 	{
 		// Check if environment is already generated
@@ -254,17 +269,6 @@ public class WorldManager : NetworkBehaviour
 	private void PlacePlayerAt(Vector2 portalPosition)
 	{
 		Player.LocalClientInstance.transform.SetPositionAndRotation(new(portalPosition.x + 0.5f, portalPosition.y - 0.5f), Quaternion.identity);
-	}
-	
-	private void Tick()
-	{
-		_currentTime += Time.deltaTime;
-
-		while (_currentTime > _dayDurationInSeconds)
-			_currentTime -= _dayDurationInSeconds;
-			
-		// if(DayCycleHandler != null)
-		// 	DayCycleHandler.Tick();
 	}
 	
 	private void DeleteNeighborWallsAroundPoint(Vector3 centerPosition)

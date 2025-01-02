@@ -11,6 +11,18 @@ public class LightSource : MonoBehaviour
 	{
 		_lastWorldPosition = transform.position;
 	}
+	
+	private void OnEnable()
+	{
+		// Register to lightmap
+		Lightmap.Instance.RegisterLightSource(this);
+	}
+	
+	private void OnDisable()
+	{
+		// Deregister to lightmap
+		Lightmap.Instance.DeregisterLightSource(this);
+	}
 
 	private void Update()
 	{
@@ -20,16 +32,9 @@ public class LightSource : MonoBehaviour
 
 		if (Vector3.Distance(transform.position, _lastWorldPosition) >= updateThreshold)
 		{
-			UpdateLightmap();
+			Lightmap.Instance.DispatchComputeShader();
 			_lastWorldPosition = transform.position;
 		}
-	}
-
-	private void UpdateLightmap()
-	{
-		// Implement the logic to update the lightmap
-		Debug.Log("Lightmap updated for light source at position: " + transform.position);
-		Lightmap.Instance.DispatchComputeShader();
 	}
 
 	public float GetIntensity()
