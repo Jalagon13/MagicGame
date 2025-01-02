@@ -18,13 +18,13 @@ float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
 {
     float2 lightPos = lightSource.xy;
     float intensity = lightSource.z; // Float between 0 and 1
-    float radius = lightSource.w;   // Light radius
+    float radius = lightSource.w; // Light radius
 
     float distance = length(targetPos - lightPos);
 
     float currentIntensity = intensity;
 
-    int opaqueTilesFound = 0;        // Tracks the number of opaque tiles encountered
+    int opaqueTilesFound = 0; // Tracks the number of opaque tiles encountered
 
     // Differences in x and y
     float xDiff = targetPos.x - lightPos.x;
@@ -38,7 +38,7 @@ float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
     {
         xStep = xDiff > 0 ? 1.0 : -1.0;
         yStep = yDiff / abs(xDiff); // Proportional step in y
-        iterations = abs(xDiff);   // Number of steps along x
+        iterations = abs(xDiff); // Number of steps along x
     }
     else
     {

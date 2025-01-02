@@ -32,7 +32,7 @@ public class LightSource : MonoBehaviour
 
 		if (Vector3.Distance(transform.position, _lastWorldPosition) >= updateThreshold)
 		{
-			Lightmap.Instance.DispatchComputeShader();
+			Lightmap.Instance.UpdateLightMap();
 			_lastWorldPosition = transform.position;
 		}
 	}

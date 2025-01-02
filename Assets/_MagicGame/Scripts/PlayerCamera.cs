@@ -1,3 +1,4 @@
+using System;
 using Unity.Cinemachine;
 using Unity.Netcode;
 using UnityEngine;
@@ -21,6 +22,11 @@ public class PlayerCamera : NetworkBehaviour
 		_originalOrthoSize = _cinemachineCam.Lens.OrthographicSize;
 		
 		_mainCamera = Camera.main;
+		
+		if(NetworkManager != null)
+		{
+			NetworkManager.OnClientConnectedCallback += RegisterCameraToPlayer;
+		}
 	}
 
 	// NTFS: Change this dynamically when camera is widened or narrowed
@@ -30,11 +36,6 @@ public class PlayerCamera : NetworkBehaviour
 		float horizontalSize = verticalSize * _mainCamera.aspect;
 		_cameraFrustumCollider.size = new Vector2(horizontalSize, verticalSize);
 		_cameraFrustumCollider.offset = Vector2.zero;
-		
-		if(NetworkManager != null)
-		{
-			NetworkManager.OnClientConnectedCallback += RegisterCameraToPlayer;
-		}
 	}
 
 	private void RegisterCameraToPlayer(ulong clientId)

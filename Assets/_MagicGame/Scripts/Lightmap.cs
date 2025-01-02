@@ -45,7 +45,7 @@ public class Lightmap : MonoBehaviour
 		// NTFS: Does not do anything rn
 		Color dayLightColor = _dayLightGradient.Evaluate(ratio);
 		
-		_lightMapRawImage.color = Player.LocalClientInstance.GetPlayerEnvironment() == EnvironmentID.Forest ? SetColorBasedOnBrightness(dayLightColor) : Color.black;
+		_lightMapRawImage.color = Player.LocalClientInstance.GetPlayerEnvironment() == EnvironmentID.Forest ? SetColorBasedOnBrightness(dayLightColor) : Color.white;
 	}
 	
 	// Method to set color and adjust opacity
@@ -79,7 +79,7 @@ public class Lightmap : MonoBehaviour
 		{
 			_lightSources.Add(lightSource);
 			
-			DispatchComputeShader();
+			UpdateLightMap();
 		}
 	}
 	
@@ -89,8 +89,16 @@ public class Lightmap : MonoBehaviour
 		{
 			_lightSources.Remove(lightSource);
 			
-			DispatchComputeShader();
+			UpdateLightMap();
 		}
+	}
+	
+	public void UpdateLightMap()
+	{
+		if(_lightmapRenderTexture == null) return;
+	
+		UpdateRenderTexture();
+		DispatchComputeShader();
 	}
 
 	private void ChunkManager_OnLoadedPlayerChunksUpdated(object sender, ChunkManager.OnActiveChunksUpdatedEventArgs e)
@@ -145,7 +153,7 @@ public class Lightmap : MonoBehaviour
 		_lightmapRenderTexture.Create();
 	}
 
-	public void DispatchComputeShader()
+	private void DispatchComputeShader()
 	{
 		int renderTextureWidth = _lightmapRenderTexture.width;
 		int renderTextureHeight = _lightmapRenderTexture.height;
@@ -259,7 +267,12 @@ public class Lightmap : MonoBehaviour
 				{
 					// Find the correct index in the 1D texture array
 					int index = (relativeY + y) * renderTextureWidth + (relativeX + x);
-					tileVisibilityArray[index] = visibility;
+
+					// Check if the index is within bounds
+					if (index >= 0 && index < tileVisibilityArray.Length)
+					{
+						tileVisibilityArray[index] = visibility;
+					}
 				}
 			}
 		}
