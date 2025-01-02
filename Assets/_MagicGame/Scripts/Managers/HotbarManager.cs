@@ -20,7 +20,6 @@ public class HotbarManager : MonoBehaviour
 	private void Awake()
 	{
 		Instance = this;
-		Debug.Log("hotbar");
 	}
 	
 	private void Start()

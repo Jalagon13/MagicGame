@@ -174,7 +174,6 @@ public class Lightmap : MonoBehaviour
 		_lightmapComputeShader.SetInt("OpaqueTileTolerance", _lightmapScale);
 		_lightmapComputeShader.SetInt("NumLights", lightSourceList.Count);
 		_lightmapComputeShader.SetVector("BaseLight", GetBaseLight());
-		Debug.Log($"Base light: {GetBaseLight()}");
 		// Set the output texture
 		_lightmapComputeShader.SetTexture(kernelIndex, "Result", _lightmapRenderTexture);
 

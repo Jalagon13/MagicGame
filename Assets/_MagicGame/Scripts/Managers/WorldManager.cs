@@ -1,18 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using MoreMountains.Tools;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 [Flags]
-public enum EnvironmentID // NTFS: when adding new IDs remember to put the value to the next power of 2
+public enum EnvironmentID // NTFS: When adding new IDs remember to put the value to the next power of 2 for the [Flags] to work properly
 {
 	Forest = 0,
 	Cave = 1
@@ -56,6 +50,11 @@ public class WorldManager : NetworkBehaviour
 	
 	private IEnumerator Start()
 	{
+		if(IsServer)
+		{
+			NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected_SyncTime;
+		}
+	
 		_currentTime = _startingTime;
 		
 		// We need to ensure that we don't have a day length at 0, otherwise we will get stuck into infinite loop in update.
@@ -70,7 +69,7 @@ public class WorldManager : NetworkBehaviour
 		// Tick once to trigger initial light update
 		Tick();
 	}
-	
+
 	private void Update()
 	{
 		if(_isTicking)
@@ -84,6 +83,15 @@ public class WorldManager : NetworkBehaviour
 		while (_currentTime > _dayDurationInSeconds)
 		{
 			_currentTime -= _dayDurationInSeconds;
+			
+			// Resync time for all clients
+			if(IsServer)
+			{
+				foreach (var clientId in NetworkManager.ConnectedClientsIds)
+				{
+					SyncTimeForClientRpc(_currentTime, _dayDurationInSeconds, RpcTarget.Single(clientId, RpcTargetUse.Persistent));
+				}
+			}
 		}
 	
 		OnTick?.Invoke(this, new OnTickEventArgs
@@ -92,6 +100,19 @@ public class WorldManager : NetworkBehaviour
 		});
 	}
 	
+	private void OnClientConnected_SyncTime(ulong clientId)
+	{
+		SyncTimeForClientRpc(_currentTime, _dayDurationInSeconds, RpcTarget.Single(clientId, RpcTargetUse.Persistent));
+	}
+
+	[Rpc(SendTo.SpecifiedInParams, RequireOwnership = false)]
+	private void SyncTimeForClientRpc(float currentTime, float dayDurationInSeconds, RpcParams rpcParams)
+	{
+		_currentTime = currentTime;
+		_dayDurationInSeconds = dayDurationInSeconds;
+		Debug.Log($"Synced time for client {NetworkManager.LocalClientId}");
+	}
+
 	public void GenerateEnvironment(EnvironmentID environmentToGenerate)
 	{
 		// Check if environment is already generated
@@ -124,7 +145,6 @@ public class WorldManager : NetworkBehaviour
 		}
 	}
 	
-	[Button("Load Environment")]
 	public void LoadEnvironment(EnvironmentID targetEnvironment, Vector2 portalPosition)
 	{
 		if(targetEnvironment == Player.LocalClientInstance.GetPlayerEnvironment())
@@ -141,7 +161,6 @@ public class WorldManager : NetworkBehaviour
 		// Clear all client visuals
 		ChunkManager.Instance.ClearChunkVisuals();
 		ObjectManager.Instance.ClearAllEnvironmentObjectVisuals();
-		// NpcManager.Instance.HideAllEnvironmentNPCs();
 		
 		if(Player.LocalClientInstance.IsHost)
 		{
@@ -285,37 +304,18 @@ public class WorldManager : NetworkBehaviour
 		}
 	}
 	
-	/// <summary>
-	/// Return in the format "xx:xx" the given ration (between 0 and 1) of time
-	/// </summary>
-	/// <param name="ratio"></param>
-	/// <returns></returns>
-	public static string GetTimeAsString(float ratio)
-	{
-		var hour = GetHourFromRatio(ratio);
-		var minute = GetMinuteFromRatio(ratio);
-
-		return $"{hour}:{minute:00}";
-	}
-	
-	public static int GetHourFromRatio(float ratio)
-	{
-		var time = ratio * 24.0f;
-		var hour = Mathf.FloorToInt(time);
-
-		return hour;
-	}
-
-	public static int GetMinuteFromRatio(float ratio)
-	{
-		var time = ratio * 24.0f;
-		var minute = Mathf.FloorToInt((time - Mathf.FloorToInt(time)) * 60.0f);
-
-		return minute;
-	}
-	
 	public bool GetIsTransitioningEnvironment()
 	{
 		return _isTransitioningEnvironment;
+	}
+	
+	public override void OnDestroy()
+	{
+		if(IsServer)
+		{
+			NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected_SyncTime;
+		}
+		
+		base.OnDestroy();
 	}
 }

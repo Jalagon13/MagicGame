@@ -27,8 +27,6 @@ public class GameManager : NetworkBehaviour
 	[SerializeField] private ItemParameterDataBaseSO _itemParameterDataBaseSO;
 	[SerializeField] private NpcDataBaseSO _npcDataBaseSO;
 	
-	private bool _isFirstUpdate = true;
-	
 	private void Awake()
 	{
 		Instance = this;
