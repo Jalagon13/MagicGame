@@ -1,9 +1,6 @@
 #pragma kernel CSMain
 
-// Tile data (1 = opaque, 0 = transparent)
-StructuredBuffer<uint> TileData;
-
-// Light sources (position, intensity, radius)
+StructuredBuffer<uint> TileData; // Tile data (1 = opaque, 0 = transparent)
 StructuredBuffer<float4> LightSources; // Each float4 is (x, y, intensity, radius)
 
 // Output lightmap
@@ -14,6 +11,7 @@ int Width;
 int Height;
 int NumLights;
 int OpaqueTileTolerance;
+float3 BaseLight;
 
 // Function to calculate light contribution for a pixel
 float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
@@ -108,14 +106,11 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     int x = id.x;
     int y = id.y;
 
-    // Initialize ambient light (very dim base color)
-    float3 pixelLight = float3(0.01, 0.01, 0.01);
-
     // Check if there are no lights
     if (NumLights == 0)
     {
         // Write only ambient light and exit
-        Result[id.xy] = float4(pixelLight, 1.0); // Ambient light only
+        Result[id.xy] = float4(BaseLight, 1.0); // Ambient light only
         return;
     }
 
@@ -140,12 +135,12 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         float3 lightContribution = CalculateLightContribution(float2(x, y), lightSource);
 
         // Accumulate light contributions
-        pixelLight += lightContribution;
+        BaseLight += lightContribution;
     }
 
     // Clamp the final light value to [0, 1] range
-    pixelLight = clamp(pixelLight, 0.0, 1.0);
+    BaseLight = clamp(BaseLight, 0.0, 1.0);
 
     // Write the final color to the output texture
-    Result[id.xy] = float4(pixelLight, 1.0);
+    Result[id.xy] = float4(BaseLight, 1.0);
 }

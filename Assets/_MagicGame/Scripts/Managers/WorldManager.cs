@@ -37,7 +37,6 @@ public class WorldManager : NetworkBehaviour
 	[SerializeField] private string _customSeed = 123.ToString();
 	[SerializeField] private WorldObject _portalObjectPrefab;
 	
-	// Class globals
 	private List<EnvironmentID> _environmentList = new(); // Used to keep track which environments have been generated or not
 	private float _currentTime;
 	private bool _isTransitioningEnvironment;

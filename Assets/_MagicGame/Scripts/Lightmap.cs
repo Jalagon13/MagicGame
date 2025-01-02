@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,13 +40,16 @@ public class Lightmap : MonoBehaviour
 	{
 		float ratio = e.CurrentDayRatio;
 		
+		if(Player.LocalClientInstance == null) return;
+		
+		// NTFS: Does not do anything rn
 		Color dayLightColor = _dayLightGradient.Evaluate(ratio);
 		
-		SetColorBasedOnBrightness(dayLightColor);
+		_lightMapRawImage.color = Player.LocalClientInstance.GetPlayerEnvironment() == EnvironmentID.Forest ? SetColorBasedOnBrightness(dayLightColor) : Color.black;
 	}
 	
 	// Method to set color and adjust opacity
-	public void SetColorBasedOnBrightness(Color color)
+	public Color SetColorBasedOnBrightness(Color color)
 	{
 		// Calculate the brightness of the color (0 = darkest, 1 = brightest)
 		float brightness = CalculateBrightness(color);
@@ -54,9 +58,10 @@ public class Lightmap : MonoBehaviour
 		float opacity = 1 - brightness;
 
 		// Set the sprite renderer's color with the new alpha value
-		Color spriteColor = _lightMapRawImage.color;
-		spriteColor.a = Mathf.Clamp(opacity, 0, 0.995f);
-		_lightMapRawImage.color = spriteColor;
+		Color spriteColor = Color.white;
+		spriteColor.a = Mathf.Clamp(opacity, 0, 1f);
+		
+		return spriteColor;
 	}
 	
 	// Method to calculate perceived brightness
@@ -144,7 +149,6 @@ public class Lightmap : MonoBehaviour
 	{
 		int renderTextureWidth = _lightmapRenderTexture.width;
 		int renderTextureHeight = _lightmapRenderTexture.height;
-
 		int kernelIndex = _lightmapComputeShader.FindKernel("CSMain");
 
 		// Create a list to hold the light data for all light sources
@@ -169,8 +173,8 @@ public class Lightmap : MonoBehaviour
 		_lightmapComputeShader.SetInt("Height", renderTextureHeight);
 		_lightmapComputeShader.SetInt("OpaqueTileTolerance", _lightmapScale);
 		_lightmapComputeShader.SetInt("NumLights", lightSourceList.Count);
-		Debug.Log($"Width: {renderTextureWidth}, Height: {renderTextureHeight}, NumLights: {lightSourceList.Count}, OpaqueTileTolerance: {_lightmapScale}");
-
+		_lightmapComputeShader.SetVector("BaseLight", GetBaseLight());
+		Debug.Log($"Base light: {GetBaseLight()}");
 		// Set the output texture
 		_lightmapComputeShader.SetTexture(kernelIndex, "Result", _lightmapRenderTexture);
 
@@ -186,7 +190,21 @@ public class Lightmap : MonoBehaviour
 		// Set the texture on the RawImage component
 		_lightMapRawImage.texture = _lightmapRenderTexture;
 	}
-	
+
+	private Vector3 GetBaseLight()
+	{
+		// For now, hard code base environment for forest to be slightly dark and cave to be completely dark
+		switch(Player.LocalClientInstance.GetPlayerEnvironment())
+		{
+			case EnvironmentID.Forest:
+				return new Vector3(0.01f, 0.01f, 0.01f);
+			case EnvironmentID.Cave:
+				return new Vector3(0.0f, 0.0f, 0.0f);
+			default:
+				return new Vector3(0.01f, 0.01f, 0.01f);
+		}
+	}
+
 	private List<Vector4> CreateLightSourceGPUData()
 	{
 		List<Vector4> lightSourceList = new List<Vector4>();

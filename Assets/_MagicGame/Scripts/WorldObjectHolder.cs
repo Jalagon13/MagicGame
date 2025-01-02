@@ -1,15 +1,15 @@
 using System;
 using UnityEngine;
 
-public class WorldAssetHolder : MonoBehaviour
+public class WorldObjectHolder : MonoBehaviour
 {
 	private void Start()
 	{
-		ObjectManager.Instance.OnWorldObjectSpawned += AssetManager_OnWorldAssetSpawned;
-		ObjectManager.Instance.OnClearAllEnvironmentObjects += AssetManager_OnClearAllEnvironmentObjects;
+		ObjectManager.Instance.OnWorldObjectSpawned += ObjectManager_OnWorldObjectSpawned;
+		ObjectManager.Instance.OnClearAllEnvironmentObjects += ObjectManager_OnClearAllEnvironmentObjects;
 	}
 
-	private void AssetManager_OnClearAllEnvironmentObjects(object sender, EventArgs e)
+	private void ObjectManager_OnClearAllEnvironmentObjects(object sender, EventArgs e)
 	{
 		// Loop through all the children of this GameObject
 		for (int i = transform.childCount - 1; i >= 0; i--)
@@ -31,14 +31,14 @@ public class WorldAssetHolder : MonoBehaviour
 		}
 	}
 
-	private void AssetManager_OnWorldAssetSpawned(object sender, ObjectManager.OnWorldAssetSpawnedEventArgs e)
+	private void ObjectManager_OnWorldObjectSpawned(object sender, ObjectManager.OnWorldAssetSpawnedEventArgs e)
 	{
 		e.WorldObjectGameObject.transform.SetParent(transform);
 	}
 
 	private void OnDestroy()
 	{
-		ObjectManager.Instance.OnWorldObjectSpawned -= AssetManager_OnWorldAssetSpawned;
-		ObjectManager.Instance.OnClearAllEnvironmentObjects += AssetManager_OnClearAllEnvironmentObjects;
+		ObjectManager.Instance.OnWorldObjectSpawned -= ObjectManager_OnWorldObjectSpawned;
+		ObjectManager.Instance.OnClearAllEnvironmentObjects += ObjectManager_OnClearAllEnvironmentObjects;
 	}
 }
