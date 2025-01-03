@@ -24,7 +24,7 @@ public class HealthBarUI : MonoBehaviour
 			Debug.LogError("Game Object  " + _iHasHealthGameObject + " does not have component that implements IHasHealth");
 		}
 	
-		_hasHealth.OnHealthUpdated += OnHealthUpdated;
+		_hasHealth.OnPlayerHealthUpdated += OnHealthUpdated;
 		
 		Hide();
 	}
@@ -60,6 +60,6 @@ public class HealthBarUI : MonoBehaviour
 	
 	private void OnDestroy()
 	{
-		_hasHealth.OnHealthUpdated -= OnHealthUpdated;
+		_hasHealth.OnPlayerHealthUpdated -= OnHealthUpdated;
 	}
 }

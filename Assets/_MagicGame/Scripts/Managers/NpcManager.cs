@@ -33,11 +33,11 @@ public class NpcManager : NetworkBehaviour
 	private void Awake()
 	{
 		Instance = this;
-	}
-	
-	private void Start()
-	{
-		// NetworkManager.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+		
+		if(NetworkManager != null)
+		{
+			NetworkManager.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+		}
 	}
 	
 	private void FixedUpdate()
@@ -55,7 +55,7 @@ public class NpcManager : NetworkBehaviour
 		_localPlayerTransform = NetworkManager.ConnectedClients[clientId].PlayerObject.transform;
 		_activeNpcSlotAmount = 0;
 		
-		// InvokeRepeating(nameof(TrySpawnEntity), 1, _tickTime);
+		InvokeRepeating(nameof(AttemptToSpawnNpc), 1, _tickTime);
 	}
 	
 	public void AttemptToSpawnNpc()

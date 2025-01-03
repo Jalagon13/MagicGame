@@ -3,7 +3,7 @@ using UnityEngine;
 
 public interface IHasHealth
 {
-    public event EventHandler<OnHealthUpdatedEventArgs> OnHealthUpdated;
+    public event EventHandler<OnHealthUpdatedEventArgs> OnPlayerHealthUpdated;
     public class OnHealthUpdatedEventArgs : EventArgs 
     {
         public int PreviousValue;

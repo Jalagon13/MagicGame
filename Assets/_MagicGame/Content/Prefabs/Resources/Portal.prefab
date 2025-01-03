@@ -287,6 +287,26 @@ PrefabInstance:
       propertyPath: _worldObjectName
       value: Portal
       objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _lootTable.Table.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _lootTable.Table.Array.data[0].Max
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _lootTable.Table.Array.data[0].Min
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _lootTable.Table.Array.data[0].Item
+      value: 
+      objectReference: {fileID: 11400000, guid: d4e4d8d6ce2d3416b87474a4415b1967, type: 2}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _lootTable.Table.Array.data[0].Chance
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 8783600225546665660, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Size.y
       value: 2

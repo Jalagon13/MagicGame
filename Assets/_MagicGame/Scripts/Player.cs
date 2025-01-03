@@ -23,7 +23,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		public Vector2 DamagerPosition;
 	}
 	
-	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnHealthUpdated;
+	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnPlayerHealthUpdated;
 	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerManaUpdated;
 	public class OnStatUpdatedEventArgs : EventArgs
 	{
@@ -56,8 +56,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		_respawnTimer = new(_respawnTimerDuration);
 		_healthNetworkVariable.OnValueChanged += HealthNetworkVariable_OnValueChanged;
 		_manaNetworkVariable.OnValueChanged += ManaNetworkVariable_OnValueChanged;
-		_spawnPoint = transform.position;
-		_spawnEnvironment = EnvironmentID.Forest;
 	}
 	
 	public override void OnNetworkSpawn()
@@ -66,21 +64,15 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		if(IsOwner)
 		{
-			_playerEnvironment.Value = EnvironmentID.Forest; // For now all players will spawn in the forest
-			_manaNetworkVariable.Value = _startingMana;
-			Debug.Log($"Environment of {gameObject.name} set to {_playerEnvironment.Value}");
-		
 			LocalClientInstance = this;
+			
+			_playerEnvironment.Value = EnvironmentID.Forest; // For now all players will spawn in the forest
+			_spawnEnvironment = EnvironmentID.Forest;
+			_spawnPoint = transform.position;
 			
 			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnFocusSlotUpdated;
 			
 			Invoke(nameof(SpawnStartingItems), 0.25f);
-			Invoke(nameof(DeadTest), 10f);
-		}
-		
-		if(IsServer)
-		{
-			_healthNetworkVariable.Value = _startingHealth;
 		}
 		
 		OnAnyPlayerSpawned?.Invoke(this, new PlayerIdEventArgs
@@ -88,16 +80,18 @@ public class Player : NetworkBehaviour, IHasHealth
 			PlayerId = OwnerClientId
 		});
 		
-		RefreshUI();
+		if(IsServer)
+		{
+			_healthNetworkVariable.Value = _startingHealth;
+		}
 		
+		if(IsOwner)
+		{
+			_manaNetworkVariable.Value = _startingMana;
+		}
 	}
 
-    private void DeadTest()
-    {
-        ApplyDamage(1000, transform.position);
-    }
-
-    private void Update()
+	private void Update()
 	{
 		if(IsDead() && NetworkManager.LocalClientId == OwnerClientId)
 		{
@@ -224,7 +218,7 @@ public class Player : NetworkBehaviour, IHasHealth
 
 	private void HealthNetworkVariable_OnValueChanged(int previousValue, int newValue)
 	{
-		OnHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
+		OnPlayerHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
 		{
 			PreviousValue = previousValue,
 			NewValue = newValue,
@@ -265,12 +259,6 @@ public class Player : NetworkBehaviour, IHasHealth
 	public NetworkVariable<int> GetFocusItemIndexNetworkVariable()
 	{
 		return _focusItemIndexNetworkVariable;
-	}
-	
-	public void RefreshUI()
-	{
-		HealthNetworkVariable_OnValueChanged(_healthNetworkVariable.Value, _healthNetworkVariable.Value);
-		ManaNetworkVariable_OnValueChanged(_manaNetworkVariable.Value, _manaNetworkVariable.Value);
 	}
 	
 	public bool IsDead()

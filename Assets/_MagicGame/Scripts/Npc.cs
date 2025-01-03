@@ -7,7 +7,7 @@ using UnityEngine;
 public class Npc : NetworkBehaviour, IHasHealth
 {	
 	public event EventHandler OnNpcKilled;
-	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnHealthUpdated;
+	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnPlayerHealthUpdated;
 
 	[SerializeField] private int _maxHealth;
 	[SerializeField] private LootTable _lootTable;
@@ -55,7 +55,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 	private void UpdateHealthUI(int previousValue, int newValue)
 	{
 		Debug.Log("UpdateHealthUI");
-		OnHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
+		OnPlayerHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
 		{
 			PreviousValue = previousValue,
 			NewValue = newValue,

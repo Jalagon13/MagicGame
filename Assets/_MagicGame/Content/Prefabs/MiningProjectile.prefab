@@ -85,7 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4235390325
+  GlobalObjectIdHash: 4261732960
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -151,7 +151,7 @@ MonoBehaviour:
   _hitSound: {fileID: 0}
   _muzzleVfxPrefab: {fileID: 3235512204744374167, guid: 01615c6d7f11f4d55a9c48e0a4cde630, type: 3}
   _hitVfxPrefab: {fileID: 8248283661722634201, guid: 3b74319c5e47f4da69ee6446b52e46af, type: 3}
-  _speed: 8
+  _speed: 7
 --- !u!1001 &2380108667143153224
 PrefabInstance:
   m_ObjectHideFlags: 0
