@@ -7,8 +7,6 @@ using UnityEngine;
 
 public class ResourceObject : WorldObject
 {
-    public event EventHandler OnBrokenByPlayer;
-
     [SerializeField] private WandAttribute _harvestType;
     [SerializeField] private int _maxHitPoints = 100;
     [SerializeField] private LootTable _lootTable;
@@ -35,8 +33,6 @@ public class ResourceObject : WorldObject
 	
     public void DestroyResourceAsset()
     {
-        OnBrokenByPlayer?.Invoke(this, EventArgs.Empty);
-		
         _lootTable.SpawnLoot((Vector2)transform.position + _dropPosOffset);
 		
         if (_destroyFeedback != null)

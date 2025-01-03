@@ -14,8 +14,8 @@ public class MiningProjectile : NetworkBehaviour
 	[SerializeField] private GameObject _hitVfxPrefab;
 	[SerializeField] private float _speed = 10f;
 	
+	private ParticleSystem _projectileParticleSystem;
 	private Vector2 _travelPoint;
-	private Collider2D _spellCollider;
 	private int _miningPower;
 	private bool _projectileEnd = true;
 	private ulong _senderId;
@@ -23,7 +23,7 @@ public class MiningProjectile : NetworkBehaviour
 	
 	private void Awake()
 	{
-		_spellCollider = GetComponent<Collider2D>();
+		_projectileParticleSystem = transform.GetChild(0).GetChild(0).GetComponent<ParticleSystem>();
 	}
 	
 	// Spawn muzzle vfx prefab and then destroy it when it is done.
@@ -65,54 +65,45 @@ public class MiningProjectile : NetworkBehaviour
 		{
 			if (Vector3.Distance(transform.position, _travelPoint) < 0.03f)
 			{
-				// StatManager.Instance.RemoveFromStat(StatManager.Stat.Mana, 1);// Change hard coded 1 in the future
-			
-				// Spawn hit prefab.
-				SpawnHitPrefab();
-			
 				if(IsServer)
 				{
-					// HitTilemap
 					HitTilemap();
 					RemoveManaClientRpc(_senderId);
 				}
-			
-				// Just destroy gameobject if clickable is destroyed already.
+				
+				SpawnHitPrefab();
 				StopProjectile();
 				
 				return;
 			}
 		}
 		
-		// If collider to check is not broken.
+		// NTFS: There is a tiny chance that this will simply not work if the transform.position is 0.03 away from the target position and it does not find any colliders. If so just destroy it anyway
 		if(_resourceSelected)
 		{
-			var colliders = Physics2D.OverlapPointAll(transform.position);
-
-			foreach(Collider2D collider in colliders)
+			if (Vector3.Distance(transform.position, _travelPoint) < 0.03f)
 			{
-				if(collider.TryGetComponent(out ResourceObject resourceAsset))
+				var colliders = Physics2D.OverlapPointAll(transform.position);
+				
+				if(IsServer)
 				{
-					if(_spellCollider.IsTouching(collider))
+					foreach(Collider2D collider in colliders)
 					{
-						if(IsServer)
+						if(collider.TryGetComponent(out ResourceObject resourceAsset))
 						{
-							// Register hit.
 							Vector2Int resourcePosition = new(Mathf.RoundToInt(resourceAsset.transform.position.x), Mathf.RoundToInt(resourceAsset.transform.position.y));
 							ObjectManager.Instance.DamageObject(resourcePosition, (ushort)_miningPower, Player.LocalClientInstance.GetPlayerEnvironment());
 							
 							RemoveManaClientRpc(_senderId);
 						}
-				
-						// Spawn hit prefab.
-						SpawnHitPrefab();
-				
-						// End the projectile.
-						StopProjectile();
-						
-						return;
 					}
 				}
+				
+				SpawnHitPrefab();
+				StopProjectile();
+						
+				return;
+				
 			}
 		}
 	}
@@ -145,9 +136,20 @@ public class MiningProjectile : NetworkBehaviour
 	private void StopProjectile()
 	{
 		_projectileEnd = true;
-		transform.GetChild(0).gameObject.SetActive(false);
+
 		MMSoundManagerSoundPlayEvent.Trigger(_hitSound, MMSoundManager.MMSoundManagerTracks.Sfx, default, pitch: Random.Range(1f, 1.2f), volume: 0.65f);
-		Destroy(gameObject);
+
+		float totalDuration = 0f;
+		
+		if (_projectileParticleSystem != null)
+		{
+			_projectileParticleSystem.Stop();
+
+			totalDuration = _projectileParticleSystem.main.duration + _projectileParticleSystem.main.startLifetime.constantMax;
+		}
+
+		// Destroy the particle system game object after it finishes
+		Destroy(gameObject, totalDuration);
 	}
 	
 	private void SpawnHitPrefab()

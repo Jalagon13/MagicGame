@@ -69,7 +69,7 @@ public class WorldInput : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
         OnUp?.Invoke(this, eventData);
     }
 	
-    public bool GetMouseOverDetector()
+    public bool IsMouseOverIndputDetector()
     {
         return _mouseOverDetector;
     }

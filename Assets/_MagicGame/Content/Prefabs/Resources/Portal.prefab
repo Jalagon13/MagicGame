@@ -12,6 +12,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: WorldInputCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 5018661738105067365, guid: 0f3c40a8a30e8478eab849812b7bf2b4, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6494180236309813926, guid: 0f3c40a8a30e8478eab849812b7bf2b4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6494180236309813926, guid: 0f3c40a8a30e8478eab849812b7bf2b4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6494180236309813926, guid: 0f3c40a8a30e8478eab849812b7bf2b4, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6494180236309813926, guid: 0f3c40a8a30e8478eab849812b7bf2b4, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6494180236309813926, guid: 0f3c40a8a30e8478eab849812b7bf2b4, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6494180236309813926, guid: 0f3c40a8a30e8478eab849812b7bf2b4, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6494180236309813926, guid: 0f3c40a8a30e8478eab849812b7bf2b4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6627164666137866793, guid: 0f3c40a8a30e8478eab849812b7bf2b4, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

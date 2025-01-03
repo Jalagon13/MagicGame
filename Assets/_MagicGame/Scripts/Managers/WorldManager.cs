@@ -33,7 +33,7 @@ public class WorldManager : NetworkBehaviour
 	
 	private List<EnvironmentID> _environmentList = new(); // Used to keep track which environments have been generated or not
 	private float _currentTime;
-	private bool _isTransitioningEnvironment;
+	private bool _isTransitioningEnvironment, _isPlayerRespawning;
 	
 	public string Seed 
 	{ 
@@ -145,13 +145,15 @@ public class WorldManager : NetworkBehaviour
 		}
 	}
 	
-	public void LoadEnvironment(EnvironmentID targetEnvironment, Vector2 portalPosition)
+	public void LoadEnvironment(EnvironmentID targetEnvironment, Vector2 portalPosition, bool isPlayerRespawning = false)
 	{
 		if(targetEnvironment == Player.LocalClientInstance.GetPlayerEnvironment())
 		{
 			Debug.LogError($"Should not be trying to load an environment you are already in. environmentID: {targetEnvironment}, ACTIVE_ENVIRONMENT_ID: {Player.LocalClientInstance.GetPlayerEnvironment()}");
 			return;
 		}
+		
+		_isPlayerRespawning = isPlayerRespawning;
 		
 		// NTFS: make sure player is not able to move during this process and add a loading screen
 		
@@ -232,9 +234,17 @@ public class WorldManager : NetworkBehaviour
 	
 	private void SearchForPortal(Vector2 portalPosition)
 	{
+		// If player is respawning after loading this environment, do not search for portal
+		if(_isPlayerRespawning)
+		{
+			_isPlayerRespawning = false;
+			return;
+		}
+		
+		_isPlayerRespawning = false;
+
 		// If there is a portal in lets say a 10 tile radius, grab it's position, and teleport player to that portal
-		// Define the radius for the portal search area
-		float searchRadius = 10f; // Adjust radius as needed
+		float searchRadius = 10f;
 
 		// Find all colliders in the circular search area
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(portalPosition, searchRadius);

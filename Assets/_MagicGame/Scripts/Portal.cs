@@ -7,51 +7,22 @@ public class Portal : MonoBehaviour
 {
 	[SerializeField] private WorldInput _worldInput;
 	
-	private BoxCollider2D _collider;
-	private ResourceObject _resourceObject;
-	
-	private void Awake()
-	{
-		_collider = GetComponent<BoxCollider2D>();
-		_resourceObject = GetComponent<ResourceObject>();
-	}
-	
 	private void Start()
 	{
-		_worldInput.OnInteractStarted += WorldInputDetector_OnInteractStarted;
-		_resourceObject.OnBrokenByPlayer += ResourceAsset_OnBrokenByPlayer;
+		GameInput.Instance.OnSecondaryAction += GameInput_OnSecondaryAction;
 	}
 
-	private void ResourceAsset_OnBrokenByPlayer(object sender, EventArgs e)
+	private void GameInput_OnSecondaryAction(object sender, GameInput.OnPrimaryOrSecondaryActionEventArgs e)
 	{
-		// GameWorldManager.Instance.UnLinkPortal(_portalID);
-	}
-
-	private void WorldInputDetector_OnInteractStarted(object sender, InputAction.CallbackContext e)
-	{
-		if(!_worldInput.GetMouseOverDetector()) return;
+		if(!_worldInput.IsMouseOverIndputDetector()) return;
 		
-		// GameWorldManager.Instance.LoadEnvironment(_destinationEnvironment, _portalID);
-	}
-	
-	[Button("Load Forest")]
-	public void LoadForest()
-	{
-		WorldManager.Instance.LoadEnvironment(EnvironmentID.Forest, transform.position);
-	}
-	
-
-	[Button("Load Cave")]
-	public void LoadCave()
-	{
-		WorldManager.Instance.LoadEnvironment(EnvironmentID.Cave, transform.position);
+		// Just hard code it like this for now will change once more environments are added
+		EnvironmentID destination = Player.LocalClientInstance.GetPlayerEnvironment() == EnvironmentID.Cave ? EnvironmentID.Forest : EnvironmentID.Cave;
+		WorldManager.Instance.LoadEnvironment(destination, transform.position);
 	}
 	
 	private void OnDestroy()
 	{
-		_worldInput.OnInteractStarted -= WorldInputDetector_OnInteractStarted;
-		_resourceObject.OnBrokenByPlayer -= ResourceAsset_OnBrokenByPlayer;
-		
-		// Portal Unlink Logic
+		GameInput.Instance.OnSecondaryAction -= GameInput_OnSecondaryAction;
 	}
 }

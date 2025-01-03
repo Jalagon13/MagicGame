@@ -14,13 +14,11 @@ public class LightSource : MonoBehaviour
 	
 	private void OnEnable()
 	{
-		// Register to lightmap
 		Lightmap.Instance.RegisterLightSource(this);
 	}
 	
 	private void OnDisable()
 	{
-		// Deregister to lightmap
 		Lightmap.Instance.DeregisterLightSource(this);
 	}
 

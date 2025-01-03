@@ -46,6 +46,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	private Rigidbody2D _rb;
 	private Timer _respawnTimer;
 	private Vector2 _spawnPoint;
+	private EnvironmentID _spawnEnvironment;
 	private bool _isSwingGoingOn;
 	
 	private void Awake()
@@ -56,6 +57,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		_healthNetworkVariable.OnValueChanged += HealthNetworkVariable_OnValueChanged;
 		_manaNetworkVariable.OnValueChanged += ManaNetworkVariable_OnValueChanged;
 		_spawnPoint = transform.position;
+		_spawnEnvironment = EnvironmentID.Forest;
 	}
 	
 	public override void OnNetworkSpawn()
@@ -73,6 +75,7 @@ public class Player : NetworkBehaviour, IHasHealth
 			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnFocusSlotUpdated;
 			
 			Invoke(nameof(SpawnStartingItems), 0.25f);
+			Invoke(nameof(DeadTest), 10f);
 		}
 		
 		if(IsServer)
@@ -88,8 +91,13 @@ public class Player : NetworkBehaviour, IHasHealth
 		RefreshUI();
 		
 	}
-	
-	private void Update()
+
+    private void DeadTest()
+    {
+        ApplyDamage(1000, transform.position);
+    }
+
+    private void Update()
 	{
 		if(IsDead() && NetworkManager.LocalClientId == OwnerClientId)
 		{
@@ -182,16 +190,20 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		_healthNetworkVariable.Value = healthToRespawnWith;
 		
-		RespawnPlayerClientRpc(respawnerId);
+		RespawnPlayerClientRpc(RpcTarget.Single(respawnerId, RpcTargetUse.Persistent));
 	}
 	
-	[Rpc(SendTo.ClientsAndHost)]
-	private void RespawnPlayerClientRpc(ulong respawnerId)
+	[Rpc(SendTo.SpecifiedInParams)]
+	private void RespawnPlayerClientRpc(RpcParams rpcParams = default)
 	{
-		// If this code is running on the client who called respawn, then execute respawn logic
-		if(NetworkManager.LocalClientId == respawnerId)
+		if(NetworkManager.LocalClientId == rpcParams.Receive.SenderClientId)
 		{
 			transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
+		}
+		
+		if(Player.LocalClientInstance.GetPlayerEnvironment() != _spawnEnvironment)
+		{
+			WorldManager.Instance.LoadEnvironment(_spawnEnvironment, _spawnPoint, isPlayerRespawning: true);
 		}
 
 		OnRespawn?.Invoke(this, new PlayerIdEventArgs

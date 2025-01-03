@@ -36,47 +36,97 @@ public class ActionManager : MonoBehaviour
 	
 	private void Update()
 	{
-		if(Player.LocalClientInstance == null || Player.LocalClientInstance.IsDead()) return;
-	
 		MouseWorldPosition = (Vector2)Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 		
-		_miningCooldownTimer.Tick(Time.deltaTime);
-		_primaryActionTimer.Tick(Time.deltaTime);
-		_secondaryActionTimer.Tick(Time.deltaTime);
-		
-		if(_focusItemSO == null || Pointer.IsOverUI()) return;
-		
-		if(_focusItemSO is WandItemSO && _miningCooldownTimer.RemainingSeconds <= 0 && PlayerInRangeOfMouse())
+		if (!CanPerformUpdate()) return;
+
+		UpdateTimers(Time.deltaTime);
+
+		if (ShouldHandleMining())
 		{
-			_wandItem = HotbarManager.Instance.GetFocusInventoryItem() as WandInventoryItem;
-				
-			if(GameInput.Instance.GetPrimaryHeldDown() || GameInput.Instance.GetSecondaryHeldDown())
-			{
-				// Spawn mining projectile
-				bool mouseOverFloor = GetMouseOverFloor();
-				bool mouseOverWall = GetMouseOverWall();
-				bool resourceSelected = GetResourceSelected();
-
-				if(!mouseOverFloor && !mouseOverWall && !resourceSelected) return;
-					
-				WandAttribute wandAttribute = GetHarvestType(mouseOverFloor, mouseOverWall, resourceSelected);
-				AttributeData hitData = _wandItem.GetAttributeData(wandAttribute);
-
-				GameManager.Instance.SpawnMiningProjectile(Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, MouseWorldPosition, hitData.MiningPower, mouseOverFloor, mouseOverWall, resourceSelected);
-				CalcMiningSpeed(wandAttribute);
-				
-				return;
-			}
+			HandleMiningActions();
+			return;
 		}
-		
-		if(_focusItemSO == null || Pointer.IsOverUI()) return;
-		
-		if(GameInput.Instance.GetPrimaryHeldDown() && _primaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetSecondaryHeldDown())
+
+		HandleItemActions();
+	}
+
+	private bool CanPerformUpdate()
+	{
+		return Player.LocalClientInstance != null && !Player.LocalClientInstance.IsDead() && _focusItemSO != null && !Pointer.IsOverUI();
+	}
+
+	private void UpdateTimers(float deltaTime)
+	{
+		_miningCooldownTimer.Tick(deltaTime);
+		_primaryActionTimer.Tick(deltaTime);
+		_secondaryActionTimer.Tick(deltaTime);
+	}
+
+	private bool ShouldHandleMining()
+	{
+		return _focusItemSO is WandItemSO && _miningCooldownTimer.RemainingSeconds <= 0 && PlayerInRangeOfMouse();
+	}
+
+	private void HandleMiningActions()
+	{
+		_wandItem = HotbarManager.Instance.GetFocusInventoryItem() as WandInventoryItem;
+
+		if (GameInput.Instance.GetPrimaryHeldDown())
+		{
+			PerformPrimaryMiningAction();
+		}
+		else if (GameInput.Instance.GetSecondaryHeldDown())
+		{
+			PerformSecondaryMiningAction();
+		}
+	}
+
+	private void PerformPrimaryMiningAction()
+	{
+		bool mouseOverWall = GetMouseOverWall();
+		bool resourceSelected = GetResourceSelected();
+
+		if (!mouseOverWall && !resourceSelected) return;
+
+		WandAttribute wandAttribute = GetHarvestType(false, mouseOverWall, resourceSelected);
+		AttributeData hitData = _wandItem.GetAttributeData(wandAttribute);
+
+		GameManager.Instance.SpawnMiningProjectile(
+			Player.LocalClientInstance.GetWandProjectileSpawnPoint().position,
+			MouseWorldPosition,
+			hitData.MiningPower,
+			false, mouseOverWall, resourceSelected);
+
+		CalcMiningSpeed(wandAttribute);
+	}
+
+	private void PerformSecondaryMiningAction()
+	{
+		bool mouseOverFloor = GetMouseOverFloor();
+
+		if (!mouseOverFloor) return;
+
+		WandAttribute wandAttribute = GetHarvestType(true, false, false);
+		AttributeData hitData = _wandItem.GetAttributeData(wandAttribute);
+
+		GameManager.Instance.SpawnMiningProjectile(
+			Player.LocalClientInstance.GetWandProjectileSpawnPoint().position,
+			MouseWorldPosition,
+			hitData.MiningPower,
+			true, false, false);
+
+		CalcMiningSpeed(wandAttribute);
+	}
+
+	private void HandleItemActions()
+	{
+		if (GameInput.Instance.GetPrimaryHeldDown() && _primaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetSecondaryHeldDown())
 		{
 			_focusItemSO.ExecutePrimaryAction();
 			_primaryActionTimer.RemainingSeconds = _primaryTimerDuration;
 		}
-		else if(GameInput.Instance.GetSecondaryHeldDown() && _secondaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetPrimaryHeldDown())
+		else if (GameInput.Instance.GetSecondaryHeldDown() && _secondaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetPrimaryHeldDown())
 		{
 			_focusItemSO.ExecuteSecondaryAction();
 			_secondaryActionTimer.RemainingSeconds = _secondaryTimerDuration;
