@@ -110,7 +110,6 @@ public class WorldManager : NetworkBehaviour
 	{
 		_currentTime = currentTime;
 		_dayDurationInSeconds = dayDurationInSeconds;
-		Debug.Log($"New day started, time being synced for client {NetworkManager.LocalClientId}");
 	}
 
 	public void GenerateEnvironment(EnvironmentID environmentToGenerate)
