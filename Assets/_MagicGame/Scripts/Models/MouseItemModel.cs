@@ -10,7 +10,7 @@ public class MouseItemModel
 	
 	public MouseItemModel()
 	{
-		_mouseInventoryItem = new();
+		_mouseInventoryItem = new(null, 0);
 	}
 	
 	public void OverrideMouseItem(InventoryItem item)

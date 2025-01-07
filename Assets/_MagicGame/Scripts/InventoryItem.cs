@@ -8,19 +8,25 @@ using UnityEngine;
 [Serializable]
 public class InventoryItem
 {
-    public ItemSO Item;
-    public int Quantity;
-    public bool HasItem => Item != null;
+	public ItemSO Item;
+	public int Quantity;
+	public bool HasItem => Item != null;
 	
-    public InventoryItem()
-    {
-        Item = null;
-        Quantity = 0;
-    }
+	public InventoryItem(ItemSO itemSO, int quantity)
+	{
+		Item = itemSO;
+		Quantity = quantity;
+	}
+	
+	public InventoryItem()
+	{
+		Item = null;
+		Quantity = 0;
+	}
 }
 
 [Serializable]
 public class SpriteContainer
 {
-    public Sprite spriteImage;
+	public Sprite spriteImage;
 }

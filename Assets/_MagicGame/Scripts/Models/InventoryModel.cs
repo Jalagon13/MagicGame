@@ -71,13 +71,6 @@ public class InventoryModel
             // For each iteration of the quantity of this unstackable item,
             for (int i = 0; i < amountToIterate; i++)
             {
-                // If itemToAdd isn't a WandInventoryObject and itemToAdd.Item is a WandObject, 
-                if (itemToAdd is not WandInventoryItem && itemToAdd.Item is WandItemSO)
-                {
-                    // Create itemToAdd as a WandInventoryObject and process it below
-                    itemToAdd = new WandInventoryItem(itemToAdd.Item, 1);
-                }
-			
                 // Loop through all slots
                 for(int j = 0; j < _inventoryItems.Count; j++)
                 {

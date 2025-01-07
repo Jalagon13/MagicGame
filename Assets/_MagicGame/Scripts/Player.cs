@@ -245,7 +245,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		foreach (InventoryItem item in _startingItems)
 		{
-			InventoryManager.Instance.AddItem(item);
+			InventoryManager.Instance.AddItem(item.Item, item.Quantity);
 		}
 		
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();

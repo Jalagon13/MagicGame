@@ -97,7 +97,7 @@ public class Item : NetworkBehaviour
                     if (collectTag.OwnerClientId == NetworkManager.LocalClientId && _canCollect && !_itemCollected /* && !InventoryFull() */)
                     {
                         // Local player is collecting the item
-                        InventoryManager.Instance.AddItem(_itemInventoryItem);
+                        InventoryManager.Instance.AddItem(_itemInventoryItem.Item, _itemInventoryItem.Quantity);
 
                         _pickUpFeedback?.PlayFeedbacks();
 
@@ -121,11 +121,7 @@ public class Item : NetworkBehaviour
     {
         ItemSO itemSO = GameManager.Instance.GetItemSOFromIndex(_itemIdNetworkVariable.Value);
 		
-        _itemInventoryItem = new()
-        {
-            Item = itemSO,
-            Quantity = _itemAmountNetworkVariable.Value
-        };
+        _itemInventoryItem = new(itemSO, _itemAmountNetworkVariable.Value);
 		
         _sr.sprite = _itemInventoryItem.Item.UiDisplay;
         gameObject.name = $"Item_{_itemInventoryItem.Item.Name}";

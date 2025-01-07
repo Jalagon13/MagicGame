@@ -49,7 +49,7 @@ public class InventoryManager : MonoBehaviour
 		MouseItemInput();
 	}
 	
-	// note refactor this later 
+	// NTFS: Refactor this later into a non update input check might be buggy
 	private void MouseItemInput()
 	{
 		if (_mouseItemModel.MouseInventoryItem.HasItem)
@@ -96,9 +96,10 @@ public class InventoryManager : MonoBehaviour
 		}
 	}
 	
-	public void AddItem(InventoryItem itemToCollect, bool playCollectSound = true)
+	public void AddItem(ItemSO ItemToAdd, int quantity, bool playCollectSound = true)
 	{
-		_itemQueue.Enqueue(itemToCollect);
+		// NTFS: BUG: This will create a brand new inventory item and will not transfer over any inventory item data that might have existed before
+		_itemQueue.Enqueue(ItemToAdd.CreateInventoryItem(quantity));
 		
 		if(!_isCollecting)
 		{
@@ -136,25 +137,17 @@ public class InventoryManager : MonoBehaviour
 			// Create refreshed item with updated quantities
 			int currentQuantity = _itemPlates[itemName].DisplayAmount;
 			int additionalQuantity = itemToCollect.Quantity;
-			InventoryItem refreshedItem = new()
-			{
-				Item = itemToCollect.Item,
-				Quantity = currentQuantity + additionalQuantity	
-			};
+			
+			itemToCollect.Quantity = currentQuantity + additionalQuantity;
 			
 			// Delete the currently spawned item,
 			Destroy(_itemPlates[itemName].gameObject);
 			
 			// Remove it from the dictionary
 			_itemPlates.Remove(itemName);
-			
-			// Spawn a new plate with the refreshed item
-			SpawnItemCollectPlate(refreshedItem);
 		}
-		else
-		{
-			SpawnItemCollectPlate(itemToCollect);
-		}
+		
+		SpawnItemCollectPlate(itemToCollect);
 	}
 	
 	private void SpawnItemCollectPlate(InventoryItem itemToCollect)
