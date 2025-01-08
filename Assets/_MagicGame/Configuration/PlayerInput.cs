@@ -85,7 +85,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": ""ResearchMenu"",
                     ""type"": ""Button"",
                     ""id"": ""ffbe704b-6a45-47d8-a653-5d15a4bb39d4"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false

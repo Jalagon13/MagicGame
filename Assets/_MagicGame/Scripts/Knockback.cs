@@ -5,53 +5,56 @@ using UnityEngine;
 
 public class Knockback : MonoBehaviour
 {
-    public event EventHandler<KnockbackEventArgs> OnKnockbackEnd;
-    public event EventHandler<KnockbackEventArgs> OnKnockbackStart;
-    public class KnockbackEventArgs : EventArgs
-    {
-        public Vector2 KnockBackerPosition;
-    }
+	public event EventHandler<KnockbackEventArgs> OnKnockbackEnd;
+	public event EventHandler<KnockbackEventArgs> OnKnockbackStart;
+	public class KnockbackEventArgs : EventArgs
+	{
+		public Vector2 KnockBackerPosition;
+	}
 
-    private Coroutine _kbCoroutine;
-    private Rigidbody2D _rb2d;
+	[SerializeField] private bool _knockbackEnabled = true;
+	private Coroutine _kbCoroutine;
+	private Rigidbody2D _rb2d;
 	
-    public bool IsBeingKnockedBack { get; private set; }
+	public bool IsBeingKnockedBack { get; private set; }
 	
-    public void ApplyKnockback(Rigidbody2D rb2d, Vector2 knockerSourcePosition, float knockbackForce = 20f)
-    {
-        _rb2d = rb2d;
-        var direction = (Vector2)transform.position - knockerSourcePosition;
+	public void ApplyKnockback(Rigidbody2D rb2d, Vector2 knockerSourcePosition, float knockbackForce = 20f)
+	{
+		if(!_knockbackEnabled) return;
 		
-        _kbCoroutine = StartCoroutine(KnockbackRoutine(knockerSourcePosition, direction, knockbackForce));
-    }
+		_rb2d = rb2d;
+		var direction = (Vector2)transform.position - knockerSourcePosition;
+		
+		_kbCoroutine = StartCoroutine(KnockbackRoutine(knockerSourcePosition, direction, knockbackForce));
+	}
 	
-    public void CancelKnockback()
-    {
-        _rb2d.linearVelocity = Vector2.zero;
-        StopCoroutine(_kbCoroutine);
-    }
+	public void CancelKnockback()
+	{
+		_rb2d.linearVelocity = Vector2.zero;
+		StopCoroutine(_kbCoroutine);
+	}
 	
-    private IEnumerator KnockbackRoutine(Vector2 knockerSourcePosition, Vector2 direction, float knockbackForce)
-    {
-        IsBeingKnockedBack = true;
+	private IEnumerator KnockbackRoutine(Vector2 knockerSourcePosition, Vector2 direction, float knockbackForce)
+	{
+		IsBeingKnockedBack = true;
 		
-        OnKnockbackStart?.Invoke(this, new KnockbackEventArgs
-        {
-            KnockBackerPosition = knockerSourcePosition
-        });
+		OnKnockbackStart?.Invoke(this, new KnockbackEventArgs
+		{
+			KnockBackerPosition = knockerSourcePosition
+		});
 		
-        _rb2d.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
+		_rb2d.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
 		
-        while(_rb2d.linearVelocity.magnitude > 0.15f)
-        {
-            yield return new WaitForFixedUpdate();
-        }
+		while(_rb2d.linearVelocity.magnitude > 0.15f)
+		{
+			yield return new WaitForFixedUpdate();
+		}
 		
-        IsBeingKnockedBack = false;
+		IsBeingKnockedBack = false;
 		
-        OnKnockbackEnd?.Invoke(this, new KnockbackEventArgs
-        {
-            KnockBackerPosition = knockerSourcePosition
-        });
-    }
+		OnKnockbackEnd?.Invoke(this, new KnockbackEventArgs
+		{
+			KnockBackerPosition = knockerSourcePosition
+		});
+	}
 }

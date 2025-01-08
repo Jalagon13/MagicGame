@@ -20,6 +20,7 @@ public class NpcManager : NetworkBehaviour
 	public static NpcManager Instance { get; private set; }
 	
 	[SerializeField] private NpcSO _deerNpcSO;
+	[SerializeField] private NpcSO _testDummyNpcSO;
 	[SerializeField] private NpcSO _yellowPixieNpcSO;
 	[SerializeField] private int _spawnRateDenominator = 600; // Value represents the deniminator of of the spawn rate per tick
 	[SerializeField] private float _maxNpcSlotSpawnAmount = 6;
@@ -40,12 +41,14 @@ public class NpcManager : NetworkBehaviour
 		}
 	}
 	
-	private void FixedUpdate()
+	private void Start()
 	{
-		if(Input.GetKeyDown(KeyCode.G))
-		{
-			TryToSpawnNpc(Player.LocalClientInstance.transform.position);
-		}
+		GameInput.Instance.OnResearchMenuButton += GameInput_OnResearchMenuButton;
+	}
+
+	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
+	{
+		TryToSpawnNpc(Player.LocalClientInstance.transform.position);
 	}
 
 	private void NetworkManager_OnClientConnectedCallback(ulong clientId)
@@ -98,7 +101,7 @@ public class NpcManager : NetworkBehaviour
 	
 	private void TryToSpawnNpc(Vector2 spawnPosition)
 	{
-		NpcSO npcToSpawn = NetworkManager.LocalClientId == NetworkManager.ServerClientId ? _deerNpcSO : _yellowPixieNpcSO;
+		NpcSO npcToSpawn = NetworkManager.LocalClientId == NetworkManager.ServerClientId ? _testDummyNpcSO : _yellowPixieNpcSO;
 		
 		// If there is 'space' to spawn NPC, spawn it
 		float remainingNpcSlotSpace = _maxNpcSlotSpawnAmount - _activeNpcSlotAmount;
@@ -292,6 +295,8 @@ public class NpcManager : NetworkBehaviour
 		{
 			NetworkManager.OnClientConnectedCallback -= NetworkManager_OnClientConnectedCallback;
 		}
+		
+		GameInput.Instance.OnResearchMenuButton -= GameInput_OnResearchMenuButton;
 		
 		base.OnDestroy();
 	}

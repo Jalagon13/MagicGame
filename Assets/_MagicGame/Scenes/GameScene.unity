@@ -6710,6 +6710,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _deerNpcSO: {fileID: 11400000, guid: a86c2629237a34fedb5779825e10a38a, type: 2}
+  _testDummyNpcSO: {fileID: 11400000, guid: b650d45affdba42d494de3ddcfc1b008, type: 2}
   _yellowPixieNpcSO: {fileID: 11400000, guid: 741ad5317491149b49b55e26de2264a5, type: 2}
   _spawnRateDenominator: 600
   _maxNpcSlotSpawnAmount: 6
@@ -8465,7 +8466,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _dayDurationInSeconds: 10
   _startingTime: 1
-  _isTicking: 1
+  _isTicking: 0
   _randomSeed: 0
   _customSeed: Hell world :D
   _portalObjectPrefab: {fileID: 821165274625048597, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
