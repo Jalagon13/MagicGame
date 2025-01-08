@@ -13,6 +13,7 @@ using UnityEngine.UI;
 public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
 	[SerializeField] private Image _itemImage;
+	[SerializeField] private Image _wandFocusImage;
 	[SerializeField] private TextMeshProUGUI _itemQuantityText;
 	
 	private InventoryItem _item;
@@ -52,11 +53,27 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 		{
 			_itemImage.color = new Vector4(1, 1, 1, 1);
 			_itemImage.sprite = item.Item.UiDisplay;
+			
+			// if(item is SimpleWandInventoryItem simpleWandInventoryItem)
+			// {
+			// 	ItemSO wandFocusItemSO = simpleWandInventoryItem.ProjectileItemSO;
+			// 	Debug.Log(item.Item.Name);
+			// 	if(wandFocusItemSO != null)
+			// 	{
+			// 		_wandFocusImage.sprite = wandFocusItemSO.UiDisplay;
+			// 	}
+			// 	else
+			// 	{
+			// 		_wandFocusImage.sprite = null;
+			// 	}
+			// }
 		}
 		else
 		{
 			_itemImage.color = new Vector4(1, 1, 1, 0);
 			_itemImage.sprite = null;
+			_wandFocusImage.color = new Vector4(1, 1, 1, 0);
+			_wandFocusImage.sprite = null;
 		}
 		
 		_itemQuantityText.text = item.Item != null ? item.Quantity > 1 ? item.Quantity.ToString() : string.Empty : string.Empty;

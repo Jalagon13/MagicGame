@@ -4,16 +4,32 @@ using UnityEngine;
 public class SimpleWandItemSO : ItemSO
 {
 	[SerializeField] private GameObject _simpleProjectilePrefab;
+	[SerializeField] private ItemSO _test;
+
+	public ItemSO GetTestItem()
+	{
+		return _test;
+	}
 
 	public override void ExecutePrimaryAction(InventoryItem inventoryItem)
 	{
 		var simpleWandInventoryItem = inventoryItem as SimpleWandInventoryItem;
 		
-		GameObject projectile = Instantiate(_simpleProjectilePrefab, Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, Quaternion.identity);
+		if(_test != null)
+		{
+			GameObject projectile = Instantiate(_simpleProjectilePrefab, Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, Quaternion.identity);
+			
+			SimpleProjectile simpleProjectile = projectile.GetComponent<SimpleProjectile>();
+			
+			Vector2 direction = ((Vector3)ActionManager.MouseWorldPosition - projectile.transform.position).normalized;
+			
+			simpleProjectile.Initialize(_test, direction);
+		}
+		else
+		{
+			Debug.LogWarning("No Test Item equiped in SO");
+		}
 		
-		SimpleProjectile simpleProjectile = projectile.GetComponent<SimpleProjectile>();
-		
-		simpleProjectile.Initialize(simpleWandInventoryItem.ProjectileItemSO);
 	}
 
 	public override void ExecuteSecondaryAction(InventoryItem inventoryItem)

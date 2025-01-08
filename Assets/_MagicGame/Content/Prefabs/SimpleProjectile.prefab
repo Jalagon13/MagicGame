@@ -45,6 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87045fccceb94b698a7bad8dcd36ab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _speed: 10
+  _lifetime: 2
+  _maxDistance: 5
+  _collisionLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  _collisionRadius: 0.1
 --- !u!212 &4333754594101243939
 SpriteRenderer:
   m_ObjectHideFlags: 0
