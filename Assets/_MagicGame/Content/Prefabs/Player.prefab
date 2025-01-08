@@ -416,12 +416,14 @@ MonoBehaviour:
   _respawnTimerDuration: 2
   _wandProjectileSpawnPoint: {fileID: 2253758697660586598}
   _startingItems:
+  - Item: {fileID: 11400000, guid: 5e37f57a32d8f4830a5b43ea68933a9c, type: 2}
+    Quantity: 1
   - Item: {fileID: 11400000, guid: f163862eaf2254f90b02b26267855a9c, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: 409efbd4e22624ac882995581adb1c37, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: 5e37f57a32d8f4830a5b43ea68933a9c, type: 2}
-    Quantity: 1
+  - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
+    Quantity: 99
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,6 +458,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e8c3f68c454d43c589ca83e21e8d4ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _knockbackEnabled: 1
 --- !u!1 &1334120334475979508
 GameObject:
   m_ObjectHideFlags: 0

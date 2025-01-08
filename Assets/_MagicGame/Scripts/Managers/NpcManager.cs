@@ -48,7 +48,7 @@ public class NpcManager : NetworkBehaviour
 
 	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
 	{
-		TryToSpawnNpc(Player.LocalClientInstance.transform.position);
+		TryToSpawnNpc(Player.LocalClientInstance.transform.position, _testDummyNpcSO);
 	}
 
 	private void NetworkManager_OnClientConnectedCallback(ulong clientId)
@@ -90,7 +90,7 @@ public class NpcManager : NetworkBehaviour
 				
 				if(SpawnSpotIsValid(potentialSpawnPoint))
 				{
-					TryToSpawnNpc(potentialSpawnPoint);
+					TryToSpawnNpc(potentialSpawnPoint, _deerNpcSO);
 					break;
 				}
 				
@@ -99,20 +99,18 @@ public class NpcManager : NetworkBehaviour
 		}
 	}
 	
-	private void TryToSpawnNpc(Vector2 spawnPosition)
+	private void TryToSpawnNpc(Vector2 spawnPosition, NpcSO npcSO)
 	{
-		NpcSO npcToSpawn = NetworkManager.LocalClientId == NetworkManager.ServerClientId ? _testDummyNpcSO : _yellowPixieNpcSO;
-		
 		// If there is 'space' to spawn NPC, spawn it
 		float remainingNpcSlotSpace = _maxNpcSlotSpawnAmount - _activeNpcSlotAmount;
 		
-		if(npcToSpawn.SlotAmount <= remainingNpcSlotSpace)
+		if(npcSO.SlotAmount <= remainingNpcSlotSpace)
 		{
 			// Npc to spawn can fit in the remaining npc slot space
-			_activeNpcSlotAmount += npcToSpawn.SlotAmount;
+			_activeNpcSlotAmount += npcSO.SlotAmount;
 			// Debug.Log($"[Client {NetworkManager.LocalClientId}] Adding {npcToSpawn.name} slot amount ({npcToSpawn.SlotAmount}) to active npc slots on this client. New amount: {_activeNpcSlotAmount}");
 			
-			byte npcId = GameManager.Instance.GetIdAsByteFromNpcSO(npcToSpawn);
+			byte npcId = GameManager.Instance.GetIdAsByteFromNpcSO(npcSO);
 
 			SpawnNpcServerRpc(Player.LocalClientInstance.GetPlayerEnvironment(), npcId, NetworkManager.LocalClientId, spawnPosition);
 		}

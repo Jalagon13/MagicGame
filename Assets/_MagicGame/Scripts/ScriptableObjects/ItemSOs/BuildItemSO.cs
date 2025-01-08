@@ -77,4 +77,9 @@ public class BuildItemSO : ItemSO
 
 		return true;
 	}
+	
+	public TileSO GetWallTile()
+	{
+		return _wallTile;
+	}
 }

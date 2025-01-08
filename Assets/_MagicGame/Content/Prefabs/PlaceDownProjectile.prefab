@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2801939122652061079}
   - component: {fileID: 4333754594101243939}
   m_Layer: 0
-  m_Name: SimpleProjectile
+  m_Name: PlaceDownProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,7 +51,8 @@ MonoBehaviour:
   _collisionLayer:
     serializedVersion: 2
     m_Bits: 8
-  _collisionRadius: 0.1
+  _collisionRadius: 0.25
+  _rotationSpeed: 200
 --- !u!212 &4333754594101243939
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -96,7 +97,7 @@ SpriteRenderer:
   m_SortingLayerID: -1268719207
   m_SortingLayer: 3
   m_SortingOrder: 99
-  m_Sprite: {fileID: 21300002, guid: 358b5d9f23bc9413e87c9948acc67ee1, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -104,6 +105,6 @@ SpriteRenderer:
   m_Size: {x: 2.56, y: 2.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0

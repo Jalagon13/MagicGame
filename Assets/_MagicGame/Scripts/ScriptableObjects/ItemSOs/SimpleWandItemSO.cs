@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Simple Wand Item", menuName = "Create Item/New Simple Wand Item")]
 public class SimpleWandItemSO : ItemSO
 {
-	[SerializeField] private GameObject _simpleProjectilePrefab;
+	[SerializeField] private GameObject _placeDownProjectile;
 	[SerializeField] private ItemSO _test;
 
 	public ItemSO GetTestItem()
@@ -17,13 +17,16 @@ public class SimpleWandItemSO : ItemSO
 		
 		if(_test != null)
 		{
-			GameObject projectile = Instantiate(_simpleProjectilePrefab, Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, Quaternion.identity);
+			if(_test is DeployItemSO || _test is BuildItemSO)
+			{
+				GameObject projectile = Instantiate(_placeDownProjectile, Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, Quaternion.identity);
 			
-			SimpleProjectile simpleProjectile = projectile.GetComponent<SimpleProjectile>();
+				PlaceDownProjectile placeDownProjectile = projectile.GetComponent<PlaceDownProjectile>();
 			
-			Vector2 direction = ((Vector3)ActionManager.MouseWorldPosition - projectile.transform.position).normalized;
+				Vector2 direction = ((Vector3)ActionManager.MouseWorldPosition - projectile.transform.position).normalized;
 			
-			simpleProjectile.Initialize(_test, direction);
+				placeDownProjectile.Initialize(_test, direction);
+			}
 		}
 		else
 		{

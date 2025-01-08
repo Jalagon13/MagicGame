@@ -218,7 +218,7 @@ public class GameManager : NetworkBehaviour
 	
 		int itemId = GetItemIndexFromItemObject(itemToSpawn); 
 		ushort itemAmount = (ushort)amount;
-	
+		
 		SpawnItemServerRpc((ushort)itemId, itemAmount, spawnPos, playAudio);
 	}
 
