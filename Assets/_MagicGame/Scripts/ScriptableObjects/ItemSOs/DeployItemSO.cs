@@ -13,7 +13,7 @@ public class DeployItemSO : ItemSO
 	[SerializeField] private WorldObject _deployObjectPrefab;
 	[SerializeField] private AudioClip _deploySound;
 	
-	public override void ExecutePrimaryAction()
+	public override void ExecutePrimaryAction(InventoryItem inventoryItem)
 	{
 		Vector2 pos = ActionManager.MouseWorldPosition;
 		
@@ -29,7 +29,7 @@ public class DeployItemSO : ItemSO
 		}
 	}
 
-	public override void ExecuteSecondaryAction()
+	public override void ExecuteSecondaryAction(InventoryItem inventoryItem)
 	{
 		
 	}

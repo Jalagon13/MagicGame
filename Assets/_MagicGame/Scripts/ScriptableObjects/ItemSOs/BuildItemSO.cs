@@ -12,7 +12,7 @@ public class BuildItemSO : ItemSO
 	[SerializeField] private TileSO _floorTile;
 	// [SerializeField] private TilemapObject _wallTm, _floorTm, _spawnFloorTilemap;
 	
-	public override void ExecutePrimaryAction()
+	public override void ExecutePrimaryAction(InventoryItem inventoryItem)
 	{
 		var pos = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
 		
@@ -30,7 +30,7 @@ public class BuildItemSO : ItemSO
 		}
 	}
 
-	public override void ExecuteSecondaryAction()
+	public override void ExecuteSecondaryAction(InventoryItem inventoryItem)
 	{
 		var pos = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
 		

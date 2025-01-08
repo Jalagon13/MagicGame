@@ -21,6 +21,7 @@ public class CastArmController : NetworkBehaviour
 
 	[SerializeField] private SwingController _swingController;
 	[SerializeField] private CastArmPivot _castArmPivot;
+	[SerializeField] private SpriteRenderer _castArmSpriteRenderer;
 	private ItemSO _focusItemSO;
 	private Player _thisPlayer;
 	
@@ -61,6 +62,8 @@ public class CastArmController : NetworkBehaviour
 	{
 		_focusItemSO = GameManager.Instance.GetItemSOFromIndex(newValue);
 		
+		_castArmSpriteRenderer.sprite = _focusItemSO == null ? null : _focusItemSO.UiDisplay;
+		
 		if(!_thisPlayer.IsSwingGoingOn())
 		{
 			CastArmUpdate();
@@ -75,7 +78,7 @@ public class CastArmController : NetworkBehaviour
 			return;
 		}
 	
-		if(_focusItemSO is WandItemSO)
+		if(_focusItemSO is WandItemSO || _focusItemSO is SimpleWandItemSO)
 		{
 			SetCastingArmHolding();
 		}

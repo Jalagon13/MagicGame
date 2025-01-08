@@ -123,12 +123,12 @@ public class ActionManager : MonoBehaviour
 	{
 		if (GameInput.Instance.GetPrimaryHeldDown() && _primaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetSecondaryHeldDown())
 		{
-			_focusItemSO.ExecutePrimaryAction();
+			_focusItemSO.ExecutePrimaryAction(HotbarManager.Instance.GetFocusInventoryItem());
 			_primaryActionTimer.RemainingSeconds = _primaryTimerDuration;
 		}
 		else if (GameInput.Instance.GetSecondaryHeldDown() && _secondaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetPrimaryHeldDown())
 		{
-			_focusItemSO.ExecuteSecondaryAction();
+			_focusItemSO.ExecuteSecondaryAction(HotbarManager.Instance.GetFocusInventoryItem());
 			_secondaryActionTimer.RemainingSeconds = _secondaryTimerDuration;
 		}
 	}

@@ -319,7 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1893099515
+  GlobalObjectIdHash: 891029302
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -419,6 +419,8 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: f163862eaf2254f90b02b26267855a9c, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: 409efbd4e22624ac882995581adb1c37, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 5e37f57a32d8f4830a5b43ea68933a9c, type: 2}
     Quantity: 1
 --- !u!114 &6270092794415709611
 MonoBehaviour:
@@ -724,6 +726,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _swingController: {fileID: 4752926092820354521}
   _castArmPivot: {fileID: 5309214422962337211}
+  _castArmSpriteRenderer: {fileID: 3684757790493457157}
 --- !u!1 &3288358466439632179
 GameObject:
   m_ObjectHideFlags: 0
@@ -2349,7 +2352,7 @@ GameObject:
   - component: {fileID: 2903351687099675861}
   - component: {fileID: 3684757790493457157}
   m_Layer: 7
-  m_Name: Wand
+  m_Name: CastArmSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

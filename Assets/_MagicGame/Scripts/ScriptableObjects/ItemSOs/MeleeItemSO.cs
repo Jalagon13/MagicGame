@@ -6,9 +6,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Melee Item", menuName = "Create Item/New Melee Item")]
 public class MeleeItemSO : ItemSO
 {
-	public override void ExecutePrimaryAction() { }
+	public override void ExecutePrimaryAction(InventoryItem inventoryItem) { }
 
-	public override void ExecuteSecondaryAction() { }
+	public override void ExecuteSecondaryAction(InventoryItem inventoryItem) { }
 
 	public override string GetDescription()
 	{

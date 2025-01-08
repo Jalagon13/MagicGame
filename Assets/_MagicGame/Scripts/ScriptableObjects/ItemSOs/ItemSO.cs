@@ -15,8 +15,8 @@ public abstract class ItemSO : ScriptableObject
 	[field: SerializeField] public List<ItemParameter> DefaultParameterList { get; set; }
 	
 	public abstract InventoryItem CreateInventoryItem(int quantity);
-	public abstract void ExecutePrimaryAction();
-	public abstract void ExecuteSecondaryAction();
+	public abstract void ExecutePrimaryAction(InventoryItem inventoryItem);
+	public abstract void ExecuteSecondaryAction(InventoryItem inventoryItem);
 	public abstract string GetDescription();
 	
 	public float ExtractParameterValue(ItemParameter paramter)

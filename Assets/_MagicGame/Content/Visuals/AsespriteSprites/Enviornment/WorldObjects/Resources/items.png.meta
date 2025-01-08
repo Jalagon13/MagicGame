@@ -571,6 +571,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: item_simple_wand
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 80
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b54ecaf0a15444043bfdcfa33810b797
+      internalID: 1328981321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -612,6 +634,7 @@ TextureImporter:
       item_plywood: 256975438
       item_portal: 547736231
       item_sand: 67440230
+      item_simple_wand: 1328981321
       item_spindle: 1551977814
       item_stone: -1096778836
       item_stone_axe: 1411200348
