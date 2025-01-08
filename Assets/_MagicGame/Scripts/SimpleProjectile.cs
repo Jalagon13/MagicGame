@@ -11,6 +11,7 @@ public class SimpleProjectile : MonoBehaviour
 	private Vector2 _direction;
 	private Vector3 _startPosition;
 	private float _distanceTraveled = 0f;
+	private ItemSO _projectileItemSO;
 
 	/// <summary>
 	/// Initializes the projectile with the given item and direction.
@@ -19,9 +20,11 @@ public class SimpleProjectile : MonoBehaviour
 	/// <param name="direction">The direction to move the projectile.</param>
 	public void Initialize(ItemSO projectileItemSO, Vector2 direction)
 	{
-		if (projectileItemSO != null)
+		_projectileItemSO = projectileItemSO;
+	
+		if (_projectileItemSO != null)
 		{
-			GetComponent<SpriteRenderer>().sprite = projectileItemSO.UiDisplay;
+			GetComponent<SpriteRenderer>().sprite = _projectileItemSO.UiDisplay;
 		}
 
 		_direction = direction.normalized; // Ensure direction is normalized
@@ -44,7 +47,7 @@ public class SimpleProjectile : MonoBehaviour
 		// Check if the projectile has exceeded the maximum distance
 		if (_distanceTraveled >= _maxDistance)
 		{
-			Destroy(gameObject);
+			OnProjectileDestroy();
 		}
 	}
 
@@ -58,7 +61,40 @@ public class SimpleProjectile : MonoBehaviour
 			Debug.Log($"Projectile collided with: {hit.name}");
 
 			// Destroy the projectile after collision
-			Destroy(gameObject);
+			OnProjectileDestroy();
 		}
+	}
+	
+	private void OnProjectileDestroy()
+	{
+		if(_projectileItemSO is DeployItemSO deployItemSO)
+		{
+			Debug.Log("Deploying object");
+			Vector2 pos = transform.position;
+		
+			if(IsClear(pos))
+			{
+				Debug.Log("Deploying object at position");
+				Vector2Int spawnPosition = new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
+				
+				ObjectManager.Instance.PlaceObject(spawnPosition, deployItemSO.GetDeployObjectPrefab(), Player.LocalClientInstance.GetPlayerEnvironment());
+			}
+		}
+	
+		Destroy(gameObject);
+	}
+	
+	private bool IsClear(Vector2 position)
+	{
+		Vector2 positionCheck = new(Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.y));
+		var colliders = Physics2D.OverlapBoxAll(positionCheck + new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), 0);
+
+		foreach(Collider2D col in colliders)
+		{
+			if(col.TryGetComponent(out ResourceObject clickable)) 
+				return false;
+		}
+
+		return true;
 	}
 }

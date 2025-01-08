@@ -61,4 +61,9 @@ public class DeployItemSO : ItemSO
 
 		return true;
 	}
+	
+	public WorldObject GetDeployObjectPrefab()
+	{
+		return _deployObjectPrefab;
+	}
 }
