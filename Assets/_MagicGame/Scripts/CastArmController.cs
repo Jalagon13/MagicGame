@@ -22,6 +22,7 @@ public class CastArmController : NetworkBehaviour
 	[SerializeField] private SwingController _swingController;
 	[SerializeField] private CastArmPivot _castArmPivot;
 	[SerializeField] private SpriteRenderer _castArmSpriteRenderer;
+	[SerializeField] private SpriteRenderer _wandFocusSpriteRenderer;
 	private ItemSO _focusItemSO;
 	private Player _thisPlayer;
 	
@@ -95,6 +96,18 @@ public class CastArmController : NetworkBehaviour
 	private void ShowCastArm()
 	{
 		_castArmPivot.gameObject.SetActive(true);
+		
+		if(HotbarManager.Instance.GetFocusInventoryItem() is SimpleWandInventoryItem simpleWandInventoryItem )
+		{
+			if(simpleWandInventoryItem.HasProjectile())
+			{
+				_wandFocusSpriteRenderer.sprite = simpleWandInventoryItem.ProjectileItemSO.UiDisplay;
+			}
+		}
+		else
+		{
+			_wandFocusSpriteRenderer.sprite = null;
+		}
 	}
 	
 	private void HideCastArm()

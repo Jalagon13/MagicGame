@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ffa45e1f00ee40b09c6258bb83c9864, type: 3}
   m_Name: SimpleWand
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Simple Wand
+  <Name>k__BackingField: Empty Wood Wand
   <UiDisplay>k__BackingField: {fileID: 1328981321, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField: []
   _placeDownProjectile: {fileID: 6669139190198866982, guid: 30b6c94dfad3c44d7a601f67d1556170, type: 3}
-  _test: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}

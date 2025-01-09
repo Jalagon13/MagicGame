@@ -319,7 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1893099515
+  GlobalObjectIdHash: 891029302
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -732,6 +732,7 @@ MonoBehaviour:
   _swingController: {fileID: 4752926092820354521}
   _castArmPivot: {fileID: 5309214422962337211}
   _castArmSpriteRenderer: {fileID: 3684757790493457157}
+  _wandFocusSpriteRenderer: {fileID: 3890240646638549847}
 --- !u!1 &3288358466439632179
 GameObject:
   m_ObjectHideFlags: 0
@@ -2043,6 +2044,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ba6205766df459e803ceecb5dc1cb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &6941187763366769727
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9145231911472417035}
+  - component: {fileID: 2393944309964900196}
+  m_Layer: 7
+  m_Name: WandFocusPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9145231911472417035
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6941187763366769727}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.205, y: 1.251, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 348698083615255385}
+  m_Father: {fileID: 2903351687099675861}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2393944309964900196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6941187763366769727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0ebfcdf8a5014279ad6dbbadddb9b5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rotationSpeed: 50
+  _scaleSpeed: 3
+  _scaleFactor: 0.15
 --- !u!1 &7206872473381088048
 GameObject:
   m_ObjectHideFlags: 0
@@ -2377,7 +2426,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2253758697660586598}
-  - {fileID: 348698083615255385}
+  - {fileID: 9145231911472417035}
   m_Father: {fileID: 5955750448407474933}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -135}
 --- !u!212 &3684757790493457157
@@ -2637,12 +2686,12 @@ GameObject:
   - component: {fileID: 348698083615255385}
   - component: {fileID: 3890240646638549847}
   m_Layer: 7
-  m_Name: Marshmellow
+  m_Name: WandFocusSR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &348698083615255385
 Transform:
   m_ObjectHideFlags: 0
@@ -2651,12 +2700,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8822011688150898992}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
-  m_LocalPosition: {x: 0.129, y: 0.521, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalRotation: {x: -0, y: -0, z: 0.38268337, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: -0.667, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 2903351687099675861}
+  m_Father: {fileID: 9145231911472417035}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
 --- !u!212 &3890240646638549847
 SpriteRenderer:
@@ -2702,7 +2751,7 @@ SpriteRenderer:
   m_SortingLayerID: 60437175
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -1033124662, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  m_Sprite: {fileID: 1337721260, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

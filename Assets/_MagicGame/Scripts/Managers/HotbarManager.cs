@@ -34,15 +34,12 @@ public class HotbarManager : MonoBehaviour
 		bool mouseHasItem = InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item != null;
 
 		_focusInventoryItem = mouseHasItem ? InventoryManager.Instance.GetMouseItem().MouseInventoryItem : InventoryManager.Instance.GetInventoryModel().InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
-		Debug.Log(GameInput.Instance.GetSelectedSlotIndex());
 		if(mouseHasItem)
 		{
-			Debug.Log("Mouse has item");
 			InvokeOnFocusItemSetEvent(GameManager.Instance.GetItemIndexFromItemObject(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item), -1);
 		}
 		else
 		{
-			Debug.Log("inv has item");
 			InvokeOnFocusItemSetEvent(GameManager.Instance.GetItemIndexFromItemObject(_focusInventoryItem.Item), GameInput.Instance.GetSelectedSlotIndex());
 		}
 	}

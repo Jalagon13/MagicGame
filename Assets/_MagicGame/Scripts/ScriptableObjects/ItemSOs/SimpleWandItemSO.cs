@@ -9,12 +9,7 @@ public class SimpleWandItemSO : ItemSO
 	{
 		if(inventoryItem is not SimpleWandInventoryItem || !(inventoryItem as SimpleWandInventoryItem).HasProjectile()) return;
 		
-		var simpleWandInventoryItem = inventoryItem as SimpleWandInventoryItem;
-		Debug.Log($"{simpleWandInventoryItem.ProjectileItemSO == null}");
-		Debug.Log($"{simpleWandInventoryItem.ProjectileQuantity}");
-		Debug.Log($"{simpleWandInventoryItem.ProjectileItemSO.Name}");
-		Debug.Log($"Has projectile {simpleWandInventoryItem.ProjectileItemSO.Name}");
-		var projectileItemSO = simpleWandInventoryItem.ProjectileItemSO;
+		var projectileItemSO = (inventoryItem as SimpleWandInventoryItem).ProjectileItemSO;
 		
 		if(projectileItemSO is DeployItemSO || projectileItemSO is BuildItemSO)
 		{
