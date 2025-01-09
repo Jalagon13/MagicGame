@@ -206,7 +206,17 @@ public class ActionManager : MonoBehaviour
 
 	private void HotbarManager_OnFocusItemSet(object sender, HotbarManager.OnFocusItemSetEventArgs e)
 	{
-		_focusItemSO = GameManager.Instance.GetItemSOFromIndex(e.FocusItemIndex);
+		// _focusItemSO = GameManager.Instance.GetItemSOFromIndex(e.FocusItemIndex);
+		
+		if(e.FocusItemSlotIndex != -1)
+		{
+			_focusItemSO = InventoryManager.Instance.GetInventoryModel().InventoryItems[e.FocusItemSlotIndex].Item;
+		}
+		else
+		{
+			_focusItemSO = InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item;
+		}
+		
 		
 		if(_focusItemSO != null)
 		{

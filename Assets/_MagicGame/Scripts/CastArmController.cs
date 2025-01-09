@@ -61,7 +61,6 @@ public class CastArmController : NetworkBehaviour
 	private void Player_FocusItemIndexNetworkVariable_OnValueChanged(int previousValue, int newValue)
 	{
 		_focusItemSO = GameManager.Instance.GetItemSOFromIndex(newValue);
-		
 		_castArmSpriteRenderer.sprite = _focusItemSO == null ? null : _focusItemSO.UiDisplay;
 		
 		if(!_thisPlayer.IsSwingGoingOn())
@@ -77,7 +76,6 @@ public class CastArmController : NetworkBehaviour
 			HideCastArm();
 			return;
 		}
-	
 		if(_focusItemSO is WandItemSO || _focusItemSO is SimpleWandItemSO)
 		{
 			SetCastingArmHolding();

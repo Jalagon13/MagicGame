@@ -230,13 +230,13 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		if(IsOwner)
 		{
-			if(HotbarManager.Instance.GetFocusInventoryItem() != null)
+			if(e.FocusItemIndex == -1)
 			{
-				_focusItemIndexNetworkVariable.Value = e.FocusItemIndex;
+				_focusItemIndexNetworkVariable.Value = -1;
 			}
 			else
 			{
-				_focusItemIndexNetworkVariable.Value = -1;
+				_focusItemIndexNetworkVariable.Value = e.FocusItemIndex;
 			}
 		}
 	}

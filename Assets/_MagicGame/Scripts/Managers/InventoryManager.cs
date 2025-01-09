@@ -224,7 +224,37 @@ public class InventoryManager : MonoBehaviour
 		
 		if(inventoryItem.HasItem)
 		{
-			if(mouseItem.HasItem)
+			if(inventoryItem is SimpleWandInventoryItem) // Wand equip functionality
+			{
+				var simpleWandInventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex] as SimpleWandInventoryItem;
+			
+				if(simpleWandInventoryItem.HasProjectile())
+				{
+					if(mouseItem.HasItem)
+					{
+						// Both the wand and mouse have items, swap both the items
+					}
+					else
+					{
+						// Mouse has no item, remove the projectiles from the wand and add it to the mouse
+						_mouseItemModel.MouseInventoryItem.Item = simpleWandInventoryItem.ProjectileItemSO;
+						_mouseItemModel.MouseInventoryItem.Quantity = simpleWandInventoryItem.ProjectileQuantity;
+						simpleWandInventoryItem.UnequipProjectile();
+					}
+				}
+				else
+				{
+					if(mouseItem.HasItem)
+					{
+						// Wand does not have any projectiles equipped, add the mouse item to the wand, and remove it from the mouse
+						Debug.Log(mouseItem.Item.Name);
+						simpleWandInventoryItem.EquipProjectile(_mouseItemModel.MouseInventoryItem.Item, _mouseItemModel.MouseInventoryItem.Quantity);
+						_mouseItemModel.MouseInventoryItem.Item = null;
+						_mouseItemModel.MouseInventoryItem.Quantity = 0;
+					}
+				}
+			}
+			else if(mouseItem.HasItem) // Normal functionality
 			{
 				if(inventoryItem.Item.Name == mouseItem.Item.Name)
 				{

@@ -4,35 +4,28 @@ using UnityEngine;
 public class SimpleWandItemSO : ItemSO
 {
 	[SerializeField] private GameObject _placeDownProjectile;
-	[SerializeField] private ItemSO _test;
-
-	public ItemSO GetTestItem()
-	{
-		return _test;
-	}
 
 	public override void ExecutePrimaryAction(InventoryItem inventoryItem)
 	{
+		if(inventoryItem is not SimpleWandInventoryItem || !(inventoryItem as SimpleWandInventoryItem).HasProjectile()) return;
+		
 		var simpleWandInventoryItem = inventoryItem as SimpleWandInventoryItem;
+		Debug.Log($"{simpleWandInventoryItem.ProjectileItemSO == null}");
+		Debug.Log($"{simpleWandInventoryItem.ProjectileQuantity}");
+		Debug.Log($"{simpleWandInventoryItem.ProjectileItemSO.Name}");
+		Debug.Log($"Has projectile {simpleWandInventoryItem.ProjectileItemSO.Name}");
+		var projectileItemSO = simpleWandInventoryItem.ProjectileItemSO;
 		
-		if(_test != null)
+		if(projectileItemSO is DeployItemSO || projectileItemSO is BuildItemSO)
 		{
-			if(_test is DeployItemSO || _test is BuildItemSO)
-			{
-				GameObject projectile = Instantiate(_placeDownProjectile, Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, Quaternion.identity);
+			GameObject projectile = Instantiate(_placeDownProjectile, Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, Quaternion.identity);
 			
-				PlaceDownProjectile placeDownProjectile = projectile.GetComponent<PlaceDownProjectile>();
+			PlaceDownProjectile placeDownProjectile = projectile.GetComponent<PlaceDownProjectile>();
 			
-				Vector2 direction = ((Vector3)ActionManager.MouseWorldPosition - projectile.transform.position).normalized;
+			Vector2 direction = ((Vector3)ActionManager.MouseWorldPosition - projectile.transform.position).normalized;
 			
-				placeDownProjectile.Initialize(_test, direction);
-			}
+			placeDownProjectile.Initialize(projectileItemSO, direction);
 		}
-		else
-		{
-			Debug.LogWarning("No Test Item equiped in SO");
-		}
-		
 	}
 
 	public override void ExecuteSecondaryAction(InventoryItem inventoryItem)

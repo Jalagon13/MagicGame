@@ -70,19 +70,6 @@ public class GameInput : MonoBehaviour
 		OnResearchMenuButton?.Invoke(this, EventArgs.Empty);
 	}
 
-	private void Start()
-	{
-		InventoryManager.Instance.OnInventoryUpdated += InventoryManager_OnInventoryUpdated;
-	}
-
-	private void InventoryManager_OnInventoryUpdated(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
-	{
-		OnSlotSelected?.Invoke(this, new SlotSelectedEventArgs
-		{
-			SelectedSlotIndex = _selectedSlotIndex,
-		});
-	}
-
 	private void PlayerInput_SecondaryAction(InputAction.CallbackContext context)
 	{
 		_secondaryHeldDown = context.performed;
@@ -164,12 +151,15 @@ public class GameInput : MonoBehaviour
 	{
 		return _secondaryHeldDown;
 	}
+	
+	public int GetSelectedSlotIndex()
+	{
+		return _selectedSlotIndex;
+	}
 
 	private void OnDestroy()
 	{
 		_playerInput.Disable();
 		_playerInput.Dispose();	
-		
-		InventoryManager.Instance.OnInventoryUpdated -= InventoryManager_OnInventoryUpdated;
 	}
 }
