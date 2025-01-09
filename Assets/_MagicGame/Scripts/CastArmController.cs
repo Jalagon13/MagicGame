@@ -34,7 +34,13 @@ public class CastArmController : NetworkBehaviour
 		{
 			_thisPlayer = transform.root.GetComponent<Player>();
 			_thisPlayer.GetFocusItemIndexNetworkVariable().OnValueChanged += Player_FocusItemIndexNetworkVariable_OnValueChanged;
+			SimpleWandInventoryItem.OnProjectileShot += SimpleWandInventoryItem_OnProjectileShot;
 		}
+	}
+
+	private void SimpleWandInventoryItem_OnProjectileShot(object sender, EventArgs e)
+	{
+		UpdateWandVisuals();
 	}
 
 	public override void OnNetworkSpawn()
@@ -63,7 +69,6 @@ public class CastArmController : NetworkBehaviour
 	{
 		_focusItemSO = GameManager.Instance.GetItemSOFromIndex(newValue);
 		_castArmSpriteRenderer.sprite = _focusItemSO == null ? null : _focusItemSO.UiDisplay;
-		
 		if(!_thisPlayer.IsSwingGoingOn())
 		{
 			CastArmUpdate();
@@ -77,6 +82,7 @@ public class CastArmController : NetworkBehaviour
 			HideCastArm();
 			return;
 		}
+		
 		if(_focusItemSO is WandItemSO || _focusItemSO is SimpleWandItemSO)
 		{
 			SetCastingArmHolding();
@@ -96,12 +102,20 @@ public class CastArmController : NetworkBehaviour
 	private void ShowCastArm()
 	{
 		_castArmPivot.gameObject.SetActive(true);
-		
+		UpdateWandVisuals();
+	}
+	
+	private void UpdateWandVisuals()
+	{
 		if(HotbarManager.Instance.GetFocusInventoryItem() is SimpleWandInventoryItem simpleWandInventoryItem )
 		{
 			if(simpleWandInventoryItem.HasProjectile())
 			{
 				_wandFocusSpriteRenderer.sprite = simpleWandInventoryItem.ProjectileItemSO.UiDisplay;
+			}
+			else
+			{
+				_wandFocusSpriteRenderer.sprite = null;
 			}
 		}
 		else
@@ -126,5 +140,6 @@ public class CastArmController : NetworkBehaviour
 		
 		_swingController.OnSwingEnd -= SwingController_OnSwingEnd;
 		_thisPlayer.GetFocusItemIndexNetworkVariable().OnValueChanged -= Player_FocusItemIndexNetworkVariable_OnValueChanged;
+		SimpleWandInventoryItem.OnProjectileShot -= SimpleWandInventoryItem_OnProjectileShot;
 	}
 }

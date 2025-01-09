@@ -9,7 +9,10 @@ public class SimpleWandItemSO : ItemSO
 	{
 		if(inventoryItem is not SimpleWandInventoryItem || !(inventoryItem as SimpleWandInventoryItem).HasProjectile()) return;
 		
-		var projectileItemSO = (inventoryItem as SimpleWandInventoryItem).ProjectileItemSO;
+		var simpleWandInventoryItem = inventoryItem as SimpleWandInventoryItem;
+		var projectileItemSO = simpleWandInventoryItem.ProjectileItemSO;
+		
+		if(simpleWandInventoryItem.ProjectileQuantity <= 0) return;
 		
 		if(projectileItemSO is DeployItemSO || projectileItemSO is BuildItemSO)
 		{
@@ -20,6 +23,9 @@ public class SimpleWandItemSO : ItemSO
 			Vector2 direction = ((Vector3)ActionManager.MouseWorldPosition - projectile.transform.position).normalized;
 			
 			placeDownProjectile.Initialize(projectileItemSO, direction);
+			
+			Player.LocalClientInstance.RemoveMana(1);
+			simpleWandInventoryItem.RemoveProjectile();
 		}
 	}
 

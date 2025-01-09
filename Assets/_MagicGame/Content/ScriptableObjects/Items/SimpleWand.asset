@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SimpleWand
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Empty Wood Wand
-  <UiDisplay>k__BackingField: {fileID: 1328981321, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -1593785014, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField: []

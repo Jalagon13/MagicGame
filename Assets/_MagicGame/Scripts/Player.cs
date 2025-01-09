@@ -230,6 +230,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		if(IsOwner)
 		{
+			// NTFS: network variables onvaluechanged is only executed if the value is different
 			if(e.FocusItemIndex == -1)
 			{
 				_focusItemIndexNetworkVariable.Value = -1;

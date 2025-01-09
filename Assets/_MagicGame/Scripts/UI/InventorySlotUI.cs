@@ -50,7 +50,6 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 			if(item is SimpleWandInventoryItem simpleWandInventoryItem)
 			{
 				ItemSO wandFocusItemSO = simpleWandInventoryItem.ProjectileItemSO;
-				Debug.Log(item.Item.Name);
 				if(wandFocusItemSO != null)
 				{
 					_wandFocusImage.color = new Vector4(1, 1, 1, 1);

@@ -43,6 +43,11 @@ public class InventoryManager : MonoBehaviour
 		_inventoryModel = new(_slotAmount, _mouseItemModel.MouseInventoryItem);
 		_inventoryModel.OnInventoryUpdate += InventoryModel_OnInventoryUpdate;
 	}
+	
+	private void Start()
+	{
+		SimpleWandInventoryItem.OnProjectileShot += OnProjectileShot_UpdateInventory;
+	}
 
 	private void Update()
 	{
@@ -68,6 +73,11 @@ public class InventoryManager : MonoBehaviour
 			_gaveItemThisFrame = true;
 			_gotItemThisFrame = false;
 		}
+	}
+	
+	private void OnProjectileShot_UpdateInventory(object sender, EventArgs e)
+	{
+		_inventoryModel.UpdateInventory();
 	}
 	
 	public void UpdateMouseItem()
@@ -385,5 +395,6 @@ public class InventoryManager : MonoBehaviour
 	private void OnDestroy()
 	{
 		_inventoryModel.OnInventoryUpdate -= InventoryModel_OnInventoryUpdate;
+		SimpleWandInventoryItem.OnProjectileShot -= OnProjectileShot_UpdateInventory;
 	}
 }

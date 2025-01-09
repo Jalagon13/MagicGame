@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public class SimpleWandInventoryItem : InventoryItem
 {
+	public static event EventHandler OnProjectileShot;
+
 	public ItemSO ProjectileItemSO { get; private set; }
 	public int ProjectileQuantity { get; private set; }
 
@@ -15,7 +18,6 @@ public class SimpleWandInventoryItem : InventoryItem
 	{
 		ProjectileItemSO = projectileItemSO;
 		ProjectileQuantity = quantity;
-		Debug.Log($"Equipped projectile {ProjectileItemSO.Name} with quantity {ProjectileQuantity}");
 	}
 	
 	public bool HasProjectile()
@@ -27,5 +29,16 @@ public class SimpleWandInventoryItem : InventoryItem
 	{
 		ProjectileItemSO = null;
 		ProjectileQuantity = 0;
+	}
+	
+	public void RemoveProjectile()
+	{
+		ProjectileQuantity--;
+		if(ProjectileQuantity <= 0)
+		{
+			UnequipProjectile();
+		}
+		
+		OnProjectileShot?.Invoke(this, EventArgs.Empty);
 	}
 }
