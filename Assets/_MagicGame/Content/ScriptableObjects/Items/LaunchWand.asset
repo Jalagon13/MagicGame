@@ -10,11 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ffa45e1f00ee40b09c6258bb83c9864, type: 3}
-  m_Name: SimpleWand
+  m_Name: LaunchWand
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Empty Wood Wand
+  <Name>k__BackingField: Launch Wand
   <UiDisplay>k__BackingField: {fileID: -1593785014, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <ProjectileForm>k__BackingField: {fileID: 0}
+  <ProjectileDamage>k__BackingField: 0
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField: []
-  _placeDownProjectile: {fileID: 6669139190198866982, guid: 30b6c94dfad3c44d7a601f67d1556170, type: 3}
+  _launchProjectileBehaviorPrefab: {fileID: 1321824045787363768, guid: ff4c26f04f6524757a29a85d46c8de91, type: 3}
+  _baseDamage: 6
+  _maxDistance: 6
+  _speed: 12
+  _collisionLayer:
+    serializedVersion: 2
+    m_Bits: 72
+  _collisionRadius: 0.25
+  _rotationSpeed: 120

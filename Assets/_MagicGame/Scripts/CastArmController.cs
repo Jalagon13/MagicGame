@@ -83,7 +83,7 @@ public class CastArmController : NetworkBehaviour
 			return;
 		}
 		
-		if(_focusItemSO is WandItemSO || _focusItemSO is SimpleWandItemSO)
+		if(_focusItemSO is WandItemSO || _focusItemSO is LaunchWandItemSO)
 		{
 			SetCastingArmHolding();
 		}

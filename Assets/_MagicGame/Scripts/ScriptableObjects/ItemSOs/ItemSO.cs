@@ -9,6 +9,8 @@ public abstract class ItemSO : ScriptableObject
 {
 	[field: SerializeField] public string Name { get; private set; }
 	[field: SerializeField] public Sprite UiDisplay { get; private set; }
+	[field: SerializeField] public GameObject ProjectileForm { get; private set; }
+	[field: SerializeField] public int ProjectileDamage { get; private set; }
 	[field: SerializeField] public bool Stackable { get; private set; }
 	[field: TextArea]
 	[field: SerializeField] public string Description { get; private set; }

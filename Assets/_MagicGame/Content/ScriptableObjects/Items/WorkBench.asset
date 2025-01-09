@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Work Bench
   <UiDisplay>k__BackingField: {fileID: 1337721260, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <ProjectileForm>k__BackingField: {fileID: 6669139190198866982, guid: 30b6c94dfad3c44d7a601f67d1556170, type: 3}
+  <ProjectileDamage>k__BackingField: 0
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField:
@@ -21,4 +23,3 @@ MonoBehaviour:
     Value: 3
   _deployObjectPrefab: {fileID: 6290587451616296401, guid: e9eb770362141454f8cd8a3e777aa608, type: 3}
   _deploySound: {fileID: 0}
-  _environmentsAbleToSpawnIn: 0

@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Wood
   <UiDisplay>k__BackingField: {fileID: -395863171, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <ProjectileForm>k__BackingField: {fileID: 6669139190198866982, guid: 30b6c94dfad3c44d7a601f67d1556170, type: 3}
+  <ProjectileDamage>k__BackingField: 0
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField:

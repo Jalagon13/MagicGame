@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2801939122652061079}
   - component: {fileID: 4333754594101243939}
   m_Layer: 0
-  m_Name: PlaceDownProjectile
+  m_Name: PlaceDownItemProjectileForm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
