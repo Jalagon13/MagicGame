@@ -7,6 +7,8 @@ public class LaunchWandItemSO : ItemSO
 	[SerializeField] private int _baseDamage = 10;
 	[SerializeField] private float _maxDistance = 20f; 
 	[SerializeField] private float _speed = 10f; 
+	[SerializeField] private int _manaCost;
+	[SerializeField] private float _primaryActionCooldown;
 	[SerializeField] private LayerMask _collisionLayer; 
 	[SerializeField] private float _collisionRadius = 0.1f; 
 	[SerializeField] private float _rotationSpeed; 
@@ -23,7 +25,11 @@ public class LaunchWandItemSO : ItemSO
 		LaunchProjectileBehavior launchProjectile = Instantiate(_launchProjectileBehaviorPrefab, Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, Quaternion.identity);
 		
 		Vector2 direction = ((Vector3)ActionManager.MouseWorldPosition - launchProjectile.transform.position).normalized;
-		launchProjectile.Initialize(direction, _maxDistance, _speed, _collisionLayer, _collisionRadius, _rotationSpeed, projectileItemSO.ProjectileDamage + _baseDamage);
+		
+		int damage = projectileItemSO is MeleeItemSO ? (projectileItemSO as MeleeItemSO).DamageAmount : projectileItemSO.ProjectileDamage;
+		damage += _baseDamage;
+		
+		launchProjectile.Initialize(projectileItemSO, direction, _maxDistance, _speed, _collisionLayer, _collisionRadius, _rotationSpeed, damage);
 		
 		if(projectileItemSO.ProjectileForm != null)
 		{
@@ -39,9 +45,11 @@ public class LaunchWandItemSO : ItemSO
 		{
 			// If there is no unique behavior found, just set the sprite of the projectile to the item sprite
 			launchProjectile.SetProjectileBehaviorSprite(projectileItemSO.UiDisplay);
+			launchProjectile.OnProjectileCompleted += launchProjectile.DefaultProjectileCompletedBehavior;
+			launchProjectile.OnProjectileNpcHit += launchProjectile.DefaultProjectileNpcHitBehavior;
 		}
 		
-		Player.LocalClientInstance.RemoveMana(1);
+		Player.LocalClientInstance.RemoveMana(_manaCost);
 		simpleWandInventoryItem.RemoveProjectile();
 	}
 
@@ -58,5 +66,10 @@ public class LaunchWandItemSO : ItemSO
 	public override string GetDescription()
 	{
 		return string.Empty;
+	}
+	
+	public float GetPrimaryActionCooldown()
+	{
+		return _primaryActionCooldown;
 	}
 }

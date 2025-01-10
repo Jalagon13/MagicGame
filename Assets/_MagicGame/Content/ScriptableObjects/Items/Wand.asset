@@ -15,7 +15,7 @@ MonoBehaviour:
   <Name>k__BackingField: Wood Wand
   <UiDisplay>k__BackingField: {fileID: -1593785014, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <ProjectileForm>k__BackingField: {fileID: 0}
-  <ProjectileDamage>k__BackingField: 0
+  <ProjectileDamage>k__BackingField: 3
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Left-click to harvest wood, stone, and crops<br>Right-click
     to remove floors and ground

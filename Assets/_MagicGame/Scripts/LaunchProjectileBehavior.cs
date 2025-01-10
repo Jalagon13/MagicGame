@@ -16,9 +16,11 @@ public class LaunchProjectileBehavior : MonoBehaviour
 	private float _distanceTraveled;
 	private float _rotationDirection;
 	private int _damage;
+	private ItemSO _projectileItemSO;
 
-	public void Initialize(Vector2 direction, float maxDistance, float speed, LayerMask collisionLayer, float collisionRadius, float rotationSpeed, int damage)
+	public void Initialize(ItemSO projectileItemSO, Vector2 direction, float maxDistance, float speed, LayerMask collisionLayer, float collisionRadius, float rotationSpeed, int damage)
 	{
+		_projectileItemSO = projectileItemSO;
 		_direction = direction.normalized;
 		_maxDistance = maxDistance;
 		_speed = speed;
@@ -95,5 +97,17 @@ public class LaunchProjectileBehavior : MonoBehaviour
 		OnProjectileNpcHit = null;
 
 		Destroy(gameObject);
+	}
+
+	public void DefaultProjectileCompletedBehavior(object sender, EventArgs e)
+	{
+		Debug.Log($"Spawning item at: {transform.position}");
+		GameManager.Instance.SpawnItem(_projectileItemSO, 1, transform.position);
+	}
+
+	public void DefaultProjectileNpcHitBehavior(object sender, EventArgs e)
+	{
+		Debug.Log($"Spawning item at: {transform.position}");
+		GameManager.Instance.SpawnItem(_projectileItemSO, 1, transform.position);
 	}
 }

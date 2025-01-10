@@ -15,7 +15,7 @@ MonoBehaviour:
   <Name>k__BackingField: Launch Wand
   <UiDisplay>k__BackingField: {fileID: -1593785014, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <ProjectileForm>k__BackingField: {fileID: 0}
-  <ProjectileDamage>k__BackingField: 0
+  <ProjectileDamage>k__BackingField: 3
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField: []
@@ -23,6 +23,8 @@ MonoBehaviour:
   _baseDamage: 6
   _maxDistance: 6
   _speed: 12
+  _manaCost: 0
+  _primaryActionCooldown: 1
   _collisionLayer:
     serializedVersion: 2
     m_Bits: 72

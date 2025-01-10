@@ -19,7 +19,6 @@ MonoBehaviour:
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField:
-  - Parameter: {fileID: 11400000, guid: ba723f4c67f86412ba70c22a22d57766, type: 2}
-    Value: 7
   - Parameter: {fileID: 11400000, guid: ae01eae50d342400397770a20292becd, type: 2}
     Value: 1.2
+  <DamageAmount>k__BackingField: 12
