@@ -73,6 +73,7 @@ public class Player : NetworkBehaviour, IHasHealth
 			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnFocusSlotUpdated;
 			
 			Invoke(nameof(SpawnStartingItems), 0.25f);
+			InvokeRepeating(nameof(ManaRegen), 1f, 1f);
 		}
 		
 		OnAnyPlayerSpawned?.Invoke(this, new PlayerIdEventArgs
@@ -88,6 +89,14 @@ public class Player : NetworkBehaviour, IHasHealth
 		if(IsOwner)
 		{
 			_manaNetworkVariable.Value = _startingMana;
+		}
+	}
+
+	private void ManaRegen()
+	{
+		if(_manaNetworkVariable.Value < _startingMana)
+		{
+			_manaNetworkVariable.Value += 1;
 		}
 	}
 

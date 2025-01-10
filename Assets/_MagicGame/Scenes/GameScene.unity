@@ -8466,7 +8466,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _dayDurationInSeconds: 10
   _startingTime: 1
-  _isTicking: 1
+  _isTicking: 0
   _randomSeed: 0
   _customSeed: Hell world :D
   _portalObjectPrefab: {fileID: 821165274625048597, guid: d486dbafb74344fbb99c566098694a5f, type: 3}

@@ -418,14 +418,12 @@ MonoBehaviour:
   _startingItems:
   - Item: {fileID: 11400000, guid: 5e37f57a32d8f4830a5b43ea68933a9c, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: f163862eaf2254f90b02b26267855a9c, type: 2}
-    Quantity: 1
   - Item: {fileID: 11400000, guid: 409efbd4e22624ac882995581adb1c37, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
-    Quantity: 3
-  - Item: {fileID: 11400000, guid: d3be2b9539bc040428db5097cea0bed6, type: 2}
-    Quantity: 3
+  - Item: {fileID: 11400000, guid: e6ad6f394500f465e91973545553777e, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
+    Quantity: 1
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,7 +441,7 @@ MonoBehaviour:
   _castArmPivot: {fileID: 5309214422962337211}
   _castArmController: {fileID: 4207180461047776558}
   _knockbackResist: 20
-  _speed: 5
+  _speed: 4
   _footstepSound: {fileID: 0}
   _spriteAnimationHandlerList:
   - {fileID: 5137825302037799411}
