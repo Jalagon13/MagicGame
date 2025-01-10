@@ -242,32 +242,62 @@ public class InventoryManager : MonoBehaviour
 				{
 					if(mouseItem.HasItem)
 					{
-						// Both the wand and mouse have items, swap both the items
-						ItemSO tempMouseItem = _mouseItemModel.MouseInventoryItem.Item;
-						int tempMouseQuantity = _mouseItemModel.MouseInventoryItem.Quantity;
+						// If they are the same, don't do anything
+						if(mouseItem.Item.Name == simpleWandInventoryItem.ProjectileItemSO.Name) return;
 						
-						_mouseItemModel.MouseInventoryItem.Item = simpleWandInventoryItem.ProjectileItemSO;
-						_mouseItemModel.MouseInventoryItem.Quantity = simpleWandInventoryItem.ProjectileQuantity;
-						
-						simpleWandInventoryItem.EquipProjectile(tempMouseItem, tempMouseQuantity);
+						if(mouseItem.Quantity > 1)
+						{
+							// Swap the item and give the wand item back to the player's inventory
+							ItemSO tempWandItem = simpleWandInventoryItem.ProjectileItemSO;
+							
+							simpleWandInventoryItem.EquipProjectile(_mouseItemModel.MouseInventoryItem.Item);
+							
+							_mouseItemModel.MouseInventoryItem.Quantity--;
+							
+							if(_mouseItemModel.MouseInventoryItem.Quantity <= 0)
+							{
+								_mouseItemModel.MouseInventoryItem.Item = null;
+								_mouseItemModel.MouseInventoryItem.Quantity = 0;
+							}
+							
+							AddItem(tempWandItem, 1);
+						}
+						else
+						{
+							// Swap them
+							ItemSO tempMouseItem = _mouseItemModel.MouseInventoryItem.Item;
+							_mouseItemModel.MouseInventoryItem.Item = simpleWandInventoryItem.ProjectileItemSO;
+							simpleWandInventoryItem.EquipProjectile(tempMouseItem);
+						}
 					}
 					else
 					{
 						// Mouse has no item, remove the projectiles from the wand and add it to the mouse
 						_mouseItemModel.MouseInventoryItem.Item = simpleWandInventoryItem.ProjectileItemSO;
-						_mouseItemModel.MouseInventoryItem.Quantity = simpleWandInventoryItem.ProjectileQuantity;
+						_mouseItemModel.MouseInventoryItem.Quantity = 1;
 						simpleWandInventoryItem.UnequipProjectile();
+					}
+				}
+				else if(mouseItem.HasItem)
+				{
+					// Wand does not have any projectiles equipped and mouse has an item, give one of that mouse item to it
+					simpleWandInventoryItem.EquipProjectile(_mouseItemModel.MouseInventoryItem.Item);
+					_mouseItemModel.MouseInventoryItem.Quantity--;
+						
+					if(_mouseItemModel.MouseInventoryItem.Quantity <= 0)
+					{
+						_mouseItemModel.MouseInventoryItem.Item = null;
+						_mouseItemModel.MouseInventoryItem.Quantity = 0;
 					}
 				}
 				else
 				{
-					if(mouseItem.HasItem)
-					{
-						// Wand does not have any projectiles equipped, add the mouse item to the wand, and remove it from the mouse
-						simpleWandInventoryItem.EquipProjectile(_mouseItemModel.MouseInventoryItem.Item, _mouseItemModel.MouseInventoryItem.Quantity);
-						_mouseItemModel.MouseInventoryItem.Item = null;
-						_mouseItemModel.MouseInventoryItem.Quantity = 0;
-					}
+					// Right clicking wand but no mouse item, give the wand to the mouse
+					_mouseItemModel.MouseInventoryItem.Item = inventoryItem.Item;
+					_mouseItemModel.MouseInventoryItem.Quantity = 1;
+					
+					_inventoryModel.InventoryItems[clickedInventorySlotIndex].Item = null;
+					_inventoryModel.InventoryItems[clickedInventorySlotIndex].Quantity = 0;
 				}
 			}
 			else if(mouseItem.HasItem) // Normal functionality

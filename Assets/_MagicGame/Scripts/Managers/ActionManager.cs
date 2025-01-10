@@ -17,7 +17,6 @@ public class ActionManager : MonoBehaviour
 	private Timer _primaryActionTimer, _secondaryActionTimer, _miningCooldownTimer;
 	private ItemSO _focusItemSO;
 	private WandInventoryItem _wandItem;
-	private float _primaryTimerDuration = 0.25f, _secondaryTimerDuration = 0.25f;
 	private ResourceObject _selectedResourceObject;
 	
 	private void Awake()
@@ -25,8 +24,8 @@ public class ActionManager : MonoBehaviour
 		Instance = this;
 		
 		_miningCooldownTimer = new Timer(0);
-		_primaryActionTimer = new Timer(_primaryTimerDuration);
-		_secondaryActionTimer = new Timer(_secondaryTimerDuration);
+		_primaryActionTimer = new Timer(0.25f);
+		_secondaryActionTimer = new Timer(0.25f);
 	}
 	
 	private void Start()
@@ -123,13 +122,11 @@ public class ActionManager : MonoBehaviour
 	{
 		if (GameInput.Instance.GetPrimaryHeldDown() && _primaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetSecondaryHeldDown())
 		{
-			_focusItemSO.ExecutePrimaryAction(HotbarManager.Instance.GetFocusInventoryItem());
-			_primaryActionTimer.RemainingSeconds = _focusItemSO is LaunchWandItemSO ? (_focusItemSO as LaunchWandItemSO).GetPrimaryActionCooldown() : _primaryTimerDuration;
+			_primaryActionTimer.RemainingSeconds = _focusItemSO.ExecutePrimaryAction(HotbarManager.Instance.GetFocusInventoryItem());
 		}
 		else if (GameInput.Instance.GetSecondaryHeldDown() && _secondaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetPrimaryHeldDown())
 		{
-			_focusItemSO.ExecuteSecondaryAction(HotbarManager.Instance.GetFocusInventoryItem());
-			_secondaryActionTimer.RemainingSeconds = _secondaryTimerDuration;
+			_secondaryActionTimer.RemainingSeconds = _focusItemSO.ExecuteSecondaryAction(HotbarManager.Instance.GetFocusInventoryItem());
 		}
 	}
 

@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Torch
   <UiDisplay>k__BackingField: {fileID: -1599595118, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <ProjectileForm>k__BackingField: {fileID: 0}
-  <ProjectileDamage>k__BackingField: 3
+  <CustomBehaviorPrefab>k__BackingField: {fileID: 0}
+  <BaseDamage>k__BackingField: 3
+  <ManaCost>k__BackingField: 3
+  <BaseDistance>k__BackingField: 6
+  <BaseSpeed>k__BackingField: 10
+  <CastCooldown>k__BackingField: 0.375
+  <RotationSpeedDegreesPerSecond>k__BackingField: 270
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField:

@@ -3,59 +3,45 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Launch Wand Item", menuName = "Create Item/New Launch Wand Item")]
 public class LaunchWandItemSO : ItemSO
 {
-	[SerializeField] private LaunchProjectileBehavior _launchProjectileBehaviorPrefab;
-	[SerializeField] private int _baseDamage = 10;
-	[SerializeField] private float _maxDistance = 20f; 
-	[SerializeField] private float _speed = 10f; 
-	[SerializeField] private int _manaCost;
-	[SerializeField] private float _primaryActionCooldown;
+	[SerializeField] private LaunchWandProjectile _launchProjectileBehaviorPrefab;
 	[SerializeField] private LayerMask _collisionLayer; 
-	[SerializeField] private float _collisionRadius = 0.1f; 
-	[SerializeField] private float _rotationSpeed; 
+	[SerializeField] private float _distanceModifierPercent = 10f; 
+	[SerializeField] private float _speedModifierPercent = 10f; 
+	[SerializeField] private int _wandDamage = 2;
 
-	public override void ExecutePrimaryAction(InventoryItem inventoryItem)
+	public override float ExecutePrimaryAction(InventoryItem inventoryItem)
 	{
-		if(inventoryItem is not SimpleWandInventoryItem || !(inventoryItem as SimpleWandInventoryItem).HasProjectile()) return;
+		if(inventoryItem is not SimpleWandInventoryItem || !(inventoryItem as SimpleWandInventoryItem).HasProjectile()) return 0.1f;
 		
-		var simpleWandInventoryItem = inventoryItem as SimpleWandInventoryItem;
-		var projectileItemSO = simpleWandInventoryItem.ProjectileItemSO;
+		var projectileItemSO = (inventoryItem as SimpleWandInventoryItem).ProjectileItemSO;
 		
-		if(simpleWandInventoryItem.ProjectileQuantity <= 0) return;
-		
-		LaunchProjectileBehavior launchProjectile = Instantiate(_launchProjectileBehaviorPrefab, Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, Quaternion.identity);
+		LaunchWandProjectile launchProjectile = Instantiate(_launchProjectileBehaviorPrefab, Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, Quaternion.identity);
 		
 		Vector2 direction = ((Vector3)ActionManager.MouseWorldPosition - launchProjectile.transform.position).normalized;
 		
-		int damage = projectileItemSO is MeleeItemSO ? (projectileItemSO as MeleeItemSO).DamageAmount : projectileItemSO.ProjectileDamage;
-		damage += _baseDamage;
+		launchProjectile.Initialize(direction, 
+		projectileItemSO.BaseDistance * (1 + (_distanceModifierPercent * 0.01f)), 
+		projectileItemSO.BaseSpeed * (1 + (_speedModifierPercent * 0.01f)), 
+		_collisionLayer, 
+		projectileItemSO.RotationSpeedDegreesPerSecond, 
+		projectileItemSO.BaseDamage + _wandDamage, 
+		projectileItemSO.UiDisplay);
 		
-		launchProjectile.Initialize(projectileItemSO, direction, _maxDistance, _speed, _collisionLayer, _collisionRadius, _rotationSpeed, damage);
+		Player.LocalClientInstance.RemoveMana(projectileItemSO.ManaCost);
 		
-		if(projectileItemSO.ProjectileForm != null)
+		if(projectileItemSO.CustomBehaviorPrefab != null)
 		{
-			GameObject itemProjectileFormGameObject = Instantiate(projectileItemSO.ProjectileForm, Player.LocalClientInstance.GetWandProjectileSpawnPoint().position, Quaternion.identity);
-			
-			PlaceDownItemProjectileForm placeDownProjectileForm = itemProjectileFormGameObject.GetComponent<PlaceDownItemProjectileForm>();
-			placeDownProjectileForm.Initialize(projectileItemSO, launchProjectile.transform);
-		
-			launchProjectile.OnProjectileCompleted += placeDownProjectileForm.OnProjectileCompleted;
-			launchProjectile.OnProjectileNpcHit += placeDownProjectileForm.OnProjectileNpcHit;
-		}
-		else
-		{
-			// If there is no unique behavior found, just set the sprite of the projectile to the item sprite
-			launchProjectile.SetProjectileBehaviorSprite(projectileItemSO.UiDisplay);
-			launchProjectile.OnProjectileCompleted += launchProjectile.DefaultProjectileCompletedBehavior;
-			launchProjectile.OnProjectileNpcHit += launchProjectile.DefaultProjectileNpcHitBehavior;
+			// If projectile has any custom behaviors, Instantiate it and attach it to as a child to the main projectile
+			var customItemBehavior = Instantiate(projectileItemSO.CustomBehaviorPrefab, default, Quaternion.identity);
+			customItemBehavior.transform.SetParent(launchProjectile.transform);
 		}
 		
-		Player.LocalClientInstance.RemoveMana(_manaCost);
-		simpleWandInventoryItem.RemoveProjectile();
+		return projectileItemSO.CastCooldown;
 	}
 
-	public override void ExecuteSecondaryAction(InventoryItem inventoryItem)
+	public override float ExecuteSecondaryAction(InventoryItem inventoryItem)
 	{
-
+		return _baseActionCooldown;
 	}
 	
 	public override InventoryItem CreateInventoryItem(int quantity)
@@ -66,10 +52,5 @@ public class LaunchWandItemSO : ItemSO
 	public override string GetDescription()
 	{
 		return string.Empty;
-	}
-	
-	public float GetPrimaryActionCooldown()
-	{
-		return _primaryActionCooldown;
 	}
 }

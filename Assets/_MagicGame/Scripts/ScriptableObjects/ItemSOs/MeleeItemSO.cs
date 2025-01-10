@@ -6,10 +6,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Melee Item", menuName = "Create Item/New Melee Item")]
 public class MeleeItemSO : ItemSO
 {	
-	[field: SerializeField] public int DamageAmount { get; private set; }
-	public override void ExecutePrimaryAction(InventoryItem inventoryItem) { }
+	public override float ExecutePrimaryAction(InventoryItem inventoryItem) { return _baseActionCooldown; }
 
-	public override void ExecuteSecondaryAction(InventoryItem inventoryItem) { }
+	public override float ExecuteSecondaryAction(InventoryItem inventoryItem) { return _baseActionCooldown; }
 
 	public override string GetDescription()
 	{

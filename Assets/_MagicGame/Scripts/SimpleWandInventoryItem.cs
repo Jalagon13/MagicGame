@@ -6,7 +6,6 @@ public class SimpleWandInventoryItem : InventoryItem
 	public static event EventHandler OnProjectileShot;
 
 	public ItemSO ProjectileItemSO { get; private set; }
-	public int ProjectileQuantity { get; private set; }
 
 	public SimpleWandInventoryItem(ItemSO itemSO, int quantity) : base(itemSO, quantity)
 	{
@@ -14,10 +13,9 @@ public class SimpleWandInventoryItem : InventoryItem
 		// Add custom behavior or properties here for wands
 	}
 	
-	public void EquipProjectile(ItemSO projectileItemSO, int quantity)
+	public void EquipProjectile(ItemSO projectileItemSO)
 	{
 		ProjectileItemSO = projectileItemSO;
-		ProjectileQuantity = quantity;
 	}
 	
 	public bool HasProjectile()
@@ -28,17 +26,5 @@ public class SimpleWandInventoryItem : InventoryItem
 	public void UnequipProjectile()
 	{
 		ProjectileItemSO = null;
-		ProjectileQuantity = 0;
-	}
-	
-	public void RemoveProjectile()
-	{
-		ProjectileQuantity--;
-		if(ProjectileQuantity <= 0)
-		{
-			UnequipProjectile();
-		}
-		
-		OnProjectileShot?.Invoke(this, EventArgs.Empty);
 	}
 }

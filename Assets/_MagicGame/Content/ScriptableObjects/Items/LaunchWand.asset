@@ -14,19 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Launch Wand
   <UiDisplay>k__BackingField: {fileID: -1593785014, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <ProjectileForm>k__BackingField: {fileID: 0}
-  <ProjectileDamage>k__BackingField: 3
+  <CustomBehaviorPrefab>k__BackingField: {fileID: 0}
+  <BaseDamage>k__BackingField: 3
+  <ManaCost>k__BackingField: 3
+  <BaseDistance>k__BackingField: 6
+  <BaseSpeed>k__BackingField: 10
+  <CastCooldown>k__BackingField: 0.375
+  <RotationSpeedDegreesPerSecond>k__BackingField: 270
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField: []
   _launchProjectileBehaviorPrefab: {fileID: 1321824045787363768, guid: ff4c26f04f6524757a29a85d46c8de91, type: 3}
-  _baseDamage: 6
-  _maxDistance: 6
-  _speed: 12
-  _manaCost: 0
-  _primaryActionCooldown: 1
   _collisionLayer:
     serializedVersion: 2
     m_Bits: 72
-  _collisionRadius: 0.25
-  _rotationSpeed: 120
+  _distanceModifierPercent: 0
+  _speedModifierPercent: 0
+  _wandDamage: 2

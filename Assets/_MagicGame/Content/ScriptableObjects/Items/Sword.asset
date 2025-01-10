@@ -14,11 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Sword
   <UiDisplay>k__BackingField: {fileID: -1843546812, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <ProjectileForm>k__BackingField: {fileID: 0}
-  <ProjectileDamage>k__BackingField: 0
+  <CustomBehaviorPrefab>k__BackingField: {fileID: 0}
+  <BaseDamage>k__BackingField: 3
+  <ManaCost>k__BackingField: 8
+  <BaseDistance>k__BackingField: 8
+  <BaseSpeed>k__BackingField: 12
+  <CastCooldown>k__BackingField: 0.5
+  <RotationSpeedDegreesPerSecond>k__BackingField: 0
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField:
   - Parameter: {fileID: 11400000, guid: ae01eae50d342400397770a20292becd, type: 2}
     Value: 1.2
-  <DamageAmount>k__BackingField: 12

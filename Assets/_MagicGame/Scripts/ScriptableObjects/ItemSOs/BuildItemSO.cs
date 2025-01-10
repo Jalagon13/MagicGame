@@ -12,7 +12,7 @@ public class BuildItemSO : ItemSO
 	[SerializeField] private TileSO _floorTile;
 	// [SerializeField] private TilemapObject _wallTm, _floorTm, _spawnFloorTilemap;
 	
-	public override void ExecutePrimaryAction(InventoryItem inventoryItem)
+	public override float ExecutePrimaryAction(InventoryItem inventoryItem)
 	{
 		var pos = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
 		
@@ -28,9 +28,11 @@ public class BuildItemSO : ItemSO
 			
 			MMSoundManagerSoundPlayEvent.Trigger(_wallTile.PlaceSound, MMSoundManager.MMSoundManagerTracks.Sfx, default, pitch:UnityEngine.Random.Range(0.9f, 1.1f));
 		}
+		
+		return _baseActionCooldown;
 	}
 
-	public override void ExecuteSecondaryAction(InventoryItem inventoryItem)
+	public override float ExecuteSecondaryAction(InventoryItem inventoryItem)
 	{
 		var pos = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
 		
@@ -46,6 +48,8 @@ public class BuildItemSO : ItemSO
 			
 			MMSoundManagerSoundPlayEvent.Trigger(_floorTile.PlaceSound, MMSoundManager.MMSoundManagerTracks.Sfx, default, pitch:UnityEngine.Random.Range(0.9f, 1.1f));
 		}
+		
+		return _baseActionCooldown;
 	}
 
 	public override string GetDescription()

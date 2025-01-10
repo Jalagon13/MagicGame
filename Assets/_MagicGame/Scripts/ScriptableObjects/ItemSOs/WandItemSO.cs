@@ -34,14 +34,14 @@ public class WandItemSO : ItemSO
 	public List<RangeData> RangeUpgrades = new();
 	
 
-	public override void ExecutePrimaryAction(InventoryItem inventoryItem)
+	public override float ExecutePrimaryAction(InventoryItem inventoryItem)
 	{
-		
+		return _baseActionCooldown;
 	}
 
-	public override void ExecuteSecondaryAction(InventoryItem inventoryItem)
+	public override float ExecuteSecondaryAction(InventoryItem inventoryItem)
 	{
-		
+		return _baseActionCooldown;
 	}
 	
 	public override string GetDescription()
