@@ -113,10 +113,6 @@ public class SwingController : NetworkBehaviour
 			{
 				_swingItemSO = _focusItemSO as MeleeItemSO;
 			}
-			else if(_focusItemSO is ToolItemSO)
-			{
-				_swingItemSO = _focusItemSO as ToolItemSO;
-			}
 			else
 			{
 				_swingItemSO = null;

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Torch
   <UiDisplay>k__BackingField: {fileID: -1599595118, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <CustomBehaviorPrefab>k__BackingField: {fileID: 0}
+  <CustomBehaviorPrefab>k__BackingField: {fileID: 7396404079601565081, guid: 0ca268e2e87dd4e738bdac060a63ad9e, type: 3}
   <BaseDamage>k__BackingField: 3
   <ManaCost>k__BackingField: 3
   <BaseDistance>k__BackingField: 6

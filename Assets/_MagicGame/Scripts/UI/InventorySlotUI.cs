@@ -47,20 +47,23 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 			_itemImage.color = new Vector4(1, 1, 1, 1);
 			_itemImage.sprite = item.Item.UiDisplay;
 			
-			if(item is SimpleWandInventoryItem simpleWandInventoryItem)
-			{
-				ItemSO wandFocusItemSO = simpleWandInventoryItem.ProjectileItemSO;
-				if(wandFocusItemSO != null)
-				{
-					_wandFocusImage.color = new Vector4(1, 1, 1, 1);
-					_wandFocusImage.sprite = wandFocusItemSO.UiDisplay;
-				}
-				else
-				{
-					_wandFocusImage.color = new Vector4(1, 1, 1, 0);
-					_wandFocusImage.sprite = null;
-				}
-			}
+			// if(item is SimpleWandInventoryItem simpleWandInventoryItem)
+			// {
+			// 	ItemSO wandFocusItemSO = simpleWandInventoryItem.ProjectileItemSO;
+			// 	if(wandFocusItemSO != null)
+			// 	{
+			// 		_wandFocusImage.color = new Vector4(1, 1, 1, 1);
+			// 		_wandFocusImage.sprite = wandFocusItemSO.UiDisplay;
+			// 	}
+			// 	else
+			// 	{
+			// 		_wandFocusImage.color = new Vector4(1, 1, 1, 0);
+			// 		_wandFocusImage.sprite = null;
+			// 	}
+			// }
+			
+			_wandFocusImage.color = new Vector4(1, 1, 1, 0);
+			_wandFocusImage.sprite = null;
 		}
 		else
 		{

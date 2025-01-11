@@ -416,11 +416,9 @@ MonoBehaviour:
   _respawnTimerDuration: 2
   _wandProjectileSpawnPoint: {fileID: 2253758697660586598}
   _startingItems:
-  - Item: {fileID: 11400000, guid: 5e37f57a32d8f4830a5b43ea68933a9c, type: 2}
+  - Item: {fileID: 11400000, guid: f163862eaf2254f90b02b26267855a9c, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: 409efbd4e22624ac882995581adb1c37, type: 2}
-    Quantity: 1
-  - Item: {fileID: 11400000, guid: e6ad6f394500f465e91973545553777e, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
     Quantity: 1
