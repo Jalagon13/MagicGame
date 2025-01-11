@@ -8,15 +8,13 @@ public class InventoryModel
 {
 	public event Action<List<InventoryItem>> OnInventoryUpdate;
 	private List<InventoryItem> _inventoryItems = new();
-	private InventoryItem _mouseItem;
 	private int _slotAmount;
 
 	public List<InventoryItem> InventoryItems => _inventoryItems;
 
-	public InventoryModel(int slotAmount, InventoryItem mouseItem)
+	public InventoryModel(int slotAmount)
 	{
 		_slotAmount = slotAmount;
-		_mouseItem = mouseItem;
 
 		for (int i = 0; i < _slotAmount; ++i)
 		{

@@ -6,10 +6,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Melee Item", menuName = "Create Item/New Melee Item")]
 public class MeleeItemSO : ItemSO
 {	
-	public override float ExecutePrimaryAction(InventoryItem inventoryItem) { return _baseActionCooldown; }
-
-	public override float ExecuteSecondaryAction(InventoryItem inventoryItem) { return _baseActionCooldown; }
-
+	public override float ExecuteItemAction(InventoryItem inventoryItem)
+	{
+		return _baseActionCooldown;
+	}
+	
 	public override string GetDescription()
 	{
 		StringBuilder description = new();
@@ -38,4 +39,6 @@ public class MeleeItemSO : ItemSO
 	{
 		return new InventoryItem(this, quantity);
 	}
+
+	
 }

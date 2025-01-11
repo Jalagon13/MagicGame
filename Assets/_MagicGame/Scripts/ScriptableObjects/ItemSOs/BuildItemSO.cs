@@ -10,9 +10,8 @@ public class BuildItemSO : ItemSO
 {
 	[SerializeField] private TileSO _wallTile;
 	[SerializeField] private TileSO _floorTile;
-	// [SerializeField] private TilemapObject _wallTm, _floorTm, _spawnFloorTilemap;
 	
-	public override float ExecutePrimaryAction(InventoryItem inventoryItem)
+	public override float ExecuteItemAction(InventoryItem inventoryItem)
 	{
 		var pos = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
 		
@@ -27,26 +26,6 @@ public class BuildItemSO : ItemSO
 			InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 			
 			MMSoundManagerSoundPlayEvent.Trigger(_wallTile.PlaceSound, MMSoundManager.MMSoundManagerTracks.Sfx, default, pitch:UnityEngine.Random.Range(0.9f, 1.1f));
-		}
-		
-		return _baseActionCooldown;
-	}
-
-	public override float ExecuteSecondaryAction(InventoryItem inventoryItem)
-	{
-		var pos = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
-		
-		Tilemap floorTilemap = Environment.Instance.GetFloorTilemapData().GetTilemap();
-		
-		bool floorTmHasTile = floorTilemap.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition));
-		
-		if(!floorTmHasTile && ActionManager.Instance.PlayerInRangeOfMouse())
-		{
-			Environment.Instance.PlaceTile(pos, _floorTile, TileType.Floor, Player.LocalClientInstance.GetPlayerEnvironment());
-			
-			InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
-			
-			MMSoundManagerSoundPlayEvent.Trigger(_floorTile.PlaceSound, MMSoundManager.MMSoundManagerTracks.Sfx, default, pitch:UnityEngine.Random.Range(0.9f, 1.1f));
 		}
 		
 		return _baseActionCooldown;

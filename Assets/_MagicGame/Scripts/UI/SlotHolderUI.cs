@@ -10,8 +10,10 @@ public class SlotHolderUI : MonoBehaviour
 	[SerializeField] private InventorySlotUI _inventorySlotUIPrefab;
 	[SerializeField] private Transform _hotbarSlotsUITransform;
 	[SerializeField] private Transform _inventorySlotsUITransform;
+	[SerializeField] private Transform _offHandSlotUITransform;
 	[SerializeField] private AudioClip _inventoryEnabledClip;
 	[SerializeField] private AudioClip _inventoryDisabledClip;
+	
 	private List<InventorySlotUI> _inventorySlotUIList = new();
 	
 	private void Start()
@@ -51,9 +53,13 @@ public class SlotHolderUI : MonoBehaviour
 			{
 				InitializeSlot(_hotbarSlotsUITransform, i);
 			}
-			else
+			else if (i < inventoryItems.Count - 1)
 			{
 				InitializeSlot(_inventorySlotsUITransform, i);
+			}
+			else if(i == inventoryItems.Count - 1) // If last slot, initialize it as the off hand slot
+			{
+				InitializeSlot(_offHandSlotUITransform, i);
 			}
 		}
 	}

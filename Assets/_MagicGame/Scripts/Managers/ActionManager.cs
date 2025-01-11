@@ -13,17 +13,13 @@ public class ActionManager : MonoBehaviour
 	public static ActionManager Instance { get; private set; }
 	
 	private float _actionRange = 3f;
-	
-	private Timer _primaryActionTimer, _secondaryActionTimer, _miningCooldownTimer;
+	private Timer _primaryActionTimer, _secondaryActionTimer;
 	private ItemSO _focusItemSO;
-	private WandInventoryItem _wandItem;
-	private ResourceObject _selectedResourceObject;
 	
 	private void Awake()
 	{
 		Instance = this;
 		
-		_miningCooldownTimer = new Timer(0);
 		_primaryActionTimer = new Timer(0.25f);
 		_secondaryActionTimer = new Timer(0.25f);
 	}
@@ -40,13 +36,6 @@ public class ActionManager : MonoBehaviour
 		if (!CanPerformUpdate()) return;
 
 		UpdateTimers(Time.deltaTime);
-
-		if (ShouldHandleMining())
-		{
-			HandleMiningActions();
-			return;
-		}
-
 		HandleItemActions();
 	}
 
@@ -57,154 +46,24 @@ public class ActionManager : MonoBehaviour
 
 	private void UpdateTimers(float deltaTime)
 	{
-		_miningCooldownTimer.Tick(deltaTime);
 		_primaryActionTimer.Tick(deltaTime);
 		_secondaryActionTimer.Tick(deltaTime);
-	}
-
-	private bool ShouldHandleMining()
-	{
-		return _focusItemSO is WandItemSO && _miningCooldownTimer.RemainingSeconds <= 0 && PlayerInRangeOfMouse();
-	}
-
-	private void HandleMiningActions()
-	{
-		_wandItem = HotbarManager.Instance.GetFocusInventoryItem() as WandInventoryItem;
-
-		if (GameInput.Instance.GetPrimaryHeldDown())
-		{
-			PerformPrimaryMiningAction();
-		}
-		else if (GameInput.Instance.GetSecondaryHeldDown())
-		{
-			PerformSecondaryMiningAction();
-		}
-	}
-
-	private void PerformPrimaryMiningAction()
-	{
-		bool mouseOverWall = GetMouseOverWall();
-		bool resourceSelected = GetResourceSelected();
-
-		if (!mouseOverWall && !resourceSelected) return;
-
-		WandAttribute wandAttribute = GetHarvestType(false, mouseOverWall, resourceSelected);
-		AttributeData hitData = _wandItem.GetAttributeData(wandAttribute);
-
-		GameManager.Instance.SpawnMiningProjectile(
-			Player.LocalClientInstance.GetWandProjectileSpawnPoint().position,
-			MouseWorldPosition,
-			hitData.MiningPower,
-			false, mouseOverWall, resourceSelected);
-
-		CalcMiningSpeed(wandAttribute);
-	}
-
-	private void PerformSecondaryMiningAction()
-	{
-		bool mouseOverFloor = GetMouseOverFloor();
-
-		if (!mouseOverFloor) return;
-
-		WandAttribute wandAttribute = GetHarvestType(true, false, false);
-		AttributeData hitData = _wandItem.GetAttributeData(wandAttribute);
-
-		GameManager.Instance.SpawnMiningProjectile(
-			Player.LocalClientInstance.GetWandProjectileSpawnPoint().position,
-			MouseWorldPosition,
-			hitData.MiningPower,
-			true, false, false);
-
-		CalcMiningSpeed(wandAttribute);
 	}
 
 	private void HandleItemActions()
 	{
 		if (GameInput.Instance.GetPrimaryHeldDown() && _primaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetSecondaryHeldDown())
 		{
-			_primaryActionTimer.RemainingSeconds = _focusItemSO.ExecutePrimaryAction(HotbarManager.Instance.GetFocusInventoryItem());
+			_primaryActionTimer.RemainingSeconds = _focusItemSO.ExecuteItemAction(HotbarManager.Instance.GetFocusInventoryItem());
 		}
 		else if (GameInput.Instance.GetSecondaryHeldDown() && _secondaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetPrimaryHeldDown())
 		{
-			_secondaryActionTimer.RemainingSeconds = _focusItemSO.ExecuteSecondaryAction(HotbarManager.Instance.GetFocusInventoryItem());
+			_secondaryActionTimer.RemainingSeconds = _focusItemSO.ExecuteItemAction(HotbarManager.Instance.GetFocusInventoryItem());
 		}
-	}
-
-	private WandAttribute GetHarvestType(bool mouseOverFloor, bool mouseOverWall, bool resourceSelected)
-	{
-		Vector3Int tilePosMouseIsHovering = Vector3Int.FloorToInt(MouseWorldPosition);
-		Vector2Int tilePos = new (tilePosMouseIsHovering.x, tilePosMouseIsHovering.y);
-		
-		if(mouseOverFloor)
-		{
-			return Environment.Instance.GetFloorTilemapData().GetHarvestType(tilePos);
-		}
-		else if(mouseOverWall)
-		{
-			return Environment.Instance.GetWallTilemapData().GetHarvestType(tilePos);
-		}
-		else if(resourceSelected)
-		{
-			return _selectedResourceObject.GetHarvestType();
-		}
-		
-		Debug.LogError($"Error, could not find a harvest type for mining");
-		return default;
-	}
-
-	
-	
-	private void CalcMiningSpeed(WandAttribute wandAttribute)
-	{
-		AttributeData upgradeData = _wandItem.GetAttributeData(wandAttribute);
-		float wandSpeedOfAttribute = upgradeData.MiningSpeed;
-		float finalSpeed = wandSpeedOfAttribute / 60f;
-		
-		// Implement future buffs or speed prefex modifiers here.
-		_miningCooldownTimer.RemainingSeconds = finalSpeed;
-	}
-	
-	private bool GetMouseOverFloor()
-	{
-		Tilemap floorTilemap = Environment.Instance.GetFloorTilemapData().GetTilemap();
-		Vector3Int tilePosition = Vector3Int.FloorToInt(MouseWorldPosition);
-		
-		return floorTilemap.HasTile(tilePosition);
-	}
-	
-	private bool GetMouseOverWall()
-	{
-		Tilemap wallTilemap = Environment.Instance.GetWallTilemapData().GetTilemap();
-		Vector3Int tilePosition = Vector3Int.FloorToInt(MouseWorldPosition);
-		
-		return wallTilemap.HasTile(tilePosition);
-	}
-
-	private bool GetResourceSelected()
-	{
-		Collider2D[] colliders = Physics2D.OverlapPointAll(MouseWorldPosition);
-		List<ResourceObject> resourceObjectsFound = new();
-
-		if (colliders.Count() > 0)
-		{
-			foreach (Collider2D c in colliders)
-			{
-				if (c.TryGetComponent(out ResourceObject resourceObject))
-				{
-					resourceObjectsFound.Add(resourceObject);
-				}
-			}
-		}
-
-		_selectedResourceObject = resourceObjectsFound.Count > 0 ? resourceObjectsFound.Last() : null;
-		
-		return _selectedResourceObject != null;
 	}
 
 	private void HotbarManager_OnFocusItemSet(object sender, HotbarManager.OnFocusItemSetEventArgs e)
 	{
-		// _focusItemSO = GameManager.Instance.GetItemSOFromIndex(e.FocusItemIndex);
-		
 		if(e.FocusItemSlotIndex != -1)
 		{
 			_focusItemSO = InventoryManager.Instance.GetInventoryModel().InventoryItems[e.FocusItemSlotIndex].Item;

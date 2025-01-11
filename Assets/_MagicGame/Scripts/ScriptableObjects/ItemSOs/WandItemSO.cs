@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine.Tilemaps;
+using System.Linq;
 
 public enum WandAttribute 
 {
@@ -33,17 +35,119 @@ public class WandItemSO : ItemSO
 	[Title("Range Upgrades", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	public List<RangeData> RangeUpgrades = new();
 	
-
-	public override float ExecutePrimaryAction(InventoryItem inventoryItem)
+	private ResourceObject _resourceObjectSelected;
+	private WandInventoryItem _wandInventoryItem;
+	
+	public override float ExecuteItemAction(InventoryItem inventoryItem)
 	{
-		return _baseActionCooldown;
-	}
+		_wandInventoryItem = inventoryItem as WandInventoryItem;
+	
+		bool mouseOverWall = GetMouseOverWall();
+		bool resourceSelected = GetResourceSelected();
 
-	public override float ExecuteSecondaryAction(InventoryItem inventoryItem)
-	{
+		if (!mouseOverWall && !resourceSelected) return _baseActionCooldown;
+
+		WandAttribute wandAttribute = GetHarvestType(false, mouseOverWall, resourceSelected);
+		AttributeData hitData = _wandInventoryItem.GetAttributeData(wandAttribute);
+
+		GameManager.Instance.SpawnMiningProjectile(
+			Player.LocalClientInstance.GetWandProjectileSpawnPoint().position,
+			ActionManager.MouseWorldPosition,
+			hitData.MiningPower,
+			false, mouseOverWall, resourceSelected);
+
+		CalcMiningSpeed(wandAttribute);
+	
 		return _baseActionCooldown;
 	}
 	
+	private float CalcMiningSpeed(WandAttribute wandAttribute)
+	{
+		AttributeData upgradeData = _wandInventoryItem.GetAttributeData(wandAttribute);
+		float wandSpeedOfAttribute = upgradeData.MiningSpeed;
+		float finalSpeed = wandSpeedOfAttribute / 60f;
+		
+		// Implement future buffs or speed prefex modifiers here.
+		return finalSpeed;
+	}
+	
+	private WandAttribute GetHarvestType(bool mouseOverFloor, bool mouseOverWall, bool resourceSelected)
+	{
+		Vector3Int tilePosMouseIsHovering = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
+		Vector2Int tilePos = new (tilePosMouseIsHovering.x, tilePosMouseIsHovering.y);
+		
+		if(mouseOverFloor)
+		{
+			return Environment.Instance.GetFloorTilemapData().GetHarvestType(tilePos);
+		}
+		else if(mouseOverWall)
+		{
+			return Environment.Instance.GetWallTilemapData().GetHarvestType(tilePos);
+		}
+		else if(resourceSelected)
+		{
+			return _resourceObjectSelected.GetHarvestType();
+		}
+		
+		Debug.LogError($"Error, could not find a harvest type for mining");
+		return default;
+	}
+	
+	private bool GetResourceSelected()
+	{
+		Collider2D[] colliders = Physics2D.OverlapPointAll(ActionManager.MouseWorldPosition);
+		List<ResourceObject> resourceObjectsFound = new();
+
+		if (colliders.Count() > 0)
+		{
+			foreach (Collider2D c in colliders)
+			{
+				if (c.TryGetComponent(out ResourceObject resourceObject))
+				{
+					resourceObjectsFound.Add(resourceObject);
+				}
+			}
+		}
+
+		_resourceObjectSelected = resourceObjectsFound.Count > 0 ? resourceObjectsFound.Last() : null;
+		
+		return _resourceObjectSelected != null;
+	}
+	
+	private bool GetMouseOverWall()
+	{
+		Tilemap wallTilemap = Environment.Instance.GetWallTilemapData().GetTilemap();
+		Vector3Int tilePosition = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
+		
+		return wallTilemap.HasTile(tilePosition);
+	}
+	
+	// private void PerformSecondaryMiningAction()
+	// {
+	// 	bool mouseOverFloor = GetMouseOverFloor();
+
+	// 	if (!mouseOverFloor) return;
+
+	// 	WandAttribute wandAttribute = GetHarvestType(true, false, false);
+	// 	AttributeData hitData = _wandItem.GetAttributeData(wandAttribute);
+
+	// 	GameManager.Instance.SpawnMiningProjectile(
+	// 		Player.LocalClientInstance.GetWandProjectileSpawnPoint().position,
+	// 		MouseWorldPosition,
+	// 		hitData.MiningPower,
+	// 		true, false, false);
+
+	// 	CalcMiningSpeed(wandAttribute);
+	// }
+	
+	// private bool GetMouseOverFloor()
+	// {
+	// 	Tilemap floorTilemap = Environment.Instance.GetFloorTilemapData().GetTilemap();
+	// 	Vector3Int tilePosition = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
+		
+	// 	return floorTilemap.HasTile(tilePosition);
+	// }
+
 	public override string GetDescription()
 	{
 		return Description;

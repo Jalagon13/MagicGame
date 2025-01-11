@@ -13,7 +13,7 @@ public class DeployItemSO : ItemSO
 	[SerializeField] private WorldObject _deployObjectPrefab;
 	[SerializeField] private AudioClip _deploySound;
 	
-	public override float ExecutePrimaryAction(InventoryItem inventoryItem)
+	public override float ExecuteItemAction(InventoryItem inventoryItem)
 	{
 		Vector2 pos = ActionManager.MouseWorldPosition;
 		
@@ -28,11 +28,6 @@ public class DeployItemSO : ItemSO
 			MMSoundManagerSoundPlayEvent.Trigger(_deploySound, MMSoundManager.MMSoundManagerTracks.Sfx, default);
 		}
 		
-		return _baseActionCooldown;
-	}
-
-	public override float ExecuteSecondaryAction(InventoryItem inventoryItem)
-	{
 		return _baseActionCooldown;
 	}
 	

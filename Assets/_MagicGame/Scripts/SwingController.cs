@@ -217,7 +217,7 @@ public class SwingController : NetworkBehaviour
 	private void UpdateMeleeData()
 	{
 		_currentSwingDuration = _swingItemSO != null ? _swingItemSO.ExtractParameterValue(GameManager.Instance.GetItemParameterDataBaseSO().SwingSpeedParameter) : _defaultSwingSpeed;
-		_meleeCollider.Damage = _swingItemSO != null ? _swingItemSO.BaseDamage : 0;
+		_meleeCollider.Damage = _swingItemSO != null ? 5 : 0; // NTFS FIX THIS 
 		
 		if(_meleeObjectSprite != null)
 		{

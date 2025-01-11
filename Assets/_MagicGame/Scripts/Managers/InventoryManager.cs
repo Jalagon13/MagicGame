@@ -40,7 +40,7 @@ public class InventoryManager : MonoBehaviour
 		Instance = this;
 		
 		_mouseItemModel = new();
-		_inventoryModel = new(_slotAmount, _mouseItemModel.MouseInventoryItem);
+		_inventoryModel = new(_slotAmount);
 		_inventoryModel.OnInventoryUpdate += InventoryModel_OnInventoryUpdate;
 	}
 	
