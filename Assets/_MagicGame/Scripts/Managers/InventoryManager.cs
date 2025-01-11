@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using MoreMountains.Feedbacks;
 using MoreMountains.Tools;
 using UnityEngine;
@@ -73,6 +74,18 @@ public class InventoryManager : MonoBehaviour
 			_gaveItemThisFrame = true;
 			_gotItemThisFrame = false;
 		}
+	}
+	
+	public bool MainHandItemExists(out InventoryItem mainHandInventoryItem)
+	{
+		mainHandInventoryItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
+		return _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Item != null;
+	}
+	
+	public bool OffHandItemExists(out InventoryItem offHandInventoryItem)
+	{
+		offHandInventoryItem = _inventoryModel.InventoryItems.Last();
+		return _inventoryModel.InventoryItems.Last().Item != null;
 	}
 	
 	private void OnProjectileShot_UpdateInventory(object sender, EventArgs e)

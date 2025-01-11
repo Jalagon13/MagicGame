@@ -41,12 +41,12 @@ public class WandItemSO : ItemSO
 	public override float ExecuteItemAction(InventoryItem inventoryItem)
 	{
 		_wandInventoryItem = inventoryItem as WandInventoryItem;
-	
+		Debug.Log("In here?");
 		bool mouseOverWall = GetMouseOverWall();
 		bool resourceSelected = GetResourceSelected();
 
 		if (!mouseOverWall && !resourceSelected) return _baseActionCooldown;
-
+		Debug.Log("How abou there?");
 		WandAttribute wandAttribute = GetHarvestType(false, mouseOverWall, resourceSelected);
 		AttributeData hitData = _wandInventoryItem.GetAttributeData(wandAttribute);
 
@@ -55,10 +55,8 @@ public class WandItemSO : ItemSO
 			ActionManager.MouseWorldPosition,
 			hitData.MiningPower,
 			false, mouseOverWall, resourceSelected);
-
-		CalcMiningSpeed(wandAttribute);
-	
-		return _baseActionCooldown;
+			
+		return CalcMiningSpeed(wandAttribute);
 	}
 	
 	private float CalcMiningSpeed(WandAttribute wandAttribute)

@@ -39,6 +39,4 @@ public class MeleeItemSO : ItemSO
 	{
 		return new InventoryItem(this, quantity);
 	}
-
-	
 }

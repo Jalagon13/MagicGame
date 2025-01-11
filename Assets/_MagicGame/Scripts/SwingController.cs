@@ -38,11 +38,10 @@ public class SwingController : NetworkBehaviour
 	[FoldoutGroup("Animation Clips")]
 	[SerializeField] private AnimationClip _swingIdleClip;
 	
-	private Animator _animator;
-	private Timer _swingTimer;
+	private Animator _mainHandAnimator;
 	private ItemSO _swingItemSO;
 	private ItemSO _focusItemSO;
-	private bool _swingPerfoming;
+	private bool _performingMainHandSwing, _performingOffHandSwing;
 	private float _defaultSwingSpeed = 1, _currentSwingDuration;
 	private Player _thisPlayer;
 	
@@ -52,9 +51,8 @@ public class SwingController : NetworkBehaviour
 	{
 		Instance = this;
 		
-		_animator = GetComponent<Animator>();
-		_swingTimer = new Timer(0.1f);
-		_animator.speed = _defaultSwingSpeed;
+		_mainHandAnimator = GetComponent<Animator>();
+		_mainHandAnimator.speed = _defaultSwingSpeed;
 	}
 
 	private void Start()
@@ -70,11 +68,9 @@ public class SwingController : NetworkBehaviour
 	{
 		if(!IsOwner || Player.LocalClientInstance.IsDead()) return;
 	
-		_swingTimer.Tick(Time.deltaTime);
-	
-		if(_swingTimer.RemainingSeconds <= 0 && _swingItemSO != null && !Pointer.IsOverUI() && GameInput.Instance.GetPrimaryHeldDown() && !_swingPerfoming && _animator.GetCurrentAnimatorStateInfo(0).IsName(_swingIdleClip.name))
+		if(CanSwingMainHand())
 		{
-			_swingPerfoming = true;
+			_performingMainHandSwing = true;
 		
 			float angle = CalculateAngle();
 
@@ -82,24 +78,73 @@ public class SwingController : NetworkBehaviour
 			if ((angle < 45 && angle > 0) || (angle < 359.999 && angle > 315))
 			{
 				// East
-				AnimStateManager.ChangeAnimationState(_animator, _swingEastClip);
+				AnimStateManager.ChangeAnimationState(_mainHandAnimator, _swingEastClip);
 			}
 			else if (angle < 135 && angle > 45)
 			{
 				// North
-				AnimStateManager.ChangeAnimationState(_animator, _swingNorthClip);
+				AnimStateManager.ChangeAnimationState(_mainHandAnimator, _swingNorthClip);
 			}
 			else if (angle < 225 && angle > 135)
 			{
 				// West
-				AnimStateManager.ChangeAnimationState(_animator, _swingWestClip);
+				AnimStateManager.ChangeAnimationState(_mainHandAnimator, _swingWestClip);
 			}
 			else if (angle < 315 && angle > 225)
 			{
 				// South
-				AnimStateManager.ChangeAnimationState(_animator, _swingSouthClip);
+				AnimStateManager.ChangeAnimationState(_mainHandAnimator, _swingSouthClip);
 			}
 		}
+		
+		if(CanSwingOffHand())
+		{
+			_performingOffHandSwing = true;
+		
+			float angle = CalculateAngle();
+
+			// Changes pivot point position based on rotation.
+			if ((angle < 45 && angle > 0) || (angle < 359.999 && angle > 315))
+			{
+				// East
+				AnimStateManager.ChangeAnimationState(_mainHandAnimator, _swingEastClip);
+			}
+			else if (angle < 135 && angle > 45)
+			{
+				// North
+				AnimStateManager.ChangeAnimationState(_mainHandAnimator, _swingNorthClip);
+			}
+			else if (angle < 225 && angle > 135)
+			{
+				// West
+				AnimStateManager.ChangeAnimationState(_mainHandAnimator, _swingWestClip);
+			}
+			else if (angle < 315 && angle > 225)
+			{
+				// South
+				AnimStateManager.ChangeAnimationState(_mainHandAnimator, _swingSouthClip);
+			}
+		}
+	}
+	
+	private bool CanSwingMainHand()
+	{
+		return InventoryManager.Instance.MainHandItemExists(out InventoryItem mainHandInventoryItem) &&
+		mainHandInventoryItem.Item is MeleeItemSO &&
+		GameInput.Instance.GetPrimaryHeldDown() && 
+		!Pointer.IsOverUI() && 
+		!_performingMainHandSwing && 
+		_mainHandAnimator.GetCurrentAnimatorStateInfo(0).IsName(_swingIdleClip.name);
+	}
+	
+	private bool CanSwingOffHand()
+	{
+		return InventoryManager.Instance.OffHandItemExists(out InventoryItem offHandInventoryItem) &&
+		offHandInventoryItem.Item is MeleeItemSO &&
+		GameInput.Instance.GetSecondaryHeldDown() && 
+		!Pointer.IsOverUI() && 
+		!_performingOffHandSwing && 
+		_mainHandAnimator.GetCurrentAnimatorStateInfo(0).IsName(_swingIdleClip.name);
 	}
 	
 	private void FocusItemIndexNetworkVariable_OnValueChanged(int previousValue, int newValue)
@@ -123,7 +168,7 @@ public class SwingController : NetworkBehaviour
 			_swingItemSO = null;
 		}
 		
-		if(!_swingPerfoming)
+		if(!_performingMainHandSwing)
 		{
 			// Update melee data if melee item found, else reset it to default
 			UpdateMeleeData();
@@ -132,21 +177,19 @@ public class SwingController : NetworkBehaviour
 	
 	public void OnSwingStartAnimationEvent() // Connected to first frame of animation
 	{
-		_swingPerfoming = true;
-	
-		if(_animator.GetCurrentAnimatorStateInfo(0).IsName(_swingNorthClip.name))
+		if(_mainHandAnimator.GetCurrentAnimatorStateInfo(0).IsName(_swingNorthClip.name))
 		{
 			SwingDirection = CardinalDirection.North;
 		}
-		else if(_animator.GetCurrentAnimatorStateInfo(0).IsName(_swingSouthClip.name))
+		else if(_mainHandAnimator.GetCurrentAnimatorStateInfo(0).IsName(_swingSouthClip.name))
 		{
 			SwingDirection = CardinalDirection.South;
 		}
-		else if(_animator.GetCurrentAnimatorStateInfo(0).IsName(_swingEastClip.name))
+		else if(_mainHandAnimator.GetCurrentAnimatorStateInfo(0).IsName(_swingEastClip.name))
 		{
 			SwingDirection = CardinalDirection.East;
 		}
-		else if(_animator.GetCurrentAnimatorStateInfo(0).IsName(_swingWestClip.name))
+		else if(_mainHandAnimator.GetCurrentAnimatorStateInfo(0).IsName(_swingWestClip.name))
 		{
 			SwingDirection = CardinalDirection.West;
 		}
@@ -166,22 +209,22 @@ public class SwingController : NetworkBehaviour
 	
 	public void OnSwingEndAnimationEvent() // Connected to last frame of animation
 	{
-		_swingPerfoming = false;
-		_swingTimer.RemainingSeconds = 0.1f;
+		_performingMainHandSwing = false;
+		// _swingTimer.RemainingSeconds = 0.1f;
 		
-		if(_animator.GetCurrentAnimatorStateInfo(0).IsName(_swingNorthClip.name))
+		if(_mainHandAnimator.GetCurrentAnimatorStateInfo(0).IsName(_swingNorthClip.name))
 		{
 			SwingDirection = CardinalDirection.North;
 		}
-		else if(_animator.GetCurrentAnimatorStateInfo(0).IsName(_swingSouthClip.name))
+		else if(_mainHandAnimator.GetCurrentAnimatorStateInfo(0).IsName(_swingSouthClip.name))
 		{
 			SwingDirection = CardinalDirection.South;
 		}
-		else if(_animator.GetCurrentAnimatorStateInfo(0).IsName(_swingEastClip.name))
+		else if(_mainHandAnimator.GetCurrentAnimatorStateInfo(0).IsName(_swingEastClip.name))
 		{
 			SwingDirection = CardinalDirection.East;
 		}
-		else if(_animator.GetCurrentAnimatorStateInfo(0).IsName(_swingWestClip.name))
+		else if(_mainHandAnimator.GetCurrentAnimatorStateInfo(0).IsName(_swingWestClip.name))
 		{
 			SwingDirection = CardinalDirection.West;
 		}
@@ -189,7 +232,7 @@ public class SwingController : NetworkBehaviour
 		if(IsOwner)
 		{
 			_thisPlayer.SetIsSwingOnGoingOn(false);
-			AnimStateManager.ChangeAnimationState(_animator, _swingIdleClip);
+			AnimStateManager.ChangeAnimationState(_mainHandAnimator, _swingIdleClip);
 		}
 		
 		OnSwingEnd?.Invoke(this, new SwingEventArgs
@@ -224,8 +267,8 @@ public class SwingController : NetworkBehaviour
 			_meleeObjectSprite.sprite = _swingItemSO!= null ? _swingItemSO.UiDisplay : null;
 		}
 		
-		if(_animator == null) _animator = GetComponent<Animator>();
-		_animator.speed = _swingItemSO != null ? _currentSwingDuration : _defaultSwingSpeed;
+		if(_mainHandAnimator == null) _mainHandAnimator = GetComponent<Animator>();
+		_mainHandAnimator.speed = _swingItemSO != null ? _currentSwingDuration : _defaultSwingSpeed;
 	}
 	
 	public override void OnDestroy()

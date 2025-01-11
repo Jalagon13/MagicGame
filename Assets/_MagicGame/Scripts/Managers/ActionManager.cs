@@ -8,9 +8,8 @@ using UnityEngine.Tilemaps;
 
 public class ActionManager : MonoBehaviour
 {
-	public static Vector2 MouseWorldPosition;
-
 	public static ActionManager Instance { get; private set; }
+	public static Vector2 MouseWorldPosition;
 	
 	private float _actionRange = 3f;
 	private Timer _primaryActionTimer, _secondaryActionTimer;
@@ -36,12 +35,12 @@ public class ActionManager : MonoBehaviour
 		if (!CanPerformUpdate()) return;
 
 		UpdateTimers(Time.deltaTime);
-		HandleItemActions();
+		HandleItemActionExecutions();
 	}
 
 	private bool CanPerformUpdate()
 	{
-		return Player.LocalClientInstance != null && !Player.LocalClientInstance.IsDead() && _focusItemSO != null && !Pointer.IsOverUI();
+		return Player.LocalClientInstance != null && !Player.LocalClientInstance.IsDead() && !Pointer.IsOverUI();
 	}
 
 	private void UpdateTimers(float deltaTime)
@@ -50,30 +49,22 @@ public class ActionManager : MonoBehaviour
 		_secondaryActionTimer.Tick(deltaTime);
 	}
 
-	private void HandleItemActions()
+	private void HandleItemActionExecutions()
 	{
-		if (GameInput.Instance.GetPrimaryHeldDown() && _primaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetSecondaryHeldDown())
+		if (GameInput.Instance.GetPrimaryHeldDown() && _primaryActionTimer.RemainingSeconds <= 0 && InventoryManager.Instance.MainHandItemExists(out InventoryItem mainHandInventoryItem))
 		{
-			_primaryActionTimer.RemainingSeconds = _focusItemSO.ExecuteItemAction(HotbarManager.Instance.GetFocusInventoryItem());
+			_primaryActionTimer.RemainingSeconds = mainHandInventoryItem.Item.ExecuteItemAction(mainHandInventoryItem);
 		}
-		else if (GameInput.Instance.GetSecondaryHeldDown() && _secondaryActionTimer.RemainingSeconds <= 0 && !GameInput.Instance.GetPrimaryHeldDown())
+		
+		if (GameInput.Instance.GetSecondaryHeldDown() && _secondaryActionTimer.RemainingSeconds <= 0 && InventoryManager.Instance.OffHandItemExists(out InventoryItem offHandInventoryItem))
 		{
-			_secondaryActionTimer.RemainingSeconds = _focusItemSO.ExecuteItemAction(HotbarManager.Instance.GetFocusInventoryItem());
+			Debug.Log($"OffHand Item Executing Action for {offHandInventoryItem.Item.Name}");
+			_secondaryActionTimer.RemainingSeconds = offHandInventoryItem.Item.ExecuteItemAction(offHandInventoryItem);
 		}
 	}
 
 	private void HotbarManager_OnFocusItemSet(object sender, HotbarManager.OnFocusItemSetEventArgs e)
 	{
-		if(e.FocusItemSlotIndex != -1)
-		{
-			_focusItemSO = InventoryManager.Instance.GetInventoryModel().InventoryItems[e.FocusItemSlotIndex].Item;
-		}
-		else
-		{
-			_focusItemSO = InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item;
-		}
-		
-		
 		if(_focusItemSO != null)
 		{
 			float range = HotbarManager.Instance.GetFocusInventoryItem() is WandInventoryItem wandItem ? wandItem.GetRangeValue() : _focusItemSO.ExtractParameterValue(GameManager.Instance.GetItemParameterDataBaseSO().ClickDistanceParmeter);
