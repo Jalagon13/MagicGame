@@ -11,11 +11,12 @@ public class InventoryManager : MonoBehaviour
 {
 	public static InventoryManager Instance { get; private set; }
 	public static int HOTBAR_SLOTS_AMOUNT = 9;
-
-	public event EventHandler<OnMouseItemUpdatedEventArgs> OnMouseItemUpdated;
-	public class OnMouseItemUpdatedEventArgs : EventArgs
+	
+	public event EventHandler<InventoryItemEventArgs> OnOffHandItemUpdated;
+	public event EventHandler<InventoryItemEventArgs> OnMouseItemUpdated;
+	public class InventoryItemEventArgs : EventArgs
 	{
-		public InventoryItem MouseItem;
+		public InventoryItem InventoryItem;
 	}
 
 	public event EventHandler<OnInventoryUpdatedEventArgs> OnInventoryUpdated;
@@ -95,9 +96,9 @@ public class InventoryManager : MonoBehaviour
 	
 	public void UpdateMouseItem()
 	{
-		OnMouseItemUpdated?.Invoke(this, new OnMouseItemUpdatedEventArgs
+		OnMouseItemUpdated?.Invoke(this, new InventoryItemEventArgs
 		{
-			MouseItem = _mouseItemModel.MouseInventoryItem
+			InventoryItem = _mouseItemModel.MouseInventoryItem
 		});
 	}
 	
@@ -237,6 +238,11 @@ public class InventoryManager : MonoBehaviour
 		OnInventoryUpdated?.Invoke(this, new OnInventoryUpdatedEventArgs
 		{
 			InventoryItems = items
+		});
+		
+		OnOffHandItemUpdated?.Invoke(this, new InventoryItemEventArgs
+		{
+			InventoryItem = items.Last()
 		});
 	}
 	

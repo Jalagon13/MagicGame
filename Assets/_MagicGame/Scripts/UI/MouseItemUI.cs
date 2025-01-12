@@ -22,9 +22,9 @@ public class MouseItemUI : MonoBehaviour
 		InventoryManager.Instance.OnMouseItemUpdated += InventoryManager_OnMouseItemUpdated;
 	}
 
-	private void InventoryManager_OnMouseItemUpdated(object sender, InventoryManager.OnMouseItemUpdatedEventArgs e)
+	private void InventoryManager_OnMouseItemUpdated(object sender, InventoryManager.InventoryItemEventArgs e)
 	{
-		UpdateView(e.MouseItem);
+		UpdateView(e.InventoryItem);
 	}
 
 	private void Update()

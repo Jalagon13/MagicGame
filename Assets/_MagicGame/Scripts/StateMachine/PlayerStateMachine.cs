@@ -23,9 +23,9 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		Moving
 	}
 	
-	[SerializeField] private SwingController _swingController;
-	[SerializeField] private CastArmPivot _castArmPivot;
-	[SerializeField] private CastArmController _castArmController;
+	// [SerializeField] private SwingController _swingController;
+	// [SerializeField] private CastArmPivot _castArmPivot;
+	// [SerializeField] private CastArmController _castArmController;
 	[Range(1f, 100f)]
 	[Tooltip("(Linear drag), higher this value, the more drag (knock back resistant) this entity experiences")]
 	[SerializeField] private int _knockbackResist = 20; 
@@ -71,10 +71,10 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	
 	public override void OnNetworkSpawn()
 	{
-		_swingController.OnSwingStart += SwingController_OnSwingStart;
-		_swingController.OnSwingEnd += SwingController_OnSwingEnd;
-		_castArmPivot.OnCastingArmDirectionChanged += CastArmPivot_OnCastingArmDirectionChanged;
-		_castArmController.OnHoldingWandEnd += CastArmController_OnHoldingWandEnd;
+		// _swingController.OnSwingStart += SwingController_OnSwingStart;
+		// _swingController.OnSwingEnd += SwingController_OnSwingEnd;
+		// _castArmPivot.OnCastingArmDirectionChanged += CastArmPivot_OnCastingArmDirectionChanged;
+		// _castArmController.OnHoldingWandEnd += CastArmController_OnHoldingWandEnd;
 		
 		if(IsOwner)
 		{
@@ -163,27 +163,27 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		}
 	}
 	
-	private void CastArmController_OnHoldingWandEnd(object sender, CastArmController.OnHoldingWandEndEventArgs e)
-	{
-		UpdateDirectionBasedOnMoveVector();
-		PlayAnimationBasedOnDirection(IsMoving ? MovingDirection : e.WandHeldDirection);
-	}
+	// private void CastArmController_OnHoldingWandEnd(object sender, CastArmController.OnHoldingWandEndEventArgs e)
+	// {
+	// 	UpdateDirectionBasedOnMoveVector();
+	// 	PlayAnimationBasedOnDirection(IsMoving ? MovingDirection : e.WandHeldDirection);
+	// }
 	
-	private void CastArmPivot_OnCastingArmDirectionChanged(object sender, CastArmPivot.OnCastingArmDirectionChangedEventArgs e)
-	{
-		PlayAnimationBasedOnDirection(e.Direction);
-	}
+	// private void CastArmPivot_OnCastingArmDirectionChanged(object sender, CastArmPivot.OnCastingArmDirectionChangedEventArgs e)
+	// {
+	// 	PlayAnimationBasedOnDirection(e.Direction);
+	// }
 	
-	private void SwingController_OnSwingEnd(object sender, SwingController.SwingEventArgs e)
-	{
-		UpdateDirectionBasedOnMoveVector();
-		PlayAnimationBasedOnDirection(IsMoving ? MovingDirection : e.SwingDirection);
-	}
+	// private void SwingController_OnSwingEnd(object sender, SwingController.SwingEventArgs e)
+	// {
+	// 	UpdateDirectionBasedOnMoveVector();
+	// 	PlayAnimationBasedOnDirection(IsMoving ? MovingDirection : e.SwingDirection);
+	// }
 	
-	private void SwingController_OnSwingStart(object sender, SwingController.SwingEventArgs e)
-	{
-		PlayAnimationBasedOnDirection(e.SwingDirection);
-	}
+	// private void SwingController_OnSwingStart(object sender, SwingController.SwingEventArgs e)
+	// {
+	// 	PlayAnimationBasedOnDirection(e.SwingDirection);
+	// }
 	
 	// This method returns a cardinal direction based on the velocity.
 	private CardinalDirection GetCardinalDirection(Vector3 velocity)
@@ -200,10 +200,10 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	
 	public override void OnDestroy()
 	{
-		_swingController.OnSwingStart -= SwingController_OnSwingStart;
-		_swingController.OnSwingEnd -= SwingController_OnSwingEnd;
-		_castArmPivot.OnCastingArmDirectionChanged -= CastArmPivot_OnCastingArmDirectionChanged;
-		_castArmController.OnHoldingWandEnd -= CastArmController_OnHoldingWandEnd;
+		// _swingController.OnSwingStart -= SwingController_OnSwingStart;
+		// _swingController.OnSwingEnd -= SwingController_OnSwingEnd;
+		// _castArmPivot.OnCastingArmDirectionChanged -= CastArmPivot_OnCastingArmDirectionChanged;
+		// _castArmController.OnHoldingWandEnd -= CastArmController_OnHoldingWandEnd;
 		_thisPlayer.OnDeath -= Player_OnKilled;
 		_thisPlayer.OnRespawn -= Player_OnRespawn;
 		

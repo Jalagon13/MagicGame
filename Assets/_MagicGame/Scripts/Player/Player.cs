@@ -39,7 +39,8 @@ public class Player : NetworkBehaviour, IHasHealth
 	[SerializeField] private List<InventoryItem> _startingItems = new();
 	
 	private NetworkVariable<EnvironmentID> _playerEnvironment = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	private NetworkVariable<int> _focusItemIndexNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	private NetworkVariable<int> _mainHandItemIndexNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	private NetworkVariable<int> _offHandItemIndexNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private NetworkVariable<int> _healthNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private NetworkVariable<int> _manaNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private Knockback _knockback;
@@ -70,7 +71,8 @@ public class Player : NetworkBehaviour, IHasHealth
 			_spawnEnvironment = EnvironmentID.Forest;
 			_spawnPoint = transform.position;
 			
-			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnFocusSlotUpdated;
+			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnMainHandSlotUpdated;
+			InventoryManager.Instance.OnOffHandItemUpdated += InventoryManager_OnOffHandItemUpdated;
 			
 			Invoke(nameof(SpawnStartingItems), 0.25f);
 			InvokeRepeating(nameof(ManaRegen), 1f, 1f);
@@ -235,18 +237,49 @@ public class Player : NetworkBehaviour, IHasHealth
 		});
 	}
 
-	private void HotbarManager_OnFocusSlotUpdated(object sender, HotbarManager.OnFocusItemSetEventArgs e)
+	private void HotbarManager_OnMainHandSlotUpdated(object sender, HotbarManager.OnFocusItemSetEventArgs e)
 	{
 		if(IsOwner)
 		{
 			// NTFS: network variables onvaluechanged is only executed if the value is different
-			if(e.FocusItemIndex == -1)
+			if(e.MainHandItemIndex == -1)
 			{
-				_focusItemIndexNetworkVariable.Value = -1;
+				Debug.Log($"main hand index: {e.MainHandItemIndex}");
+				_mainHandItemIndexNetworkVariable.Value = -1;
 			}
 			else
 			{
-				_focusItemIndexNetworkVariable.Value = e.FocusItemIndex;
+				Debug.Log($"main hand index: {e.MainHandItemIndex}");
+				_mainHandItemIndexNetworkVariable.Value = e.MainHandItemIndex;
+			}
+		}
+	}
+	
+	 private void InventoryManager_OnOffHandItemUpdated(object sender, InventoryManager.InventoryItemEventArgs e)
+	{
+		if(IsOwner)
+		{
+			// NTFS: network variables onvaluechanged is only executed if the value is different
+			var offHandItemIndex = GameManager.Instance.GetItemIndexFromItemSO(e.InventoryItem.Item);
+			
+			if(e.InventoryItem.Item != null)
+			{
+				Debug.Log($"Off hand item: {e.InventoryItem.Item.Name}");
+			}
+			else
+			{
+				Debug.Log("No off hand item equipped");
+			}
+			
+			if(offHandItemIndex == -1)
+			{
+				Debug.Log($"off hand index: {offHandItemIndex}");
+				_offHandItemIndexNetworkVariable.Value = -1;
+			}
+			else
+			{
+				Debug.Log($"off hand index: {offHandItemIndex}");
+				_offHandItemIndexNetworkVariable.Value = offHandItemIndex;
 			}
 		}
 	}
@@ -266,9 +299,14 @@ public class Player : NetworkBehaviour, IHasHealth
 		return _wandProjectileSpawnPoint;
 	}
 	
-	public NetworkVariable<int> GetFocusItemIndexNetworkVariable()
+	public NetworkVariable<int> GetMainHandItemIndexNetworkVariable()
 	{
-		return _focusItemIndexNetworkVariable;
+		return _mainHandItemIndexNetworkVariable;
+	}
+	
+	public NetworkVariable<int> GetOffHandItemIndexNetworkVariable()
+	{
+		return _offHandItemIndexNetworkVariable;
 	}
 	
 	public bool IsDead()
@@ -288,7 +326,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	public bool IsHoldingWand()
 	{
-		ItemSO focusItem = GameManager.Instance.GetItemSOFromIndex(_focusItemIndexNetworkVariable.Value);
+		ItemSO focusItem = GameManager.Instance.GetItemSOFromIndex(_mainHandItemIndexNetworkVariable.Value);
 		
 		if(focusItem == null)
 		{
@@ -319,7 +357,8 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		if(IsOwner)
 		{
-			HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnFocusSlotUpdated;
+			HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnMainHandSlotUpdated;
+			InventoryManager.Instance.OnOffHandItemUpdated -= InventoryManager_OnOffHandItemUpdated;
 		}
 	}
 }

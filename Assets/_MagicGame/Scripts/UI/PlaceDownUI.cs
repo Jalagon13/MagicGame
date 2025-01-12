@@ -21,7 +21,7 @@ public class PlaceDownUI : MonoBehaviour
 
 	private void HotbarManager_OnFocusItemSet(object sender, HotbarManager.OnFocusItemSetEventArgs e)
 	{
-		_focusItemSO = GameManager.Instance.GetItemSOFromIndex(e.FocusItemIndex);
+		_focusItemSO = GameManager.Instance.GetItemSOFromIndex(e.MainHandItemIndex);
 		
 		if(_focusItemSO == null)
 		{

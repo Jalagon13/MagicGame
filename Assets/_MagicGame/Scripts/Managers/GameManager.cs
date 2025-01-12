@@ -113,7 +113,7 @@ public class GameManager : NetworkBehaviour
 		return (byte)_tileDataBaseSO.TileObjectSOList.IndexOf(tileSO);
 	}
 	
-	public int GetItemIndexFromItemObject(ItemSO item)
+	public int GetItemIndexFromItemSO(ItemSO item)
 	{
 		if(item == null)
 		{
@@ -216,7 +216,7 @@ public class GameManager : NetworkBehaviour
 			return;
 		}
 	
-		int itemId = GetItemIndexFromItemObject(itemToSpawn); 
+		int itemId = GetItemIndexFromItemSO(itemToSpawn); 
 		ushort itemAmount = (ushort)amount;
 		
 		SpawnItemServerRpc((ushort)itemId, itemAmount, spawnPos, playAudio);
