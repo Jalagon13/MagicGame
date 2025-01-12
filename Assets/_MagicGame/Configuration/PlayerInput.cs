@@ -64,7 +64,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Interact"",
+                    ""name"": ""SwapHands"",
                     ""type"": ""Button"",
                     ""id"": ""dc166370-62e3-4aec-a602-7c4621b9c311"",
                     ""expectedControlType"": """",
@@ -176,7 +176,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": ""Hold"",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Interact"",
+                    ""action"": ""SwapHands"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -432,7 +432,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_PrimaryAction = m_Player.FindAction("PrimaryAction", throwIfNotFound: true);
         m_Player_SecondaryAction = m_Player.FindAction("SecondaryAction", throwIfNotFound: true);
         m_Player_ToggleInventory = m_Player.FindAction("ToggleInventory", throwIfNotFound: true);
-        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_SwapHands = m_Player.FindAction("SwapHands", throwIfNotFound: true);
         m_Player_Esc = m_Player.FindAction("Esc", throwIfNotFound: true);
         m_Player_ResearchMenu = m_Player.FindAction("ResearchMenu", throwIfNotFound: true);
         // Hotbar
@@ -518,7 +518,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_PrimaryAction;
     private readonly InputAction m_Player_SecondaryAction;
     private readonly InputAction m_Player_ToggleInventory;
-    private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_SwapHands;
     private readonly InputAction m_Player_Esc;
     private readonly InputAction m_Player_ResearchMenu;
     public struct PlayerActions
@@ -529,7 +529,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @PrimaryAction => m_Wrapper.m_Player_PrimaryAction;
         public InputAction @SecondaryAction => m_Wrapper.m_Player_SecondaryAction;
         public InputAction @ToggleInventory => m_Wrapper.m_Player_ToggleInventory;
-        public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @SwapHands => m_Wrapper.m_Player_SwapHands;
         public InputAction @Esc => m_Wrapper.m_Player_Esc;
         public InputAction @ResearchMenu => m_Wrapper.m_Player_ResearchMenu;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -553,9 +553,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ToggleInventory.started += instance.OnToggleInventory;
             @ToggleInventory.performed += instance.OnToggleInventory;
             @ToggleInventory.canceled += instance.OnToggleInventory;
-            @Interact.started += instance.OnInteract;
-            @Interact.performed += instance.OnInteract;
-            @Interact.canceled += instance.OnInteract;
+            @SwapHands.started += instance.OnSwapHands;
+            @SwapHands.performed += instance.OnSwapHands;
+            @SwapHands.canceled += instance.OnSwapHands;
             @Esc.started += instance.OnEsc;
             @Esc.performed += instance.OnEsc;
             @Esc.canceled += instance.OnEsc;
@@ -578,9 +578,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ToggleInventory.started -= instance.OnToggleInventory;
             @ToggleInventory.performed -= instance.OnToggleInventory;
             @ToggleInventory.canceled -= instance.OnToggleInventory;
-            @Interact.started -= instance.OnInteract;
-            @Interact.performed -= instance.OnInteract;
-            @Interact.canceled -= instance.OnInteract;
+            @SwapHands.started -= instance.OnSwapHands;
+            @SwapHands.performed -= instance.OnSwapHands;
+            @SwapHands.canceled -= instance.OnSwapHands;
             @Esc.started -= instance.OnEsc;
             @Esc.performed -= instance.OnEsc;
             @Esc.canceled -= instance.OnEsc;
@@ -728,7 +728,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnPrimaryAction(InputAction.CallbackContext context);
         void OnSecondaryAction(InputAction.CallbackContext context);
         void OnToggleInventory(InputAction.CallbackContext context);
-        void OnInteract(InputAction.CallbackContext context);
+        void OnSwapHands(InputAction.CallbackContext context);
         void OnEsc(InputAction.CallbackContext context);
         void OnResearchMenu(InputAction.CallbackContext context);
     }

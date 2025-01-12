@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interact",
+                    "name": "SwapHands",
                     "type": "Button",
                     "id": "dc166370-62e3-4aec-a602-7c4621b9c311",
                     "expectedControlType": "",
@@ -154,7 +154,7 @@
                     "interactions": "Hold",
                     "processors": "",
                     "groups": "",
-                    "action": "Interact",
+                    "action": "SwapHands",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

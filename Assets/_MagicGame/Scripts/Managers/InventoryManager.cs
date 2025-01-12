@@ -49,6 +49,7 @@ public class InventoryManager : MonoBehaviour
 	private void Start()
 	{
 		SimpleWandInventoryItem.OnProjectileShot += OnProjectileShot_UpdateInventory;
+		GameInput.Instance.OnSwapHands += GameInput_OnSwapHands;
 	}
 
 	private void Update()
@@ -75,6 +76,23 @@ public class InventoryManager : MonoBehaviour
 			_gaveItemThisFrame = true;
 			_gotItemThisFrame = false;
 		}
+	}
+	
+	private void GameInput_OnSwapHands(object sender, EventArgs e)
+	{
+		Debug.Log("This GameInput_OnSwapHands?");
+		
+		var mainHandInventoryItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
+		var mainHandTempItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Item;
+		var mainHandTempQuantity = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Quantity;
+		
+		_inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Item = _inventoryModel.InventoryItems.Last().Item;
+		_inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Quantity = _inventoryModel.InventoryItems.Last().Quantity;
+		
+		_inventoryModel.InventoryItems.Last().Item = mainHandTempItem;
+		_inventoryModel.InventoryItems.Last().Quantity = mainHandTempQuantity;
+		
+		_inventoryModel.UpdateInventory();
 	}
 	
 	public bool MainHandItemExists(out InventoryItem mainHandInventoryItem)
@@ -444,6 +462,7 @@ public class InventoryManager : MonoBehaviour
 	private void OnDestroy()
 	{
 		_inventoryModel.OnInventoryUpdate -= InventoryModel_OnInventoryUpdate;
+		SimpleWandInventoryItem.OnProjectileShot -= OnProjectileShot_UpdateInventory;
 		SimpleWandInventoryItem.OnProjectileShot -= OnProjectileShot_UpdateInventory;
 	}
 }

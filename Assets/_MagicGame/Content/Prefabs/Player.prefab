@@ -451,6 +451,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5266565406439448448}
   - component: {fileID: 4958567346535862893}
+  - component: {fileID: 9069398629946766295}
   m_Layer: 0
   m_Name: OffHand
   m_TagString: Untagged
@@ -467,7 +468,7 @@ Transform:
   m_GameObject: {fileID: 2037511617217630823}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -486,7 +487,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 396e4f7e8e7344fe592bf007c8d3e994, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _isMainHand: 0
+  _rightFacePivot: {fileID: 5642894971404015858}
+  _backFacePivot: {fileID: 5642894971404015858}
+  _leftFacePivot: {fileID: 5642894971404015858}
+  _frontFacePivot: {fileID: 5642894971404015858}
+--- !u!210 &9069398629946766295
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2037511617217630823}
+  m_Enabled: 1
+  m_SortingLayerID: -1478012363
+  m_SortingLayer: 2
+  m_SortingOrder: 1
+  m_SortAtRoot: 0
 --- !u!1 &4990529044509216685
 GameObject:
   m_ObjectHideFlags: 0
@@ -1182,6 +1200,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5908567600357599322}
   - component: {fileID: 4604921083407888490}
+  - component: {fileID: 5148406131904805326}
   m_Layer: 0
   m_Name: MainHand
   m_TagString: Untagged
@@ -1198,7 +1217,7 @@ Transform:
   m_GameObject: {fileID: 5933339187041847009}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1217,7 +1236,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 396e4f7e8e7344fe592bf007c8d3e994, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _isMainHand: 1
+  _rightFacePivot: {fileID: 5642894971404015858}
+  _backFacePivot: {fileID: 5642894971404015858}
+  _leftFacePivot: {fileID: 5642894971404015858}
+  _frontFacePivot: {fileID: 5642894971404015858}
+--- !u!210 &5148406131904805326
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5933339187041847009}
+  m_Enabled: 1
+  m_SortingLayerID: -1478012363
+  m_SortingLayer: 2
+  m_SortingOrder: 1
+  m_SortAtRoot: 0
 --- !u!1 &5942745410432643869
 GameObject:
   m_ObjectHideFlags: 0

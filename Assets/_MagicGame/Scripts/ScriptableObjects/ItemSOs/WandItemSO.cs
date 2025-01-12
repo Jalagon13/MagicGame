@@ -40,6 +40,8 @@ public class WandItemSO : ItemSO
 	
 	public override float ExecuteItemAction(InventoryItem inventoryItem)
 	{
+		if(inventoryItem is not WandInventoryItem) return _baseActionCooldown;
+		
 		_wandInventoryItem = inventoryItem as WandInventoryItem;
 		Debug.Log("In here?");
 		bool mouseOverWall = GetMouseOverWall();
@@ -51,7 +53,7 @@ public class WandItemSO : ItemSO
 		AttributeData hitData = _wandInventoryItem.GetAttributeData(wandAttribute);
 
 		GameManager.Instance.SpawnMiningProjectile(
-			Player.LocalClientInstance.GetWandProjectileSpawnPoint().position,
+			Player.LocalClientInstance.transform.position,
 			ActionManager.MouseWorldPosition,
 			hitData.MiningPower,
 			false, mouseOverWall, resourceSelected);

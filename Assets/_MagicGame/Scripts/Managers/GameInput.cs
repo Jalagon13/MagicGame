@@ -8,6 +8,7 @@ public class GameInput : MonoBehaviour
 {
 	public static GameInput Instance { get; private set; }
 
+	public event EventHandler OnSwapHands;
 	public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnSecondaryAction;
 	public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnPrimaryAction;
 	public class OnPrimaryOrSecondaryActionEventArgs : EventArgs
@@ -63,6 +64,12 @@ public class GameInput : MonoBehaviour
 		_playerInput.Player.SecondaryAction.performed += PlayerInput_SecondaryAction; 
 		_playerInput.Player.SecondaryAction.canceled += PlayerInput_SecondaryAction; 
 		_playerInput.Player.ResearchMenu.started += PlayerInput_ResearchMenu;
+		_playerInput.Player.SwapHands.started += PlayerInput_SwapHands;
+	}
+
+	private void PlayerInput_SwapHands(InputAction.CallbackContext context)
+	{
+		OnSwapHands?.Invoke(this, EventArgs.Empty);
 	}
 
 	private void PlayerInput_ResearchMenu(InputAction.CallbackContext context)

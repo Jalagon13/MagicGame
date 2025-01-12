@@ -15,21 +15,21 @@ public class WorldInput : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
     public event EventHandler<InputAction.CallbackContext> OnInteractPerformed;
     public event EventHandler<InputAction.CallbackContext> OnInteractCanceled;
 	
-    private PlayerInput _playerInput;
+    // private PlayerInput _playerInput;
     private bool _mouseOverDetector;
 	
     private void Awake()
     {
-        _playerInput = new();
-        _playerInput.Player.Interact.started += InteractStarted;
-        _playerInput.Player.Interact.performed += InteractPerformed;
-        _playerInput.Player.Interact.canceled += InteractCanceled;
-        _playerInput.Enable();
+        // _playerInput = new();
+        // _playerInput.Player.Interact.started += InteractStarted;
+        // _playerInput.Player.Interact.performed += InteractPerformed;
+        // _playerInput.Player.Interact.canceled += InteractCanceled;
+        // _playerInput.Enable();
     }
 	
     private void OnDestroy()
     {
-        _playerInput.Disable();
+        // _playerInput.Disable();
     }
 	
     public void InteractStarted(InputAction.CallbackContext context)
