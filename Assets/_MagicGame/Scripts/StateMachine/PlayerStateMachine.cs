@@ -23,9 +23,8 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		Moving
 	}
 	
-	// [SerializeField] private SwingController _swingController;
-	// [SerializeField] private CastArmPivot _castArmPivot;
-	// [SerializeField] private CastArmController _castArmController;
+	[SerializeField] private PlayerHand _mainHand;
+	[SerializeField] private PlayerHand _offHand;
 	[Range(1f, 100f)]
 	[Tooltip("(Linear drag), higher this value, the more drag (knock back resistant) this entity experiences")]
 	[SerializeField] private int _knockbackResist = 20; 
@@ -71,10 +70,15 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	
 	public override void OnNetworkSpawn()
 	{
-		// _swingController.OnSwingStart += SwingController_OnSwingStart;
-		// _swingController.OnSwingEnd += SwingController_OnSwingEnd;
-		// _castArmPivot.OnCastingArmDirectionChanged += CastArmPivot_OnCastingArmDirectionChanged;
-		// _castArmController.OnHoldingWandEnd += CastArmController_OnHoldingWandEnd;
+		_mainHand.OnSwingStart += OnSwingStart;
+		_mainHand.OnSwingEnd += OnSwingEnd;
+		_mainHand.OnCastingArmDirectionChanged += OnCastingArmDirectionChanged;
+		_mainHand.OnHoldingWandEnd += OnHoldingWandEnd;
+		
+		_offHand.OnSwingStart += OnSwingStart;
+		_offHand.OnSwingEnd += OnSwingEnd;
+		_offHand.OnCastingArmDirectionChanged += OnCastingArmDirectionChanged;
+		_offHand.OnHoldingWandEnd += OnHoldingWandEnd;
 		
 		if(IsOwner)
 		{
@@ -86,8 +90,8 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 
 	protected override void FixedUpdate()
 	{
-		var isHoldingWand = _thisPlayer.IsHoldingWand();
-		var isSwingOnGoing = _thisPlayer.IsSwingGoingOn();
+		var isHoldingWand = _thisPlayer.IsHoldingAWand();
+		var isSwingOnGoing = _thisPlayer.GetIsPerformingSwing();
 		
 		if(!isHoldingWand && !isSwingOnGoing)
 		{
@@ -163,27 +167,27 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		}
 	}
 	
-	// private void CastArmController_OnHoldingWandEnd(object sender, CastArmController.OnHoldingWandEndEventArgs e)
-	// {
-	// 	UpdateDirectionBasedOnMoveVector();
-	// 	PlayAnimationBasedOnDirection(IsMoving ? MovingDirection : e.WandHeldDirection);
-	// }
+	private void OnHoldingWandEnd(object sender, PlayerHand.CardinalDirectionEventArgs e)
+	{
+		UpdateDirectionBasedOnMoveVector();
+		PlayAnimationBasedOnDirection(IsMoving ? MovingDirection : e.Direction);
+	}
 	
-	// private void CastArmPivot_OnCastingArmDirectionChanged(object sender, CastArmPivot.OnCastingArmDirectionChangedEventArgs e)
-	// {
-	// 	PlayAnimationBasedOnDirection(e.Direction);
-	// }
+	private void OnCastingArmDirectionChanged(object sender, PlayerHand.CardinalDirectionEventArgs e)
+	{
+		PlayAnimationBasedOnDirection(e.Direction);
+	}
 	
-	// private void SwingController_OnSwingEnd(object sender, SwingController.SwingEventArgs e)
-	// {
-	// 	UpdateDirectionBasedOnMoveVector();
-	// 	PlayAnimationBasedOnDirection(IsMoving ? MovingDirection : e.SwingDirection);
-	// }
+	private void OnSwingEnd(object sender, PlayerHand.CardinalDirectionEventArgs e)
+	{
+		UpdateDirectionBasedOnMoveVector();
+		PlayAnimationBasedOnDirection(IsMoving ? MovingDirection : e.Direction);
+	}
 	
-	// private void SwingController_OnSwingStart(object sender, SwingController.SwingEventArgs e)
-	// {
-	// 	PlayAnimationBasedOnDirection(e.SwingDirection);
-	// }
+	private void OnSwingStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
+	{
+		PlayAnimationBasedOnDirection(e.Direction);
+	}
 	
 	// This method returns a cardinal direction based on the velocity.
 	private CardinalDirection GetCardinalDirection(Vector3 velocity)
@@ -200,10 +204,16 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	
 	public override void OnDestroy()
 	{
-		// _swingController.OnSwingStart -= SwingController_OnSwingStart;
-		// _swingController.OnSwingEnd -= SwingController_OnSwingEnd;
-		// _castArmPivot.OnCastingArmDirectionChanged -= CastArmPivot_OnCastingArmDirectionChanged;
-		// _castArmController.OnHoldingWandEnd -= CastArmController_OnHoldingWandEnd;
+		_mainHand.OnSwingStart -= OnSwingStart;
+		_mainHand.OnSwingEnd -= OnSwingEnd;
+		_mainHand.OnCastingArmDirectionChanged -= OnCastingArmDirectionChanged;
+		_mainHand.OnHoldingWandEnd -= OnHoldingWandEnd;
+		
+		_offHand.OnSwingStart -= OnSwingStart;
+		_offHand.OnSwingEnd -= OnSwingEnd;
+		_offHand.OnCastingArmDirectionChanged -= OnCastingArmDirectionChanged;
+		_offHand.OnHoldingWandEnd -= OnHoldingWandEnd;
+		
 		_thisPlayer.OnDeath -= Player_OnKilled;
 		_thisPlayer.OnRespawn -= Player_OnRespawn;
 		

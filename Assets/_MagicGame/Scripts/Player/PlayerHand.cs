@@ -7,9 +7,12 @@ using UnityEngine.Rendering;
 
 public class PlayerHand : NetworkBehaviour
 {
-	// Event for casting arm direction changes
-	public event EventHandler<OnCastingArmDirectionChangedEventArgs> OnCastingArmDirectionChanged;
-	public class OnCastingArmDirectionChangedEventArgs : EventArgs
+	public event EventHandler<CardinalDirectionEventArgs> OnHoldingWandEnd;
+	public event EventHandler<CardinalDirectionEventArgs> OnHoldingWandStart;
+	public event EventHandler<CardinalDirectionEventArgs> OnSwingStart;
+	public event EventHandler<CardinalDirectionEventArgs> OnSwingEnd;
+	public event EventHandler<CardinalDirectionEventArgs> OnCastingArmDirectionChanged;
+	public class CardinalDirectionEventArgs : EventArgs
 	{
 		public CardinalDirection Direction;
 	}
@@ -22,7 +25,7 @@ public class PlayerHand : NetworkBehaviour
 
 	private SpriteRenderer _itemSpriteRenderer;
 	private GameObject _armGameObject;
-	private Player _player;
+	private Player _thisPlayer;
 	private ItemSO _heldItem;
 	private SortingGroup _sortingGroup;
 	private bool _isSwinging;
@@ -40,12 +43,12 @@ public class PlayerHand : NetworkBehaviour
 
 	private void Start()
 	{
-		_player = transform.root.GetComponent<Player>();
+		_thisPlayer = transform.root.GetComponent<Player>();
 
 		if (_isMainHand)
-			_player.GetMainHandItemIndexNetworkVariable().OnValueChanged += HandleItemIndexChanged;
+			_thisPlayer.GetMainHandItemIndexNetworkVariable().OnValueChanged += HandleItemIndexChanged;
 		else
-			_player.GetOffHandItemIndexNetworkVariable().OnValueChanged += HandleItemIndexChanged;
+			_thisPlayer.GetOffHandItemIndexNetworkVariable().OnValueChanged += HandleItemIndexChanged;
 
 		HideArm();
 	}
@@ -58,7 +61,7 @@ public class PlayerHand : NetworkBehaviour
 		{
 			HandleMeleeSwing();
 		}
-		else if (_heldItem is WandItemSO)
+		else if (_heldItem is WandItemSO && !_isSwinging)
 		{
 			HandleWandActions();
 		}
@@ -106,9 +109,9 @@ public class PlayerHand : NetworkBehaviour
 		CastArmDirection = DetermineCardinalDirection(angle);
 		transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-		if (_player.GetComponent<PlayerStateMachine>().MovingDirection != CastArmDirection)
+		if (_thisPlayer.GetComponent<PlayerStateMachine>().MovingDirection != CastArmDirection)
 		{
-			OnCastingArmDirectionChanged?.Invoke(this, new OnCastingArmDirectionChangedEventArgs { Direction = CastArmDirection });
+			OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = CastArmDirection });
 			transform.localScale = new Vector3(1, CastArmDirection == CardinalDirection.West ? -1 : 1, 1);
 		}
 	}
@@ -137,10 +140,21 @@ public class PlayerHand : NetworkBehaviour
 
 	private void HandleItemIndexChanged(int previousValue, int newValue)
 	{
-		HideArm();
-		
+		var tempItem = _heldItem;
+	
 		_heldItem = GameManager.Instance.GetItemSOFromIndex(newValue);
 
+		if(tempItem is WandItemSO && _heldItem is not WandItemSO)
+		{
+			if(!_isSwinging)
+			{
+				OnHoldingWandEnd?.Invoke(this, new CardinalDirectionEventArgs
+				{
+					Direction = CastArmDirection
+				});
+			}
+		}
+		
 		if (_heldItem is WandItemSO)
 		{
 			ShowArm();
@@ -152,25 +166,34 @@ public class PlayerHand : NetworkBehaviour
 		else
 		{
 			_heldItem = null;
+			HideArm();
 		}
 
 		_itemSpriteRenderer.sprite = _heldItem?.UiDisplay;
 	}
 
-	private void SwingEast(float duration) => Swing(60, 300, duration, true);
-	private void SwingWest(float duration) => Swing(120, 240, duration, false);
-	private void SwingNorth(float duration) => Swing(150, 30, duration, true);
-	private void SwingSouth(float duration) => Swing(330, 210, duration, false);
+	private void SwingEast(float duration) => Swing(60, 300, duration, true, CardinalDirection.East);
+	private void SwingWest(float duration) => Swing(120, 240, duration, false, CardinalDirection.West);
+	private void SwingNorth(float duration) => Swing(150, 30, duration, true, CardinalDirection.North);
+	private void SwingSouth(float duration) => Swing(330, 210, duration, false, CardinalDirection.South);
 
-	private void Swing(float startAngle, float endAngle, float duration, bool clockwise)
+	private void Swing(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction)
 	{
 		if (_isSwinging) return;
-		StartCoroutine(SwingCoroutine(startAngle, endAngle, duration, clockwise));
+		StartCoroutine(SwingCoroutine(startAngle, endAngle, duration, clockwise, direction));
 	}
 
-	private IEnumerator SwingCoroutine(float startAngle, float endAngle, float duration, bool clockwise)
+	private IEnumerator SwingCoroutine(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction)
 	{
 		ShowArm();
+		
+		OnSwingStart?.Invoke(this, new CardinalDirectionEventArgs
+		{
+			Direction = direction
+		});
+		
+		_thisPlayer.SetIsPerformingSwing(true);
+		
 		_isSwinging = true;
 
 		startAngle = NormalizeAngle(startAngle);
@@ -189,23 +212,56 @@ public class PlayerHand : NetworkBehaviour
 			elapsedTime += Time.deltaTime;
 			yield return null;
 		}
+		
+		yield return new WaitForSeconds(duration * 0.3f);
 
 		transform.rotation = endRotation;
-		HideArm();
+		
 		_isSwinging = false;
+		
+		OnSwingEnd?.Invoke(this, new CardinalDirectionEventArgs
+		{
+			Direction = direction
+		});
+		
+		_thisPlayer.SetIsPerformingSwing(false);
+		
+		if(_heldItem is WandItemSO)
+		{
+			ShowArm();
+		}
+		else
+		{
+			HideArm();
+		}
 	}
 
 	private float NormalizeAngle(float angle) => (angle % 360 + 360) % 360;
 
-	private void ShowArm() => _armGameObject.SetActive(true);
-	private void HideArm() => _armGameObject.SetActive(false);
+	private void ShowArm()
+	{
+		_armGameObject.SetActive(true);
+		
+		if(_heldItem is WandItemSO)
+		{
+			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs
+			{
+				
+			});
+		}
+	}
+	
+	private void HideArm()
+	{
+		_armGameObject.SetActive(false);
+	}
 
 	public override void OnDestroy()
 	{
 		if (_isMainHand)
-			_player.GetMainHandItemIndexNetworkVariable().OnValueChanged -= HandleItemIndexChanged;
+			_thisPlayer.GetMainHandItemIndexNetworkVariable().OnValueChanged -= HandleItemIndexChanged;
 		else
-			_player.GetOffHandItemIndexNetworkVariable().OnValueChanged -= HandleItemIndexChanged;
+			_thisPlayer.GetOffHandItemIndexNetworkVariable().OnValueChanged -= HandleItemIndexChanged;
 
 		base.OnDestroy();
 	}

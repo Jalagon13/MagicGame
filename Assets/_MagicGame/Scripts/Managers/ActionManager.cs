@@ -58,7 +58,6 @@ public class ActionManager : MonoBehaviour
 		
 		if (GameInput.Instance.GetSecondaryHeldDown() && _secondaryActionTimer.RemainingSeconds <= 0 && InventoryManager.Instance.OffHandItemExists(out InventoryItem offHandInventoryItem))
 		{
-			Debug.Log($"OffHand Item Executing Action for {offHandInventoryItem.Item.Name}");
 			_secondaryActionTimer.RemainingSeconds = offHandInventoryItem.Item.ExecuteItemAction(offHandInventoryItem);
 		}
 	}

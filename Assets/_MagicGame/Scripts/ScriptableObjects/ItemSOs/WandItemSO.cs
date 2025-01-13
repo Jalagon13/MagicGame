@@ -40,15 +40,14 @@ public class WandItemSO : ItemSO
 	
 	public override float ExecuteItemAction(InventoryItem inventoryItem)
 	{
-		if(inventoryItem is not WandInventoryItem) return _baseActionCooldown;
+		if(inventoryItem is not WandInventoryItem || !Player.LocalClientInstance.gameObject.GetComponent<Player>().IsHoldingAWand()) return _baseActionCooldown;
 		
 		_wandInventoryItem = inventoryItem as WandInventoryItem;
-		Debug.Log("In here?");
 		bool mouseOverWall = GetMouseOverWall();
 		bool resourceSelected = GetResourceSelected();
 
 		if (!mouseOverWall && !resourceSelected) return _baseActionCooldown;
-		Debug.Log("How abou there?");
+		
 		WandAttribute wandAttribute = GetHarvestType(false, mouseOverWall, resourceSelected);
 		AttributeData hitData = _wandInventoryItem.GetAttributeData(wandAttribute);
 

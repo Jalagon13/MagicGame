@@ -48,7 +48,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	private Timer _respawnTimer;
 	private Vector2 _spawnPoint;
 	private EnvironmentID _spawnEnvironment;
-	private bool _isSwingGoingOn;
+	private bool _isPerformingSwing;
 	
 	private void Awake()
 	{
@@ -244,12 +244,10 @@ public class Player : NetworkBehaviour, IHasHealth
 			// NTFS: network variables onvaluechanged is only executed if the value is different
 			if(e.MainHandItemIndex == -1)
 			{
-				Debug.Log($"main hand index: {e.MainHandItemIndex}");
 				_mainHandItemIndexNetworkVariable.Value = -1;
 			}
 			else
 			{
-				Debug.Log($"main hand index: {e.MainHandItemIndex}");
 				_mainHandItemIndexNetworkVariable.Value = e.MainHandItemIndex;
 			}
 		}
@@ -314,27 +312,27 @@ public class Player : NetworkBehaviour, IHasHealth
 		return _healthNetworkVariable.Value <= 0;
 	}
 
-	public bool IsSwingGoingOn()
+	public bool GetIsPerformingSwing()
 	{
-		return _isSwingGoingOn;
+		return _isPerformingSwing;
 	}
 	
-	public void SetIsSwingOnGoingOn(bool _)
+	public void SetIsPerformingSwing(bool _)
 	{
-		_isSwingGoingOn = _;
+		_isPerformingSwing = _;
 	}
 	
-	public bool IsHoldingWand()
+	public bool IsHoldingAWand()
 	{
-		ItemSO focusItem = GameManager.Instance.GetItemSOFromIndex(_mainHandItemIndexNetworkVariable.Value);
+		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromIndex(_mainHandItemIndexNetworkVariable.Value);
+		bool mainHandHoldingWand = mainHandItem != null && mainHandItem is WandItemSO;
 		
-		if(focusItem == null)
-		{
-			return false;
-		}
+		ItemSO offHandItem = GameManager.Instance.GetItemSOFromIndex(_offHandItemIndexNetworkVariable.Value);
+		bool offHandHoldingWand = offHandItem != null && offHandItem is WandItemSO;
 		
+		bool isHoldingAWand = (mainHandHoldingWand || offHandHoldingWand) && !_isPerformingSwing;
 		
-		return focusItem is WandItemSO;
+		return isHoldingAWand;
 	}
 	
 	public EnvironmentID GetPlayerEnvironment()

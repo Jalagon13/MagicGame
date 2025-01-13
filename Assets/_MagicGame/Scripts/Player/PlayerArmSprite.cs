@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerArmSprite : NetworkBehaviour
 {
-	// [SerializeField] private CastArmController _castArmController;
-	// [SerializeField] private SwingController _swingController;
+	[SerializeField] private PlayerHand _mainHand;
+	[SerializeField] private PlayerHand _offHand;
 	
 	private SpriteRenderer _sr;
 	private Player _thisPlayer;
@@ -15,15 +15,20 @@ public class PlayerArmSprite : NetworkBehaviour
 		_thisPlayer = transform.root.GetComponent<Player>();
 		_sr = GetComponent<SpriteRenderer>();
 		
-		// _castArmController.OnHoldingWandStart += CastArm_OnHoldingWandStart;
-		// _castArmController.OnHoldingWandEnd += CastArm_OnHoldingWandEnd;
-		// _swingController.OnSwingStart += Swing_OnStart;
-		// _swingController.OnSwingEnd += Swing_OnEnd;
+		_mainHand.OnSwingStart += OnSwingStart;
+		_mainHand.OnSwingEnd += OnSwingEnd;
+		_mainHand.OnHoldingWandEnd += OnHoldingWandEnd;
+		_mainHand.OnHoldingWandStart += OnHoldingWandStart;
+		
+		_offHand.OnSwingStart += OnSwingStart;
+		_offHand.OnSwingEnd += OnSwingEnd;
+		_offHand.OnHoldingWandEnd += OnHoldingWandEnd;
+		_offHand.OnHoldingWandStart += OnHoldingWandStart;
 	}
 
 	public override void OnNetworkSpawn()
 	{
-		if(_thisPlayer.IsHoldingWand())
+		if(_thisPlayer.IsHoldingAWand())
 		{
 			Hide();
 		}
@@ -34,26 +39,26 @@ public class PlayerArmSprite : NetworkBehaviour
 	
 		base.OnNetworkSpawn();
 	}
-
-	// private void Swing_OnStart(object sender, SwingController.SwingEventArgs e)
-	// {
-	// 	Hide();
-	// }
-
-	// private void Swing_OnEnd(object sender, SwingController.SwingEventArgs e)
-	// {
-	// 	Show();
-	// }
-
-	private void CastArm_OnHoldingWandStart(object sender, EventArgs e)
+	
+	private void OnHoldingWandStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
 	{
 		Hide();
 	}
 
-	// private void CastArm_OnHoldingWandEnd(object sender, CastArmController.OnHoldingWandEndEventArgs e)
-	// {
-	// 	Show();
-	// }
+	private void OnHoldingWandEnd(object sender, PlayerHand.CardinalDirectionEventArgs e)
+	{
+		Show();
+	}
+
+	private void OnSwingEnd(object sender, PlayerHand.CardinalDirectionEventArgs e)
+	{
+		Show();
+	}
+
+	private void OnSwingStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
+	{
+		Hide();
+	}
 	
 	public void Show()
 	{
@@ -67,10 +72,15 @@ public class PlayerArmSprite : NetworkBehaviour
 	
 	public override void OnDestroy()
 	{
-		// _castArmController.OnHoldingWandStart -= CastArm_OnHoldingWandStart;
-		// _castArmController.OnHoldingWandEnd -= CastArm_OnHoldingWandEnd;
-		// _swingController.OnSwingStart -= Swing_OnStart;
-		// _swingController.OnSwingEnd -= Swing_OnEnd;
+		_mainHand.OnSwingStart -= OnSwingStart;
+		_mainHand.OnSwingEnd -= OnSwingEnd;
+		_mainHand.OnHoldingWandEnd -= OnHoldingWandEnd;
+		_mainHand.OnHoldingWandStart -= OnHoldingWandStart;
+		
+		_offHand.OnSwingStart -= OnSwingStart;
+		_offHand.OnSwingEnd -= OnSwingEnd;
+		_offHand.OnHoldingWandEnd -= OnHoldingWandEnd;
+		_offHand.OnHoldingWandStart -= OnHoldingWandStart;
 		base.OnDestroy();
 	}
 }

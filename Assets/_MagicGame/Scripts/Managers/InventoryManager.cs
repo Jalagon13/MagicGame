@@ -83,14 +83,9 @@ public class InventoryManager : MonoBehaviour
 		Debug.Log("This GameInput_OnSwapHands?");
 		
 		var mainHandInventoryItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
-		var mainHandTempItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Item;
-		var mainHandTempQuantity = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Quantity;
 		
-		_inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Item = _inventoryModel.InventoryItems.Last().Item;
-		_inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Quantity = _inventoryModel.InventoryItems.Last().Quantity;
-		
-		_inventoryModel.InventoryItems.Last().Item = mainHandTempItem;
-		_inventoryModel.InventoryItems.Last().Quantity = mainHandTempQuantity;
+		_inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()] = _inventoryModel.InventoryItems[_inventoryModel.InventoryItems.Count - 1];
+		_inventoryModel.InventoryItems[_inventoryModel.InventoryItems.Count - 1] = mainHandInventoryItem;;
 		
 		_inventoryModel.UpdateInventory();
 	}
