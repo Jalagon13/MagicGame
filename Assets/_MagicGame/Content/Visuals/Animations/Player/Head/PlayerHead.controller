@@ -7,7 +7,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerArmsFrontMove
+  m_Name: PlayerHeadFrontMove
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -20,7 +20,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 542088d2ec8864b0c8e28b4aad23fab1, type: 2}
+  m_Motion: {fileID: 7400000, guid: 03ddf9caaa5ae4c7696b7276a33fc071, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -70,7 +70,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerArmsFrontIdle
+  m_Name: PlayerHeadFrontIdle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -83,7 +83,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: f35f7e85d576048f0858c7a61bbf5e63, type: 2}
+  m_Motion: {fileID: 7400000, guid: 9d5ecd77cede44bfbb18a7fd6fd35e8f, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -96,7 +96,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerArmsBackMove
+  m_Name: PlayerHeadBackMove
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -109,7 +109,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: ec025c26788864e969263d6fa6937d4e, type: 2}
+  m_Motion: {fileID: 7400000, guid: dda6a5c356c1d45d0abb5ea27de1aff3, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -122,7 +122,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerArmsSideMove
+  m_Name: PlayerHeadSideMove
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -135,7 +135,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: bf7d8e7caefb4418fbd12e459ad61c72, type: 2}
+  m_Motion: {fileID: 7400000, guid: c3786dd5f87694fea98d9c3308082ef4, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -170,7 +170,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerArmsBackIdle
+  m_Name: PlayerHeadBackIdle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -183,7 +183,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: ec2dc82fddefd47a2bc0aa056962292b, type: 2}
+  m_Motion: {fileID: 7400000, guid: 9c2e8e7cbaaae49a09460b2e885c9216, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -196,7 +196,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerArmsSideIdle
+  m_Name: PlayerHeadSideIdle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -209,7 +209,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 82666e05b74ad4c93ae3d08d7650c4de, type: 2}
+  m_Motion: {fileID: 7400000, guid: 7573e0df65438459daa4629d2e07d0bc, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
