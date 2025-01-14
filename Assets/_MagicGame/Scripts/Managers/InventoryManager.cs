@@ -80,8 +80,6 @@ public class InventoryManager : MonoBehaviour
 	
 	private void GameInput_OnSwapHands(object sender, EventArgs e)
 	{
-		Debug.Log("This GameInput_OnSwapHands?");
-		
 		var mainHandInventoryItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
 		
 		_inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()] = _inventoryModel.InventoryItems[_inventoryModel.InventoryItems.Count - 1];

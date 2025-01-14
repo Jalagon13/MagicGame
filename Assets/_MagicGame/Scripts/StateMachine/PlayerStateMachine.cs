@@ -73,11 +73,13 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		_mainHand.OnSwingStart += OnSwingStart;
 		_mainHand.OnSwingEnd += OnSwingEnd;
 		_mainHand.OnCastingArmDirectionChanged += OnCastingArmDirectionChanged;
+		_mainHand.OnHoldingWandStart += OnHoldingWandStart;
 		_mainHand.OnHoldingWandEnd += OnHoldingWandEnd;
 		
 		_offHand.OnSwingStart += OnSwingStart;
 		_offHand.OnSwingEnd += OnSwingEnd;
 		_offHand.OnCastingArmDirectionChanged += OnCastingArmDirectionChanged;
+		_offHand.OnHoldingWandStart += OnHoldingWandStart;
 		_offHand.OnHoldingWandEnd += OnHoldingWandEnd;
 		
 		if(IsOwner)
@@ -167,6 +169,11 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		}
 	}
 	
+	private void OnHoldingWandStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
+	{
+		PlayAnimationBasedOnDirection(e.Direction);
+	}
+	
 	private void OnHoldingWandEnd(object sender, PlayerHand.CardinalDirectionEventArgs e)
 	{
 		UpdateDirectionBasedOnMoveVector();
@@ -207,11 +214,13 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		_mainHand.OnSwingStart -= OnSwingStart;
 		_mainHand.OnSwingEnd -= OnSwingEnd;
 		_mainHand.OnCastingArmDirectionChanged -= OnCastingArmDirectionChanged;
+		_mainHand.OnHoldingWandStart -= OnHoldingWandStart;
 		_mainHand.OnHoldingWandEnd -= OnHoldingWandEnd;
 		
 		_offHand.OnSwingStart -= OnSwingStart;
 		_offHand.OnSwingEnd -= OnSwingEnd;
 		_offHand.OnCastingArmDirectionChanged -= OnCastingArmDirectionChanged;
+		_offHand.OnHoldingWandStart -= OnHoldingWandStart;
 		_offHand.OnHoldingWandEnd -= OnHoldingWandEnd;
 		
 		_thisPlayer.OnDeath -= Player_OnKilled;

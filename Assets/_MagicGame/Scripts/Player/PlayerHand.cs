@@ -23,14 +23,14 @@ public class PlayerHand : NetworkBehaviour
 	// Serialized Fields
 	[SerializeField] private bool _isMainHand;
 	[SerializeField] private PlayerHand _oppositeHand;
-	[FoldoutGroup("Pivots"), SerializeField] private Transform _rightFacePivot;
-	[FoldoutGroup("Pivots"), SerializeField] private Transform _backFacePivot;
-	[FoldoutGroup("Pivots"), SerializeField] private Transform _leftFacePivot;
-	[FoldoutGroup("Pivots"), SerializeField] private Transform _frontFacePivot;
+	[FoldoutGroup("Pivots"), SerializeField] private Transform _northPivot;
+	[FoldoutGroup("Pivots"), SerializeField] private Transform _southPivot;
+	[FoldoutGroup("Pivots"), SerializeField] private Transform _eastPivot;
+	[FoldoutGroup("Pivots"), SerializeField] private Transform _westPivot;
+	[SerializeField] private SpriteRenderer _itemHeldSR;
+	[SerializeField] private GameObject _armPivotGO;
+	[SerializeField] private GameObject _armGO;
 
-	// Private Fields
-	private SpriteRenderer _itemSpriteRenderer;
-	private GameObject _armGameObject;
 	private Player _thisPlayer;
 	private ItemSO _heldItem;
 	private SortingGroup _sortingGroup;
@@ -44,16 +44,13 @@ public class PlayerHand : NetworkBehaviour
 	);
 
 	// Properties
-	public CardinalDirection CastArmDirection { get; private set; }
-	public CardinalDirection SwingDirection { get; private set; }
+	public CardinalDirection ArmDirection { get; private set; }
 
 	#region Unity Callbacks
 
 	private void Awake()
 	{
 		_sortingGroup = GetComponent<SortingGroup>();
-		_armGameObject = transform.GetChild(0).gameObject;
-		_itemSpriteRenderer = _armGameObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
 	}
 
 	private void Start()
@@ -74,15 +71,50 @@ public class PlayerHand : NetworkBehaviour
 
 	private void Update()
 	{
-		if (Player.LocalClientInstance.IsDead() || !Player.LocalClientInstance.IsOwner || _heldItem == null) return;
+		if (Player.LocalClientInstance.IsDead() || !Player.LocalClientInstance.IsOwner) return;
 
+		if (IsOwner)
+		{
+			Vector3 direction = ActionManager.MouseWorldPosition - (Vector2)transform.position;
+			_angleNetworkVariable.Value = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+		}
+		
+		float angle = NormalizeAngle(_angleNetworkVariable.Value);
+		ArmDirection = DetermineCardinalDirection(angle);
+		
 		if (_heldItem is MeleeItemSO)
 		{
-			HandleMeleeSwing();
+			if (_isSwinging || Pointer.IsOverUI()) return;
+
+			bool hasSwingInput = _isMainHand
+				? GameInput.Instance.GetPrimaryHeldDown()
+				: GameInput.Instance.GetSecondaryHeldDown();
+
+			if (hasSwingInput)
+			{
+				Debug.Log($"Executing swing in {ArmDirection}");
+				switch (ArmDirection)
+				{
+					case CardinalDirection.North:
+						SwingNorth(0.35f);
+						break;
+					case CardinalDirection.South:
+						SwingSouth(0.35f);
+						break;
+					case CardinalDirection.West:
+						SwingWest(0.35f);
+						break;
+					case CardinalDirection.East:
+						SwingEast(0.35f);
+						break;
+				}
+			}
 		}
 		else if (_heldItem is WandItemSO && !_isSwinging)
 		{
-			HandleWandActions();
+			RotateArmBasedOnAngle();
+			
+			_sortingGroup.sortingOrder = ArmDirection == CardinalDirection.North ? -1 : 1;
 		}
 	}
 
@@ -111,12 +143,19 @@ public class PlayerHand : NetworkBehaviour
 
 		if (tempItem is WandItemSO && _heldItem is not WandItemSO && !_isSwinging)
 		{
-			OnHoldingWandEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = CastArmDirection });
+			OnHoldingWandEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmDirection });
+		}
+		
+		if(_isSwinging)
+		{
+			_stoppingSwing = true;
 		}
 
 		if (_heldItem is WandItemSO)
 		{
 			ShowArm();
+			
+			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmDirection });
 		}
 		else if (_heldItem is MeleeItemSO)
 		{
@@ -128,59 +167,26 @@ public class PlayerHand : NetworkBehaviour
 			HideArm();
 		}
 
-		_itemSpriteRenderer.sprite = _heldItem?.UiDisplay;
+		_itemHeldSR.sprite = _heldItem?.UiDisplay;
 	}
 
 	#endregion
 
 	#region Swing and Wand Handling
-
-	private void HandleMeleeSwing()
-	{
-		if (_isSwinging || Pointer.IsOverUI()) return;
-
-		bool isSwinging = _isMainHand
-			? GameInput.Instance.GetPrimaryHeldDown()
-			: GameInput.Instance.GetSecondaryHeldDown();
-
-		if (isSwinging)
-		{
-			float angle = CalculateMouseAngle();
-			SwingBasedOnAngle(angle);
-		}
-	}
-
-	private void HandleWandActions()
-	{
-		if (IsOwner)
-		{
-			Vector3 direction = ActionManager.MouseWorldPosition - (Vector2)transform.position;
-			_angleNetworkVariable.Value = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-		}
-
-		RotateArmBasedOnAngle();
-		UpdateSortingOrder();
-	}
-
-	private void SwingBasedOnAngle(float angle)
-	{
-		if (angle < 45 || angle > 315) SwingEast(0.35f);
-		else if (angle < 135) SwingNorth(0.35f);
-		else if (angle < 225) SwingWest(0.35f);
-		else SwingSouth(0.35f);
-	}
-
 	private void Swing(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction)
 	{
 		if (_isSwinging) return;
-
-		SwingDirection = direction;
+		Debug.Log($"InSwing function for direction {direction}");
+		
+		SetPivotPosition(direction);
+		
 		StartCoroutine(SwingCoroutine(startAngle, endAngle, duration, clockwise, direction));
 	}
 
 	private IEnumerator SwingCoroutine(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction)
 	{
 		ShowArm();
+		Debug.Log($"In Swing co routine for direction {direction}");
 		OnSwingStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
 
 		_thisPlayer.SetIsPerformingSwing(true);
@@ -198,7 +204,7 @@ public class PlayerHand : NetworkBehaviour
 		float elapsedTime = 0f;
 		while (elapsedTime < duration)
 		{
-			transform.rotation = Quaternion.Lerp(startRotation, endRotation, elapsedTime / duration);
+			_armPivotGO.transform.rotation = Quaternion.Lerp(startRotation, endRotation, elapsedTime / duration);
 			elapsedTime += Time.deltaTime;
 
 			if (_stoppingSwing)
@@ -226,7 +232,7 @@ public class PlayerHand : NetworkBehaviour
 	private IEnumerator FinishSwing(float duration, Quaternion endRotation)
 	{
 		yield return new WaitForSeconds(duration * 0.3f);
-		transform.rotation = endRotation;
+		_armPivotGO.transform.rotation = endRotation;
 
 		_isSwinging = false;
 		_thisPlayer.SetIsPerformingSwing(false);
@@ -240,31 +246,37 @@ public class PlayerHand : NetworkBehaviour
 	private void RotateArmBasedOnAngle()
 	{
 		float angle = NormalizeAngle(_angleNetworkVariable.Value);
-		CastArmDirection = DetermineCardinalDirection(angle);
-		transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+		_armPivotGO.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+		
+		SetPivotPosition(ArmDirection);
 
-		if (_thisPlayer.GetComponent<PlayerStateMachine>().MovingDirection != CastArmDirection)
+		if (_thisPlayer.GetComponent<PlayerStateMachine>().MovingDirection != ArmDirection)
 		{
-			OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = CastArmDirection });
+			OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmDirection });
 
 			if (_oppositeHand.IsSwinging()) _oppositeHand.StopSwing();
 
-			transform.localScale = new Vector3(1, CastArmDirection == CardinalDirection.West ? -1 : 1, 1);
+			_armPivotGO.transform.localScale = new Vector3(1, ArmDirection == CardinalDirection.West ? -1 : 1, 1);
 		}
 	}
-
-	private void UpdateSortingOrder()
+	
+	private void SetPivotPosition(CardinalDirection direction)
 	{
-		float angle = NormalizeAngle(transform.eulerAngles.z);
-		CastArmDirection = DetermineCardinalDirection(angle);
-
-		_sortingGroup.sortingOrder = CastArmDirection == CardinalDirection.North ? -1 : 1;
-	}
-
-	private float CalculateMouseAngle()
-	{
-		Vector2 direction = ActionManager.MouseWorldPosition - (Vector2)transform.position;
-		return NormalizeAngle(Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+		switch (direction)
+		{
+			case CardinalDirection.North:
+				_armPivotGO.transform.position = _northPivot.transform.position;
+				break;
+			case CardinalDirection.South:
+				_armPivotGO.transform.position = _southPivot.transform.position;
+				break;
+			case CardinalDirection.West:
+				_armPivotGO.transform.position = _westPivot.transform.position;
+				break;
+			case CardinalDirection.East:
+				_armPivotGO.transform.position = _eastPivot.transform.position;
+				break;
+		}
 	}
 
 	private CardinalDirection DetermineCardinalDirection(float angle)
@@ -279,20 +291,15 @@ public class PlayerHand : NetworkBehaviour
 
 	private void ShowArm()
 	{
-		_armGameObject.SetActive(true);
-
-		if (_heldItem is WandItemSO)
-		{
-			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = CastArmDirection });
-		}
+		_armGO.SetActive(true);
 	}
 
 	private void HideArm()
 	{
-		_armGameObject.SetActive(false);
+		_armGO.SetActive(false);
 	}
 
-	public bool IsArmShown() => _armGameObject.activeInHierarchy;
+	public bool IsArmShown() => _armPivotGO.activeInHierarchy;
 	public bool IsSwinging() => _isSwinging;
 	public void StopSwing() => _stoppingSwing = true;
 

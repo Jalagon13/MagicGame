@@ -260,23 +260,12 @@ public class Player : NetworkBehaviour, IHasHealth
 			// NTFS: network variables onvaluechanged is only executed if the value is different
 			var offHandItemIndex = GameManager.Instance.GetItemIndexFromItemSO(e.InventoryItem.Item);
 			
-			if(e.InventoryItem.Item != null)
-			{
-				Debug.Log($"Off hand item: {e.InventoryItem.Item.Name}");
-			}
-			else
-			{
-				Debug.Log("No off hand item equipped");
-			}
-			
 			if(offHandItemIndex == -1)
 			{
-				Debug.Log($"off hand index: {offHandItemIndex}");
 				_offHandItemIndexNetworkVariable.Value = -1;
 			}
 			else
 			{
-				Debug.Log($"off hand index: {offHandItemIndex}");
 				_offHandItemIndexNetworkVariable.Value = offHandItemIndex;
 			}
 		}
