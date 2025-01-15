@@ -176,8 +176,15 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	
 	private void OnHoldingWandEnd(object sender, PlayerHand.CardinalDirectionEventArgs e)
 	{
-		UpdateDirectionBasedOnMoveVector();
-		PlayAnimationBasedOnDirection(IsMoving ? MovingDirection : e.Direction);
+		if(_thisPlayer.IsHoldingAWand())
+		{
+			PlayAnimationBasedOnDirection(e.Direction);
+		}
+		else
+		{
+			UpdateDirectionBasedOnMoveVector();
+			PlayAnimationBasedOnDirection(IsMoving ? MovingDirection : e.Direction);
+		}
 	}
 	
 	private void OnCastingArmDirectionChanged(object sender, PlayerHand.CardinalDirectionEventArgs e)

@@ -14,13 +14,11 @@ public class PlayerHand : NetworkBehaviour
 	public event EventHandler<CardinalDirectionEventArgs> OnSwingEnd;
 	public event EventHandler<CardinalDirectionEventArgs> OnCastingArmDirectionChanged;
 
-	// Inner Class
 	public class CardinalDirectionEventArgs : EventArgs
 	{
 		public CardinalDirection Direction;
 	}
 
-	// Serialized Fields
 	[SerializeField] private bool _isMainHand;
 	[SerializeField] private PlayerHand _oppositeHand;
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _northPivot;
@@ -30,10 +28,12 @@ public class PlayerHand : NetworkBehaviour
 	[SerializeField] private SpriteRenderer _itemHeldSR;
 	[SerializeField] private GameObject _armPivotGO;
 	[SerializeField] private GameObject _armGO;
+	[SerializeField] private PlayerArmVisualPreset _meleeSwingPreset;
+	[SerializeField] private PlayerArmVisualPreset _holdingWandPreset;
+	[SerializeField] private PlayerArmVisualPreset _armItemAnglePreset;
 
 	private Player _thisPlayer;
 	private ItemSO _heldItem;
-	private SortingGroup _sortingGroup;
 	private bool _isSwinging;
 	private bool _stoppingSwing;
 
@@ -43,15 +43,9 @@ public class PlayerHand : NetworkBehaviour
 		NetworkVariableWritePermission.Owner
 	);
 
-	// Properties
 	public CardinalDirection ArmDirection { get; private set; }
 
 	#region Unity Callbacks
-
-	private void Awake()
-	{
-		_sortingGroup = GetComponent<SortingGroup>();
-	}
 
 	private void Start()
 	{
@@ -84,37 +78,54 @@ public class PlayerHand : NetworkBehaviour
 		
 		if (_heldItem is MeleeItemSO)
 		{
-			if (_isSwinging || Pointer.IsOverUI()) return;
-
-			bool hasSwingInput = _isMainHand
-				? GameInput.Instance.GetPrimaryHeldDown()
-				: GameInput.Instance.GetSecondaryHeldDown();
-
-			if (hasSwingInput)
-			{
-				Debug.Log($"Executing swing in {ArmDirection}");
-				switch (ArmDirection)
-				{
-					case CardinalDirection.North:
-						SwingNorth(0.35f);
-						break;
-					case CardinalDirection.South:
-						SwingSouth(0.35f);
-						break;
-					case CardinalDirection.West:
-						SwingWest(0.35f);
-						break;
-					case CardinalDirection.East:
-						SwingEast(0.35f);
-						break;
-				}
-			}
+			TryToSwing();
 		}
 		else if (_heldItem is WandItemSO && !_isSwinging)
 		{
 			RotateArmBasedOnAngle();
-			
-			_sortingGroup.sortingOrder = ArmDirection == CardinalDirection.North ? -1 : 1;
+		}
+	}
+	
+	private void TryToSwing()
+	{
+		if (_isSwinging || Pointer.IsOverUI()) return;
+
+		bool hasSwingInput = _isMainHand
+			? GameInput.Instance.GetPrimaryHeldDown()
+			: GameInput.Instance.GetSecondaryHeldDown();
+
+		if (hasSwingInput)
+		{
+			switch (ArmDirection)
+			{
+				case CardinalDirection.North:
+					SwingNorth(0.35f);
+					break;
+				case CardinalDirection.South:
+					SwingSouth(0.35f);
+					break;
+				case CardinalDirection.West:
+					SwingWest(0.35f);
+					break;
+				case CardinalDirection.East:
+					SwingEast(0.35f);
+					break;
+			}
+		}
+	}
+	
+	private void RotateArmBasedOnAngle()
+	{
+		float angle = NormalizeAngle(_angleNetworkVariable.Value);
+		_armPivotGO.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+		
+		SetPivotPosition(ArmDirection);
+
+		if (_thisPlayer.GetComponent<PlayerStateMachine>().MovingDirection != ArmDirection)
+		{
+			OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmDirection });
+
+			if (_oppositeHand.IsSwinging()) _oppositeHand.StopSwing();
 		}
 	}
 
@@ -154,6 +165,7 @@ public class PlayerHand : NetworkBehaviour
 		if (_heldItem is WandItemSO)
 		{
 			ShowArm();
+			ApplyPreset(_holdingWandPreset);
 			
 			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmDirection });
 		}
@@ -176,9 +188,9 @@ public class PlayerHand : NetworkBehaviour
 	private void Swing(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction)
 	{
 		if (_isSwinging) return;
-		Debug.Log($"InSwing function for direction {direction}");
 		
 		SetPivotPosition(direction);
+		ApplyPreset(_meleeSwingPreset);
 		
 		StartCoroutine(SwingCoroutine(startAngle, endAngle, duration, clockwise, direction));
 	}
@@ -186,7 +198,7 @@ public class PlayerHand : NetworkBehaviour
 	private IEnumerator SwingCoroutine(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction)
 	{
 		ShowArm();
-		Debug.Log($"In Swing co routine for direction {direction}");
+		
 		OnSwingStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
 
 		_thisPlayer.SetIsPerformingSwing(true);
@@ -243,23 +255,25 @@ public class PlayerHand : NetworkBehaviour
 
 	#region Helpers
 
-	private void RotateArmBasedOnAngle()
+	private void ApplyPreset(PlayerArmVisualPreset preset)
 	{
-		float angle = NormalizeAngle(_angleNetworkVariable.Value);
-		_armPivotGO.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-		
-		SetPivotPosition(ArmDirection);
-
-		if (_thisPlayer.GetComponent<PlayerStateMachine>().MovingDirection != ArmDirection)
-		{
-			OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmDirection });
-
-			if (_oppositeHand.IsSwinging()) _oppositeHand.StopSwing();
-
-			_armPivotGO.transform.localScale = new Vector3(1, ArmDirection == CardinalDirection.West ? -1 : 1, 1);
-		}
+		CopyTransformValues(preset.GetArmTransform(), _armGO.transform);
+		CopyTransformValues(preset.GetItemInHandTransform(), _itemHeldSR.gameObject.transform);
 	}
 	
+	private void CopyTransformValues(Transform source, Transform target)
+	{
+		if (source == null || target == null)
+		{
+			Debug.LogError("Source or target Transform is null.");
+			return;
+		}
+
+		target.position = source.position;
+		target.rotation = source.rotation;
+		target.localScale = source.localScale;
+	}
+
 	private void SetPivotPosition(CardinalDirection direction)
 	{
 		switch (direction)
@@ -299,7 +313,7 @@ public class PlayerHand : NetworkBehaviour
 		_armGO.SetActive(false);
 	}
 
-	public bool IsArmShown() => _armPivotGO.activeInHierarchy;
+	public bool IsArmShown() => _armGO.activeInHierarchy;
 	public bool IsSwinging() => _isSwinging;
 	public void StopSwing() => _stoppingSwing = true;
 

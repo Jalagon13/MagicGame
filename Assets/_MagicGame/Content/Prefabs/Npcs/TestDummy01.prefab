@@ -66,11 +66,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Size.x
-      value: 1.0625
+      value: 0.6875
       objectReference: {fileID: 0}
     - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Size.y
-      value: 1.8125
+      value: 1.375
       objectReference: {fileID: 0}
     - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Sprite
@@ -78,7 +78,7 @@ PrefabInstance:
       objectReference: {fileID: 8791090488303533599, guid: d981cc3dbff7e45c4bdcc37a786c2e83, type: 3}
     - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_WasSpriteAssigned
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Name
@@ -106,7 +106,7 @@ PrefabInstance:
       objectReference: {fileID: 532044041320650086}
     - target: {fileID: 8184671317715962605, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 1364854954
+      value: 67067947
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

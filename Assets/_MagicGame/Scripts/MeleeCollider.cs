@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MoreMountains.Tools;
@@ -8,35 +9,55 @@ public class MeleeCollider : NetworkBehaviour
 {
 	[SerializeField] private float _detectionBetweenHits;
 	[SerializeField] private AudioClip _smackSound;
-
+	[SerializeField] private PlayerHand _playerHand;
 
 	private MeleeItemSO _meleeItemSO;
 	private List<IHasHealth> _entitiesFoundThisSwing;
 	private List<IHasHealth> _entitiesHitThisSwing;
 	private int _damage;
 	private Player _thisPlayer;
-	
-	public int Damage { get => _damage; set => _damage = value; }
+	private Collider2D _meleeCollider;
 
 	private void Awake()
 	{
 		_thisPlayer = transform.root.GetComponent<Player>();
+		_meleeCollider = GetComponent<Collider2D>();
+	}
+	
+	private void Start()
+	{
+		_playerHand.OnSwingStart += OnSwingStart;
+		_playerHand.OnSwingEnd += OnSwingEnd;
+		_playerHand.OnHoldingWandStart += OnHoldingWandStart;
+		_playerHand.OnHoldingWandEnd += OnHoldingWandEnd;
 	}
 
-	private void OnEnable()
+	private void OnHoldingWandStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
+	{
+		_meleeCollider.isTrigger = false;
+	}
+
+	private void OnHoldingWandEnd(object sender, PlayerHand.CardinalDirectionEventArgs e)
+	{
+		_meleeCollider.isTrigger = true;
+	}
+
+	private void OnSwingStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
 	{
 		if(!IsOwner) return;
-	
+		
+		_meleeCollider.isTrigger = true;
 		_entitiesFoundThisSwing = new();
 		_entitiesHitThisSwing = new();
 			
 		StartCoroutine(HitEnemies());
 	}
 
-	private void OnDisable()
+	private void OnSwingEnd(object sender, PlayerHand.CardinalDirectionEventArgs e)
 	{
 		if(!IsOwner) return;
 		
+		_meleeCollider.isTrigger = false;
 		_entitiesFoundThisSwing = new();
 		_entitiesHitThisSwing = new();
 			
@@ -69,7 +90,7 @@ public class MeleeCollider : NetworkBehaviour
 			{
 				if (_entitiesHitThisSwing.Contains(entityToDamage)) continue;
 
-				entityToDamage.ApplyDamage(_damage, transform.root.position);
+				entityToDamage.ApplyDamage(8, transform.root.position);
 				
 				_entitiesFoundThisSwing.Remove(entityToDamage);
 				
@@ -87,5 +108,15 @@ public class MeleeCollider : NetworkBehaviour
 		yield return null;
 
 		StartCoroutine(HitEnemies());
+	}
+	
+	public override void OnDestroy()
+	{
+		_playerHand.OnSwingStart -= OnSwingStart;
+		_playerHand.OnSwingEnd -= OnSwingEnd;
+		_playerHand.OnHoldingWandStart -= OnHoldingWandStart;
+		_playerHand.OnHoldingWandEnd -= OnHoldingWandEnd;
+		
+		base.OnDestroy();
 	}
 }

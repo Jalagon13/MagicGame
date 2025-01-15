@@ -223,7 +223,7 @@ TextureImporter:
       name: item_sword
       rect:
         serializedVersion: 2
-        x: 80
+        x: 16
         y: 80
         width: 16
         height: 16
@@ -509,7 +509,7 @@ TextureImporter:
       name: item_campfire
       rect:
         serializedVersion: 2
-        x: 16
+        x: 32
         y: 80
         width: 16
         height: 16
@@ -531,7 +531,7 @@ TextureImporter:
       name: item_marshmellow
       rect:
         serializedVersion: 2
-        x: 32
+        x: 48
         y: 80
         width: 16
         height: 16
@@ -553,7 +553,7 @@ TextureImporter:
       name: item_portal
       rect:
         serializedVersion: 2
-        x: 48
+        x: 64
         y: 80
         width: 16
         height: 16
@@ -567,50 +567,6 @@ TextureImporter:
       bones: []
       spriteID: 61e9456639523437ca678883662bd148
       internalID: 547736231
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: item_axe
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 80
-        width: 16
-        height: 16
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 512dccee5881f4cfa9a9a796841e46fe
-      internalID: 323659875
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: item_pickaxe
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 80
-        width: 16
-        height: 16
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ad838a0ce3f0c4c1fb4e1550954b884e
-      internalID: 2087115345
       vertices: []
       indices: 
       edges: []
@@ -631,45 +587,45 @@ TextureImporter:
     nameFileIdTable:
       item_alchemy_table: 1147903491
       item_axe: 323659875
-      item_blacksmith: 193280306
+      item_blacksmith: 677612400
       item_blue_bell: -1747701128
       item_campfire: -925800054
-      item_chicken: 613644385
-      item_coal: -956365738
-      item_fiber: 1246140129
+      item_chicken: 1063399352
+      item_coal: -650282894
+      item_fiber: 1175467371
       item_furnace: -1644608659
       item_glass_bottle: -427256236
-      item_hammer: -2051668681
+      item_hammer: -2017261595
       item_hide: -630612298
-      item_hoe: 270584447
-      item_iron_ingot: 1183257717
-      item_iron_ore: 878949773
+      item_hoe: -240867307
+      item_iron_ingot: 1100099323
+      item_iron_ore: -1501873989
       item_mana_crystal: -984316580
       item_mana_potion: -854955160
       item_marshmellow: -1033124662
       item_meat_cooked: 1280716566
       item_meat_raw: 1876687506
-      item_mushed_mushroom: 1788323739
-      item_mushroom: -1464366705
+      item_mushed_mushroom: 715077904
+      item_mushroom: 973883254
       item_pickaxe: 2087115345
       item_pixie_dust: 1964935682
-      item_plywood: 256975438
+      item_plywood: -68245828
       item_portal: 547736231
       item_sand: 67440230
-      item_simple_wand: 1328981321
+      item_simple_wand: -1071939411
       item_spindle: 1551977814
       item_stone: -1096778836
-      item_stone_axe: 1411200348
-      item_stone_pickaxe: 1009719350
-      item_stone_shovel: -1486516137
-      item_stone_sword: -1805061650
+      item_stone_axe: -393647513
+      item_stone_pickaxe: 561404720
+      item_stone_shovel: 2080392036
+      item_stone_sword: 444970800
       item_sword: -1843546812
       item_torch: -1599595118
       item_wood: -395863171
-      item_wood_axe: -1858806548
-      item_wood_hammer: -1571514942
-      item_wood_pickaxe: 521086555
-      item_wood_shovel: 1748907150
+      item_wood_axe: 1896764305
+      item_wood_hammer: 1132864278
+      item_wood_pickaxe: 1564066302
+      item_wood_shovel: 1504003823
       item_wood_wand: -1593785014
       item_work_bench: 1337721260
   mipmapLimitGroupName: 
