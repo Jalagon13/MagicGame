@@ -103,6 +103,8 @@ public class Lightmap : MonoBehaviour
 
 	private void ChunkManager_OnLoadedPlayerChunksUpdated(object sender, ChunkManager.OnActiveChunksUpdatedEventArgs e)
 	{
+		if(!WorldManager.Instance.IsTicking()) return;
+	
 		// Get the bounds of the loaded tiles
 		_minLoadedTilePos = e.MinLoadedTilePos;
 		_maxLoadedTilePos = e.MaxLoadedTilePos;

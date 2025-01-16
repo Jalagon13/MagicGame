@@ -318,6 +318,11 @@ public class WorldManager : NetworkBehaviour
 		return _isTransitioningEnvironment;
 	}
 	
+	public bool IsTicking()
+	{
+		return _isTicking;
+	}
+	
 	public override void OnDestroy()
 	{
 		if(IsServer)

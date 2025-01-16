@@ -24,7 +24,7 @@ public class LightSource : MonoBehaviour
 
 	private void Update()
 	{
-		if(Lightmap.Instance.GetRenderTexture() == null) return;
+		if(Lightmap.Instance.GetRenderTexture() == null || !WorldManager.Instance.IsTicking()) return;
 
 		float updateThreshold = 1f / Lightmap.Instance.GetLightmapScale();
 

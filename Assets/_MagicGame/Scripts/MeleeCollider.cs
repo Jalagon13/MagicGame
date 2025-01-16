@@ -16,12 +16,11 @@ public class MeleeCollider : NetworkBehaviour
 	private List<IHasHealth> _entitiesHitThisSwing;
 	private int _damage;
 	private Player _thisPlayer;
-	private Collider2D _meleeCollider;
+	private bool _wandOut;
 
 	private void Awake()
 	{
 		_thisPlayer = transform.root.GetComponent<Player>();
-		_meleeCollider = GetComponent<Collider2D>();
 	}
 	
 	private void Start()
@@ -34,19 +33,18 @@ public class MeleeCollider : NetworkBehaviour
 
 	private void OnHoldingWandStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
 	{
-		_meleeCollider.isTrigger = false;
+		_wandOut = true;
 	}
 
 	private void OnHoldingWandEnd(object sender, PlayerHand.CardinalDirectionEventArgs e)
 	{
-		_meleeCollider.isTrigger = true;
+		_wandOut = false;
 	}
 
 	private void OnSwingStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
 	{
 		if(!IsOwner) return;
 		
-		_meleeCollider.isTrigger = true;
 		_entitiesFoundThisSwing = new();
 		_entitiesHitThisSwing = new();
 			
@@ -57,7 +55,6 @@ public class MeleeCollider : NetworkBehaviour
 	{
 		if(!IsOwner) return;
 		
-		_meleeCollider.isTrigger = false;
 		_entitiesFoundThisSwing = new();
 		_entitiesHitThisSwing = new();
 			
@@ -66,7 +63,7 @@ public class MeleeCollider : NetworkBehaviour
 	
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if(!IsOwner) return;
+		if(!IsOwner || _wandOut) return;
 	
 		if(collision.TryGetComponent(out IHasHealth iHasHealth))
 		{
