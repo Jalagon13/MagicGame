@@ -72,7 +72,7 @@ public class PlayerHand : NetworkBehaviour
 	public override void OnNetworkSpawn()
 	{
 		int heldItemValue = _isMainHand ? _thisPlayer.GetMainHandItemIndexNetworkVariable().Value : _thisPlayer.GetOffHandItemIndexNetworkVariable().Value;
-		Debug.Log(heldItemValue);
+		
 		UpdateArmFromItemIndex(heldItemValue);
 		
 		base.OnNetworkSpawn();
@@ -186,7 +186,7 @@ public class PlayerHand : NetworkBehaviour
 		{
 			ShowArm();
 			ApplyPreset(_holdingWandPreset);
-			Debug.Log("Held item is a wand");
+			
 			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmDirection });
 		}
 		else if (_heldItem is MeleeItemSO)

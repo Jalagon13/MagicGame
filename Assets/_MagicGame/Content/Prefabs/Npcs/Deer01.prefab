@@ -140,6 +140,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_Size.x
+      value: 0.89
+      objectReference: {fileID: 0}
+    - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_Size.y
+      value: 0.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1563285353, guid: 8c7d9328ebb2e4be49dd7bbacdaa2be2, type: 3}
+    - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Name
       value: Deer01

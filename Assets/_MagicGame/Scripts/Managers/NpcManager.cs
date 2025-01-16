@@ -48,7 +48,7 @@ public class NpcManager : NetworkBehaviour
 
 	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
 	{
-		TryToSpawnNpc(Player.LocalClientInstance.transform.position, _testDummyNpcSO);
+		TryToSpawnNpc(ActionManager.MouseWorldPosition, _testDummyNpcSO);
 	}
 
 	private void NetworkManager_OnClientConnectedCallback(ulong clientId)

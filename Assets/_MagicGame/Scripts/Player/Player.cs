@@ -277,7 +277,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			InventoryManager.Instance.AddItem(item.Item, item.Quantity);
 		}
-		Debug.Log("Start Items spawned");
+		
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
 
