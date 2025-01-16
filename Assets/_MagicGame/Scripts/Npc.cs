@@ -38,8 +38,6 @@ public class Npc : NetworkBehaviour, IHasHealth
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void DamageNpcServerRpc(int damageAmount, Vector2 damagerPosition)
 	{
-		Debug.Log($"[Client {NetworkManager.LocalClientId}] dealing {damageAmount} damage to {gameObject.name}");
-		
 		_npcHealthPointNetworkVariable.Value -= damageAmount;
 		
 		if(_npcHealthPointNetworkVariable.Value <= 0)
@@ -54,7 +52,6 @@ public class Npc : NetworkBehaviour, IHasHealth
 	
 	private void UpdateHealthUI(int previousValue, int newValue)
 	{
-		Debug.Log("UpdateHealthUI");
 		OnPlayerHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
 		{
 			PreviousValue = previousValue,

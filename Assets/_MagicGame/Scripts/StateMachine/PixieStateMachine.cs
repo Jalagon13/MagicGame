@@ -13,9 +13,9 @@ public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
 	[Tooltip("(Linear drag), higher this value, the more drag (knockback resistant) this entity experiences")]
 	[SerializeField] private int _knockbackResist = 20; 
 	[field: SerializeField] public float MoveForce { get; private set; }
-	[Range(0f, 1f)]
 	[Tooltip("Bias toward moving toward the player. Higher values mean stronger bias.")]
 	[field: SerializeField] public float TowardPlayerBias { get; private set; }
+	[field: SerializeField] public NpcWallCollider WallCollider { get; private set; }
 	
 	public Knockback KnockBack { get; private set; }
 	private Npc _npc;
@@ -26,10 +26,6 @@ public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
 	{
 		if(IsServer)
 		{
-			// Populate dictionary with livestock states
-			_states[PixieState.Attacking] = new PixieAttackState(PixieState.Attacking, this);
-			_currentState = _states[PixieState.Attacking];
-		
 			// Get knockback component for dealing damage and knockback
 			KnockBack = GetComponent<Knockback>();
 			KnockBack.OnKnockbackStart += Knockback_OnKnockbackStart;
@@ -45,6 +41,10 @@ public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
 		
 			// Set up the environment of the NPC so it knows how to pathfind itself
 			GridGraph = NodeGraphUtility.GetGridGraph(GetComponent<NpcNetworkComponent>().GetNpcEnvironment());
+			
+			// Populate dictionary with livestock states
+			_states[PixieState.Attacking] = new PixieAttackState(PixieState.Attacking, this);
+			_currentState = _states[PixieState.Attacking];
 		}
 	
 		base.OnNetworkSpawn();
