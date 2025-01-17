@@ -51,7 +51,7 @@ public class PixieAttackState : BaseState<PixieStateMachine.PixieState>
 		// Store the avoidance direction and activate avoidance
 		_wallAvoidanceDirection = collisionDirection;
 		_isAvoidingWall = true;
-		Debug.Log("OnWallCollide");
+		
 		// Flip perpendicular direction
 		FlipPerpendicularDirection();
 	}
