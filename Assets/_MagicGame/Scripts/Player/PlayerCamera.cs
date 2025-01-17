@@ -2,6 +2,8 @@ using System;
 using Unity.Cinemachine;
 using Unity.Netcode;
 using UnityEngine;
+using FMODUnity;
+using FMOD.Studio;
 
 public class PlayerCamera : NetworkBehaviour
 {
@@ -11,6 +13,8 @@ public class PlayerCamera : NetworkBehaviour
 	private CinemachineCamera _cinemachineCam;
 	private Transform _originalFollowTarget;
 	private float _originalOrthoSize;
+	private NetworkObject _playerObject;
+	private Vector3 _lastPlayerPosition;
 	
 	private void Awake() 
 	{
@@ -37,12 +41,39 @@ public class PlayerCamera : NetworkBehaviour
 		_cameraFrustumCollider.size = new Vector2(horizontalSize, verticalSize);
 		_cameraFrustumCollider.offset = Vector2.zero;
 	}
+	
+	private void Update()
+	{
+		if(_playerObject != null && _playerObject.transform.position != _lastPlayerPosition)
+		{
+			SetListenerToPlayer();
+			_lastPlayerPosition = _playerObject.transform.position;
+		}
+	}
 
 	private void RegisterCameraToPlayer(ulong clientId)
 	{
 		if(NetworkManager.LocalClientId != clientId) return;
 		
-		_cinemachineCam.Follow = NetworkManager.ConnectedClients[clientId].PlayerObject.transform;
+		_playerObject = NetworkManager.ConnectedClients[clientId].PlayerObject;
+		_cinemachineCam.Follow = _playerObject.transform;
+		
+		SetListenerToPlayer();
+	}
+	
+	
+	private void SetListenerToPlayer()
+	{
+		var attributes = new FMOD.ATTRIBUTES_3D
+		{
+			position = new FMOD.VECTOR
+			{
+				x = _playerObject.transform.position.x,
+				y = _playerObject.transform.position.y,
+				z = _playerObject.transform.position.z
+			}
+		};
+		RuntimeManager.StudioSystem.setListenerAttributes(0, attributes);
 	}
 	
 	public override void OnDestroy() 

@@ -380,8 +380,8 @@ MonoBehaviour:
   switchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: ../../Desktop/Stuff/FMOD/MagicGame/MagicGame.fspro
-  sourceBankPath: ../../Desktop/Stuff/FMOD/MagicGame/Build
+  sourceProjectPath: Assets/_MagicGame/Content/Audio/FMOD/MagicGame.fspro
+  sourceBankPath: Assets/_MagicGame/Content/Audio/FMOD/Build
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
