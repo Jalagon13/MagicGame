@@ -79,8 +79,8 @@ public class NpcNetworkComponent : NetworkBehaviour
 	private void NpcNetworkTick()
 	{
 		HandleNpcEnvironmentVisibility();
-		// HandleNpcSpawnZoneVisibility();
-		// UpdateDespawnTimer();
+		HandleNpcSpawnZoneVisibility();
+		UpdateDespawnTimer();
 	}
 
 	private void HandleNpcEnvironmentVisibility()

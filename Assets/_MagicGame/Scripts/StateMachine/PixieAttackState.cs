@@ -24,8 +24,6 @@ public class PixieAttackState : BaseState<PixieStateMachine.PixieState>
 
 	private void OnKnockbackEnd(object sender, Knockback.KnockbackEventArgs e)
 	{
-		Debug.Log("OnKnockbackEnd");
-
 		// Store the original TowardPlayerBias value when knockback ends
 		_originalTowardPlayerBias = _ctx.TowardPlayerBias;
 

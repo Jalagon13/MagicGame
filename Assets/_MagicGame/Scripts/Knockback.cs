@@ -20,8 +20,6 @@ public class Knockback : MonoBehaviour
 	
 	public bool IsBeingKnockedBack { get; private set; }
 	
-	private float knockbackTimer;
-
 	public void ApplyKnockback(Rigidbody2D rb2d, Vector2 knockerSourcePosition, float knockbackForce = 20f)
 	{
 		if (!_knockbackEnabled) return;
@@ -49,7 +47,6 @@ public class Knockback : MonoBehaviour
 		});
 
 		// Apply the knockback force
-		Debug.Log($"Force being applied: {knockbackForce}");
 		_rb2d.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
 		
 		float knockbackTimer = _knockbackDuration; // Set the timer to knockbackDuration

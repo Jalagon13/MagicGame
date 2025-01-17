@@ -26,7 +26,6 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 	[Tooltip("(Linear drag), higher this value, the more drag (knockback resistant) this entity experiences")]
 	[SerializeField] private int _knockbackResist = 20; 
 	[SerializeField] private List<SpriteAnimationHandler> _spriteDirectionHandlers = new();
-	[SerializeField] private Collider2D _wallDetectionCollider; // Used for wall collision detection
 	
 	private Npc _npc;
 	private Knockback _knockback;
@@ -132,15 +131,11 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 	
 	private void Knockback_OnKnockbackStart(object sender, Knockback.KnockbackEventArgs e)
 	{
-		_wallDetectionCollider.isTrigger = false;
-		
 		Agent.enabled = false;
 	}
 	
 	private void Knockback_OnKnockbackEnd(object sender, Knockback.KnockbackEventArgs e)
 	{
-		_wallDetectionCollider.isTrigger = true;
-		
 		Agent.enabled = true;
 		
 		ThreatSource = e.KnockBackerPosition;
