@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{8611083f-a97f-4047-9e27-2c095d60e585}">
 		<property name="name">
-			<value>MeleeSwing</value>
+			<value>Woosh</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -72,6 +72,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{6b558304-fdab-4706-857d-65a83d9307b1}">
+		<relationship name="modulators">
+			<destination>{232f46b7-5404-4b93-9118-ad343ba3cd93}</destination>
+		</relationship>
 		<relationship name="effectChain">
 			<destination>{52a2cac5-1bf4-4aa4-aa61-dc510ba5e5dc}</destination>
 		</relationship>
@@ -93,6 +96,14 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{df10429b-0cce-44cf-9c27-b8b7239522a4}" />
+	<object class="RandomizerModulator" id="{232f46b7-5404-4b93-9118-ad343ba3cd93}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>pitch</value>
+		</property>
+		<property name="amount">
+			<value>13</value>
+		</property>
+	</object>
 	<object class="MixerBusEffectChain" id="{52a2cac5-1bf4-4aa4-aa61-dc510ba5e5dc}">
 		<relationship name="effects">
 			<destination>{c0eda5db-82bc-4976-af73-25a7b285f285}</destination>

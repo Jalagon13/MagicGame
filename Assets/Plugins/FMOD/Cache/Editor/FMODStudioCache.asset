@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-1950581129879358920
+--- !u!114 &-7913808447469494507
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,14 +10,68 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/MeleeSwing
+  m_Name: event:/FocusSlotChanged
   m_EditorClassIdentifier: 
-  Path: event:/MeleeSwing
+  Path: event:/FocusSlotChanged
   Guid:
-    Data1: -2045704129
-    Data2: 1078438271
-    Data3: 153888670
-    Data4: -2048565155
+    Data1: 765158737
+    Data2: 1310804204
+    Data3: -1870693459
+    Data4: -353672984
+  Banks:
+  - {fileID: -274494626289347152}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-5090105735752503274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/MeleeHit
+  m_EditorClassIdentifier: 
+  Path: event:/MeleeHit
+  Guid:
+    Data1: -321209541
+    Data2: 1119949590
+    Data3: 197467520
+    Data4: 1755672934
+  Banks:
+  - {fileID: -1788956731235525559}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4444346561180830864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/ItemPickup
+  m_EditorClassIdentifier: 
+  Path: event:/ItemPickup
+  Guid:
+    Data1: 1278557062
+    Data2: 1173231088
+    Data3: 951300029
+    Data4: -972426705
   Banks:
   - {fileID: -1788956731235525559}
   IsStream: 0
@@ -42,10 +96,57 @@ MonoBehaviour:
   Path: Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638727053724022697
+  lastModified: 638727345698006271
   FileSizes:
   - Name: Desktop
-    Value: 6144
+    Value: 2984224
+  Exists: 1
+--- !u!114 &-1658336870167961165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Woosh
+  m_EditorClassIdentifier: 
+  Path: event:/Woosh
+  Guid:
+    Data1: -2045704129
+    Data2: 1078438271
+    Data3: 153888670
+    Data4: -2048565155
+  Banks:
+  - {fileID: -1788956731235525559}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-274494626289347152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/UI.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/UI.bank
+  Name: UI
+  StudioPath: bank:/UI
+  lastModified: 638727350257423051
+  FileSizes:
+  - Name: Desktop
+    Value: 9536
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -63,14 +164,21 @@ MonoBehaviour:
   - {fileID: 1866455422502961147}
   - {fileID: 9203900867399494895}
   - {fileID: -1788956731235525559}
+  - {fileID: -274494626289347152}
   EditorEvents:
-  - {fileID: -1950581129879358920}
+  - {fileID: -1658336870167961165}
+  - {fileID: 5446125238412971131}
+  - {fileID: -5090105735752503274}
+  - {fileID: 5157382580385516755}
+  - {fileID: -4444346561180830864}
+  - {fileID: 8529417814688622035}
+  - {fileID: -7913808447469494507}
   EditorParameters: []
   MasterBanks:
   - {fileID: 9203900867399494895}
   StringsBanks:
   - {fileID: 1866455422502961147}
-  cacheTime: 638727053724022697
+  cacheTime: 638727350257423051
   cacheVersion: 131622
 --- !u!114 &1866455422502961147
 MonoBehaviour:
@@ -87,11 +195,92 @@ MonoBehaviour:
   Path: Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638727053721460694
+  lastModified: 638727343147674945
   FileSizes:
   - Name: Desktop
-    Value: 806
+    Value: 1134
   Exists: 1
+--- !u!114 &5157382580385516755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/PixieDamaged
+  m_EditorClassIdentifier: 
+  Path: event:/PixieDamaged
+  Guid:
+    Data1: 3190678
+    Data2: 1255253222
+    Data3: 756817558
+    Data4: 811093164
+  Banks:
+  - {fileID: -1788956731235525559}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &5446125238412971131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/PlayerFootsteps
+  m_EditorClassIdentifier: 
+  Path: event:/PlayerFootsteps
+  Guid:
+    Data1: 1689472473
+    Data2: 1191771207
+    Data3: 255401399
+    Data4: -184975247
+  Banks:
+  - {fileID: -1788956731235525559}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 605
+--- !u!114 &8529417814688622035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/InventorySlotClicked
+  m_EditorClassIdentifier: 
+  Path: event:/InventorySlotClicked
+  Guid:
+    Data1: -1013286621
+    Data2: 1259496442
+    Data3: 1447670913
+    Data4: -1372581738
+  Banks:
+  - {fileID: -274494626289347152}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &9203900867399494895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,7 +296,7 @@ MonoBehaviour:
   Path: Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638727053721451685
+  lastModified: 638727343147669560
   FileSizes:
   - Name: Desktop
     Value: 1036

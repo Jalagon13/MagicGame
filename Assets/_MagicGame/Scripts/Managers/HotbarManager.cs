@@ -62,6 +62,8 @@ public class HotbarManager : MonoBehaviour
 	{
 		_focusInventoryItem = InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SelectedSlotIndex];
 		
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.LocalClientInstance.transform.position);
+		
 		if(_focusInventoryItem == null)
 		{
 			InvokeOnFocusItemSetEvent(-1, e.SelectedSlotIndex);

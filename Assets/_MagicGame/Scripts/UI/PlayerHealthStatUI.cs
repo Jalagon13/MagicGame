@@ -22,7 +22,7 @@ public class PlayerHealthStatUI : MonoBehaviour
 	{
 		if(Player.LocalClientInstance != null)
 		{
-			Player.LocalClientInstance.OnPlayerHealthUpdated += Player_OnPlayerHealthUpdated;
+			Player.LocalClientInstance.OnHealthUpdated += Player_OnPlayerHealthUpdated;
 		}
 	}
 
@@ -45,7 +45,7 @@ public class PlayerHealthStatUI : MonoBehaviour
 		
 		if(Player.LocalClientInstance != null)
 		{
-			Player.LocalClientInstance.OnPlayerHealthUpdated -= Player_OnPlayerHealthUpdated;
+			Player.LocalClientInstance.OnHealthUpdated -= Player_OnPlayerHealthUpdated;
 		}
 	}
 }

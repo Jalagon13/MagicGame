@@ -27,9 +27,7 @@ public class InventoryManager : MonoBehaviour
 
 	
 	[SerializeField] private int _slotAmount;
-	[SerializeField] private AudioClip _collectSound;
 	[SerializeField] private ItemCollectWorldUI _itemCollectPlatePrefab;
-	[SerializeField] private MMF_Player _slotClickFeedbacks;
 	
 	private InventoryModel _inventoryModel;
 	private MouseItemModel _mouseItemModel;
@@ -84,6 +82,8 @@ public class InventoryManager : MonoBehaviour
 		
 		_inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()] = _inventoryModel.InventoryItems[_inventoryModel.InventoryItems.Count - 1];
 		_inventoryModel.InventoryItems[_inventoryModel.InventoryItems.Count - 1] = mainHandInventoryItem;;
+		
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.LocalClientInstance.transform.position);
 		
 		_inventoryModel.UpdateInventory();
 	}
@@ -149,7 +149,9 @@ public class InventoryManager : MonoBehaviour
 		while(_itemQueue.Count > 0)
 		{
 			if(playCollectSound)
-				MMSoundManagerSoundPlayEvent.Trigger(_collectSound, MMSoundManager.MMSoundManagerTracks.Sfx, default, volume: UnityEngine.Random.Range(0.9f, 1.1f));
+			{
+				SoundManager.Instance.PlayOneShot(FMODEvents.Instance.ItemPickup, Player.LocalClientInstance.transform.position);
+			}
 		
 			InventoryItem item = _itemQueue.Dequeue();
 			ItemCollectHandle(item);
@@ -439,7 +441,7 @@ public class InventoryManager : MonoBehaviour
 	
 	private void PlayClickFeedbacks()
 	{
-		_slotClickFeedbacks?.PlayFeedbacks();
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.InventorySlotClicked, Player.LocalClientInstance.transform.position);
 	}
 	
 	public InventoryModel GetInventoryModel()

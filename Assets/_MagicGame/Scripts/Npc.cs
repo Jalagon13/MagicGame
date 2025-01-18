@@ -7,7 +7,8 @@ using UnityEngine;
 public class Npc : NetworkBehaviour, IHasHealth
 {	
 	public event EventHandler OnNpcKilled;
-	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnPlayerHealthUpdated;
+	public event EventHandler OnNpcDamged;
+	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnHealthUpdated;
 
 	[SerializeField] private int _maxHealth;
 	[SerializeField] private LootTable _lootTable;
@@ -26,10 +27,20 @@ public class Npc : NetworkBehaviour, IHasHealth
 		}
 		
 		_npcHealthPointNetworkVariable.OnValueChanged += UpdateHealthUI;
+		_npcHealthPointNetworkVariable.OnValueChanged += OnDamged;
 		
 		base.OnNetworkSpawn();
 	}
-	
+
+	private void OnDamged(int previousValue, int newValue)
+	{
+		// If the new value is less than the previous value than this npc has been damaged
+		if(newValue < previousValue)
+		{
+			OnNpcDamged?.Invoke(this, EventArgs.Empty);
+		}
+	}
+
 	public void ApplyDamage(int damage, Vector2 damagerPosition)
 	{
 		DamageNpcServerRpc(damage, damagerPosition);
@@ -52,7 +63,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 	
 	private void UpdateHealthUI(int previousValue, int newValue)
 	{
-		OnPlayerHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
+		OnHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
 		{
 			PreviousValue = previousValue,
 			NewValue = newValue,
@@ -79,6 +90,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 	public override void OnNetworkDespawn()
 	{
 		_npcHealthPointNetworkVariable.OnValueChanged -= UpdateHealthUI;
+		_npcHealthPointNetworkVariable.OnValueChanged -= OnDamged;
 	
 		base.OnNetworkDespawn();
 	}

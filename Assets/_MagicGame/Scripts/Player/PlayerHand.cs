@@ -231,7 +231,7 @@ public class PlayerHand : NetworkBehaviour
 		
 		OnSwingStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
 
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.MeleeSwing, Player.LocalClientInstance.transform.position);
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerMeleeSwing, Player.LocalClientInstance.transform.position);
 		
 		_thisPlayer.SetIsPerformingSwing(true);
 		_isSwinging = true;

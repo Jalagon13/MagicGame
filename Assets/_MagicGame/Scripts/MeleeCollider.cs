@@ -8,7 +8,6 @@ using UnityEngine;
 public class MeleeCollider : NetworkBehaviour
 {
 	[SerializeField] private float _detectionBetweenHits;
-	[SerializeField] private AudioClip _smackSound;
 	[SerializeField] private PlayerHand _playerHand;
 
 	private MeleeItemSO _meleeItemSO;
@@ -91,7 +90,7 @@ public class MeleeCollider : NetworkBehaviour
 				
 				_entitiesFoundThisSwing.Remove(entityToDamage);
 				
-				MMSoundManagerSoundPlayEvent.Trigger(_smackSound, MMSoundManager.MMSoundManagerTracks.Sfx, default, pitch: UnityEngine.Random.Range(1.2f, 1.3f), volume: 0.85f);
+				SoundManager.Instance.PlayOneShot(FMODEvents.Instance.MeleeHit, Player.LocalClientInstance.transform.position);
 					
 				if(entityToDamage != null)
 				{

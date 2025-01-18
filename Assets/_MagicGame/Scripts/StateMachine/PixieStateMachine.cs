@@ -37,7 +37,8 @@ public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
 		
 			// Set up Npc on death
 			_npc = GetComponent<Npc>();
-			_npc.OnNpcKilled += Npc_OnNpcKilled;
+			_npc.OnNpcKilled += OnNpcKilled;
+			_npc.OnNpcDamged += OnNpcDamged;
 		
 			// Set up the environment of the NPC so it knows how to pathfind itself
 			GridGraph = NodeGraphUtility.GetGridGraph(GetComponent<NpcNetworkComponent>().GetNpcEnvironment());
@@ -49,15 +50,20 @@ public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
 	
 		base.OnNetworkSpawn();
 	}
-	
+
 	protected override void Start()
 	{
 		if(!IsServer) return;
 	
 		base.Start();
 	}
+	
+	private void OnNpcDamged(object sender, EventArgs e)
+	{
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PixieDamaged, transform.position);
+	}
 
-	private void Npc_OnNpcKilled(object sender, EventArgs e)
+	private void OnNpcKilled(object sender, EventArgs e)
 	{
 		
 	}
@@ -76,7 +82,8 @@ public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
 	{
 		if(IsServer)
 		{
-			_npc.OnNpcKilled -= Npc_OnNpcKilled;
+			_npc.OnNpcKilled -= OnNpcKilled;
+			_npc.OnNpcDamged -= OnNpcDamged;
 			
 			KnockBack.OnKnockbackStart -= Knockback_OnKnockbackStart;
 			KnockBack.OnKnockbackEnd -= Knockback_OnKnockbackEnd;

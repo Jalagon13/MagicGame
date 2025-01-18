@@ -23,7 +23,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		public Vector2 DamagerPosition;
 	}
 	
-	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnPlayerHealthUpdated;
+	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnHealthUpdated;
 	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerManaUpdated;
 	public class OnStatUpdatedEventArgs : EventArgs
 	{
@@ -229,7 +229,7 @@ public class Player : NetworkBehaviour, IHasHealth
 
 	private void HealthNetworkVariable_OnValueChanged(int previousValue, int newValue)
 	{
-		OnPlayerHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
+		OnHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
 		{
 			PreviousValue = previousValue,
 			NewValue = newValue,

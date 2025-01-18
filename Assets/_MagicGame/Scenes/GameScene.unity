@@ -3705,9 +3705,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _slotAmount: 37
-  _collectSound: {fileID: 0}
   _itemCollectPlatePrefab: {fileID: 2893883857882228170, guid: 97583e12174a6488193592c120954140, type: 3}
-  _slotClickFeedbacks: {fileID: 0}
 --- !u!1 &870508366
 GameObject:
   m_ObjectHideFlags: 0
@@ -4365,6 +4363,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006424801}
   m_CullTransparentMesh: 1
+--- !u!1 &1007229083
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1007229085}
+  - component: {fileID: 1007229084}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1007229084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1007229083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f0021fc511df4421a17ea4781c6eb24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1007229085
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1007229083}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1741739116}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1007233518
 GameObject:
   m_ObjectHideFlags: 0
@@ -7740,6 +7783,99 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1724730761}
   m_CullTransparentMesh: 1
+--- !u!1 &1741739115
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1741739116}
+  - component: {fileID: 1741739117}
+  m_Layer: 0
+  m_Name: FMODEvents
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1741739116
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1741739115}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1007229085}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1741739117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1741739115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 856f586765ecf44d5ae1efb60d334837, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <PlayerFootsteps>k__BackingField:
+    Guid:
+      Data1: 1689472473
+      Data2: 1191771207
+      Data3: 255401399
+      Data4: -184975247
+    Path: event:/PlayerFootsteps
+  <PlayerMeleeSwing>k__BackingField:
+    Guid:
+      Data1: -2045704129
+      Data2: 1078438271
+      Data3: 153888670
+      Data4: -2048565155
+    Path: event:/Woosh
+  <ItemPickup>k__BackingField:
+    Guid:
+      Data1: 1278557062
+      Data2: 1173231088
+      Data3: 951300029
+      Data4: -972426705
+    Path: event:/ItemPickup
+  <InventorySlotClicked>k__BackingField:
+    Guid:
+      Data1: -1013286621
+      Data2: 1259496442
+      Data3: 1447670913
+      Data4: -1372581738
+    Path: event:/InventorySlotClicked
+  <FocusSlotChanged>k__BackingField:
+    Guid:
+      Data1: 765158737
+      Data2: 1310804204
+      Data3: -1870693459
+      Data4: -353672984
+    Path: event:/FocusSlotChanged
+  <MeleeHit>k__BackingField:
+    Guid:
+      Data1: -321209541
+      Data2: 1119949590
+      Data3: 197467520
+      Data4: 1755672934
+    Path: event:/MeleeHit
+  <PixieDamaged>k__BackingField:
+    Guid:
+      Data1: 3190678
+      Data2: 1255253222
+      Data3: 756817558
+      Data4: 811093164
+    Path: event:/PixieDamaged
 --- !u!1 &1785759320
 GameObject:
   m_ObjectHideFlags: 0
@@ -9473,6 +9609,7 @@ SceneRoots:
   - {fileID: 1616656745}
   - {fileID: 1942133333}
   - {fileID: 2131152289}
+  - {fileID: 1007229085}
   - {fileID: 242063068}
   - {fileID: 1785759326}
   - {fileID: 1058546868}
