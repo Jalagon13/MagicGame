@@ -1,4 +1,5 @@
 using System;
+using FMODUnity;
 using Pathfinding;
 using UnityEngine;
 
@@ -16,6 +17,8 @@ public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
 	[Tooltip("Bias toward moving toward the player. Higher values mean stronger bias.")]
 	[field: SerializeField] public float TowardPlayerBias { get; private set; }
 	[field: SerializeField] public NpcWallCollider WallCollider { get; private set; }
+	[field: SerializeField] public EventReference PixieDamaged { get; private set; }
+	[field: SerializeField] public EventReference PixieDeath { get; private set; }
 	
 	public Knockback KnockBack { get; private set; }
 	private Npc _npc;
@@ -60,12 +63,12 @@ public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
 	
 	private void OnNpcDamged(object sender, EventArgs e)
 	{
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PixieDamaged, transform.position);
+		SoundManager.Instance.PlayOneShot(PixieDamaged, transform.position);
 	}
 
 	private void OnNpcKilled(object sender, EventArgs e)
 	{
-		
+		SoundManager.Instance.PlayOneShot(PixieDeath, transform.position);
 	}
 
 	private void Knockback_OnKnockbackStart(object sender, Knockback.KnockbackEventArgs e)

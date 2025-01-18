@@ -60,7 +60,7 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 	{
 		if(!_ctx.IsDead)
 		{
-			MMSoundManagerSoundPlayEvent.Trigger(_ctx.FootstepSound, MMSoundManager.MMSoundManagerTracks.Sfx, default, pitch: UnityEngine.Random.Range(0.75f, 1f), volume: 0.35f);
+			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerFootsteps, Player.LocalClientInstance.transform.position);
 		}
 	}
 }

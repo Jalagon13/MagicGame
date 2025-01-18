@@ -3,7 +3,7 @@
 	<object class="AudioFile" id="{a54fc808-7896-42e9-9688-8c8fef5bc628}">
 		<property name="note" />
 		<property name="assetPath">
-			<value>SFX/Footsteps/SFX_GrassFootstep04.wav</value>
+			<value>Player/Footsteps/SFX_GrassFootstep04.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>

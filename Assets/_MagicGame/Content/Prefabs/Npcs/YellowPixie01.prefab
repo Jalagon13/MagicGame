@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _maxHealth
-      value: 500
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 3885697903487451157, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Radius
@@ -106,7 +106,7 @@ PrefabInstance:
       objectReference: {fileID: 6633633827701661900}
     - target: {fileID: 8184671317715962605, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 3803721222
+      value: 3555774998
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -149,3 +149,17 @@ MonoBehaviour:
   <MoveForce>k__BackingField: 60
   <TowardPlayerBias>k__BackingField: 0.8
   <WallCollider>k__BackingField: {fileID: 2548604085223437188}
+  <PixieDamaged>k__BackingField:
+    Guid:
+      Data1: 3190678
+      Data2: 1255253222
+      Data3: 756817558
+      Data4: 811093164
+    Path: event:/PixieDamaged
+  <PixieDeath>k__BackingField:
+    Guid:
+      Data1: 3190678
+      Data2: 1255253222
+      Data3: 756817558
+      Data4: 811093164
+    Path: event:/PixieDamaged

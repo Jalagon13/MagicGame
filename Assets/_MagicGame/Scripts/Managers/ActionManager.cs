@@ -53,12 +53,12 @@ public class ActionManager : MonoBehaviour
 	{
 		if (GameInput.Instance.GetPrimaryHeldDown() && _primaryActionTimer.RemainingSeconds <= 0 && InventoryManager.Instance.MainHandItemExists(out InventoryItem mainHandInventoryItem))
 		{
-			_primaryActionTimer.RemainingSeconds = mainHandInventoryItem.Item.ExecuteItemAction(mainHandInventoryItem);
+			_primaryActionTimer.RemainingSeconds = mainHandInventoryItem.Item.ExecuteItemAction(mainHandInventoryItem, Player.LocalClientInstance.MainHand);
 		}
 		
 		if (GameInput.Instance.GetSecondaryHeldDown() && _secondaryActionTimer.RemainingSeconds <= 0 && InventoryManager.Instance.OffHandItemExists(out InventoryItem offHandInventoryItem))
 		{
-			_secondaryActionTimer.RemainingSeconds = offHandInventoryItem.Item.ExecuteItemAction(offHandInventoryItem);
+			_secondaryActionTimer.RemainingSeconds = offHandInventoryItem.Item.ExecuteItemAction(offHandInventoryItem, Player.LocalClientInstance.OffHand);
 		}
 	}
 

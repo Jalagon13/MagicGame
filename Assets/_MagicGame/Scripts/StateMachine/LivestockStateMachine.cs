@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using Pathfinding;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -25,6 +26,8 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 	[Range(1f, 100f)]
 	[Tooltip("(Linear drag), higher this value, the more drag (knockback resistant) this entity experiences")]
 	[SerializeField] private int _knockbackResist = 20; 
+	[field: SerializeField] public EventReference LivestockDamaged { get; private set; }
+	[field: SerializeField] public EventReference LivestockDeath { get; private set; }
 	[SerializeField] private List<SpriteAnimationHandler> _spriteDirectionHandlers = new();
 	
 	private Npc _npc;
@@ -70,7 +73,8 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 		
 			// Set up Npc on death
 			_npc = GetComponent<Npc>();
-			_npc.OnNpcKilled += Npc_OnNpcKilled;
+			_npc.OnNpcKilled += OnNpcKilled;
+			_npc.OnNpcDamged += OnNpcDamaged;
 		
 			// Set up the environment of the NPC so it knows how to pathfind itself
 			var npcEnvironment = GetComponent<NpcNetworkComponent>().GetNpcEnvironment();
@@ -112,7 +116,7 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 		} 
 	}
 	
-	private void Npc_OnNpcKilled(object sender, EventArgs e)
+	private void OnNpcKilled(object sender, EventArgs e)
 	{
 		TransitionToState(LivestockState.Idle);
 		Agent.canMove = false;
@@ -121,6 +125,13 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 		{
 			Agent.SetPath(null);
 		}
+		
+		SoundManager.Instance.PlayOneShot(LivestockDeath, transform.position);
+	}
+	
+	private void OnNpcDamaged(object sender, EventArgs e)
+	{
+		SoundManager.Instance.PlayOneShot(LivestockDamaged, transform.position);
 	}
 	
 	public bool DestinationValid(Vector3 moveSpot)
@@ -179,7 +190,8 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 	{
 		if(IsServer)
 		{
-			_npc.OnNpcKilled -= Npc_OnNpcKilled;
+			_npc.OnNpcKilled -= OnNpcKilled;
+			_npc.OnNpcDamged -= OnNpcDamaged;
 			
 			_knockback.OnKnockbackStart -= Knockback_OnKnockbackStart;
 			_knockback.OnKnockbackEnd -= Knockback_OnKnockbackEnd;

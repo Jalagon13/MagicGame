@@ -18,7 +18,7 @@ public abstract class ItemSO : ScriptableObject
 	protected float _baseActionCooldown = 0.25f;
 	
 	public abstract InventoryItem CreateInventoryItem(int quantity);
-	public abstract float ExecuteItemAction(InventoryItem inventoryItem);
+	public abstract float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand);
 	public abstract string GetDescription();
 	
 	public float ExtractParameterValue(ItemParameter paramter)

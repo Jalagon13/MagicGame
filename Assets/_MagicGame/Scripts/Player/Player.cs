@@ -32,10 +32,11 @@ public class Player : NetworkBehaviour, IHasHealth
 		public int MaxValue;
 	}
 	
+	[field: SerializeField] public PlayerHand MainHand { get; private set; }
+	[field: SerializeField] public PlayerHand OffHand { get; private set; }
 	[SerializeField] private int _startingMana = 100;
 	[SerializeField] private int _startingHealth = 100;
 	[SerializeField] private float _respawnTimerDuration;
-	[SerializeField] private Transform _wandProjectileSpawnPoint;
 	[SerializeField] private List<InventoryItem> _startingItems = new();
 	
 	private NetworkVariable<EnvironmentID> _playerEnvironment = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -280,11 +281,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
-
-	public Transform GetWandProjectileSpawnPoint()
-	{
-		return _wandProjectileSpawnPoint;
-	}
 	
 	public NetworkVariable<int> GetMainHandItemIndexNetworkVariable()
 	{
@@ -319,7 +315,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		ItemSO offHandItem = GameManager.Instance.GetItemSOFromIndex(_offHandItemIndexNetworkVariable.Value);
 		bool offHandHoldingWand = offHandItem != null && offHandItem is WandItemSO;
 		
-		bool isHoldingAWand = (mainHandHoldingWand || offHandHoldingWand) && !_isPerformingSwing;
+		bool isHoldingAWand = mainHandHoldingWand || offHandHoldingWand;
 		
 		return isHoldingAWand;
 	}

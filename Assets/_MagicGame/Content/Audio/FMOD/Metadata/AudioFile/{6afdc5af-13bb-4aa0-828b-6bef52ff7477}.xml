@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{6afdc5af-13bb-4aa0-828b-6bef52ff7477}">
 		<property name="assetPath">
-			<value>SFX/Footsteps/SFX_GrassFootstep03.wav</value>
+			<value>Player/Footsteps/SFX_GrassFootstep03.wav</value>
 		</property>
 		<property name="isStreaming">
 			<value>true</value>

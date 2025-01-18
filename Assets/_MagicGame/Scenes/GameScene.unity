@@ -7833,49 +7833,63 @@ MonoBehaviour:
       Data2: 1191771207
       Data3: 255401399
       Data4: -184975247
-    Path: event:/PlayerFootsteps
+    Path: event:/Player/PlayerFootsteps
   <PlayerMeleeSwing>k__BackingField:
     Guid:
       Data1: -2045704129
       Data2: 1078438271
       Data3: 153888670
       Data4: -2048565155
-    Path: event:/Woosh
+    Path: event:/Player/Woosh
   <ItemPickup>k__BackingField:
     Guid:
       Data1: 1278557062
       Data2: 1173231088
       Data3: 951300029
       Data4: -972426705
-    Path: event:/ItemPickup
+    Path: event:/Player/ItemPickup
   <InventorySlotClicked>k__BackingField:
     Guid:
       Data1: -1013286621
       Data2: 1259496442
       Data3: 1447670913
       Data4: -1372581738
-    Path: event:/InventorySlotClicked
+    Path: event:/UI/InventorySlotClicked
   <FocusSlotChanged>k__BackingField:
     Guid:
       Data1: 765158737
       Data2: 1310804204
       Data3: -1870693459
       Data4: -353672984
-    Path: event:/FocusSlotChanged
+    Path: event:/UI/FocusSlotChanged
+  <InventoryOpen>k__BackingField:
+    Guid:
+      Data1: -361162760
+      Data2: 1101383051
+      Data3: 2041025175
+      Data4: 923772193
+    Path: event:/UI/InventoryOpen
+  <InventoryClose>k__BackingField:
+    Guid:
+      Data1: 1533063767
+      Data2: 1080530062
+      Data3: -919418481
+      Data4: 2010506348
+    Path: event:/UI/InventoryClose
+  <WandCast>k__BackingField:
+    Guid:
+      Data1: -2115950531
+      Data2: 1190229213
+      Data3: 49132942
+      Data4: 1594458749
+    Path: event:/Player/WandCast
   <MeleeHit>k__BackingField:
     Guid:
       Data1: -321209541
       Data2: 1119949590
       Data3: 197467520
       Data4: 1755672934
-    Path: event:/MeleeHit
-  <PixieDamaged>k__BackingField:
-    Guid:
-      Data1: 3190678
-      Data2: 1255253222
-      Data3: 756817558
-      Data4: 811093164
-    Path: event:/PixieDamaged
+    Path: event:/Player/MeleeHit
 --- !u!1 &1785759320
 GameObject:
   m_ObjectHideFlags: 0

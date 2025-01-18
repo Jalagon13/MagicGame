@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Melee Item", menuName = "Create Item/New Melee Item")]
 public class MeleeItemSO : ItemSO
 {	
-	public override float ExecuteItemAction(InventoryItem inventoryItem)
+	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
 		return _baseActionCooldown;
 	}

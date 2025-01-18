@@ -13,7 +13,7 @@ public class DeployItemSO : ItemSO
 	[SerializeField] private WorldObject _deployObjectPrefab;
 	[SerializeField] private AudioClip _deploySound;
 	
-	public override float ExecuteItemAction(InventoryItem inventoryItem)
+	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
 		Vector2 pos = ActionManager.MouseWorldPosition;
 		

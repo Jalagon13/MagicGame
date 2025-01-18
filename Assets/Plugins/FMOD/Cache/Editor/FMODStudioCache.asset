@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7913808447469494507
+--- !u!114 &-8204724007145673428
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,41 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/FocusSlotChanged
+  m_Name: event:/DeerDamaged
   m_EditorClassIdentifier: 
-  Path: event:/FocusSlotChanged
+  Path: event:/DeerDamaged
   Guid:
-    Data1: 765158737
-    Data2: 1310804204
-    Data3: -1870693459
-    Data4: -353672984
-  Banks:
-  - {fileID: -274494626289347152}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-5090105735752503274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/MeleeHit
-  m_EditorClassIdentifier: 
-  Path: event:/MeleeHit
-  Guid:
-    Data1: -321209541
-    Data2: 1119949590
-    Data3: 197467520
-    Data4: 1755672934
+    Data1: -1016024945
+    Data2: 1270028947
+    Data3: 124954255
+    Data4: -1982127540
   Banks:
   - {fileID: -1788956731235525559}
   IsStream: 0
@@ -54,7 +27,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-4444346561180830864
+--- !u!114 &-4954338595305428895
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -64,14 +37,68 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/ItemPickup
+  m_Name: event:/Player/Woosh
   m_EditorClassIdentifier: 
-  Path: event:/ItemPickup
+  Path: event:/Player/Woosh
   Guid:
-    Data1: 1278557062
-    Data2: 1173231088
-    Data3: 951300029
-    Data4: -972426705
+    Data1: -2045704129
+    Data2: 1078438271
+    Data3: 153888670
+    Data4: -2048565155
+  Banks:
+  - {fileID: -1788956731235525559}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-3338814010101707130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/InventorySlotClicked
+  m_EditorClassIdentifier: 
+  Path: event:/UI/InventorySlotClicked
+  Guid:
+    Data1: -1013286621
+    Data2: 1259496442
+    Data3: 1447670913
+    Data4: -1372581738
+  Banks:
+  - {fileID: -274494626289347152}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-2870121683862887700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/WandCast
+  m_EditorClassIdentifier: 
+  Path: event:/Player/WandCast
+  Guid:
+    Data1: -2115950531
+    Data2: 1190229213
+    Data3: 49132942
+    Data4: 1594458749
   Banks:
   - {fileID: -1788956731235525559}
   IsStream: 0
@@ -96,12 +123,12 @@ MonoBehaviour:
   Path: Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638727345698006271
+  lastModified: 638727903255985483
   FileSizes:
   - Name: Desktop
-    Value: 2984224
+    Value: 3036224
   Exists: 1
---- !u!114 &-1658336870167961165
+--- !u!114 &-667045017661580946
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,14 +138,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Woosh
+  m_Name: event:/Player/ItemPickup
   m_EditorClassIdentifier: 
-  Path: event:/Woosh
+  Path: event:/Player/ItemPickup
   Guid:
-    Data1: -2045704129
-    Data2: 1078438271
-    Data3: 153888670
-    Data4: -2048565155
+    Data1: 1278557062
+    Data2: 1173231088
+    Data3: 951300029
+    Data4: -972426705
   Banks:
   - {fileID: -1788956731235525559}
   IsStream: 0
@@ -143,10 +170,10 @@ MonoBehaviour:
   Path: Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/UI.bank
   Name: UI
   StudioPath: bank:/UI
-  lastModified: 638727350257423051
+  lastModified: 638727874700914830
   FileSizes:
   - Name: Desktop
-    Value: 9536
+    Value: 21696
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -166,20 +193,79 @@ MonoBehaviour:
   - {fileID: -1788956731235525559}
   - {fileID: -274494626289347152}
   EditorEvents:
-  - {fileID: -1658336870167961165}
-  - {fileID: 5446125238412971131}
-  - {fileID: -5090105735752503274}
   - {fileID: 5157382580385516755}
-  - {fileID: -4444346561180830864}
-  - {fileID: 8529417814688622035}
-  - {fileID: -7913808447469494507}
+  - {fileID: 397943980342998466}
+  - {fileID: -4954338595305428895}
+  - {fileID: -667045017661580946}
+  - {fileID: 5825095235393094221}
+  - {fileID: -3338814010101707130}
+  - {fileID: 938606335959742326}
+  - {fileID: 2250663754935570584}
+  - {fileID: 6933453468125344437}
+  - {fileID: 2110581720546208649}
+  - {fileID: -8204724007145673428}
+  - {fileID: -2870121683862887700}
   EditorParameters: []
   MasterBanks:
   - {fileID: 9203900867399494895}
   StringsBanks:
   - {fileID: 1866455422502961147}
-  cacheTime: 638727350257423051
+  cacheTime: 638727903255985483
   cacheVersion: 131622
+--- !u!114 &397943980342998466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/MeleeHit
+  m_EditorClassIdentifier: 
+  Path: event:/Player/MeleeHit
+  Guid:
+    Data1: -321209541
+    Data2: 1119949590
+    Data3: 197467520
+    Data4: 1755672934
+  Banks:
+  - {fileID: -1788956731235525559}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &938606335959742326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/FocusSlotChanged
+  m_EditorClassIdentifier: 
+  Path: event:/UI/FocusSlotChanged
+  Guid:
+    Data1: 765158737
+    Data2: 1310804204
+    Data3: -1870693459
+    Data4: -353672984
+  Banks:
+  - {fileID: -274494626289347152}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &1866455422502961147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,11 +281,65 @@ MonoBehaviour:
   Path: Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638727343147674945
+  lastModified: 638727897080287539
   FileSizes:
   - Name: Desktop
-    Value: 1134
+    Value: 1380
   Exists: 1
+--- !u!114 &2110581720546208649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/DeerDeath
+  m_EditorClassIdentifier: 
+  Path: event:/DeerDeath
+  Guid:
+    Data1: 89985926
+    Data2: 1147036939
+    Data3: 1353001656
+    Data4: 1797791123
+  Banks:
+  - {fileID: -1788956731235525559}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &2250663754935570584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/InventoryClose
+  m_EditorClassIdentifier: 
+  Path: event:/UI/InventoryClose
+  Guid:
+    Data1: 1533063767
+    Data2: 1080530062
+    Data3: -919418481
+    Data4: 2010506348
+  Banks:
+  - {fileID: -274494626289347152}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &5157382580385516755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,7 +367,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &5446125238412971131
+--- !u!114 &5825095235393094221
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -237,9 +377,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/PlayerFootsteps
+  m_Name: event:/Player/PlayerFootsteps
   m_EditorClassIdentifier: 
-  Path: event:/PlayerFootsteps
+  Path: event:/Player/PlayerFootsteps
   Guid:
     Data1: 1689472473
     Data2: 1191771207
@@ -249,12 +389,12 @@ MonoBehaviour:
   - {fileID: -1788956731235525559}
   IsStream: 1
   Is3D: 0
-  IsOneShot: 0
+  IsOneShot: 1
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
   Length: 605
---- !u!114 &8529417814688622035
+--- !u!114 &6933453468125344437
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -264,14 +404,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/InventorySlotClicked
+  m_Name: event:/UI/InventoryOpen
   m_EditorClassIdentifier: 
-  Path: event:/InventorySlotClicked
+  Path: event:/UI/InventoryOpen
   Guid:
-    Data1: -1013286621
-    Data2: 1259496442
-    Data3: 1447670913
-    Data4: -1372581738
+    Data1: -361162760
+    Data2: 1101383051
+    Data3: 2041025175
+    Data4: 923772193
   Banks:
   - {fileID: -274494626289347152}
   IsStream: 0
@@ -296,7 +436,7 @@ MonoBehaviour:
   Path: Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638727343147669560
+  lastModified: 638727897080281069
   FileSizes:
   - Name: Desktop
     Value: 1036

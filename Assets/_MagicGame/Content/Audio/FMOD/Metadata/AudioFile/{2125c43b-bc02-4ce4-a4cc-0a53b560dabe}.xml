@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{2125c43b-bc02-4ce4-a4cc-0a53b560dabe}">
 		<property name="assetPath">
-			<value>SFX_FocusSlotChanged.wav</value>
+			<value>UI/SFX_FocusSlotChanged.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>

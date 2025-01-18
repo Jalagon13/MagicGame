@@ -166,7 +166,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8184671317715962605, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 404734043
+      value: 1486424500
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4388047220858872420, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
@@ -308,6 +308,20 @@ MonoBehaviour:
   _fleeSpeed: 3
   _maxWanderNodeDistance: 5
   _knockbackResist: 25
+  <LivestockDamaged>k__BackingField:
+    Guid:
+      Data1: -1016024945
+      Data2: 1270028947
+      Data3: 124954255
+      Data4: -1982127540
+    Path: event:/DeerDamaged
+  <LivestockDeath>k__BackingField:
+    Guid:
+      Data1: 89985926
+      Data2: 1147036939
+      Data3: 1353001656
+      Data4: 1797791123
+    Path: event:/DeerDeath
   _spriteDirectionHandlers:
   - {fileID: 3221309251872524564}
 --- !u!1 &6292943880239321547 stripped

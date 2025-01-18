@@ -11,7 +11,7 @@ public class BuildItemSO : ItemSO
 	[SerializeField] private TileSO _wallTile;
 	[SerializeField] private TileSO _floorTile;
 	
-	public override float ExecuteItemAction(InventoryItem inventoryItem)
+	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
 		var pos = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
 		

@@ -31,6 +31,7 @@ public class PlayerHand : NetworkBehaviour
 	[SerializeField] private PlayerArmVisualPreset _meleeSwingPreset;
 	[SerializeField] private PlayerArmVisualPreset _holdingWandPreset;
 	[SerializeField] private PlayerArmVisualPreset _armItemAnglePreset;
+	[field: SerializeField] public Transform ProjectileSpawnTransform;
 
 	private Player _thisPlayer;
 	private ItemSO _heldItem;

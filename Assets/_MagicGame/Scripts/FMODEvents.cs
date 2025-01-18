@@ -11,12 +11,13 @@ public class FMODEvents : MonoBehaviour
 	[field: SerializeField] public EventReference ItemPickup { get; private set; }
 	[field: SerializeField] public EventReference InventorySlotClicked { get; private set; }
 	[field: SerializeField] public EventReference FocusSlotChanged { get; private set; }
+	[field: SerializeField] public EventReference InventoryOpen { get; private set; }
+	[field: SerializeField] public EventReference InventoryClose { get; private set; }
 	
-	[field: Header("Weapon SFX")]
+	[field: Header("Tool SFX")]
+	[field: SerializeField] public EventReference WandCast { get; private set; }
 	[field: SerializeField] public EventReference MeleeHit { get; private set; }
 	
-	[field: Header("NPC SFX")]
-	[field: SerializeField] public EventReference PixieDamaged { get; private set; }
 	
 	private void Awake()
 	{

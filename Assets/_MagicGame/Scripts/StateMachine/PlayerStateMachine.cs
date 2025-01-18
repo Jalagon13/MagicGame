@@ -27,7 +27,6 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	[Tooltip("(Linear drag), higher this value, the more drag (knock back resistant) this entity experiences")]
 	[SerializeField] private int _knockbackResist = 20; 
 	[SerializeField] private float _speed;
-	[SerializeField] private AudioClip _footstepSound;
 	[SerializeField] private List<SpriteAnimationHandler> _spriteAnimationHandlerList = new();
 	
 	private NetworkVariable<Vector2> _moveVectorNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -35,7 +34,6 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	private CardinalDirection _currentDirection;
 	private bool _previousIsMoving; // Tracks the previous frame's IsMoving value
 	private Player _thisPlayer;
-	private EventInstance _playerFootstepsEventInstance;
 	
 	public Knockback Knockback { get; private set; }
 	public Vector2 MoveVector { get { return _moveVectorNetworkVariable.Value; } set { if(IsOwner) {_moveVectorNetworkVariable.Value = value; } } }
@@ -43,7 +41,6 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	public PlayerIdleState PlayerIdleState { get; private set; }
 	public PlayerMoveState PlayerMoveState { get; private set; }
 	public CardinalDirection MovingDirection { get {return _currentDirection; } set {_currentDirection = value; } }
-	public AudioClip FootstepSound => _footstepSound;
 	public float Speed => _speed;
 	public bool IsMoving { get; set; }
 	public bool IsDead { get { return _thisPlayer.IsDead(); } }
@@ -69,8 +66,6 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	
 	public override void OnNetworkSpawn()
 	{
-		_playerFootstepsEventInstance = SoundManager.Instance.CreateInstance(FMODEvents.Instance.PlayerFootsteps);
-	
 		_mainHand.OnSwingStart += OnSwingStart;
 		_mainHand.OnSwingEnd += OnSwingEnd;
 		_mainHand.OnCastingArmDirectionChanged += OnCastingArmDirectionChanged;
@@ -111,26 +106,7 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		// Update _previousIsMoving to the current IsMoving value
 		_previousIsMoving = IsMoving;
 		
-		UpdateSound();
-		
 		base.FixedUpdate();
-	}
-	
-	private void UpdateSound()
-	{
-		if(IsMoving)
-		{
-			PLAYBACK_STATE playbackState;
-			_playerFootstepsEventInstance.getPlaybackState(out playbackState);
-			if(playbackState.Equals(PLAYBACK_STATE.STOPPED))
-			{
-				_playerFootstepsEventInstance.start();
-			}
-		}
-		else
-		{
-			_playerFootstepsEventInstance.stop(STOP_MODE.IMMEDIATE);
-		}
 	}
 
 	private void Player_OnKilled(object sender, EventArgs e)

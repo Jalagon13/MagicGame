@@ -38,7 +38,7 @@ public class WandItemSO : ItemSO
 	private ResourceObject _resourceObjectSelected;
 	private WandInventoryItem _wandInventoryItem;
 	
-	public override float ExecuteItemAction(InventoryItem inventoryItem)
+	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
 		if(inventoryItem is not WandInventoryItem || !Player.LocalClientInstance.gameObject.GetComponent<Player>().IsHoldingAWand()) return _baseActionCooldown;
 		
@@ -50,12 +50,14 @@ public class WandItemSO : ItemSO
 		
 		WandAttribute wandAttribute = GetHarvestType(false, mouseOverWall, resourceSelected);
 		AttributeData hitData = _wandInventoryItem.GetAttributeData(wandAttribute);
-
+		
 		GameManager.Instance.SpawnMiningProjectile(
-			Player.LocalClientInstance.transform.position,
+			playerHand.ProjectileSpawnTransform.position,
 			ActionManager.MouseWorldPosition,
 			hitData.MiningPower,
 			false, mouseOverWall, resourceSelected);
+			
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.transform.position);
 			
 		return CalcMiningSpeed(wandAttribute);
 	}
