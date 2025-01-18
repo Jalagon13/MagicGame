@@ -505,6 +505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _maxHealth: 0
+  _damageNumberFeedbacks: {fileID: 1268500243634403229}
   _lootTable:
     Table: []
 --- !u!114 &6692481928224885727
@@ -714,6 +715,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3dffbfc6e42604128afed3f729cb646e, type: 3}
+--- !u!114 &1268500243634403229 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4870184595997182013, guid: 3dffbfc6e42604128afed3f729cb646e, type: 3}
+  m_PrefabInstance: {fileID: 5912312985970212768}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da43522623d4704e979466dc7650b65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1506471652525124306 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5108435109054928242, guid: 3dffbfc6e42604128afed3f729cb646e, type: 3}

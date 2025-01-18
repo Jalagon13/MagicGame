@@ -1,4 +1,5 @@
 using System;
+using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnHealthUpdated;
 
 	[SerializeField] private int _maxHealth;
+	[SerializeField] private MMF_Player _damageNumberFeedbacks;
 	[SerializeField] private LootTable _lootTable;
 	
 	private NetworkVariable<int> _npcHealthPointNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -44,6 +46,11 @@ public class Npc : NetworkBehaviour, IHasHealth
 	public void ApplyDamage(int damage, Vector2 damagerPosition)
 	{
 		DamageNpcServerRpc(damage, damagerPosition);
+		
+		// Set damage and play damage feedback
+		MMF_FloatingText floatingText = _damageNumberFeedbacks.GetFeedbackOfType<MMF_FloatingText>();
+		floatingText.Value = damage.ToString();
+		_damageNumberFeedbacks.PlayFeedbacks(transform.position);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]

@@ -29,8 +29,6 @@ public class MiningProjectile : NetworkBehaviour
 	// Spawn muzzle vfx prefab and then destroy it when it is done.
 	private void Start()
 	{
-		MMSoundManagerSoundPlayEvent.Trigger(_castSound, MMSoundManager.MMSoundManagerTracks.Sfx, default, pitch: Random.Range(0.9f, 1.1f), volume: 0.65f);
-		
 		if(_muzzleVfxPrefab != null)
 		{
 			var muzzleVFX = Instantiate(_muzzleVfxPrefab, transform.position, Quaternion.identity);
