@@ -40,7 +40,7 @@ public class WandItemSO : ItemSO
 	
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
-		if(inventoryItem is not WandInventoryItem || !Player.LocalClientInstance.gameObject.GetComponent<Player>().IsHoldingAWand()) return _baseActionCooldown;
+		if(inventoryItem is not WandInventoryItem || !Player.LocalClientInstance.gameObject.GetComponent<Player>().IsHoldingAWand() || !PlayerInRangeOfMouse()) return _baseActionCooldown;
 		
 		_wandInventoryItem = inventoryItem as WandInventoryItem;
 		bool mouseOverWall = GetMouseOverWall();
@@ -60,6 +60,11 @@ public class WandItemSO : ItemSO
 		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.transform.position);
 			
 		return CalcMiningSpeed(wandAttribute);
+	}
+	
+	private bool PlayerInRangeOfMouse()
+	{
+		return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= 4;
 	}
 	
 	private float CalcMiningSpeed(WandAttribute wandAttribute)

@@ -406,6 +406,7 @@ MonoBehaviour:
   - Master
   Banks:
   - SFX
+  - Tiles
   - UI
   BanksToLoad: []
   LiveUpdatePort: 9264

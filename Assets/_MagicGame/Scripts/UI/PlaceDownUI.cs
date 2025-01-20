@@ -50,7 +50,13 @@ public class PlaceDownUI : MonoBehaviour
 
 	private bool IsInRange()
 	{
-		return Vector2.Distance(transform.position, Player.LocalClientInstance.transform.position) < ActionManager.Instance.GetActionRange();
+		return Vector2.Distance(transform.position, Player.LocalClientInstance.transform.position) < 3;
+	}
+	
+
+	public bool PlayerInRangeOfMouse()
+	{
+		return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= 3;
 	}
 
 	private bool IsClear(Vector2 position)

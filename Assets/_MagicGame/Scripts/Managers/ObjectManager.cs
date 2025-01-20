@@ -131,6 +131,10 @@ public class ObjectManager : NetworkBehaviour
 		if(ResourceObjectFoundAtPosition(position, out ResourceObject resourceObjectFound))
 		{
 			byte assetID = GameManager.Instance.GetByteIDFromWorldObject(resourceObjectFound);
+			var asset = GameManager.Instance.GetWorldObjectFromID(assetID);
+			var pos = new Vector3(position.x, position.y);
+			
+			SoundManager.Instance.PlayOneShot(asset.ResourceHit, pos);
 			
 			DamageWorldObjectServerRpc(position, assetID, incomingDamage, environment);
 		}

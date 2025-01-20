@@ -45,6 +45,10 @@ public class TilemapData : NetworkBehaviour
 		{
 			var tileId = GameManager.Instance.GetTileIDFromTilemapTilePosition(_tilemap, vector3IntPos);
 			DamageTileServerRpc(position, tileId, (ushort)amount, environment);
+			
+			var tile = GameManager.Instance.GetTileSOFromID(tileId);
+			var pos = new Vector3(position.x, position.y);
+			SoundManager.Instance.PlayOneShot(tile.HitSound, pos);
 		}
 	}
 	
@@ -121,11 +125,11 @@ public class TilemapData : NetworkBehaviour
 		GameManager.Instance.SpawnItem(dropItem, 3, position);
 		
 		ChunkManager.Instance.RemoveWallTileDataFromChunk(position, environment);
-		DestroyTileClientRpc(position);
+		DestroyTileClientRpc(position, tileId);
 	}
 
 	[Rpc(SendTo.Everyone)]
-	private void DestroyTileClientRpc(Vector2Int position)
+	private void DestroyTileClientRpc(Vector2Int position, byte tileId)
 	{
 		// Debug.Log("Destroying tile instead of adding entry because it was destroyed in one hit");
 		var pos = new Vector3Int(position.x, position.y, 0);
@@ -135,6 +139,9 @@ public class TilemapData : NetworkBehaviour
 		{
 			_tilemap.SetTile(pos, null);
 		}
+		
+		var tile = GameManager.Instance.GetTileSOFromID(tileId);
+		SoundManager.Instance.PlayOneShot(tile.DestroySound, pos);
 	}
 	
 	public WandAttribute GetHarvestType(Vector2Int position)

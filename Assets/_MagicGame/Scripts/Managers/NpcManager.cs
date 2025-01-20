@@ -117,11 +117,12 @@ public class NpcManager : NetworkBehaviour
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnNpcServerRpc(EnvironmentID environmentToSpawnIn, byte npcId, ulong spawningClientId,Vector2 position)
+	private void SpawnNpcServerRpc(EnvironmentID environmentToSpawnIn, byte npcId, ulong spawningClientId, Vector2 position)
 	{
 		NpcSO npcSO = GameManager.Instance.GetNpcSOFromId(npcId);
 		
-		GameObject npcPrefab = Instantiate(npcSO.Prefab, position, Quaternion.identity);
+		var spawnPosition = new Vector2(Mathf.FloorToInt(position.x) + 0.5f, Mathf.FloorToInt(position.y) + 0.5f);
+		GameObject npcPrefab = Instantiate(npcSO.Prefab, spawnPosition, Quaternion.identity);
 		
 		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
 		npcNetworkComponent.SetNpcEnvironment(environmentToSpawnIn);

@@ -17,7 +17,7 @@ public class DeployItemSO : ItemSO
 	{
 		Vector2 pos = ActionManager.MouseWorldPosition;
 		
-		if(IsClear(pos) && ActionManager.Instance.PlayerInRangeOfMouse())
+		if(IsClear(pos) && PlayerInRangeOfMouse())
 		{
 			Vector2Int spawnPosition = new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
 				
@@ -29,6 +29,12 @@ public class DeployItemSO : ItemSO
 		}
 		
 		return _baseActionCooldown;
+	}
+	
+
+	private bool PlayerInRangeOfMouse()
+	{
+		return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= 3;
 	}
 	
 	public override string GetDescription()

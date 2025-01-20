@@ -77,8 +77,52 @@ PrefabInstance:
       value: Tree01
       objectReference: {fileID: 0}
     - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _resourceHit.Path
+      value: event:/WoodHit
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _resourceDestroyed.Path
+      value: event:/WoodDestroyed
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _resourceHit.Guid.Data1
+      value: 1812228115
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _resourceHit.Guid.Data2
+      value: 1207244471
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _resourceHit.Guid.Data3
+      value: 1013332110
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _resourceHit.Guid.Data4
+      value: -2033662663
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: _lootTable.Table.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _resourceDestroyed.Guid.Data1
+      value: 15823222
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _resourceDestroyed.Guid.Data2
+      value: 1125522555
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _resourceDestroyed.Guid.Data3
+      value: -1633797458
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _resourceDestroyed.Guid.Data4
+      value: 490440430
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceHit>k__BackingField.Path
+      value: event:/WoodHit
       objectReference: {fileID: 0}
     - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: _lootTable.Table.Array.data[0].Max
@@ -95,6 +139,42 @@ PrefabInstance:
     - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: _lootTable.Table.Array.data[0].Chance
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceDestroyed>k__BackingField.Path
+      value: event:/WoodDestroyed
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceHit>k__BackingField.Guid.Data1
+      value: 1812228115
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceHit>k__BackingField.Guid.Data2
+      value: 1207244471
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceHit>k__BackingField.Guid.Data3
+      value: 1013332110
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceHit>k__BackingField.Guid.Data4
+      value: -2033662663
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceDestroyed>k__BackingField.Guid.Data1
+      value: 15823222
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceDestroyed>k__BackingField.Guid.Data2
+      value: 1125522555
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceDestroyed>k__BackingField.Guid.Data3
+      value: -1633797458
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceDestroyed>k__BackingField.Guid.Data4
+      value: 490440430
       objectReference: {fileID: 0}
     - target: {fileID: 8783600225546665660, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Size.y

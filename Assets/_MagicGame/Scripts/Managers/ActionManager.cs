@@ -11,7 +11,6 @@ public class ActionManager : MonoBehaviour
 	public static ActionManager Instance { get; private set; }
 	public static Vector2 MouseWorldPosition;
 	
-	private float _actionRange = 3f;
 	private Timer _primaryActionTimer, _secondaryActionTimer;
 	private ItemSO _focusItemSO;
 	
@@ -21,11 +20,6 @@ public class ActionManager : MonoBehaviour
 		
 		_primaryActionTimer = new Timer(0.25f);
 		_secondaryActionTimer = new Timer(0.25f);
-	}
-	
-	private void Start()
-	{
-		HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnFocusItemSet;
 	}
 	
 	private void Update()
@@ -60,29 +54,5 @@ public class ActionManager : MonoBehaviour
 		{
 			_secondaryActionTimer.RemainingSeconds = offHandInventoryItem.Item.ExecuteItemAction(offHandInventoryItem, Player.LocalClientInstance.OffHand);
 		}
-	}
-
-	private void HotbarManager_OnFocusItemSet(object sender, HotbarManager.OnFocusItemSetEventArgs e)
-	{
-		if(_focusItemSO != null)
-		{
-			float range = HotbarManager.Instance.GetFocusInventoryItem() is WandInventoryItem wandItem ? wandItem.GetRangeValue() : _focusItemSO.ExtractParameterValue(GameManager.Instance.GetItemParameterDataBaseSO().ClickDistanceParmeter);
-			_actionRange = range > 0 ? range : 1f;
-		}
-	}
-	
-	public bool PlayerInRangeOfMouse()
-	{
-		return Vector2.Distance(Player.LocalClientInstance.transform.position, MouseWorldPosition) <= _actionRange;
-	}
-	
-	public float GetActionRange()
-	{
-		return _actionRange;
-	}
-	
-	private void OnDestroy()
-	{
-		HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnFocusItemSet;
 	}
 }

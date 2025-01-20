@@ -19,16 +19,22 @@ public class BuildItemSO : ItemSO
 		
 		bool wallTmHasTile = wallTilemap.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition));
 		
-		if(IsClear(new(pos.x, pos.y)) && !wallTmHasTile && ActionManager.Instance.PlayerInRangeOfMouse())
+		if(IsClear(new(pos.x, pos.y)) && !wallTmHasTile && PlayerInRangeOfMouse())
 		{
 			Environment.Instance.PlaceTile(pos, _wallTile, TileType.Wall, Player.LocalClientInstance.GetPlayerEnvironment());
 			
 			InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 			
-			MMSoundManagerSoundPlayEvent.Trigger(_wallTile.PlaceSound, MMSoundManager.MMSoundManagerTracks.Sfx, default, pitch:UnityEngine.Random.Range(0.9f, 1.1f));
+			SoundManager.Instance.PlayOneShot(_wallTile.HitSound, pos);
 		}
 		
 		return _baseActionCooldown;
+	}
+	
+
+	public bool PlayerInRangeOfMouse()
+	{
+		return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= 3;
 	}
 
 	public override string GetDescription()

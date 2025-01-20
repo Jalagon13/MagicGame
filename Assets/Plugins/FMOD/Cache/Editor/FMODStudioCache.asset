@@ -1,5 +1,52 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8748537218142744212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/StoneDestroyed
+  m_EditorClassIdentifier: 
+  Path: event:/StoneDestroyed
+  Guid:
+    Data1: -557428352
+    Data2: 1107459471
+    Data3: 2078279570
+    Data4: 643237060
+  Banks:
+  - {fileID: -8511938362911404177}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-8511938362911404177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Tiles.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Tiles.bank
+  Name: Tiles
+  StudioPath: bank:/Tiles
+  lastModified: 638729612341832738
+  FileSizes:
+  - Name: Desktop
+    Value: 48480
+  Exists: 1
 --- !u!114 &-8204724007145673428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20,6 +67,33 @@ MonoBehaviour:
     Data4: -1982127540
   Banks:
   - {fileID: -1788956731235525559}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-6989533865479567562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/WoodDestroyed
+  m_EditorClassIdentifier: 
+  Path: event:/WoodDestroyed
+  Guid:
+    Data1: 15823222
+    Data2: 1125522555
+    Data3: -1633797458
+    Data4: 490440430
+  Banks:
+  - {fileID: -8511938362911404177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -108,6 +182,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-2580870154883285040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/WoodHit
+  m_EditorClassIdentifier: 
+  Path: event:/WoodHit
+  Guid:
+    Data1: 1812228115
+    Data2: 1207244471
+    Data3: 1013332110
+    Data4: -2033662663
+  Banks:
+  - {fileID: -8511938362911404177}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-1788956731235525559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,7 +224,7 @@ MonoBehaviour:
   Path: Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638727903255985483
+  lastModified: 638729612341067105
   FileSizes:
   - Name: Desktop
     Value: 3036224
@@ -192,6 +293,7 @@ MonoBehaviour:
   - {fileID: 9203900867399494895}
   - {fileID: -1788956731235525559}
   - {fileID: -274494626289347152}
+  - {fileID: -8511938362911404177}
   EditorEvents:
   - {fileID: 5157382580385516755}
   - {fileID: 397943980342998466}
@@ -205,12 +307,16 @@ MonoBehaviour:
   - {fileID: 2110581720546208649}
   - {fileID: -8204724007145673428}
   - {fileID: -2870121683862887700}
+  - {fileID: 3057966581371169419}
+  - {fileID: -8748537218142744212}
+  - {fileID: -2580870154883285040}
+  - {fileID: -6989533865479567562}
   EditorParameters: []
   MasterBanks:
   - {fileID: 9203900867399494895}
   StringsBanks:
   - {fileID: 1866455422502961147}
-  cacheTime: 638727903255985483
+  cacheTime: 638729612341832738
   cacheVersion: 131622
 --- !u!114 &397943980342998466
 MonoBehaviour:
@@ -281,10 +387,10 @@ MonoBehaviour:
   Path: Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638727897080287539
+  lastModified: 638729612340538229
   FileSizes:
   - Name: Desktop
-    Value: 1380
+    Value: 1596
   Exists: 1
 --- !u!114 &2110581720546208649
 MonoBehaviour:
@@ -333,6 +439,33 @@ MonoBehaviour:
     Data4: 2010506348
   Banks:
   - {fileID: -274494626289347152}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3057966581371169419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/StoneHit
+  m_EditorClassIdentifier: 
+  Path: event:/StoneHit
+  Guid:
+    Data1: 249587751
+    Data2: 1169178929
+    Data3: -130389574
+    Data4: -1987048442
+  Banks:
+  - {fileID: -8511938362911404177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -436,7 +569,7 @@ MonoBehaviour:
   Path: Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638727897080281069
+  lastModified: 638729612340528142
   FileSizes:
   - Name: Desktop
     Value: 1036

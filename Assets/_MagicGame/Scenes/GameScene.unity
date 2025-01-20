@@ -2147,6 +2147,7 @@ Transform:
   - {fileID: 652259849}
   - {fileID: 1630212177}
   - {fileID: 632392012}
+  - {fileID: 438106778}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &429902437
@@ -2277,6 +2278,129 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 430541914}
   m_CullTransparentMesh: 1
+--- !u!1 &438106777
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 438106778}
+  - component: {fileID: 438106780}
+  - component: {fileID: 438106779}
+  m_Layer: 0
+  m_Name: ForestPathfinding
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &438106778
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438106777}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 429902436}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!483693784 &438106779
+TilemapRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438106777}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -1268719207
+  m_SortingLayer: 3
+  m_SortingOrder: 0
+  m_ChunkSize: {x: 32, y: 32, z: 32}
+  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
+  m_MaxChunkCount: 16
+  m_MaxFrameAge: 16
+  m_SortOrder: 0
+  m_Mode: 0
+  m_DetectChunkCullingBounds: 0
+  m_MaskInteraction: 0
+--- !u!1839735485 &438106780
+Tilemap:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438106777}
+  m_Enabled: 1
+  m_Tiles: {}
+  m_AnimatedTiles: {}
+  m_TileAssetArray: []
+  m_TileSpriteArray: []
+  m_TileMatrixArray: []
+  m_TileColorArray: []
+  m_TileObjectToInstantiateArray: []
+  m_AnimationFrameRate: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Origin: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0, y: 0, z: 1}
+  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+  m_TileOrientation: 0
+  m_TileOrientationMatrix:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
 --- !u!1 &462286016
 GameObject:
   m_ObjectHideFlags: 0
@@ -4696,7 +4820,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   data:
-    dataString: UEsDBBQAAAgIAACAn+v6ZbL6cAIAACgFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQF1VE1z2jAQ/SuMziVjCI5Dby0hpIckTEknF18UeY01yJJHkgMkw3/vrmxjh05PLLtv3779kD+Z1K4C4Y1dWZk9mgzY9xEjm30b9cEHOPCt0Rv5AR3mVWa+IBAPmN/cS4P+CaU5U4K3UvzQW0XgCJ21lrmx5TLbwsI479Cdc+UAQ9Z4ytbo+hyxA/6M55RyRGuakPWB1jwandAUoD3YHjqZ3rbQxiJog6y1ULysICPZfcI0vum445sA1NhSiyH5wiglXauH+WMV+v3Nj9RtJjn2FgQQtgC5LTxxDROf89yBbxu3/HgnLY6oYWQ/TTO3krtdo+qdq5pqJNMgp+F8/Cc8noRwbk350JWdRFTCF1LsUKDgzg/mOnTffdVd6z1XO/6m4LUA/WRW1tQ6w6C3NaXWDqZ3/d9zZ4sCxK73N1IvnHXVD7tb4+Qqub2dXM+TZDmOknZN1NApTOKwULJ8I/zVrHFslAlzD4cAFjf0C9WHM3EtL3pJ0h8HL3w7vKc2cC+t8xhqW9ak9c3UlqBsGQZIrdV+YawGO2SoQHPlj2vk8Zf7vIj9P+ue09Npq7ex7kVcpAR3j4+ii9Da7M+rc4XZP4IrnmuvpIZ+7hR4wkEtjNbNuQ1b6tI2tc25GKRta5l9PTQW5bMon8bxPBeRSG7EmM/iWRRH+DOZxfNrwcIlSo19crVuhLbjwbXpnlzj1RHjC5SV4h7oy7KyvAovILN8v5IfpXF9gtS52QgLoJ8borN+sFgLX2m2zCTOaQPeSx32zj5TpozYQZaeidLQ8PLgLU97lpRV8t148qRsEb4kKSP3+cDXFt4l7Kl4R3Zip79QSwMEFAAACAgAAICf65GsLq9sAAAAeAAAAAkAJABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGrVipLLSrOzM9TslIw0TPSMzTXUVBKL0osyCgGihiCOKWZKSB2tJJBmolBmpGpqWVaskGyuVmybqKJqYmBqQGQMjQxtTROVooFqi+pLEj1S8xNhegJSCzJSMvMS8nMS9dzL8pMcQcZrRRbCwBQSwECLQAUAAAICAAAgJ/r+mWy+nACAAAoBQAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAAgJ/rkawur2wAAAB4AAAACQAkAAAAAAAAAAAAAAC9AgAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAAHQDAAAAAA==
+    dataString: UEsDBBQAAAgIAACAn+seOFF8dQIAAC0FAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQF1VE1z2jAQ/SuMziVjExxCby0hpIckTEgnF18UeY01yJJHkgMkw3/vrmxjl05PLLtv3779kL+Y1K4C4Y1dWZk9mgzY9xEjm30b9cEHOPCt0Rv5CR3mTWa+IBAPmBfupUF/TGnOlOCtFD/0VhE4QmetZW5sucy2sDDOO3TnXDnAkDWesjW6vkbsgD/jOaUc0ZrMyPpEax6NTmgK0B5sD40nty20sQjaIGstFC8ryEh2nzBJbjru5CYANbbUYki+MEpJ1+ph/liFfjdVARao4UxybC9oiK8ooQC5LTwRDrOf89yBb7u3/HgnLc6poWU/TTO8krtdI+2Dq5oKzSZBU8P5+E94HIdwbk350JWNIyrhCyl2L/wouPOD4Q7ddwPlYUB7rnb8XcFbAfrJrKypdYZBb2tKrR1M7vq/584WBYhd72+kXjjrqp94t8v4anZ7G1/PZ7PlOJq1u6KGTmESh4WS5Tvhr6aNY6NMGH64BrC4pl+oPtyKa3nRS5J+O3jl2+FRtYF7aZ3HUNuyJq3vprYEZcswQGqt9gtjNdghQwWaK39cI4+/3OdF7P9Z95zeT1u9jXXP4iIluHt8FF2E1mZ/Xp0rzP4RXPFceyU19HOnwBMOamG0bs5t2FKXtqltzsUgbVvL7O9DY1E+jfJJksxzEYnZjRjzaTKNkgh/4mkyvxYsXKLU2CdX60ZoOx5cm+7JNV4dMb5CWSnugT4vK8ur8AIyy/cr+Vka1ydInZuNsAD6uSE66weLtfCpZstM4pw24L3UYe/sK2XKiB1k6ZkoDQ0vD97ytGdJWSU/jCdPyhbhc5Iycp8PfG3hQ8KeindkJ3b6A1BLAwQUAAAICAAAgJ/rkawur2wAAAB4AAAACQAkAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAatWKkstKs7Mz1OyUjDRM9IzNNdRUEovSizIKAaKGII4pZkpIHa0kkGaiUGakampZVqyQbK5WbJuoompiYGpAZAyNDG1NE5WigWqL6ksSPVLzE2F6AlILMlIy8xLycxL13MvykxxBxmtFFsLAFBLAQItABQAAAgIAACAn+seOFF8dQIAAC0FAAALACQAAAAAAAAAAAAAAAAAAABncmFwaDAuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLAQItABQAAAgIAACAn+uRrC6vbAAAAHgAAAAJACQAAAAAAAAAAAAAAMICAABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwUGAAAAAAIAAgC4AAAAeQMAAAAA
     upgradeData: 
     file_cachedStartup: {fileID: 0}
     data_cachedStartup: 
@@ -6821,7 +6945,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _deerNpcSO: {fileID: 11400000, guid: a86c2629237a34fedb5779825e10a38a, type: 2}
-  _testDummyNpcSO: {fileID: 11400000, guid: a86c2629237a34fedb5779825e10a38a, type: 2}
+  _testDummyNpcSO: {fileID: 11400000, guid: 741ad5317491149b49b55e26de2264a5, type: 2}
   _yellowPixieNpcSO: {fileID: 11400000, guid: 741ad5317491149b49b55e26de2264a5, type: 2}
   _spawnRateDenominator: 600
   _maxNpcSlotSpawnAmount: 6

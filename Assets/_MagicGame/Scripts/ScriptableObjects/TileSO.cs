@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -22,7 +23,7 @@ public class TileSO : RuleTile
 	public int MaxHitPoints;
 	
 	[Header("Sounds")]
-	public AudioClip HitSound;
-	public AudioClip PlaceSound;
-	public AudioClip DestroySound;
+	public EventReference HitSound;
+	public EventReference PlaceSound;
+	public EventReference DestroySound;
 }
