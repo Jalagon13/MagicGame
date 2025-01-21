@@ -1,6 +1,3 @@
-using System;
-using System.Numerics;
-using Unity.Services.Multiplay.Authoring.Core.Model;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 

@@ -1047,8 +1047,26 @@ MonoBehaviour:
     m_RuleTransform: 0
   TileType: 0
   HarvestType: 1
-  DropItem: {fileID: 0}
+  DropItem: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
   MaxHitPoints: 100
-  HitSound: {fileID: 0}
-  PlaceSound: {fileID: 0}
-  DestroySound: {fileID: 0}
+  HitSound:
+    Guid:
+      Data1: 1812228115
+      Data2: 1207244471
+      Data3: 1013332110
+      Data4: -2033662663
+    Path: event:/WoodHit
+  PlaceSound:
+    Guid:
+      Data1: 1812228115
+      Data2: 1207244471
+      Data3: 1013332110
+      Data4: -2033662663
+    Path: event:/WoodHit
+  DestroySound:
+    Guid:
+      Data1: 15823222
+      Data2: 1125522555
+      Data3: -1633797458
+      Data4: 490440430
+    Path: event:/WoodDestroyed

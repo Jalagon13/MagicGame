@@ -18,8 +18,26 @@ MonoBehaviour:
   m_TilingRules: []
   TileType: 0
   HarvestType: 0
-  DropItem: {fileID: 0}
-  MaxHitPoints: 0
-  HitSound: {fileID: 0}
-  PlaceSound: {fileID: 0}
-  DestroySound: {fileID: 0}
+  DropItem: {fileID: 11400000, guid: 78d4495e64216404c85d1a0daa71cc1b, type: 2}
+  MaxHitPoints: 100
+  HitSound:
+    Guid:
+      Data1: 249587751
+      Data2: 1169178929
+      Data3: -130389574
+      Data4: -1987048442
+    Path: event:/StoneHit
+  PlaceSound:
+    Guid:
+      Data1: 249587751
+      Data2: 1169178929
+      Data3: -130389574
+      Data4: -1987048442
+    Path: event:/StoneHit
+  DestroySound:
+    Guid:
+      Data1: -557428352
+      Data2: 1107459471
+      Data3: 2078279570
+      Data4: 643237060
+    Path: event:/StoneDestroyed
