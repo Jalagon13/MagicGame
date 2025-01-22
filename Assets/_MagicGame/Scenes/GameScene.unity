@@ -3141,7 +3141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spellBookMenuUI: {fileID: 1555507937}
   _backgroundIcon: {fileID: 1798765713}
-  _wandIcon: {fileID: 2036903162}
+  _spellBookIcon: {fileID: 2036903162}
 --- !u!114 &806501535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8242,7 +8242,7 @@ GameObject:
   - component: {fileID: 2036903163}
   - component: {fileID: 2036903162}
   m_Layer: 5
-  m_Name: WandIcon
+  m_Name: SpellBookIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

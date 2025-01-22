@@ -15,7 +15,7 @@ MonoBehaviour:
   <Name>k__BackingField: SpellBook1
   <UiDisplay>k__BackingField: {fileID: -1033124662, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
-  <Stackable>k__BackingField: 1
+  <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField: []
   <SpellsCast>k__BackingField: 1

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "New Spell Projectile", menuName = "Create Item/New Spell Projectile")]
 public class SpellProjectileItemSO : ItemSO
 {
 	[field: Tooltip("Actual Prefab for the projectile.")]

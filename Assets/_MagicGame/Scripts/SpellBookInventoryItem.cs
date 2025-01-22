@@ -35,17 +35,17 @@ public class SpellBookInventoryItem : InventoryItem
 		return removedSpell; // Return the removed spell
 	}
 
-	public void SwapSpells(int firstIndex, int secondIndex)
+	public SpellProjectileItemSO SwapSpells(SpellProjectileItemSO spell, int slotIndex)
 	{
-		if (firstIndex < 0 || firstIndex >= SpellsArray.Length || secondIndex < 0 || secondIndex >= SpellsArray.Length)
+		if (slotIndex < 0 || slotIndex >= SpellsArray.Length)
 		{
-			Debug.LogWarning("Invalid spell slot indices.");
-			return;
+			Debug.LogWarning("Invalid spell slot index.");
+			return null;
 		}
 
-		SpellProjectileItemSO temp = SpellsArray[firstIndex];
-		SpellsArray[firstIndex] = SpellsArray[secondIndex];
-		SpellsArray[secondIndex] = temp;
+		SpellProjectileItemSO swappedSpell = SpellsArray[slotIndex]; // Store the spell currently in the slot
+		SpellsArray[slotIndex] = spell; // Place the new spell in the slot
+		return swappedSpell; // Return the swapped-out spell
 	}
 
 	public override string ToString()

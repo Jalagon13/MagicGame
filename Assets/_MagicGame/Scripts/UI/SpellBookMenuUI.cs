@@ -70,7 +70,7 @@ public class SpellBookMenuUI : MonoBehaviour
 			for (int i = 0; i < SelectedSpellBook.SpellsArray.Length; i++)
 			{
 				SpellBookInventorySlotUI spellBookInventorySlot = Instantiate(_spellBookInventorySlotPrefab, _spellBookSlotsHolder);
-				spellBookInventorySlot.Initialize(SelectedSpellBook.SpellsArray[i]);
+				spellBookInventorySlot.Initialize(SelectedSpellBook, i);
 			}
 		}
 	}
