@@ -18,9 +18,10 @@ MonoBehaviour:
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField: []
-  <ProjectilePrefab>k__BackingField: {fileID: 0}
+  <SpellProjectilePrefab>k__BackingField: {fileID: 2865795296762045379, guid: b690059f7ea154d8bb5b67392ed3195f, type: 3}
   <ManaCost>k__BackingField: 5
   <Damage>k__BackingField: 3
   <Spread>k__BackingField: 1
-  <Speed>k__BackingField: 100
+  <Lifetime>k__BackingField: 2
+  <Speed>k__BackingField: 20
   <CastDelay>k__BackingField: -0.03

@@ -3,12 +3,26 @@ using UnityEngine;
 public class SpellBookInventoryItem : InventoryItem
 {
 	public SpellProjectileItemSO[] SpellsArray { get; private set; }
-
+	public int SpellIndex { get; private set; } = 0;
+	
 	public SpellBookInventoryItem(ItemSO itemSO, int quantity, int capacity) : base(itemSO, quantity)
 	{
 		Item = itemSO;
 		Quantity = quantity;
 		SpellsArray = new SpellProjectileItemSO[capacity]; // Initialize the array with the given capacity
+	}
+	
+	public SpellProjectileItemSO GetSpellAndIncrementSpellIndex()
+	{
+		if (SpellsArray.Length == 0)
+		{
+			Debug.LogWarning("Spell array is empty.");
+			return null;
+		}
+
+		SpellProjectileItemSO spell = SpellsArray[SpellIndex];
+		SpellIndex = (SpellIndex + 1) % SpellsArray.Length; // Increment and wrap around
+		return spell;
 	}
 
 	public void SetSpell(int slotIndex, SpellProjectileItemSO spell)

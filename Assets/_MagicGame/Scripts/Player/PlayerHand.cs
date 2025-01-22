@@ -49,7 +49,7 @@ public class PlayerHand : NetworkBehaviour
 		NetworkVariableWritePermission.Owner
 	);
 
-	public CardinalDirection ArmDirection { get; private set; }
+	public CardinalDirection ArmCardinalDirection { get; private set; }
 
 	#region Unity Callbacks
 
@@ -90,13 +90,13 @@ public class PlayerHand : NetworkBehaviour
 		}
 		
 		float angle = NormalizeAngle(_angleNetworkVariable.Value);
-		ArmDirection = DetermineCardinalDirection(angle);
+		ArmCardinalDirection = DetermineCardinalDirection(angle);
 		
 		if (_heldItem is MeleeItemSO)
 		{
 			TryToSwing();
 		}
-		else if (_heldItem is WandItemSO && !_isSwinging)
+		else if ((_heldItem is WandItemSO || _heldItem is SpellBookItemSO) && !_isSwinging)
 		{
 			RotateArmBasedOnAngle();
 		}
@@ -112,7 +112,7 @@ public class PlayerHand : NetworkBehaviour
 
 		if (hasSwingInput)
 		{
-			switch (ArmDirection)
+			switch (ArmCardinalDirection)
 			{
 				case CardinalDirection.North:
 					SwingNorth(0.35f);
@@ -135,11 +135,11 @@ public class PlayerHand : NetworkBehaviour
 		float angle = NormalizeAngle(_angleNetworkVariable.Value);
 		_armPivotGO.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 		
-		SetPivotPosition(ArmDirection);
+		SetPivotPosition(ArmCardinalDirection);
 
-		if (_thisPlayer.GetComponent<PlayerStateMachine>().MovingDirection != ArmDirection)
+		if (_thisPlayer.GetComponent<PlayerStateMachine>().MovingDirection != ArmCardinalDirection)
 		{
-			OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmDirection });
+			OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 
 			if (_oppositeHand.IsSwinging()) _oppositeHand.StopSwing();
 		}
@@ -173,9 +173,9 @@ public class PlayerHand : NetworkBehaviour
 		var tempItem = _heldItem;
 		_heldItem = GameManager.Instance.GetItemSOFromIndex(newValue);
 
-		if (tempItem is WandItemSO && _heldItem is not WandItemSO && !_isSwinging)
+		if ((tempItem is WandItemSO || tempItem is SpellBookItemSO) && (_heldItem is not WandItemSO || _heldItem is not SpellBookItemSO) && !_isSwinging)
 		{
-			OnHoldingWandEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmDirection });
+			OnHoldingWandEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 		}
 		
 		if(_isSwinging)
@@ -183,12 +183,12 @@ public class PlayerHand : NetworkBehaviour
 			_stoppingSwing = true;
 		}
 
-		if (_heldItem is WandItemSO)
+		if (_heldItem is WandItemSO || _heldItem is SpellBookItemSO)
 		{
 			ShowArm();
 			ApplyPreset(_holdingWandPreset);
 			
-			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmDirection });
+			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 		}
 		else if (_heldItem is MeleeItemSO)
 		{
@@ -287,6 +287,13 @@ public class PlayerHand : NetworkBehaviour
 	#endregion
 
 	#region Helpers
+
+	public Vector3 GetDirectionNormalized()
+	{
+		// Ensure ActionManager.MouseWorldPosition is defined and accessible
+		Vector3 direction = (Vector3)ActionManager.MouseWorldPosition - ProjectileSpawnTransform.position;
+		return direction.normalized;
+	}
 
 	private void ApplyPreset(PlayerArmVisualPreset preset)
 	{

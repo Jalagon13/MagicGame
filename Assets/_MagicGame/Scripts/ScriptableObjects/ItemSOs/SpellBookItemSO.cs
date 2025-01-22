@@ -26,9 +26,19 @@ public class SpellBookItemSO : ItemSO
 
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
+		SpellBookInventoryItem spellBookInventoryItem = inventoryItem as SpellBookInventoryItem;
+
+		var spell = spellBookInventoryItem.GetSpellAndIncrementSpellIndex();
+		
+		if(spell != null)
+		{
+			spell.SpawnAndShootSpell(playerHand.ProjectileSpawnTransform.position, playerHand.GetDirectionNormalized());
+		}
+		
+		
 		return _baseActionCooldown;
 	}
-    
+	
 	public override InventoryItem CreateInventoryItem(int quantity)
 	{
 		return new SpellBookInventoryItem(this, quantity, Capacity);

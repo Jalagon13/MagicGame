@@ -34,6 +34,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
 	[field: SerializeField] public PlayerHand OffHand { get; private set; }
+	public Collider2D HitCollider { get; private set; }
 	[SerializeField] private int _startingMana = 100;
 	[SerializeField] private int _startingHealth = 100;
 	[SerializeField] private float _respawnTimerDuration;
@@ -53,6 +54,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	private void Awake()
 	{
+		HitCollider = GetComponent<Collider2D>();
 		_knockback = GetComponent<Knockback>();
 		_rb = GetComponent<Rigidbody2D>();
 		_respawnTimer = new(_respawnTimerDuration);
