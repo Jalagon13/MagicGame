@@ -4,7 +4,7 @@ using UnityEngine;
 public class SpellProjectileItemSO : ItemSO
 {
 	[field: Tooltip("Actual Prefab for the projectile.")]
-	[field: SerializeField] public SpellProjectile SpellProjectilePrefab { get; private set; }
+	[field: SerializeField] public BouncySpellProjectile SpellProjectilePrefab { get; private set; }
 
 	[field: Tooltip("The mana cost required to cast this projectile.")]
 	[field: SerializeField] public int ManaCost { get; private set; } = 5;

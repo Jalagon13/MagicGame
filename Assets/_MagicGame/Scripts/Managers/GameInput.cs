@@ -34,7 +34,7 @@ public class GameInput : MonoBehaviour
 	
 	private PlayerInput _playerInput;
 	
-	private bool _inventoryOpen, _primaryHeldDown, _secondaryHeldDown;
+	private bool _inventoryOpen, _primaryHeldDown, _secondaryHeldDown, _shiftHeldDown;
 	private int _selectedSlotIndex = 0;
 	
 	private void Awake()
@@ -65,6 +65,18 @@ public class GameInput : MonoBehaviour
 		_playerInput.Player.SecondaryAction.canceled += PlayerInput_SecondaryAction; 
 		_playerInput.Player.ResearchMenu.started += PlayerInput_ResearchMenu;
 		_playerInput.Player.SwapHands.started += PlayerInput_SwapHands;
+		_playerInput.Player.Shift.started += PlayerInput_ShiftStart;
+		_playerInput.Player.Shift.canceled += PlayerInput_ShiftCanceled;
+	}
+
+	private void PlayerInput_ShiftStart(InputAction.CallbackContext context)
+	{
+		_shiftHeldDown = true;
+	}
+	
+	private void PlayerInput_ShiftCanceled(InputAction.CallbackContext context)
+	{
+		_shiftHeldDown = false;
 	}
 
 	private void PlayerInput_SwapHands(InputAction.CallbackContext context)
@@ -162,6 +174,11 @@ public class GameInput : MonoBehaviour
 	public int GetSelectedSlotIndex()
 	{
 		return _selectedSlotIndex;
+	}
+	
+	public bool GetShiftHeldDown()
+	{
+		return _shiftHeldDown;
 	}
 
 	private void OnDestroy()

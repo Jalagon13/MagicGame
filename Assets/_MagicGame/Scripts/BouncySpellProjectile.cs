@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class SpellProjectile : MonoBehaviour
+public class BouncySpellProjectile : MonoBehaviour
 {
 	[SerializeField] private NpcWallCollider _wallCollider;
 

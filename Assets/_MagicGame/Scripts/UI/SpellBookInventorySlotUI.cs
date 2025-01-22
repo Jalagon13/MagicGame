@@ -24,7 +24,11 @@ public class SpellBookInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPo
 		
 		if(SpellBookInventorySlotIsOccupied())
 		{
-			if(mouseItem.HasItem && mouseItem.Item is SpellProjectileItemSO mouseSpellProjectileItemSO)
+			if(GameInput.Instance.GetShiftHeldDown())
+			{
+				InventoryManager.Instance.AddItem(_spellBookInventoryItemRef.RemoveSpell(_spellIndex), 1);
+			}
+			else if(mouseItem.HasItem && mouseItem.Item is SpellProjectileItemSO mouseSpellProjectileItemSO)
 			{
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _spellBookInventoryItemRef.SwapSpells(mouseSpellProjectileItemSO, _spellIndex);
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = 1;
@@ -45,6 +49,12 @@ public class SpellBookInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPo
 		
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
+	
+	public void SetSpell(SpellProjectileItemSO spell)
+	{
+		_spellBookInventoryItemRef.SetSpell(_spellIndex, spell);
+		UpdateSlotUI();
+	}
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
@@ -56,12 +66,12 @@ public class SpellBookInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPo
 		
 	}
 	
-	private bool SpellBookInventorySlotIsOccupied()
+	public bool SpellBookInventorySlotIsOccupied()
 	{
 		return _spellBookInventoryItemRef.SpellsArray[_spellIndex] != null;
 	}
 	
-	private void UpdateSlotUI()
+	public void UpdateSlotUI()
 	{
 		if(SpellBookInventorySlotIsOccupied())
 		{

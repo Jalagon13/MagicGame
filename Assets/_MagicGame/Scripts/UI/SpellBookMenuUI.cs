@@ -1,13 +1,79 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SpellBookMenuUI : MonoBehaviour
 {
+	public SpellBookInventoryItem SelectedSpellBook { get; private set; }
+	
 	[SerializeField] private SpellBookInventorySlotUI _spellBookInventorySlotPrefab;
 	[SerializeField] private Transform _spellBookSlotsHolder;
+	[SerializeField] private SpellBookSlotUI _spellBookSlotUI;
+	
+	private void OnEnable()
+	{
+		InventoryManager.Instance.OnInventorySlotShiftLeftClicked += SpellBookShortCut;
+	}
 
-	public SpellBookInventoryItem SelectedSpellBook { get; private set; }
-
+	private void OnDisable()
+	{
+		InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= SpellBookShortCut;
+		
+		if(HasSpellBook())
+		{
+			InventoryManager.Instance.AddItem(SelectedSpellBook);
+		}
+		
+		RemoveSelectedSpellBook();
+	}
+	
+	private void SpellBookShortCut(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
+	{
+		if(e.InventoryItem is SpellBookInventoryItem spellBookInInventory)
+		{
+			if(HasSpellBook())
+			{
+				InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = SwapSpellBooks(spellBookInInventory);
+			}
+			else
+			{
+				PlaceSelectedSpellBook(spellBookInInventory);
+				InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
+			}
+			
+			_spellBookSlotUI.UpdateSlotUI();
+		}
+		else if(e.InventoryItem.Item is SpellProjectileItemSO spellProjectileItemSO)
+		{
+			Debug.Log("a");
+			if(HasSpellBook())
+			{
+				Debug.Log("b");
+				SpellBookInventorySlotUI firstEmptySpellBookInventorySlotUI = null;
+			
+				foreach (Transform child in _spellBookSlotsHolder)
+				{
+					if(!child.GetComponent<SpellBookInventorySlotUI>().SpellBookInventorySlotIsOccupied())
+					{
+						Debug.Log("c");
+						firstEmptySpellBookInventorySlotUI = child.GetComponent<SpellBookInventorySlotUI>();
+						break;
+					}
+				}
+				
+				if(firstEmptySpellBookInventorySlotUI != null)
+				{
+					Debug.Log("d");
+					// Found an empty spot
+					firstEmptySpellBookInventorySlotUI.SetSpell(spellProjectileItemSO);
+					InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
+				}
+			}
+		}
+		
+		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
+	}
+	
 	public bool HasSpellBook()
 	{
 		return SelectedSpellBook != null;
@@ -32,7 +98,8 @@ public class SpellBookMenuUI : MonoBehaviour
 		}
 
 		SelectedSpellBook = newSpellBook;
-		Debug.Log($"Placed spellbook: {newSpellBook.Item.Name}");
+		Debug.Log(SelectedSpellBook == null);
+		Debug.Log($"Placed spellbook: {SelectedSpellBook.Item.Name}, {SelectedSpellBook.Item.UiDisplay}");
 		
 		UpdateSpellBookSlotsUI();
 	}

@@ -89,6 +89,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shift"",
+                    ""type"": ""Button"",
+                    ""id"": ""b73c6445-93af-4d5b-bba6-79c47df338d7"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -210,6 +219,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ResearchMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9912636a-4d40-4bed-ab17-286e19106076"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shift"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -435,6 +455,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_SwapHands = m_Player.FindAction("SwapHands", throwIfNotFound: true);
         m_Player_Esc = m_Player.FindAction("Esc", throwIfNotFound: true);
         m_Player_ResearchMenu = m_Player.FindAction("ResearchMenu", throwIfNotFound: true);
+        m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
         // Hotbar
         m_Hotbar = asset.FindActionMap("Hotbar", throwIfNotFound: true);
         m_Hotbar__1 = m_Hotbar.FindAction("1", throwIfNotFound: true);
@@ -521,6 +542,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SwapHands;
     private readonly InputAction m_Player_Esc;
     private readonly InputAction m_Player_ResearchMenu;
+    private readonly InputAction m_Player_Shift;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -532,6 +554,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @SwapHands => m_Wrapper.m_Player_SwapHands;
         public InputAction @Esc => m_Wrapper.m_Player_Esc;
         public InputAction @ResearchMenu => m_Wrapper.m_Player_ResearchMenu;
+        public InputAction @Shift => m_Wrapper.m_Player_Shift;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -562,6 +585,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ResearchMenu.started += instance.OnResearchMenu;
             @ResearchMenu.performed += instance.OnResearchMenu;
             @ResearchMenu.canceled += instance.OnResearchMenu;
+            @Shift.started += instance.OnShift;
+            @Shift.performed += instance.OnShift;
+            @Shift.canceled += instance.OnShift;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -587,6 +613,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ResearchMenu.started -= instance.OnResearchMenu;
             @ResearchMenu.performed -= instance.OnResearchMenu;
             @ResearchMenu.canceled -= instance.OnResearchMenu;
+            @Shift.started -= instance.OnShift;
+            @Shift.performed -= instance.OnShift;
+            @Shift.canceled -= instance.OnShift;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -731,6 +760,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnSwapHands(InputAction.CallbackContext context);
         void OnEsc(InputAction.CallbackContext context);
         void OnResearchMenu(InputAction.CallbackContext context);
+        void OnShift(InputAction.CallbackContext context);
     }
     public interface IHotbarActions
     {

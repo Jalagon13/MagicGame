@@ -12,6 +12,14 @@ public class InventoryManager : MonoBehaviour
 	public static InventoryManager Instance { get; private set; }
 	public static int HOTBAR_SLOTS_AMOUNT = 9;
 	
+	public event EventHandler<ShortCutInventoryItemEventArgs> OnInventorySlotShiftLeftClicked;
+	public event EventHandler<ShortCutInventoryItemEventArgs> OnInventorySlotShiftRightClicked;
+	public class ShortCutInventoryItemEventArgs : EventArgs
+	{
+		public InventoryItem InventoryItem;
+		public int SlotIndex;
+	}
+	
 	public event EventHandler<InventoryItemEventArgs> OnOffHandItemUpdated;
 	public event EventHandler<InventoryItemEventArgs> OnMouseItemUpdated;
 	public class InventoryItemEventArgs : EventArgs
@@ -127,6 +135,17 @@ public class InventoryManager : MonoBehaviour
 		if(remainder > 0)
 		{
 			_inventoryModel.RemoveItem(item, amount);
+		}
+	}
+	
+	public void AddItem(InventoryItem inventoryItem, bool playCollectSound = true)
+	{
+		// NTFS: BUG: This will create a brand new inventory item and will not transfer over any inventory item data that might have existed before
+		_itemQueue.Enqueue(inventoryItem);
+		
+		if(!_isCollecting)
+		{
+			StartCoroutine(StaggeredItemCollection(playCollectSound));
 		}
 	}
 	
@@ -260,6 +279,16 @@ public class InventoryManager : MonoBehaviour
 	
 	public void InventorySlotRightClicked(int clickedInventorySlotIndex)
 	{
+		if(GameInput.Instance.GetShiftHeldDown())
+		{
+			OnInventorySlotShiftRightClicked?.Invoke(this, new ShortCutInventoryItemEventArgs
+			{
+				InventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex],
+				SlotIndex = clickedInventorySlotIndex
+			});
+			return;
+		}
+	
 		InventoryItem inventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex];
 		InventoryItem mouseItem = _mouseItemModel.MouseInventoryItem;
 		
@@ -328,6 +357,16 @@ public class InventoryManager : MonoBehaviour
 	
 	public void InventorySlotLeftClicked(int clickedInventorySlotIndex)
 	{
+		if(GameInput.Instance.GetShiftHeldDown())
+		{
+			OnInventorySlotShiftLeftClicked?.Invoke(this, new ShortCutInventoryItemEventArgs
+			{
+				InventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex],
+				SlotIndex = clickedInventorySlotIndex
+			});
+			return;
+		}
+	
 		InventoryItem inventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex];
 		InventoryItem mouseItem = _mouseItemModel.MouseInventoryItem;
 		
