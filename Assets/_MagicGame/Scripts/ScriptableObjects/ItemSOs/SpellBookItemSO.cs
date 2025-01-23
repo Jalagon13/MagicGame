@@ -27,18 +27,30 @@ public class SpellBookItemSO : ItemSO
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
 		SpellBookInventoryItem spellBookInventoryItem = inventoryItem as SpellBookInventoryItem;
-		
-		if(!spellBookInventoryItem.HasSpells())
+		SpellProjectileItemSO currentSpell = spellBookInventoryItem.GetCurrentSpell();
+
+		if (currentSpell == null)
 		{
-			return 0f;
+			Debug.LogWarning("No valid spell to cast.");
+			return RechargeTime; // Fallback in case there are no valid spells
 		}
-		
-		(float delay, SpellProjectileItemSO spell) = spellBookInventoryItem.CastSpell(RechargeTime, CastDelay);
-		
+
+		// Calculate the total spread
+		float calculatedSpread = Spread + currentSpell.Spread;
+		if (calculatedSpread < 0)
+		{
+			calculatedSpread = 0; // Clamp spread to a minimum of 0
+		}
+
+		// Generate a random angle within the spread range
+		float randomAngle = Random.Range(-calculatedSpread, calculatedSpread);
 		Vector3 directionNormalized = ((Vector3)ActionManager.MouseWorldPosition - playerHand.ProjectileSpawnTransform.position).normalized;
-		spell.SpawnAndShootSpell(playerHand.ProjectileSpawnTransform.position, directionNormalized);
-		Debug.Log(delay);
-		return delay;
+		Vector3 rotatedDirection = Quaternion.Euler(0, 0, randomAngle) * directionNormalized;
+
+		currentSpell.SpawnAndShootSpell(playerHand.ProjectileSpawnTransform.position, rotatedDirection);
+
+		// Advance to the next spell and return the appropriate delay
+		return spellBookInventoryItem.AdvanceToNextSpell(RechargeTime, CastDelay);
 	}
 	
 	public override InventoryItem CreateInventoryItem(int quantity)

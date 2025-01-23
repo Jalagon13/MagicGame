@@ -13,20 +13,24 @@ public class SpellBookInventoryItem : InventoryItem
 		SpellsArray = new SpellProjectileItemSO[capacity]; // Initialize the array with the given capacity
 	}
 
-	public void ResetSpellBook()
+	public (int, int) ResetSpellBook()
 	{
+		var spellBookItemSO = Item as SpellBookItemSO;
+
 		// Find the first valid spell index
 		for (int i = 0; i < SpellsArray.Length; i++)
 		{
 			if (SpellsArray[i] != null)
 			{
 				_spellIndex = i - 1; // Set to one before the first valid spell, so the next cast starts here
-				return;
+				return (spellBookItemSO.MaxMana, spellBookItemSO.ManaChargeSpeed);
 			}
 		}
 
 		// If no valid spells, reset the index to -1
 		_spellIndex = -1;
+
+		return (spellBookItemSO.MaxMana, spellBookItemSO.ManaChargeSpeed);
 	}
 
 	public bool HasSpells()
@@ -41,8 +45,53 @@ public class SpellBookInventoryItem : InventoryItem
 
 		return false;
 	}
+	
+	public bool IsCurrentSpellFinalSpell()
+	{
+		// Collect valid spell indices (non-null) into a list
+		List<int> validSpellIndices = new();
+		for (int i = 0; i < SpellsArray.Length; i++)
+		{
+			if (SpellsArray[i] != null)
+			{
+				validSpellIndices.Add(i);
+			}
+		}
 
-	public (float, SpellProjectileItemSO) CastSpell(float rechargeTime, float castDelay)
+		// If no valid spells are available, return false
+		if (validSpellIndices.Count == 0)
+		{
+			return false;
+		}
+
+		// Check if the current spell is the last valid spell
+		int lastSpellIndex = validSpellIndices[validSpellIndices.Count - 1];
+		return _spellIndex == lastSpellIndex;
+	}
+
+	public SpellProjectileItemSO GetCurrentSpell()
+	{
+		if (_spellIndex >= 0 && _spellIndex < SpellsArray.Length && SpellsArray[_spellIndex] != null)
+		{
+			return SpellsArray[_spellIndex];
+		}
+
+		// If the current index is invalid or null, find the first valid spell
+		for (int i = 0; i < SpellsArray.Length; i++)
+		{
+			if (SpellsArray[i] != null)
+			{
+				_spellIndex = i; // Update the index to the first valid spell
+				return SpellsArray[i];
+			}
+		}
+
+		// If no valid spells exist, return null
+		Debug.LogWarning($"Warning no valid spells exist, this warning should not be seen because check for empty spell book should already have been checked prior to this call");
+		return null;
+	}
+
+	public float AdvanceToNextSpell(float rechargeTime, float spellBookCastDelay)
 	{
 		// Collect valid spells (non-null) into a list of indices
 		List<int> validSpellIndices = new();
@@ -54,31 +103,29 @@ public class SpellBookInventoryItem : InventoryItem
 			}
 		}
 
-		// If there are no spells to cast, log a warning and return default values
+		// If there are no spells to cast, log a warning and return default recharge time
 		if (validSpellIndices.Count == 0)
 		{
 			Debug.LogWarning("No spells available to cast.");
-			return (0f, null);
+			return rechargeTime;
+		}
+		
+		// Check if we are at the last spell in the sequence
+		if (_spellIndex == validSpellIndices[validSpellIndices.Count - 1])
+		{
+			Debug.Log("Returning recharge time. Spell Index {}");
+			
+			_spellIndex = (_spellIndex + 1) % validSpellIndices.Count;
+			return rechargeTime;
 		}
 
-		// Increment the spell index and wrap around when reaching the end
+		// Otherwise, return the cast delay for the current spell
+		float spellCastDelay = SpellsArray[validSpellIndices[_spellIndex]].CastDelay;
+		
 		_spellIndex = (_spellIndex + 1) % validSpellIndices.Count;
-
-		// Get the current spell to cast
-		int currentSpellIndex = validSpellIndices[_spellIndex];
-		SpellProjectileItemSO currentSpell = SpellsArray[currentSpellIndex];
-
-		// Return the cast delay or recharge time along with the current spell
-		if (_spellIndex == validSpellIndices.Count - 1)
-		{
-			// If this is the last spell in the sequence, return recharge time
-			return (rechargeTime, currentSpell);
-		}
-		else
-		{
-			// Otherwise, return the cast delay
-			return (castDelay + currentSpell.CastDelay, currentSpell);
-		}
+		
+		Debug.Log("Returning cast delay");
+		return spellBookCastDelay + spellCastDelay;
 	}
 
 	public void SetSpell(int slotIndex, SpellProjectileItemSO spell)

@@ -66,7 +66,6 @@ public class MiningProjectile : NetworkBehaviour
 				if(IsServer)
 				{
 					HitTilemap();
-					RemoveManaClientRpc(RpcTarget.Single(_senderId, RpcTargetUse.Persistent));
 				}
 				
 				SpawnHitPrefab();
@@ -91,8 +90,6 @@ public class MiningProjectile : NetworkBehaviour
 						{
 							Vector2Int resourcePosition = new(Mathf.RoundToInt(resourceAsset.transform.position.x), Mathf.RoundToInt(resourceAsset.transform.position.y));
 							ObjectManager.Instance.DamageObject(resourcePosition, (ushort)_miningPower, Player.LocalClientInstance.GetPlayerEnvironment());
-							
-							RemoveManaClientRpc(RpcTarget.Single(_senderId, RpcTargetUse.Persistent));
 						}
 					}
 				}
@@ -104,14 +101,6 @@ public class MiningProjectile : NetworkBehaviour
 				
 			}
 		}
-	}
-	
-	[Rpc(SendTo.SpecifiedInParams)]
-	private void RemoveManaClientRpc(RpcParams rpcParams = default)
-	{
-		if(rpcParams.Receive.SenderClientId != NetworkManager.Singleton.LocalClientId) return;
-	
-		Player.LocalClientInstance.RemoveMana(1);
 	}
 
 	private void HitTilemap()

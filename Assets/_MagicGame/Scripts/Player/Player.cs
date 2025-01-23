@@ -24,7 +24,6 @@ public class Player : NetworkBehaviour, IHasHealth
 	}
 	
 	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnHealthUpdated;
-	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerManaUpdated;
 	public class OnStatUpdatedEventArgs : EventArgs
 	{
 		public int PreviousValue;
@@ -35,7 +34,6 @@ public class Player : NetworkBehaviour, IHasHealth
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
 	[field: SerializeField] public PlayerHand OffHand { get; private set; }
 	public Collider2D HitCollider { get; private set; }
-	[SerializeField] private int _startingMana = 100;
 	[SerializeField] private int _startingHealth = 100;
 	[SerializeField] private float _respawnTimerDuration;
 	[SerializeField] private List<InventoryItem> _startingItems = new();
@@ -44,7 +42,6 @@ public class Player : NetworkBehaviour, IHasHealth
 	private NetworkVariable<int> _mainHandItemIndexNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private NetworkVariable<int> _offHandItemIndexNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private NetworkVariable<int> _healthNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	private NetworkVariable<int> _manaNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private Knockback _knockback;
 	private Rigidbody2D _rb;
 	private Timer _respawnTimer;
@@ -59,7 +56,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		_rb = GetComponent<Rigidbody2D>();
 		_respawnTimer = new(_respawnTimerDuration);
 		_healthNetworkVariable.OnValueChanged += HealthNetworkVariable_OnValueChanged;
-		_manaNetworkVariable.OnValueChanged += ManaNetworkVariable_OnValueChanged;
 	}
 	
 	public override void OnNetworkSpawn()
@@ -78,7 +74,6 @@ public class Player : NetworkBehaviour, IHasHealth
 			InventoryManager.Instance.OnOffHandItemUpdated += InventoryManager_OnOffHandItemUpdated;
 			
 			Invoke(nameof(SpawnStartingItems), 0.25f);
-			InvokeRepeating(nameof(ManaRegen), 1f, 1f);
 		}
 		
 		OnAnyPlayerSpawned?.Invoke(this, new PlayerIdEventArgs
@@ -90,19 +85,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			_healthNetworkVariable.Value = _startingHealth;
 		}
-		
-		if(IsOwner)
-		{
-			_manaNetworkVariable.Value = _startingMana;
-		}
-	}
-
-	private void ManaRegen()
-	{
-		if(_manaNetworkVariable.Value < _startingMana)
-		{
-			_manaNetworkVariable.Value += 1;
-		}
 	}
 
 	private void Update()
@@ -110,16 +92,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		if(IsDead() && NetworkManager.LocalClientId == OwnerClientId)
 		{
 			_respawnTimer.Tick(Time.deltaTime);
-		}
-	}
-	
-	public void RemoveMana(int amount)
-	{
-		_manaNetworkVariable.Value -= amount;
-		
-		if(_manaNetworkVariable.Value < 0)
-		{
-			_manaNetworkVariable.Value = 0;
 		}
 	}
 	
@@ -217,16 +189,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		OnRespawn?.Invoke(this, new PlayerIdEventArgs
 		{
 			PlayerId = OwnerClientId
-		});
-	}
-	
-	private void ManaNetworkVariable_OnValueChanged(int previousValue, int newValue)
-	{
-		OnPlayerManaUpdated?.Invoke(this, new OnStatUpdatedEventArgs
-		{
-			PreviousValue = previousValue,
-			NewValue = newValue,
-			MaxValue = _startingMana
 		});
 	}
 
@@ -338,7 +300,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		base.OnDestroy();
 		
 		_healthNetworkVariable.OnValueChanged -= HealthNetworkVariable_OnValueChanged;
-		_manaNetworkVariable.OnValueChanged -= ManaNetworkVariable_OnValueChanged;
 		
 		if(IsOwner)
 		{
