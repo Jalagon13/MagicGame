@@ -45,17 +45,14 @@ public class SpellBookMenuUI : MonoBehaviour
 		}
 		else if(e.InventoryItem.Item is SpellProjectileItemSO spellProjectileItemSO)
 		{
-			Debug.Log("a");
 			if(HasSpellBook())
 			{
-				Debug.Log("b");
 				SpellBookInventorySlotUI firstEmptySpellBookInventorySlotUI = null;
 			
 				foreach (Transform child in _spellBookSlotsHolder)
 				{
 					if(!child.GetComponent<SpellBookInventorySlotUI>().SpellBookInventorySlotIsOccupied())
 					{
-						Debug.Log("c");
 						firstEmptySpellBookInventorySlotUI = child.GetComponent<SpellBookInventorySlotUI>();
 						break;
 					}
@@ -63,7 +60,6 @@ public class SpellBookMenuUI : MonoBehaviour
 				
 				if(firstEmptySpellBookInventorySlotUI != null)
 				{
-					Debug.Log("d");
 					// Found an empty spot
 					firstEmptySpellBookInventorySlotUI.SetSpell(spellProjectileItemSO);
 					InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
@@ -98,8 +94,6 @@ public class SpellBookMenuUI : MonoBehaviour
 		}
 
 		SelectedSpellBook = newSpellBook;
-		Debug.Log(SelectedSpellBook == null);
-		Debug.Log($"Placed spellbook: {SelectedSpellBook.Item.Name}, {SelectedSpellBook.Item.UiDisplay}");
 		
 		UpdateSpellBookSlotsUI();
 	}

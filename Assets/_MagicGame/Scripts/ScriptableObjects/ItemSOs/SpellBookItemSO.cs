@@ -7,7 +7,7 @@ public class SpellBookItemSO : ItemSO
 	[field: SerializeField] public int SpellsCast { get; private set; } = 1;
 
 	[field: Tooltip("The delay (in seconds) between individual casts of the spell book.")]
-	[field: SerializeField] public float CastDelay { get; private set; } = 0.3f;
+	[field: SerializeField] public float CastDelay { get; private set; } = 0.2f;
 
 	[field: Tooltip("The cooldown time (in seconds) before the spell book can be used again.")]
 	[field: SerializeField] public float RechargeTime { get; private set; } = 0.5f;
@@ -27,16 +27,18 @@ public class SpellBookItemSO : ItemSO
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
 		SpellBookInventoryItem spellBookInventoryItem = inventoryItem as SpellBookInventoryItem;
-
-		var spell = spellBookInventoryItem.GetSpellAndIncrementSpellIndex();
 		
-		if(spell != null)
+		if(!spellBookInventoryItem.HasSpells())
 		{
-			spell.SpawnAndShootSpell(playerHand.ProjectileSpawnTransform.position, playerHand.GetDirectionNormalized());
+			return 0f;
 		}
 		
+		(float delay, SpellProjectileItemSO spell) = spellBookInventoryItem.CastSpell(RechargeTime, CastDelay);
 		
-		return _baseActionCooldown;
+		Vector3 directionNormalized = ((Vector3)ActionManager.MouseWorldPosition - playerHand.ProjectileSpawnTransform.position).normalized;
+		spell.SpawnAndShootSpell(playerHand.ProjectileSpawnTransform.position, directionNormalized);
+		Debug.Log(delay);
+		return delay;
 	}
 	
 	public override InventoryItem CreateInventoryItem(int quantity)

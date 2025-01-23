@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
-  m_Name: SpellProjectile1
+  m_Name: SpellProjectile3
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Spell Proj 1
-  <UiDisplay>k__BackingField: {fileID: -3168733581550749585, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
+  <Name>k__BackingField: Spell Proj 2
+  <UiDisplay>k__BackingField: {fileID: 2125737359283935466, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField: []
-  <SpellProjectilePrefab>k__BackingField: {fileID: 2865795296762045379, guid: b690059f7ea154d8bb5b67392ed3195f, type: 3}
+  <SpellProjectilePrefab>k__BackingField: {fileID: 2865795296762045379, guid: e1982671954b1483a977007b87de8d38, type: 3}
   <ManaCost>k__BackingField: 5
   <Damage>k__BackingField: 3
   <Spread>k__BackingField: 1
   <Lifetime>k__BackingField: 2
-  <Speed>k__BackingField: 20
+  <Speed>k__BackingField: 40
   <CastDelay>k__BackingField: 0

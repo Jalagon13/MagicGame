@@ -19,9 +19,9 @@ MonoBehaviour:
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField: []
   <SpellsCast>k__BackingField: 1
-  <CastDelay>k__BackingField: 0.3
-  <RechargeTime>k__BackingField: 0.5
+  <CastDelay>k__BackingField: 1
+  <RechargeTime>k__BackingField: 4
   <MaxMana>k__BackingField: 150
   <ManaChargeSpeed>k__BackingField: 50
-  <Capacity>k__BackingField: 2
+  <Capacity>k__BackingField: 3
   <Spread>k__BackingField: 0

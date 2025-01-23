@@ -22,7 +22,7 @@ public class SpellProjectileItemSO : ItemSO
 	[field: SerializeField] public int Speed { get; private set; } = 100;
 
 	[field: Tooltip("The additional delay (in seconds) added to the casting time of this projectile. Negative values reduce the delay.")]
-	[field: SerializeField] public float CastDelay { get; private set; } = -0.03f;
+	[field: SerializeField] public float CastDelay { get; private set; } = 0.1f;
 
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{

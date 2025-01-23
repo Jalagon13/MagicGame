@@ -71,7 +71,6 @@ public class SpellBookSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 		
 		if(_spellBookMenuUI.HasSpellBook())
 		{
-			Debug.Log(_spellBookMenuUI.SelectedSpellBook.Item == null);
 			_spellBookIcon.sprite = _spellBookMenuUI.SelectedSpellBook.Item.UiDisplay;
 			
 			if(_hovered)
