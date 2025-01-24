@@ -17,7 +17,7 @@ public class Portal : MonoBehaviour
 		if(!_worldInput.IsMouseOverIndputDetector()) return;
 		
 		// Just hard code it like this for now will change once more environments are added
-		EnvironmentID destination = Player.LocalClientInstance.GetPlayerEnvironment() == EnvironmentID.Cave ? EnvironmentID.Forest : EnvironmentID.Cave;
+		EnvironmentID destination = Player.LocalClientInstance.PlayerEnvironment.Value == EnvironmentID.Cave ? EnvironmentID.Forest : EnvironmentID.Cave;
 		WorldManager.Instance.LoadEnvironment(destination, transform.position);
 	}
 	

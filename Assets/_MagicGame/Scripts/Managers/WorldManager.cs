@@ -134,21 +134,21 @@ public class WorldManager : NetworkBehaviour
 			case EnvironmentID.Forest:
 				_environmentList.Add(EnvironmentID.Forest);
 				GetComponent<ForestGeneration>().GenerateForest();
-				Player.LocalClientInstance.SetPlayerEnvironment(EnvironmentID.Forest);
+				Player.LocalClientInstance.PlayerEnvironment.Value = EnvironmentID.Forest;
 				break;
 			case EnvironmentID.Cave:
 				_environmentList.Add(EnvironmentID.Cave);
 				GetComponent<CaveGeneration>().GenerateCave();
-				Player.LocalClientInstance.SetPlayerEnvironment(EnvironmentID.Cave);
+				Player.LocalClientInstance.PlayerEnvironment.Value = EnvironmentID.Cave;
 				break;
 		}
 	}
 	
 	public void LoadEnvironment(EnvironmentID targetEnvironment, Vector2 portalPosition, bool isPlayerRespawning = false)
 	{
-		if(targetEnvironment == Player.LocalClientInstance.GetPlayerEnvironment())
+		if(targetEnvironment == Player.LocalClientInstance.PlayerEnvironment.Value)
 		{
-			Debug.LogError($"Should not be trying to load an environment you are already in. environmentID: {targetEnvironment}, ACTIVE_ENVIRONMENT_ID: {Player.LocalClientInstance.GetPlayerEnvironment()}");
+			Debug.LogError($"Should not be trying to load an environment you are already in. environmentID: {targetEnvironment}, ACTIVE_ENVIRONMENT_ID: {Player.LocalClientInstance.PlayerEnvironment.Value}");
 			return;
 		}
 		
@@ -169,7 +169,7 @@ public class WorldManager : NetworkBehaviour
 		}
 		else
 		{
-			Player.LocalClientInstance.SetPlayerEnvironment(targetEnvironment);
+			Player.LocalClientInstance.PlayerEnvironment.Value = targetEnvironment;
 
 			ChunkManager.Instance.OnLoadedPlayerChunksUpdated += OnClientEnvironmentTransitionEnd;
 			
@@ -213,10 +213,10 @@ public class WorldManager : NetworkBehaviour
 		_isTransitioningEnvironment = true;
 		
 		// If host, save the scene you just left
-		await SaveSystem.Instance.SerializeDataAndWriteToFile(Player.LocalClientInstance.GetPlayerEnvironment());
+		await SaveSystem.Instance.SerializeDataAndWriteToFile(Player.LocalClientInstance.PlayerEnvironment.Value);
 		
 		// Change environment
-		Player.LocalClientInstance.SetPlayerEnvironment(targetEnvironment);
+		Player.LocalClientInstance.PlayerEnvironment.Value = targetEnvironment;
 		
 		// If chunks for target environment does not exist, deserialize the environment 
 		if(ChunkManager.Instance.GetChunksFromEnvironment(targetEnvironment).Count <= 0)
@@ -290,7 +290,7 @@ public class WorldManager : NetworkBehaviour
 	{
 		Debug.Log("Portal NOT found. Placing player at new portal that is spawned");
 		Vector2Int v2IntPos = new(Mathf.RoundToInt(portalPosition.x), Mathf.RoundToInt(portalPosition.y));
-		ObjectManager.Instance.PlaceObject(v2IntPos, _portalObjectPrefab, Player.LocalClientInstance.GetPlayerEnvironment());
+		ObjectManager.Instance.PlaceObject(v2IntPos, _portalObjectPrefab, Player.LocalClientInstance.PlayerEnvironment.Value);
 	}
 	
 	private void PlacePlayerAt(Vector2 portalPosition)
@@ -308,7 +308,7 @@ public class WorldManager : NetworkBehaviour
 			for (int y = -1; y <= 1; y++)
 			{
 				Vector3Int neighborPosition = new(centerPositionInt.x + x, centerPositionInt.y + y, centerPositionInt.z);
-				Environment.Instance.GetWallTilemapData().DeleteTile(new(neighborPosition.x, neighborPosition.y), Player.LocalClientInstance.GetPlayerEnvironment());
+				Environment.Instance.GetWallTilemapData().DeleteTile(new(neighborPosition.x, neighborPosition.y), Player.LocalClientInstance.PlayerEnvironment.Value);
 			}
 		}
 	}

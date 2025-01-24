@@ -99,7 +99,7 @@ public class ObjectManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void HandleObjectVisualsClientRpc(Vector2Int position, byte assetID, EnvironmentID objectEnvironment)
 	{
-		if(objectEnvironment == Player.LocalClientInstance.GetPlayerEnvironment() && ObjectPositionInLoadedChunks(position))
+		if(objectEnvironment == Player.LocalClientInstance.PlayerEnvironment.Value && ObjectPositionInLoadedChunks(position))
 		{
 			// Visually place it down for everyone
 			WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);

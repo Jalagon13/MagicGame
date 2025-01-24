@@ -89,7 +89,7 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	protected override void FixedUpdate()
 	{
 		var isHoldingWand = _thisPlayer.IsHoldingAWand();
-		var isSwingOnGoing = _thisPlayer.GetIsPerformingSwing();
+		var isSwingOnGoing = _thisPlayer.IsPerformingSwing;
 		
 		if(!isHoldingWand && !isSwingOnGoing)
 		{

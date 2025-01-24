@@ -45,7 +45,7 @@ public class Lightmap : MonoBehaviour
 		// NTFS: Does not do anything rn
 		Color dayLightColor = _dayLightGradient.Evaluate(ratio);
 		
-		_lightMapRawImage.color = Player.LocalClientInstance.GetPlayerEnvironment() == EnvironmentID.Forest ? SetColorBasedOnBrightness(dayLightColor) : Color.white;
+		_lightMapRawImage.color = Player.LocalClientInstance.PlayerEnvironment.Value == EnvironmentID.Forest ? SetColorBasedOnBrightness(dayLightColor) : Color.white;
 	}
 	
 	// Method to set color and adjust opacity
@@ -203,7 +203,7 @@ public class Lightmap : MonoBehaviour
 	private Vector3 GetBaseLight()
 	{
 		// For now, hard code base environment for forest to be slightly dark and cave to be completely dark
-		switch(Player.LocalClientInstance.GetPlayerEnvironment())
+		switch(Player.LocalClientInstance.PlayerEnvironment.Value)
 		{
 			case EnvironmentID.Forest:
 				return new Vector3(0.01f, 0.01f, 0.01f);

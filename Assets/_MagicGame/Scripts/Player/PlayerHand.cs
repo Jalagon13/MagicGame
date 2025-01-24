@@ -61,18 +61,18 @@ public class PlayerHand : NetworkBehaviour
 			
 			if (_isMainHand)
 			{
-				_thisPlayer.GetMainHandItemIndexNetworkVariable().OnValueChanged += HandleItemIndexChanged;
+				_thisPlayer.MainHandItemIndexNetworkVariable.OnValueChanged += HandleItemIndexChanged;
 			}
 			else
 			{
-				_thisPlayer.GetOffHandItemIndexNetworkVariable().OnValueChanged += HandleItemIndexChanged;
+				_thisPlayer.OffHandItemIndexNetworkVariable.OnValueChanged += HandleItemIndexChanged;
 			}
 		}
 	}
 
 	public override void OnNetworkSpawn()
 	{
-		int heldItemValue = _isMainHand ? _thisPlayer.GetMainHandItemIndexNetworkVariable().Value : _thisPlayer.GetOffHandItemIndexNetworkVariable().Value;
+		int heldItemValue = _isMainHand ? _thisPlayer.MainHandItemIndexNetworkVariable.Value : _thisPlayer.OffHandItemIndexNetworkVariable.Value;
 		
 		UpdateArmFromItemIndex(heldItemValue);
 		
@@ -149,11 +149,11 @@ public class PlayerHand : NetworkBehaviour
 	{
 		if (_isMainHand)
 		{
-			_thisPlayer.GetMainHandItemIndexNetworkVariable().OnValueChanged -= HandleItemIndexChanged;
+			_thisPlayer.MainHandItemIndexNetworkVariable.OnValueChanged -= HandleItemIndexChanged;
 		}
 		else
 		{
-			_thisPlayer.GetOffHandItemIndexNetworkVariable().OnValueChanged -= HandleItemIndexChanged;
+			_thisPlayer.OffHandItemIndexNetworkVariable.OnValueChanged -= HandleItemIndexChanged;
 		}
 
 		base.OnDestroy();
@@ -234,7 +234,7 @@ public class PlayerHand : NetworkBehaviour
 
 		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerMeleeSwing, Player.LocalClientInstance.transform.position);
 		
-		_thisPlayer.SetIsPerformingSwing(true);
+		_thisPlayer.IsPerformingSwing = true;
 		_isSwinging = true;
 
 		startAngle = NormalizeAngle(startAngle);
@@ -280,7 +280,7 @@ public class PlayerHand : NetworkBehaviour
 		_armPivotGO.transform.rotation = endRotation;
 
 		_isSwinging = false;
-		_thisPlayer.SetIsPerformingSwing(false);
+		_thisPlayer.IsPerformingSwing = false;
 		_stoppingSwing = false;
 	}
 

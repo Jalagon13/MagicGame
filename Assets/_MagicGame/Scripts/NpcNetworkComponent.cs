@@ -155,7 +155,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 
 	private bool CheckIfInSameEnvironment(ulong clientId)
 	{
-		var clientEnvironment = NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().GetPlayerEnvironment();
+		var clientEnvironment = NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().PlayerEnvironment.Value;
 	
 		return clientEnvironment == _npcEnvironment;
 	}

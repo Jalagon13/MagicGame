@@ -11,7 +11,7 @@ public class BouncySpellProjectile : NetworkBehaviour
 	private float _lifetime;
 	private Vector3 _directionNormalized;
 	private Vector3 _damagerPosition;
-
+	private ulong _sourcePlayerId;
 	private float _timeAlive;
 	private Rigidbody2D _rigidbody2D;
 
@@ -31,39 +31,45 @@ public class BouncySpellProjectile : NetworkBehaviour
 		{
 			if(IsServer)
 			{
-				Destroy(gameObject);
+				StopProjectileClientRPC(RpcTarget.Single(_sourcePlayerId, RpcTargetUse.Persistent));
+				// Destroy(gameObject);
 			}
 		}
 	}
 
-	// private void OnTriggerEnter2D(Collider2D other)
-	// {
-	// 	if(Player.LocalClientInstance.HitCollider == other) return;
+	private void OnTriggerEnter2D(Collider2D other)
+	{
+		// If is overlapping with the collider attached to the player who sent it, don't damage it
+		if(NetworkManager.ConnectedClients[_sourcePlayerId].PlayerObject.GetComponent<Player>().HitCollider == other) return;
 
-	// 	if (other.TryGetComponent(out IHasHealth npcToDamage))
-	// 	{
-	// 		if(IsServer)
-	// 		{
-	// 			npcToDamage.ApplyDamage(_damage, _damagerPosition);
-	// 		}
-			
-	// 		Destroy(gameObject);
-	// 	}
-	// }
+		if (other.TryGetComponent(out IHasHealth npcToDamage))
+		{
+			if(IsServer)
+			{
+				npcToDamage.ApplyDamage(_damage, _damagerPosition);
+				
+				StopProjectileClientRPC(RpcTarget.Single(_sourcePlayerId, RpcTargetUse.Persistent));
+				// Destroy(gameObject);
+			}
+		}
+	}
 
 	// Initialize the projectile with impulse force
-	public void Initialize(int speed, int damage, float lifetime, Vector3 directionNormalized)
+	public void Initialize(int speed, int damage, float lifetime, Vector3 directionNormalized, ulong sourcePlayerId)
 	{
-	
+		_sourcePlayerId = sourcePlayerId;
 		_damagerPosition = transform.position;
 		_speed = speed;
 		_damage = damage;
 		_lifetime = lifetime;
 		_directionNormalized = directionNormalized;
-		Debug.Log("Initialized and force is being added");
-		// Apply an initial impulse to the Rigidbody2D to launch the projectile
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 		_rigidbody2D.AddForce(_directionNormalized * _speed, ForceMode2D.Impulse);
-		Debug.Log($"Velocity: {_rigidbody2D.linearVelocity.magnitude}, Speed: {_speed}, Direction {_directionNormalized}");
+	}
+	
+	[Rpc(SendTo.SpecifiedInParams)]
+	private void StopProjectileClientRPC(RpcParams rpcParams)
+	{
+		Debug.Log($"Test.. {gameObject.name}");
 	}
 }

@@ -76,7 +76,7 @@ public class ChunkManager : NetworkBehaviour
 		}
 		else
 		{
-			_chunkNetworkManager.ClientUpdatePlayerChunks(Player.LocalClientInstance.GetPlayerEnvironment());
+			_chunkNetworkManager.ClientUpdatePlayerChunks(Player.LocalClientInstance.PlayerEnvironment.Value);
 		}
 	}
 	
@@ -128,13 +128,13 @@ public class ChunkManager : NetworkBehaviour
 	
 	private void TryToUnloadChunk(Vector2Int chunkPos)
 	{
-		ChunkGameData chunkToUnload = GetChunkDataFromChunkPosition(Player.LocalClientInstance.GetPlayerEnvironment(), chunkPos);
+		ChunkGameData chunkToUnload = GetChunkDataFromChunkPosition(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
 		InvokeOnUnloadChunk(chunkToUnload);
 	}
 	
 	private void TryToLoadChunk(Vector2Int chunkPos)
 	{
-		ChunkGameData chunkToLoad = GetChunkDataFromChunkPosition(Player.LocalClientInstance.GetPlayerEnvironment(), chunkPos);
+		ChunkGameData chunkToLoad = GetChunkDataFromChunkPosition(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
 		InvokeOnLoadChunk(chunkToLoad);
 	}
 	

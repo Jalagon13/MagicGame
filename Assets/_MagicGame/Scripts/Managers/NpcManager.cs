@@ -6,18 +6,17 @@ using UnityEngine;
 
 public class NpcManager : NetworkBehaviour
 {
-	public event EventHandler<OnNpcSpawnEventArgs> OnNpcSpawn;
-	public class OnNpcSpawnEventArgs : EventArgs 
-	{
-		public GameObject NpcGameObject;
-	}
-
+	public static NpcManager Instance { get; private set; }
 	public static int SPAWN_ZONE_WIDTH = 48;
 	public static int SPAWN_ZONE_HEIGHT = 28;
 	public static int NO_SPAWN_ZONE_WIDTH = 35;
 	public static int NO_SPAWN_ZONE_HEIGHT = 20;
 	
-	public static NpcManager Instance { get; private set; }
+	public event EventHandler<OnNpcSpawnEventArgs> OnNpcSpawn;
+	public class OnNpcSpawnEventArgs : EventArgs 
+	{
+		public GameObject NpcGameObject;
+	}
 	
 	[SerializeField] private NpcSO _deerNpcSO;
 	[SerializeField] private NpcSO _testDummyNpcSO;
@@ -112,7 +111,7 @@ public class NpcManager : NetworkBehaviour
 			
 			byte npcId = GameManager.Instance.GetIdAsByteFromNpcSO(npcSO);
 
-			SpawnNpcServerRpc(Player.LocalClientInstance.GetPlayerEnvironment(), npcId, NetworkManager.LocalClientId, spawnPosition);
+			SpawnNpcServerRpc(Player.LocalClientInstance.PlayerEnvironment.Value, npcId, NetworkManager.LocalClientId, spawnPosition);
 		}
 	}
 	

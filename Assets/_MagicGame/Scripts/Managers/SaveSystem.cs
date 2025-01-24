@@ -57,13 +57,13 @@ public class SaveSystem : MonoBehaviour
 		string json = JsonUtility.ToJson(_environmentFileData);
 		
 		// Log the saving
-		Debug.Log($"<color=orange>Writing Environment Data of: </color>{Player.LocalClientInstance.GetPlayerEnvironment()}<color=orange> to file...</color>");
+		Debug.Log($"<color=orange>Writing Environment Data of: </color>{Player.LocalClientInstance.PlayerEnvironment.Value}<color=orange> to file...</color>");
 		
 		// Write JSON data to file asynchronously
 		await File.WriteAllTextAsync(_path, json);
 		
 		// Log the completion
-		Debug.Log($"<color=orange>Environment: </color>{Player.LocalClientInstance.GetPlayerEnvironment()}<color=orange> writing data to file complete!</color>");
+		Debug.Log($"<color=orange>Environment: </color>{Player.LocalClientInstance.PlayerEnvironment.Value}<color=orange> writing data to file complete!</color>");
 		
 		OnSerializationFinished?.Invoke(this, EventArgs.Empty);
 		

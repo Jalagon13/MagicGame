@@ -21,7 +21,7 @@ public class BuildItemSO : ItemSO
 		
 		if(IsClear(new(pos.x, pos.y)) && !wallTmHasTile && PlayerInRangeOfMouse())
 		{
-			Environment.Instance.PlaceTile(pos, _wallTile, TileType.Wall, Player.LocalClientInstance.GetPlayerEnvironment());
+			Environment.Instance.PlaceTile(pos, _wallTile, TileType.Wall, Player.LocalClientInstance.PlayerEnvironment.Value);
 			
 			InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 			

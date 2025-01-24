@@ -189,15 +189,14 @@ public class GameManager : NetworkBehaviour
 		{
 			// If player is not host, spawn fake projectile and hide the actual server projectile
 			BouncySpellProjectile fakeSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, spawnPoint, Quaternion.identity);
-			Debug.Log("SPawning fake");
-			fakeSpell.Initialize(speed, damage, lifetime,direction);
+			fakeSpell.Initialize(speed, damage, lifetime,direction, Player.LocalClientInstance.OwnerClientId);
 		}
 		
 		SpawnSpellProjectileServerRpc(GetItemIndexFromItemSO(currentSpellItemSO), spawnPoint, direction, speed, damage, lifetime, Player.LocalClientInstance.IsHost, Player.LocalClientInstance.OwnerClientId);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnSpellProjectileServerRpc(int itemIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, bool isHost, ulong clientSenderId)
+	private void SpawnSpellProjectileServerRpc(int itemIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, bool isHost, ulong sourcePlayerId)
 	{
 		var spellPrefab = (GetItemSOFromIndex(itemIndex) as SpellProjectileItemSO).SpellProjectilePrefab;
 		
@@ -205,11 +204,11 @@ public class GameManager : NetworkBehaviour
 		
 		spell.GetComponent<NetworkObject>().Spawn(true);
 		
-		spell.Initialize(speed, damage, lifetime,direction);
+		spell.Initialize(speed, damage, lifetime,direction, sourcePlayerId);
 		
 		if(!isHost)
 		{
-			spell.GetComponent<NetworkObject>().NetworkHide(clientSenderId);
+			spell.GetComponent<NetworkObject>().NetworkHide(sourcePlayerId);
 		}
 	}
 

@@ -33,21 +33,22 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
 	[field: SerializeField] public PlayerHand OffHand { get; private set; }
-	public Collider2D HitCollider { get; private set; }
 	[SerializeField] private int _startingHealth = 100;
 	[SerializeField] private float _respawnTimerDuration;
 	[SerializeField] private List<InventoryItem> _startingItems = new();
+	public NetworkVariable<int> MainHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public NetworkVariable<int> OffHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public NetworkVariable<EnvironmentID> PlayerEnvironment { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public Collider2D HitCollider { get; private set; }
+	public bool IsPerformingSwing { get; set; }
 	
-	private NetworkVariable<EnvironmentID> _playerEnvironment = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	private NetworkVariable<int> _mainHandItemIndexNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	private NetworkVariable<int> _offHandItemIndexNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private NetworkVariable<int> _healthNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private Knockback _knockback;
 	private Rigidbody2D _rb;
 	private Timer _respawnTimer;
 	private Vector2 _spawnPoint;
 	private EnvironmentID _spawnEnvironment;
-	private bool _isPerformingSwing;
+	
 	
 	private void Awake()
 	{
@@ -66,7 +67,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			LocalClientInstance = this;
 			
-			_playerEnvironment.Value = EnvironmentID.Forest; // For now all players will spawn in the forest
+			PlayerEnvironment.Value = EnvironmentID.Forest; // For now all players will spawn in the forest
 			_spawnEnvironment = EnvironmentID.Forest;
 			_spawnPoint = transform.position;
 			
@@ -181,7 +182,7 @@ public class Player : NetworkBehaviour, IHasHealth
 			transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
 		}
 		
-		if(Player.LocalClientInstance.GetPlayerEnvironment() != _spawnEnvironment)
+		if(LocalClientInstance.PlayerEnvironment.Value != _spawnEnvironment)
 		{
 			WorldManager.Instance.LoadEnvironment(_spawnEnvironment, _spawnPoint, isPlayerRespawning: true);
 		}
@@ -209,11 +210,11 @@ public class Player : NetworkBehaviour, IHasHealth
 			// NTFS: network variables onvaluechanged is only executed if the value is different
 			if(e.MainHandItemIndex == -1)
 			{
-				_mainHandItemIndexNetworkVariable.Value = -1;
+				MainHandItemIndexNetworkVariable.Value = -1;
 			}
 			else
 			{
-				_mainHandItemIndexNetworkVariable.Value = e.MainHandItemIndex;
+				MainHandItemIndexNetworkVariable.Value = e.MainHandItemIndex;
 			}
 		}
 	}
@@ -227,11 +228,11 @@ public class Player : NetworkBehaviour, IHasHealth
 			
 			if(offHandItemIndex == -1)
 			{
-				_offHandItemIndexNetworkVariable.Value = -1;
+				OffHandItemIndexNetworkVariable.Value = -1;
 			}
 			else
 			{
-				_offHandItemIndexNetworkVariable.Value = offHandItemIndex;
+				OffHandItemIndexNetworkVariable.Value = offHandItemIndex;
 			}
 		}
 	}
@@ -246,53 +247,20 @@ public class Player : NetworkBehaviour, IHasHealth
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
 	
-	public NetworkVariable<int> GetMainHandItemIndexNetworkVariable()
-	{
-		return _mainHandItemIndexNetworkVariable;
-	}
-	
-	public NetworkVariable<int> GetOffHandItemIndexNetworkVariable()
-	{
-		return _offHandItemIndexNetworkVariable;
-	}
-	
 	public bool IsDead()
 	{
 		return _healthNetworkVariable.Value <= 0;
 	}
-
-	public bool GetIsPerformingSwing()
-	{
-		return _isPerformingSwing;
-	}
-	
-	public void SetIsPerformingSwing(bool _)
-	{
-		_isPerformingSwing = _;
-	}
 	
 	public bool IsHoldingAWand()
 	{
-		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromIndex(_mainHandItemIndexNetworkVariable.Value);
+		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromIndex(MainHandItemIndexNetworkVariable.Value);
 		bool mainHandHoldingWand = mainHandItem != null && mainHandItem is WandItemSO;
 		
-		ItemSO offHandItem = GameManager.Instance.GetItemSOFromIndex(_offHandItemIndexNetworkVariable.Value);
+		ItemSO offHandItem = GameManager.Instance.GetItemSOFromIndex(OffHandItemIndexNetworkVariable.Value);
 		bool offHandHoldingWand = offHandItem != null && offHandItem is WandItemSO;
 		
-		bool isHoldingAWand = mainHandHoldingWand || offHandHoldingWand;
-		
-		return isHoldingAWand;
-	}
-	
-	public EnvironmentID GetPlayerEnvironment()
-	{
-		return _playerEnvironment.Value;
-	}
-	
-	public void SetPlayerEnvironment(EnvironmentID environment)
-	{
-		Debug.Log($"Setting player {OwnerClientId} environement to: {environment}");
-		_playerEnvironment.Value = environment;
+		return mainHandHoldingWand || offHandHoldingWand;
 	}
 
 	public override void OnDestroy()

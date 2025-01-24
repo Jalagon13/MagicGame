@@ -30,7 +30,7 @@ public class CaveGeneration : MonoBehaviour
 
 	private void SaveSystem_OnNoFileFoundToDeserialize(object sender, EventArgs e)
 	{
-		if(Player.LocalClientInstance.GetPlayerEnvironment() == _environment)
+		if(Player.LocalClientInstance.PlayerEnvironment.Value == _environment)
 		{
 			GenerateCave();
 		}
