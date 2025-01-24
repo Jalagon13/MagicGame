@@ -113,8 +113,6 @@ public class SpellBookInventoryItem : InventoryItem
 		// Check if we are at the last spell in the sequence
 		if (_spellIndex == validSpellIndices[validSpellIndices.Count - 1])
 		{
-			Debug.Log("Returning recharge time. Spell Index {}");
-			
 			_spellIndex = (_spellIndex + 1) % validSpellIndices.Count;
 			return rechargeTime;
 		}

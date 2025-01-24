@@ -96,6 +96,16 @@ public class Player : NetworkBehaviour, IHasHealth
 		}
 	}
 	
+	private void SpawnStartingItems()
+	{
+		foreach (InventoryItem item in _startingItems)
+		{
+			InventoryManager.Instance.AddItem(item.Item, item.Quantity);
+		}
+		
+		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
+	}
+	
 	public void ApplyDamage(int damage, Vector2 damagerPosition)
 	{
 		if(IsDead()) return;
@@ -237,16 +247,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		}
 	}
 	
-	private void SpawnStartingItems()
-	{
-		foreach (InventoryItem item in _startingItems)
-		{
-			InventoryManager.Instance.AddItem(item.Item, item.Quantity);
-		}
-		
-		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
-	}
-	
 	public bool IsDead()
 	{
 		return _healthNetworkVariable.Value <= 0;
@@ -262,7 +262,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		return mainHandHoldingWand || offHandHoldingWand;
 	}
-
+	
 	public override void OnDestroy()
 	{
 		base.OnDestroy();

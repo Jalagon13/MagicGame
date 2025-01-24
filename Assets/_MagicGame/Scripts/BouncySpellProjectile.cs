@@ -8,33 +8,16 @@ public class BouncySpellProjectile : NetworkBehaviour
 {
 	private int _speed;
 	private int _damage;
-	private float _lifetime;
 	private Vector3 _directionNormalized;
 	private Vector3 _damagerPosition;
 	private ulong _sourcePlayerId;
-	private float _timeAlive;
+	private ulong _projectileId;
 	private Rigidbody2D _rigidbody2D;
 
 	private void Awake()
 	{
 		// Get the Rigidbody2D component
 		_rigidbody2D = GetComponent<Rigidbody2D>();
-	}
-	
-	private void FixedUpdate()
-	{
-		// Increment time alive
-		_timeAlive += Time.deltaTime;
-
-		// Destroy the projectile when its lifetime is exceeded
-		if (_timeAlive >= _lifetime)
-		{
-			if(IsServer)
-			{
-				StopProjectileClientRPC(RpcTarget.Single(_sourcePlayerId, RpcTargetUse.Persistent));
-				// Destroy(gameObject);
-			}
-		}
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -48,28 +31,34 @@ public class BouncySpellProjectile : NetworkBehaviour
 			{
 				npcToDamage.ApplyDamage(_damage, _damagerPosition);
 				
-				StopProjectileClientRPC(RpcTarget.Single(_sourcePlayerId, RpcTargetUse.Persistent));
-				// Destroy(gameObject);
+				StopProjectile();
 			}
 		}
 	}
 
 	// Initialize the projectile with impulse force
-	public void Initialize(int speed, int damage, float lifetime, Vector3 directionNormalized, ulong sourcePlayerId)
+	public void Initialize(int speed, int damage, float lifetime, Vector3 directionNormalized, ulong sourcePlayerId, ulong projectileId)
 	{
+		_projectileId = projectileId;
 		_sourcePlayerId = sourcePlayerId;
 		_damagerPosition = transform.position;
 		_speed = speed;
 		_damage = damage;
-		_lifetime = lifetime;
 		_directionNormalized = directionNormalized;
+		
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 		_rigidbody2D.AddForce(_directionNormalized * _speed, ForceMode2D.Impulse);
+		
+		if(IsServer)
+		{
+			Invoke(nameof(StopProjectile), lifetime);
+		}
 	}
 	
-	[Rpc(SendTo.SpecifiedInParams)]
-	private void StopProjectileClientRPC(RpcParams rpcParams)
+	private void StopProjectile()
 	{
-		Debug.Log($"Test.. {gameObject.name}");
+		GameManager.Instance.DestroyFakeProjectile(_sourcePlayerId, _projectileId);
+		NetworkObject.Despawn();
+		Destroy(gameObject);
 	}
 }

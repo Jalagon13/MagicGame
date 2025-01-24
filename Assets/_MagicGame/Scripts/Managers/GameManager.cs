@@ -27,6 +27,8 @@ public class GameManager : NetworkBehaviour
 	[SerializeField] private ItemParameterDataBaseSO _itemParameterDataBaseSO;
 	[SerializeField] private NpcDataBaseSO _npcDataBaseSO;
 	
+	private Dictionary<ulong, GameObject> _fakeProjectiles = new Dictionary<ulong, GameObject>();
+	
 	private void Awake()
 	{
 		Instance = this;
@@ -185,18 +187,22 @@ public class GameManager : NetworkBehaviour
 
 	public void SpawnSpellProjectile(SpellProjectileItemSO currentSpellItemSO, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime)
 	{
+		ulong projectileId = IdGenerator.GenerateRandomId();
+		Debug.Log($"Projectile ID: {projectileId}");
 		if(!Player.LocalClientInstance.IsHost)
 		{
-			// If player is not host, spawn fake projectile and hide the actual server projectile
+			// If player is not host, spawn fake projectile, and add it to fake projectiles dictionary
 			BouncySpellProjectile fakeSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, spawnPoint, Quaternion.identity);
-			fakeSpell.Initialize(speed, damage, lifetime,direction, Player.LocalClientInstance.OwnerClientId);
+			fakeSpell.Initialize(speed, damage, lifetime,direction, Player.LocalClientInstance.OwnerClientId, projectileId);
+			
+			AddFakeProjectile(projectileId, fakeSpell.gameObject);
 		}
 		
-		SpawnSpellProjectileServerRpc(GetItemIndexFromItemSO(currentSpellItemSO), spawnPoint, direction, speed, damage, lifetime, Player.LocalClientInstance.IsHost, Player.LocalClientInstance.OwnerClientId);
+		SpawnSpellProjectileServerRpc(GetItemIndexFromItemSO(currentSpellItemSO), spawnPoint, direction, speed, damage, lifetime, Player.LocalClientInstance.IsHost, Player.LocalClientInstance.OwnerClientId, projectileId);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnSpellProjectileServerRpc(int itemIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, bool isHost, ulong sourcePlayerId)
+	private void SpawnSpellProjectileServerRpc(int itemIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, bool isHost, ulong sourcePlayerId, ulong projectileId)
 	{
 		var spellPrefab = (GetItemSOFromIndex(itemIndex) as SpellProjectileItemSO).SpellProjectilePrefab;
 		
@@ -204,11 +210,38 @@ public class GameManager : NetworkBehaviour
 		
 		spell.GetComponent<NetworkObject>().Spawn(true);
 		
-		spell.Initialize(speed, damage, lifetime,direction, sourcePlayerId);
+		spell.Initialize(speed, damage, lifetime,direction, sourcePlayerId, projectileId);
 		
 		if(!isHost)
 		{
 			spell.GetComponent<NetworkObject>().NetworkHide(sourcePlayerId);
+		}
+	}
+	
+	public void DestroyFakeProjectile(ulong sourcePlayerId, ulong projectileId)
+	{
+		DestroyFakeProjectileClientRpc(projectileId, RpcTarget.Single(sourcePlayerId, RpcTargetUse.Persistent));
+	}
+	
+	[Rpc(SendTo.SpecifiedInParams)]
+	private void DestroyFakeProjectileClientRpc(ulong projectileId, RpcParams rpcParams = default)
+	{
+		Debug.Log($"DestroyFakeProjectile client rpc call proj id: {projectileId}");
+		RemoveFakeProjectile(projectileId);
+	}
+	
+	private void AddFakeProjectile(ulong projectileId, GameObject projectileGameObject)
+	{
+		_fakeProjectiles.Add(projectileId, projectileGameObject);
+	}
+	
+	private void RemoveFakeProjectile(ulong projectileId)
+	{
+		if (_fakeProjectiles.TryGetValue(projectileId, out GameObject fakeProjectile))
+		{
+			Debug.Log($"Fake projectile found and destroyed for proj id {projectileId}");
+			Destroy(fakeProjectile);
+			_fakeProjectiles.Remove(projectileId);
 		}
 	}
 
