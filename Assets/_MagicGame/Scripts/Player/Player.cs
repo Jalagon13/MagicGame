@@ -108,35 +108,40 @@ public class Player : NetworkBehaviour, IHasHealth
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
 	
+	#region Damage Functions
+	
 	public void ApplyDamage(int damage, Vector2 damagerPosition)
 	{
 		if (IsDead()) return;
-
-		// Calculate damage reduction based on Terraria's defense formula
-		int defense = PlayerStats.PlayerDefense;
-		int damageReduction = defense / 2; // Defense reduces damage by half its value
-		
-		// Apply damage reduction
-		int finalDamage = Mathf.Max(1, damage - damageReduction); // Minimum damage is 1
-
-		Debug.Log($"Defense: {defense}, Damage Reduction {damageReduction}, Damage: {damage}, FinalDamage: {finalDamage}");
 		
 		// Apply the final damage to the player
-		ApplyPlayerDamageServerRpc(OwnerClientId, finalDamage, damagerPosition);
+		ApplyPlayerDamageServerRpc(OwnerClientId, damage, damagerPosition);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void ApplyPlayerDamageServerRpc(ulong damagePlayerId, int damageAmount, Vector2 damagerPosition)
 	{
-		_healthNetworkVariable.Value -= damageAmount;
+		if (!NetworkManager.ConnectedClients.ContainsKey(damagePlayerId))
+		{
+			Debug.LogWarning($"Invalid damagePlayerId: {damagePlayerId}");
+			return;
+		}
+	
+		int defense = NetworkManager.ConnectedClients[damagePlayerId].PlayerObject.GetComponent<Player>().PlayerStats.PlayerDefense;
+		int damageReduction = defense / 2; // Defense reduces damage by half its value
+		
+		// Apply damage reduction
+		int finalDamage = Mathf.Max(1, damageAmount - damageReduction); // Minimum damage is 1
+	
+		_healthNetworkVariable.Value = Mathf.Max(0, _healthNetworkVariable.Value - finalDamage);
 		
 		bool isPlayerDead = _healthNetworkVariable.Value <= 0;
 		
-		OnPlayerHealthChangedClientRpc(damageAmount, isPlayerDead, damagerPosition, damagePlayerId);
+		OnPlayerHealthChangedClientRpc(finalDamage, isPlayerDead, damagerPosition, damagePlayerId);
 	}
 	
 	[Rpc(SendTo.ClientsAndHost)]
-	private void OnPlayerHealthChangedClientRpc(int damageAmount, bool isKilled, Vector2 damagerPosition, ulong damagePlayerId)
+	private void OnPlayerHealthChangedClientRpc(int finalDamage, bool isKilled, Vector2 damagerPosition, ulong damagePlayerId)
 	{
 		if(OwnerClientId != damagePlayerId) return;
 		
@@ -148,7 +153,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		}
 		else
 		{
-			OnPlayerDamaged(damageAmount, damagerPosition);
+			OnPlayerDamaged(finalDamage, damagerPosition);
 		}
 	}
 	
@@ -168,18 +173,20 @@ public class Player : NetworkBehaviour, IHasHealth
 		});
 	}
 	
-	private void OnPlayerDamaged(int damageAmount, Vector2 damagerPosition)
+	private void OnPlayerDamaged(int finalDamage, Vector2 damagerPosition)
 	{
-		Debug.Log($"[Client {NetworkManager.LocalClientId}] Applied {damageAmount} Damage to {gameObject.name}!");
+		Debug.Log($"[Client {NetworkManager.LocalClientId}] Applied {finalDamage} Damage to {gameObject.name}!");
 		
 		_knockback?.ApplyKnockback(_rb, damagerPosition);
 		
 		OnDamaged?.Invoke(this, new OnDamagedEventArgs
 		{
 			DamagerPosition = damagerPosition,
-			DamageAmount = damageAmount
+			DamageAmount = finalDamage
 		});
 	}
+	
+	#endregion
 	
 	private void RespawnPlayer(object sender, EventArgs e)
 	{
