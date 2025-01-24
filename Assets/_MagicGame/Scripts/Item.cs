@@ -119,7 +119,7 @@ public class Item : NetworkBehaviour
 	
 	private void UpdateItemDataAndVisuals()
 	{
-		ItemSO itemSO = GameManager.Instance.GetItemSOFromIndex(_itemIdNetworkVariable.Value);
+		ItemSO itemSO = GameManager.Instance.GetItemSOFromItemId(_itemIdNetworkVariable.Value);
 		
 		_itemInventoryItem = new(itemSO, _itemAmountNetworkVariable.Value);
 		

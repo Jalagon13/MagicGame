@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 005376f4cf790463789cef1fed8b875c, type: 3}
+  m_Name: Chestplate
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Chestplate
+  <UiDisplay>k__BackingField: {fileID: 21300012, guid: 358b5d9f23bc9413e87c9948acc67ee1, type: 3}
+  <ItemActionCooldown>k__BackingField: 0.375
+  <Stackable>k__BackingField: 1
+  <Description>k__BackingField: 
+  <DefaultParameterList>k__BackingField: []
+  <ArmorType>k__BackingField: 1
+  <DefenseAmount>k__BackingField: 8

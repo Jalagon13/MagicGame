@@ -171,7 +171,7 @@ public class PlayerHand : NetworkBehaviour
 	private void UpdateArmFromItemIndex(int newValue)
 	{
 		var tempItem = _heldItem;
-		_heldItem = GameManager.Instance.GetItemSOFromIndex(newValue);
+		_heldItem = GameManager.Instance.GetItemSOFromItemId(newValue);
 
 		if ((tempItem is WandItemSO || tempItem is SpellBookItemSO) && (_heldItem is not WandItemSO || _heldItem is not SpellBookItemSO) && !_isSwinging)
 		{

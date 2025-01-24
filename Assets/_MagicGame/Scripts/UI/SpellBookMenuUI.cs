@@ -12,12 +12,12 @@ public class SpellBookMenuUI : MonoBehaviour
 	
 	private void OnEnable()
 	{
-		InventoryManager.Instance.OnInventorySlotShiftLeftClicked += SpellBookShortCut;
+		InventoryManager.Instance.OnInventorySlotShiftLeftClicked += OnInventorySlotShiftLeftClicked_SpellBookShortCut;
 	}
 
 	private void OnDisable()
 	{
-		InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= SpellBookShortCut;
+		InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= OnInventorySlotShiftLeftClicked_SpellBookShortCut;
 		
 		if(HasSpellBook())
 		{
@@ -27,7 +27,7 @@ public class SpellBookMenuUI : MonoBehaviour
 		RemoveSelectedSpellBook();
 	}
 	
-	private void SpellBookShortCut(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
+	private void OnInventorySlotShiftLeftClicked_SpellBookShortCut(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
 	{
 		if(e.InventoryItem is SpellBookInventoryItem spellBookInInventory)
 		{

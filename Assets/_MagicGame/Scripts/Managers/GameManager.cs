@@ -113,7 +113,7 @@ public class GameManager : NetworkBehaviour
 		return (byte)_tileDataBaseSO.TileObjectSOList.IndexOf(tileSO);
 	}
 	
-	public int GetItemIndexFromItemSO(ItemSO item)
+	public int GetItemIdFromItemSO(ItemSO item)
 	{
 		if(item == null)
 		{
@@ -198,13 +198,13 @@ public class GameManager : NetworkBehaviour
 			AddFakeProjectile(projectileId, fakeSpell.gameObject);
 		}
 		
-		SpawnSpellProjectileServerRpc(GetItemIndexFromItemSO(currentSpellItemSO), spawnPoint, direction, speed, damage, lifetime, Player.LocalClientInstance.IsHost, Player.LocalClientInstance.OwnerClientId, projectileId);
+		SpawnSpellProjectileServerRpc(GetItemIdFromItemSO(currentSpellItemSO), spawnPoint, direction, speed, damage, lifetime, Player.LocalClientInstance.IsHost, Player.LocalClientInstance.OwnerClientId, projectileId);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void SpawnSpellProjectileServerRpc(int itemIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, bool isHost, ulong sourcePlayerId, ulong projectileId)
 	{
-		var spellPrefab = (GetItemSOFromIndex(itemIndex) as SpellProjectileItemSO).SpellProjectilePrefab;
+		var spellPrefab = (GetItemSOFromItemId(itemIndex) as SpellProjectileItemSO).SpellProjectilePrefab;
 		
 		BouncySpellProjectile spell = Instantiate(spellPrefab, spawnPoint, Quaternion.identity);
 		
@@ -280,7 +280,7 @@ public class GameManager : NetworkBehaviour
 			return;
 		}
 	
-		int itemId = GetItemIndexFromItemSO(itemToSpawn); 
+		int itemId = GetItemIdFromItemSO(itemToSpawn); 
 		ushort itemAmount = (ushort)amount;
 		
 		SpawnItemServerRpc((ushort)itemId, itemAmount, spawnPos, playAudio);
@@ -308,7 +308,7 @@ public class GameManager : NetworkBehaviour
 		DestroyItemServerRpc(itemToDestroy.NetworkObject);
 	}
 	
-	public ItemSO GetItemSOFromIndex(int index)
+	public ItemSO GetItemSOFromItemId(int index)
 	{
 		if(index >= 0 && index < _itemDataBaseSO.ItemSOList.Count)
 		{

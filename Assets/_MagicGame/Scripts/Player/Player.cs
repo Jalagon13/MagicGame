@@ -33,9 +33,10 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
 	[field: SerializeField] public PlayerHand OffHand { get; private set; }
-	[SerializeField] private int _startingHealth = 100;
 	[SerializeField] private float _respawnTimerDuration;
 	[SerializeField] private List<InventoryItem> _startingItems = new();
+	
+	public PlayerStats PlayerStats { get; private set; }
 	public NetworkVariable<int> MainHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<int> OffHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<EnvironmentID> PlayerEnvironment { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -52,6 +53,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	private void Awake()
 	{
+		PlayerStats = GetComponent<PlayerStats>();
 		HitCollider = GetComponent<Collider2D>();
 		_knockback = GetComponent<Knockback>();
 		_rb = GetComponent<Rigidbody2D>();
@@ -84,7 +86,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		if(IsServer)
 		{
-			_healthNetworkVariable.Value = _startingHealth;
+			_healthNetworkVariable.Value = PlayerStats.StartingPlayerHealth;
 		}
 	}
 
@@ -108,9 +110,19 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	public void ApplyDamage(int damage, Vector2 damagerPosition)
 	{
-		if(IsDead()) return;
-	
-		ApplyPlayerDamageServerRpc(OwnerClientId, damage, damagerPosition);
+		if (IsDead()) return;
+
+		// Calculate damage reduction based on Terraria's defense formula
+		int defense = PlayerStats.PlayerDefense;
+		int damageReduction = defense / 2; // Defense reduces damage by half its value
+		
+		// Apply damage reduction
+		int finalDamage = Mathf.Max(1, damage - damageReduction); // Minimum damage is 1
+
+		Debug.Log($"Defense: {defense}, Damage Reduction {damageReduction}, Damage: {damage}, FinalDamage: {finalDamage}");
+		
+		// Apply the final damage to the player
+		ApplyPlayerDamageServerRpc(OwnerClientId, finalDamage, damagerPosition);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
@@ -173,7 +185,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		_respawnTimer.OnTimerEnd -= RespawnPlayer;
 		
-		RespawnPlayerServerRpc(OwnerClientId, _startingHealth);
+		RespawnPlayerServerRpc(OwnerClientId, PlayerStats.StartingPlayerHealth);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
@@ -209,7 +221,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			PreviousValue = previousValue,
 			NewValue = newValue,
-			MaxValue = _startingHealth
+			MaxValue = PlayerStats.StartingPlayerHealth
 		});
 	}
 
@@ -234,7 +246,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		if(IsOwner)
 		{
 			// NTFS: network variables onvaluechanged is only executed if the value is different
-			var offHandItemIndex = GameManager.Instance.GetItemIndexFromItemSO(e.InventoryItem.Item);
+			var offHandItemIndex = GameManager.Instance.GetItemIdFromItemSO(e.InventoryItem.Item);
 			
 			if(offHandItemIndex == -1)
 			{
@@ -254,10 +266,10 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	public bool IsHoldingAWand()
 	{
-		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromIndex(MainHandItemIndexNetworkVariable.Value);
+		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromItemId(MainHandItemIndexNetworkVariable.Value);
 		bool mainHandHoldingWand = mainHandItem != null && mainHandItem is WandItemSO;
 		
-		ItemSO offHandItem = GameManager.Instance.GetItemSOFromIndex(OffHandItemIndexNetworkVariable.Value);
+		ItemSO offHandItem = GameManager.Instance.GetItemSOFromItemId(OffHandItemIndexNetworkVariable.Value);
 		bool offHandHoldingWand = offHandItem != null && offHandItem is WandItemSO;
 		
 		return mainHandHoldingWand || offHandHoldingWand;

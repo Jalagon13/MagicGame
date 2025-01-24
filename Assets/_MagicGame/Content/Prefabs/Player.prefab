@@ -584,6 +584,7 @@ GameObject:
   - component: {fileID: 58978028088058983}
   - component: {fileID: 1645875197371293612}
   - component: {fileID: 6270092794415709611}
+  - component: {fileID: 5536299572111678412}
   - component: {fileID: 7910427268955246096}
   m_Layer: 0
   m_Name: Player
@@ -782,17 +783,12 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   <MainHand>k__BackingField: {fileID: 4604921083407888490}
   <OffHand>k__BackingField: {fileID: 4958567346535862893}
-  _startingHealth: 150
   _respawnTimerDuration: 2
   _startingItems:
   - Item: {fileID: 11400000, guid: f163862eaf2254f90b02b26267855a9c, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: 409efbd4e22624ac882995581adb1c37, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
-    Quantity: 1
-  - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
-    Quantity: 99
   - Item: {fileID: 11400000, guid: 1cf699ca803ee4a948f9d763ddf2409d, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: bf1d2a5b5f1334f7f9a6d0aa32605231, type: 2}
@@ -800,6 +796,12 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: cd7a8008b9b73404b88d7681dc7ebf56, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: 09a10dc71ecf54d858726abd2700cc95, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: a446ad3687760455aabee48fe233433e, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: ec4a6fa66410745918edadb13423b3ee, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: aa0e76fcdcf124101898bc97c089b57c, type: 2}
     Quantity: 1
 --- !u!114 &6270092794415709611
 MonoBehaviour:
@@ -823,6 +825,19 @@ MonoBehaviour:
   - {fileID: 7721777825053776820}
   - {fileID: 8195383011194485763}
   - {fileID: 1299341961821722642}
+--- !u!114 &5536299572111678412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815970926421098775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4b9d159c987f4dbb80b04062b6745d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <StartingPlayerHealth>k__BackingField: 100
 --- !u!114 &7910427268955246096
 MonoBehaviour:
   m_ObjectHideFlags: 0

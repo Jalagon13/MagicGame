@@ -20,7 +20,7 @@ public class PlayerRechargeStatUI : MonoBehaviour
 
 	private void CheckForSpellBook(object sender, HotbarManager.OnFocusItemSetEventArgs e)
 	{
-		var mainHandItemSO = GameManager.Instance.GetItemSOFromIndex(e.MainHandItemIndex);
+		var mainHandItemSO = GameManager.Instance.GetItemSOFromItemId(e.MainHandItemIndex);
 		
 		if(mainHandItemSO is not SpellBookItemSO)
 		{
