@@ -124,7 +124,6 @@ public class SpellBookInventoryItem : InventoryItem
 		
 		_spellIndex = (_spellIndex + 1) % validSpellIndices.Count;
 		
-		Debug.Log("Returning cast delay");
 		return spellBookCastDelay + spellCastDelay;
 	}
 

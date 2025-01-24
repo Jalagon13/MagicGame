@@ -29,12 +29,6 @@ public class SpellProjectileItemSO : ItemSO
 		return _baseActionCooldown;
 	}
 	
-	public void SpawnAndShootSpell(Vector3 spawnPoint, Vector3 direction)
-	{
-		var spell = Instantiate(SpellProjectilePrefab, spawnPoint, Quaternion.identity);
-		spell.Initialize(Speed, Damage, Lifetime, direction);
-	}
-	
 	public override InventoryItem CreateInventoryItem(int quantity)
 	{
 		return new InventoryItem(this, quantity);

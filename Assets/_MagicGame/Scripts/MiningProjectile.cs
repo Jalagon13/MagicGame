@@ -18,7 +18,6 @@ public class MiningProjectile : NetworkBehaviour
 	private Vector2 _travelPoint;
 	private int _miningPower;
 	private bool _projectileEnd = true;
-	private ulong _senderId;
 	private bool _mouseOverFloor, _mouseOverWall, _resourceSelected;
 	
 	private void Awake()
@@ -40,7 +39,7 @@ public class MiningProjectile : NetworkBehaviour
 		}
 	}
 	
-	public void InitializeMiningSpell(Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected, ulong senderId)
+	public void InitializeMiningSpell(Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected)
 	{
 		_travelPoint = travelPoint;
 		_miningPower = miningPower;
@@ -48,7 +47,6 @@ public class MiningProjectile : NetworkBehaviour
 		_mouseOverWall = mouseOverWall;
 		_resourceSelected = resourceSelected;
 		_projectileEnd = false;
-		_senderId = senderId;
 	}
 	
 	private void FixedUpdate()

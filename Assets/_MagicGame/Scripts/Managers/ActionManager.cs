@@ -170,8 +170,6 @@ public class ActionManager : MonoBehaviour
 			_maxRecharge = maxMana;
 			_rechargeSpeed = _maxRecharge / spellBookItemSO.RechargeTime;  // Set recharge speed
 			SetCurrentRecharge(_maxRecharge);
-
-			Debug.Log($"SpellBook Reset");
 		}
 	}
 

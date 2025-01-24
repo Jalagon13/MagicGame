@@ -24,4 +24,4 @@ MonoBehaviour:
   <MaxMana>k__BackingField: 100
   <ManaChargeSpeed>k__BackingField: 50
   <Capacity>k__BackingField: 4
-  <Spread>k__BackingField: 25
+  <Spread>k__BackingField: 1

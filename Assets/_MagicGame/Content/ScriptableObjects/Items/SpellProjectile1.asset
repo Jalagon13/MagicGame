@@ -24,4 +24,4 @@ MonoBehaviour:
   <Spread>k__BackingField: 0
   <Lifetime>k__BackingField: 2
   <Speed>k__BackingField: 20
-  <CastDelay>k__BackingField: 0.5
+  <CastDelay>k__BackingField: 0.25

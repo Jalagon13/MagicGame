@@ -688,7 +688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 891029302
+  GlobalObjectIdHash: 1893099515
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -782,7 +782,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   <MainHand>k__BackingField: {fileID: 4604921083407888490}
   <OffHand>k__BackingField: {fileID: 4958567346535862893}
-  _startingMana: 200
   _startingHealth: 150
   _respawnTimerDuration: 2
   _startingItems:

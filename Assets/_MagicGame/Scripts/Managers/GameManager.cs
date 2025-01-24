@@ -48,10 +48,6 @@ public class GameManager : NetworkBehaviour
 	// This function is called whenever a scene has finished loading
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		Debug.Log($"Scene {scene.name} has finished loading.");
-		// Debug.Log(HotbarManager.Instance == null);
-		// NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(_playerPrefab.GetComponent<NetworkObject>(), OwnerClientId, isPlayerObject: true, position: new Vector3(128, 128), rotation: Quaternion.identity);
-		
 		if(NetworkManager.Singleton == null) return;
 		NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
 		
@@ -86,7 +82,9 @@ public class GameManager : NetworkBehaviour
 			WorldManager.Instance.GenerateEnvironment(EnvironmentID.Forest);
 		}
 	}
-
+	
+	#region DataBase Functions
+	
 	public NpcSO GetNpcSOFromId(byte id)
 	{
 		return _npcDataBaseSO.NpcSOList[id];
@@ -183,13 +181,45 @@ public class GameManager : NetworkBehaviour
 		return _tileDataBaseSO.TileObjectSOList.ElementAt(id);
 	}
 	
+	#endregion
+
+	public void SpawnSpellProjectile(SpellProjectileItemSO currentSpellItemSO, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime)
+	{
+		if(!Player.LocalClientInstance.IsHost)
+		{
+			// If player is not host, spawn fake projectile and hide the actual server projectile
+			BouncySpellProjectile fakeSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, spawnPoint, Quaternion.identity);
+			Debug.Log("SPawning fake");
+			fakeSpell.Initialize(speed, damage, lifetime,direction);
+		}
+		
+		SpawnSpellProjectileServerRpc(GetItemIndexFromItemSO(currentSpellItemSO), spawnPoint, direction, speed, damage, lifetime, Player.LocalClientInstance.IsHost, Player.LocalClientInstance.OwnerClientId);
+	}
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void SpawnSpellProjectileServerRpc(int itemIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, bool isHost, ulong clientSenderId)
+	{
+		var spellPrefab = (GetItemSOFromIndex(itemIndex) as SpellProjectileItemSO).SpellProjectilePrefab;
+		
+		BouncySpellProjectile spell = Instantiate(spellPrefab, spawnPoint, Quaternion.identity);
+		
+		spell.GetComponent<NetworkObject>().Spawn(true);
+		
+		spell.Initialize(speed, damage, lifetime,direction);
+		
+		if(!isHost)
+		{
+			spell.GetComponent<NetworkObject>().NetworkHide(clientSenderId);
+		}
+	}
+
 	public void SpawnMiningProjectile(Vector2 spawnPoint, Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected)
 	{
 		if(!Player.LocalClientInstance.IsHost)
 		{
 			// If player is not host, spawn the fake projectile and hide the actual server projectile
 			MiningProjectile dummyProjectile = Instantiate(_miningProjectilePrefab, spawnPoint, Quaternion.identity);
-			dummyProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected, Player.LocalClientInstance.OwnerClientId);
+			dummyProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected);
 		}
 		
 		SpawnMiningProjectileServerRpc(spawnPoint, travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.IsHost);
@@ -199,8 +229,10 @@ public class GameManager : NetworkBehaviour
 	private void SpawnMiningProjectileServerRpc(Vector2 spawnPoint, Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected, ulong clientSenderId, bool isHost)
 	{
 		MiningProjectile miningProjectile = Instantiate(_miningProjectilePrefab, spawnPoint, Quaternion.identity);
+		
 		miningProjectile.GetComponent<NetworkObject>().Spawn(true);
-		miningProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected, clientSenderId);
+		
+		miningProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected);
 		
 		if(!isHost)
 		{
