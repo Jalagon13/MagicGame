@@ -135,6 +135,7 @@ public class ChunkManager : NetworkBehaviour
 	private void TryToLoadChunk(Vector2Int chunkPos)
 	{
 		ChunkGameData chunkToLoad = GetChunkDataFromChunkPosition(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
+		Debug.Log(chunkToLoad == null);
 		InvokeOnLoadChunk(chunkToLoad);
 	}
 	
@@ -155,6 +156,12 @@ public class ChunkManager : NetworkBehaviour
 	public void InvokeOnLoadChunk(ChunkGameData chunkGameDataToLoad)
 	{
 		// Add chunk to _loadedChunks
+		if(chunkGameDataToLoad == null)
+		{
+			Debug.LogWarning("chunk to load is null");
+			return;
+		}
+		
 		if (!_loadedPlayerChunks.ContainsKey(chunkGameDataToLoad.ChunkPosition))
 		{
 			OnLoadChunk?.Invoke(this, new ChunkEventArgs
@@ -171,6 +178,7 @@ public class ChunkManager : NetworkBehaviour
 		switch(environment)
 		{
 			case EnvironmentID.Forest:
+				Debug.Log(_forestChunks.Count);
 				return _forestChunks.ContainsKey(chunkPosition) ? _forestChunks[chunkPosition] : null;
 			case EnvironmentID.Cave:
 				return _caveChunks.ContainsKey(chunkPosition) ? _caveChunks[chunkPosition] : null;
@@ -273,6 +281,7 @@ public class ChunkManager : NetworkBehaviour
 		switch(environmentToSetChunksFor)
 		{
 			case EnvironmentID.Forest:
+				Debug.Log(newChunks.Count);
 				_forestChunks = newChunks;
 				return;
 			case EnvironmentID.Cave:

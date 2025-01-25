@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectManager : NetworkBehaviour
 {
-	public static ObjectManager Instance;
+	public static ObjectManager Instance { get; private set; }
 	
 	public event EventHandler OnClearAllEnvironmentObjects;
 	public event EventHandler<OnWorldAssetSpawnedEventArgs> OnWorldObjectSpawned;

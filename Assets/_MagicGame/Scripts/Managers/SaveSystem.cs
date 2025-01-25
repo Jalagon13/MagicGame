@@ -222,7 +222,7 @@ public class SaveSystem : MonoBehaviour
 	{
 		// Unpack chunk data
 		List<ChunkFileData> chunkFileData = _environmentFileData.ChunksList;
-		
+		Debug.Log($"Chunklist couunt {_environmentFileData.ChunksList.Count}");
 		// Construct a new Dictionary<Vector2Int, Chunk> of deserialized chunk data and send it to ChunkManager to use
 		Dictionary<Vector2Int, ChunkGameData> deserializedChunks = new Dictionary<Vector2Int, ChunkGameData>();
 		

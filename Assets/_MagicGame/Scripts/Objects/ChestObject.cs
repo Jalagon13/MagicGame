@@ -3,7 +3,10 @@ using UnityEngine;
 
 public class ChestObject : ResourceObject
 {
-	// Network variable for chest inventory for multipalyer
+	private void Awake()
+	{
+		ChestManager.Instance.TryToCreateEmptyChestData(Vector2Int.FloorToInt(transform.position));
+	}
 
 	public List<ItemFileData> GetChestItems()
 	{
