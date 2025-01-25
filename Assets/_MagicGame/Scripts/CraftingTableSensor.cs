@@ -8,7 +8,7 @@ public class CraftingTableSensor : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        CraftingTable craftingTable = other.GetComponent<CraftingTable>();
+        CraftingTableObject craftingTable = other.GetComponent<CraftingTableObject>();
 
         if(craftingTable != null)
         {
@@ -18,7 +18,7 @@ public class CraftingTableSensor : MonoBehaviour
 	
     private void OnTriggerExit2D(Collider2D other)
     {
-        CraftingTable craftingTable = other.GetComponent<CraftingTable>();
+        CraftingTableObject craftingTable = other.GetComponent<CraftingTableObject>();
 
         if(craftingTable != null)
         {

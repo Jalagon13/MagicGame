@@ -35,6 +35,8 @@ public class SaveSystem : MonoBehaviour
 		return File.Exists(path);
 	}
 	
+	#region Serialization
+	
 	[Button("Serialize data of current environment and write to file")]
 	public async Task SerializeDataAndWriteToFile(EnvironmentID environmentToSerialize)
 	{
@@ -44,36 +46,64 @@ public class SaveSystem : MonoBehaviour
 		Debug.Log($"<color=orange>=============================================</color>");
 		Debug.Log($"Path: " + Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environmentToSerialize}_data.json");
 		// Serialize Assets and Chunks
-		SerializeAssetDataOfCurrentEnvironment(environmentToSerialize);
+		SerializeObjectDataOfCurrentEnvironment(environmentToSerialize);
 		SerializeChunkDataOfCurrentEnvironment(environmentToSerialize);
 		
 		// Write the data to file
 		await WriteCurrentEnvironmentDataToFile();
 	}
-
-	private async Task WriteCurrentEnvironmentDataToFile()
+	
+	private void SerializeObjectDataOfCurrentEnvironment(EnvironmentID environmentToSerialize)
 	{
-		// Serialize scene data to JSON
-		string json = JsonUtility.ToJson(_environmentFileData);
+		// Clear assets
+		_environmentFileData.WorldObjectsList.Clear();
+		_environmentFileData.ChestList.Clear();
 		
-		// Log the saving
-		Debug.Log($"<color=orange>Writing Environment Data of: </color>{Player.LocalClientInstance.PlayerEnvironment.Value}<color=orange> to file...</color>");
+		// Loop through all assets and push them to _sceneData before serializing it
+		foreach (var chunkPosChunkDataKVP in ChunkManager.Instance.GetChunksFromEnvironment(environmentToSerialize))
+		{
+			List<WorldObjectGameData> worldObjectGameDataList = chunkPosChunkDataKVP.Value.WorldObjectGameDataList;
 		
-		// Write JSON data to file asynchronously
-		await File.WriteAllTextAsync(_path, json);
+			if(worldObjectGameDataList.Count > 0)
+			{
+				foreach (WorldObjectGameData worldObjectGameData in worldObjectGameDataList)
+				{
+					// If so, serialize it
+					if(worldObjectGameData.Asset != null)
+					{
+						// Create new filedata for this asset
+						WorldObjectFileData worldAssetData = new()
+						{
+							WorldObjectId = GameManager.Instance.GetByteIDFromWorldObject(worldObjectGameData.Asset),
+							Pos = worldObjectGameData.Position
+						};
+						
+						// If it is a chest, serialize that
+						if(worldObjectGameData.Asset is ChestObject chestObject)
+						{
+							ChestFileData chestFileData = new()
+							{
+								ChestPosition = worldObjectGameData.Position,
+								ChestItems = chestObject.GetChestItems()
+							};
+							
+							_environmentFileData.ChestList.Add(chestFileData);
+						}
+						
+						// Push it to WorldAssets in sceneData
+						_environmentFileData.WorldObjectsList.Add(worldAssetData);
+					}
+				}
+			}
+		}
 		
-		// Log the completion
-		Debug.Log($"<color=orange>Environment: </color>{Player.LocalClientInstance.PlayerEnvironment.Value}<color=orange> writing data to file complete!</color>");
-		
-		OnSerializationFinished?.Invoke(this, EventArgs.Empty);
-		
-		IsSerializing = false;
+		Debug.Log($"<color=orange>Asset Data of </color>{environmentToSerialize}<color=orange> Serialized</color>");
 	}
-
+	
 	private void SerializeChunkDataOfCurrentEnvironment(EnvironmentID environmentToSerialize)
 	{
 		// Clear world chunks for new data
-		_environmentFileData.WorldChunks.Clear();
+		_environmentFileData.ChunksList.Clear();
 		
 		// Initialize chunk data to write
 		List<ChunkFileData> sceneDataChunks = new();
@@ -122,43 +152,32 @@ public class SaveSystem : MonoBehaviour
 		}
 		
 		// Push chunk scene data to current SceneSaveHandler
-		_environmentFileData.WorldChunks = sceneDataChunks;
+		_environmentFileData.ChunksList = sceneDataChunks;
 		Debug.Log($"<color=orange>Chunk Data of </color>{environmentToSerialize}<color=orange> Serialized</color>");
 	}
-	
-	private void SerializeAssetDataOfCurrentEnvironment(EnvironmentID environmentToSerialize)
+
+	private async Task WriteCurrentEnvironmentDataToFile()
 	{
-		// Clear assets
-		_environmentFileData.WorldAssets.Clear();
+		// Serialize scene data to JSON
+		string json = JsonUtility.ToJson(_environmentFileData);
 		
-		// Loop through all assets and push them to _sceneData before serializing it
-		foreach (var chunkPosChunkDataKVP in ChunkManager.Instance.GetChunksFromEnvironment(environmentToSerialize))
-		{
-			var worldObjectGameDataList = chunkPosChunkDataKVP.Value.WorldObjectGameDataList;
+		// Log the saving
+		Debug.Log($"<color=orange>Writing Environment Data of: </color>{Player.LocalClientInstance.PlayerEnvironment.Value}<color=orange> to file...</color>");
 		
-			if(worldObjectGameDataList.Count > 0)
-			{
-				foreach (var worldAssetGameData in worldObjectGameDataList)
-				{
-					// If so, serialize it
-					if(worldAssetGameData.Asset != null)
-					{
-						// Create new filedata for this asset
-						WorldAssetFileData worldAssetData = new()
-						{
-							WorldAssetId = GameManager.Instance.GetByteIDFromWorldObject(worldAssetGameData.Asset),
-							Pos = worldAssetGameData.Position
-						};
-						
-						// Push it to WorldAssets in sceneData
-						_environmentFileData.WorldAssets.Add(worldAssetData);
-					}
-				}
-			}
-		}
+		// Write JSON data to file asynchronously
+		await File.WriteAllTextAsync(_path, json);
 		
-		Debug.Log($"<color=orange>Asset Data of </color>{environmentToSerialize}<color=orange> Serialized</color>");
+		// Log the completion
+		Debug.Log($"<color=orange>Environment: </color>{Player.LocalClientInstance.PlayerEnvironment.Value}<color=orange> writing data to file complete!</color>");
+		
+		OnSerializationFinished?.Invoke(this, EventArgs.Empty);
+		
+		IsSerializing = false;
 	}
+
+	#endregion
+	
+	#region Deserialization
 	
 	[Button("Deserialize data of current environment and dispatch updated data to game")]
 	public async Task DeserializeAndDispatchData(EnvironmentID environmentToDeserialize)
@@ -183,7 +202,7 @@ public class SaveSystem : MonoBehaviour
 			
 			// Dispatch the data
 			DeserializeChunkData(environmentToDeserialize);
-			DeserializeAssetData(environmentToDeserialize);
+			DeserializeObjectData(environmentToDeserialize);
 			
 			Debug.Log($"<color=orange>Chunk and Asset Data of: </color>{environmentToDeserialize}<color=orange> Deserialized! </color>");
 			
@@ -202,7 +221,7 @@ public class SaveSystem : MonoBehaviour
 	private void DeserializeChunkData(EnvironmentID environmentToDeserialize)
 	{
 		// Unpack chunk data
-		List<ChunkFileData> chunkFileData = _environmentFileData.WorldChunks;
+		List<ChunkFileData> chunkFileData = _environmentFileData.ChunksList;
 		
 		// Construct a new Dictionary<Vector2Int, Chunk> of deserialized chunk data and send it to ChunkManager to use
 		Dictionary<Vector2Int, ChunkGameData> deserializedChunks = new Dictionary<Vector2Int, ChunkGameData>();
@@ -251,23 +270,40 @@ public class SaveSystem : MonoBehaviour
 		return tileGameData;
 	}
 	
-	private void DeserializeAssetData(EnvironmentID environmentToDeserialize)
+	private void DeserializeObjectData(EnvironmentID environmentToDeserialize)
 	{
 		// Unpack asset data need to make a new list to avoid error that said I was modifying this list as it was being processed
-		List<WorldAssetFileData> worldAssetFileData = new(_environmentFileData.WorldAssets);
+		List<WorldObjectFileData> worldAssetFileData = new(_environmentFileData.WorldObjectsList);
 		
 		// Clear all scene assets
 		// AssetManager.Instance.ClearAllCurrentEnvironmentAssets();
 		
 		// Instantiate each asset
 		Debug.Log($"World Object File Data Count: {worldAssetFileData.Count}");
-		foreach (WorldAssetFileData data in worldAssetFileData)
+		foreach (WorldObjectFileData data in worldAssetFileData)
 		{
 			// Fetch each prefab from database
-			WorldObject worldObjectToInst = GameManager.Instance.GetWorldObjectFromID(data.WorldAssetId);
+			WorldObject worldObjectToInst = GameManager.Instance.GetWorldObjectFromID(data.WorldObjectId);
 			ChunkManager.Instance.AddObjectDataToChunk(data.Pos, worldObjectToInst, environmentToDeserialize);
+			
+			if(worldObjectToInst is ChestObject chestObject)
+			{
+				foreach (ChestFileData chestFileData in _environmentFileData.ChestList)
+				{
+					if(chestFileData.ChestPosition == data.Pos)
+					{
+						// Chest to load found
+						chestObject.DeserializeFileItemsToChest(chestFileData.ChestItems);
+						return;
+					}
+				}
+				
+				Debug.LogError($"Found a chest to be instantiated but could not find chestFileData in _environmentFileData.ChestList. This error should not be seen, all chests loaded should have a chestFileData");
+			}
 		}
 		
 		Debug.Log($"<color=orange>Asset Data of: </color>{environmentToDeserialize}<color=orange> Deserialized</color>");
 	}
+	
+	#endregion
 }

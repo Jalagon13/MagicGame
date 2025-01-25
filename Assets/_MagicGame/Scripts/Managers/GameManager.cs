@@ -188,7 +188,7 @@ public class GameManager : NetworkBehaviour
 	public void SpawnSpellProjectile(SpellProjectileItemSO currentSpellItemSO, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime)
 	{
 		ulong projectileId = IdGenerator.GenerateRandomId();
-		Debug.Log($"Projectile ID: {projectileId}");
+		
 		if(!Player.LocalClientInstance.IsHost)
 		{
 			// If player is not host, spawn fake projectile, and add it to fake projectiles dictionary
@@ -226,7 +226,6 @@ public class GameManager : NetworkBehaviour
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void DestroyFakeProjectileClientRpc(ulong projectileId, RpcParams rpcParams = default)
 	{
-		Debug.Log($"DestroyFakeProjectile client rpc call proj id: {projectileId}");
 		RemoveFakeProjectile(projectileId);
 	}
 	

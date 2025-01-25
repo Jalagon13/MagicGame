@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [SelectionBase]
-public class CraftingTable : ResourceObject
+public class CraftingTableObject : ResourceObject
 {
     [Header("Crafting Table Parameters")]
     [SerializeField] private RecipeDataBaseObject _craftingRecipeDB;

@@ -156,7 +156,7 @@ public class ObjectManager : NetworkBehaviour
 				// If damage is greater than current hp for this incoming attack, destroy the tile
 				if (incomingDamage > syncWorldObjectHpData.CurrentWorldObjectHP)
 				{
-					// Remove the tile if destroyed
+					// Remove the object if destroyed
 					_syncWorldObjectDataHPNetworkList.RemoveAt(i);
 					
 					// Trigger tile destruction logic
@@ -167,11 +167,11 @@ public class ObjectManager : NetworkBehaviour
 				{
 					// Update the modified struct in the list
 					syncWorldObjectHpData.CurrentWorldObjectHP -= incomingDamage;
-					// Debug.Log("Found tile callback, tile hp after damage: " + syncTileHpData.CurrentTileHP);
+					
 					_syncWorldObjectDataHPNetworkList[i] = syncWorldObjectHpData;
 				}
 
-				return; // Exit after finding the tile
+				return; // Exit after finding the object
 			}
 		}
 	}
@@ -179,15 +179,17 @@ public class ObjectManager : NetworkBehaviour
 	private void AddObjectToNetworkListDamaged(Vector2Int position, byte assetID, ushort damageAmount, EnvironmentID environment)
 	{
 		ResourceObject resourceAsset = GameManager.Instance.GetWorldObjectFromID(assetID) as ResourceObject;
-		
-		ushort currentAssetHPAfterDamage = (ushort)(resourceAsset.GetMaxHitPoints() - damageAmount);
-		if(currentAssetHPAfterDamage > 0)
+
+		// Perform calculation using a signed integer
+		int currentAssetHPAfterDamage = resourceAsset.GetMaxHitPoints() - damageAmount;
+
+		if (currentAssetHPAfterDamage > 0)
 		{
 			// If tile hp after damage is above 0, just add as usual
 			_syncWorldObjectDataHPNetworkList.Add(new SyncWorldObjectHPData()
 			{
 				WorldObjectID = GameManager.Instance.GetByteIDFromWorldObject(resourceAsset),
-				CurrentWorldObjectHP = currentAssetHPAfterDamage,
+				CurrentWorldObjectHP = (ushort)currentAssetHPAfterDamage, // Cast back to ushort
 				Position = position
 			});
 		}
