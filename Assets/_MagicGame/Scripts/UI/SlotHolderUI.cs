@@ -11,8 +11,7 @@ public class SlotHolderUI : MonoBehaviour
 	[SerializeField] private Transform _hotbarSlotsUITransform;
 	[SerializeField] private Transform _inventorySlotsUITransform;
 	[SerializeField] private Transform _offHandSlotUITransform;
-	[SerializeField] private AudioClip _inventoryEnabledClip;
-	[SerializeField] private AudioClip _inventoryDisabledClip;
+	[SerializeField] private Transform _chestSlotsUITransform;
 	
 	private List<InventorySlotUI> _inventorySlotUIList = new();
 	
@@ -20,10 +19,53 @@ public class SlotHolderUI : MonoBehaviour
 	{
 		GameInput.Instance.OnInventoryToggle += GameInput_OnInventoryToggle;
 		InventoryManager.Instance.OnInventoryUpdated += InventoryManager_OnInventoryUpdated;
+		ChestManager.Instance.OnChestOpen += ChestManager_OnChestOpen;
+		ChestManager.Instance.OnChestClose += ChestManager_OnChestClose;
+		ChestManager.Instance.OnChestUpdated += ChestManager_OnChestUpdated;
 		
 		Initialize(InventoryManager.Instance.GetInventoryModel().InventoryItems);
 		
 		HideInventorySlots();
+		HideChestSlots();
+	}
+
+	private void ChestManager_OnChestUpdated(object sender, ChestManager.ChestEventArgs e)
+	{
+		UpdateChestSlotDisplay(e.ChestItemData);
+	}
+
+	private void ChestManager_OnChestClose(object sender, EventArgs e)
+	{
+		HideChestSlots();
+	}
+
+	private void ChestManager_OnChestOpen(object sender, ChestManager.ChestEventArgs e)
+	{
+		ShowChestSlots();
+		UpdateChestSlotDisplay(e.ChestItemData);
+	}
+
+	private void UpdateChestSlotDisplay(List<ChestItemData> chestItemData)
+	{
+		Debug.Log("Updating chest slot display");
+		foreach (Transform child in _chestSlotsUITransform)
+		{
+			var chestSlotIndex = child.GetSiblingIndex();
+			
+			foreach (ChestItemData itemData in chestItemData)
+			{
+				if(itemData.SlotIndex == chestSlotIndex)
+				{
+					// Found a chest item that should occupy this chest slot
+					Debug.Log($"Found chest slot to be updated at chest slot index {chestSlotIndex}");
+					child.GetComponent<ChestSlotUI>().UpdateChestSlot(itemData, chestSlotIndex);
+					continue;
+				}
+			}
+			
+			// If could not find a chestItemData for this slot, initialize it as empty and continue
+			child.GetComponent<ChestSlotUI>().UpdateChestSlot(null, chestSlotIndex);
+		}
 	}
 
 	private void InventoryManager_OnInventoryUpdated(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
@@ -40,6 +82,7 @@ public class SlotHolderUI : MonoBehaviour
 		else
 		{
 			HideInventorySlots();
+			HideChestSlots();
 		}
 	}
 
@@ -87,19 +130,28 @@ public class SlotHolderUI : MonoBehaviour
 	private void ShowInventorySlots()
 	{
 		_inventorySlotsUITransform.gameObject.SetActive(true);
-		
-		MMSoundManagerSoundPlayEvent.Trigger(_inventoryEnabledClip, MMSoundManager.MMSoundManagerTracks.UI, default);
 	}
 	
 	private void HideInventorySlots()
 	{
 		_inventorySlotsUITransform.gameObject.SetActive(false);
-		
-		MMSoundManagerSoundPlayEvent.Trigger(_inventoryDisabledClip, MMSoundManager.MMSoundManagerTracks.UI, default);
+	}
+	
+	private void ShowChestSlots()
+	{
+		_chestSlotsUITransform.gameObject.SetActive(true);
+	}
+	
+	private void HideChestSlots()
+	{
+		_chestSlotsUITransform.gameObject.SetActive(false);
 	}
 	
 	private void OnDestroy()
 	{
 		GameInput.Instance.OnInventoryToggle -= GameInput_OnInventoryToggle;
+		ChestManager.Instance.OnChestOpen -= ChestManager_OnChestOpen;
+		ChestManager.Instance.OnChestClose -= ChestManager_OnChestClose;
+		ChestManager.Instance.OnChestUpdated -= ChestManager_OnChestUpdated;
 	}
 }

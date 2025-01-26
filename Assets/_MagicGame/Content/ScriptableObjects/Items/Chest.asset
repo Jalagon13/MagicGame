@@ -18,5 +18,5 @@ MonoBehaviour:
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField: []
-  _deployObjectPrefab: {fileID: 3923712456644301510, guid: 3bc37f5a996714e3c93136f78e87bc55, type: 3}
+  _deployObjectPrefab: {fileID: -590340910586133321, guid: 3bc37f5a996714e3c93136f78e87bc55, type: 3}
   _deploySound: {fileID: 0}

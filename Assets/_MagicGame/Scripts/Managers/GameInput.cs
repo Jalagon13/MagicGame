@@ -9,6 +9,7 @@ public class GameInput : MonoBehaviour
 	public static GameInput Instance { get; private set; }
 
 	public event EventHandler OnSwapHands;
+	public event EventHandler OnSecondaryActionStarted;
 	public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnSecondaryAction;
 	public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnPrimaryAction;
 	public class OnPrimaryOrSecondaryActionEventArgs : EventArgs
@@ -60,13 +61,28 @@ public class GameInput : MonoBehaviour
 		_playerInput.Player.PrimaryAction.started += PlayerInput_PrimaryAction; 
 		_playerInput.Player.PrimaryAction.performed += PlayerInput_PrimaryAction; 
 		_playerInput.Player.PrimaryAction.canceled += PlayerInput_PrimaryAction; 
-		_playerInput.Player.SecondaryAction.started += PlayerInput_SecondaryAction; 
+		_playerInput.Player.SecondaryAction.started += PlayerInput_SecondaryActionStarted; 
 		_playerInput.Player.SecondaryAction.performed += PlayerInput_SecondaryAction; 
 		_playerInput.Player.SecondaryAction.canceled += PlayerInput_SecondaryAction; 
 		_playerInput.Player.ResearchMenu.started += PlayerInput_ResearchMenu;
 		_playerInput.Player.SwapHands.started += PlayerInput_SwapHands;
 		_playerInput.Player.Shift.started += PlayerInput_ShiftStart;
 		_playerInput.Player.Shift.canceled += PlayerInput_ShiftCanceled;
+	}
+	
+	private void Start()
+	{
+		ChestManager.Instance.OnChestOpen += ChestManager_OnChestOpen;
+	}
+
+	private void ChestManager_OnChestOpen(object sender, ChestManager.ChestEventArgs e)
+	{
+		_inventoryOpen = true;
+		
+		OnInventoryToggle?.Invoke(this, new OnToggleInventoryEventArgs
+		{
+			InventoryOpen = _inventoryOpen
+		});
 	}
 
 	private void PlayerInput_ShiftStart(InputAction.CallbackContext context)
@@ -97,6 +113,11 @@ public class GameInput : MonoBehaviour
 		{
 			IsHeldDown = _secondaryHeldDown
 		});
+	}
+	
+	private void PlayerInput_SecondaryActionStarted(InputAction.CallbackContext context)
+	{
+		OnSecondaryActionStarted?.Invoke(this, EventArgs.Empty);
 	}
 
 	private void PlayerInput_PrimaryAction(InputAction.CallbackContext context)
@@ -185,5 +206,6 @@ public class GameInput : MonoBehaviour
 	{
 		_playerInput.Disable();
 		_playerInput.Dispose();	
+		ChestManager.Instance.OnChestOpen -= ChestManager_OnChestOpen;
 	}
 }
