@@ -9,7 +9,7 @@ public class ChestObject : WorldObject
 
 	private void Start()
 	{
-		ChestManager.Instance.TryToCreateEmptyChestData(Vector2Int.FloorToInt(transform.position));
+		ChestManager.Instance.CreateEmptyChestData(Vector2Int.FloorToInt(transform.position));
 		GameInput.Instance.OnSecondaryActionStarted += GameInput_OnSecondaryActionStarted;
 	}
 
@@ -20,22 +20,9 @@ public class ChestObject : WorldObject
 		
 		if(_worldInput.IsMouseOverIndputDetector() && playerInRange)
 		{
-			Debug.Log("world detector working and accessed");
 			ChestManager.Instance.OpenChest(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.PlayerEnvironment.Value);
 		}
     }
-
-	public List<ItemFileData> GetChestItems()
-	{
-		// get the items here and turn it into file data list
-	
-		return null;
-	}
-	
-	public void DeserializeFileItemsToChest(List<ItemFileData> chestItems)
-	{
-		// override current inventory with these items
-	}
 	
 	private void OnDestroy()
 	{

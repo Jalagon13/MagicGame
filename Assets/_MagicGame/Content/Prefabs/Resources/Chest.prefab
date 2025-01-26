@@ -306,6 +306,7 @@ MonoBehaviour:
       Data4: 0
     Path: 
   _worldInput: {fileID: 9207288352720458267}
+  _chestOpenDistance: 2.75
 --- !u!4 &8566354021552112440 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2392654451137683977, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}

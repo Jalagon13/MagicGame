@@ -47,20 +47,25 @@ public class SlotHolderUI : MonoBehaviour
 
 	private void UpdateChestSlotDisplay(List<ChestItemData> chestItemData)
 	{
-		Debug.Log("Updating chest slot display");
 		foreach (Transform child in _chestSlotsUITransform)
 		{
-			var chestSlotIndex = child.GetSiblingIndex();
+			int chestSlotIndex = child.GetSiblingIndex();
+			bool foundItemForThisSlot = false;
 			
 			foreach (ChestItemData itemData in chestItemData)
 			{
 				if(itemData.SlotIndex == chestSlotIndex)
 				{
 					// Found a chest item that should occupy this chest slot
-					Debug.Log($"Found chest slot to be updated at chest slot index {chestSlotIndex}");
 					child.GetComponent<ChestSlotUI>().UpdateChestSlot(itemData, chestSlotIndex);
-					continue;
+					foundItemForThisSlot = true;
+					break;
 				}
+			}
+			
+			if(foundItemForThisSlot)
+			{
+				continue;
 			}
 			
 			// If could not find a chestItemData for this slot, initialize it as empty and continue

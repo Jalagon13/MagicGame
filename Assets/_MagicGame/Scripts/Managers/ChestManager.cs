@@ -28,6 +28,7 @@ public class ChestManager : NetworkBehaviour
 	[SerializeField] private float _chestCloseDistance = 3f; 
 	
 	private Dictionary<Vector2Int, List<ChestItemData>> _forestChests = new();
+	private Dictionary<Vector2Int, List<ChestItemData>> _caveChests = new();
 
 	private void Awake()
 	{
@@ -48,12 +49,30 @@ public class ChestManager : NetworkBehaviour
 			CloseChest();
 		}
 	}
+	
+	public Dictionary<Vector2Int, List<ChestItemData>> GetChestDataFromEnvironment(EnvironmentID environment)
+	{
+		switch(environment)
+		{
+			case EnvironmentID.Forest:
+				return _forestChests;
+			case EnvironmentID.Cave:
+				return _caveChests;
+		}
+
+		Debug.LogError($"Environment {environment} should exist but doesn't, add environment chunks to ChestManager");
+		return null;
+	}
 
 	public void OpenChest(Vector2Int chestPosition, EnvironmentID playerEnvironment)
 	{
 		if (_forestChests.ContainsKey(chestPosition))
 		{
-			Debug.Log($"Chest open at position: {chestPosition}");
+			if(IsChestOpen == false)
+			{
+				InventoryManager.Instance.OnInventorySlotShiftLeftClicked += EnableChestShortcuts;
+			}
+		
 			OpenChestPosition = chestPosition;
 			IsChestOpen = true;
 
@@ -68,22 +87,28 @@ public class ChestManager : NetworkBehaviour
 		}
 	}
 
+	private void EnableChestShortcuts(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
+	{
+		// NTFS: Shift Click chest functionality to be added here
+	}
+
 	public void CloseChest()
 	{
 		if (IsChestOpen)
 		{
-			Debug.Log($"Chest closed at position: {OpenChestPosition}");
+			InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= EnableChestShortcuts;
 			IsChestOpen = false;
 
 			OnChestClose?.Invoke(this, EventArgs.Empty);
 		}
-		else
-		{
-			Debug.LogError($"Should not be trying to close a chest that is not open");
-		}
+	}
+	
+	public void AddChestEntry(Vector2Int chestPosition, List<ChestItemData> chestItems, EnvironmentID environment)
+	{
+		_forestChests.Add(chestPosition, chestItems);
 	}
 
-	public void TryToCreateEmptyChestData(Vector2Int chestPosition)
+	public void CreateEmptyChestData(Vector2Int chestPosition)
 	{
 		if (_forestChests.ContainsKey(chestPosition))
 		{
@@ -93,7 +118,6 @@ public class ChestManager : NetworkBehaviour
 
 		// Create an entry for this position with an empty chest
 		_forestChests.Add(chestPosition, new List<ChestItemData>());
-		Debug.Log($"New empty chest entry added for position: {chestPosition}");
 	}
 
 	public void RemoveChestData(Vector2Int chestPosition)
@@ -126,24 +150,18 @@ public class ChestManager : NetworkBehaviour
 			}
 		}
 		
-		if(openChestSlotItemData == null)
-		{
-			Debug.LogError("openCHestSLotItemData null. this message should never appear");
-			return;
-		}
-		
-		InventoryItem openChestSlotInventoryItem = new(GameManager.Instance.GetItemSOFromItemId(openChestSlotItemData.ItemId), openChestSlotItemData.Quantity);
+		InventoryItem openChestSlotInventoryItem = openChestSlotItemData == null ? new() : new(GameManager.Instance.GetItemSOFromItemId(openChestSlotItemData.ItemId), openChestSlotItemData.Quantity);
 		InventoryItem mouseItem = InventoryManager.Instance.GetMouseItem().MouseInventoryItem;
 
 		bool chestSlotHasItem = openChestSlotItemData != null;
-		
-		if(chestSlotHasItem)
+
+		if (chestSlotHasItem)
 		{
 			if(mouseItem.HasItem) // Normal functionality
 			{
 				if(openChestSlotInventoryItem.Item.Name == mouseItem.Item.Name)
 				{
-					_forestChests[OpenChestPosition][clickedChestSlotIndex].Quantity += 1;
+					GetChestItemEntry(_forestChests[OpenChestPosition], clickedChestSlotIndex).Quantity += 1;
 					InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity -= 1;
 					
 					if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity <= 0)
@@ -156,8 +174,8 @@ public class ChestManager : NetworkBehaviour
 					// Swap the two items
 					InventoryItem tempItem = openChestSlotInventoryItem;
 					
-					_forestChests[OpenChestPosition][clickedChestSlotIndex].ItemId = GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item);
-					_forestChests[OpenChestPosition][clickedChestSlotIndex].Quantity = mouseItem.Quantity;
+					GetChestItemEntry(_forestChests[OpenChestPosition], clickedChestSlotIndex).ItemId = GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item);
+					GetChestItemEntry(_forestChests[OpenChestPosition], clickedChestSlotIndex).Quantity = mouseItem.Quantity;
 					
 					InventoryManager.Instance.GetMouseItem().MouseInventoryItem = tempItem;
 				}
@@ -168,14 +186,14 @@ public class ChestManager : NetworkBehaviour
 				int newChestSlotItemQuantity = openChestSlotItemQuantity / 2;
 				int newMouseItemQuantity = openChestSlotItemQuantity - newChestSlotItemQuantity;
 				
-				_forestChests[OpenChestPosition][clickedChestSlotIndex].Quantity = newChestSlotItemQuantity;
+				GetChestItemEntry(_forestChests[OpenChestPosition], clickedChestSlotIndex).Quantity = newChestSlotItemQuantity;
 				
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = openChestSlotInventoryItem.Item;
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = newMouseItemQuantity;
 				
-				if(openChestSlotInventoryItem.Quantity == 0)
+				if(GetChestItemEntry(_forestChests[OpenChestPosition], clickedChestSlotIndex).Quantity == 0)
 				{
-					_forestChests[OpenChestPosition].Remove(openChestSlotItemData);
+					RemoveChestItemEntry(_forestChests[OpenChestPosition], clickedChestSlotIndex);
 				}
 				
 				TooltipManager.Instance.Hide();
@@ -185,8 +203,7 @@ public class ChestManager : NetworkBehaviour
 		{
 			if(mouseItem.HasItem)
 			{
-				_forestChests[OpenChestPosition][clickedChestSlotIndex].ItemId = GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item);
-				_forestChests[OpenChestPosition][clickedChestSlotIndex].Quantity = 1;
+				AddChestItemEntry(_forestChests[OpenChestPosition], clickedChestSlotIndex, GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item), 1);
 				
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity -= 1;
 				if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity <= 0)
@@ -200,36 +217,6 @@ public class ChestManager : NetworkBehaviour
 		// Play click feedbacks and update Inventory
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 		UpdateChestSlots();
-	}
-	
-	private ChestItemData FindChestItemData(int index)
-	{
-		foreach (ChestItemData chestItemData in _forestChests[OpenChestPosition])
-		{
-			if(chestItemData.SlotIndex == index)
-			{
-				// Found the chestSlot to work with
-				return chestItemData;
-			}
-		}
-		
-		_forestChests[OpenChestPosition].Add(new ChestItemData
-		{
-			SlotIndex = index,
-			ItemId = -1,
-			Quantity = 0
-		});
-		
-		foreach (ChestItemData chestItemData in _forestChests[OpenChestPosition])
-		{
-			if(chestItemData.SlotIndex == index)
-			{
-				// Found the chestSlot to work with
-				return chestItemData;
-			}
-		}
-		
-		return null;
 	}
 	
 	public void ChestSlotLeftClicked(int clickedChestSlotIndex)
@@ -257,8 +244,7 @@ public class ChestManager : NetworkBehaviour
 				if (openChestSlotInventoryItem.Item.Name == mouseItem.Item.Name && mouseItem.Item.Stackable)
 				{
 					// If the items are the same and stackable, add the mouse item's quantity to the chest slot
-					FindChestItemData(clickedChestSlotIndex).Quantity += mouseItem.Quantity;
-					// _forestChests[OpenChestPosition][clickedChestSlotIndex].Quantity += mouseItem.Quantity;
+					GetChestItemEntry(_forestChests[OpenChestPosition], clickedChestSlotIndex).Quantity += mouseItem.Quantity;
 					InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
 					TooltipManager.Instance.Show(mouseItem is WandInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
 				}
@@ -266,10 +252,8 @@ public class ChestManager : NetworkBehaviour
 				{
 					// Swap the two items
 					InventoryItem tempItem = openChestSlotInventoryItem;
-
-					_forestChests[OpenChestPosition][clickedChestSlotIndex].ItemId = GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item);
-					_forestChests[OpenChestPosition][clickedChestSlotIndex].Quantity = mouseItem.Quantity;
-
+					GetChestItemEntry(_forestChests[OpenChestPosition], clickedChestSlotIndex).ItemId = GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item);
+					GetChestItemEntry(_forestChests[OpenChestPosition], clickedChestSlotIndex).Quantity = mouseItem.Quantity;
 					InventoryManager.Instance.GetMouseItem().MouseInventoryItem = tempItem;
 				}
 			}
@@ -277,7 +261,7 @@ public class ChestManager : NetworkBehaviour
 			{
 				// If the mouse has no item, pick up the chest slot's item
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem = openChestSlotInventoryItem;
-				_forestChests[OpenChestPosition][clickedChestSlotIndex] = new ChestItemData(); // Clear the chest slot
+				RemoveChestItemEntry(_forestChests[OpenChestPosition], clickedChestSlotIndex);
 				TooltipManager.Instance.Hide();
 			}
 		}
@@ -286,8 +270,8 @@ public class ChestManager : NetworkBehaviour
 			if (mouseItem.HasItem)
 			{
 				// If the chest slot is empty and the mouse has an item, place the item in the chest slot
-				FindChestItemData(clickedChestSlotIndex).ItemId = GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item);
-				FindChestItemData(clickedChestSlotIndex).Quantity = mouseItem.Quantity;
+				Debug.Log($"Chest slot index clicked {clickedChestSlotIndex}");
+				AddChestItemEntry(_forestChests[OpenChestPosition], clickedChestSlotIndex, GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item), mouseItem.Quantity);
 
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
 				TooltipManager.Instance.Show(mouseItem is WandInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
@@ -297,5 +281,41 @@ public class ChestManager : NetworkBehaviour
 		// Update the inventory and play click feedbacks
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 		UpdateChestSlots();
+	}
+	
+	private ChestItemData GetChestItemEntry(List<ChestItemData> chestItemDataContainer, int chestSlotIndexToGet)
+	{
+		foreach (ChestItemData chestItemData in chestItemDataContainer)
+		{
+			if(chestItemData.SlotIndex == chestSlotIndexToGet)
+			{
+				return chestItemData;
+			}
+		}
+		
+		Debug.LogWarning($"This chest does not have an entry to get at this chest slot index {chestSlotIndexToGet}");
+		return null;
+	}
+	
+	private void RemoveChestItemEntry(List<ChestItemData> chestItemDataContainer, int chestSlotIndex)
+	{
+		foreach (ChestItemData chestItemData in chestItemDataContainer)
+		{
+			if(chestItemData.SlotIndex == chestSlotIndex)
+			{
+				chestItemDataContainer.Remove(chestItemData);
+				return;
+			}
+		}
+	}
+	
+	private void AddChestItemEntry(List<ChestItemData> chestItemDataContainer, int chestSlotIndex, int itemId, int quantity)
+	{
+		chestItemDataContainer.Add(new()
+		{
+			SlotIndex = chestSlotIndex,
+			ItemId = itemId,
+			Quantity = quantity
+		});
 	}
 }

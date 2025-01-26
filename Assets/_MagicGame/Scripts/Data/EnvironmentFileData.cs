@@ -20,6 +20,7 @@ public class ChestFileData
 [System.Serializable]
 public struct ItemFileData
 {
+	public int SlotIndex;
 	public int ItemId; // Unique ID of the item
 	public int Quantity; // Quantity of the item
 }

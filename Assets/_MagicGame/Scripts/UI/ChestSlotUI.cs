@@ -22,8 +22,6 @@ public class ChestSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 		{
 			ChestManager.Instance.ChestSlotRightClicked(_slotIndex);
 		}
-		
-		UpdateChestSlot(_chestSlotItemData, _slotIndex);
 	}
 
 	public void OnPointerEnter(PointerEventData eventData)
