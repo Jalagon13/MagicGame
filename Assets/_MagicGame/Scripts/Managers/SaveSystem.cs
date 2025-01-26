@@ -37,7 +37,12 @@ public class SaveSystem : MonoBehaviour
 	
 	#region Serialization
 	
-	[Button("Serialize data of current environment and write to file")]
+	[Button("Save current player environment data")]
+	public async void SavePlayer()
+	{
+		await SerializeDataAndWriteToFile(Player.LocalClientInstance.PlayerEnvironment.Value);
+	}
+	
 	public async Task SerializeDataAndWriteToFile(EnvironmentID environmentToSerialize)
 	{
 		IsSerializing = true;

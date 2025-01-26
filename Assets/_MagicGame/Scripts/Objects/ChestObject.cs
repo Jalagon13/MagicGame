@@ -9,12 +9,16 @@ public class ChestObject : WorldObject
 
 	private void Start()
 	{
-		ChestManager.Instance.CreateEmptyChestData(Vector2Int.FloorToInt(transform.position));
+		if(Player.LocalClientInstance.IsHost)
+		{
+			ChestManager.Instance.TryToCreateEmptyChestData(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.PlayerEnvironment.Value);
+		}
+		
 		GameInput.Instance.OnSecondaryActionStarted += GameInput_OnSecondaryActionStarted;
 	}
 
-    private void GameInput_OnSecondaryActionStarted(object sender, EventArgs e)
-    {
+	private void GameInput_OnSecondaryActionStarted(object sender, EventArgs e)
+	{
 		var centerOfChestPosition = new Vector2(transform.position.x + 0.5f, transform.position.y + 0.5f);
 		var playerInRange = Vector2.Distance(Player.LocalClientInstance.transform.position, centerOfChestPosition) <= _chestOpenDistance;
 		
@@ -22,7 +26,7 @@ public class ChestObject : WorldObject
 		{
 			ChestManager.Instance.OpenChest(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.PlayerEnvironment.Value);
 		}
-    }
+	}
 	
 	private void OnDestroy()
 	{
