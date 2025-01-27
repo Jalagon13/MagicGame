@@ -28,12 +28,13 @@ public class ChestManager : NetworkBehaviour
 	[SerializeField] private float _chestCloseDistance = 3f; 
 	
 	private Dictionary<Vector2Int, List<ChestItemData>> _forestChests = new();
-	//private NetworkList<int>// could just use a network list insstead of private dictionaries for each environment
 	private Dictionary<Vector2Int, List<ChestItemData>> _caveChests = new();
+	private ChestNetworkManager _chestNetworkManager;
 
 	private void Awake()
 	{
 		Instance = this;
+		_chestNetworkManager = GetComponent<ChestNetworkManager>();
 	}
 
 	private void Update()
@@ -73,7 +74,7 @@ public class ChestManager : NetworkBehaviour
 		}
 		else
 		{
-			OpenChestClient(chestPosition, playerEnvironment);
+			_chestNetworkManager.OpenChestClient(chestPosition, playerEnvironment);
 		}
 	}
 	
@@ -88,13 +89,7 @@ public class ChestManager : NetworkBehaviour
 				InventoryManager.Instance.OnInventorySlotShiftLeftClicked += EnableChestShortcuts;
 			}
 		
-			OpenChestPosition = chestPosition;
-			IsChestOpen = true;
-
-			OnChestOpen?.Invoke(this, new ChestEventArgs
-			{
-				ChestItemData = environmentChestData[chestPosition]
-			});
+			OpenChestClient(chestPosition, environmentChestData[chestPosition]);
 		}
 		else
 		{
@@ -102,11 +97,16 @@ public class ChestManager : NetworkBehaviour
 		}
 	}
 	
-	private void OpenChestClient(Vector2Int chestPosition, EnvironmentID playerEnvironment)
+	public void OpenChestClient(Vector2Int chestPosition, List<ChestItemData> chestData)
 	{
-		
+		OpenChestPosition = chestPosition;
+		IsChestOpen = true;
+
+		OnChestOpen?.Invoke(this, new ChestEventArgs
+		{
+			ChestItemData = chestData
+		});
 	}
-	
 
 	private void EnableChestShortcuts(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
 	{

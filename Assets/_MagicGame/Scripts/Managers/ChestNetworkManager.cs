@@ -1,0 +1,160 @@
+using System;
+using System.Collections.Generic;
+using Unity.Netcode;
+using UnityEngine;
+
+public struct ChestSyncItemData : IEquatable<ChestSyncItemData>, INetworkSerializable
+{
+	public int SlotIndex;
+	public int ItemId;
+	public int Quantity;
+
+	public bool Equals(ChestSyncItemData other)
+	{
+		return SlotIndex == other.SlotIndex && ItemId == other.ItemId && Quantity == other.Quantity;
+	}
+
+	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+	{
+		serializer.SerializeValue(ref SlotIndex);
+		serializer.SerializeValue(ref ItemId);
+		serializer.SerializeValue(ref Quantity);
+	}
+}
+
+public struct ChestSyncData : IEquatable<ChestSyncData>, INetworkSerializable
+{
+	public Vector2Int ChestPosition;
+	public List<ChestSyncItemData> ChestItemData;
+
+	public bool Equals(ChestSyncData other)
+	{
+		return ChestPosition == other.ChestPosition &&
+			ChestItemData.Equals(other.ChestItemData);
+	}
+
+	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+	{
+		serializer.SerializeValue(ref ChestPosition);
+
+		SerializeAgnosticDataList(serializer, ref ChestItemData);
+	}
+
+	private void SerializeAgnosticDataList<T>(BufferSerializer<T> serializer, ref List<ChestSyncItemData> chestItemList) where T : IReaderWriter
+	{
+		if (serializer.IsWriter)
+		{
+			// Serialize the list length
+			ushort listLength = (ushort)chestItemList.Count;
+			serializer.SerializeValue(ref listLength);
+
+			// Serialize each tile in the list
+			for (int i = 0; i < listLength; i++)
+			{
+				ChestSyncItemData syncTileData = chestItemList[i];
+				serializer.SerializeValue(ref syncTileData);
+			}
+		}
+		else
+		{
+			// Deserialize the list length first
+			ushort listLength = 0;
+			serializer.SerializeValue(ref listLength);
+
+			// If the list length is 0, no further deserialization is needed
+			if (listLength == 0)
+			{
+				return; // Skip deserialization if the list length is 0
+			}
+
+			// Initialize the list if it's null
+			if (chestItemList == null)
+			{
+				chestItemList = new List<ChestSyncItemData>(listLength);
+			}
+			else
+			{
+				chestItemList.Clear(); // Clear the list if it's already initialized
+			}
+
+			// Deserialize each item in the list
+			for (int i = 0; i < listLength; i++)
+			{
+				ChestSyncItemData chestSyncItemData = default;
+				serializer.SerializeValue(ref chestSyncItemData);
+				chestItemList.Add(chestSyncItemData);
+			}
+		}
+	}
+}
+
+public class ChestNetworkManager : NetworkBehaviour
+{
+	public void OpenChestClient(Vector2Int chestPosition, EnvironmentID playerEnvironment)
+	{
+		RequestChestDataServerRpc(chestPosition, playerEnvironment);
+	}
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void RequestChestDataServerRpc(Vector2Int chestPosition, EnvironmentID environment, RpcParams rpcParams = default)
+	{
+		var chestData = ChestManager.Instance.GetChestDataFromEnvironment(environment);
+
+		if (chestData.ContainsKey(chestPosition))
+		{
+			var syncData = new ChestSyncData
+			{
+				ChestItemData = ConvertToSyncChestData(chestData[chestPosition]),
+				ChestPosition = chestPosition
+			};
+
+			SendChestDataClientRpc(syncData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+		}
+		else
+		{
+			Debug.LogError($"Chest not found for position: {chestPosition}.");
+		}
+	}
+
+	[Rpc(SendTo.SpecifiedInParams)]
+	private void SendChestDataClientRpc(ChestSyncData syncData, RpcParams rpcParams)
+	{
+		// Convert the sync data back to game data and pass it to the ChestManager
+		List<ChestItemData> chestItemData = ConvertToGameChestData(syncData.ChestItemData);
+		ChestManager.Instance.OpenChestClient(syncData.ChestPosition, chestItemData);
+	}
+
+	private List<ChestSyncItemData> ConvertToSyncChestData(List<ChestItemData> chestItemDataToConvert)
+	{
+		List<ChestSyncItemData> syncChestData = new List<ChestSyncItemData>();
+
+		foreach (var chestItem in chestItemDataToConvert)
+		{
+			syncChestData.Add(new ChestSyncItemData
+			{
+				SlotIndex = chestItem.SlotIndex,
+				ItemId = chestItem.ItemId,
+				Quantity = chestItem.Quantity
+			});
+		}
+
+		return syncChestData;
+	}
+
+	private List<ChestItemData> ConvertToGameChestData(List<ChestSyncItemData> syncChestData)
+	{
+		List<ChestItemData> chestItemData = new List<ChestItemData>();
+
+		foreach (var syncItem in syncChestData)
+		{
+			chestItemData.Add(new ChestItemData
+			{
+				SlotIndex = syncItem.SlotIndex,
+				ItemId = syncItem.ItemId,
+				Quantity = syncItem.Quantity
+			});
+		}
+
+		return chestItemData;
+	}
+}

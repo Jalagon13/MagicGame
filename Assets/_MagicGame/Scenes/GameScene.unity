@@ -14865,6 +14865,7 @@ GameObject:
   - component: {fileID: 2018757678}
   - component: {fileID: 2018757679}
   - component: {fileID: 2018757680}
+  - component: {fileID: 2018757681}
   m_Layer: 0
   m_Name: ObjectManager
   m_TagString: Untagged
@@ -14939,6 +14940,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _chestCloseDistance: 3
+--- !u!114 &2018757681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2018757676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 252fe529b52ea4d3fbbfddd47dc69913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2036903160
 GameObject:
   m_ObjectHideFlags: 0
