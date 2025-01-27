@@ -9667,7 +9667,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_StartCorner: 2
+  m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 55, y: 55}
   m_Spacing: {x: 3, y: 5}
@@ -14952,6 +14952,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 252fe529b52ea4d3fbbfddd47dc69913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &2036903160
 GameObject:
   m_ObjectHideFlags: 0

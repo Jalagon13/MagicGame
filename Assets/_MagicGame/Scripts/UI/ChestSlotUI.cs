@@ -16,12 +16,30 @@ public class ChestSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 	{
 		if(eventData.button == PointerEventData.InputButton.Left)
 		{
-			ChestManager.Instance.ChestSlotLeftClicked(_slotIndex);
+			if (GameInput.Instance.GetShiftHeldDown())
+			{
+				InventoryManager.Instance.AddItem(GameManager.Instance.GetItemSOFromItemId(_chestSlotItemData.ItemId), _chestSlotItemData.Quantity);
+				ChestManager.Instance.RemoveChestItemEntry(_slotIndex); // NTFS: No checks for if inventory is full or not
+			}
+			else
+			{
+				ChestManager.Instance.ChestSlotLeftClicked(_slotIndex);
+			}
 		}
 		else if(eventData.button == PointerEventData.InputButton.Right)
 		{
-			ChestManager.Instance.ChestSlotRightClicked(_slotIndex);
+			if (GameInput.Instance.GetShiftHeldDown())
+			{
+				InventoryManager.Instance.AddItem(GameManager.Instance.GetItemSOFromItemId(_chestSlotItemData.ItemId), _chestSlotItemData.Quantity);
+				ChestManager.Instance.RemoveChestItemEntry(_slotIndex); // NTFS: No checks for if inventory is full or not
+			}
+			else
+			{
+				ChestManager.Instance.ChestSlotRightClicked(_slotIndex);
+			}
 		}
+		
+		ChestManager.Instance.UpdateChestSlots();
 	}
 
 	public void OnPointerEnter(PointerEventData eventData)
