@@ -24,6 +24,7 @@ public class ChestManager : NetworkBehaviour
 
 	public bool IsChestOpen { get; private set; } = false;
 	public Vector2Int OpenChestPosition { get; private set; }
+	public List<string> OpenedChestIds { get; private set; }
 	
 	[SerializeField] private float _chestCloseDistance = 3f; 
 	
@@ -35,6 +36,12 @@ public class ChestManager : NetworkBehaviour
 	{
 		Instance = this;
 		_chestNetworkManager = GetComponent<ChestNetworkManager>();
+		OpenedChestIds = new();
+	}
+	
+	private void Start()
+	{
+		GameInput.Instance.OnInventoryToggle += CloseChestOnInventoryClose;
 	}
 
 	private void Update()
@@ -47,6 +54,14 @@ public class ChestManager : NetworkBehaviour
 		float distance = Vector2.Distance(playerPosition, chestPosition);
 
 		if (distance > _chestCloseDistance)
+		{
+			CloseChest();
+		}
+	}
+	
+	private void CloseChestOnInventoryClose(object sender, GameInput.OnToggleInventoryEventArgs e)
+	{
+		if(!e.InventoryOpen)
 		{
 			CloseChest();
 		}
@@ -84,12 +99,29 @@ public class ChestManager : NetworkBehaviour
 	
 		if (environmentChestData.ContainsKey(chestPosition))
 		{
-			if(IsChestOpen == false)
+			string chestId = $"{chestPosition}{playerEnvironment}";
+			Debug.Log($"Opened chest ids contains this id? {OpenedChestIds.Contains(chestId)}");
+			Debug.Log($"OpenedChest IDs Count: {OpenedChestIds.Count}");
+			foreach (var item in OpenedChestIds)
 			{
-				InventoryManager.Instance.OnInventorySlotShiftLeftClicked += EnableChestShortcuts;
+				Debug.Log($"{item} compared to {chestId}");
 			}
+			
+			if(!OpenedChestIds.Contains(chestId))
+			{
+				OpenedChestIds.Add(chestId);
+				Debug.Log($"COntainer count: {OpenedChestIds.Count}");
+				foreach (var item in OpenedChestIds)
+				{
+					Debug.Log($"{item}");
+				}
 		
-			OpenChestClient(chestPosition, environmentChestData[chestPosition]);
+				OpenChest(chestPosition, environmentChestData[chestPosition]);
+			}
+			else
+			{
+				Debug.Log("Chest already is open");
+			}
 		}
 		else
 		{
@@ -97,11 +129,16 @@ public class ChestManager : NetworkBehaviour
 		}
 	}
 	
-	public void OpenChestClient(Vector2Int chestPosition, List<ChestItemData> chestData)
+	public void OpenChest(Vector2Int chestPosition, List<ChestItemData> chestData)
 	{
 		OpenChestPosition = chestPosition;
 		IsChestOpen = true;
 
+		if(IsChestOpen == false)
+		{
+			InventoryManager.Instance.OnInventorySlotShiftLeftClicked += EnableChestShortcuts;
+		}
+			
 		OnChestOpen?.Invoke(this, new ChestEventArgs
 		{
 			ChestItemData = chestData
@@ -117,6 +154,8 @@ public class ChestManager : NetworkBehaviour
 	{
 		if (IsChestOpen)
 		{
+			_chestNetworkManager.RemoveChestId(OpenChestPosition, Player.LocalClientInstance.PlayerEnvironment.Value);
+		
 			InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= EnableChestShortcuts;
 			IsChestOpen = false;
 
@@ -337,5 +376,10 @@ public class ChestManager : NetworkBehaviour
 			ItemId = itemId,
 			Quantity = quantity
 		});
+	}
+	
+	public override void OnDestroy()
+	{
+		GameInput.Instance.OnInventoryToggle -= CloseChestOnInventoryClose;
 	}
 }

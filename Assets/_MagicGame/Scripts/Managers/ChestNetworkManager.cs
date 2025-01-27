@@ -102,13 +102,19 @@ public class ChestNetworkManager : NetworkBehaviour
 
 		if (chestData.ContainsKey(chestPosition))
 		{
-			var syncData = new ChestSyncData
+			string chestId = $"{chestPosition}{environment}";
+			if(!ChestManager.Instance.OpenedChestIds.Contains(chestId))
 			{
-				ChestItemData = ConvertToSyncChestData(chestData[chestPosition]),
-				ChestPosition = chestPosition
-			};
-
-			SendChestDataClientRpc(syncData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+				ChestManager.Instance.OpenedChestIds.Add(chestId);
+			
+				var syncData = new ChestSyncData
+				{
+					ChestItemData = ConvertToSyncChestData(chestData[chestPosition]),
+					ChestPosition = chestPosition
+				};
+			
+				SendChestDataClientRpc(syncData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+			}
 		}
 		else
 		{
@@ -121,21 +127,24 @@ public class ChestNetworkManager : NetworkBehaviour
 	{
 		// Convert the sync data back to game data and pass it to the ChestManager
 		List<ChestItemData> chestItemData = ConvertToGameChestData(syncData.ChestItemData);
-		ChestManager.Instance.OpenChestClient(syncData.ChestPosition, chestItemData);
+		ChestManager.Instance.OpenChest(syncData.ChestPosition, chestItemData);
 	}
 
 	private List<ChestSyncItemData> ConvertToSyncChestData(List<ChestItemData> chestItemDataToConvert)
 	{
 		List<ChestSyncItemData> syncChestData = new List<ChestSyncItemData>();
 
-		foreach (var chestItem in chestItemDataToConvert)
+		if(chestItemDataToConvert != null && chestItemDataToConvert.Count > 0)
 		{
-			syncChestData.Add(new ChestSyncItemData
+			foreach (var chestItem in chestItemDataToConvert)
 			{
-				SlotIndex = chestItem.SlotIndex,
-				ItemId = chestItem.ItemId,
-				Quantity = chestItem.Quantity
-			});
+				syncChestData.Add(new ChestSyncItemData
+				{
+					SlotIndex = chestItem.SlotIndex,
+					ItemId = chestItem.ItemId,
+					Quantity = chestItem.Quantity
+				});
+			}
 		}
 
 		return syncChestData;
@@ -145,16 +154,31 @@ public class ChestNetworkManager : NetworkBehaviour
 	{
 		List<ChestItemData> chestItemData = new List<ChestItemData>();
 
-		foreach (var syncItem in syncChestData)
+		if(syncChestData != null && syncChestData.Count > 0)
 		{
-			chestItemData.Add(new ChestItemData
+			foreach (var syncItem in syncChestData)
 			{
-				SlotIndex = syncItem.SlotIndex,
-				ItemId = syncItem.ItemId,
-				Quantity = syncItem.Quantity
-			});
+				chestItemData.Add(new ChestItemData
+				{
+					SlotIndex = syncItem.SlotIndex,
+					ItemId = syncItem.ItemId,
+					Quantity = syncItem.Quantity
+				});
+			}
 		}
 
 		return chestItemData;
+	}
+
+	public void RemoveChestId(Vector2Int openChestPosition, EnvironmentID value)
+	{
+		RemoveChestIdServerRpc(openChestPosition, value);
+	}
+	
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void RemoveChestIdServerRpc(Vector2Int openChestPosition, EnvironmentID value)
+	{
+		Debug.Log($"Removing {openChestPosition}{value}");
+		ChestManager.Instance.OpenedChestIds.Remove($"{openChestPosition}{value}");
 	}
 }

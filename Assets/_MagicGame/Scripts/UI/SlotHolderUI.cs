@@ -52,20 +52,23 @@ public class SlotHolderUI : MonoBehaviour
 			int chestSlotIndex = child.GetSiblingIndex();
 			bool foundItemForThisSlot = false;
 			
-			foreach (ChestItemData itemData in chestItemData)
+			if(chestItemData.Count > 0)
 			{
-				if(itemData.SlotIndex == chestSlotIndex)
+				foreach (ChestItemData itemData in chestItemData)
 				{
-					// Found a chest item that should occupy this chest slot
-					child.GetComponent<ChestSlotUI>().UpdateChestSlot(itemData, chestSlotIndex);
-					foundItemForThisSlot = true;
-					break;
+					if(itemData.SlotIndex == chestSlotIndex)
+					{
+						// Found a chest item that should occupy this chest slot
+						child.GetComponent<ChestSlotUI>().UpdateChestSlot(itemData, chestSlotIndex);
+						foundItemForThisSlot = true;
+						break;
+					}
 				}
-			}
-			
-			if(foundItemForThisSlot)
-			{
-				continue;
+				
+				if(foundItemForThisSlot)
+				{
+					continue;
+				}
 			}
 			
 			// If could not find a chestItemData for this slot, initialize it as empty and continue
