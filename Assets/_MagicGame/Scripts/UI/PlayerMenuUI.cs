@@ -19,6 +19,8 @@ public class PlayerMenuUI : MonoBehaviour
 
 	private void OnInventorySlotShiftLeftClicked_EquipShortcut(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
 	{
+		if(ChestManager.Instance.IsChestOpen) return;
+	
 		if (e.InventoryItem.Item is ArmorItemSO armorItemSO)
 		{
 			switch (armorItemSO.ArmorType)

@@ -29,6 +29,8 @@ public class SpellBookMenuUI : MonoBehaviour
 	
 	private void OnInventorySlotShiftLeftClicked_SpellBookShortCut(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
 	{
+		if(ChestManager.Instance.IsChestOpen) return;
+	
 		if(e.InventoryItem is SpellBookInventoryItem spellBookInInventory)
 		{
 			if(HasSpellBook())
