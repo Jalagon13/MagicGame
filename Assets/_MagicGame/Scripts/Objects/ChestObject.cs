@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChestObject : WorldObject
+public class ChestObject : ResourceObject
 {
 	[SerializeField] private WorldInput _worldInput;
 	[SerializeField] private float _chestOpenDistance = 2.75f; 
 
-	private void Start()
+	protected override void Start()
 	{
+		base.Start();
+	
 		if(Player.LocalClientInstance.IsHost)
 		{
 			ChestManager.Instance.TryToCreateEmptyChestData(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.PlayerEnvironment.Value);

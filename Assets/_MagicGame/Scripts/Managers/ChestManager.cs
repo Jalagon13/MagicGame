@@ -388,7 +388,7 @@ public class ChestManager : NetworkBehaviour
 			}
 		}
 
-		Debug.LogWarning($"This chest does not have an entry to get at this chest slot index {chestSlotIndexToGet}");
+		// Debug.LogWarning($"This chest does not have an entry to get at this chest slot index {chestSlotIndexToGet}");
 		return null;
 	}
 

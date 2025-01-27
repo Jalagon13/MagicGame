@@ -293,18 +293,29 @@ MonoBehaviour:
   _worldObjectName: Chest
   <ResourceHit>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1812228115
+      Data2: 1207244471
+      Data3: 1013332110
+      Data4: -2033662663
+    Path: event:/WoodHit
   <ResourceDestroyed>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 15823222
+      Data2: 1125522555
+      Data3: -1633797458
+      Data4: 490440430
+    Path: event:/WoodDestroyed
+  _harvestType: 1
+  _maxHitPoints: 100
+  _lootTable:
+    Table:
+    - Item: {fileID: 11400000, guid: d42e1f6278c094b24b5037d421650f40, type: 2}
+      Min: 1
+      Max: 1
+      Chance: 100
+  _clickFeedback: {fileID: 0}
+  _destroyFeedback: {fileID: 0}
+  _spawnFeedback: {fileID: 0}
   _worldInput: {fileID: 9207288352720458267}
   _chestOpenDistance: 2.75
 --- !u!4 &8566354021552112440 stripped

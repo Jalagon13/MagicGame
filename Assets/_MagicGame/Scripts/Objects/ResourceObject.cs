@@ -21,7 +21,7 @@ public class ResourceObject : WorldObject
 	
 	private Vector2 _dropPosOffset;
 	
-	public void Start()
+	protected virtual void Start()
 	{
 		_dropPosOffset = Vector2.one * 0.5f;
 		_spawnFeedback?.PlayFeedbacks();
