@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ChestItemData
@@ -31,6 +32,7 @@ public class ChestManager : NetworkBehaviour
 	private Dictionary<Vector2Int, List<ChestItemData>> _forestChests = new();
 	private Dictionary<Vector2Int, List<ChestItemData>> _caveChests = new();
 	private ChestNetworkManager _chestNetworkManager;
+	private List<ChestItemData> _localChestItemData; // Used for clients to be sent to server when done editing it
 
 	private void Awake()
 	{
@@ -100,27 +102,11 @@ public class ChestManager : NetworkBehaviour
 		if (environmentChestData.ContainsKey(chestPosition))
 		{
 			string chestId = $"{chestPosition}{playerEnvironment}";
-			Debug.Log($"Opened chest ids contains this id? {OpenedChestIds.Contains(chestId)}");
-			Debug.Log($"OpenedChest IDs Count: {OpenedChestIds.Count}");
-			foreach (var item in OpenedChestIds)
-			{
-				Debug.Log($"{item} compared to {chestId}");
-			}
-			
 			if(!OpenedChestIds.Contains(chestId))
 			{
 				OpenedChestIds.Add(chestId);
-				Debug.Log($"COntainer count: {OpenedChestIds.Count}");
-				foreach (var item in OpenedChestIds)
-				{
-					Debug.Log($"{item}");
-				}
 		
 				OpenChest(chestPosition, environmentChestData[chestPosition]);
-			}
-			else
-			{
-				Debug.Log("Chest already is open");
 			}
 		}
 		else
@@ -138,6 +124,12 @@ public class ChestManager : NetworkBehaviour
 		{
 			InventoryManager.Instance.OnInventorySlotShiftLeftClicked += EnableChestShortcuts;
 		}
+		
+		if(!IsServer)
+		{
+			// If not server, turn chestData into a local data structure and have the left and right click functionalities, edit that local data structure
+			_localChestItemData = chestData;
+		}
 			
 		OnChestOpen?.Invoke(this, new ChestEventArgs
 		{
@@ -148,6 +140,10 @@ public class ChestManager : NetworkBehaviour
 	private void EnableChestShortcuts(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
 	{
 		// NTFS: Shift Click chest functionality to be added here
+		if(e.InventoryItem.HasItem)
+		{
+			
+		}
 	}
 
 	public void CloseChest()
@@ -159,6 +155,11 @@ public class ChestManager : NetworkBehaviour
 			InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= EnableChestShortcuts;
 			IsChestOpen = false;
 
+			if(!IsServer)
+			{
+				_chestNetworkManager.UpdateChestContents(OpenChestPosition, Player.LocalClientInstance.PlayerEnvironment.Value, _localChestItemData);
+			}
+			
 			OnChestClose?.Invoke(this, EventArgs.Empty);
 		}
 	}
@@ -192,22 +193,15 @@ public class ChestManager : NetworkBehaviour
 	{
 		OnChestUpdated?.Invoke(this, new ChestEventArgs
 		{
-			ChestItemData = GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition]
+			ChestItemData = IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData
 		});
 	}
 	
 	public void ChestSlotRightClicked(int clickedChestSlotIndex)
 	{
 		// Define variables at the top, just like in ChestSlotRightClicked
-		ChestItemData openChestSlotItemData = null;
-		foreach (ChestItemData chestItemData in GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition])
-		{
-			if(chestItemData.SlotIndex == clickedChestSlotIndex)
-			{
-				// Found the chestSlot to work with
-				openChestSlotItemData = chestItemData;
-			}
-		}
+		ChestItemData openChestSlotItemData = IsServer ? GetChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex) : 
+		GetChestItemEntry(_localChestItemData, clickedChestSlotIndex);
 		
 		InventoryItem openChestSlotInventoryItem = openChestSlotItemData == null ? new() : new(GameManager.Instance.GetItemSOFromItemId(openChestSlotItemData.ItemId), openChestSlotItemData.Quantity);
 		InventoryItem mouseItem = InventoryManager.Instance.GetMouseItem().MouseInventoryItem;
@@ -220,7 +214,7 @@ public class ChestManager : NetworkBehaviour
 			{
 				if(openChestSlotInventoryItem.Item.Name == mouseItem.Item.Name)
 				{
-					GetChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex).Quantity += 1;
+					GetChestItemEntry(IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData, clickedChestSlotIndex).Quantity += 1;
 					InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity -= 1;
 					
 					if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity <= 0)
@@ -233,8 +227,8 @@ public class ChestManager : NetworkBehaviour
 					// Swap the two items
 					InventoryItem tempItem = openChestSlotInventoryItem;
 					
-					GetChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex).ItemId = GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item);
-					GetChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex).Quantity = mouseItem.Quantity;
+					GetChestItemEntry(IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData, clickedChestSlotIndex).ItemId = GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item);
+					GetChestItemEntry(IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData, clickedChestSlotIndex).Quantity = mouseItem.Quantity;
 					
 					InventoryManager.Instance.GetMouseItem().MouseInventoryItem = tempItem;
 				}
@@ -245,14 +239,14 @@ public class ChestManager : NetworkBehaviour
 				int newChestSlotItemQuantity = openChestSlotItemQuantity / 2;
 				int newMouseItemQuantity = openChestSlotItemQuantity - newChestSlotItemQuantity;
 				
-				GetChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex).Quantity = newChestSlotItemQuantity;
+				GetChestItemEntry(IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData, clickedChestSlotIndex).Quantity = newChestSlotItemQuantity;
 				
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = openChestSlotInventoryItem.Item;
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = newMouseItemQuantity;
 				
-				if(GetChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex).Quantity == 0)
+				if(GetChestItemEntry(IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData, clickedChestSlotIndex).Quantity == 0)
 				{
-					RemoveChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex);
+					RemoveChestItemEntry(IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData, clickedChestSlotIndex);
 				}
 				
 				TooltipManager.Instance.Hide();
@@ -262,7 +256,7 @@ public class ChestManager : NetworkBehaviour
 		{
 			if(mouseItem.HasItem)
 			{
-				AddChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex, GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item), 1);
+				AddChestItemEntry(IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData, clickedChestSlotIndex, GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item), mouseItem.Quantity);
 				
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity -= 1;
 				if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity <= 0)
@@ -281,15 +275,8 @@ public class ChestManager : NetworkBehaviour
 	public void ChestSlotLeftClicked(int clickedChestSlotIndex)
 	{
 		// Define variables at the top, just like in ChestSlotRightClicked
-		ChestItemData openChestSlotItemData = null;
-		foreach (ChestItemData chestItemData in GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition])
-		{
-			if(chestItemData.SlotIndex == clickedChestSlotIndex)
-			{
-				// Found the chestSlot to work with
-				openChestSlotItemData = chestItemData;
-			}
-		}
+		ChestItemData openChestSlotItemData = IsServer ? GetChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex) : 
+		GetChestItemEntry(_localChestItemData, clickedChestSlotIndex);
 		
 		InventoryItem openChestSlotInventoryItem = openChestSlotItemData == null ? new() : new(GameManager.Instance.GetItemSOFromItemId(openChestSlotItemData.ItemId), openChestSlotItemData.Quantity);
 		InventoryItem mouseItem = InventoryManager.Instance.GetMouseItem().MouseInventoryItem;
@@ -303,7 +290,7 @@ public class ChestManager : NetworkBehaviour
 				if (openChestSlotInventoryItem.Item.Name == mouseItem.Item.Name && mouseItem.Item.Stackable)
 				{
 					// If the items are the same and stackable, add the mouse item's quantity to the chest slot
-					GetChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex).Quantity += mouseItem.Quantity;
+					GetChestItemEntry(IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData, clickedChestSlotIndex).Quantity += mouseItem.Quantity;
 					InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
 					TooltipManager.Instance.Show(mouseItem is WandInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
 				}
@@ -311,8 +298,8 @@ public class ChestManager : NetworkBehaviour
 				{
 					// Swap the two items
 					InventoryItem tempItem = openChestSlotInventoryItem;
-					GetChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex).ItemId = GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item);
-					GetChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex).Quantity = mouseItem.Quantity;
+					GetChestItemEntry(IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData, clickedChestSlotIndex).ItemId = GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item);
+					GetChestItemEntry(IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData, clickedChestSlotIndex).Quantity = mouseItem.Quantity;
 					InventoryManager.Instance.GetMouseItem().MouseInventoryItem = tempItem;
 				}
 			}
@@ -320,7 +307,7 @@ public class ChestManager : NetworkBehaviour
 			{
 				// If the mouse has no item, pick up the chest slot's item
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem = openChestSlotInventoryItem;
-				RemoveChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex);
+				RemoveChestItemEntry(IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData, clickedChestSlotIndex);
 				TooltipManager.Instance.Hide();
 			}
 		}
@@ -330,7 +317,7 @@ public class ChestManager : NetworkBehaviour
 			{
 				// If the chest slot is empty and the mouse has an item, place the item in the chest slot
 				Debug.Log($"Chest slot index clicked {clickedChestSlotIndex}");
-				AddChestItemEntry(GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition], clickedChestSlotIndex, GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item), mouseItem.Quantity);
+				AddChestItemEntry(IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData, clickedChestSlotIndex, GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item), mouseItem.Quantity);
 
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
 				TooltipManager.Instance.Show(mouseItem is WandInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);

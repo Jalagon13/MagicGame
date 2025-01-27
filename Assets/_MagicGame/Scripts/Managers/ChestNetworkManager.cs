@@ -181,4 +181,25 @@ public class ChestNetworkManager : NetworkBehaviour
 		Debug.Log($"Removing {openChestPosition}{value}");
 		ChestManager.Instance.OpenedChestIds.Remove($"{openChestPosition}{value}");
 	}
+
+	public void UpdateChestContents(Vector2Int openChestPosition, EnvironmentID playerEnvironment, List<ChestItemData> localChestItemData)
+	{
+		var chestSyncData = new ChestSyncData
+		{
+			ChestItemData = ConvertToSyncChestData(localChestItemData),
+			ChestPosition = openChestPosition
+		};
+	
+		UpdateChestContentsServerRpc(openChestPosition, playerEnvironment, chestSyncData);
+	}
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void UpdateChestContentsServerRpc(Vector2Int openChestPosition, EnvironmentID playerEnvironment, ChestSyncData syncChestItemData)
+	{
+		var chestGameData = ConvertToGameChestData(syncChestItemData.ChestItemData);
+		
+		var chestData = ChestManager.Instance.GetChestDataFromEnvironment(playerEnvironment);
+		Debug.Log($"Dat shit updated from client");
+		chestData[openChestPosition] = chestGameData;
+	}
 }

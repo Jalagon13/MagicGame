@@ -52,7 +52,7 @@ public class SlotHolderUI : MonoBehaviour
 			int chestSlotIndex = child.GetSiblingIndex();
 			bool foundItemForThisSlot = false;
 			
-			if(chestItemData.Count > 0)
+			if(chestItemData != null && chestItemData.Count > 0)
 			{
 				foreach (ChestItemData itemData in chestItemData)
 				{
