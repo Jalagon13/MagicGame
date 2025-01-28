@@ -380,8 +380,8 @@ MonoBehaviour:
   switchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: Assets/_MagicGame/Content/Audio/FMOD/MagicGame.fspro
-  sourceBankPath: Assets/_MagicGame/Content/Audio/FMOD/Build
+  sourceProjectPath: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/MagicGame.fspro
+  sourceBankPath: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
@@ -907,7 +907,7 @@ MonoBehaviour:
       Value: 0
       HasValue: 0
     Overlay:
-      Value: 1
+      Value: 0
       HasValue: 1
     OverlayPosition:
       Value: 0

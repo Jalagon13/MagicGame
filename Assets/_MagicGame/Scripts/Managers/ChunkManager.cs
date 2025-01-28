@@ -32,6 +32,7 @@ public class ChunkManager : NetworkBehaviour
 	public Vector2Int MinLoadedTilePosition { get; private set; }
 	public Vector2Int MaxLoadedTilePosition { get; private set; }
 	
+	[SerializeField] private float _chunkLoadCooldown = 0.02f;
 	[SerializeField] private int _chunkLoadRadiusX = 5;
 	[SerializeField] private int _chunkLoadRadiusY = 4;
 	
@@ -43,17 +44,16 @@ public class ChunkManager : NetworkBehaviour
 	private ChunkNetworkManager _chunkNetworkManager;
 	private Vector2Int _currentChunkPosition; // Current chunk the player is in
 	private Vector2Int _lastChunkPosition; // Last chunk position for comparison
-	private Vector2 _loadPlayerPos, _unloadPlayerPos;
-	private float _loadIncrementDist, _unloadIncrementDist;
-	
+	private Timer _chunkUpdateTimer;
 	
 	private void Awake()
 	{
 		Instance = this;
 		_chunkNetworkManager = GetComponent<ChunkNetworkManager>();
+		_chunkUpdateTimer = new(_chunkLoadCooldown);
 	}
 	
-	private void Update()
+	private void FixedUpdate()
 	{
 		if(Player.LocalClientInstance == null || IS_GENERATING_ENVIRONMENT || SaveSystem.Instance.IsDeserializing) return;
 		
@@ -65,53 +65,27 @@ public class ChunkManager : NetworkBehaviour
 			UpdateChunksAroundPlayer();
 		}
 		
-		if(Vector2.Distance(Player.LocalClientInstance.transform.position, _loadPlayerPos) > _loadIncrementDist)
+		_chunkUpdateTimer.Tick(Time.deltaTime);
+		
+		if(_chunkUpdateTimer.RemainingSeconds <= 0)
 		{
 			if(_chunksToLoad.Count > 0)
 			{
 				LoadChunk(_chunksToLoad.Dequeue());
 			}
 			
-			_loadPlayerPos = Player.LocalClientInstance.transform.position;
-		}
-		
-		if(Vector2.Distance(Player.LocalClientInstance.transform.position, _unloadPlayerPos) > _unloadIncrementDist)
-		{
 			if(_chunksToUnload.Count > 0)
 			{
 				UnloadChunk(_chunksToUnload.Dequeue());
 			}
-			
-			_unloadPlayerPos = Player.LocalClientInstance.transform.position;
+		
+			_chunkUpdateTimer.RemainingSeconds = _chunkLoadCooldown;
 		}
 	}
 
-	private Vector2Int GetChunkPosition(Vector3 worldPosition)
-	{
-		int chunkSize = CHUNK_SIZE;
-		return new Vector2Int(
-			Mathf.FloorToInt(worldPosition.x / chunkSize),
-			Mathf.FloorToInt(worldPosition.y / chunkSize)
-		);
-	}
-	
 	public void UpdateChunksAroundPlayer()
 	{
 		if(WorldManager.Instance.GetIsTransitioningEnvironment()) return;
-	
-		if(Player.LocalClientInstance.IsHost)
-		{
-			HostUpdatePlayerChunks();
-		}
-		else
-		{
-			_chunkNetworkManager.ClientUpdatePlayerChunks(Player.LocalClientInstance.PlayerEnvironment.Value);
-		}
-	}
-	
-	private void HostUpdatePlayerChunks()
-	{
-		// Debug.Log("Updating Chunks as Host");
 	
 		// Get chunks around the player the player wants to load
 		List<Vector2Int> chunksToLoadAroundPlayer = GetPositionsToLoadAroundPlayer();
@@ -125,34 +99,66 @@ public class ChunkManager : NetworkBehaviour
 			}
 		}
 		
-		_loadIncrementDist = (float)CHUNK_SIZE / _chunksToLoad.Count;
-		
 		// In the loaded player chunks, if any of them are not in playerChunksToLoadAroundPlayer, unload them
 		foreach (Vector2Int chunkPos in _loadedChunks.Keys.ToList())
 		{
 			if (!chunksToLoadAroundPlayer.Contains(chunkPos))
 			{
 				_chunksToUnload.Enqueue(chunkPos);
-				
 			}
 		}
 		
-		_unloadIncrementDist = (float)CHUNK_SIZE / _chunksToUnload.Count;
 		// InvokeOnLoadedPlayerChunksUpdated();
 	}
 
 	private void LoadChunk(Vector2Int chunkPos)
 	{
-		ChunkGameData chunkToLoad = GetChunkDataFromChunkPosition(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
-		InvokeOnLoadChunk(chunkToLoad);
+		if(IsHost)
+		{
+			ChunkGameData chunkToLoad = GetChunkDataFromChunkPosition(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
+			InvokeOnLoadChunk(chunkToLoad);
+		}
+		else
+		{
+			_chunkNetworkManager.RequestChunkData(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
+		}
 	}
 
 	private void UnloadChunk(Vector2Int chunkPos)
 	{
-		ChunkGameData chunkToUnload = GetChunkDataFromChunkPosition(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
-		InvokeOnUnloadChunk(chunkToUnload);
+		if(_loadedChunks.ContainsKey(chunkPos))
+		{
+			InvokeOnUnloadChunk(_loadedChunks[chunkPos]);
+		}
 	}
 
+	public void InvokeOnLoadChunk(ChunkGameData chunkGameDataToLoad)
+	{
+		if (!_loadedChunks.ContainsKey(chunkGameDataToLoad.ChunkPosition))
+		{
+			OnLoadChunk?.Invoke(this, new ChunkEventArgs
+			{
+				Chunk = chunkGameDataToLoad
+			});
+		
+			_loadedChunks.Add(chunkGameDataToLoad.ChunkPosition, chunkGameDataToLoad);
+		}
+	}
+	
+	public void InvokeOnUnloadChunk(ChunkGameData chunkGameDataToUnload)
+	{
+		// Remove the chunk from the list of loaded chunks
+		if(_loadedChunks.ContainsKey(chunkGameDataToUnload.ChunkPosition))
+		{
+			OnUnloadChunk?.Invoke(this, new ChunkEventArgs
+			{
+				Chunk = chunkGameDataToUnload
+			});
+		
+			_loadedChunks.Remove(chunkGameDataToUnload.ChunkPosition);
+		}
+	}
+	
 	public void InvokeOnLoadedPlayerChunksUpdated()
 	{
 		CalculateMinMaxLoadedTilePos();
@@ -180,38 +186,13 @@ public class ChunkManager : NetworkBehaviour
 		return chunksToLoad;
 	}
 	
-	public void InvokeOnLoadChunk(ChunkGameData chunkGameDataToLoad)
+	private Vector2Int GetChunkPosition(Vector3 worldPosition)
 	{
-		// Add chunk to _loadedChunks
-		if(chunkGameDataToLoad == null)
-		{
-			Debug.LogWarning("chunk to load is null");
-			return;
-		}
-		
-		if (!_loadedChunks.ContainsKey(chunkGameDataToLoad.ChunkPosition))
-		{
-			OnLoadChunk?.Invoke(this, new ChunkEventArgs
-			{
-				Chunk = chunkGameDataToLoad
-			});
-		
-			_loadedChunks.Add(chunkGameDataToLoad.ChunkPosition, chunkGameDataToLoad);
-		}
-	}
-	
-	public void InvokeOnUnloadChunk(ChunkGameData chunkGameDataToUnload)
-	{
-		// Remove the chunk from the list of loaded chunks
-		if(_loadedChunks.ContainsKey(chunkGameDataToUnload.ChunkPosition))
-		{
-			OnUnloadChunk?.Invoke(this, new ChunkEventArgs
-			{
-				Chunk = chunkGameDataToUnload
-			});
-		
-			_loadedChunks.Remove(chunkGameDataToUnload.ChunkPosition);
-		}
+		int chunkSize = CHUNK_SIZE;
+		return new Vector2Int(
+			Mathf.FloorToInt(worldPosition.x / chunkSize),
+			Mathf.FloorToInt(worldPosition.y / chunkSize)
+		);
 	}
 	
 	public void ClearChunkVisuals()

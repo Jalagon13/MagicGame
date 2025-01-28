@@ -7,38 +7,15 @@ using UnityEngine;
 
 public class ChunkNetworkManager : NetworkBehaviour
 {
-	private int _chunkCountIterator;
-	private int _chunksToLoadAmount;
-	private List<Vector2Int> _playerChunksToLoadAroundPlayer;
-	
-	public void ClientUpdatePlayerChunks(EnvironmentID environmentToRequest)
+	public void RequestChunkData(EnvironmentID environmentToRequest, Vector2Int chunkPosition)
 	{
-		// Debug.Log("Updating Chunks as Client");
-		
-		// Get chunks around the player the player wants to load
-		_playerChunksToLoadAroundPlayer = ChunkManager.Instance.GetPositionsToLoadAroundPlayer();
-		_chunksToLoadAmount = _playerChunksToLoadAroundPlayer.Count;
-		_chunkCountIterator = 0;
-		
-		// For each of those chunks, load them if they are not already loaded
-		foreach (Vector2Int chunkPosition in _playerChunksToLoadAroundPlayer)
-		{
-			if(!ChunkManager.Instance.GetLoadedPlayerChunks().ContainsKey(chunkPosition))
-			{
-				RequestChunkDataServerRpc(environmentToRequest, chunkPosition);
-			}
-			else
-			{
-				_chunkCountIterator++;
-			}
-		}
+		RequestChunkDataServerRpc(environmentToRequest, chunkPosition);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void RequestChunkDataServerRpc(EnvironmentID environmentToRequest, Vector2Int chunkPosition, RpcParams rpcParams = default)
 	{
-		var chunkData = GetChunkGameData(environmentToRequest, chunkPosition);
-		
+		var chunkData = ChunkManager.Instance.GetChunkDataFromChunkPosition(environmentToRequest, chunkPosition);
 		var syncChunkData = ConvertToSyncChunkData(chunkData);
 		
 		SendChunkDataToClientRpc(syncChunkData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
@@ -50,29 +27,6 @@ public class ChunkNetworkManager : NetworkBehaviour
 		var chunkGameData = ConvertToGameChunkData(syncChunkData);
 		
 		ChunkManager.Instance.InvokeOnLoadChunk(chunkGameData);
-		
-		_chunkCountIterator++;
-		if(_chunkCountIterator >= _chunksToLoadAmount)
-		{
-			// All loaded player chunks refreshed successfully
-			// In the loaded player chunks, if any of them are not in playerChunksToLoadAroundPlayer, unload them
-			List<Vector2Int> loadedChunkPositions = new(ChunkManager.Instance.GetLoadedPlayerChunks().Keys);
-			foreach (Vector2Int loadedChunkPosition in loadedChunkPositions)
-			{
-				if (!_playerChunksToLoadAroundPlayer.Contains(loadedChunkPosition))
-				{
-					ChunkManager.Instance.InvokeOnUnloadChunk(ChunkManager.Instance.GetLoadedPlayerChunks()[loadedChunkPosition]);
-				}
-			}
-			
-			ChunkManager.Instance.InvokeOnLoadedPlayerChunksUpdated();
-			_chunkCountIterator = 0;
-		}
-	}
-
-	private ChunkGameData GetChunkGameData(EnvironmentID environmentToRequest, Vector2Int chunkPosition)
-	{
-		return ChunkManager.Instance.GetChunkDataFromChunkPosition(environmentToRequest, chunkPosition);
 	}
 	
 	private SyncChunkData ConvertToSyncChunkData(ChunkGameData chunkGameData)
