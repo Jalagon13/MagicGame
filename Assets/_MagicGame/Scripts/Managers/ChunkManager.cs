@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
@@ -28,18 +29,23 @@ public class ChunkManager : NetworkBehaviour
 
 	public static ChunkManager Instance { get; private set; }
 	
+	public Vector2Int MinLoadedTilePosition { get; private set; }
+	public Vector2Int MaxLoadedTilePosition { get; private set; }
+	
 	[SerializeField] private int _chunkLoadRadiusX = 5;
 	[SerializeField] private int _chunkLoadRadiusY = 4;
 	
-	private Dictionary<Vector2Int, ChunkGameData> _loadedPlayerChunks = new();
-	private Dictionary<Vector2Int, ChunkGameData> _forestChunks = new();
-	private Dictionary<Vector2Int, ChunkGameData> _caveChunks = new();
-	private Vector2 _lastPlayerPosition;
-	private Vector2Int _playerChunkCoord;
+	private Dictionary<Vector2Int, ChunkGameData> _loadedChunks = new(); // Data structure to hold chunk data that is loaded around player
+	private Dictionary<Vector2Int, ChunkGameData> _forestChunks = new(); // Data structure to hold chunk data
+	private Dictionary<Vector2Int, ChunkGameData> _caveChunks = new(); // Data structure to hold chunk data
+	private Queue<Vector2Int> _chunksToLoad = new Queue<Vector2Int>();
+	private Queue<Vector2Int> _chunksToUnload = new Queue<Vector2Int>();
 	private ChunkNetworkManager _chunkNetworkManager;
+	private Vector2Int _currentChunkPosition; // Current chunk the player is in
+	private Vector2Int _lastChunkPosition; // Last chunk position for comparison
+	private Vector2 _loadPlayerPos, _unloadPlayerPos;
+	private float _loadIncrementDist, _unloadIncrementDist;
 	
-	public Vector2Int MinLoadedTilePosition { get; private set; }
-	public Vector2Int MaxLoadedTilePosition { get; private set; }
 	
 	private void Awake()
 	{
@@ -51,19 +57,42 @@ public class ChunkManager : NetworkBehaviour
 	{
 		if(Player.LocalClientInstance == null || IS_GENERATING_ENVIRONMENT || SaveSystem.Instance.IsDeserializing) return;
 		
-		Vector3Int playerTilePos = GetPlayerTilePos();
-		
-		// NTFS: Optimize this in the future so it doesn't unload all the chunks and reload them
-		if (Vector2.Distance(Player.LocalClientInstance.transform.position, _lastPlayerPosition) >= CHUNK_SIZE) 
+		Vector2Int newChunkPosition = GetChunkPosition(Player.LocalClientInstance.transform.position);
+		if (newChunkPosition != _lastChunkPosition)
 		{
-			_playerChunkCoord = new Vector2Int(playerTilePos.x / CHUNK_SIZE, playerTilePos.y / CHUNK_SIZE);
-			
-			// Hosts use the single player logic, clients use netcode logic
+			_lastChunkPosition = newChunkPosition;
+			_currentChunkPosition = newChunkPosition;
 			UpdateChunksAroundPlayer();
-			
-			// Update last player position
-			_lastPlayerPosition = Player.LocalClientInstance.transform.position;
 		}
+		
+		if(Vector2.Distance(Player.LocalClientInstance.transform.position, _loadPlayerPos) > _loadIncrementDist)
+		{
+			if(_chunksToLoad.Count > 0)
+			{
+				LoadChunk(_chunksToLoad.Dequeue());
+			}
+			
+			_loadPlayerPos = Player.LocalClientInstance.transform.position;
+		}
+		
+		if(Vector2.Distance(Player.LocalClientInstance.transform.position, _unloadPlayerPos) > _unloadIncrementDist)
+		{
+			if(_chunksToUnload.Count > 0)
+			{
+				UnloadChunk(_chunksToUnload.Dequeue());
+			}
+			
+			_unloadPlayerPos = Player.LocalClientInstance.transform.position;
+		}
+	}
+
+	private Vector2Int GetChunkPosition(Vector3 worldPosition)
+	{
+		int chunkSize = CHUNK_SIZE;
+		return new Vector2Int(
+			Mathf.FloorToInt(worldPosition.x / chunkSize),
+			Mathf.FloorToInt(worldPosition.y / chunkSize)
+		);
 	}
 	
 	public void UpdateChunksAroundPlayer()
@@ -85,27 +114,45 @@ public class ChunkManager : NetworkBehaviour
 		// Debug.Log("Updating Chunks as Host");
 	
 		// Get chunks around the player the player wants to load
-		List<Vector2Int> playerChunksToLoadAroundPlayer = GetChunkPositionsToLoadAroundPlayer();
-		List<Vector2Int> loadedChunkPositions = new(_loadedPlayerChunks.Keys);
+		List<Vector2Int> chunksToLoadAroundPlayer = GetPositionsToLoadAroundPlayer();
 		
 		// For each of those chunks, load them if they are not already loaded
-		foreach (Vector2Int chunkPosition in playerChunksToLoadAroundPlayer)
+		foreach (Vector2Int chunkPos in chunksToLoadAroundPlayer)
 		{
-			TryToLoadChunk(chunkPosition);
-		}
-		
-		// In the loaded player chunks, if any of them are not in playerChunksToLoadAroundPlayer, unload them
-		foreach (Vector2Int loadedChunkPosition in loadedChunkPositions)
-		{
-			if (!playerChunksToLoadAroundPlayer.Contains(loadedChunkPosition))
+			if(!_loadedChunks.ContainsKey(chunkPos))
 			{
-				TryToUnloadChunk(loadedChunkPosition);
+				_chunksToLoad.Enqueue(chunkPos);
 			}
 		}
-	
-		InvokeOnLoadedPlayerChunksUpdated();
+		
+		_loadIncrementDist = (float)CHUNK_SIZE / _chunksToLoad.Count;
+		
+		// In the loaded player chunks, if any of them are not in playerChunksToLoadAroundPlayer, unload them
+		foreach (Vector2Int chunkPos in _loadedChunks.Keys.ToList())
+		{
+			if (!chunksToLoadAroundPlayer.Contains(chunkPos))
+			{
+				_chunksToUnload.Enqueue(chunkPos);
+				
+			}
+		}
+		
+		_unloadIncrementDist = (float)CHUNK_SIZE / _chunksToUnload.Count;
+		// InvokeOnLoadedPlayerChunksUpdated();
 	}
-	
+
+	private void LoadChunk(Vector2Int chunkPos)
+	{
+		ChunkGameData chunkToLoad = GetChunkDataFromChunkPosition(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
+		InvokeOnLoadChunk(chunkToLoad);
+	}
+
+	private void UnloadChunk(Vector2Int chunkPos)
+	{
+		ChunkGameData chunkToUnload = GetChunkDataFromChunkPosition(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
+		InvokeOnUnloadChunk(chunkToUnload);
+	}
+
 	public void InvokeOnLoadedPlayerChunksUpdated()
 	{
 		CalculateMinMaxLoadedTilePos();
@@ -117,39 +164,20 @@ public class ChunkManager : NetworkBehaviour
 		});
 	}
 	
-	public void ClearChunkVisuals()
+	public List<Vector2Int> GetPositionsToLoadAroundPlayer()
 	{
-		for (int i = _loadedPlayerChunks.Count - 1; i >= 0; i--)
-		{
-			var chunk = _loadedPlayerChunks.ElementAt(i);
-			InvokeOnUnloadChunk(chunk.Value);
-		}
-	}
-	
-	private void TryToUnloadChunk(Vector2Int chunkPos)
-	{
-		ChunkGameData chunkToUnload = GetChunkDataFromChunkPosition(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
-		InvokeOnUnloadChunk(chunkToUnload);
-	}
-	
-	private void TryToLoadChunk(Vector2Int chunkPos)
-	{
-		ChunkGameData chunkToLoad = GetChunkDataFromChunkPosition(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
-		InvokeOnLoadChunk(chunkToLoad);
-	}
-	
-	public void InvokeOnUnloadChunk(ChunkGameData chunkGameDataToUnload)
-	{
-		// Remove the chunk from the list of loaded chunks
-		if(_loadedPlayerChunks.ContainsKey(chunkGameDataToUnload.ChunkPosition))
-		{
-			OnUnloadChunk?.Invoke(this, new ChunkEventArgs
-			{
-				Chunk = chunkGameDataToUnload
-			});
+		List<Vector2Int> chunksToLoad = new();
 		
-			_loadedPlayerChunks.Remove(chunkGameDataToUnload.ChunkPosition);
+		for (int x = -_chunkLoadRadiusX; x <= _chunkLoadRadiusX; x++)
+		{
+			for (int y = -_chunkLoadRadiusY; y <= _chunkLoadRadiusY; y++)
+			{
+				Vector2Int chunkCoord = new Vector2Int(_currentChunkPosition.x + x, _currentChunkPosition.y + y);
+				chunksToLoad.Add(chunkCoord);
+			}
 		}
+		
+		return chunksToLoad;
 	}
 	
 	public void InvokeOnLoadChunk(ChunkGameData chunkGameDataToLoad)
@@ -161,14 +189,37 @@ public class ChunkManager : NetworkBehaviour
 			return;
 		}
 		
-		if (!_loadedPlayerChunks.ContainsKey(chunkGameDataToLoad.ChunkPosition))
+		if (!_loadedChunks.ContainsKey(chunkGameDataToLoad.ChunkPosition))
 		{
 			OnLoadChunk?.Invoke(this, new ChunkEventArgs
 			{
 				Chunk = chunkGameDataToLoad
 			});
 		
-			_loadedPlayerChunks.Add(chunkGameDataToLoad.ChunkPosition, chunkGameDataToLoad);
+			_loadedChunks.Add(chunkGameDataToLoad.ChunkPosition, chunkGameDataToLoad);
+		}
+	}
+	
+	public void InvokeOnUnloadChunk(ChunkGameData chunkGameDataToUnload)
+	{
+		// Remove the chunk from the list of loaded chunks
+		if(_loadedChunks.ContainsKey(chunkGameDataToUnload.ChunkPosition))
+		{
+			OnUnloadChunk?.Invoke(this, new ChunkEventArgs
+			{
+				Chunk = chunkGameDataToUnload
+			});
+		
+			_loadedChunks.Remove(chunkGameDataToUnload.ChunkPosition);
+		}
+	}
+	
+	public void ClearChunkVisuals()
+	{
+		for (int i = _loadedChunks.Count - 1; i >= 0; i--)
+		{
+			var chunk = _loadedChunks.ElementAt(i);
+			InvokeOnUnloadChunk(chunk.Value);
 		}
 	}
 	
@@ -236,22 +287,6 @@ public class ChunkManager : NetworkBehaviour
 		return chunk;
 	}
 	
-	public List<Vector2Int> GetChunkPositionsToLoadAroundPlayer()
-	{
-		List<Vector2Int> chunksToLoad = new();
-		
-		for (int x = -_chunkLoadRadiusX; x <= _chunkLoadRadiusX; x++)
-		{
-			for (int y = -_chunkLoadRadiusY; y <= _chunkLoadRadiusY; y++)
-			{
-				Vector2Int chunkCoord = new Vector2Int(_playerChunkCoord.x + x, _playerChunkCoord.y + y);
-				chunksToLoad.Add(chunkCoord);
-			}
-		}
-		
-		return chunksToLoad;
-	}
-	
 	private Vector2Int GetChunkCoordFromPosition(Vector2 position)
 	{
 		int chunkX = Mathf.FloorToInt(position.x / CHUNK_SIZE);
@@ -305,7 +340,7 @@ public class ChunkManager : NetworkBehaviour
 		Vector2Int minLoadedTilePos = new(int.MaxValue, int.MaxValue);
 		Vector2Int maxLoadedTilePos = new(int.MinValue, int.MinValue);
 
-		foreach (var item in _loadedPlayerChunks)
+		foreach (var item in _loadedChunks)
 		{
 			Vector2Int loadedChunkWorldPosition = item.Key * CHUNK_SIZE;
 			minLoadedTilePos = Vector2Int.Min(minLoadedTilePos, loadedChunkWorldPosition);
@@ -322,6 +357,6 @@ public class ChunkManager : NetworkBehaviour
 	
 	public Dictionary<Vector2Int, ChunkGameData> GetLoadedPlayerChunks()
 	{
-		return _loadedPlayerChunks;
+		return _loadedChunks;
 	}
 }

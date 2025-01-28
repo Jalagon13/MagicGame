@@ -18,8 +18,11 @@ public class ChestSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 		{
 			if (GameInput.Instance.GetShiftHeldDown())
 			{
-				InventoryManager.Instance.AddItem(GameManager.Instance.GetItemSOFromItemId(_chestSlotItemData.ItemId), _chestSlotItemData.Quantity);
-				ChestManager.Instance.RemoveChestItemEntry(_slotIndex); // NTFS: No checks for if inventory is full or not
+				if(_chestSlotItemData != null)
+				{
+					InventoryManager.Instance.AddItem(GameManager.Instance.GetItemSOFromItemId(_chestSlotItemData.ItemId), _chestSlotItemData.Quantity);
+					ChestManager.Instance.RemoveChestItemEntry(_slotIndex); // NTFS: No checks for if inventory is full or not
+				}
 			}
 			else
 			{
@@ -30,8 +33,11 @@ public class ChestSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 		{
 			if (GameInput.Instance.GetShiftHeldDown())
 			{
-				InventoryManager.Instance.AddItem(GameManager.Instance.GetItemSOFromItemId(_chestSlotItemData.ItemId), _chestSlotItemData.Quantity);
-				ChestManager.Instance.RemoveChestItemEntry(_slotIndex); // NTFS: No checks for if inventory is full or not
+				if(_chestSlotItemData != null)
+				{
+					InventoryManager.Instance.AddItem(GameManager.Instance.GetItemSOFromItemId(_chestSlotItemData.ItemId), _chestSlotItemData.Quantity);
+					ChestManager.Instance.RemoveChestItemEntry(_slotIndex); // NTFS: No checks for if inventory is full or not
+				}
 			}
 			else
 			{

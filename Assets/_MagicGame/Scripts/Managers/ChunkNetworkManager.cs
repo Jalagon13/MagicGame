@@ -16,7 +16,7 @@ public class ChunkNetworkManager : NetworkBehaviour
 		// Debug.Log("Updating Chunks as Client");
 		
 		// Get chunks around the player the player wants to load
-		_playerChunksToLoadAroundPlayer = ChunkManager.Instance.GetChunkPositionsToLoadAroundPlayer();
+		_playerChunksToLoadAroundPlayer = ChunkManager.Instance.GetPositionsToLoadAroundPlayer();
 		_chunksToLoadAmount = _playerChunksToLoadAroundPlayer.Count;
 		_chunkCountIterator = 0;
 		
