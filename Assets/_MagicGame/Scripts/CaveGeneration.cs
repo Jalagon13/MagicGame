@@ -41,9 +41,6 @@ public class CaveGeneration : MonoBehaviour
 		Debug.Log("Generating Cave...");
 		ChunkManager.IS_GENERATING_ENVIRONMENT = true;
 		
-		// Create gridgraph for pathfinding for environment if haven't done so already
-		NodeGraphUtility.TryToCreateGridGraph(_environment);
-		
 		// Generate World Data
 		GenerateNoiseMapsBasedOnSeed();
 		GenerateCaveChunkData();
@@ -97,9 +94,6 @@ public class CaveGeneration : MonoBehaviour
 						else
 						{
 							TryToAddTileToChunk(_stoneWallTile, tileWorldPosition, chunkGameData.WallTileGameDataList);
-							
-							var centerNodePosition = new Vector2(tileWorldPosition.x + 0.5f, tileWorldPosition.y + 0.5f);
-							NodeGraphUtility.SetNodeToWalkable(centerNodePosition, _environment, false);
 						}
 					}
 				}

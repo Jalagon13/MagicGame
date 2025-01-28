@@ -54,9 +54,6 @@ public class ForestGeneration : MonoBehaviour
 		Debug.Log("Generating Forest Data...");
 		ChunkManager.IS_GENERATING_ENVIRONMENT = true;
 		
-		// Create gridgraph for pathfinding for environment if haven't done so already
-		NodeGraphUtility.TryToCreateGridGraph(_environment);
-		
 		// Generate World Data
 		GenerateNoiseMapsBasedOnSeed();
 		GenerateOverworldChunkData();
@@ -118,9 +115,6 @@ public class ForestGeneration : MonoBehaviour
 						if(wallTilePointValue >= 0.6f)
 						{
 							TryToAddTileToChunk(wallTileSO, tileWorldPosition, chunkGameData.WallTileGameDataList);
-							
-							var centerNodePosition = new Vector2(tileWorldPosition.x + 0.5f, tileWorldPosition.y + 0.5f);
-							NodeGraphUtility.SetNodeToWalkable(centerNodePosition, _environment, false);
 						}
 					}
 				}

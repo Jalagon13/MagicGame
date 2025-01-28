@@ -15,7 +15,7 @@ public class ChunkNetworkManager : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void RequestChunkDataServerRpc(EnvironmentID environmentToRequest, Vector2Int chunkPosition, RpcParams rpcParams = default)
 	{
-		var chunkData = ChunkManager.Instance.GetChunkDataFromChunkPosition(environmentToRequest, chunkPosition);
+		var chunkData = ChunkManager.Instance.GetChunkData(environmentToRequest, chunkPosition);
 		var syncChunkData = ConvertToSyncChunkData(chunkData);
 		
 		SendChunkDataToClientRpc(syncChunkData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));

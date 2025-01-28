@@ -54,6 +54,8 @@ public class Environment : NetworkBehaviour
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			_wallTilemapData.GetTilemap().SetTile(tilePosV3Int, tile.TileSO);
 		}
+		
+		PathfindingManager.Instance.UpdateAstarGrid(e.Chunk.ChunkPosition);
 	}
 
 	private void ChunkManager_OnUnloadChunk(object sender, ChunkManager.ChunkEventArgs e)

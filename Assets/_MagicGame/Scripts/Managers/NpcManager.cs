@@ -47,7 +47,7 @@ public class NpcManager : NetworkBehaviour
 
 	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
 	{
-		TryToSpawnNpc(ActionManager.MouseWorldPosition, _testDummyNpcSO);
+		// TryToSpawnNpc(ActionManager.MouseWorldPosition, _testDummyNpcSO);
 	}
 
 	private void NetworkManager_OnClientConnectedCallback(ulong clientId)
@@ -57,7 +57,7 @@ public class NpcManager : NetworkBehaviour
 		_localPlayerTransform = NetworkManager.ConnectedClients[clientId].PlayerObject.transform;
 		_activeNpcSlotAmount = 0;
 		
-		InvokeRepeating(nameof(AttemptToSpawnNpc), 1, _tickTime);
+		// InvokeRepeating(nameof(AttemptToSpawnNpc), 1, _tickTime);
 	}
 	
 	public void AttemptToSpawnNpc()

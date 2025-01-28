@@ -115,7 +115,7 @@ public class ChunkManager : NetworkBehaviour
 	{
 		if(IsHost)
 		{
-			ChunkGameData chunkToLoad = GetChunkDataFromChunkPosition(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
+			ChunkGameData chunkToLoad = GetChunkData(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
 			InvokeOnLoadChunk(chunkToLoad);
 		}
 		else
@@ -129,6 +129,7 @@ public class ChunkManager : NetworkBehaviour
 		if(_loadedChunks.ContainsKey(chunkPos))
 		{
 			InvokeOnUnloadChunk(_loadedChunks[chunkPos]);
+			PathfindingManager.Instance.RequestUnloadChunk(chunkPos);
 		}
 	}
 
@@ -159,15 +160,34 @@ public class ChunkManager : NetworkBehaviour
 		}
 	}
 	
-	public void InvokeOnLoadedPlayerChunksUpdated()
+	public ChunkGameData GetChunkData(EnvironmentID environment, Vector2Int chunkPosition)
 	{
-		CalculateMinMaxLoadedTilePos();
-		
-		OnLoadedPlayerChunksUpdated?.Invoke(this, new OnActiveChunksUpdatedEventArgs
+		switch(environment)
 		{
-			MinLoadedTilePos = MinLoadedTilePosition,
-			MaxLoadedTilePos = MaxLoadedTilePosition
-		});
+			case EnvironmentID.Forest:
+			
+				if(_forestChunks[chunkPosition] == null)
+				{
+					Debug.LogError($"This should not be playing chunks should exist on requested");
+					return null;
+				}
+				
+				// PathfindingManager.Instance.UpdatePathfinding(chunkPosition, _forestChunks[chunkPosition], environment);
+				return _forestChunks[chunkPosition];
+			case EnvironmentID.Cave:
+			
+				if(_caveChunks[chunkPosition] == null)
+				{
+					Debug.LogError($"This should not be playing chunks should exist on requested");
+					return null;
+				}
+				
+				// PathfindingManager.Instance.UpdatePathfinding(chunkPosition, _caveChunks[chunkPosition], environment);
+				return _caveChunks[chunkPosition];
+		}
+		
+		Debug.LogError("No Environment found for _activeEnvironment variable");
+		return null;
 	}
 	
 	public List<Vector2Int> GetPositionsToLoadAroundPlayer()
@@ -186,6 +206,17 @@ public class ChunkManager : NetworkBehaviour
 		return chunksToLoad;
 	}
 	
+	public void InvokeOnLoadedPlayerChunksUpdated()
+	{
+		CalculateMinMaxLoadedTilePos();
+		
+		OnLoadedPlayerChunksUpdated?.Invoke(this, new OnActiveChunksUpdatedEventArgs
+		{
+			MinLoadedTilePos = MinLoadedTilePosition,
+			MaxLoadedTilePos = MaxLoadedTilePosition
+		});
+	}
+	
 	private Vector2Int GetChunkPosition(Vector3 worldPosition)
 	{
 		int chunkSize = CHUNK_SIZE;
@@ -202,20 +233,6 @@ public class ChunkManager : NetworkBehaviour
 			var chunk = _loadedChunks.ElementAt(i);
 			InvokeOnUnloadChunk(chunk.Value);
 		}
-	}
-	
-	public ChunkGameData GetChunkDataFromChunkPosition(EnvironmentID environment, Vector2Int chunkPosition)
-	{
-		switch(environment)
-		{
-			case EnvironmentID.Forest:
-				return _forestChunks.ContainsKey(chunkPosition) ? _forestChunks[chunkPosition] : null;
-			case EnvironmentID.Cave:
-				return _caveChunks.ContainsKey(chunkPosition) ? _caveChunks[chunkPosition] : null;
-		}
-		
-		Debug.LogError("No Environment found for _activeEnvironment variable");
-		return null;
 	}
 	
 	public void AddObjectDataToChunk(Vector2Int position, WorldObject worldObject, EnvironmentID environmentToPlaceIn)

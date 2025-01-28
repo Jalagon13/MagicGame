@@ -217,7 +217,7 @@ public class SaveSystem : MonoBehaviour
 			// Deserialize JSON data into SceneData object
 			_environmentFileData = JsonUtility.FromJson<EnvironmentFileData>(json);
 			
-			NodeGraphUtility.TryToCreateGridGraph(environmentToDeserialize);
+			AstarPath.active.Scan();
 			
 			// Dispatch the data
 			DeserializeChunkData(environmentToDeserialize);
@@ -259,9 +259,6 @@ public class SaveSystem : MonoBehaviour
 			foreach (TileGameData wallTileGameData in chunk.WallTileGameDataList)
 			{
 				var tileWorldPosition = wallTileGameData.TilePosition;
-				var centerNodePosition = new Vector2(tileWorldPosition.x + 0.5f, tileWorldPosition.y + 0.5f);
-			
-				NodeGraphUtility.SetNodeToWalkable(centerNodePosition, environmentToDeserialize, false);
 			}
 			
 			deserializedChunks.Add(data.ChunkPosition, chunk);

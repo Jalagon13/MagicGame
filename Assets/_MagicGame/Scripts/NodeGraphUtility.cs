@@ -111,8 +111,8 @@ public static class NodeGraphUtility
 	
 	public static void SetNodeToWalkable(Vector2 centerNodePosition, EnvironmentID environment, bool isWalkable)
 	{
-		var node = GetNodeAtPosition(centerNodePosition, environment);
-		node.Walkable = isWalkable;
+		// var node = GetNodeAtPosition(centerNodePosition, environment);
+		// node.Walkable = isWalkable;
 	}
 
 	private static GraphNode GetNodeAtPosition(Vector3 worldPosition, EnvironmentID environment)
