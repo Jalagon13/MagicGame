@@ -82,7 +82,7 @@ public class ObjectManager : NetworkBehaviour
 	public void PlaceObject(Vector2Int position, WorldObject worldObject, EnvironmentID environmentToPlaceIn)
 	{
 		byte assetID = GameManager.Instance.GetByteIDFromWorldObject(worldObject);
-	
+		Debug.Log("a");
 		PlaceResourceObjectServerRpc(position, assetID, environmentToPlaceIn);
 	}
 
@@ -92,18 +92,18 @@ public class ObjectManager : NetworkBehaviour
 		// While on server, add the data to chunks
 		WorldObject asset = GameManager.Instance.GetWorldObjectFromID(assetID);
 		ChunkManager.Instance.AddObjectDataToChunk(position, asset, environmentToPlaceIn);
-		
+		Debug.Log("b");
 		HandleObjectVisualsClientRpc(position, assetID, environmentToPlaceIn);
 	}
 
 	[Rpc(SendTo.ClientsAndHost)]
 	private void HandleObjectVisualsClientRpc(Vector2Int position, byte assetID, EnvironmentID objectEnvironment)
 	{
-		if(objectEnvironment == Player.LocalClientInstance.PlayerEnvironment.Value && ObjectPositionInLoadedChunks(position))
+		if(objectEnvironment == Player.LocalClientInstance.PlayerEnvironment.Value /* && ObjectPositionInLoadedChunks(position) */)
 		{
 			// Visually place it down for everyone
 			WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);
-		
+			Debug.Log("c");
 			GameObject placedAsset = Instantiate(worldAsset.gameObject, (Vector2)position, Quaternion.identity);
 			placedAsset.GetComponent<WorldObject>().SetPlacedDownByPlayer(true);
 		
