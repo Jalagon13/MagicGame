@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-// using Pathfinding;
-using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -17,6 +15,8 @@ public class ChunkNetworkManager : NetworkBehaviour
 	{
 		var chunkData = ChunkManager.Instance.GetChunkData(environmentToRequest, chunkPosition);
 		var syncChunkData = ConvertToSyncChunkData(chunkData);
+		
+		Pathfinding.Instance.AddPathfindingTiles(chunkPosition, chunkData, environmentToRequest);
 		
 		SendChunkDataToClientRpc(syncChunkData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
 	}

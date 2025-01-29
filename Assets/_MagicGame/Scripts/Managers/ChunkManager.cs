@@ -113,15 +113,7 @@ public class ChunkManager : NetworkBehaviour
 
 	private void LoadChunk(Vector2Int chunkPos)
 	{
-		if(IsHost)
-		{
-			ChunkGameData chunkToLoad = GetChunkData(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
-			InvokeOnLoadChunk(chunkToLoad);
-		}
-		else
-		{
-			_chunkNetworkManager.RequestChunkData(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
-		}
+		_chunkNetworkManager.RequestChunkData(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
 	}
 
 	private void UnloadChunk(Vector2Int chunkPos)
@@ -129,7 +121,7 @@ public class ChunkManager : NetworkBehaviour
 		if(_loadedChunks.ContainsKey(chunkPos))
 		{
 			InvokeOnUnloadChunk(_loadedChunks[chunkPos]);
-			PathfindingManager.Instance.RequestUnloadChunk(chunkPos);
+			Pathfinding.Instance.RequestUnloadChunk(chunkPos);
 		}
 	}
 
@@ -172,7 +164,6 @@ public class ChunkManager : NetworkBehaviour
 					return null;
 				}
 				
-				// PathfindingManager.Instance.UpdatePathfinding(chunkPosition, _forestChunks[chunkPosition], environment);
 				return _forestChunks[chunkPosition];
 			case EnvironmentID.Cave:
 			
@@ -182,7 +173,6 @@ public class ChunkManager : NetworkBehaviour
 					return null;
 				}
 				
-				// PathfindingManager.Instance.UpdatePathfinding(chunkPosition, _caveChunks[chunkPosition], environment);
 				return _caveChunks[chunkPosition];
 		}
 		
