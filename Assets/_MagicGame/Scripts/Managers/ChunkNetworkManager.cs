@@ -7,16 +7,17 @@ public class ChunkNetworkManager : NetworkBehaviour
 {
 	public void RequestChunkData(EnvironmentID environmentToRequest, Vector2Int chunkPosition)
 	{
-		RequestChunkDataServerRpc(environmentToRequest, chunkPosition);
+		var clientId = Player.LocalClientInstance.OwnerClientId;
+		RequestChunkDataServerRpc(clientId, environmentToRequest, chunkPosition);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RequestChunkDataServerRpc(EnvironmentID environmentToRequest, Vector2Int chunkPosition, RpcParams rpcParams = default)
+	private void RequestChunkDataServerRpc(ulong clientId, EnvironmentID environmentToRequest, Vector2Int chunkPosition, RpcParams rpcParams = default)
 	{
 		var chunkData = ChunkManager.Instance.GetChunkData(environmentToRequest, chunkPosition);
 		var syncChunkData = ConvertToSyncChunkData(chunkData);
 		
-		Pathfinding.Instance.AddPathfindingTiles(chunkPosition, chunkData, environmentToRequest);
+		Pathfinding.Instance.UpdateChunkPathfinding(chunkPosition, chunkData, environmentToRequest, clientId);
 		
 		SendChunkDataToClientRpc(syncChunkData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
 	}

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -7,6 +8,10 @@ public class Pathfinding : NetworkBehaviour
 {
 	public static Pathfinding Instance { get; private set; }
 	
+	[SerializeField] private TileBase _walkableTile;
+	
+	private HashSet<Vector2Int> _loadedForestPathfindingChunks = new();
+	private Dictionary<ulong, HashSet<Vector2Int>> _playerToChunks = new(); // Keeps track of chunks loaded by player using clientId
 	private Tilemap _pathfindingTilemap;
 	
 	private void Awake()
@@ -14,56 +19,137 @@ public class Pathfinding : NetworkBehaviour
 		Instance = this;
 		_pathfindingTilemap = GetComponent<Tilemap>();
 	}
-	
-	public void AddPathfindingTiles(Vector2Int chunkPos, ChunkGameData chunkGameData, EnvironmentID environment)
+
+	public void OnClientConnected(ulong clientId)
 	{
-		Debug.Log($"Updating pathfinding for chunk {chunkPos}");
+		if(!_playerToChunks.ContainsKey(clientId))
+		{
+			Debug.Log($"Creating player {clientId}'s pathfinding chunks list");
+			_playerToChunks.Add(clientId, new());
+		}
+	}
+
+	public void OnClientDisconnected(ulong clientId)
+	{
+		if(_playerToChunks.ContainsKey(clientId))
+		{
+			Debug.Log($"Removing player {clientId}'s pathfinding chunks list");
+			_playerToChunks.Remove(clientId);
+			
+			// Loop through all chunks this player has loaded and try to remove them from the pathfinding tilemap
+			foreach (Vector2Int chunkPos in _playerToChunks[clientId])
+			{
+				if(!IsChunkInUse(chunkPos))
+				{
+					RemovePathfindingForChunk(chunkPos);
+			
+					_loadedForestPathfindingChunks.Remove(chunkPos);
+				}
+			}
+		}
 	}
 	
-	public void RequestUnloadChunk(Vector2Int chunkPos)
+	public bool IsPositionOnWalkableTile(Vector2 position)
 	{
-		RequestUnloadChunkServerRpc(chunkPos);
+		Vector3Int tilePosition = Vector3Int.FloorToInt(position);
+		// If a tile exists on this tilemap at this location it is walkable.
+		return _pathfindingTilemap.HasTile(tilePosition);
+	}
+
+	public void UpdateChunkPathfinding(Vector2Int chunkPos, ChunkGameData chunkGameData, EnvironmentID environment, ulong clientId)
+	{
+		// No matter what, add this chunk to this player's chunk list
+		_playerToChunks[clientId].Add(chunkPos);
+	
+		if(!_loadedForestPathfindingChunks.Contains(chunkPos))
+		{
+			PopulatePathfindingTilemap(chunkGameData);
+			
+			_loadedForestPathfindingChunks.Add(chunkGameData.ChunkPosition);
+		}
+	}
+
+	private void PopulatePathfindingTilemap(ChunkGameData chunkGameData)
+	{
+		for (int x = 0; x < ChunkManager.CHUNK_SIZE; x++)
+		{
+			for (int y = 0; y < ChunkManager.CHUNK_SIZE; y++)
+			{
+				// Get the world position of each tile in the chunk
+				int tilePosX = chunkGameData.ChunkPosition.x * ChunkManager.CHUNK_SIZE + x;
+				int tilePosY = chunkGameData.ChunkPosition.y * ChunkManager.CHUNK_SIZE + y;
+				Vector2Int tileWorldPosition = new(tilePosX, tilePosY);
+				
+				bool isWalkable = CheckTileWalkable(tileWorldPosition, chunkGameData.WallTileGameDataList);
+				
+				_pathfindingTilemap.SetTile((Vector3Int)tileWorldPosition, isWalkable ? _walkableTile : null);
+			}
+		}
+	}
+
+	private bool CheckTileWalkable(Vector2Int tileWorldPosition, List<TileGameData> wallTileGameDataList)
+	{
+		foreach (var wallTileGameData in wallTileGameDataList)
+		{
+			var wallTilePosition = wallTileGameData.TilePosition;
+			
+			if(wallTilePosition == tileWorldPosition)
+			{
+				return false;
+			}
+		}
+	
+		return true;
+	}
+	
+	public void RequestUnloadChunk(Vector2Int chunkPos, ulong clientId)
+	{
+		RequestUnloadChunkServerRpc(chunkPos, clientId);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RequestUnloadChunkServerRpc(Vector2Int chunkPos)
+	private void RequestUnloadChunkServerRpc(Vector2Int chunkPos, ulong clientId)
 	{
-		if(IsChunkInUse(chunkPos))
+		_playerToChunks[clientId].Remove(chunkPos);
+	
+		if(!IsChunkInUse(chunkPos))
 		{
-			return;
+			RemovePathfindingForChunk(chunkPos);
+			
+			_loadedForestPathfindingChunks.Remove(chunkPos);
 		}
-		
-		InvisibleTilemapRemoveChunk(chunkPos);
-		Bounds bounds = GetChunkBounds(chunkPos);
 	}
 
 	private bool IsChunkInUse(Vector2Int chunkPos)
 	{
-		return true;
-	}
-
-	private void InvisibleTilemapRemoveChunk(Vector2Int chunkPos)
-	{
+		// If a player still has chunk active
+		foreach (var kvp in _playerToChunks)
+		{
+			var chunksLoaded = kvp.Value;
+			
+			if(chunksLoaded.Contains(chunkPos))
+			{
+				// This chunk is still in use by this player, return true
+				return true;
+			}
+		}
 		
+		return false;
 	}
-	
-	private Bounds GetChunkBounds(Vector2Int chunkPosition)
+
+	private void RemovePathfindingForChunk(Vector2Int chunkPos)
 	{
-		// Chunk size in tiles
-		int chunkSize = ChunkManager.CHUNK_SIZE;
-
-		// Calculate the world position of the bottom-left corner of the chunk
-		Vector3 worldPosition = new Vector3(chunkPosition.x * chunkSize, chunkPosition.y * chunkSize, 0);
-
-		// Define the bounds using the world position and chunk size
-		Bounds bounds = new Bounds();
-
-		// Center of the bounds is the middle of the chunk
-		bounds.center = worldPosition + new Vector3(chunkSize / 2f, chunkSize / 2f, 0);
-
-		// Size of the bounds is the chunk size in X and Y, with a small Z depth
-		bounds.size = new Vector3(chunkSize, chunkSize, 1f);
-
-		return bounds;
+		for (int x = 0; x < ChunkManager.CHUNK_SIZE; x++)
+		{
+			for (int y = 0; y < ChunkManager.CHUNK_SIZE; y++)
+			{
+				// Get the world position of each tile in the chunk
+				int tilePosX = chunkPos.x * ChunkManager.CHUNK_SIZE + x;
+				int tilePosY = chunkPos.y * ChunkManager.CHUNK_SIZE + y;
+				Vector2Int tileWorldPosition = new(tilePosX, tilePosY);
+				
+				_pathfindingTilemap.SetTile((Vector3Int)tileWorldPosition, null);
+			}
+		}
 	}
 }

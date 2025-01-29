@@ -51,18 +51,29 @@ public class GameManager : NetworkBehaviour
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if(NetworkManager.Singleton == null) return;
+		
 		NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+		NetworkManager.Singleton.OnClientConnectedCallback += Pathfinding_OnClientConnected;
+		NetworkManager.Singleton.OnClientDisconnectCallback += Pathfinding_OnClientDisconnected;
 		
 		if(Loader.IsHost)
 		{
-			Debug.Log("Host");
 			NetworkManager.Singleton.StartHost();
 		}
 		else
 		{
-			Debug.Log("Client");
 			NetworkManager.Singleton.StartClient();
 		}
+	}
+
+	private void Pathfinding_OnClientConnected(ulong obj)
+	{
+		Pathfinding.Instance.OnClientConnected(obj);
+	}
+
+	private void Pathfinding_OnClientDisconnected(ulong obj)
+	{
+		Pathfinding.Instance.OnClientDisconnected(obj);
 	}
 
 	private void OnClientConnected(ulong clientId)

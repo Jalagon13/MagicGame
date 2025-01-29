@@ -121,7 +121,6 @@ public class ChunkManager : NetworkBehaviour
 		if(_loadedChunks.ContainsKey(chunkPos))
 		{
 			InvokeOnUnloadChunk(_loadedChunks[chunkPos]);
-			Pathfinding.Instance.RequestUnloadChunk(chunkPos);
 		}
 	}
 
