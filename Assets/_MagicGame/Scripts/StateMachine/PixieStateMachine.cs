@@ -1,6 +1,5 @@
 using System;
 using FMODUnity;
-using Pathfinding;
 using UnityEngine;
 
 public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
@@ -22,7 +21,6 @@ public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
 	
 	public Knockback KnockBack { get; private set; }
 	private Npc _npc;
-	public GridGraph GridGraph { get; private set; }
 	public Rigidbody2D RB { get; private set; }
 	
 	public override void OnNetworkSpawn()
@@ -43,9 +41,6 @@ public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
 			_npc.OnNpcKilled += OnNpcKilled;
 			_npc.OnNpcDamged += OnNpcDamged;
 		
-			// Set up the environment of the NPC so it knows how to pathfind itself
-			GridGraph = NodeGraphUtility.GetGridGraph(GetComponent<NpcNetworkComponent>().GetNpcEnvironment());
-			
 			// Populate dictionary with livestock states
 			_states[PixieState.Attacking] = new PixieAttackState(PixieState.Attacking, this);
 			_currentState = _states[PixieState.Attacking];

@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Pathfinding;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class SaveSystem : MonoBehaviour
 {
@@ -216,8 +213,6 @@ public class SaveSystem : MonoBehaviour
 			
 			// Deserialize JSON data into SceneData object
 			_environmentFileData = JsonUtility.FromJson<EnvironmentFileData>(json);
-			
-			AstarPath.active.Scan();
 			
 			// Dispatch the data
 			DeserializeChunkData(environmentToDeserialize);

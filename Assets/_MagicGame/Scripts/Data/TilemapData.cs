@@ -74,10 +74,6 @@ public class TilemapData : NetworkBehaviour
 					// Remove the tile if destroyed
 					_syncTileHPDataNetworkList.RemoveAt(i);
 
-					// Make node walkable
-					var centerNodePosition = new Vector2(position.x + 0.5f, position.y + 0.5f);
-					NodeGraphUtility.SetNodeToWalkable(centerNodePosition, environment, true);
-					
 					// Trigger tile destruction logic
 					DestroyTile(position, syncTileHpData.TileID, environment);
 				}

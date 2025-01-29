@@ -29,7 +29,6 @@ public class PathfindingManager : NetworkBehaviour
 	public void UpdateAstarGrid(Vector2Int chunkPos)
 	{
 		Bounds bounds = GetChunkBounds(chunkPos);
-		AstarPath.active.UpdateGraphs(bounds);
 	}
 	
 	private Bounds GetChunkBounds(Vector2Int chunkPosition)
@@ -67,7 +66,6 @@ public class PathfindingManager : NetworkBehaviour
 		
 		InvisibleTilemapRemoveChunk(chunkPos);
 		Bounds bounds = GetChunkBounds(chunkPos);
-		AstarPath.active.UpdateGraphs(bounds);
 	}
 
 	private bool IsChunkInUse(Vector2Int chunkPos)

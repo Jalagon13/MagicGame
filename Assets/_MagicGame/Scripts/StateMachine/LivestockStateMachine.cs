@@ -2,12 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
-using Pathfinding;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 // Passively wander around and idle. Will flee when hit
-[RequireComponent(typeof(AIPath))]
 public class LivestockStateMachine : StateMachine<LivestockStateMachine.LivestockState>
 {
 	public enum LivestockState
@@ -35,10 +33,8 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 	private Rigidbody2D _rb;
 	private CardinalDirection _previousDirection;
 	private CardinalDirection _currentDirection;
-	private GridGraph _gridGraph;
 
 	public Vector3 ThreatSource { get; private set; }
-	public AIPath Agent { get; private set; }
 	public CardinalDirection LookDirection { get; private set; }
 	public int MinIdleTime => _idleTimeRange.x;
 	public int MaxIdleTime => _idleTimeRange.y;
@@ -46,14 +42,9 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 	public int FleeSpeed => _fleeSpeed;
 	public int WanderSpeed => _wanderSpeed;
 	public bool IsMoving { get; set; }
-	public GridGraph NpcGridGraph => _gridGraph;
 
 	public override void OnNetworkSpawn()
 	{
-		// Get AIPath component for movement
-		Agent = GetComponent<AIPath>();
-		Agent.maxSpeed = _wanderSpeed;
-	
 		if(IsServer)
 		{
 			// Populate dictionary with livestock states
@@ -75,10 +66,6 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 			_npc = GetComponent<Npc>();
 			_npc.OnNpcKilled += OnNpcKilled;
 			_npc.OnNpcDamged += OnNpcDamaged;
-		
-			// Set up the environment of the NPC so it knows how to pathfind itself
-			var npcEnvironment = GetComponent<NpcNetworkComponent>().GetNpcEnvironment();
-			_gridGraph = NodeGraphUtility.GetGridGraph(npcEnvironment);
 		}
 	
 		base.OnNetworkSpawn();
@@ -97,34 +84,11 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 		{
 			base.FixedUpdate();
 		}
-	
-		// Make it check the velocity of the game object itself somehow
-		if(Agent.desiredVelocity.magnitude > 0.1f)
-		{
-			// Get the current velocity and convert it to a cardinal direction.
-			_currentDirection = GetCardinalDirection(Agent.desiredVelocity);
-
-			// Check if the direction has changed.
-			if (_currentDirection != _previousDirection)
-			{
-				// Call a method to handle the direction change.
-				OnDirectionChange(_currentDirection);
-
-				// Update the previous direction to the current one.
-				_previousDirection = _currentDirection;
-			}
-		} 
 	}
 	
 	private void OnNpcKilled(object sender, EventArgs e)
 	{
 		TransitionToState(LivestockState.Idle);
-		Agent.canMove = false;
-		Agent.canSearch = false;
-		if(Agent.hasPath)
-		{
-			Agent.SetPath(null);
-		}
 		
 		SoundManager.Instance.PlayOneShot(LivestockDeath, transform.position);
 	}
@@ -142,13 +106,11 @@ public class LivestockStateMachine : StateMachine<LivestockStateMachine.Livestoc
 	
 	private void Knockback_OnKnockbackStart(object sender, Knockback.KnockbackEventArgs e)
 	{
-		Agent.enabled = false;
+		
 	}
 	
 	private void Knockback_OnKnockbackEnd(object sender, Knockback.KnockbackEventArgs e)
 	{
-		Agent.enabled = true;
-		
 		ThreatSource = e.KnockBackerPosition;
 		
 		TransitionToState(LivestockState.Fleeing);

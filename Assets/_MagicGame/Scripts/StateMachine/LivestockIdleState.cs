@@ -21,11 +21,6 @@ public class LivestockIdleState : BaseState<LivestockStateMachine.LivestockState
         _ctx.IsMoving = false;
         _ctx.OnDirectionChange(_ctx.LookDirection);
 		
-        if(_ctx.Agent.hasPath)
-        {
-            _ctx.Agent.SetPath(null);
-        }
-		
         _ctx.StartCoroutine(PlayIdleDuration());
     }
 

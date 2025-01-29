@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using MoreMountains.Tools;
-using Pathfinding;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;

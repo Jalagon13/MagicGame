@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Pathfinding;
 
 public class LivestockFleeingState : BaseState<LivestockStateMachine.LivestockState>
 {
@@ -23,12 +22,11 @@ public class LivestockFleeingState : BaseState<LivestockStateMachine.LivestockSt
         _ctx.IsMoving = true;
         _ctx.OnDirectionChange(_ctx.LookDirection);
         _isSafe = false;
-        _ctx.Agent.maxSpeed = _ctx.FleeSpeed;
     }
 
     public override void ExitState()
     {
-        _ctx.Agent.maxSpeed = _ctx.WanderSpeed;
+        
     }
 
     public override LivestockStateMachine.LivestockState GetNextState()
@@ -46,7 +44,6 @@ public class LivestockFleeingState : BaseState<LivestockStateMachine.LivestockSt
         {
             Vector3 fleeDirection = (_initialThreatenedPosition - _ctx.ThreatSource).normalized;
             Vector3 newPos = _ctx.transform.position + (fleeDirection * _safeDistance);
-            _ctx.Agent.destination = newPos;
             _isSafe = false;
         }
         else
