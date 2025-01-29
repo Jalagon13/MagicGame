@@ -75,7 +75,7 @@ public class Environment : NetworkBehaviour
 			_wallTilemapData.GetTilemap().SetTile(tilePosV3Int, null);
 		}
 		
-		Pathfinding.Instance.RequestUnloadChunk(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId);
+		Pathfinding.Instance.RequestUnloadChunk(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.PlayerEnvironment.Value);
 	}
 	
 	// Handles placing the visual of the tile, NOT the tile data that is being synced
