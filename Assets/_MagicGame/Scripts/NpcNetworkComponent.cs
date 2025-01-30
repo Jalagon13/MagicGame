@@ -13,7 +13,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 	private bool _npcIsBeingRemoved;
 	private Npc _npc;
 	private byte _npcId;
-	private EnvironmentID _npcEnvironment;
+	public EnvironmentID NpcEnvironment { get; private set; }
 	private GameObject _npcGameObject;
 	private Collider2D _npcCollider;
 
@@ -61,11 +61,6 @@ public class NpcNetworkComponent : NetworkBehaviour
 	public void SetNpcId(byte npcId)
 	{
 		_npcId = npcId;
-	}
-	
-	public void SetNpcEnvironment(EnvironmentID environment)
-	{
-		_npcEnvironment = environment;
 	}
 
 	private bool CheckIfInSpawnZone(ulong clientId)
@@ -157,7 +152,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 	{
 		var clientEnvironment = NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().PlayerEnvironment.Value;
 	
-		return clientEnvironment == _npcEnvironment;
+		return clientEnvironment == NpcEnvironment;
 	}
 
 	private void UpdateDespawnTimer()
@@ -226,17 +221,24 @@ public class NpcNetworkComponent : NetworkBehaviour
 		
 		return false;
 	}
-	
-	public EnvironmentID GetNpcEnvironment()
-	{
-		return _npcEnvironment;
-	}
 
 	private void DespawnNpc()
 	{
 		// Debug.Log($"[Client {NetworkManager.LocalClientId}] Despawning NPC.");
 		_npcIsBeingRemoved = true;
 		NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, false);
+	}
+	
+	public void SetEnvironment(EnvironmentID environment)
+	{
+		NpcEnvironment = environment;
+		
+		// Find walldetectorcollider and populate it
+		var wallDetectorCollider = GetComponentInChildren<WallDetectorCollider>();
+		if(wallDetectorCollider != null)
+		{
+			wallDetectorCollider.SetEnvironment(environment);
+		}
 	}
 
 	public override void OnNetworkDespawn()

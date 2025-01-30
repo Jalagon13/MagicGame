@@ -4,13 +4,32 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+public class PathfindingData
+{
+	public HashSet<Vector2Int> Chunks { get; }
+	public Tilemap WallColliderTm { get; }
+
+	public PathfindingData(HashSet<Vector2Int> chunks, Tilemap tilemap)
+	{
+		Chunks = chunks;
+		WallColliderTm = tilemap;
+	}
+}
+
 public class Pathfinding : NetworkBehaviour
 {
 	public static Pathfinding Instance { get; private set; }
+	public event EventHandler<PathfindingTilemapEventArgs> OnPathfindingTilemapCreated;
+	public class PathfindingTilemapEventArgs : EventArgs
+	{
+		public Collider2D TilemapCollider;
+		public EnvironmentID Environment;
+	}
 	
-	[SerializeField] private TileBase _walkableTile;
+	[SerializeField] private TileBase _wallTile;
+	[SerializeField] private Tilemap _wallColliderTmPrefab;
 	
-	private Dictionary<EnvironmentID, HashSet<Vector2Int>> _environmentToLoadedPathfindingChunks = new();
+	private Dictionary<EnvironmentID, PathfindingData> _environmentToLoadedPathfindingChunks = new();
 	private Dictionary<ulong, HashSet<Vector2Int>> _playerToChunks = new(); // Keeps track of chunks loaded by player using clientId
 	
 	private void Awake()
@@ -23,12 +42,12 @@ public class Pathfinding : NetworkBehaviour
 		GameInput.Instance.OnResearchMenuButton += GameInput_OnResearchMenuButton;
 	}
 
-    private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
-    {
-		IsPositionOnWalkableTile(ActionManager.MouseWorldPosition, Player.LocalClientInstance.PlayerEnvironment.Value);
-    }
+	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
+	{
+		// IsPositionOnWalkableTile(ActionManager.MouseWorldPosition, Player.LocalClientInstance.PlayerEnvironment.Value);
+	}
 
-    public void OnClientConnected(ulong clientId)
+	public void OnClientConnected(ulong clientId)
 	{
 		if(!_playerToChunks.ContainsKey(clientId))
 		{
@@ -51,12 +70,12 @@ public class Pathfinding : NetworkBehaviour
 			{
 				if(!IsChunkInUse(chunkPos, environment))
 				{
-					_environmentToLoadedPathfindingChunks[environment].Remove(chunkPos);
+					// _environmentToLoadedPathfindingChunks[environment].Remove(chunkPos);
 					
-					if(_environmentToLoadedPathfindingChunks[environment].Count <= 0)
-					{
-						_environmentToLoadedPathfindingChunks.Remove(environment);
-					}
+					// if(_environmentToLoadedPathfindingChunks[environment].Count <= 0)
+					// {
+					// 	_environmentToLoadedPathfindingChunks.Remove(environment);
+					// }
 				}
 			}
 		}
@@ -77,42 +96,42 @@ public class Pathfinding : NetworkBehaviour
 		int chunkY = Mathf.FloorToInt(position.y / ChunkManager.CHUNK_SIZE);
 		var chunkPos = new Vector2Int(chunkX, chunkY);
 		
-		if(_environmentToLoadedPathfindingChunks[environment].Contains(chunkPos))
-		{
-			// Loop through all the tile positions of this chunk
-			for (int x = 0; x < ChunkManager.CHUNK_SIZE; x++)
-			{
-				for (int y = 0; y < ChunkManager.CHUNK_SIZE; y++)
-				{
-					// Find the tilePosition and return whether it is walkable or not
-					int tilePosX = chunkPos.x * ChunkManager.CHUNK_SIZE + x;
-					int tilePosY = chunkPos.y * ChunkManager.CHUNK_SIZE + y;
-					Vector2Int chunkTileWorldPosition = new(tilePosX, tilePosY);
+		// if(_environmentToLoadedPathfindingChunks[environment].Contains(chunkPos))
+		// {
+		// 	// Loop through all the tile positions of this chunk
+		// 	for (int x = 0; x < ChunkManager.CHUNK_SIZE; x++)
+		// 	{
+		// 		for (int y = 0; y < ChunkManager.CHUNK_SIZE; y++)
+		// 		{
+		// 			// Find the tilePosition and return whether it is walkable or not
+		// 			int tilePosX = chunkPos.x * ChunkManager.CHUNK_SIZE + x;
+		// 			int tilePosY = chunkPos.y * ChunkManager.CHUNK_SIZE + y;
+		// 			Vector2Int chunkTileWorldPosition = new(tilePosX, tilePosY);
 					
-					if(chunkTileWorldPosition == tilePositionToCheck)
-					{
-						// Found it, check if it is walkable
-						bool isWalkable = CheckTileWalkable(tilePositionToCheck, ChunkManager.Instance.GetChunkData(environment, chunkPos).WallTileGameDataList);
+		// 			if(chunkTileWorldPosition == tilePositionToCheck)
+		// 			{
+		// 				// Found it, check if it is walkable
+		// 				bool isWalkable = CheckTileWalkable(tilePositionToCheck, ChunkManager.Instance.GetChunkData(environment, chunkPos).WallTileGameDataList);
 						
-						if(isWalkable)
-						{
-							Debug.LogWarning($"This position is on a walkable tile");
-						}
-						else
-						{
-							Debug.LogWarning($"This position is NOT on a walkable tile. Wall tile");
-						}
+		// 				if(isWalkable)
+		// 				{
+		// 					Debug.LogWarning($"This position is on a walkable tile");
+		// 				}
+		// 				else
+		// 				{
+		// 					Debug.LogWarning($"This position is NOT on a walkable tile. Wall tile");
+		// 				}
 						
-						return isWalkable;
-					}
-				}
-			}
-		}
-		else
-		{
-			Debug.LogWarning($"Position is not part of a loaded chunk");
-			return false;
-		}
+		// 				return isWalkable;
+		// 			}
+		// 		}
+		// 	}
+		// }
+		// else
+		// {
+		// 	Debug.LogWarning($"Position is not part of a loaded chunk");
+		// 	return false;
+		// }
 		
 		Debug.LogWarning($"Found chunk pos but position is not in this chunk. This message should never appear");
 		return false;
@@ -140,16 +159,42 @@ public class Pathfinding : NetworkBehaviour
 
 		if(_environmentToLoadedPathfindingChunks.ContainsKey(environment))
 		{
-			if(!_environmentToLoadedPathfindingChunks[environment].Contains(chunkPos))
+			if(!_environmentToLoadedPathfindingChunks[environment].Chunks.Contains(chunkPos))
 			{
-				_environmentToLoadedPathfindingChunks[environment].Add(chunkGameData.ChunkPosition);
+				AddWallColliderChunk(environment, chunkGameData);
 			}
 		}
 		else
 		{
-			_environmentToLoadedPathfindingChunks.Add(environment, new());
-			_environmentToLoadedPathfindingChunks[environment].Add(chunkGameData.ChunkPosition);
+			_environmentToLoadedPathfindingChunks.Add(environment, new PathfindingData(new(), CreateWallColliderTilemap(environment)));
+			AddWallColliderChunk(environment, chunkGameData);
 		}
+	}
+	
+	private void AddWallColliderChunk(EnvironmentID environment, ChunkGameData chunkGameData)
+	{
+		_environmentToLoadedPathfindingChunks[environment].Chunks.Add(chunkGameData.ChunkPosition);
+		
+		// Loop through all the wall data and inst a wall tile for it on the tilemap
+		foreach (TileGameData wallTileGameData in chunkGameData.WallTileGameDataList)
+		{
+			_environmentToLoadedPathfindingChunks[environment].WallColliderTm.SetTile((Vector3Int)wallTileGameData.TilePosition, _wallTile);
+		}
+	}
+
+	private Tilemap CreateWallColliderTilemap(EnvironmentID environment)
+	{
+		var wallColliderTm = Instantiate(_wallColliderTmPrefab);
+		wallColliderTm.transform.SetParent(transform);
+		wallColliderTm.gameObject.name = $"{environment}{_wallColliderTmPrefab.name}";
+		
+		OnPathfindingTilemapCreated?.Invoke(this, new PathfindingTilemapEventArgs
+		{
+			TilemapCollider = wallColliderTm.GetComponent<TilemapCollider2D>(),
+			Environment = environment
+		});
+		
+		return wallColliderTm;
 	}
 
 	public void RequestUnloadChunk(Vector2Int chunkPos, ulong clientId, EnvironmentID environment)
@@ -164,15 +209,41 @@ public class Pathfinding : NetworkBehaviour
 	
 		if(!IsChunkInUse(chunkPos, environment))
 		{
-			_environmentToLoadedPathfindingChunks[environment].Remove(chunkPos);
+			_environmentToLoadedPathfindingChunks[environment].Chunks.Remove(chunkPos);
 			
-			if(_environmentToLoadedPathfindingChunks[environment].Count <= 0)
+			RemoveWallColliderChunk(environment, chunkPos);
+			
+			if(_environmentToLoadedPathfindingChunks[environment].Chunks.Count <= 0)
 			{
+				Destroy(_environmentToLoadedPathfindingChunks[environment].WallColliderTm.gameObject);
 				_environmentToLoadedPathfindingChunks.Remove(environment);
 			}
 		}
 	}
 
+	private void RemoveWallColliderChunk(EnvironmentID environment, Vector2Int chunkPos)
+	{
+		Tilemap wallColliderTm = _environmentToLoadedPathfindingChunks[environment].WallColliderTm;
+		
+		// Loop through all positions inside this chunk
+		for (int x = 0; x < ChunkManager.CHUNK_SIZE; x++)
+		{
+			for (int y = 0; y < ChunkManager.CHUNK_SIZE; y++)
+			{
+				// Get the world position of each tile in the chunk
+				int tilePosX = chunkPos.x * ChunkManager.CHUNK_SIZE + x;
+				int tilePosY = chunkPos.y * ChunkManager.CHUNK_SIZE + y;
+				Vector3Int tileWorldPosition = new(tilePosX, tilePosY);
+				
+				if(wallColliderTm.HasTile(tileWorldPosition))
+				{
+					wallColliderTm.SetTile(tileWorldPosition, null);
+				}
+			}
+		}
+	}
+
+	// Checks if another player needs the pathfinding for this chunk
 	private bool IsChunkInUse(Vector2Int chunkPos, EnvironmentID environment)
 	{
 		// If a player still has chunk active

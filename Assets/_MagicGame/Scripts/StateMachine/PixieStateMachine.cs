@@ -15,7 +15,7 @@ public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
 	[field: SerializeField] public float MoveForce { get; private set; }
 	[Tooltip("Bias toward moving toward the player. Higher values mean stronger bias.")]
 	[field: SerializeField] public float TowardPlayerBias { get; private set; }
-	[field: SerializeField] public NpcWallCollider WallCollider { get; private set; }
+	[field: SerializeField] public WallDetectorCollider WallCollider { get; private set; }
 	[field: SerializeField] public EventReference PixieDamaged { get; private set; }
 	[field: SerializeField] public EventReference PixieDeath { get; private set; }
 	
@@ -55,7 +55,14 @@ public class PixieStateMachine : StateMachine<PixieStateMachine.PixieState>
 	
 		base.Start();
 	}
+
+	protected override void FixedUpdate()
+	{
+		if(!IsServer) return;
 	
+		base.FixedUpdate();
+	}
+
 	private void OnNpcDamged(object sender, EventArgs e)
 	{
 		SoundManager.Instance.PlayOneShot(PixieDamaged, transform.position);

@@ -7,10 +7,10 @@ using UnityEngine;
 public class NpcManager : NetworkBehaviour
 {
 	public static NpcManager Instance { get; private set; }
-	public static int SPAWN_ZONE_WIDTH = 48;
-	public static int SPAWN_ZONE_HEIGHT = 28;
-	public static int NO_SPAWN_ZONE_WIDTH = 35;
-	public static int NO_SPAWN_ZONE_HEIGHT = 20;
+	public static int SPAWN_ZONE_WIDTH = 48; // Outer zone from cam frustum
+	public static int SPAWN_ZONE_HEIGHT = 28; // Outer zone from cam frustum
+	public static int NO_SPAWN_ZONE_WIDTH = 35; // Camera Frustum
+	public static int NO_SPAWN_ZONE_HEIGHT = 20; // Camera Frustum
 	
 	public event EventHandler<OnNpcSpawnEventArgs> OnNpcSpawn;
 	public class OnNpcSpawnEventArgs : EventArgs 
@@ -47,7 +47,7 @@ public class NpcManager : NetworkBehaviour
 
 	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
 	{
-		// TryToSpawnNpc(ActionManager.MouseWorldPosition, _testDummyNpcSO);
+		TryToSpawnNpc(ActionManager.MouseWorldPosition, _testDummyNpcSO);
 	}
 
 	private void NetworkManager_OnClientConnectedCallback(ulong clientId)
@@ -124,7 +124,7 @@ public class NpcManager : NetworkBehaviour
 		GameObject npcPrefab = Instantiate(npcSO.Prefab, spawnPosition, Quaternion.identity);
 		
 		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
-		npcNetworkComponent.SetNpcEnvironment(environmentToSpawnIn);
+		npcNetworkComponent.SetEnvironment(environmentToSpawnIn);
 		npcNetworkComponent.SetSpawningClientId(spawningClientId);
 		npcNetworkComponent.SetNpcId(npcId);
 		

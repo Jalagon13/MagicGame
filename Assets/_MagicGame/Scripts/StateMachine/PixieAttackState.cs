@@ -39,7 +39,7 @@ public class PixieAttackState : BaseState<PixieStateMachine.PixieState>
 		}
 	}
 
-	private void OnWallCollide(object sender, NpcWallCollider.WallCollisionEventArgs e)
+	private void OnWallCollide(object sender, WallDetectorCollider.WallCollisionEventArgs e)
 	{
 		// Calculate avoidance direction based on contact point
 		Vector3 contactPoint = e.ContactPoint;
