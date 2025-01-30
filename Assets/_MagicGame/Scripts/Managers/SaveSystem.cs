@@ -25,7 +25,7 @@ public class SaveSystem : MonoBehaviour
 		Instance = this;
 	}
 	
-	public bool EnvironmentDataExists(EnvironmentID environment)
+	public bool EnvironmentDataExists(BiomeType environment)
 	{
 		string path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{environment}_data.json";
 		
@@ -37,10 +37,10 @@ public class SaveSystem : MonoBehaviour
 	[Button("Save current player environment data")]
 	public async void SavePlayer()
 	{
-		await SerializeDataAndWriteToFile(Player.LocalClientInstance.PlayerEnvironment.Value);
+		await SerializeDataAndWriteToFile(Player.LocalClientInstance.CurrentBiome.Value);
 	}
 	
-	public async Task SerializeDataAndWriteToFile(EnvironmentID environmentToSerialize)
+	public async Task SerializeDataAndWriteToFile(BiomeType environmentToSerialize)
 	{
 		IsSerializing = true;
 	
@@ -56,7 +56,7 @@ public class SaveSystem : MonoBehaviour
 		await WriteCurrentEnvironmentDataToFile();
 	}
 	
-	private void SerializeObjectDataOfCurrentEnvironment(EnvironmentID environmentToSerialize)
+	private void SerializeObjectDataOfCurrentEnvironment(BiomeType environmentToSerialize)
 	{
 		// Clear assets
 		_environmentFileData.WorldObjectsList.Clear();
@@ -90,7 +90,7 @@ public class SaveSystem : MonoBehaviour
 		Debug.Log($"<color=orange>Asset Data of </color>{environmentToSerialize}<color=orange> Serialized</color>");
 	}
 	
-	private void SerializeChunkDataOfCurrentEnvironment(EnvironmentID environmentToSerialize)
+	private void SerializeChunkDataOfCurrentEnvironment(BiomeType environmentToSerialize)
 	{
 		// Clear world chunks for new data
 		_environmentFileData.ChunksList.Clear();
@@ -146,7 +146,7 @@ public class SaveSystem : MonoBehaviour
 		Debug.Log($"<color=orange>Chunk Data of </color>{environmentToSerialize}<color=orange> Serialized</color>");
 	}
 
-	private void SerializeChestDataOfCurrentEnvironment(EnvironmentID environmentToSerialize)
+	private void SerializeChestDataOfCurrentEnvironment(BiomeType environmentToSerialize)
 	{
 		_environmentFileData.ChestList.Clear();
 		
@@ -178,13 +178,13 @@ public class SaveSystem : MonoBehaviour
 		string json = JsonUtility.ToJson(_environmentFileData);
 		
 		// Log the saving
-		Debug.Log($"<color=orange>Writing Environment Data of: </color>{Player.LocalClientInstance.PlayerEnvironment.Value}<color=orange> to file...</color>");
+		Debug.Log($"<color=orange>Writing Environment Data of: </color>{Player.LocalClientInstance.CurrentBiome.Value}<color=orange> to file...</color>");
 		
 		// Write JSON data to file asynchronously
 		await File.WriteAllTextAsync(_path, json);
 		
 		// Log the completion
-		Debug.Log($"<color=orange>Environment: </color>{Player.LocalClientInstance.PlayerEnvironment.Value}<color=orange> writing data to file complete!</color>");
+		Debug.Log($"<color=orange>Environment: </color>{Player.LocalClientInstance.CurrentBiome.Value}<color=orange> writing data to file complete!</color>");
 		
 		OnSerializationFinished?.Invoke(this, EventArgs.Empty);
 		
@@ -196,7 +196,7 @@ public class SaveSystem : MonoBehaviour
 	#region Deserialization
 	
 	[Button("Deserialize data of current environment and dispatch updated data to game")]
-	public async Task DeserializeAndDispatchData(EnvironmentID environmentToDeserialize)
+	public async Task DeserializeAndDispatchData(BiomeType environmentToDeserialize)
 	{
 		IsDeserializing = true;
 	
@@ -233,7 +233,7 @@ public class SaveSystem : MonoBehaviour
 		// NTFS: Write condition for non existant path
 	}
 
-	private void DeserializeChunkData(EnvironmentID environmentToDeserialize)
+	private void DeserializeChunkData(BiomeType environmentToDeserialize)
 	{
 		// Unpack chunk data
 		List<ChunkFileData> chunkFileData = _environmentFileData.ChunksList;
@@ -282,7 +282,7 @@ public class SaveSystem : MonoBehaviour
 		return tileGameData;
 	}
 	
-	private void DeserializeObjectData(EnvironmentID environmentToDeserialize)
+	private void DeserializeObjectData(BiomeType environmentToDeserialize)
 	{
 		// Unpack asset data need to make a new list to avoid error that said I was modifying this list as it was being processed
 		List<WorldObjectFileData> worldObjectFileData = new(_environmentFileData.WorldObjectsList);
@@ -301,7 +301,7 @@ public class SaveSystem : MonoBehaviour
 		Debug.Log($"<color=orange>Asset Data of: </color>{environmentToDeserialize}<color=orange> Deserialized</color>");
 	}
 	
-	private void DeserializeChestData(EnvironmentID environmentToDeserialize)
+	private void DeserializeChestData(BiomeType environmentToDeserialize)
 	{
 		List<ChestFileData> chestDataList = new(_environmentFileData.ChestList);
 		ChestManager.Instance.GetChestDataFromEnvironment(environmentToDeserialize).Clear();

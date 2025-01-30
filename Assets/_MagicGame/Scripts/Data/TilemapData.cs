@@ -36,7 +36,7 @@ public class TilemapData : NetworkBehaviour
 		_syncTileHPDataNetworkList = new();
 	}
 
-	public void HitTile(Vector2Int position, int amount, EnvironmentID environment)
+	public void HitTile(Vector2Int position, int amount, BiomeType environment)
 	{
 		// Debug.Log("HitTile callback");
 		var vector3IntPos = new Vector3Int(position.x, position.y);
@@ -53,7 +53,7 @@ public class TilemapData : NetworkBehaviour
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void DamageTileServerRpc(Vector2Int position, byte tileId, ushort incomingDamage, EnvironmentID environment)
+	private void DamageTileServerRpc(Vector2Int position, byte tileId, ushort incomingDamage, BiomeType environment)
 	{
 		// If it doesn't contain an entry, add it and damage it
 		if(!HpDataListContainsPosition(position))
@@ -90,7 +90,7 @@ public class TilemapData : NetworkBehaviour
 		}
 	}
 
-	private void AddTileToNetworkListDamaged(Vector2Int position, byte tileId, ushort damageAmount, EnvironmentID environment)
+	private void AddTileToNetworkListDamaged(Vector2Int position, byte tileId, ushort damageAmount, BiomeType environment)
 	{
 		TileSO tileSO = GameManager.Instance.GetTileSOFromID(tileId);
 		
@@ -115,12 +115,12 @@ public class TilemapData : NetworkBehaviour
 		}
 	}
 	
-	private void DestroyTile(Vector2Int position, byte tileId, EnvironmentID environment)
+	private void DestroyTile(Vector2Int position, byte tileId, BiomeType environment)
 	{
-		ItemSO dropItem = GameManager.Instance.GetTileSOFromID(tileId).DropItem;
-		GameManager.Instance.SpawnItem(dropItem, 3, position);
-		
+		GameManager.Instance.SpawnItem(GameManager.Instance.GetTileSOFromID(tileId).DropItem, 3, position);
 		ChunkManager.Instance.RemoveWallTileDataFromChunk(position, environment);
+		Pathfinding.Instance.RemovePfWallTile(position, environment);
+		
 		DestroyTileClientRpc(position, tileId);
 	}
 
@@ -146,7 +146,7 @@ public class TilemapData : NetworkBehaviour
 	}
 	
 	// NTFS: This could be bugged
-	public void DeleteTile(Vector2Int position, EnvironmentID environment)
+	public void DeleteTile(Vector2Int position, BiomeType environment)
 	{
 		var vector3IntPos = new Vector3Int(position.x, position.y);
 	

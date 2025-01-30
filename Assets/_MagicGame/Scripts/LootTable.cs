@@ -29,18 +29,26 @@ public class LootTable
 	
     public Dictionary<ItemSO, int> GetItemsToSpawn()
     {
-        Dictionary<ItemSO, int> lootReturn = new();
+        Dictionary<ItemSO, int> lootToDrop = new();
 
         foreach (Loot loot in Table)
         {
             if (Random.Range(0, 100) < loot.Chance)
             {
                 int dropAmount = Random.Range(loot.Min, loot.Max + 1);
-                lootReturn.Add(loot.Item, dropAmount);
+
+                if (lootToDrop.TryGetValue(loot.Item, out int existingAmount))
+                {
+                    lootToDrop[loot.Item] = existingAmount + dropAmount;
+                }
+                else
+                {
+                    lootToDrop.Add(loot.Item, dropAmount);
+                }
             }
         }
 
-        return lootReturn;
+        return lootToDrop;
     }
 }
 

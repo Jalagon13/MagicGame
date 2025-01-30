@@ -69,13 +69,13 @@ public class ChestManager : NetworkBehaviour
 		}
 	}
 	
-	public Dictionary<Vector2Int, List<ChestItemData>> GetChestDataFromEnvironment(EnvironmentID environment)
+	public Dictionary<Vector2Int, List<ChestItemData>> GetChestDataFromEnvironment(BiomeType environment)
 	{
 		switch(environment)
 		{
-			case EnvironmentID.Forest:
+			case BiomeType.Forest:
 				return _forestChests;
-			case EnvironmentID.Cave:
+			case BiomeType.Cave:
 				return _caveChests;
 		}
 
@@ -83,7 +83,7 @@ public class ChestManager : NetworkBehaviour
 		return null;
 	}
 
-	public void OpenChest(Vector2Int chestPosition, EnvironmentID playerEnvironment)
+	public void OpenChest(Vector2Int chestPosition, BiomeType playerEnvironment)
 	{
 		if(Player.LocalClientInstance.IsHost)
 		{
@@ -95,7 +95,7 @@ public class ChestManager : NetworkBehaviour
 		}
 	}
 	
-	private void OpenChestHost(Vector2Int chestPosition, EnvironmentID playerEnvironment)
+	private void OpenChestHost(Vector2Int chestPosition, BiomeType playerEnvironment)
 	{
 		var environmentChestData = GetChestDataFromEnvironment(playerEnvironment);
 	
@@ -141,26 +141,26 @@ public class ChestManager : NetworkBehaviour
 	{
 		if (IsChestOpen)
 		{
-			_chestNetworkManager.RemoveChestId(OpenChestPosition, Player.LocalClientInstance.PlayerEnvironment.Value);
+			_chestNetworkManager.RemoveChestId(OpenChestPosition, Player.LocalClientInstance.CurrentBiome.Value);
 		
 			InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= EnableChestShortcuts;
 			IsChestOpen = false;
 
 			if(!IsServer)
 			{
-				_chestNetworkManager.UpdateChestContents(OpenChestPosition, Player.LocalClientInstance.PlayerEnvironment.Value, _localChestItemData);
+				_chestNetworkManager.UpdateChestContents(OpenChestPosition, Player.LocalClientInstance.CurrentBiome.Value, _localChestItemData);
 			}
 			
 			OnChestClose?.Invoke(this, EventArgs.Empty);
 		}
 	}
 	
-	public void AddChestEntry(Vector2Int chestPosition, List<ChestItemData> chestItems, EnvironmentID environment)
+	public void AddChestEntry(Vector2Int chestPosition, List<ChestItemData> chestItems, BiomeType environment)
 	{
 		GetChestDataFromEnvironment(environment).Add(chestPosition, chestItems);
 	}
 
-	public void TryToCreateEmptyChestData(Vector2Int chestPosition, EnvironmentID environment)
+	public void TryToCreateEmptyChestData(Vector2Int chestPosition, BiomeType environment)
 	{
 		if (GetChestDataFromEnvironment(environment).ContainsKey(chestPosition))
 		{
@@ -171,7 +171,7 @@ public class ChestManager : NetworkBehaviour
 		GetChestDataFromEnvironment(environment).Add(chestPosition, new List<ChestItemData>());
 	}
 
-	public void RemoveChestData(Vector2Int chestPosition, EnvironmentID environment)
+	public void RemoveChestData(Vector2Int chestPosition, BiomeType environment)
 	{
 		if (GetChestDataFromEnvironment(environment).ContainsKey(chestPosition))
 		{
@@ -184,7 +184,7 @@ public class ChestManager : NetworkBehaviour
 	{
 		OnChestUpdated?.Invoke(this, new ChestEventArgs
 		{
-			ChestItemData = IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] : _localChestItemData
+			ChestItemData = IsServer ? GetChestDataFromEnvironment(Player.LocalClientInstance.CurrentBiome.Value)[OpenChestPosition] : _localChestItemData
 		});
 	}
 	
@@ -376,7 +376,7 @@ public class ChestManager : NetworkBehaviour
 	{
 		// Determine the correct chest data container based on whether this is the server or client
 		var chestItemDataContainer = IsServer 
-			? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] 
+			? GetChestDataFromEnvironment(Player.LocalClientInstance.CurrentBiome.Value)[OpenChestPosition] 
 			: _localChestItemData;
 
 		// Find and return the chest item data for the specified slot index
@@ -396,7 +396,7 @@ public class ChestManager : NetworkBehaviour
 	{
 		// Determine the correct chest data container based on whether this is the server or client
 		var chestItemDataContainer = IsServer 
-			? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] 
+			? GetChestDataFromEnvironment(Player.LocalClientInstance.CurrentBiome.Value)[OpenChestPosition] 
 			: _localChestItemData;
 
 		// Remove the chest item data for the specified slot index
@@ -414,7 +414,7 @@ public class ChestManager : NetworkBehaviour
 	{
 		// Determine the correct chest data container based on whether this is the server or client
 		var chestItemDataContainer = IsServer 
-			? GetChestDataFromEnvironment(Player.LocalClientInstance.PlayerEnvironment.Value)[OpenChestPosition] 
+			? GetChestDataFromEnvironment(Player.LocalClientInstance.CurrentBiome.Value)[OpenChestPosition] 
 			: _localChestItemData;
 
 		// Add a new chest item entry to the container

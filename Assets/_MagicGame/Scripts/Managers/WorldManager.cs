@@ -6,7 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 [Flags]
-public enum EnvironmentID // NTFS: When adding new IDs remember to put the value to the next power of 2 for the [Flags] to work properly
+public enum BiomeType // NTFS: When adding new IDs remember to put the value to the next power of 2 for the [Flags] to work properly
 {
 	Forest = 0,
 	Cave = 1
@@ -25,13 +25,14 @@ public class WorldManager : NetworkBehaviour
 	[SerializeField] private float _dayDurationInSeconds;
 	[SerializeField] private float _startingTime = 0.0f;
 	[SerializeField] private bool _isTicking = true;
+	public bool IsNight { get; private set; }
 	
 	[Title("World Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private bool _randomSeed = false;
 	[SerializeField] private string _customSeed = 123.ToString();
 	[SerializeField] private WorldObject _portalObjectPrefab;
 	
-	private List<EnvironmentID> _environmentList = new(); // Used to keep track which environments have been generated or not
+	private List<BiomeType> _environmentList = new(); // Used to keep track which environments have been generated or not
 	private float _currentTime;
 	private bool _isTransitioningEnvironment, _isPlayerRespawning;
 	
@@ -83,9 +84,9 @@ public class WorldManager : NetworkBehaviour
 		while (_currentTime > _dayDurationInSeconds)
 		{
 			_currentTime -= _dayDurationInSeconds;
-			
+        
 			// Resync time for all clients
-			if(IsServer)
+			if (IsServer)
 			{
 				foreach (var clientId in NetworkManager.ConnectedClientsIds)
 				{
@@ -93,10 +94,16 @@ public class WorldManager : NetworkBehaviour
 				}
 			}
 		}
-	
+
+		// Calculate the ratio of the day
+		float currentDayRatio = _currentTime / _dayDurationInSeconds;
+
+		// Set IsNight to true if the current ratio is between 0.5 (halfway) and 1 (end of the day)
+		IsNight = currentDayRatio >= 0.5f && currentDayRatio < 1f;
+
 		OnTick?.Invoke(this, new OnTickEventArgs
 		{
-			CurrentDayRatio = _currentTime / _dayDurationInSeconds
+			CurrentDayRatio = currentDayRatio
 		});
 	}
 	
@@ -112,12 +119,12 @@ public class WorldManager : NetworkBehaviour
 		_dayDurationInSeconds = dayDurationInSeconds;
 	}
 
-	public void GenerateEnvironment(EnvironmentID environmentToGenerate)
+	public void GenerateEnvironment(BiomeType environmentToGenerate)
 	{
 		// Check if environment is already generated
 		if(_environmentList.Count > 0)
 		{
-			foreach (EnvironmentID environment in _environmentList)
+			foreach (BiomeType environment in _environmentList)
 			{
 				if(environment == environmentToGenerate)
 				{
@@ -131,24 +138,24 @@ public class WorldManager : NetworkBehaviour
 		// Generate environment based on ID
 		switch(environmentToGenerate)
 		{
-			case EnvironmentID.Forest:
-				_environmentList.Add(EnvironmentID.Forest);
+			case BiomeType.Forest:
+				_environmentList.Add(BiomeType.Forest);
 				GetComponent<ForestGeneration>().GenerateForest();
-				Player.LocalClientInstance.PlayerEnvironment.Value = EnvironmentID.Forest;
+				Player.LocalClientInstance.CurrentBiome.Value = BiomeType.Forest;
 				break;
-			case EnvironmentID.Cave:
-				_environmentList.Add(EnvironmentID.Cave);
+			case BiomeType.Cave:
+				_environmentList.Add(BiomeType.Cave);
 				GetComponent<CaveGeneration>().GenerateCave();
-				Player.LocalClientInstance.PlayerEnvironment.Value = EnvironmentID.Cave;
+				Player.LocalClientInstance.CurrentBiome.Value = BiomeType.Cave;
 				break;
 		}
 	}
 	
-	public void LoadEnvironment(EnvironmentID targetEnvironment, Vector2 portalPosition, bool isPlayerRespawning = false)
+	public void LoadEnvironment(BiomeType targetEnvironment, Vector2 portalPosition, bool isPlayerRespawning = false)
 	{
-		if(targetEnvironment == Player.LocalClientInstance.PlayerEnvironment.Value)
+		if(targetEnvironment == Player.LocalClientInstance.CurrentBiome.Value)
 		{
-			Debug.LogError($"Should not be trying to load an environment you are already in. environmentID: {targetEnvironment}, ACTIVE_ENVIRONMENT_ID: {Player.LocalClientInstance.PlayerEnvironment.Value}");
+			Debug.LogError($"Should not be trying to load an environment you are already in. environmentID: {targetEnvironment}, ACTIVE_ENVIRONMENT_ID: {Player.LocalClientInstance.CurrentBiome.Value}");
 			return;
 		}
 		
@@ -169,7 +176,7 @@ public class WorldManager : NetworkBehaviour
 		}
 		else
 		{
-			Player.LocalClientInstance.PlayerEnvironment.Value = targetEnvironment;
+			Player.LocalClientInstance.CurrentBiome.Value = targetEnvironment;
 
 			ChunkManager.Instance.OnLoadedPlayerChunksUpdated += OnClientEnvironmentTransitionEnd;
 			
@@ -178,12 +185,12 @@ public class WorldManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void ClientLoadEnvironmentServerRpc(EnvironmentID targetEnvironment, Vector2 portalPosition, RpcParams rpcParams = default)
+	private void ClientLoadEnvironmentServerRpc(BiomeType targetEnvironment, Vector2 portalPosition, RpcParams rpcParams = default)
 	{
 		AsyncClientLoadEnvironment(targetEnvironment, portalPosition, rpcParams);
 	}
 	
-	private async void AsyncClientLoadEnvironment(EnvironmentID targetEnvironment, Vector2 portalPosition, RpcParams rpcParams = default)
+	private async void AsyncClientLoadEnvironment(BiomeType targetEnvironment, Vector2 portalPosition, RpcParams rpcParams = default)
 	{
 		// If chunks of target environment is empty (no chunks loaded), host needs to deserialize
 		if(ChunkManager.Instance.GetChunksFromEnvironment(targetEnvironment).Count <= 0)
@@ -208,15 +215,15 @@ public class WorldManager : NetworkBehaviour
 		SearchForPortal(Player.LocalClientInstance.transform.position);
 	}
 
-	private async void HostLoadEnvironment(EnvironmentID targetEnvironment, Vector2 portalPosition)
+	private async void HostLoadEnvironment(BiomeType targetEnvironment, Vector2 portalPosition)
 	{
 		_isTransitioningEnvironment = true;
 		
 		// If host, save the scene you just left
-		await SaveSystem.Instance.SerializeDataAndWriteToFile(Player.LocalClientInstance.PlayerEnvironment.Value);
+		await SaveSystem.Instance.SerializeDataAndWriteToFile(Player.LocalClientInstance.CurrentBiome.Value);
 		
 		// Change environment
-		Player.LocalClientInstance.PlayerEnvironment.Value = targetEnvironment;
+		Player.LocalClientInstance.CurrentBiome.Value = targetEnvironment;
 		
 		// If chunks for target environment does not exist, deserialize the environment 
 		if(ChunkManager.Instance.GetChunksFromEnvironment(targetEnvironment).Count <= 0)
@@ -290,7 +297,7 @@ public class WorldManager : NetworkBehaviour
 	{
 		Debug.Log("Portal NOT found. Placing player at new portal that is spawned");
 		Vector2Int v2IntPos = new(Mathf.RoundToInt(portalPosition.x), Mathf.RoundToInt(portalPosition.y));
-		ObjectManager.Instance.PlaceObject(v2IntPos, _portalObjectPrefab, Player.LocalClientInstance.PlayerEnvironment.Value);
+		ObjectManager.Instance.PlaceObject(v2IntPos, _portalObjectPrefab, Player.LocalClientInstance.CurrentBiome.Value);
 	}
 	
 	private void PlacePlayerAt(Vector2 portalPosition)
@@ -308,7 +315,7 @@ public class WorldManager : NetworkBehaviour
 			for (int y = -1; y <= 1; y++)
 			{
 				Vector3Int neighborPosition = new(centerPositionInt.x + x, centerPositionInt.y + y, centerPositionInt.z);
-				Environment.Instance.GetWallTilemapData().DeleteTile(new(neighborPosition.x, neighborPosition.y), Player.LocalClientInstance.PlayerEnvironment.Value);
+				Environment.Instance.GetWallTilemapData().DeleteTile(new(neighborPosition.x, neighborPosition.y), Player.LocalClientInstance.CurrentBiome.Value);
 			}
 		}
 	}

@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class CaveGeneration : MonoBehaviour
 {
-	[SerializeField] private EnvironmentID _environment;
+	[SerializeField] private BiomeType _environment;
 	
 	[FoldoutGroup("Cave Generation")]
 	[SerializeField] private NoiseMapSO _spaghettiCaveNM;
@@ -30,7 +30,7 @@ public class CaveGeneration : MonoBehaviour
 
 	private void SaveSystem_OnNoFileFoundToDeserialize(object sender, EventArgs e)
 	{
-		if(Player.LocalClientInstance.PlayerEnvironment.Value == _environment)
+		if(Player.LocalClientInstance.CurrentBiome.Value == _environment)
 		{
 			GenerateCave();
 		}
@@ -39,13 +39,13 @@ public class CaveGeneration : MonoBehaviour
 	public async void GenerateCave()
 	{
 		Debug.Log("Generating Cave...");
-		ChunkManager.IS_GENERATING_ENVIRONMENT = true;
+		ChunkManager.IS_GENERATING_BIOME = true;
 		
 		// Generate World Data
 		GenerateNoiseMapsBasedOnSeed();
 		GenerateCaveChunkData();
 		
-		ChunkManager.IS_GENERATING_ENVIRONMENT = false;
+		ChunkManager.IS_GENERATING_BIOME = false;
 		
 		Debug.Log("Cave Generation Complete!");
 		
@@ -63,9 +63,9 @@ public class CaveGeneration : MonoBehaviour
 	
 	private void GenerateCaveChunkData()
 	{
-		ChunkManager.Instance.GetChunksFromEnvironment(EnvironmentID.Cave).Clear();
+		ChunkManager.Instance.GetChunksFromEnvironment(BiomeType.Cave).Clear();
 		
-		int chunkSideAmount = ChunkManager.ENVIRONMENT_SIDE_LENGTH / ChunkManager.CHUNK_SIZE;
+		int chunkSideAmount = ChunkManager.BIOME_SICE_LENGTH / ChunkManager.CHUNK_SIZE;
 		for (int chunkX = 0; chunkX < chunkSideAmount; chunkX++)
 		{
 			for (int chunkY = 0; chunkY < chunkSideAmount; chunkY++)
@@ -99,7 +99,7 @@ public class CaveGeneration : MonoBehaviour
 				}
 				
 				// Populate the overworld chunk data
-				ChunkManager.Instance.GetChunksFromEnvironment(EnvironmentID.Cave)[chunkCoord] = chunkGameData;
+				ChunkManager.Instance.GetChunksFromEnvironment(BiomeType.Cave)[chunkCoord] = chunkGameData;
 			}
 		}
 	}

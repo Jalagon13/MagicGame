@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class ChunkNetworkManager : NetworkBehaviour
 {
-	public void RequestChunkData(EnvironmentID environmentToRequest, Vector2Int chunkPosition)
+	public void RequestChunkData(BiomeType environmentToRequest, Vector2Int chunkPosition)
 	{
 		var clientId = Player.LocalClientInstance.OwnerClientId;
 		RequestChunkDataServerRpc(clientId, environmentToRequest, chunkPosition);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RequestChunkDataServerRpc(ulong clientId, EnvironmentID environmentToRequest, Vector2Int chunkPosition, RpcParams rpcParams = default)
+	private void RequestChunkDataServerRpc(ulong clientId, BiomeType environmentToRequest, Vector2Int chunkPosition, RpcParams rpcParams = default)
 	{
 		var chunkData = ChunkManager.Instance.GetChunkData(environmentToRequest, chunkPosition);
 		var syncChunkData = ConvertToSyncChunkData(chunkData);

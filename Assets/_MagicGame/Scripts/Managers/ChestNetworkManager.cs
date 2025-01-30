@@ -90,13 +90,13 @@ public struct ChestSyncData : IEquatable<ChestSyncData>, INetworkSerializable
 
 public class ChestNetworkManager : NetworkBehaviour
 {
-	public void OpenChestClient(Vector2Int chestPosition, EnvironmentID playerEnvironment)
+	public void OpenChestClient(Vector2Int chestPosition, BiomeType playerEnvironment)
 	{
 		RequestChestDataServerRpc(chestPosition, playerEnvironment);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RequestChestDataServerRpc(Vector2Int chestPosition, EnvironmentID environment, RpcParams rpcParams = default)
+	private void RequestChestDataServerRpc(Vector2Int chestPosition, BiomeType environment, RpcParams rpcParams = default)
 	{
 		var chestData = ChestManager.Instance.GetChestDataFromEnvironment(environment);
 
@@ -170,19 +170,19 @@ public class ChestNetworkManager : NetworkBehaviour
 		return chestItemData;
 	}
 
-	public void RemoveChestId(Vector2Int openChestPosition, EnvironmentID value)
+	public void RemoveChestId(Vector2Int openChestPosition, BiomeType value)
 	{
 		RemoveChestIdServerRpc(openChestPosition, value);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RemoveChestIdServerRpc(Vector2Int openChestPosition, EnvironmentID value)
+	private void RemoveChestIdServerRpc(Vector2Int openChestPosition, BiomeType value)
 	{
 		Debug.Log($"Removing {openChestPosition}{value}");
 		ChestManager.Instance.OpenedChestIds.Remove($"{openChestPosition}{value}");
 	}
 
-	public void UpdateChestContents(Vector2Int openChestPosition, EnvironmentID playerEnvironment, List<ChestItemData> localChestItemData)
+	public void UpdateChestContents(Vector2Int openChestPosition, BiomeType playerEnvironment, List<ChestItemData> localChestItemData)
 	{
 		var chestSyncData = new ChestSyncData
 		{
@@ -194,7 +194,7 @@ public class ChestNetworkManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void UpdateChestContentsServerRpc(Vector2Int openChestPosition, EnvironmentID playerEnvironment, ChestSyncData syncChestItemData)
+	private void UpdateChestContentsServerRpc(Vector2Int openChestPosition, BiomeType playerEnvironment, ChestSyncData syncChestItemData)
 	{
 		var chestGameData = ConvertToGameChestData(syncChestItemData.ChestItemData);
 		

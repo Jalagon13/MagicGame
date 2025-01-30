@@ -24,8 +24,8 @@ public class PlayerNetworkComponent : NetworkBehaviour
 		if(clientId == OwnerClientId) return true;
 		
 		var nonClientIdPlayerObject = NetworkManager.ConnectedClients[clientId].PlayerObject;
-		var nonClientIdPlayerEnvironment = nonClientIdPlayerObject.GetComponent<Player>().PlayerEnvironment.Value;
-		var ownerClientEnvironment = NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().PlayerEnvironment.Value;
+		var nonClientIdPlayerEnvironment = nonClientIdPlayerObject.GetComponent<Player>().CurrentBiome.Value;
+		var ownerClientEnvironment = NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value;
 		
 		return ownerClientEnvironment == nonClientIdPlayerEnvironment;
 	}

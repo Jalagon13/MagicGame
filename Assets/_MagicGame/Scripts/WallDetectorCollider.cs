@@ -10,7 +10,7 @@ public class WallDetectorCollider : MonoBehaviour
 		public Vector2 ContactPoint;
 	} 
 	
-	private EnvironmentID _colliderEnvironment;
+	private BiomeType _colliderEnvironment;
 	private Collider2D _wallDetectorCollider;
 	
 	private void Awake()
@@ -32,7 +32,7 @@ public class WallDetectorCollider : MonoBehaviour
 		}
 	}
 
-	public void SetEnvironment(EnvironmentID environment) // Sets the environment whose walls this collider will detect
+	public void SetEnvironment(BiomeType environment) // Sets the environment whose walls this collider will detect
 	{
 		_colliderEnvironment = environment;
 	}

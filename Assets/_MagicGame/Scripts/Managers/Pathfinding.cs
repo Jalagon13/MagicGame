@@ -23,13 +23,13 @@ public class Pathfinding : NetworkBehaviour
 	public class PathfindingTilemapEventArgs : EventArgs
 	{
 		public Collider2D TilemapCollider;
-		public EnvironmentID Environment;
+		public BiomeType Environment;
 	}
 	
 	[SerializeField] private TileBase _wallTile;
 	[SerializeField] private Tilemap _wallColliderTmPrefab;
 	
-	private Dictionary<EnvironmentID, PathfindingData> _environmentToLoadedPathfindingChunks = new();
+	private Dictionary<BiomeType, PathfindingData> _environmentToLoadedPathfindingChunks = new();
 	private Dictionary<ulong, HashSet<Vector2Int>> _playerToChunks = new(); // Keeps track of chunks loaded by player using clientId
 	
 	private void Awake()
@@ -63,78 +63,52 @@ public class Pathfinding : NetworkBehaviour
 			Debug.Log($"Removing player {clientId}'s pathfinding chunks list");
 			_playerToChunks.Remove(clientId);
 			
-			var environment = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().PlayerEnvironment.Value;
+			var environment = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value;
 			
 			// Loop through all chunks this player has loaded and try to remove them from the pathfinding tilemap
 			foreach (Vector2Int chunkPos in _playerToChunks[clientId])
 			{
 				if(!IsChunkInUse(chunkPos, environment))
 				{
-					// _environmentToLoadedPathfindingChunks[environment].Remove(chunkPos);
+					_environmentToLoadedPathfindingChunks[environment].Chunks.Remove(chunkPos);
 					
-					// if(_environmentToLoadedPathfindingChunks[environment].Count <= 0)
-					// {
-					// 	_environmentToLoadedPathfindingChunks.Remove(environment);
-					// }
+					RemoveWallColliderChunk(environment, chunkPos);
+					
+					if(_environmentToLoadedPathfindingChunks[environment].Chunks.Count <= 0)
+					{
+						Destroy(_environmentToLoadedPathfindingChunks[environment].WallColliderTm.gameObject);
+						_environmentToLoadedPathfindingChunks.Remove(environment);
+					}
 				}
 			}
 		}
 	}
 	
-	public bool IsPositionOnWalkableTile(Vector2 position, EnvironmentID environment)
+	public bool EnvironmentPathfindingExists(BiomeType environment)
 	{
-		if(!IsServer)
-		{
-			Debug.LogWarning($"Should not be calling this on a client. Only server. Returning false");
-			return false;
-		}
+		return _environmentToLoadedPathfindingChunks.ContainsKey(environment);
+	}
 	
-		Vector2Int tilePositionToCheck = Vector2Int.FloorToInt(position);
-		
-		// Calculate chunk coordinates
-		int chunkX = Mathf.FloorToInt(position.x / ChunkManager.CHUNK_SIZE);
-		int chunkY = Mathf.FloorToInt(position.y / ChunkManager.CHUNK_SIZE);
-		var chunkPos = new Vector2Int(chunkX, chunkY);
-		
-		// if(_environmentToLoadedPathfindingChunks[environment].Contains(chunkPos))
-		// {
-		// 	// Loop through all the tile positions of this chunk
-		// 	for (int x = 0; x < ChunkManager.CHUNK_SIZE; x++)
-		// 	{
-		// 		for (int y = 0; y < ChunkManager.CHUNK_SIZE; y++)
-		// 		{
-		// 			// Find the tilePosition and return whether it is walkable or not
-		// 			int tilePosX = chunkPos.x * ChunkManager.CHUNK_SIZE + x;
-		// 			int tilePosY = chunkPos.y * ChunkManager.CHUNK_SIZE + y;
-		// 			Vector2Int chunkTileWorldPosition = new(tilePosX, tilePosY);
-					
-		// 			if(chunkTileWorldPosition == tilePositionToCheck)
-		// 			{
-		// 				// Found it, check if it is walkable
-		// 				bool isWalkable = CheckTileWalkable(tilePositionToCheck, ChunkManager.Instance.GetChunkData(environment, chunkPos).WallTileGameDataList);
-						
-		// 				if(isWalkable)
-		// 				{
-		// 					Debug.LogWarning($"This position is on a walkable tile");
-		// 				}
-		// 				else
-		// 				{
-		// 					Debug.LogWarning($"This position is NOT on a walkable tile. Wall tile");
-		// 				}
-						
-		// 				return isWalkable;
-		// 			}
-		// 		}
-		// 	}
-		// }
-		// else
-		// {
-		// 	Debug.LogWarning($"Position is not part of a loaded chunk");
-		// 	return false;
-		// }
-		
-		Debug.LogWarning($"Found chunk pos but position is not in this chunk. This message should never appear");
-		return false;
+	public void AddPfWallTile(Vector2Int position, BiomeType environment)
+	{
+		AddPfWallTileServerRpc(position, environment);
+	}
+	
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void AddPfWallTileServerRpc(Vector2Int position, BiomeType environment)
+	{
+		_environmentToLoadedPathfindingChunks[environment].WallColliderTm.SetTile((Vector3Int)position, _wallTile);
+	}
+	
+	public void RemovePfWallTile(Vector2Int position, BiomeType environment)
+	{
+		RemovePfWallTileServerRpc(position, environment);
+	}
+	
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void RemovePfWallTileServerRpc(Vector2Int position, BiomeType environment)
+	{
+		_environmentToLoadedPathfindingChunks[environment].WallColliderTm.SetTile((Vector3Int)position, null);
 	}
 	
 	private bool CheckTileWalkable(Vector2Int tileWorldPosition, List<TileGameData> wallTileGameDataList)
@@ -152,7 +126,7 @@ public class Pathfinding : NetworkBehaviour
 		return true;
 	}
 
-	public void UpdateChunkPathfinding(Vector2Int chunkPos, ChunkGameData chunkGameData, EnvironmentID environment, ulong clientId)
+	public void UpdateChunkPathfinding(Vector2Int chunkPos, ChunkGameData chunkGameData, BiomeType environment, ulong clientId)
 	{
 		// No matter what, add this chunk to this player's chunk list
 		_playerToChunks[clientId].Add(chunkPos);
@@ -171,7 +145,7 @@ public class Pathfinding : NetworkBehaviour
 		}
 	}
 	
-	private void AddWallColliderChunk(EnvironmentID environment, ChunkGameData chunkGameData)
+	private void AddWallColliderChunk(BiomeType environment, ChunkGameData chunkGameData)
 	{
 		_environmentToLoadedPathfindingChunks[environment].Chunks.Add(chunkGameData.ChunkPosition);
 		
@@ -182,7 +156,7 @@ public class Pathfinding : NetworkBehaviour
 		}
 	}
 
-	private Tilemap CreateWallColliderTilemap(EnvironmentID environment)
+	private Tilemap CreateWallColliderTilemap(BiomeType environment)
 	{
 		var wallColliderTm = Instantiate(_wallColliderTmPrefab);
 		wallColliderTm.transform.SetParent(transform);
@@ -197,13 +171,13 @@ public class Pathfinding : NetworkBehaviour
 		return wallColliderTm;
 	}
 
-	public void RequestUnloadChunk(Vector2Int chunkPos, ulong clientId, EnvironmentID environment)
+	public void RequestUnloadChunk(Vector2Int chunkPos, ulong clientId, BiomeType environment)
 	{
 		RequestUnloadChunkServerRpc(chunkPos, clientId, environment);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RequestUnloadChunkServerRpc(Vector2Int chunkPos, ulong clientId, EnvironmentID environment)
+	private void RequestUnloadChunkServerRpc(Vector2Int chunkPos, ulong clientId, BiomeType environment)
 	{
 		_playerToChunks[clientId].Remove(chunkPos);
 	
@@ -221,7 +195,7 @@ public class Pathfinding : NetworkBehaviour
 		}
 	}
 
-	private void RemoveWallColliderChunk(EnvironmentID environment, Vector2Int chunkPos)
+	private void RemoveWallColliderChunk(BiomeType environment, Vector2Int chunkPos)
 	{
 		Tilemap wallColliderTm = _environmentToLoadedPathfindingChunks[environment].WallColliderTm;
 		
@@ -244,13 +218,13 @@ public class Pathfinding : NetworkBehaviour
 	}
 
 	// Checks if another player needs the pathfinding for this chunk
-	private bool IsChunkInUse(Vector2Int chunkPos, EnvironmentID environment)
+	private bool IsChunkInUse(Vector2Int chunkPos, BiomeType environment)
 	{
 		// If a player still has chunk active
 		foreach (var kvp in _playerToChunks)
 		{
 			// Loop through only players in the same environment being tested
-			if(NetworkManager.ConnectedClients[kvp.Key].PlayerObject.GetComponent<Player>().PlayerEnvironment.Value != environment) continue;
+			if(NetworkManager.ConnectedClients[kvp.Key].PlayerObject.GetComponent<Player>().CurrentBiome.Value != environment) continue;
 		
 			var chunksLoaded = kvp.Value;
 			

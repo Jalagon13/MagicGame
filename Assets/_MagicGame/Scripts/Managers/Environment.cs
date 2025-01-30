@@ -75,11 +75,11 @@ public class Environment : NetworkBehaviour
 			_wallTilemapData.GetTilemap().SetTile(tilePosV3Int, null);
 		}
 		
-		Pathfinding.Instance.RequestUnloadChunk(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.PlayerEnvironment.Value);
+		Pathfinding.Instance.RequestUnloadChunk(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentBiome.Value);
 	}
 	
 	// Handles placing the visual of the tile, NOT the tile data that is being synced
-	public void PlaceTile(Vector3Int pos, TileSO wallTile, TileType syncTileType, EnvironmentID environment)
+	public void PlaceTile(Vector3Int pos, TileSO wallTile, TileType syncTileType, BiomeType environment)
 	{
 		// Debug.Log("Some Client is placing a tile");
 		Vector2Int syncPos = new(pos.x, pos.y);
@@ -89,7 +89,7 @@ public class Environment : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void AddTileDataServerRpc(Vector2Int syncPos, byte syncTileId, TileType syncTileType, EnvironmentID environment)
+	private void AddTileDataServerRpc(Vector2Int syncPos, byte syncTileId, TileType syncTileType, BiomeType environment)
 	{
 		// Debug.Log("Server is adding tile data to official world data");
 		ChunkManager.Instance.AddWallTileDataToChunk(new(syncPos.x, syncPos.y), syncTileId, environment);

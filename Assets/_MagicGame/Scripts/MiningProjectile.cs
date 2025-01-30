@@ -87,7 +87,7 @@ public class MiningProjectile : NetworkBehaviour
 						if(collider.TryGetComponent(out ResourceObject resourceAsset))
 						{
 							Vector2Int resourcePosition = new(Mathf.RoundToInt(resourceAsset.transform.position.x), Mathf.RoundToInt(resourceAsset.transform.position.y));
-							ObjectManager.Instance.DamageObject(resourcePosition, (ushort)_miningPower, Player.LocalClientInstance.PlayerEnvironment.Value);
+							ObjectManager.Instance.DamageObject(resourcePosition, (ushort)_miningPower, Player.LocalClientInstance.CurrentBiome.Value);
 						}
 					}
 				}
@@ -107,12 +107,12 @@ public class MiningProjectile : NetworkBehaviour
 	
 		if(_mouseOverWall)
 		{
-			Environment.Instance.GetWallTilemapData().HitTile(tilePos, _miningPower, Player.LocalClientInstance.PlayerEnvironment.Value);
+			Environment.Instance.GetWallTilemapData().HitTile(tilePos, _miningPower, Player.LocalClientInstance.CurrentBiome.Value);
 			return;
 		}
 		else if(_mouseOverFloor)
 		{
-			Environment.Instance.GetFloorTilemapData().HitTile(tilePos, _miningPower, Player.LocalClientInstance.PlayerEnvironment.Value);
+			Environment.Instance.GetFloorTilemapData().HitTile(tilePos, _miningPower, Player.LocalClientInstance.CurrentBiome.Value);
 			return;
 		}
 	}

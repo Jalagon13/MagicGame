@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class ForestGeneration : MonoBehaviour
 {
-	[SerializeField] private EnvironmentID _environment;
+	[SerializeField] private BiomeType _environment;
 
 	[FoldoutGroup("Overworld Generation")]
 	[SerializeField] private NoiseMapSO _forestGroundNM;
@@ -42,7 +42,7 @@ public class ForestGeneration : MonoBehaviour
 
 	private void SaveSystem_OnNoFileFoundToDeserialize(object sender, EventArgs e)
 	{
-		if(Player.LocalClientInstance.PlayerEnvironment.Value == _environment)
+		if(Player.LocalClientInstance.CurrentBiome.Value == _environment)
 		{
 			GenerateForest();
 		}
@@ -51,14 +51,14 @@ public class ForestGeneration : MonoBehaviour
 	public async void GenerateForest()
 	{
 		Debug.Log("Generating Forest Data...");
-		ChunkManager.IS_GENERATING_ENVIRONMENT = true;
+		ChunkManager.IS_GENERATING_BIOME = true;
 		
 		// Generate World Data
 		GenerateNoiseMapsBasedOnSeed();
 		GenerateOverworldChunkData();
 		GenerateTrees();
 		
-		ChunkManager.IS_GENERATING_ENVIRONMENT = false;
+		ChunkManager.IS_GENERATING_BIOME = false;
 		
 		Debug.Log("Forest Data Generation Complete!");
 		
@@ -77,10 +77,10 @@ public class ForestGeneration : MonoBehaviour
 	
 	private void GenerateOverworldChunkData()
 	{
-		ChunkManager.Instance.GetChunksFromEnvironment(EnvironmentID.Forest).Clear();
+		ChunkManager.Instance.GetChunksFromEnvironment(BiomeType.Forest).Clear();
 		
 		// Loop through all chunks
-		int chunkSideAmount = ChunkManager.ENVIRONMENT_SIDE_LENGTH / ChunkManager.CHUNK_SIZE;
+		int chunkSideAmount = ChunkManager.BIOME_SICE_LENGTH / ChunkManager.CHUNK_SIZE;
 		for (int chunkX = 0; chunkX < chunkSideAmount; chunkX++)
 		{
 			for (int chunkY = 0; chunkY < chunkSideAmount; chunkY++)
@@ -119,7 +119,7 @@ public class ForestGeneration : MonoBehaviour
 				}
 				
 				// Populate the overworld chunk data
-				ChunkManager.Instance.GetChunksFromEnvironment(EnvironmentID.Forest).Add(chunkCoord, chunkGameData);
+				ChunkManager.Instance.GetChunksFromEnvironment(BiomeType.Forest).Add(chunkCoord, chunkGameData);
 			}
 		}
 	}
@@ -127,7 +127,7 @@ public class ForestGeneration : MonoBehaviour
 	private void GenerateTrees()
 	{
 		// Generate Tree placements
-		Vector2Int surfaceBounds = new Vector2Int(ChunkManager.ENVIRONMENT_SIDE_LENGTH, ChunkManager.ENVIRONMENT_SIDE_LENGTH);
+		Vector2Int surfaceBounds = new Vector2Int(ChunkManager.BIOME_SICE_LENGTH, ChunkManager.BIOME_SICE_LENGTH);
 		
 		float minTreeDistance = 3f;
 		float maxTreeDistance = 10f;
@@ -145,7 +145,7 @@ public class ForestGeneration : MonoBehaviour
 			if(groundTilePointValue > 0.125f && (wallTilePointValue < 0.6f && wallTilePointValue > 0.35f))
 			{
 				// Add world asset data to chunk
-				ChunkManager.Instance.AddObjectDataToChunk(new Vector2Int(pointX, pointY), _treeObject, EnvironmentID.Forest);
+				ChunkManager.Instance.AddObjectDataToChunk(new Vector2Int(pointX, pointY), _treeObject, BiomeType.Forest);
 			}
 		}
 	}

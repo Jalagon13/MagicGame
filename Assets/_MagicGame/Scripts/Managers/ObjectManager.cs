@@ -79,31 +79,28 @@ public class ObjectManager : NetworkBehaviour
 		OnClearAllEnvironmentObjects?.Invoke(this, new EventArgs());
 	}
 	
-	public void PlaceObject(Vector2Int position, WorldObject worldObject, EnvironmentID environmentToPlaceIn)
+	public void PlaceObject(Vector2Int position, WorldObject worldObject, BiomeType environmentToPlaceIn)
 	{
 		byte assetID = GameManager.Instance.GetByteIDFromWorldObject(worldObject);
-		Debug.Log("a");
 		PlaceResourceObjectServerRpc(position, assetID, environmentToPlaceIn);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void PlaceResourceObjectServerRpc(Vector2Int position, byte assetID, EnvironmentID environmentToPlaceIn)
+	private void PlaceResourceObjectServerRpc(Vector2Int position, byte assetID, BiomeType environmentToPlaceIn)
 	{
 		// While on server, add the data to chunks
 		WorldObject asset = GameManager.Instance.GetWorldObjectFromID(assetID);
 		ChunkManager.Instance.AddObjectDataToChunk(position, asset, environmentToPlaceIn);
-		Debug.Log("b");
 		HandleObjectVisualsClientRpc(position, assetID, environmentToPlaceIn);
 	}
 
 	[Rpc(SendTo.ClientsAndHost)]
-	private void HandleObjectVisualsClientRpc(Vector2Int position, byte assetID, EnvironmentID objectEnvironment)
+	private void HandleObjectVisualsClientRpc(Vector2Int position, byte assetID, BiomeType objectEnvironment)
 	{
-		if(objectEnvironment == Player.LocalClientInstance.PlayerEnvironment.Value /* && ObjectPositionInLoadedChunks(position) */)
+		if(objectEnvironment == Player.LocalClientInstance.CurrentBiome.Value /* && ObjectPositionInLoadedChunks(position) */)
 		{
 			// Visually place it down for everyone
 			WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);
-			Debug.Log("c");
 			GameObject placedAsset = Instantiate(worldAsset.gameObject, (Vector2)position, Quaternion.identity);
 			placedAsset.GetComponent<WorldObject>().SetPlacedDownByPlayer(true);
 		
@@ -124,7 +121,7 @@ public class ObjectManager : NetworkBehaviour
 			   position.y >= minLoadedTilePos.y && position.y <= maxLoadedTilePos.y;
 	}
 
-	public void DamageObject(Vector2Int position, ushort incomingDamage, EnvironmentID environment)
+	public void DamageObject(Vector2Int position, ushort incomingDamage, BiomeType environment)
 	{
 		if(ResourceObjectFoundAtPosition(position, out ResourceObject resourceObjectFound))
 		{
@@ -142,7 +139,7 @@ public class ObjectManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void DamageWorldObjectServerRpc(Vector2Int position, byte assetID, ushort incomingDamage, EnvironmentID environment)
+	private void DamageWorldObjectServerRpc(Vector2Int position, byte assetID, ushort incomingDamage, BiomeType environment)
 	{
 		if(!SyncWorldObjectHPDataListContainsPosition(position))
 		{
@@ -179,7 +176,7 @@ public class ObjectManager : NetworkBehaviour
 		}
 	}
 
-	private void AddObjectToNetworkListDamaged(Vector2Int position, byte assetID, ushort damageAmount, EnvironmentID environment)
+	private void AddObjectToNetworkListDamaged(Vector2Int position, byte assetID, ushort damageAmount, BiomeType environment)
 	{
 		ResourceObject resourceAsset = GameManager.Instance.GetWorldObjectFromID(assetID) as ResourceObject;
 

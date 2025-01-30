@@ -39,7 +39,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	public PlayerStats PlayerStats { get; private set; }
 	public NetworkVariable<int> MainHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<int> OffHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	public NetworkVariable<EnvironmentID> PlayerEnvironment { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public NetworkVariable<BiomeType> CurrentBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public Collider2D HitCollider { get; private set; }
 	public bool IsPerformingSwing { get; set; }
 	
@@ -48,7 +48,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	private Rigidbody2D _rb;
 	private Timer _respawnTimer;
 	private Vector2 _spawnPoint;
-	private EnvironmentID _spawnEnvironment;
+	private BiomeType _spawnEnvironment;
 	
 	
 	private void Awake()
@@ -69,8 +69,8 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			LocalClientInstance = this;
 			
-			PlayerEnvironment.Value = EnvironmentID.Forest; // For now all players will spawn in the forest
-			_spawnEnvironment = EnvironmentID.Forest;
+			CurrentBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
+			_spawnEnvironment = BiomeType.Forest;
 			_spawnPoint = transform.position;
 			
 			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnMainHandSlotUpdated;
@@ -211,7 +211,7 @@ public class Player : NetworkBehaviour, IHasHealth
 			transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
 		}
 		
-		if(LocalClientInstance.PlayerEnvironment.Value != _spawnEnvironment)
+		if(LocalClientInstance.CurrentBiome.Value != _spawnEnvironment)
 		{
 			WorldManager.Instance.LoadEnvironment(_spawnEnvironment, _spawnPoint, isPlayerRespawning: true);
 		}

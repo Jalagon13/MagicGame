@@ -11053,11 +11053,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _deerNpcSO: {fileID: 11400000, guid: a86c2629237a34fedb5779825e10a38a, type: 2}
-  _testDummyNpcSO: {fileID: 11400000, guid: 741ad5317491149b49b55e26de2264a5, type: 2}
-  _yellowPixieNpcSO: {fileID: 11400000, guid: 741ad5317491149b49b55e26de2264a5, type: 2}
-  _spawnRateDenominator: 600
-  _maxNpcSlotSpawnAmount: 6
+  _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
 --- !u!1 &1616919198
 GameObject:
   m_ObjectHideFlags: 0

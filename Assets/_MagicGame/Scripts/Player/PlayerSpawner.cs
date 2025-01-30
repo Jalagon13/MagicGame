@@ -29,13 +29,13 @@ public class PlayerSpawner : NetworkBehaviour
 	
 	private async void LoadEnvironment()
 	{
-		if(SaveSystem.Instance.EnvironmentDataExists(EnvironmentID.Forest))
+		if(SaveSystem.Instance.EnvironmentDataExists(BiomeType.Forest))
 		{
-			await SaveSystem.Instance.DeserializeAndDispatchData(EnvironmentID.Forest);
+			await SaveSystem.Instance.DeserializeAndDispatchData(BiomeType.Forest);
 		}
 		else
 		{
-			WorldManager.Instance.GenerateEnvironment(EnvironmentID.Forest);
+			WorldManager.Instance.GenerateEnvironment(BiomeType.Forest);
 		}
 	}
 }

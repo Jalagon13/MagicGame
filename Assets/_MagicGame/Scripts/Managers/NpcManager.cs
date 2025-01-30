@@ -12,17 +12,7 @@ public class NpcManager : NetworkBehaviour
 	public static int NO_SPAWN_ZONE_WIDTH = 35; // Camera Frustum
 	public static int NO_SPAWN_ZONE_HEIGHT = 20; // Camera Frustum
 	
-	public event EventHandler<OnNpcSpawnEventArgs> OnNpcSpawn;
-	public class OnNpcSpawnEventArgs : EventArgs 
-	{
-		public GameObject NpcGameObject;
-	}
-	
-	[SerializeField] private NpcSO _deerNpcSO;
-	[SerializeField] private NpcSO _testDummyNpcSO;
-	[SerializeField] private NpcSO _yellowPixieNpcSO;
-	[SerializeField] private int _spawnRateDenominator = 600; // Value represents the deniminator of of the spawn rate per tick
-	[SerializeField] private float _maxNpcSlotSpawnAmount = 6;
+	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
 	
 	private readonly NetworkList<NetworkObjectReference> _activeNpcNetworkList = new();
 	private readonly float _tickTime = 1f / 60f; // 60 ticks per second
@@ -39,7 +29,7 @@ public class NpcManager : NetworkBehaviour
 			NetworkManager.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
 		}
 	}
-	
+
 	private void Start()
 	{
 		GameInput.Instance.OnResearchMenuButton += GameInput_OnResearchMenuButton;
@@ -47,7 +37,7 @@ public class NpcManager : NetworkBehaviour
 
 	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
 	{
-		TryToSpawnNpc(ActionManager.MouseWorldPosition, _testDummyNpcSO);
+		SpawnNpc(ActionManager.MouseWorldPosition, _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().GetRandomNpc());
 	}
 
 	private void NetworkManager_OnClientConnectedCallback(ulong clientId)
@@ -57,23 +47,22 @@ public class NpcManager : NetworkBehaviour
 		_localPlayerTransform = NetworkManager.ConnectedClients[clientId].PlayerObject.transform;
 		_activeNpcSlotAmount = 0;
 		
-		// InvokeRepeating(nameof(AttemptToSpawnNpc), 1, _tickTime);
+		InvokeRepeating(nameof(TryToSpawnNpc), 1, _tickTime);
 	}
 	
-	public void AttemptToSpawnNpc()
+	public void TryToSpawnNpc()
 	{
-		// If there is no chunks loaded, then don't try to spawn anything
-		// NTFS: This might not work, first place to look if mob spawning is bugged
+		// If there is no chunks loaded, then don't try to spawn anything. NTFS: This might not work, first place to look if mob spawning is bugged
 		if(ChunkManager.Instance.GetLoadedPlayerChunks().Count <= 0) return;
 	
 		// Calculate the current spawn chance modifier
 		float spawnModifier = GetSpawnModifier();
 		
 		// Adjust spawn rate based on the modifier
-		float spawnRate = 1 / (_spawnRateDenominator * spawnModifier);
+		float spawnRate = 1 / (_biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().SpawnRateDenominator * spawnModifier);
 		
 		// Try to spawn an enemy if we're below the max number of NPC slots
-		if (_activeNpcSlotAmount < _maxNpcSlotSpawnAmount && UnityEngine.Random.value < spawnRate)
+		if (_activeNpcSlotAmount < _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount && UnityEngine.Random.value < spawnRate)
 		{
 			// Try to find a valid spawn spot and spawn an entity on the first one found
 			int spawnAttempts = 0;
@@ -89,8 +78,15 @@ public class NpcManager : NetworkBehaviour
 				
 				if(SpawnSpotIsValid(potentialSpawnPoint))
 				{
-					TryToSpawnNpc(potentialSpawnPoint, _deerNpcSO);
-					break;
+					float remainingNpcSlotSpace = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount - _activeNpcSlotAmount;
+					NpcSO npcToSpawn = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().GetRandomNpc();
+					
+					if(npcToSpawn.SlotAmount <= remainingNpcSlotSpace)
+					{
+						SpawnNpc(potentialSpawnPoint, npcToSpawn);
+						
+						break;
+					}
 				}
 				
 				spawnAttempts++;
@@ -98,25 +94,18 @@ public class NpcManager : NetworkBehaviour
 		}
 	}
 	
-	private void TryToSpawnNpc(Vector2 spawnPosition, NpcSO npcSO)
+	private void SpawnNpc(Vector2 spawnPosition, NpcSO npcSO)
 	{
-		// If there is 'space' to spawn NPC, spawn it
-		float remainingNpcSlotSpace = _maxNpcSlotSpawnAmount - _activeNpcSlotAmount;
-		
-		if(npcSO.SlotAmount <= remainingNpcSlotSpace)
-		{
-			// Npc to spawn can fit in the remaining npc slot space
-			_activeNpcSlotAmount += npcSO.SlotAmount;
-			// Debug.Log($"[Client {NetworkManager.LocalClientId}] Adding {npcToSpawn.name} slot amount ({npcToSpawn.SlotAmount}) to active npc slots on this client. New amount: {_activeNpcSlotAmount}");
+		// Npc to spawn can fit in the remaining npc slot space
+		_activeNpcSlotAmount += npcSO.SlotAmount;
 			
-			byte npcId = GameManager.Instance.GetIdAsByteFromNpcSO(npcSO);
+		byte npcId = GameManager.Instance.GetIdAsByteFromNpcSO(npcSO);
 
-			SpawnNpcServerRpc(Player.LocalClientInstance.PlayerEnvironment.Value, npcId, NetworkManager.LocalClientId, spawnPosition);
-		}
+		SpawnNpcServerRpc(Player.LocalClientInstance.CurrentBiome.Value, npcId, NetworkManager.LocalClientId, spawnPosition);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnNpcServerRpc(EnvironmentID environmentToSpawnIn, byte npcId, ulong spawningClientId, Vector2 position)
+	private void SpawnNpcServerRpc(BiomeType environmentToSpawnIn, byte npcId, ulong spawningClientId, Vector2 position)
 	{
 		NpcSO npcSO = GameManager.Instance.GetNpcSOFromId(npcId);
 		
@@ -133,18 +122,11 @@ public class NpcManager : NetworkBehaviour
 		
 		// replace this with dimension specific entity list that contains mobs and projectiles for entities
 		_activeNpcNetworkList.Add(npcPrefabNetworkObject);
-		
-		OnNpcSpawn?.Invoke(this, new OnNpcSpawnEventArgs
-		{
-			NpcGameObject = npcPrefab
-		});
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void DespawnNpcServerRpc(byte npcId, NetworkObjectReference npcToRemoveNetworkObjectReference, ulong spawningClientId, bool killNpc)
 	{
-		// Debug.Log($"[Client {NetworkManager.LocalClientId}] Removing NPC from active npc list");
-			
 		_activeNpcNetworkList.Remove(npcToRemoveNetworkObjectReference);
 		
 		// Either kill or despawn npc depending on the conditional
@@ -156,7 +138,7 @@ public class NpcManager : NetworkBehaviour
 			// NTFS: Handle other death stuff here
 			npc.DropLoot();
 		}
-		// Debug.Log($"[Client {NetworkManager.LocalClientId}] Destroying Npc from game");
+		
 		npc.DestroySelf();
 		
 		UpdateActiveNpcSlotAmountClientRpc(npcId, RpcTarget.Single(spawningClientId, RpcTargetUse.Persistent));
@@ -168,33 +150,31 @@ public class NpcManager : NetworkBehaviour
 		NpcSO npc = GameManager.Instance.GetNpcSOFromId(npcId);
 	
 		_activeNpcSlotAmount -= npc.SlotAmount;
-		// Debug.Log($"[Client {NetworkManager.LocalClientId}] Removing {npc.name} slot amount ({npc.SlotAmount}) from active npc slots on this client. New amount: {_activeNpcSlotAmount}");
 	}
 	
 	private bool SpawnSpotIsValid(Vector2 potentialSpawnPoint)
 	{
 		if(PointIsInWall(potentialSpawnPoint)) return false;
 		
-		// If position is not open space, it is invalid
-		if(!PointHasRoom(potentialSpawnPoint)) return false;
+		// If point is in the no-spawn zone of any other player, it is invalid (Camera frustum, NOTE: this is not dynamic; does not change if you change the cam frustum)
+		if(PointInNoSpawnZoneOfAnyOtherPlayer(potentialSpawnPoint)) return false;
 		
-		// If position is in the no-spawn zone (Camera frustum, NOTE: this is not dynamic; does not change if you change the cam frustum), it's invalid
-		if(IsPointInRectangle(potentialSpawnPoint, Player.LocalClientInstance.transform.position, NO_SPAWN_ZONE_WIDTH, NO_SPAWN_ZONE_HEIGHT)) return false;
-		
-		// If point is in the no-spawn zone of any other player, it is invalid
+		return true;
+	}
+	
+	private bool PointInNoSpawnZoneOfAnyOtherPlayer(Vector2 potentialSpawnPoint)
+	{
 		if(NetworkManager.ConnectedClientsList.Count > 1)
 		{
 			foreach (var clientId in NetworkManager.ConnectedClientsIds)
 			{
-				if(clientId == NetworkManager.LocalClientId) continue;
-			
 				var otherPlayerPosition = NetworkManager.ConnectedClients[clientId].PlayerObject.transform.position;
 			
-				if(IsPointInRectangle(potentialSpawnPoint, otherPlayerPosition, NO_SPAWN_ZONE_WIDTH, NO_SPAWN_ZONE_HEIGHT)) return false;
+				if(PointInRectangle(potentialSpawnPoint, otherPlayerPosition, NO_SPAWN_ZONE_WIDTH, NO_SPAWN_ZONE_HEIGHT)) return true;
 			}
 		}
 		
-		return true;
+		return false;
 	}
 
 	private bool PointIsInWall(Vector2 point)
@@ -203,26 +183,8 @@ public class NpcManager : NetworkBehaviour
 		
 		return Environment.Instance.GetWallTilemapData().GetTilemap().HasTile(tilePos);
 	}
-
-	private bool PointHasRoom(Vector2 potentialSpawnSpot)
-	{
-		// If wall is here, has no room
-		Vector3Int tileCheckPos = new((int)potentialSpawnSpot.x, (int)potentialSpawnSpot.y);
-		// if(_wallTmObject.Tilemap.HasTile(tileCheckPos)) return false;
-
-		// If There is some world asset here, it has no room
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(new Vector2(tileCheckPos.x + 0.5f, tileCheckPos.y + 0.5f), 0.1f);
-		foreach(var collider in colliders)
-		{
-			if(collider.GetComponent<WorldObject>() != null) return false;
-		}
-		
-		// NTFS: Implement this later: If there is a floor here, there is no room (Figure out exact rules for this later)
-		
-		return true;
-	}
 	
-	private bool IsPointInRectangle(Vector2 point, Vector2 rectCenter, float rectWidth, float rectHeight)
+	private bool PointInRectangle(Vector2 point, Vector2 rectCenter, float rectWidth, float rectHeight)
 	{
 		// Calculate the bounds of the rectangle
 		float halfWidth = rectWidth / 2;
@@ -265,7 +227,7 @@ public class NpcManager : NetworkBehaviour
 	
 	private float GetSpawnModifier()
 	{
-		float activeRatio = _activeNpcSlotAmount / _maxNpcSlotSpawnAmount;
+		float activeRatio = _activeNpcSlotAmount / _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount;
 
 		if (activeRatio < 0.2f)
 		{

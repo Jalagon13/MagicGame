@@ -10,8 +10,8 @@ using Random = UnityEngine.Random;
 
 public class ChunkManager : NetworkBehaviour
 {
-	public static bool IS_GENERATING_ENVIRONMENT;
-	public static int ENVIRONMENT_SIDE_LENGTH = 256;
+	public static bool IS_GENERATING_BIOME;
+	public static int BIOME_SICE_LENGTH = 256;
 	public static int CHUNK_SIZE = 4;
 
 	public event EventHandler<OnActiveChunksUpdatedEventArgs> OnLoadedPlayerChunksUpdated; // Whenever new chunks are loaded around the player
@@ -32,7 +32,7 @@ public class ChunkManager : NetworkBehaviour
 	public Vector2Int MinLoadedTilePosition { get; private set; }
 	public Vector2Int MaxLoadedTilePosition { get; private set; }
 	
-	[SerializeField] private float _chunkLoadCooldown = 0.02f;
+	[SerializeField] private float _chunkLoadCooldown = 0.01f;
 	[SerializeField] private int _chunkLoadRadiusX = 5;
 	[SerializeField] private int _chunkLoadRadiusY = 4;
 	
@@ -55,7 +55,7 @@ public class ChunkManager : NetworkBehaviour
 	
 	private void FixedUpdate()
 	{
-		if(Player.LocalClientInstance == null || IS_GENERATING_ENVIRONMENT || SaveSystem.Instance.IsDeserializing) return;
+		if(Player.LocalClientInstance == null || IS_GENERATING_BIOME || SaveSystem.Instance.IsDeserializing) return;
 		
 		Vector2Int newChunkPosition = GetChunkPosition(Player.LocalClientInstance.transform.position);
 		if (newChunkPosition != _lastChunkPosition)
@@ -113,7 +113,7 @@ public class ChunkManager : NetworkBehaviour
 
 	private void LoadChunk(Vector2Int chunkPos)
 	{
-		_chunkNetworkManager.RequestChunkData(Player.LocalClientInstance.PlayerEnvironment.Value, chunkPos);
+		_chunkNetworkManager.RequestChunkData(Player.LocalClientInstance.CurrentBiome.Value, chunkPos);
 	}
 
 	private void UnloadChunk(Vector2Int chunkPos)
@@ -151,11 +151,11 @@ public class ChunkManager : NetworkBehaviour
 		}
 	}
 	
-	public ChunkGameData GetChunkData(EnvironmentID environment, Vector2Int chunkPosition)
+	public ChunkGameData GetChunkData(BiomeType environment, Vector2Int chunkPosition)
 	{
 		switch(environment)
 		{
-			case EnvironmentID.Forest:
+			case BiomeType.Forest:
 			
 				if(_forestChunks[chunkPosition] == null)
 				{
@@ -164,7 +164,7 @@ public class ChunkManager : NetworkBehaviour
 				}
 				
 				return _forestChunks[chunkPosition];
-			case EnvironmentID.Cave:
+			case BiomeType.Cave:
 			
 				if(_caveChunks[chunkPosition] == null)
 				{
@@ -224,7 +224,7 @@ public class ChunkManager : NetworkBehaviour
 		}
 	}
 	
-	public void AddObjectDataToChunk(Vector2Int position, WorldObject worldObject, EnvironmentID environmentToPlaceIn)
+	public void AddObjectDataToChunk(Vector2Int position, WorldObject worldObject, BiomeType environmentToPlaceIn)
 	{
 		if(!IsServer) return;
 		
@@ -233,7 +233,7 @@ public class ChunkManager : NetworkBehaviour
 		chunk.AddObjectData(position, worldObject);
 	}
 	
-	public void RemoveObjectDataFromChunk(Vector2Int position, EnvironmentID environmentToRemoveFrom)
+	public void RemoveObjectDataFromChunk(Vector2Int position, BiomeType environmentToRemoveFrom)
 	{
 		if(!IsServer) return;
 		
@@ -242,7 +242,7 @@ public class ChunkManager : NetworkBehaviour
 		chunk.RemoveObjectData(position);
 	}
 	
-	public void AddWallTileDataToChunk(Vector2Int position, byte tileID, EnvironmentID environmentToAddTileData)
+	public void AddWallTileDataToChunk(Vector2Int position, byte tileID, BiomeType environmentToAddTileData)
 	{
 		if(!IsServer) return;
 	
@@ -253,7 +253,7 @@ public class ChunkManager : NetworkBehaviour
 		chunk.AddWallTileData(position, GameManager.Instance.GetTileSOFromID(tileID));
 	}
 	
-	public void RemoveWallTileDataFromChunk(Vector2Int position, EnvironmentID environmentToRemoveTileData)
+	public void RemoveWallTileDataFromChunk(Vector2Int position, BiomeType environmentToRemoveTileData)
 	{
 		if(!IsServer) return;
 	
@@ -264,7 +264,7 @@ public class ChunkManager : NetworkBehaviour
 		chunk.RemoveWallTileData(position);
 	}
 	
-	public ChunkGameData GetChunk(Vector2Int position, EnvironmentID environmentToGetChunkFrom)
+	public ChunkGameData GetChunk(Vector2Int position, BiomeType environmentToGetChunkFrom)
 	{
 		Vector2Int chunkCoord = GetChunkCoordFromPosition(position);
 		
@@ -281,13 +281,13 @@ public class ChunkManager : NetworkBehaviour
 		return new Vector2Int(chunkX, chunkY);
 	}
 
-	public Dictionary<Vector2Int, ChunkGameData> GetChunksFromEnvironment(EnvironmentID environmentToGet)
+	public Dictionary<Vector2Int, ChunkGameData> GetChunksFromEnvironment(BiomeType environmentToGet)
 	{
 		switch(environmentToGet)
 		{
-			case EnvironmentID.Forest:
+			case BiomeType.Forest:
 				return _forestChunks;
-			case EnvironmentID.Cave:
+			case BiomeType.Cave:
 				return _caveChunks;
 		}
 		
@@ -296,14 +296,14 @@ public class ChunkManager : NetworkBehaviour
 	}
 	
 
-	public void SetChunksForEnvironment(EnvironmentID environmentToSetChunksFor, Dictionary<Vector2Int, ChunkGameData> newChunks)
+	public void SetChunksForEnvironment(BiomeType environmentToSetChunksFor, Dictionary<Vector2Int, ChunkGameData> newChunks)
 	{
 		switch(environmentToSetChunksFor)
 		{
-			case EnvironmentID.Forest:
+			case BiomeType.Forest:
 				_forestChunks = newChunks;
 				return;
-			case EnvironmentID.Cave:
+			case BiomeType.Cave:
 				_caveChunks = newChunks;
 				return;
 		}

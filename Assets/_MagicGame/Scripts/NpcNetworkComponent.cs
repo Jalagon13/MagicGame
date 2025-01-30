@@ -13,7 +13,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 	private bool _npcIsBeingRemoved;
 	private Npc _npc;
 	private byte _npcId;
-	public EnvironmentID NpcEnvironment { get; private set; }
+	public BiomeType NpcEnvironment { get; private set; }
 	private GameObject _npcGameObject;
 	private Collider2D _npcCollider;
 
@@ -75,7 +75,17 @@ public class NpcNetworkComponent : NetworkBehaviour
 	{
 		HandleNpcEnvironmentVisibility();
 		HandleNpcSpawnZoneVisibility();
+		HandlePathfindingVisibility();
 		UpdateDespawnTimer();
+	}
+
+	private void HandlePathfindingVisibility()
+	{
+		if(!Pathfinding.Instance.EnvironmentPathfindingExists(NpcEnvironment))
+		{
+			// If No player is in the same environment as this npc, despawn it
+			DespawnNpc();
+		}
 	}
 
 	private void HandleNpcEnvironmentVisibility()
@@ -150,7 +160,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 
 	private bool CheckIfInSameEnvironment(ulong clientId)
 	{
-		var clientEnvironment = NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().PlayerEnvironment.Value;
+		var clientEnvironment = NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value;
 	
 		return clientEnvironment == NpcEnvironment;
 	}
@@ -229,7 +239,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 		NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, false);
 	}
 	
-	public void SetEnvironment(EnvironmentID environment)
+	public void SetEnvironment(BiomeType environment)
 	{
 		NpcEnvironment = environment;
 		
