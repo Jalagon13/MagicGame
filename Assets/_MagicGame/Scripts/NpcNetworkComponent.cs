@@ -12,8 +12,8 @@ public class NpcNetworkComponent : NetworkBehaviour
 	private Timer _despawnTimer;
 	private bool _npcIsBeingRemoved;
 	private Npc _npc;
-	private byte _npcId;
-	public BiomeType NpcEnvironment { get; private set; }
+	private int _npcId;
+	public BiomeType NpcBiomeType { get; private set; }
 	private GameObject _npcGameObject;
 	private Collider2D _npcCollider;
 
@@ -58,7 +58,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 		_spawningClientId = sourceClientId;
 	}
 	
-	public void SetNpcId(byte npcId)
+	public void SetNpcId(int npcId)
 	{
 		_npcId = npcId;
 	}
@@ -81,7 +81,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 
 	private void HandlePathfindingVisibility()
 	{
-		if(!Pathfinding.Instance.EnvironmentPathfindingExists(NpcEnvironment))
+		if(!Pathfinding.Instance.EnvironmentPathfindingExists(NpcBiomeType))
 		{
 			// If No player is in the same environment as this npc, despawn it
 			DespawnNpc();
@@ -162,7 +162,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 	{
 		var clientEnvironment = NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value;
 	
-		return clientEnvironment == NpcEnvironment;
+		return clientEnvironment == NpcBiomeType;
 	}
 
 	private void UpdateDespawnTimer()
@@ -241,7 +241,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 	
 	public void SetEnvironment(BiomeType environment)
 	{
-		NpcEnvironment = environment;
+		NpcBiomeType = environment;
 		
 		// Find walldetectorcollider and populate it
 		var wallDetectorCollider = GetComponentInChildren<WallDetectorCollider>();

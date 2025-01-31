@@ -79,7 +79,7 @@ public class NpcManager : NetworkBehaviour
 				if(SpawnSpotIsValid(potentialSpawnPoint))
 				{
 					float remainingNpcSlotSpace = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount - _activeNpcSlotAmount;
-					NpcSO npcToSpawn = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().GetRandomNpc();
+					NpcSpawnData npcToSpawn = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().GetRandomNpc();
 					
 					if(npcToSpawn.SlotAmount <= remainingNpcSlotSpace)
 					{
@@ -94,26 +94,26 @@ public class NpcManager : NetworkBehaviour
 		}
 	}
 	
-	private void SpawnNpc(Vector2 spawnPosition, NpcSO npcSO)
+	private void SpawnNpc(Vector2 spawnPosition, NpcSpawnData npcSpawnData)
 	{
 		// Npc to spawn can fit in the remaining npc slot space
-		_activeNpcSlotAmount += npcSO.SlotAmount;
+		_activeNpcSlotAmount += npcSpawnData.SlotAmount;
 			
-		byte npcId = GameManager.Instance.GetIdAsByteFromNpcSO(npcSO);
+		int npcId = GameManager.Instance.GetNpcIdFromNpcSpawnData(Player.LocalClientInstance.CurrentBiome.Value, npcSpawnData);
 
 		SpawnNpcServerRpc(Player.LocalClientInstance.CurrentBiome.Value, npcId, NetworkManager.LocalClientId, spawnPosition);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnNpcServerRpc(BiomeType environmentToSpawnIn, byte npcId, ulong spawningClientId, Vector2 position)
+	private void SpawnNpcServerRpc(BiomeType spawnBiome, int npcId, ulong spawningClientId, Vector2 position)
 	{
-		NpcSO npcSO = GameManager.Instance.GetNpcSOFromId(npcId);
+		NpcSpawnData npcSpawnData = GameManager.Instance.GetNpcSpawnData(spawnBiome, npcId);
 		
 		var spawnPosition = new Vector2(Mathf.FloorToInt(position.x) + 0.5f, Mathf.FloorToInt(position.y) + 0.5f);
-		GameObject npcPrefab = Instantiate(npcSO.Prefab, spawnPosition, Quaternion.identity);
+		GameObject npcPrefab = Instantiate(npcSpawnData.Prefab, spawnPosition, Quaternion.identity);
 		
 		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
-		npcNetworkComponent.SetEnvironment(environmentToSpawnIn);
+		npcNetworkComponent.SetEnvironment(spawnBiome);
 		npcNetworkComponent.SetSpawningClientId(spawningClientId);
 		npcNetworkComponent.SetNpcId(npcId);
 		
@@ -125,13 +125,14 @@ public class NpcManager : NetworkBehaviour
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void DespawnNpcServerRpc(byte npcId, NetworkObjectReference npcToRemoveNetworkObjectReference, ulong spawningClientId, bool killNpc)
+	public void DespawnNpcServerRpc(int npcId, NetworkObjectReference npcToRemoveNetworkObjectReference, ulong spawningClientId, bool killNpc)
 	{
 		_activeNpcNetworkList.Remove(npcToRemoveNetworkObjectReference);
 		
 		// Either kill or despawn npc depending on the conditional
 		npcToRemoveNetworkObjectReference.TryGet(out NetworkObject npcNetworkObject);
 		Npc npc = npcNetworkObject.GetComponent<Npc>();
+		NpcNetworkComponent npcNetworkComponent = npc.GetComponent<NpcNetworkComponent>();
 		
 		if(killNpc)
 		{
@@ -141,13 +142,13 @@ public class NpcManager : NetworkBehaviour
 		
 		npc.DestroySelf();
 		
-		UpdateActiveNpcSlotAmountClientRpc(npcId, RpcTarget.Single(spawningClientId, RpcTargetUse.Persistent));
+		UpdateActiveNpcSlotAmountClientRpc(npcNetworkComponent.NpcBiomeType, npcId, RpcTarget.Single(spawningClientId, RpcTargetUse.Persistent));
 	}
 	
 	[Rpc(SendTo.SpecifiedInParams)]
-	private void UpdateActiveNpcSlotAmountClientRpc(byte npcId, RpcParams rpcParams)
+	private void UpdateActiveNpcSlotAmountClientRpc(BiomeType biome, int npcId, RpcParams rpcParams)
 	{
-		NpcSO npc = GameManager.Instance.GetNpcSOFromId(npcId);
+		NpcSpawnData npc = GameManager.Instance.GetNpcSpawnData(biome, npcId);
 	
 		_activeNpcSlotAmount -= npc.SlotAmount;
 	}

@@ -18,14 +18,13 @@ public class GameManager : NetworkBehaviour
 	[SerializeField] private GameObject _itemBasePrefab;
 	[SerializeField] private GameObject _playerPrefab;
 	[SerializeField] private MiningProjectile _miningProjectilePrefab;
-	[SerializeField] private AudioClip _pickupClip;
 	
 	[Title("Database Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private ItemDataBaseSO _itemDataBaseSO;
 	[SerializeField] private WorldObjectDataBaseSO _worldObjectDataBaseSO;
 	[SerializeField] private TileDataBaseSO _tileDataBaseSO;
 	[SerializeField] private ItemParameterDataBaseSO _itemParameterDataBaseSO;
-	[SerializeField] private NpcDataBaseSO _npcDataBaseSO;
+	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
 	
 	private Dictionary<ulong, GameObject> _fakeProjectiles = new Dictionary<ulong, GameObject>();
 	
@@ -98,20 +97,14 @@ public class GameManager : NetworkBehaviour
 	
 	#region DataBase Functions
 	
-	public NpcSO GetNpcSOFromId(byte id)
+	public NpcSpawnData GetNpcSpawnData(BiomeType biome, int id)
 	{
-		return _npcDataBaseSO.NpcSOList[id];
+		return _biomeSpawnParamsSO.GetBiomeSpawnRule(biome).NpcSpawnTable[id];
 	}
 	
-	public byte GetIdAsByteFromNpcSO(NpcSO npcSO)
+	public int GetNpcIdFromNpcSpawnData(BiomeType biome, NpcSpawnData npcSpawnData)
 	{
-		int index = _npcDataBaseSO.NpcSOList.IndexOf(npcSO);
-		if(index > 255 || index < 0)
-		{
-			Debug.LogError($"Warning, {npcSO.name} is returning an index value out of bounds of a byte");
-		}
-		
-		return (byte)index;
+		return _biomeSpawnParamsSO.GetBiomeSpawnRule(biome).NpcSpawnTable.IndexOf(npcSpawnData);
 	}	
 	
 	public ItemParameterDataBaseSO GetItemParameterDataBaseSO()
@@ -282,7 +275,7 @@ public class GameManager : NetworkBehaviour
 		}
 	}
 	
-	public void SpawnItem(ItemSO itemToSpawn, int amount, Vector2 spawnPos, bool playAudio = true)
+	public void SpawnItem(ItemSO itemToSpawn, int amount, Vector2 spawnPos)
 	{
 		if(itemToSpawn == null)
 		{
@@ -293,11 +286,11 @@ public class GameManager : NetworkBehaviour
 		int itemId = GetItemIdFromItemSO(itemToSpawn); 
 		ushort itemAmount = (ushort)amount;
 		
-		SpawnItemServerRpc((ushort)itemId, itemAmount, spawnPos, playAudio);
+		SpawnItemServerRpc((ushort)itemId, itemAmount, spawnPos);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnItemServerRpc(ushort itemId, ushort itemAmount, Vector2 spawnPos, bool playAudio = true)
+	private void SpawnItemServerRpc(ushort itemId, ushort itemAmount, Vector2 spawnPos)
 	{
 		GameObject itemGameObject = Instantiate(_itemBasePrefab, spawnPos, Quaternion.identity);
 		
@@ -306,11 +299,6 @@ public class GameManager : NetworkBehaviour
 		
 		NetworkObject itemNetworkObject = itemGameObject.GetComponent<NetworkObject>();
 		itemNetworkObject.Spawn(true);
-		
-		if (playAudio)
-		{
-			MMSoundManagerSoundPlayEvent.Trigger(_pickupClip, MMSoundManager.MMSoundManagerTracks.UI, default);
-		}
 	}
 	
 	public void DestroyItem(Item itemToDestroy)

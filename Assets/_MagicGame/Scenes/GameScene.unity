@@ -11303,7 +11303,7 @@ MonoBehaviour:
   _worldObjectDataBaseSO: {fileID: 11400000, guid: de04e42d3d1784c50ae37924da4d8a99, type: 2}
   _tileDataBaseSO: {fileID: 11400000, guid: 86b92227f4ff84b0a9aee415c11b1cbe, type: 2}
   _itemParameterDataBaseSO: {fileID: 11400000, guid: 3b8301f84a290414e984575381b8ddcf, type: 2}
-  _npcDataBaseSO: {fileID: 11400000, guid: 61735c61f6cbe40ed9c66df3baa42282, type: 2}
+  _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
 --- !u!114 &1655249454
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -21,6 +21,20 @@ public class BiomeSpawnParamsSO : ScriptableObject
 		Debug.LogError($"{Player.LocalClientInstance.CurrentBiome.Value} has not been found.");
 		return default;
 	}
+	
+	public BiomeSpawnRule GetBiomeSpawnRule(BiomeType biomeType)
+	{
+		foreach (BiomeSpawnRule biomeSpawnRule in AllBiomeSpawnRules)
+		{
+			if (biomeSpawnRule.Biome == biomeType)
+			{
+				return biomeSpawnRule;
+			}
+		}
+
+		Debug.LogError($"{biomeType} has not been found.");
+		return default;
+	}
 }
 
 [Serializable]
@@ -32,13 +46,13 @@ public class BiomeSpawnRule
 	[Tooltip("Maximum NPCs that can exist in this biome at once.")]
 	public int MaxNpcSlotAmount;
 	public bool HasDayNightCycle;
-	public List<NpcSpawnEntry> NpcSpawnTable;
+	public List<NpcSpawnData> NpcSpawnTable;
 
-	public NpcSO GetRandomNpc()
+	public NpcSpawnData GetRandomNpc()
 	{
 		bool isNightTime = WorldManager.Instance.IsNight;
 	
-		List<NpcSpawnEntry> validNpcEntries = new();
+		List<NpcSpawnData> validNpcEntries = new();
 
 		// Filter NPCs based on the time of day (if applicable)
 		foreach (var entry in NpcSpawnTable)
@@ -61,7 +75,7 @@ public class BiomeSpawnRule
 		return SelectRandomNpc(validNpcEntries);
 	}
 
-	private NpcSO SelectRandomNpc(List<NpcSpawnEntry> npcEntries)
+	private NpcSpawnData SelectRandomNpc(List<NpcSpawnData> npcEntries)
 	{
 		float totalWeight = 0f;
 		foreach (var entry in npcEntries)
@@ -77,19 +91,20 @@ public class BiomeSpawnRule
 			currentWeight += entry.RelativeSpawnWeight;
 			if (randomValue <= currentWeight)
 			{
-				return entry.NpcSO;
+				return entry;
 			}
 		}
 
 		Debug.LogError($"Random NPC selection failed unexpectedly in {Biome}. Returning first NPC in the table.");
-		return npcEntries[0].NpcSO;
+		return npcEntries[0];
 	}
 }
 
 [Serializable]
-public class NpcSpawnEntry
+public class NpcSpawnData
 {
-	public NpcSO NpcSO;
+	public GameObject Prefab;
+	public float SlotAmount;
 	[Tooltip("Higher values mean higher spawn chances.")]
 	[Range(0.01f, 100.0f)]
 	public float RelativeSpawnWeight;
