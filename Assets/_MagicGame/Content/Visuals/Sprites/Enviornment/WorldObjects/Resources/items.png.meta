@@ -528,7 +528,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_marshmellow
+      name: item_spellbook
       rect:
         serializedVersion: 2
         x: 48
@@ -571,6 +571,116 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: item_chest
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 80
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0b6198b12cd34623bc1c107719c03d3
+      internalID: -1010797688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_wizard_hat
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 80
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40c9cb3a5c64a49a8a3d6408afeb1277
+      internalID: -554541973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_wizard_robe
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 80
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1201dbc4815c4f24a93d98c05bd084b
+      internalID: 1972111916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_wizard_grieves
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0a3de5114e5a4e29bbfeee07c67f30e
+      internalID: 1068366592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_door
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c0fb939c79c148a9bd53834cc9cf7ff
+      internalID: 730009004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -590,8 +700,10 @@ TextureImporter:
       item_blacksmith: 677612400
       item_blue_bell: -1747701128
       item_campfire: -925800054
+      item_chest: -1010797688
       item_chicken: 1063399352
       item_coal: -650282894
+      item_door: 730009004
       item_fiber: 1175467371
       item_furnace: -1644608659
       item_glass_bottle: -427256236
@@ -602,7 +714,6 @@ TextureImporter:
       item_iron_ore: -1501873989
       item_mana_crystal: -984316580
       item_mana_potion: -854955160
-      item_marshmellow: -1033124662
       item_meat_cooked: 1280716566
       item_meat_raw: 1876687506
       item_mushed_mushroom: 715077904
@@ -613,6 +724,7 @@ TextureImporter:
       item_portal: 547736231
       item_sand: 67440230
       item_simple_wand: -1071939411
+      item_spellbook: -1033124662
       item_spindle: 1551977814
       item_stone: -1096778836
       item_stone_axe: -393647513
@@ -621,6 +733,9 @@ TextureImporter:
       item_stone_sword: 444970800
       item_sword: -1843546812
       item_torch: -1599595118
+      item_wizard_grieves: 1068366592
+      item_wizard_hat: -554541973
+      item_wizard_robe: 1972111916
       item_wood: -395863171
       item_wood_axe: 1896764305
       item_wood_hammer: 1132864278

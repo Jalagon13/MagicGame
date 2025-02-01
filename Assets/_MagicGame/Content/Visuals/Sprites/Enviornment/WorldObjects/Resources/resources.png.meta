@@ -113,7 +113,7 @@ TextureImporter:
       name: rsc_craft_table
       rect:
         serializedVersion: 2
-        x: 0
+        x: 80
         y: 112
         width: 16
         height: 16
@@ -285,6 +285,94 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: rsc_torch
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a5dbeaf5f0804a019def8773d351679
+      internalID: -597264530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rsc_door_closed
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 112
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 107dba3a24bf743468fb80a08eac9832
+      internalID: -691286103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rsc_door_open
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca4c2b92dc6d54f4680147b38d62f006
+      internalID: 1158298151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rsc_chest
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 96
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd693560398244fd18eff5500ff35e30
+      internalID: 1565617341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -301,12 +389,16 @@ TextureImporter:
     nameFileIdTable:
       rsc_alchemy_table: -443529757
       rsc_campfire: 1706644685
+      rsc_chest: 1565617341
       rsc_craft_table: 1014094090
+      rsc_door_closed: -691286103
+      rsc_door_open: 1158298151
       rsc_furnace: -1474684095
       rsc_mana_crystal: -1761981032
       rsc_portal: -1882313086
       rsc_spindle: 250863300
       rsc_stone: -153397541
+      rsc_torch: -597264530
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

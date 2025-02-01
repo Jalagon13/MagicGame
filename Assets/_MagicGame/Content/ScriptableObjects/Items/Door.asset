@@ -10,13 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a7aded7ceac2467a95225af72ed6b1a, type: 3}
-  m_Name: Chest
+  m_Name: Door
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Chest
-  <UiDisplay>k__BackingField: {fileID: -1010797688, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <Name>k__BackingField: Door
+  <UiDisplay>k__BackingField: {fileID: 730009004, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  <DefaultParameterList>k__BackingField: []
-  _deployObjectPrefab: {fileID: -590340910586133321, guid: 3bc37f5a996714e3c93136f78e87bc55, type: 3}
+  <DefaultParameterList>k__BackingField:
+  - Parameter: {fileID: 11400000, guid: 7d0caf3b965b54f63a502974443886c9, type: 2}
+    Value: 3
+  _deployObjectPrefab: {fileID: 821165274625048597, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
   _deploySound: {fileID: 0}

@@ -132,7 +132,10 @@ public class ObjectManager : NetworkBehaviour
 			SoundManager.Instance.PlayOneShot(asset.ResourceHit, pos);
 			
 			// If hitting a chest that is opened or the chest has items, don't do anything
-			if(ChestManager.Instance.OpenedChestIds.Contains($"{position}{environment}") || ChestManager.Instance.GetChestDataFromEnvironment(environment)[position].Count > 0) return; 
+			if(resourceObjectFound is ChestObject)
+			{
+				if(ChestManager.Instance.OpenedChestIds.Contains($"{position}{environment}") || ChestManager.Instance.GetChestDataFromEnvironment(environment)[position].Count > 0) return; 
+			}
 			
 			DamageWorldObjectServerRpc(position, assetID, incomingDamage, environment);
 		}
