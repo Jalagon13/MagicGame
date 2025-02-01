@@ -222,7 +222,7 @@ MonoBehaviour:
   - rid: 7040998723637215769
   - rid: 7040998723637215815
   - rid: 7040998723637215891
-  m_VersionTimestamp: 638740026406394620
+  m_VersionTimestamp: 638740031751281930
   m_DebugInfo: {fileID: -2552540242314150647}
   m_RuntimeGraph: {fileID: 5221345960659253865}
   AssetID:
@@ -1221,7 +1221,7 @@ MonoBehaviour:
         AuthoringAssetID:
           m_Value0: 17209478533539545690
           m_Value1: 17899044058787254008
-        m_DebugInfo: {fileID: 0}
+        m_DebugInfo: {fileID: -2552540242314150647}
         Root:
           rid: 7040998723637216157
         BlackboardReference:

@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4246324318
+  GlobalObjectIdHash: 2955916327
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -236,7 +236,7 @@ CircleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 0b5105ee1ea7a46da950b9d0eb46bf0b, type: 2}
+  m_Material: {fileID: 6200000, guid: 2a93957d1b6314d99a78e3a3f64ea335, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
