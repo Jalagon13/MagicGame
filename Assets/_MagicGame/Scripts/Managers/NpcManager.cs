@@ -14,6 +14,7 @@ public class NpcManager : NetworkBehaviour
 	
 	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
 	[SerializeField] private bool _enableSpawning = true;
+	[SerializeField] private float _startSpawnDelay;
 	
 	private readonly NetworkList<NetworkObjectReference> _activeNpcNetworkList = new();
 	private readonly float _tickTime = 1f / 60f; // 60 ticks per second
@@ -48,7 +49,7 @@ public class NpcManager : NetworkBehaviour
 		_localPlayerTransform = NetworkManager.ConnectedClients[clientId].PlayerObject.transform;
 		_activeNpcSlotAmount = 0;
 		
-		InvokeRepeating(nameof(TryToSpawnNpc), 1, _tickTime);
+		InvokeRepeating(nameof(TryToSpawnNpc), _startSpawnDelay, _tickTime);
 	}
 	
 	public void TryToSpawnNpc()
