@@ -1356,7 +1356,7 @@ Camera:
   far clip plane: 5000
   field of view: 9.75
   orthographic: 1
-  orthographic size: 19.5
+  orthographic size: 9.75
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -6615,7 +6615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _chunkLoadCooldown: 0.03
+  _chunkLoadCooldown: 0.02
   _chunkLoadRadiusX: 6
   _chunkLoadRadiusY: 4
 --- !u!114 &876396789
@@ -11054,6 +11054,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
+  _enableSpawning: 0
 --- !u!1 &1616919198
 GameObject:
   m_ObjectHideFlags: 0
@@ -11298,7 +11299,6 @@ MonoBehaviour:
   _itemBasePrefab: {fileID: 4324714860010554649, guid: b80d6a3337ea34052b9944957d71ebd0, type: 3}
   _playerPrefab: {fileID: 815970926421098775, guid: f97c883a224ab4846b8446859cca2edd, type: 3}
   _miningProjectilePrefab: {fileID: -7044577308189781429, guid: 0f801ebc91b004182a3219acb85b34d4, type: 3}
-  _pickupClip: {fileID: 0}
   _itemDataBaseSO: {fileID: 11400000, guid: f8a736388b2c44969af16475866a4801, type: 2}
   _worldObjectDataBaseSO: {fileID: 11400000, guid: de04e42d3d1784c50ae37924da4d8a99, type: 2}
   _tileDataBaseSO: {fileID: 11400000, guid: 86b92227f4ff84b0a9aee415c11b1cbe, type: 2}
@@ -12375,7 +12375,7 @@ MonoBehaviour:
     CustomLookAtTarget: 0
   Lens:
     FieldOfView: 9.75
-    OrthographicSize: 19.5
+    OrthographicSize: 9.75
     NearClipPlane: 0.1
     FarClipPlane: 5000
     Dutch: 0

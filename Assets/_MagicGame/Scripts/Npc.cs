@@ -8,7 +8,11 @@ using UnityEngine;
 public class Npc : NetworkBehaviour, IHasHealth
 {	
 	public event EventHandler OnNpcKilled;
-	public event EventHandler OnNpcDamged;
+	public event EventHandler<OnNpcDamagedEventArgs> OnNpcDamged;
+	public class OnNpcDamagedEventArgs : EventArgs
+	{
+		public Vector2 DamageSourcePosition;
+	}
 	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnHealthUpdated;
 
 	[SerializeField] private int _maxHealth;
@@ -16,16 +20,12 @@ public class Npc : NetworkBehaviour, IHasHealth
 	[SerializeField] private LootTable _lootTable;
 	
 	private NetworkVariable<int> _npcHealthPointNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	private Knockback _knockback;
-	private Rigidbody2D _rigidBody2D;
-	
+	private Vector2 _damageSourcePosition;
 	public override void OnNetworkSpawn()
 	{
 		if(IsServer)
 		{
 			_npcHealthPointNetworkVariable.Value = _maxHealth;
-			_knockback = GetComponent<Knockback>();
-			_rigidBody2D = GetComponent<Rigidbody2D>();
 		}
 		
 		_npcHealthPointNetworkVariable.OnValueChanged += UpdateHealthUI;
@@ -39,7 +39,10 @@ public class Npc : NetworkBehaviour, IHasHealth
 		// If the new value is less than the previous value than this npc has been damaged
 		if(newValue < previousValue)
 		{
-			OnNpcDamged?.Invoke(this, EventArgs.Empty);
+			OnNpcDamged?.Invoke(this, new OnNpcDamagedEventArgs
+			{
+				DamageSourcePosition = _damageSourcePosition
+			});
 		}
 	}
 
@@ -56,15 +59,12 @@ public class Npc : NetworkBehaviour, IHasHealth
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void DamageNpcServerRpc(int damageAmount, Vector2 damagerPosition)
 	{
+		_damageSourcePosition = damagerPosition;
 		_npcHealthPointNetworkVariable.Value -= damageAmount;
 		
 		if(_npcHealthPointNetworkVariable.Value <= 0)
 		{
 			OnNpcKilled?.Invoke(this, EventArgs.Empty);
-		}
-		else
-		{
-			_knockback?.ApplyKnockback(_rigidBody2D, damagerPosition);
 		}
 	}
 	

@@ -787,7 +787,7 @@ MonoBehaviour:
   _startingItems:
   - Item: {fileID: 11400000, guid: f163862eaf2254f90b02b26267855a9c, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: d42e1f6278c094b24b5037d421650f40, type: 2}
+  - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
     Quantity: 10
   - Item: {fileID: 11400000, guid: 409efbd4e22624ac882995581adb1c37, type: 2}
     Quantity: 1

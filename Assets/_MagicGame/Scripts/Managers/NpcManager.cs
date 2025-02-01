@@ -13,6 +13,7 @@ public class NpcManager : NetworkBehaviour
 	public static int NO_SPAWN_ZONE_HEIGHT = 20; // Camera Frustum
 	
 	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
+	[SerializeField] private bool _enableSpawning = true;
 	
 	private readonly NetworkList<NetworkObjectReference> _activeNpcNetworkList = new();
 	private readonly float _tickTime = 1f / 60f; // 60 ticks per second
@@ -53,7 +54,7 @@ public class NpcManager : NetworkBehaviour
 	public void TryToSpawnNpc()
 	{
 		// If there is no chunks loaded, then don't try to spawn anything. NTFS: This might not work, first place to look if mob spawning is bugged
-		if(ChunkManager.Instance.GetLoadedPlayerChunks().Count <= 0) return;
+		if(ChunkManager.Instance.GetLoadedPlayerChunks().Count <= 0 || !_enableSpawning) return;
 	
 		// Calculate the current spawn chance modifier
 		float spawnModifier = GetSpawnModifier();

@@ -90,7 +90,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Name
-      value: Deer01
+      value: Npc_Deer01
       objectReference: {fileID: 0}
     - target: {fileID: 5432751543366974388, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Enabled
@@ -166,7 +166,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8184671317715962605, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 404734043
+      value: 1486424500
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4388047220858872420, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
@@ -175,37 +175,17 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1846937315678024958}
-    - targetCorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 973664428748397742}
-    - targetCorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7015184231448579503}
-    - targetCorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3913762829402714234}
+      addedObject: {fileID: 1574713361264783037}
     - targetCorrespondingSourceObject: {fileID: 3405255178129098330, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4192024292003532019}
   m_SourcePrefab: {fileID: 100100000, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
---- !u!114 &3221309251872524564 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6098015897637183109, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
-  m_PrefabInstance: {fileID: 8652789913409017745}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8066f214e926c43c4b5d9d1bf4fbd377, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3583022790027280923 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
   m_PrefabInstance: {fileID: 8652789913409017745}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1846937315678024958
+--- !u!114 &1574713361264783037
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -214,116 +194,54 @@ MonoBehaviour:
   m_GameObject: {fileID: 3583022790027280923}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 5
-  radius: 0.1
-  height: 2
-  canMove: 1
-  maxSpeed: 1
-  gravity: {x: NaN, y: NaN, z: NaN}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  centerOffsetCompatibility: NaN
-  repathRateCompatibility: NaN
-  canSearchCompability: 0
-  orientation: 1
-  enableRotation: 0
-  autoRepath:
-    mode: 2
-    interval: 0.5
-    sensitivity: 10
-    maximumInterval: 2
-    visualizeSensitivity: 0
-  targetCompatibility: {fileID: 0}
-  maxAcceleration: -2.5
-  rotationSpeed: 360
-  slowdownDistance: 0.25
-  pickNextWaypointDist: 0.25
-  endReachedDistance: 0.125
-  alwaysDrawGizmos: 0
-  slowWhenNotFacingTarget: 1
-  whenCloseToDestination: 0
-  constrainInsideGraph: 0
---- !u!114 &973664428748397742
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3583022790027280923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  drawGizmos: 1
-  detailedGizmos: 0
-  startEndModifier:
-    addPoints: 0
-    exactStartPoint: 3
-    exactEndPoint: 3
-    useRaycasting: 0
-    mask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    useGraphRaycasting: 0
-  traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  graphMask:
-    value: -1
---- !u!114 &7015184231448579503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3583022790027280923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77f586f285b3847808d79083bd19ef1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  unwrap: 1
-  splitAtEveryPortal: 0
---- !u!114 &3913762829402714234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3583022790027280923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e0e1992f380d4207b79539cd00e0de8, type: 3}
+  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _idleTimeRange: {x: 3, y: 6}
-  _wanderSpeed: 1
-  _fleeSpeed: 3
-  _maxWanderNodeDistance: 5
-  _knockbackResist: 25
-  <LivestockDamaged>k__BackingField:
-    Guid:
-      Data1: -1016024945
-      Data2: 1270028947
-      Data3: 124954255
-      Data4: -1982127540
-    Path: event:/DeerDamaged
-  <LivestockDeath>k__BackingField:
-    Guid:
-      Data1: 89985926
-      Data2: 1147036939
-      Data3: 1353001656
-      Data4: 1797791123
-    Path: event:/DeerDeath
-  _spriteDirectionHandlers:
-  - {fileID: 3221309251872524564}
+  m_Graph: {fileID: -2886738209571348641, guid: 24912bd11aa2a48348abb62bd16f4a5c, type: 2}
+  m_BlackboardVariableOverridesList:
+  - rid: 2948846905284886720
+  - rid: 2948846905284886845
+  - rid: 2948846905284887004
+  - rid: 2948846928740484020
+  m_IsInitialised: 0
+  m_IsStarted: 0
+  NetcodeRunOnlyOnOwner: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: 2948846905284886720
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        m_Value: {fileID: 3583022790027280923}
+    - rid: 2948846905284886845
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 6639735210481233650
+          m_Value1: 17181388704984548911
+        Name: MaxWanderDistance
+        m_Value: 3
+    - rid: 2948846905284887004
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 2340894599642784118
+          m_Value1: 511265977762974940
+        Name: WanderSpeed
+        m_Value: 10
+    - rid: 2948846928740484020
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 16776494197961774382
+          m_Value1: 9418826327438765941
+        Name: FleeSpeed
+        m_Value: 20
 --- !u!1 &6292943880239321547 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3405255178129098330, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
