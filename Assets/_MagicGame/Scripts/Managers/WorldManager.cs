@@ -193,7 +193,7 @@ public class WorldManager : NetworkBehaviour
 	private async void AsyncClientLoadEnvironment(BiomeType targetEnvironment, Vector2 portalPosition, RpcParams rpcParams = default)
 	{
 		// If chunks of target environment is empty (no chunks loaded), host needs to deserialize
-		if(ChunkManager.Instance.GetChunksFromEnvironment(targetEnvironment).Count <= 0)
+		if(ChunkManager.Instance.GetChunksFromBiome(targetEnvironment).Count <= 0)
 		{
 			// Chunks of target environment are not generated or deserialized
 			await SaveSystem.Instance.DeserializeAndDispatchData(targetEnvironment);
@@ -226,7 +226,7 @@ public class WorldManager : NetworkBehaviour
 		Player.LocalClientInstance.CurrentBiome.Value = targetEnvironment;
 		
 		// If chunks for target environment does not exist, deserialize the environment 
-		if(ChunkManager.Instance.GetChunksFromEnvironment(targetEnvironment).Count <= 0)
+		if(ChunkManager.Instance.GetChunksFromBiome(targetEnvironment).Count <= 0)
 		{
 			await SaveSystem.Instance.DeserializeAndDispatchData(targetEnvironment);
 		}

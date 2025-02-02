@@ -77,7 +77,7 @@ public class ForestGeneration : MonoBehaviour
 	
 	private void GenerateOverworldChunkData()
 	{
-		ChunkManager.Instance.GetChunksFromEnvironment(BiomeType.Forest).Clear();
+		ChunkManager.Instance.GetChunksFromBiome(BiomeType.Forest).Clear();
 		
 		// Loop through all chunks
 		int chunkSideAmount = ChunkManager.BIOME_SICE_LENGTH / ChunkManager.CHUNK_SIZE;
@@ -119,7 +119,7 @@ public class ForestGeneration : MonoBehaviour
 				}
 				
 				// Populate the overworld chunk data
-				ChunkManager.Instance.GetChunksFromEnvironment(BiomeType.Forest).Add(chunkCoord, chunkGameData);
+				ChunkManager.Instance.GetChunksFromBiome(BiomeType.Forest).Add(chunkCoord, chunkGameData);
 			}
 		}
 	}

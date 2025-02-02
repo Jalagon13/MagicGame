@@ -53,6 +53,11 @@ public class ObjectManager : NetworkBehaviour
 			// Instantiate the visual asset
 			GameObject assetGO = Instantiate(assetData.Asset.gameObject, (Vector2)assetData.Position, Quaternion.identity);
 			
+			if(assetData is DoorObjectGameData doorObjectGameData)
+			{
+				assetGO.GetComponent<DoorObject>().InitializeOpenState(doorObjectGameData.IsOpen);
+			}
+			
 			OnWorldObjectSpawned?.Invoke(this, new OnWorldAssetSpawnedEventArgs
 			{
 				WorldObjectGameObject = assetGO
@@ -79,6 +84,38 @@ public class ObjectManager : NetworkBehaviour
 		OnClearAllEnvironmentObjects?.Invoke(this, new EventArgs());
 	}
 	
+	public void ToggleDoor(Vector2Int doorPos, BiomeType biome)
+	{
+		ToggleDoorServerRpc(doorPos, biome);
+	}
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void ToggleDoorServerRpc(Vector2Int doorPos, BiomeType biome)
+	{
+		bool newIsOpen = ChunkManager.Instance.ToggleDoor(doorPos, biome);
+		HandleDoorVisualsClientRpc(doorPos, newIsOpen, biome);
+	}
+
+	[Rpc(SendTo.ClientsAndHost)]
+	private void HandleDoorVisualsClientRpc(Vector2Int doorPos, bool isOpen, BiomeType biome)
+	{
+		if(biome == Player.LocalClientInstance.CurrentBiome.Value)
+		{
+			// If there exists a door in this position, set its open value to isOpen
+			var colliders = Physics2D.OverlapPointAll(doorPos + new Vector2(0.5f, 0.5f));
+			foreach (var collider in colliders)
+			{
+				if(collider.TryGetComponent(out DoorObject doorObject))
+				{
+					doorObject.SetIsOpen(isOpen);
+					return;
+				}
+			}
+			
+			Debug.LogError($"No door found here. There should be a door here");
+		}
+	}
+
 	public void PlaceObject(Vector2Int position, WorldObject worldObject, BiomeType environmentToPlaceIn)
 	{
 		byte assetID = GameManager.Instance.GetByteIDFromWorldObject(worldObject);
@@ -95,9 +132,9 @@ public class ObjectManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.ClientsAndHost)]
-	private void HandleObjectVisualsClientRpc(Vector2Int position, byte assetID, BiomeType objectEnvironment)
+	private void HandleObjectVisualsClientRpc(Vector2Int position, byte assetID, BiomeType objectBiome)
 	{
-		if(objectEnvironment == Player.LocalClientInstance.CurrentBiome.Value /* && ObjectPositionInLoadedChunks(position) */)
+		if(objectBiome == Player.LocalClientInstance.CurrentBiome.Value /* && ObjectPositionInLoadedChunks(position) */)
 		{
 			// Visually place it down for everyone
 			WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);

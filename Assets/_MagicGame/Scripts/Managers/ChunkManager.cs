@@ -224,6 +224,38 @@ public class ChunkManager : NetworkBehaviour
 		}
 	}
 	
+	public bool ToggleDoor(Vector2Int doorPos, BiomeType biome)
+	{
+		if(!IsServer) return false;
+		
+		ChunkGameData chunk = GetChunk(doorPos, biome);
+		
+		foreach (WorldObjectGameData worldObject in chunk.WorldObjectGameDataList)
+		{
+			if(worldObject.Position == doorPos)
+			{
+				// Found door
+				Debug.Log(worldObject == null);
+				Debug.Log(worldObject as DoorObjectGameData == null);
+				var doorObject = worldObject as DoorObjectGameData;
+				doorObject.ToggleDoor();
+				
+				return doorObject.IsOpen;
+			}
+		}
+		
+		return false;
+	}
+	
+	public void AddObjectDataToChunk(WorldObjectFileData worldObjectFileData, BiomeType biome, WorldObject worldObject)
+	{
+		if(!IsServer) return;
+		
+		ChunkGameData chunk = GetChunk(worldObjectFileData.Pos, biome);
+		
+		chunk.AddObjectData(worldObjectFileData, worldObject);
+	}
+	
 	public void AddObjectDataToChunk(Vector2Int position, WorldObject worldObject, BiomeType environmentToPlaceIn)
 	{
 		if(!IsServer) return;
@@ -268,7 +300,7 @@ public class ChunkManager : NetworkBehaviour
 	{
 		Vector2Int chunkCoord = GetChunkCoordFromPosition(position);
 		
-		var chunks = GetChunksFromEnvironment(environmentToGetChunkFrom);
+		var chunks = GetChunksFromBiome(environmentToGetChunkFrom);
 		chunks.TryGetValue(chunkCoord, out ChunkGameData chunk);
 		
 		return chunk;
@@ -281,7 +313,7 @@ public class ChunkManager : NetworkBehaviour
 		return new Vector2Int(chunkX, chunkY);
 	}
 
-	public Dictionary<Vector2Int, ChunkGameData> GetChunksFromEnvironment(BiomeType environmentToGet)
+	public Dictionary<Vector2Int, ChunkGameData> GetChunksFromBiome(BiomeType environmentToGet)
 	{
 		switch(environmentToGet)
 		{

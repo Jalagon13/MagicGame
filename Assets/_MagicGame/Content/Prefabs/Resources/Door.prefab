@@ -184,7 +184,7 @@ PrefabInstance:
     - target: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 1565617341, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
+      objectReference: {fileID: -691286103, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
     - target: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
@@ -273,6 +273,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 590160871130149661}
   m_SourcePrefab: {fileID: 100100000, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+--- !u!212 &62746517780266360 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+  m_PrefabInstance: {fileID: 6329148553474859313}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6193510229615470260 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 154920837247502213, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
@@ -308,12 +313,19 @@ MonoBehaviour:
   _harvestType: 1
   _maxHitPoints: 50
   _lootTable:
-    Table: []
+    Table:
+    - Item: {fileID: 11400000, guid: 0d0c117ace8794e798947bdfaa1c52ef, type: 2}
+      Min: 1
+      Max: 1
+      Chance: 100
   _clickFeedback: {fileID: 0}
   _destroyFeedback: {fileID: 0}
   _spawnFeedback: {fileID: 0}
   _worldInput: {fileID: 9207288352720458267}
   _doorOpenDistance: 2.75
+  _openSprite: {fileID: 1158298151, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
+  _closeSprite: {fileID: -691286103, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
+  _doorSr: {fileID: 62746517780266360}
 --- !u!4 &8566354021552112440 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2392654451137683977, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}

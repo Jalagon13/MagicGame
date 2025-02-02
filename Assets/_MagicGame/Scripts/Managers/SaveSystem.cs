@@ -62,7 +62,7 @@ public class SaveSystem : MonoBehaviour
 		_environmentFileData.WorldObjectsList.Clear();
 		
 		// Loop through all assets and push them to _sceneData before serializing it
-		foreach (var chunkPosChunkDataKVP in ChunkManager.Instance.GetChunksFromEnvironment(environmentToSerialize))
+		foreach (var chunkPosChunkDataKVP in ChunkManager.Instance.GetChunksFromBiome(environmentToSerialize))
 		{
 			List<WorldObjectGameData> worldObjectGameDataList = chunkPosChunkDataKVP.Value.WorldObjectGameDataList;
 		
@@ -74,11 +74,17 @@ public class SaveSystem : MonoBehaviour
 					if(worldObjectGameData.Asset != null)
 					{
 						// Create new filedata for this asset
-						WorldObjectFileData worldAssetData = new()
+						WorldObjectFileData worldAssetData;
+						
+						if(worldObjectGameData is DoorObjectGameData doorObjectGameData)
 						{
-							WorldObjectId = GameManager.Instance.GetByteIDFromWorldObject(worldObjectGameData.Asset),
-							Pos = worldObjectGameData.Position
-						};
+							Debug.Log($"Serializing door. door open: {doorObjectGameData.IsOpen}");
+							worldAssetData = new DoorObjectFileData(GameManager.Instance.GetByteIDFromWorldObject(worldObjectGameData.Asset), worldObjectGameData.Position, doorObjectGameData.IsOpen);
+						}
+						else
+						{
+							worldAssetData = new WorldObjectFileData(GameManager.Instance.GetByteIDFromWorldObject(worldObjectGameData.Asset), worldObjectGameData.Position);
+						}
 						
 						// Push it to WorldAssets in sceneData
 						_environmentFileData.WorldObjectsList.Add(worldAssetData);
@@ -99,7 +105,7 @@ public class SaveSystem : MonoBehaviour
 		List<ChunkFileData> sceneDataChunks = new();
 		
 		// Convert chunks into ChunkData for serialization
-		foreach (var kvp in ChunkManager.Instance.GetChunksFromEnvironment(environmentToSerialize))
+		foreach (var kvp in ChunkManager.Instance.GetChunksFromBiome(environmentToSerialize))
 		{
 			ChunkFileData chunkData = new()
 			{
@@ -282,7 +288,7 @@ public class SaveSystem : MonoBehaviour
 		return tileGameData;
 	}
 	
-	private void DeserializeObjectData(BiomeType environmentToDeserialize)
+	private void DeserializeObjectData(BiomeType biomeToDeserialize)
 	{
 		// Unpack asset data need to make a new list to avoid error that said I was modifying this list as it was being processed
 		List<WorldObjectFileData> worldObjectFileData = new(_environmentFileData.WorldObjectsList);
@@ -293,12 +299,18 @@ public class SaveSystem : MonoBehaviour
 		// Instantiate each asset
 		foreach (WorldObjectFileData data in worldObjectFileData)
 		{
+			if(data is DoorObjectFileData doorData)
+			{
+				Debug.Log($"FOund door file data. Is open?: {doorData.IsOpen}");
+			}
+		
 			// Fetch each prefab from database
 			WorldObject worldObjectToInst = GameManager.Instance.GetWorldObjectFromID(data.WorldObjectId);
-			ChunkManager.Instance.AddObjectDataToChunk(data.Pos, worldObjectToInst, environmentToDeserialize);
+			// ChunkManager.Instance.AddObjectDataToChunk(data.Pos, worldObjectToInst, biomeToDeserialize);
+			ChunkManager.Instance.AddObjectDataToChunk(data, biomeToDeserialize, worldObjectToInst);
 		}
 		
-		Debug.Log($"<color=orange>Asset Data of: </color>{environmentToDeserialize}<color=orange> Deserialized</color>");
+		Debug.Log($"<color=orange>Asset Data of: </color>{biomeToDeserialize}<color=orange> Deserialized</color>");
 	}
 	
 	private void DeserializeChestData(BiomeType environmentToDeserialize)

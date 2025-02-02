@@ -47,4 +47,21 @@ public class WorldObjectFileData // For Serialization
 {
 	public int WorldObjectId;
 	public Vector2Int Pos;
+	
+	public WorldObjectFileData(int id, Vector2Int pos)
+	{
+		WorldObjectId = id;
+		Pos = pos;
+	}
+}
+
+[System.Serializable]
+public class DoorObjectFileData : WorldObjectFileData
+{
+	public bool IsOpen;
+
+	public DoorObjectFileData(int worldObject, Vector2Int pos, bool isOpen) : base(worldObject, pos)
+	{
+		IsOpen = isOpen;
+	}
 }
