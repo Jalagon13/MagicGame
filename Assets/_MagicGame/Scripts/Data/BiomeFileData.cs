@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class EnvironmentFileData 
+public class BiomeFileData 
 {
 	[SerializeReference] public List<WorldObjectFileData> WorldObjectsList = new();
 	[SerializeReference] public List<ChunkFileData> ChunksList = new();

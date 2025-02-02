@@ -7,6 +7,7 @@ public class DoorObject : ResourceObject
 	[SerializeField] private float _doorOpenDistance = 2.75f; 
 	[SerializeField] private Sprite _openSprite, _closeSprite;
 	[SerializeField] private SpriteRenderer _doorSr;
+	[SerializeField] private Collider2D _localWallCollider;
 	
 	private bool _isOpen;
 	
@@ -50,17 +51,27 @@ public class DoorObject : ResourceObject
 	private void OpenDoor()
 	{
 		_doorSr.sprite = _openSprite;
+		_localWallCollider.gameObject.SetActive(false);
+		
+		Pathfinding.Instance.RemovePfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
+		
 		Debug.Log($"Open");
 	}
 	
 	private void CloseDoor()
 	{
 		_doorSr.sprite = _closeSprite;
+		_localWallCollider.gameObject.SetActive(true);
+		
+		Pathfinding.Instance.AddPfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
+		
 		Debug.Log($"Close");
 	}
 	
 	private void OnDestroy()
 	{
+		Pathfinding.Instance.RemovePfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
+	
 		GameInput.Instance.OnSecondaryActionStarted -= GameInput_OnSecondaryActionStarted;
 	}
 }

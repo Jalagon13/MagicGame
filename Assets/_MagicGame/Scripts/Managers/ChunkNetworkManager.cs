@@ -12,21 +12,20 @@ public class ChunkNetworkManager : NetworkBehaviour
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RequestChunkDataServerRpc(ulong clientId, BiomeType environmentToRequest, Vector2Int chunkPosition, RpcParams rpcParams = default)
+	private void RequestChunkDataServerRpc(ulong clientId, BiomeType requestBiome, Vector2Int chunkPosition, RpcParams rpcParams = default)
 	{
-		var chunkData = ChunkManager.Instance.GetChunkData(environmentToRequest, chunkPosition);
+		var chunkData = ChunkManager.Instance.GetChunkData(requestBiome, chunkPosition);
 		var syncChunkData = ConvertToSyncChunkData(chunkData);
 		
-		Pathfinding.Instance.UpdateChunkPathfinding(chunkPosition, chunkData, environmentToRequest, clientId);
+		Pathfinding.Instance.UpdateChunkPathfinding(chunkPosition, chunkData, requestBiome, clientId);
 		
 		SendChunkDataToClientRpc(syncChunkData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
 	}
-	
+
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void SendChunkDataToClientRpc(SyncChunkData syncChunkData, RpcParams rpcParams)
 	{
 		var chunkGameData = ConvertToGameChunkData(syncChunkData);
-		
 		ChunkManager.Instance.InvokeOnLoadChunk(chunkGameData);
 	}
 	
@@ -38,7 +37,8 @@ public class ChunkNetworkManager : NetworkBehaviour
 			SyncChunkPosition = chunkGameData.ChunkPosition,
 			SyncGroundTileDataList = new(),
 			SyncWallTileDataList = new(),
-			SyncWorldAssetDataList = new()
+			SyncObjectAssetDataList = new(),
+			SyncDoorObjectDataList = new()
 		};
 
 		// Convert ground tile game data to agnostic sync data
@@ -56,10 +56,18 @@ public class ChunkNetworkManager : NetworkBehaviour
 		}
 
 		// Convert world asset game data to agnostic sync data
-		foreach (var asset in chunkGameData.WorldObjectGameDataList)
+		foreach (var worldObjectGameData in chunkGameData.WorldObjectGameDataList)
 		{
-			byte id = GameManager.Instance.GetByteIDFromWorldObject(asset.Asset);
-			syncChunkData.SyncWorldAssetDataList.Add(ConvertGameDataIntoGenericSyncData(asset.Position, id));
+			byte id = GameManager.Instance.GetByteIDFromWorldObject(worldObjectGameData.Asset);
+			
+			if(worldObjectGameData is DoorObjectGameData doorObjectGameData)
+			{
+				syncChunkData.SyncDoorObjectDataList.Add(new DoorObjectSyncData(){ Position = doorObjectGameData.Position, ID = id, IsOpen = doorObjectGameData.IsOpen});
+			}
+			else
+			{
+				syncChunkData.SyncObjectAssetDataList.Add(ConvertGameDataIntoGenericSyncData(worldObjectGameData.Position, id));
+			}
 		}
 
 		return syncChunkData;
@@ -94,10 +102,17 @@ public class ChunkNetworkManager : NetworkBehaviour
 		}, ref chunkGameData.WallTileGameDataList);
 
 		// Convert SyncWorldAssetData to WorldAssetGameData
-		ConvertSyncDataList(syncChunkData.SyncWorldAssetDataList, (syncAsset) =>
+		ConvertSyncDataList(syncChunkData.SyncObjectAssetDataList, (syncAsset) =>
 		{
 			WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(syncAsset.ID);
 			return new WorldObjectGameData(worldObject, syncAsset.Position);
+		}, ref chunkGameData.WorldObjectGameDataList);
+		
+		// Convert SyncDoorObjectData To DoorObjectGameData
+		ConvertSyncDataList(syncChunkData.SyncDoorObjectDataList, (syncDoor) => 
+		{
+			WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(syncDoor.ID);
+			return new DoorObjectGameData(worldObject, syncDoor.Position, syncDoor.IsOpen);
 		}, ref chunkGameData.WorldObjectGameDataList);
 
 		return chunkGameData;
@@ -106,17 +121,14 @@ public class ChunkNetworkManager : NetworkBehaviour
 	// Generic helper function for converting Sync*DataList to *GameDataList
 	private void ConvertSyncDataList<TSyncData, TGameData>(List<TSyncData> syncDataList, Func<TSyncData, TGameData> convertFunction, ref List<TGameData> gameDataList)
 	{
-		if (syncDataList == null)
+		if (syncDataList == null || syncDataList.Count == 0)
 		{
-			gameDataList = new List<TGameData>();
+			return;
 		}
-		else
+		
+		foreach (var syncData in syncDataList)
 		{
-			gameDataList = new List<TGameData>();
-			foreach (var syncData in syncDataList)
-			{
-				gameDataList.Add(convertFunction(syncData));
-			}
+			gameDataList.Add(convertFunction(syncData));
 		}
 	}
 }

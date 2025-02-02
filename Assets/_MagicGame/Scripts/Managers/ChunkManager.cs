@@ -261,7 +261,7 @@ public class ChunkManager : NetworkBehaviour
 		if(!IsServer) return;
 		
 		ChunkGameData chunk = GetChunk(position, environmentToPlaceIn);
-		
+		Debug.Log($"Tree gen?");
 		chunk.AddObjectData(position, worldObject);
 	}
 	

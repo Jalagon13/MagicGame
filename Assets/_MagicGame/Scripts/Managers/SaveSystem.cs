@@ -14,7 +14,7 @@ public class SaveSystem : MonoBehaviour
 
 	public static SaveSystem Instance { get; private set; }
 	
-	private EnvironmentFileData _environmentFileData = new();
+	private BiomeFileData _environmentFileData = new();
 	private string _path;
 	
 	public bool IsSerializing { get; private set; }
@@ -218,7 +218,7 @@ public class SaveSystem : MonoBehaviour
 			string json = await File.ReadAllTextAsync(_path);
 			
 			// Deserialize JSON data into SceneData object
-			_environmentFileData = JsonUtility.FromJson<EnvironmentFileData>(json);
+			_environmentFileData = JsonUtility.FromJson<BiomeFileData>(json);
 			
 			// Dispatch the data
 			DeserializeChunkData(environmentToDeserialize);
