@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,19 +6,19 @@ using UnityEngine;
 [System.Serializable]
 public class EnvironmentFileData 
 {
-	public List<WorldObjectFileData> WorldObjectsList = new();
-	public List<ChunkFileData> ChunksList = new();
-	public List<ChestFileData> ChestList = new();
+	[SerializeReference] public List<WorldObjectFileData> WorldObjectsList = new();
+	[SerializeReference] public List<ChunkFileData> ChunksList = new();
+	[SerializeReference] public List<ChestFileData> ChestList = new();
 }
 
-[System.Serializable]
+[Serializable]
 public class ChestFileData
 {
 	public Vector2Int ChestPosition;
 	public List<ItemFileData> ChestItems;
 }
 
-[System.Serializable]
+[Serializable]
 public struct ItemFileData
 {
 	public int SlotIndex;
@@ -25,7 +26,7 @@ public struct ItemFileData
 	public int Quantity; // Quantity of the item
 }
 
-[System.Serializable]
+[Serializable]
 public class TileFileData // For Serialization
 {
 	public int TileId;
@@ -33,7 +34,7 @@ public class TileFileData // For Serialization
 	public TileType TileType;
 }
 
-[System.Serializable]
+[Serializable]
 public class ChunkFileData // For Serialization
 {
 	public Vector2Int ChunkPosition;
@@ -42,7 +43,7 @@ public class ChunkFileData // For Serialization
 	public int Size; // Width and Height
 }
 
-[System.Serializable]
+[Serializable]
 public class WorldObjectFileData // For Serialization
 {
 	public int WorldObjectId;
@@ -55,7 +56,7 @@ public class WorldObjectFileData // For Serialization
 	}
 }
 
-[System.Serializable]
+[Serializable]
 public class DoorObjectFileData : WorldObjectFileData
 {
 	public bool IsOpen;

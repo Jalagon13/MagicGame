@@ -306,7 +306,6 @@ public class SaveSystem : MonoBehaviour
 		
 			// Fetch each prefab from database
 			WorldObject worldObjectToInst = GameManager.Instance.GetWorldObjectFromID(data.WorldObjectId);
-			// ChunkManager.Instance.AddObjectDataToChunk(data.Pos, worldObjectToInst, biomeToDeserialize);
 			ChunkManager.Instance.AddObjectDataToChunk(data, biomeToDeserialize, worldObjectToInst);
 		}
 		

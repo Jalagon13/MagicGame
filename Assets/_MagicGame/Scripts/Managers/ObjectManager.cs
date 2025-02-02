@@ -53,9 +53,11 @@ public class ObjectManager : NetworkBehaviour
 			// Instantiate the visual asset
 			GameObject assetGO = Instantiate(assetData.Asset.gameObject, (Vector2)assetData.Position, Quaternion.identity);
 			
-			if(assetData is DoorObjectGameData doorObjectGameData)
+			if(assetGO.TryGetComponent(out DoorObject doorObject))
 			{
-				assetGO.GetComponent<DoorObject>().InitializeOpenState(doorObjectGameData.IsOpen);
+				Debug.Log($"{assetData.GetType()}");
+				Debug.Log($"For chunk pos {e.Chunk.ChunkPosition}");
+				assetGO.GetComponent<DoorObject>().InitializeOpenState((assetData as DoorObjectGameData).IsOpen);
 			}
 			
 			OnWorldObjectSpawned?.Invoke(this, new OnWorldAssetSpawnedEventArgs
@@ -103,10 +105,12 @@ public class ObjectManager : NetworkBehaviour
 		{
 			// If there exists a door in this position, set its open value to isOpen
 			var colliders = Physics2D.OverlapPointAll(doorPos + new Vector2(0.5f, 0.5f));
+			Debug.Log($"Door pos checking: {doorPos}, center of door {doorPos + new Vector2(0.5f, 0.5f)}");
 			foreach (var collider in colliders)
 			{
 				if(collider.TryGetComponent(out DoorObject doorObject))
 				{
+					Debug.Log($"Found door, setting it open to: {isOpen}");
 					doorObject.SetIsOpen(isOpen);
 					return;
 				}
