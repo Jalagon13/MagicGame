@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
@@ -15,17 +16,21 @@ public enum BiomeType // NTFS: When adding new IDs remember to put the value to 
 public class WorldManager : NetworkBehaviour
 {
 	public static WorldManager Instance { get; private set; }
+	
+	public event EventHandler OnBiomeLoaded;
 	public event EventHandler<OnTickEventArgs> OnTick;
 	public class OnTickEventArgs : EventArgs 
 	{
 		public float CurrentDayRatio;
 	}
+	
+	public bool IsNight { get; private set; }
+	public bool IsLoadingBiome { get; private set; }
 
 	[Title("Bounaries", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private float _dayDurationInSeconds;
 	[SerializeField] private float _startingTime = 0.0f;
 	[SerializeField] private bool _isTicking = true;
-	public bool IsNight { get; private set; }
 	
 	[Title("World Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private bool _randomSeed = false;
@@ -84,7 +89,7 @@ public class WorldManager : NetworkBehaviour
 		while (_currentTime > _dayDurationInSeconds)
 		{
 			_currentTime -= _dayDurationInSeconds;
-        
+		
 			// Resync time for all clients
 			if (IsServer)
 			{
@@ -119,14 +124,14 @@ public class WorldManager : NetworkBehaviour
 		_dayDurationInSeconds = dayDurationInSeconds;
 	}
 
-	public void GenerateEnvironment(BiomeType environmentToGenerate)
+	public void GenerateEnvironment(BiomeType biomeToGenerate)
 	{
 		// Check if environment is already generated
 		if(_environmentList.Count > 0)
 		{
 			foreach (BiomeType environment in _environmentList)
 			{
-				if(environment == environmentToGenerate)
+				if(environment == biomeToGenerate)
 				{
 					// Environment found, should not generate an environment already found
 					Debug.LogError("Should not be trying to generate an environment that is already generated");
@@ -135,31 +140,13 @@ public class WorldManager : NetworkBehaviour
 			}
 		}
 		
-		// Generate environment based on ID
-		switch(environmentToGenerate)
-		{
-			case BiomeType.Forest:
-				_environmentList.Add(BiomeType.Forest);
-				GetComponent<ForestGeneration>().GenerateForest();
-				Player.LocalClientInstance.CurrentBiome.Value = BiomeType.Forest;
-				break;
-			case BiomeType.Cave:
-				_environmentList.Add(BiomeType.Cave);
-				GetComponent<CaveGeneration>().GenerateCave();
-				Player.LocalClientInstance.CurrentBiome.Value = BiomeType.Cave;
-				break;
-		}
+		LoadEnvironment(biomeToGenerate, Player.LocalClientInstance.transform.position);
 	}
 	
-	public void LoadEnvironment(BiomeType targetEnvironment, Vector2 portalPosition, bool isPlayerRespawning = false)
+	public void LoadEnvironment(BiomeType targetBiome, Vector2 portalPosition, bool isPlayerRespawning = false)
 	{
-		if(targetEnvironment == Player.LocalClientInstance.CurrentBiome.Value)
-		{
-			Debug.LogError($"Should not be trying to load an environment you are already in. environmentID: {targetEnvironment}, ACTIVE_ENVIRONMENT_ID: {Player.LocalClientInstance.CurrentBiome.Value}");
-			return;
-		}
-		
 		_isPlayerRespawning = isPlayerRespawning;
+		IsLoadingBiome = true;
 		
 		// NTFS: make sure player is not able to move during this process and add a loading screen
 		
@@ -167,77 +154,91 @@ public class WorldManager : NetworkBehaviour
 		PlacePlayerAt(portalPosition);
 		
 		// Clear all client visuals
-		ChunkManager.Instance.ClearChunkVisuals();
+		ChunkManager.Instance.UnloadAllChunks();
 		ObjectManager.Instance.ClearAllEnvironmentObjectVisuals();
-		
-		if(Player.LocalClientInstance.IsHost)
-		{
-			HostLoadEnvironment(targetEnvironment, portalPosition);
-		}
-		else
-		{
-			Player.LocalClientInstance.CurrentBiome.Value = targetEnvironment;
-
-			ChunkManager.Instance.OnLoadedPlayerChunksUpdated += OnClientEnvironmentTransitionEnd;
-			
-			ClientLoadEnvironmentServerRpc(targetEnvironment, portalPosition);
-		}
+		// ChunkManager.Instance.OnLoadedPlayerChunksUpdated += OnClientEnvironmentTransitionEnd;
+		Debug.Log("a");
+		LoadEnvironmentServerRpc(Player.LocalClientInstance.CurrentBiome.Value, targetBiome);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void ClientLoadEnvironmentServerRpc(BiomeType targetEnvironment, Vector2 portalPosition, RpcParams rpcParams = default)
+	private void LoadEnvironmentServerRpc(BiomeType fromBiome, BiomeType toBiome)
 	{
-		AsyncClientLoadEnvironment(targetEnvironment, portalPosition, rpcParams);
+		Debug.Log("b");
+		AsyncLoadEnvironment(fromBiome, toBiome);
 	}
-	
-	private async void AsyncClientLoadEnvironment(BiomeType targetEnvironment, Vector2 portalPosition, RpcParams rpcParams = default)
+
+	private async void AsyncLoadEnvironment(BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
 	{
-		// If chunks of target environment is empty (no chunks loaded), host needs to deserialize
-		if(ChunkManager.Instance.GetChunksFromBiome(targetEnvironment).Count <= 0)
+		// Save the last biome it came from and set the player's burrent biome to tobiome.
+		if(!SaveSystem.Instance.IsSaving && SaveSystem.Instance.BiomeLoadedInMemory(fromBiome))
 		{
-			// Chunks of target environment are not generated or deserialized
-			await SaveSystem.Instance.DeserializeAndDispatchData(targetEnvironment);
+			Debug.Log($"Saving biome because is not saving and biome is loaded in memeory");
+			await SaveSystem.Instance.SaveBiome(fromBiome);
 		}
+		Debug.Log("c");
+		NetworkManager.Singleton.ConnectedClients[rpcParams.Receive.SenderClientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value = toBiome;
 		
-		UpdateChunksAndHandlePortalClientRpc(portalPosition, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+		// If the targetBiome is already loaded into memory, 
+		if(SaveSystem.Instance.BiomesInMemory.Contains(toBiome))
+		{
+			// Load chunks around this player
+			Debug.Log($"Biome in memory already");
+			LoadChunksClientRpc(RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+		}
+		else
+		{
+			// If not, deserializeanddispatch data
+			Debug.Log($"biome not in memory, need to deserialize and dispatch data if the save file exists or generate the new biome");
+			
+			if(SaveSystem.Instance.BiomeSaveFileExists(toBiome))
+			{
+				Debug.Log($"Unloading biome data and dispatching it");
+				await SaveSystem.Instance.DeserializeAndDispatchData(toBiome);
+			}
+			else
+			{
+				GenerateBiome(toBiome);
+				
+				Debug.Log($"Biome generated and saving it");
+				await SaveSystem.Instance.SaveBiome(fromBiome);
+			}
+			
+			LoadChunksClientRpc(RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+		}
+	}
+
+	private void GenerateBiome(BiomeType toBiome)
+	{
+		switch (toBiome)
+		{
+			case BiomeType.Forest:
+				_environmentList.Add(BiomeType.Forest);
+				GetComponent<ForestGeneration>().GenerateForest();
+				break;
+			case BiomeType.Cave:
+				_environmentList.Add(BiomeType.Cave);
+				GetComponent<CaveGeneration>().GenerateCave();
+				break;
+		}
 	}
 
 	[Rpc(SendTo.SpecifiedInParams)]
-	private void UpdateChunksAndHandlePortalClientRpc(Vector2 portalPosition, RpcParams rpcParams)
+	private void LoadChunksClientRpc(RpcParams rpcParams)
 	{
-		ChunkManager.Instance.UpdateChunksAroundPlayer();
+		Debug.Log($"Allowing client to load chunks");
+		// Invoke it first to prep the last chunk position to garentee a new set of chunks to generate, then set loadingbiome to true to resume the update method
+		OnBiomeLoaded?.Invoke(this, EventArgs.Empty);
+		IsLoadingBiome = false;
 	}
 	
 	private void OnClientEnvironmentTransitionEnd(object sender, ChunkManager.OnActiveChunksUpdatedEventArgs e)
 	{
-		ChunkManager.Instance.OnLoadedPlayerChunksUpdated -= OnClientEnvironmentTransitionEnd;
+		// ChunkManager.Instance.OnLoadedPlayerChunksUpdated -= OnClientEnvironmentTransitionEnd;
 		
 		SearchForPortal(Player.LocalClientInstance.transform.position);
 	}
 
-	private async void HostLoadEnvironment(BiomeType targetEnvironment, Vector2 portalPosition)
-	{
-		_isTransitioningEnvironment = true;
-		
-		// If host, save the scene you just left
-		await SaveSystem.Instance.SerializeDataAndWriteToFile(Player.LocalClientInstance.CurrentBiome.Value);
-		
-		// Change environment
-		Player.LocalClientInstance.CurrentBiome.Value = targetEnvironment;
-		
-		// If chunks for target environment does not exist, deserialize the environment 
-		if(ChunkManager.Instance.GetChunksFromBiome(targetEnvironment).Count <= 0)
-		{
-			await SaveSystem.Instance.DeserializeAndDispatchData(targetEnvironment);
-		}
-
-		_isTransitioningEnvironment = false;
-		
-		ChunkManager.Instance.UpdateChunksAroundPlayer();
-		
-		SearchForPortal(portalPosition);
-	}
-	
 	private void SearchForPortal(Vector2 portalPosition)
 	{
 		// If player is respawning after loading this environment, do not search for portal

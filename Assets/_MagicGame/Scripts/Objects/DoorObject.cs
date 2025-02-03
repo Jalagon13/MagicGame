@@ -54,8 +54,6 @@ public class DoorObject : ResourceObject
 		_localWallCollider.gameObject.SetActive(false);
 		
 		Pathfinding.Instance.RemovePfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
-		
-		Debug.Log($"Open");
 	}
 	
 	private void CloseDoor()
@@ -64,8 +62,6 @@ public class DoorObject : ResourceObject
 		_localWallCollider.gameObject.SetActive(true);
 		
 		Pathfinding.Instance.AddPfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
-		
-		Debug.Log($"Close");
 	}
 	
 	private void OnDestroy()

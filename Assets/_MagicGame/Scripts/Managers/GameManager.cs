@@ -85,7 +85,7 @@ public class GameManager : NetworkBehaviour
 	
 	private async void HandleEnvironment()
 	{
-		if(SaveSystem.Instance.EnvironmentDataExists(BiomeType.Forest))
+		if(SaveSystem.Instance.BiomeSaveFileExists(BiomeType.Forest))
 		{
 			await SaveSystem.Instance.DeserializeAndDispatchData(BiomeType.Forest);
 		}

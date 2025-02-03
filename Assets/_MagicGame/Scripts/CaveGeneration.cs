@@ -36,7 +36,7 @@ public class CaveGeneration : MonoBehaviour
 		}
 	}
 	
-	public async void GenerateCave()
+	public void GenerateCave()
 	{
 		Debug.Log("Generating Cave...");
 		ChunkManager.IS_GENERATING_BIOME = true;
@@ -45,11 +45,10 @@ public class CaveGeneration : MonoBehaviour
 		GenerateNoiseMapsBasedOnSeed();
 		GenerateCaveChunkData();
 		
+		SaveSystem.Instance.AddBiomeToMemorySessionTracker(BiomeType.Cave);
 		ChunkManager.IS_GENERATING_BIOME = false;
 		
 		Debug.Log("Cave Generation Complete!");
-		
-		await SaveSystem.Instance.SerializeDataAndWriteToFile(_environment);
 	}
 	
 	private void GenerateNoiseMapsBasedOnSeed()

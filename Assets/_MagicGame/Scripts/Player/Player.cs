@@ -48,7 +48,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	private Rigidbody2D _rb;
 	private Timer _respawnTimer;
 	private Vector2 _spawnPoint;
-	private BiomeType _spawnEnvironment;
+	private BiomeType _spawnBiome;
 	
 	
 	private void Awake()
@@ -70,7 +70,7 @@ public class Player : NetworkBehaviour, IHasHealth
 			LocalClientInstance = this;
 			
 			CurrentBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
-			_spawnEnvironment = BiomeType.Forest;
+			_spawnBiome = BiomeType.Forest;
 			_spawnPoint = transform.position;
 			
 			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnMainHandSlotUpdated;
@@ -211,9 +211,9 @@ public class Player : NetworkBehaviour, IHasHealth
 			transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
 		}
 		
-		if(LocalClientInstance.CurrentBiome.Value != _spawnEnvironment)
+		if(LocalClientInstance.CurrentBiome.Value != _spawnBiome)
 		{
-			WorldManager.Instance.LoadEnvironment(_spawnEnvironment, _spawnPoint, isPlayerRespawning: true);
+			WorldManager.Instance.LoadEnvironment(_spawnBiome, _spawnPoint, isPlayerRespawning: true);
 		}
 
 		OnRespawn?.Invoke(this, new PlayerIdEventArgs

@@ -55,18 +55,11 @@ public class ChunkGameData
 		
 		if(worldObjectFileData is DoorObjectFileData doorObjectFileData)
 		{
-			Debug.Log($"Deserializing door");
 			worldObjectToAdd = new DoorObjectGameData(worldObject, worldObjectFileData.Pos, doorObjectFileData.IsOpen);
 		}
 		else
 		{
 			worldObjectToAdd = new WorldObjectGameData(worldObject, worldObjectFileData.Pos);
-		}
-		
-		if(worldObjectToAdd is DoorObjectGameData)
-		{
-			Debug.Log($"Door object is being added, {worldObjectToAdd.GetType()}");
-			Debug.Log($"For chunk pos {ChunkPosition}");
 		}
 		
 		WorldObjectGameDataList.Add(worldObjectToAdd);
@@ -78,7 +71,6 @@ public class ChunkGameData
 
 		if (worldObject is DoorObject)
 		{
-			Debug.Log($"Setting worldObject to door");
 			worldObjectToAdd = new DoorObjectGameData(worldObject, position, false);
 		}
 		else

@@ -53,9 +53,14 @@ public class ChunkManager : NetworkBehaviour
 		_chunkUpdateTimer = new(_chunkLoadCooldown);
 	}
 	
+	private void Start()
+	{
+		WorldManager.Instance.OnBiomeLoaded += OnBiomeLoaded;
+	}
+
 	private void FixedUpdate()
 	{
-		if(Player.LocalClientInstance == null || IS_GENERATING_BIOME || SaveSystem.Instance.IsDeserializing) return;
+		if(Player.LocalClientInstance == null || IS_GENERATING_BIOME || WorldManager.Instance.IsLoadingBiome) return;
 		
 		Vector2Int newChunkPosition = GetChunkPosition(Player.LocalClientInstance.transform.position);
 		if (newChunkPosition != _lastChunkPosition)
@@ -82,24 +87,36 @@ public class ChunkManager : NetworkBehaviour
 			_chunkUpdateTimer.RemainingSeconds = _chunkLoadCooldown;
 		}
 	}
+	
+	private void OnBiomeLoaded(object sender, EventArgs e)
+	{
+		_lastChunkPosition = new Vector2Int(-99, 99); // Set it to an impossible chunk position so UpdateChunksAroundPlayer executes;
+	}
 
 	public void UpdateChunksAroundPlayer()
 	{
-		if(WorldManager.Instance.GetIsTransitioningEnvironment()) return;
-	
+		if (WorldManager.Instance.GetIsTransitioningEnvironment()) return;
+
+		var playerChunkPos = GetChunkPosition(Player.LocalClientInstance.transform.position);
+
 		// Get chunks around the player the player wants to load
 		List<Vector2Int> chunksToLoadAroundPlayer = GetPositionsToLoadAroundPlayer();
-		
+
+		// Sort chunks by distance to the player (closest first)
+		chunksToLoadAroundPlayer = chunksToLoadAroundPlayer
+			.OrderBy(chunkPos => Vector2Int.Distance(playerChunkPos, chunkPos))
+			.ToList();
+
 		// For each of those chunks, load them if they are not already loaded
 		foreach (Vector2Int chunkPos in chunksToLoadAroundPlayer)
 		{
-			if(!_loadedChunks.ContainsKey(chunkPos))
+			if (!_loadedChunks.ContainsKey(chunkPos))
 			{
 				_chunksToLoad.Enqueue(chunkPos);
 			}
 		}
-		
-		// In the loaded player chunks, if any of them are not in playerChunksToLoadAroundPlayer, unload them
+
+		// In the loaded player chunks, if any of them are not in chunksToLoadAroundPlayer, unload them
 		foreach (Vector2Int chunkPos in _loadedChunks.Keys.ToList())
 		{
 			if (!chunksToLoadAroundPlayer.Contains(chunkPos))
@@ -107,8 +124,6 @@ public class ChunkManager : NetworkBehaviour
 				_chunksToUnload.Enqueue(chunkPos);
 			}
 		}
-		
-		// InvokeOnLoadedPlayerChunksUpdated();
 	}
 
 	private void LoadChunk(Vector2Int chunkPos)
@@ -215,7 +230,7 @@ public class ChunkManager : NetworkBehaviour
 		);
 	}
 	
-	public void ClearChunkVisuals()
+	public void UnloadAllChunks()
 	{
 		for (int i = _loadedChunks.Count - 1; i >= 0; i--)
 		{
@@ -235,8 +250,6 @@ public class ChunkManager : NetworkBehaviour
 			if(worldObject.Position == doorPos)
 			{
 				// Found door
-				Debug.Log(worldObject == null);
-				Debug.Log(worldObject as DoorObjectGameData == null);
 				var doorObject = worldObject as DoorObjectGameData;
 				doorObject.ToggleDoor();
 				
@@ -261,7 +274,6 @@ public class ChunkManager : NetworkBehaviour
 		if(!IsServer) return;
 		
 		ChunkGameData chunk = GetChunk(position, environmentToPlaceIn);
-		Debug.Log($"Tree gen?");
 		chunk.AddObjectData(position, worldObject);
 	}
 	
@@ -328,9 +340,9 @@ public class ChunkManager : NetworkBehaviour
 	}
 	
 
-	public void SetChunksForEnvironment(BiomeType environmentToSetChunksFor, Dictionary<Vector2Int, ChunkGameData> newChunks)
+	public void LoadChunksForBiome(BiomeType biomeToSetChunksFor, Dictionary<Vector2Int, ChunkGameData> newChunks)
 	{
-		switch(environmentToSetChunksFor)
+		switch(biomeToSetChunksFor)
 		{
 			case BiomeType.Forest:
 				_forestChunks = newChunks;

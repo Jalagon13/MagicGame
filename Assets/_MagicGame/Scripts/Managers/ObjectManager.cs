@@ -55,8 +55,6 @@ public class ObjectManager : NetworkBehaviour
 			
 			if(assetGO.TryGetComponent(out DoorObject doorObject))
 			{
-				Debug.Log($"{assetData.GetType()}");
-				Debug.Log($"For chunk pos {e.Chunk.ChunkPosition}");
 				assetGO.GetComponent<DoorObject>().InitializeOpenState((assetData as DoorObjectGameData).IsOpen);
 			}
 			

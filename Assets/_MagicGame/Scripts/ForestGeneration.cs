@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -48,7 +49,7 @@ public class ForestGeneration : MonoBehaviour
 		}
 	}
 
-	public async void GenerateForest()
+	public void GenerateForest()
 	{
 		Debug.Log("Generating Forest Data...");
 		ChunkManager.IS_GENERATING_BIOME = true;
@@ -58,12 +59,9 @@ public class ForestGeneration : MonoBehaviour
 		GenerateOverworldChunkData();
 		GenerateTrees();
 		
+		SaveSystem.Instance.AddBiomeToMemorySessionTracker(BiomeType.Forest);
 		ChunkManager.IS_GENERATING_BIOME = false;
-		
-		Debug.Log("Forest Data Generation Complete!");
-		
-		// Save it after its done
-		await SaveSystem.Instance.SerializeDataAndWriteToFile(_environment);
+		Debug.Log("Generating Forest Complete!");
 	}
 	
 	private void GenerateNoiseMapsBasedOnSeed()
