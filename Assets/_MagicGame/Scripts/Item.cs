@@ -16,11 +16,9 @@ public class Item : NetworkBehaviour
 	private NetworkVariable<int> _itemAmountNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private InventoryItem _itemInventoryItem;
 	private SpriteRenderer _sr;
-	private bool _canCollect;
-	private bool _itemCollected;
+	private bool _canCollect, _itemCollected;
 	private Rigidbody2D _rb;
-	private ushort _itemId;
-	private ushort _itemAmount;
+	private ushort _itemId, _itemAmount;
 	private BiomeType _itemBiome;
 	private Collider2D _itemCollider;
 	private GameObject _itemGameObject;
