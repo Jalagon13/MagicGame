@@ -54,13 +54,10 @@ public class NpcManager : NetworkBehaviour
 	
 	public void TryToSpawnNpc()
 	{
-		// If there is no chunks loaded, then don't try to spawn anything. NTFS: This might not work, first place to look if mob spawning is bugged
 		if(ChunkManager.Instance.GetLoadedPlayerChunks().Count <= 0 || !_enableSpawning) return;
 	
-		// Calculate the current spawn chance modifier
+		// Calculate the current spawn chance modifier and adjust spawn rate based on the modifier
 		float spawnModifier = GetSpawnModifier();
-		
-		// Adjust spawn rate based on the modifier
 		float spawnRate = 1 / (_biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().SpawnRateDenominator * spawnModifier);
 		
 		// Try to spawn an enemy if we're below the max number of NPC slots

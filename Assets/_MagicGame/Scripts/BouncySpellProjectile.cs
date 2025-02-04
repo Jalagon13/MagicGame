@@ -11,7 +11,6 @@ public class BouncySpellProjectile : NetworkBehaviour
 	private Vector3 _directionNormalized;
 	private Vector3 _damagerPosition;
 	private ulong _sourcePlayerId;
-	private ulong _projectileId;
 	private Rigidbody2D _rigidbody2D;
 
 	private void Awake()
@@ -22,24 +21,22 @@ public class BouncySpellProjectile : NetworkBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
+		if(!IsServer) return;
+	
 		// If is overlapping with the collider attached to the player who sent it, don't damage it
-		if(NetworkManager.ConnectedClients[_sourcePlayerId].PlayerObject.GetComponent<Player>().HitCollider == other) return;
+		if(NetworkManager.ConnectedClients[_sourcePlayerId].PlayerObject == null || NetworkManager.ConnectedClients[_sourcePlayerId].PlayerObject.GetComponent<Player>().HitCollider == other) return;
 
 		if (other.TryGetComponent(out IHasHealth npcToDamage))
 		{
-			if(IsServer)
-			{
-				npcToDamage.ApplyDamage(_damage, _damagerPosition);
-				
-				StopProjectile();
-			}
+			npcToDamage.ApplyDamage(_damage, _damagerPosition);
+			GetComponent<SpellNetworkComponent>().StopProjectile();
+			return;
 		}
 	}
 
 	// Initialize the projectile with impulse force
-	public void Initialize(int speed, int damage, float lifetime, Vector3 directionNormalized, ulong sourcePlayerId, ulong projectileId)
+	public void Initialize(BiomeType biome, int speed, int damage, Vector3 directionNormalized, ulong sourcePlayerId)
 	{
-		_projectileId = projectileId;
 		_sourcePlayerId = sourcePlayerId;
 		_damagerPosition = transform.position;
 		_speed = speed;
@@ -48,17 +45,5 @@ public class BouncySpellProjectile : NetworkBehaviour
 		
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 		_rigidbody2D.AddForce(_directionNormalized * _speed, ForceMode2D.Impulse);
-		
-		if(IsServer)
-		{
-			Invoke(nameof(StopProjectile), lifetime);
-		}
-	}
-	
-	private void StopProjectile()
-	{
-		GameManager.Instance.DestroyFakeProjectile(_sourcePlayerId, _projectileId);
-		NetworkObject.Despawn();
-		Destroy(gameObject);
 	}
 }

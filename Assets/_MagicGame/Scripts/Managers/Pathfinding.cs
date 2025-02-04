@@ -83,6 +83,21 @@ public class Pathfinding : NetworkBehaviour
 		}
 	}
 	
+	public Dictionary<BiomeType, TilemapCollider2D> GetExistingPathfindingBiomes()
+	{
+		Dictionary<BiomeType, TilemapCollider2D> biomeTmColliderPair = new();
+	
+		if(BiomeToLoadedPathfindingChunks.Count > 0)
+		{
+			foreach (var kvp in BiomeToLoadedPathfindingChunks)
+			{
+				biomeTmColliderPair.Add(kvp.Key, kvp.Value.WallColliderTm.GetComponent<TilemapCollider2D>());
+			}
+		}
+		
+		return biomeTmColliderPair;
+	}
+	
 	public bool EnvironmentPathfindingExists(BiomeType environment)
 	{
 		return BiomeToLoadedPathfindingChunks.ContainsKey(environment);

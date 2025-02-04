@@ -179,7 +179,7 @@ public class GameManager : NetworkBehaviour
 	
 	#endregion
 
-	public void SpawnSpellProjectile(SpellProjectileItemSO currentSpellItemSO, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime)
+	public void SpawnSpellProjectile(BiomeType spawnBiome, SpellProjectileItemSO currentSpellItemSO, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime)
 	{
 		ulong projectileId = IdGenerator.GenerateRandomId();
 		
@@ -187,24 +187,26 @@ public class GameManager : NetworkBehaviour
 		{
 			// If player is not host, spawn fake projectile, and add it to fake projectiles dictionary
 			BouncySpellProjectile fakeSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, spawnPoint, Quaternion.identity);
-			fakeSpell.Initialize(speed, damage, lifetime,direction, Player.LocalClientInstance.OwnerClientId, projectileId);
+			fakeSpell.Initialize(spawnBiome, speed, damage, direction, Player.LocalClientInstance.OwnerClientId);
 			
-			AddFakeProjectile(projectileId, fakeSpell.gameObject);
+			RegisterFakeProjectile(projectileId, fakeSpell.gameObject);
 		}
 		
-		SpawnSpellProjectileServerRpc(GetItemIdFromItemSO(currentSpellItemSO), spawnPoint, direction, speed, damage, lifetime, Player.LocalClientInstance.IsHost, Player.LocalClientInstance.OwnerClientId, projectileId);
+		SpawnSpellProjectileServerRpc(spawnBiome, GetItemIdFromItemSO(currentSpellItemSO), spawnPoint, direction, speed, damage, lifetime, Player.LocalClientInstance.IsHost, Player.LocalClientInstance.OwnerClientId, projectileId);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnSpellProjectileServerRpc(int itemIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, bool isHost, ulong sourcePlayerId, ulong projectileId)
+	private void SpawnSpellProjectileServerRpc(BiomeType spawnBiome, int itemIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, bool isHost, ulong sourcePlayerId, ulong projectileId)
 	{
 		var spellPrefab = (GetItemSOFromItemId(itemIndex) as SpellProjectileItemSO).SpellProjectilePrefab;
 		
 		BouncySpellProjectile spell = Instantiate(spellPrefab, spawnPoint, Quaternion.identity);
 		
-		spell.GetComponent<NetworkObject>().Spawn(true);
+		var spellNetworkComponent = spell.GetComponent<SpellNetworkComponent>();
+		spellNetworkComponent.InitializeSpell(spawnBiome, sourcePlayerId, lifetime, projectileId);
 		
-		spell.Initialize(speed, damage, lifetime,direction, sourcePlayerId, projectileId);
+		spell.GetComponent<NetworkObject>().Spawn(true);
+		spell.Initialize(spawnBiome, speed, damage, direction, sourcePlayerId);
 		
 		if(!isHost)
 		{
@@ -223,7 +225,7 @@ public class GameManager : NetworkBehaviour
 		RemoveFakeProjectile(projectileId);
 	}
 	
-	private void AddFakeProjectile(ulong projectileId, GameObject projectileGameObject)
+	private void RegisterFakeProjectile(ulong projectileId, GameObject projectileGameObject)
 	{
 		_fakeProjectiles.Add(projectileId, projectileGameObject);
 	}

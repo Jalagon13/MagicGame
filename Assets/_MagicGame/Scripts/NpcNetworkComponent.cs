@@ -73,7 +73,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 
 	private void NpcNetworkTick()
 	{
-		HandleNpcEnvironmentVisibility();
+		HandleNpcBiomeVisibility();
 		HandleNpcSpawnZoneVisibility();
 		HandlePathfindingVisibility();
 		UpdateDespawnTimer();
@@ -88,7 +88,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 		}
 	}
 
-	private void HandleNpcEnvironmentVisibility()
+	private void HandleNpcBiomeVisibility()
 	{
 		foreach (var clientId in NetworkManager.ConnectedClientsIds)
 		{
@@ -108,7 +108,6 @@ public class NpcNetworkComponent : NetworkBehaviour
 	
 	private void ShowNpc(ulong clientId)
 	{
-		Debug.Log($"Showing {gameObject.name} to player {clientId}");
 		if(clientId == NetworkManager.ServerClientId)
 		{
 			_npcGameObject.SetActive(true);
@@ -123,7 +122,6 @@ public class NpcNetworkComponent : NetworkBehaviour
 	
 	private void HideNpc(ulong clientId)
 	{
-		Debug.Log($"Hiding {gameObject.name} to player {clientId}");
 		if(clientId == NetworkManager.ServerClientId)
 		{
 			_npcGameObject.SetActive(false);
@@ -239,15 +237,15 @@ public class NpcNetworkComponent : NetworkBehaviour
 		NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, false);
 	}
 	
-	public void SetEnvironment(BiomeType environment)
+	public void SetEnvironment(BiomeType biome)
 	{
-		NpcBiomeType = environment;
+		NpcBiomeType = biome;
 		
 		// Find walldetectorcollider and populate it
 		var wallDetectorCollider = GetComponentInChildren<WallDetectorCollider>();
 		if(wallDetectorCollider != null)
 		{
-			wallDetectorCollider.SetEnvironment(environment);
+			wallDetectorCollider.SetEnvironment(biome, Pathfinding.Instance.GetExistingPathfindingBiomes());
 		}
 	}
 

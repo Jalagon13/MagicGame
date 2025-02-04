@@ -47,7 +47,7 @@ public class SpellBookItemSO : ItemSO
 		Vector3 directionNormalized = ((Vector3)ActionManager.MouseWorldPosition - playerHand.ProjectileSpawnTransform.position).normalized;
 		Vector3 rotatedDirection = Quaternion.Euler(0, 0, randomAngle) * directionNormalized;
 
-		GameManager.Instance.SpawnSpellProjectile(currentSpell, playerHand.ProjectileSpawnTransform.position, rotatedDirection, currentSpell.Speed, currentSpell.Damage, currentSpell.Lifetime);
+		GameManager.Instance.SpawnSpellProjectile(Player.LocalClientInstance.CurrentBiome.Value, currentSpell, playerHand.ProjectileSpawnTransform.position, rotatedDirection, currentSpell.Speed, currentSpell.Damage, currentSpell.Lifetime);
 
 		// Advance to the next spell and return the appropriate delay
 		return spellBookInventoryItem.AdvanceToNextSpell(RechargeTime, CastDelay);

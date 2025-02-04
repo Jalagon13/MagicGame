@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class WallDetectorCollider : MonoBehaviour
 {
@@ -10,7 +12,7 @@ public class WallDetectorCollider : MonoBehaviour
 		public Vector2 ContactPoint;
 	} 
 	
-	private BiomeType _colliderEnvironment;
+	private BiomeType _colliderBiome;
 	private Collider2D _wallDetectorCollider;
 	
 	private void Awake()
@@ -25,16 +27,24 @@ public class WallDetectorCollider : MonoBehaviour
 
 	private void UpdateCollisions(object sender, Pathfinding.PathfindingTilemapEventArgs e)
 	{
-		if(e.Environment != _colliderEnvironment)
+		if(e.Environment != _colliderBiome)
 		{
 			Debug.Log(transform.root.name + " Ignoring detection of " + e.TilemapCollider.name);
 			Physics2D.IgnoreCollision(_wallDetectorCollider, e.TilemapCollider);
 		}
 	}
 
-	public void SetEnvironment(BiomeType environment) // Sets the environment whose walls this collider will detect
+	public void SetEnvironment(BiomeType spawnBiome, Dictionary<BiomeType, TilemapCollider2D> registeredPfBiomes) // Sets the environment whose walls this collider will detect
 	{
-		_colliderEnvironment = environment;
+		_colliderBiome = spawnBiome;
+		
+		foreach (var biome in registeredPfBiomes)
+		{
+			if(biome.Key != _colliderBiome)
+			{
+				Physics2D.IgnoreCollision(_wallDetectorCollider, biome.Value);
+			}
+		}
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)
@@ -47,7 +57,6 @@ public class WallDetectorCollider : MonoBehaviour
 		}
 	}
 
-	// Method to invoke the event
 	protected virtual void OnWallCollisionStateChanged(Vector2 contactPoint)
 	{
 		OnWallCollide?.Invoke(this, new WallCollisionEventArgs()
