@@ -181,7 +181,7 @@ public class NpcManager : NetworkBehaviour
 	{
 		Vector3Int tilePos = new(Mathf.RoundToInt(point.x), Mathf.RoundToInt(point.y));
 		
-		return Environment.Instance.GetWallTilemapData().GetTilemap().HasTile(tilePos);
+		return Environment.Instance.WallTmData.GetTilemap().HasTile(tilePos);
 	}
 	
 	private bool PointInRectangle(Vector2 point, Vector2 rectCenter, float rectWidth, float rectHeight)

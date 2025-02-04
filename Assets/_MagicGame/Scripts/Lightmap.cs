@@ -31,8 +31,6 @@ public class Lightmap : MonoBehaviour
 
 	private void Start()
 	{
-		// Subscribe to the event to update overlay bounds
-		ChunkManager.Instance.OnLoadedPlayerChunksUpdated += ChunkManager_OnLoadedPlayerChunksUpdated;
 		WorldManager.Instance.OnTick += WorldManager_OnTick;
 	}
 
@@ -96,26 +94,21 @@ public class Lightmap : MonoBehaviour
 	public void UpdateLightMap()
 	{
 		if(_lightmapRenderTexture == null) return;
-	
+
+		UpdateOverlayRect();
 		UpdateRenderTexture();
 		DispatchComputeShader();
 	}
-
-	private void ChunkManager_OnLoadedPlayerChunksUpdated(object sender, ChunkManager.OnActiveChunksUpdatedEventArgs e)
+	
+	public void UpdateLightMap(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos)
 	{
 		if(!WorldManager.Instance.IsTicking()) return;
 	
-		// Get the bounds of the loaded tiles
-		_minLoadedTilePos = e.MinLoadedTilePos;
-		_maxLoadedTilePos = e.MaxLoadedTilePos;
-
-		// Calculate center and size in world space
+		_minLoadedTilePos = minLoadedTilePos;
+		_maxLoadedTilePos = maxLoadedTilePos;
+		
 		UpdateOverlayRect();
-
-		// Update the RenderTexture size dynamically based on the tile bounds
 		UpdateRenderTexture();
-
-		// Set up and dispatch the compute shader
 		DispatchComputeShader();
 	}
 
@@ -253,7 +246,7 @@ public class Lightmap : MonoBehaviour
 
 	private void PopulateTileVisibilityArray(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos, int scale, TileVisibility[] tileVisibilityArray, int renderTextureWidth)
 	{
-		foreach (var kvp in Environment.Instance.GetTileVisibilityDictionary())
+		foreach (var kvp in Environment.Instance.TileVisibilityDict)
 		{
 			Vector3Int tilePosition = kvp.Key;
 			TileVisibility visibility = kvp.Value;
@@ -297,8 +290,6 @@ public class Lightmap : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		// Unsubscribe from the event
-		ChunkManager.Instance.OnLoadedPlayerChunksUpdated -= ChunkManager_OnLoadedPlayerChunksUpdated;
 		WorldManager.Instance.OnTick -= WorldManager_OnTick;
 	}
 }

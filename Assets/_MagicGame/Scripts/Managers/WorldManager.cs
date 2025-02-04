@@ -75,8 +75,7 @@ public class WorldManager : NetworkBehaviour
 		
 		yield return new WaitForEndOfFrame();
 		
-		// Tick once to trigger initial light update
-		Tick();
+		Tick(); // Tick once to trigger initial light update
 	}
 
 	private void Update()
@@ -103,11 +102,9 @@ public class WorldManager : NetworkBehaviour
 			}
 		}
 
-		// Calculate the ratio of the day
 		float currentDayRatio = _currentTime / _dayDurationInSeconds;
 
-		// Set IsNight to true if the current ratio is between 0.5 (halfway) and 1 (end of the day)
-		IsNight = currentDayRatio >= 0.5f && currentDayRatio < 1f;
+		IsNight = currentDayRatio >= 0.5f && currentDayRatio < 1f; // Set IsNight to true if the current ratio is between 0.5 (halfway) and 1 (end of the day)
 
 		OnTick?.Invoke(this, new OnTickEventArgs
 		{
@@ -136,14 +133,13 @@ public class WorldManager : NetworkBehaviour
 		IsLoadingBiome = true;
 		ChunkManager.Instance.UnloadAllChunks();
 		ObjectManager.Instance.ClearAllEnvironmentObjectVisuals();
-		Debug.Log($"a");
+		
 		LoadEnvironmentServerRpc(searchForPortal, portalPosition, Player.LocalClientInstance.CurrentBiome.Value, targetBiome);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void LoadEnvironmentServerRpc(bool searchForPortal, Vector2 portalPosition, BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
 	{
-		Debug.Log("b");
 		AsyncLoadEnvironment(searchForPortal, portalPosition, fromBiome, toBiome, rpcParams);
 	}
 
@@ -152,33 +148,25 @@ public class WorldManager : NetworkBehaviour
 		// Save the last biome it came from and set the player's burrent biome to tobiome.
 		if(!SaveSystem.Instance.IsSaving && SaveSystem.Instance.BiomeLoadedInMemory(fromBiome))
 		{
-			Debug.Log($"Saving biome because is not saving and biome is loaded in memeory");
 			await SaveSystem.Instance.SaveBiome(fromBiome);
 		}
-		Debug.Log($"c, sender client id: {rpcParams.Receive.SenderClientId}");
 		
 		// If the targetBiome is already loaded into memory, 
 		if(SaveSystem.Instance.BiomesInMemory.Contains(toBiome))
 		{
-			// Load chunks around this player
-			Debug.Log($"Biome in memory already");
 			LoadChunksClientRpc(toBiome, searchForPortal, portalPosition, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
 		}
 		else
 		{
 			// If not, deserializeanddispatch data
-			Debug.Log($"biome not in memory, need to deserialize and dispatch data if the save file exists or generate the new biome");
-			
 			if(SaveSystem.Instance.BiomeSaveFileExists(toBiome))
 			{
-				Debug.Log($"Unloading biome data and dispatching it");
 				await SaveSystem.Instance.DeserializeAndDispatchData(toBiome);
 			}
 			else
 			{
 				GenerateBiome(toBiome);
 				
-				Debug.Log($"Biome generated and saving it");
 				await SaveSystem.Instance.SaveBiome(fromBiome);
 			}
 			
@@ -282,7 +270,7 @@ public class WorldManager : NetworkBehaviour
 			for (int y = -1; y <= 1; y++)
 			{
 				Vector3Int neighborPosition = new(centerPositionInt.x + x, centerPositionInt.y + y, centerPositionInt.z);
-				Environment.Instance.GetWallTilemapData().DeleteTile(new(neighborPosition.x, neighborPosition.y), Player.LocalClientInstance.CurrentBiome.Value);
+				Environment.Instance.WallTmData.DeleteTile(new(neighborPosition.x, neighborPosition.y), Player.LocalClientInstance.CurrentBiome.Value);
 			}
 		}
 	}

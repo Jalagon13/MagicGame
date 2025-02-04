@@ -14,7 +14,6 @@ public class ChunkManager : NetworkBehaviour
 	public static int BIOME_SICE_LENGTH = 256;
 	public static int CHUNK_SIZE = 4;
 
-	public event EventHandler<OnActiveChunksUpdatedEventArgs> OnLoadedPlayerChunksUpdated; // Whenever new chunks are loaded around the player
 	public class OnActiveChunksUpdatedEventArgs : EventArgs
 	{
 		public Vector2Int MinLoadedTilePos;
@@ -44,6 +43,7 @@ public class ChunkManager : NetworkBehaviour
 	private ChunkNetworkManager _chunkNetworkManager;
 	private Vector2Int _currentChunkPosition; // Current chunk the player is in
 	private Vector2Int _lastChunkPosition; // Last chunk position for comparison
+	private bool _updateLightsFlag;
 	
 	private void Awake()
 	{
@@ -79,6 +79,35 @@ public class ChunkManager : NetworkBehaviour
 		{
 			UnloadChunk(_chunksToUnload.Dequeue());
 		}
+		
+		if(_chunksToLoad.Count <= 0 && _chunksToUnload.Count <= 0 && _updateLightsFlag)
+		{
+			UpdateLightMap();
+			_updateLightsFlag = false;
+		}
+	}
+	
+	public void UpdateLightMap()
+	{
+		// Set min and max loaded tile positions by looping through loaded chunks
+		Vector2Int minLoadedTilePos = new(int.MaxValue, int.MaxValue);
+		Vector2Int maxLoadedTilePos = new(int.MinValue, int.MinValue);
+
+		foreach (var item in _loadedChunks)
+		{
+			Vector2Int loadedChunkWorldPosition = item.Key * CHUNK_SIZE;
+			minLoadedTilePos = Vector2Int.Min(minLoadedTilePos, loadedChunkWorldPosition);
+			maxLoadedTilePos = Vector2Int.Max(maxLoadedTilePos, loadedChunkWorldPosition);
+		}
+
+		// Add chunk size to maxLoadedTilePosCoord to account for the chunk's area
+		maxLoadedTilePos += new Vector2Int(CHUNK_SIZE, CHUNK_SIZE);
+
+		// Set the final values
+		MinLoadedTilePosition = minLoadedTilePos;
+		MaxLoadedTilePosition = maxLoadedTilePos;
+		
+		Lightmap.Instance.UpdateLightMap(minLoadedTilePos, maxLoadedTilePos);
 	}
 	
 	private void OnBiomeDataLoaded(object sender, EventArgs e)
@@ -118,6 +147,8 @@ public class ChunkManager : NetworkBehaviour
 				_chunksToUnload.Enqueue(chunkPos);
 			}
 		}
+		
+		_updateLightsFlag = true;
 	}
 
 	private void LoadChunk(Vector2Int chunkPos)
@@ -202,17 +233,6 @@ public class ChunkManager : NetworkBehaviour
 		}
 		
 		return chunksToLoad;
-	}
-	
-	public void InvokeOnLoadedPlayerChunksUpdated()
-	{
-		CalculateMinMaxLoadedTilePos();
-		
-		OnLoadedPlayerChunksUpdated?.Invoke(this, new OnActiveChunksUpdatedEventArgs
-		{
-			MinLoadedTilePos = MinLoadedTilePosition,
-			MaxLoadedTilePos = MaxLoadedTilePosition
-		});
 	}
 	
 	private Vector2Int GetChunkPosition(Vector3 worldPosition)
@@ -356,28 +376,6 @@ public class ChunkManager : NetworkBehaviour
 		int yPos = Mathf.FloorToInt(Player.LocalClientInstance.transform.position.y);
 		
 		return new(xPos, yPos);
-	}
-	
-
-	private void CalculateMinMaxLoadedTilePos()
-	{
-		// Set min and max loaded tile positions by looping through loaded chunks
-		Vector2Int minLoadedTilePos = new(int.MaxValue, int.MaxValue);
-		Vector2Int maxLoadedTilePos = new(int.MinValue, int.MinValue);
-
-		foreach (var item in _loadedChunks)
-		{
-			Vector2Int loadedChunkWorldPosition = item.Key * CHUNK_SIZE;
-			minLoadedTilePos = Vector2Int.Min(minLoadedTilePos, loadedChunkWorldPosition);
-			maxLoadedTilePos = Vector2Int.Max(maxLoadedTilePos, loadedChunkWorldPosition);
-		}
-
-		// Add chunk size to maxLoadedTilePosCoord to account for the chunk's area
-		maxLoadedTilePos += new Vector2Int(CHUNK_SIZE, CHUNK_SIZE);
-
-		// Set the final values
-		MinLoadedTilePosition = minLoadedTilePos;
-		MaxLoadedTilePosition = maxLoadedTilePos;
 	}
 	
 	public Dictionary<Vector2Int, ChunkGameData> GetLoadedPlayerChunks()

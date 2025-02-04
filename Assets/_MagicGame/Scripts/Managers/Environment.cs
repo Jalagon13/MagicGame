@@ -14,11 +14,11 @@ public class Environment : NetworkBehaviour
 {
 	public static Environment Instance;
 
-	[SerializeField] private TilemapData _groundTilemapData;
-	[SerializeField] private TilemapData _floorTilemapData;
-	[SerializeField] private TilemapData _wallTilemapData;
+	[field: SerializeField] public TilemapData GroundTmData { get; private set; }
+	[field: SerializeField] public TilemapData FloorTmData { get; private set; }
+	[field: SerializeField] public TilemapData WallTmData { get; private set; }
 
-	private Dictionary<Vector3Int, TileVisibility> _tileVisibilityDictionary = new();
+	public Dictionary<Vector3Int, TileVisibility> TileVisibilityDict { get; private set; } = new();
 
 	private void Awake()
 	{
@@ -35,9 +35,9 @@ public class Environment : NetworkBehaviour
 	private void ClearLocalTilemaps(object sender, EventArgs e)
 	{
 		// Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
-		_groundTilemapData.GetTilemap().ClearAllTiles();
-		_floorTilemapData.GetTilemap().ClearAllTiles();
-		_wallTilemapData.GetTilemap().ClearAllTiles();
+		GroundTmData.GetTilemap().ClearAllTiles();
+		FloorTmData.GetTilemap().ClearAllTiles();
+		WallTmData.GetTilemap().ClearAllTiles();
 	}
 
 	private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)
@@ -46,13 +46,13 @@ public class Environment : NetworkBehaviour
 		foreach(TileGameData tile in e.Chunk.GroundTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			_groundTilemapData.GetTilemap().SetTile(tilePosV3Int, tile.TileSO);
+			GroundTmData.GetTilemap().SetTile(tilePosV3Int, tile.TileSO);
 			
 			// Populate Dicionary with tile visibility
-			if(!_tileVisibilityDictionary.ContainsKey(tilePosV3Int))
+			if(!TileVisibilityDict.ContainsKey(tilePosV3Int))
 			{
 				var isOpaque = e.Chunk.WallTileGameDataList.Exists(wallTile => wallTile.TilePosition == tile.TilePosition);
-				_tileVisibilityDictionary.Add(tilePosV3Int, new TileVisibility {Visibility = isOpaque ? 1 : 0});
+				TileVisibilityDict.Add(tilePosV3Int, new TileVisibility {Visibility = isOpaque ? 1 : 0});
 			}
 		}
 			
@@ -60,7 +60,7 @@ public class Environment : NetworkBehaviour
 		foreach(TileGameData tile in e.Chunk.WallTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			_wallTilemapData.GetTilemap().SetTile(tilePosV3Int, tile.TileSO);
+			WallTmData.GetTilemap().SetTile(tilePosV3Int, tile.TileSO);
 		}
 	}
 
@@ -70,18 +70,18 @@ public class Environment : NetworkBehaviour
 		foreach(TileGameData tile in e.Chunk.GroundTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			_groundTilemapData.GetTilemap().SetTile(tilePosV3Int, null);
+			GroundTmData.GetTilemap().SetTile(tilePosV3Int, null);
 			
-			if(_tileVisibilityDictionary.ContainsKey(tilePosV3Int))
+			if(TileVisibilityDict.ContainsKey(tilePosV3Int))
 			{
-				_tileVisibilityDictionary.Remove(tilePosV3Int);
+				TileVisibilityDict.Remove(tilePosV3Int);
 			}
 		}
 		
 		foreach (TileGameData tile in e.Chunk.WallTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			_wallTilemapData.GetTilemap().SetTile(tilePosV3Int, null);
+			WallTmData.GetTilemap().SetTile(tilePosV3Int, null);
 		}
 		
 		Pathfinding.Instance.RequestUnloadChunk(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentBiome.Value);
@@ -97,22 +97,22 @@ public class Environment : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void AddTileDataServerRpc(Vector3Int syncPos, byte syncTileId, TileType syncTileType, BiomeType environment)
+	private void AddTileDataServerRpc(Vector3Int syncPos, byte syncTileId, TileType syncTileType, BiomeType biome)
 	{
 		// Debug.Log("Server is adding tile data to official world data");
-		ChunkManager.Instance.AddWallTileDataToChunk((Vector2Int)syncPos, syncTileId, environment);
+		ChunkManager.Instance.AddWallTileDataToChunk((Vector2Int)syncPos, syncTileId, biome);
 		
-		HandleTileVisualClientRpc(syncPos, syncTileId, syncTileType);
+		HandleTileVisualClientRpc(syncPos, syncTileId, syncTileType, biome);
 	}
 	
 	[Rpc(SendTo.ClientsAndHost)]
-	private void HandleTileVisualClientRpc(Vector3Int syncPos, byte syncTileId, TileType syncTileType)
+	private void HandleTileVisualClientRpc(Vector3Int syncPos, byte syncTileId, TileType syncTileType, BiomeType biome)
 	{
-		// Debug.Log("Distributing visual placement information for each client to decide if it is worth placing based on chunks being loaded");
+		if(Player.LocalClientInstance.CurrentBiome.Value != biome) return;
+	
 		TileSO tileToPlace = GameManager.Instance.GetTileSOFromID(syncTileId);
 
-		// If ground tilemap has a tile at this location, that means the chunk is loaded and is able to accept visual changes
-		if(_groundTilemapData.GetTilemap().HasTile(syncPos))
+		if(GroundTmData.GetTilemap().HasTile(syncPos))
 		{
 			// Chunk is loaded visually, therefore visually update whatever tile wants to be updated
 			switch(syncTileType)
@@ -120,40 +120,17 @@ public class Environment : NetworkBehaviour
 				case TileType.Ground:
 					break;
 				case TileType.Floor:
-					_floorTilemapData.GetTilemap().SetTile(syncPos, tileToPlace);
+					FloorTmData.GetTilemap().SetTile(syncPos, tileToPlace);
 					break;
 				case TileType.Wall:
-					_wallTilemapData.GetTilemap().SetTile(syncPos, tileToPlace);
+					WallTmData.GetTilemap().SetTile(syncPos, tileToPlace);
+					
+					TileVisibilityDict[syncPos] = new TileVisibility {Visibility = 1};
+					
+					Lightmap.Instance.UpdateLightMap();
 					break;
 			}
 		}
-	}
-
-	private void ClearTilemaps()
-	{
-		_groundTilemapData.GetTilemap().ClearAllTiles();
-		_floorTilemapData.GetTilemap().ClearAllTiles();
-		_wallTilemapData.GetTilemap().ClearAllTiles();
-	}
-	
-	public TilemapData GetGroundTilemapData()
-	{
-		return _groundTilemapData;
-	}
-	
-	public TilemapData GetFloorTilemapData()
-	{
-		return _floorTilemapData;
-	}
-	
-	public TilemapData GetWallTilemapData()
-	{
-		return _wallTilemapData;
-	}
-	
-	public Dictionary<Vector3Int, TileVisibility> GetTileVisibilityDictionary()
-	{
-		return _tileVisibilityDictionary;
 	}
 	
 	public override void OnDestroy()

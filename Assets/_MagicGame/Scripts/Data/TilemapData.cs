@@ -115,29 +115,35 @@ public class TilemapData : NetworkBehaviour
 		}
 	}
 	
-	private void DestroyTile(Vector2Int position, byte tileId, BiomeType environment)
+	private void DestroyTile(Vector2Int position, byte tileId, BiomeType biome)
 	{
 		GameManager.Instance.SpawnItem(GameManager.Instance.GetTileSOFromID(tileId).DropItem, 3, position);
-		ChunkManager.Instance.RemoveWallTileDataFromChunk(position, environment);
-		Pathfinding.Instance.RemovePfWallTile(position, environment);
+		ChunkManager.Instance.RemoveWallTileDataFromChunk(position, biome);
+		Pathfinding.Instance.RemovePfWallTile(position, biome);
 		
-		DestroyTileClientRpc(position, tileId);
+		DestroyTileClientRpc(position, tileId, biome);
 	}
 
-	[Rpc(SendTo.Everyone)]
-	private void DestroyTileClientRpc(Vector2Int position, byte tileId)
+	[Rpc(SendTo.ClientsAndHost)]
+	private void DestroyTileClientRpc(Vector2Int position, byte tileId, BiomeType biome)
 	{
-		// Debug.Log("Destroying tile instead of adding entry because it was destroyed in one hit");
+		if(Player.LocalClientInstance.CurrentBiome.Value != biome) return;
+	
 		var pos = new Vector3Int(position.x, position.y, 0);
 		
-		// If tile has tile, then the chunk is loaded, if not, no need to destroy anything since there is no tile to destroy
 		if(_tilemap.HasTile(pos))
 		{
 			_tilemap.SetTile(pos, null);
+			
+			if(Environment.Instance.TileVisibilityDict.ContainsKey(pos))
+			{
+				Environment.Instance.TileVisibilityDict.Remove(pos);
+				Lightmap.Instance.UpdateLightMap();
+			}
+			
+			var tile = GameManager.Instance.GetTileSOFromID(tileId);
+			SoundManager.Instance.PlayOneShot(tile.DestroySound, pos);
 		}
-		
-		var tile = GameManager.Instance.GetTileSOFromID(tileId);
-		SoundManager.Instance.PlayOneShot(tile.DestroySound, pos);
 	}
 	
 	public WandAttribute GetHarvestType(Vector2Int position)

@@ -136,7 +136,7 @@ public class ObjectManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void HandleObjectVisualsClientRpc(Vector2Int position, byte assetID, BiomeType objectBiome)
 	{
-		if(objectBiome == Player.LocalClientInstance.CurrentBiome.Value /* && ObjectPositionInLoadedChunks(position) */)
+		if(objectBiome == Player.LocalClientInstance.CurrentBiome.Value && ObjectPositionInLoadedChunks(position))
 		{
 			// Visually place it down for everyone
 			WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);
