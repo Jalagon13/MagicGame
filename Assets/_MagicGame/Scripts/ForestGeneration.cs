@@ -36,19 +36,6 @@ public class ForestGeneration : MonoBehaviour
 	
 	private string _seed;
 	
-	private void Start()
-	{
-		SaveSystem.Instance.OnNoFileFoundToDeserialize += SaveSystem_OnNoFileFoundToDeserialize;
-	}
-
-	private void SaveSystem_OnNoFileFoundToDeserialize(object sender, EventArgs e)
-	{
-		if(Player.LocalClientInstance.CurrentBiome.Value == _environment)
-		{
-			GenerateForest();
-		}
-	}
-
 	public void GenerateForest()
 	{
 		Debug.Log("Generating Forest Data...");
@@ -173,10 +160,5 @@ public class ForestGeneration : MonoBehaviour
 			TileGameData tileGameData = new(tileObjectSO, position);
 			chunkDataTileList.Add(tileGameData);
 		}
-	}
-	
-	private void OnDestroy()
-	{
-		SaveSystem.Instance.OnNoFileFoundToDeserialize -= SaveSystem_OnNoFileFoundToDeserialize;
 	}
 }

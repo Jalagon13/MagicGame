@@ -22,20 +22,7 @@ public class CaveGeneration : MonoBehaviour
 	
 	
 	private string _seed;
-	
-	private void Start()
-	{
-		SaveSystem.Instance.OnNoFileFoundToDeserialize += SaveSystem_OnNoFileFoundToDeserialize;
-	}
 
-	private void SaveSystem_OnNoFileFoundToDeserialize(object sender, EventArgs e)
-	{
-		if(Player.LocalClientInstance.CurrentBiome.Value == _environment)
-		{
-			GenerateCave();
-		}
-	}
-	
 	public void GenerateCave()
 	{
 		Debug.Log("Generating Cave...");
@@ -115,10 +102,5 @@ public class CaveGeneration : MonoBehaviour
 	private float GetNoiseMapPointValueAtCoords(NoiseMapSO noiseMapSO, int x, int y)
 	{
 		return noiseMapSO.NoiseTexture.GetPixel(x, y).grayscale;
-	}
-	
-	private void OnDestroy()
-	{
-		SaveSystem.Instance.OnNoFileFoundToDeserialize -= SaveSystem_OnNoFileFoundToDeserialize;
 	}
 }

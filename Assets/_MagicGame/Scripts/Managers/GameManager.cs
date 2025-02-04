@@ -13,6 +13,7 @@ public class GameManager : NetworkBehaviour
 {
 	public static GameManager Instance { get; private set; }
 	
+	[SerializeField] private BiomeType _startingBiome;
 	
 	[Title("Item Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private GameObject _itemBasePrefab;
@@ -79,21 +80,10 @@ public class GameManager : NetworkBehaviour
 	{
 		if(clientId == NetworkManager.ServerClientId)
 		{
-			HandleEnvironment();
+			WorldManager.Instance.LoadBiome(_startingBiome, Player.LocalClientInstance.transform.position, false);
 		}
 	}
 	
-	private async void HandleEnvironment()
-	{
-		if(SaveSystem.Instance.BiomeSaveFileExists(BiomeType.Forest))
-		{
-			await SaveSystem.Instance.DeserializeAndDispatchData(BiomeType.Forest);
-		}
-		else
-		{
-			WorldManager.Instance.GenerateEnvironment(BiomeType.Forest);
-		}
-	}
 	
 	#region DataBase Functions
 	

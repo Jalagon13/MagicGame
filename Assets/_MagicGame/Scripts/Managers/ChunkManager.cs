@@ -32,7 +32,7 @@ public class ChunkManager : NetworkBehaviour
 	public Vector2Int MinLoadedTilePosition { get; private set; }
 	public Vector2Int MaxLoadedTilePosition { get; private set; }
 	
-	[SerializeField] private float _chunkLoadCooldown = 0.01f;
+	[SerializeField] private float _chunkLoadCooldown;
 	[SerializeField] private int _chunkLoadRadiusX = 5;
 	[SerializeField] private int _chunkLoadRadiusY = 4;
 	
@@ -44,21 +44,21 @@ public class ChunkManager : NetworkBehaviour
 	private ChunkNetworkManager _chunkNetworkManager;
 	private Vector2Int _currentChunkPosition; // Current chunk the player is in
 	private Vector2Int _lastChunkPosition; // Last chunk position for comparison
-	private Timer _chunkUpdateTimer;
 	
 	private void Awake()
 	{
 		Instance = this;
 		_chunkNetworkManager = GetComponent<ChunkNetworkManager>();
-		_chunkUpdateTimer = new(_chunkLoadCooldown);
 	}
 	
 	private void Start()
 	{
-		WorldManager.Instance.OnBiomeLoaded += OnBiomeLoaded;
+		WorldManager.Instance.OnBiomeDataLoaded += OnBiomeDataLoaded;
+		
+		InvokeRepeating(nameof(TryToLoadChunk), _chunkLoadCooldown, _chunkLoadCooldown);
 	}
-
-	private void FixedUpdate()
+	
+	private void TryToLoadChunk()
 	{
 		if(Player.LocalClientInstance == null || IS_GENERATING_BIOME || WorldManager.Instance.IsLoadingBiome) return;
 		
@@ -69,34 +69,28 @@ public class ChunkManager : NetworkBehaviour
 			_currentChunkPosition = newChunkPosition;
 			UpdateChunksAroundPlayer();
 		}
-		
-		_chunkUpdateTimer.Tick(Time.deltaTime);
-		
-		if(_chunkUpdateTimer.RemainingSeconds <= 0)
+	
+		if(_chunksToLoad.Count > 0)
 		{
-			if(_chunksToLoad.Count > 0)
-			{
-				LoadChunk(_chunksToLoad.Dequeue());
-			}
+			LoadChunk(_chunksToLoad.Dequeue());
+		}
 			
-			if(_chunksToUnload.Count > 0)
-			{
-				UnloadChunk(_chunksToUnload.Dequeue());
-			}
-		
-			_chunkUpdateTimer.RemainingSeconds = _chunkLoadCooldown;
+		if(_chunksToUnload.Count > 0)
+		{
+			UnloadChunk(_chunksToUnload.Dequeue());
 		}
 	}
 	
-	private void OnBiomeLoaded(object sender, EventArgs e)
+	private void OnBiomeDataLoaded(object sender, EventArgs e)
 	{
+		_chunksToLoad.Clear();
+		_chunksToUnload.Clear();
+	
 		_lastChunkPosition = new Vector2Int(-99, 99); // Set it to an impossible chunk position so UpdateChunksAroundPlayer executes;
 	}
-
+	
 	public void UpdateChunksAroundPlayer()
 	{
-		if (WorldManager.Instance.GetIsTransitioningEnvironment()) return;
-
 		var playerChunkPos = GetChunkPosition(Player.LocalClientInstance.transform.position);
 
 		// Get chunks around the player the player wants to load
@@ -286,12 +280,12 @@ public class ChunkManager : NetworkBehaviour
 		chunk.RemoveObjectData(position);
 	}
 	
-	public void AddWallTileDataToChunk(Vector2Int position, byte tileID, BiomeType environmentToAddTileData)
+	public void AddWallTileDataToChunk(Vector2Int position, byte tileID, BiomeType biomeToAddTileData)
 	{
 		if(!IsServer) return;
 	
 		// Get chunk tile was placed in
-		ChunkGameData chunk = GetChunk(position, environmentToAddTileData);
+		ChunkGameData chunk = GetChunk(position, biomeToAddTileData);
 		
 		// Add that tile data to this chunk
 		chunk.AddWallTileData(position, GameManager.Instance.GetTileSOFromID(tileID));

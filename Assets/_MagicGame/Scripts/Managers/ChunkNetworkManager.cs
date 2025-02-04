@@ -19,12 +19,14 @@ public class ChunkNetworkManager : NetworkBehaviour
 		
 		Pathfinding.Instance.UpdateChunkPathfinding(chunkPosition, chunkData, requestBiome, clientId);
 		
-		SendChunkDataToClientRpc(syncChunkData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+		SendChunkDataToClientRpc(requestBiome, syncChunkData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
 	}
 
 	[Rpc(SendTo.SpecifiedInParams)]
-	private void SendChunkDataToClientRpc(SyncChunkData syncChunkData, RpcParams rpcParams)
+	private void SendChunkDataToClientRpc(BiomeType requestBiome, SyncChunkData syncChunkData, RpcParams rpcParams)
 	{
+		if(Player.LocalClientInstance.CurrentBiome.Value != requestBiome) return;
+	
 		var chunkGameData = ConvertToGameChunkData(syncChunkData);
 		ChunkManager.Instance.InvokeOnLoadChunk(chunkGameData);
 	}

@@ -44,6 +44,7 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	public float Speed => _speed;
 	public bool IsMoving { get; set; }
 	public bool IsDead { get { return _thisPlayer.IsDead(); } }
+	public bool CanMove { get; private set; } = true;
 	
 	private void Awake()
 	{
@@ -81,6 +82,8 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		if(IsOwner)
 		{
 			GameInput.Instance.OnMove += GameInput_OnMove;
+			WorldManager.Instance.OnStartBiomeTransition += WorldManager_RestrictMovement;
+			WorldManager.Instance.OnEndBiomeTransition += WorldManager_AllowMovement;
 		}
 	
 		base.OnNetworkSpawn();
@@ -107,6 +110,16 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		_previousIsMoving = IsMoving;
 		
 		base.FixedUpdate();
+	}
+	
+	private void WorldManager_AllowMovement(object sender, EventArgs e)
+	{
+		CanMove = true;
+	}
+
+	private void WorldManager_RestrictMovement(object sender, EventArgs e)
+	{
+		CanMove = false;
 	}
 
 	private void Player_OnKilled(object sender, EventArgs e)
@@ -232,6 +245,8 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		if(IsOwner)
 		{
 			GameInput.Instance.OnMove -= GameInput_OnMove;
+			WorldManager.Instance.OnStartBiomeTransition -= WorldManager_RestrictMovement;
+			WorldManager.Instance.OnEndBiomeTransition -= WorldManager_AllowMovement;
 		}
 	}
 }

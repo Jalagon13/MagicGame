@@ -6283,7 +6283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _chunkLoadCooldown: 0.005
+  _chunkLoadCooldown: 0.01
   _chunkLoadRadiusX: 6
   _chunkLoadRadiusY: 4
 --- !u!114 &876396789
@@ -11048,6 +11048,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _startingBiome: 0
   _itemBasePrefab: {fileID: 4324714860010554649, guid: b80d6a3337ea34052b9944957d71ebd0, type: 3}
   _playerPrefab: {fileID: 815970926421098775, guid: f97c883a224ab4846b8446859cca2edd, type: 3}
   _miningProjectilePrefab: {fileID: -7044577308189781429, guid: 0f801ebc91b004182a3219acb85b34d4, type: 3}
@@ -13675,6 +13676,9 @@ MonoBehaviour:
   _randomSeed: 0
   _customSeed: Hell world :D
   _portalObjectPrefab: {fileID: 821165274625048597, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
+  _portalSearchRadius: 10
+  _portalSearchDelayOnBiomeLoad: 0.25
+  _endBiomeTransitionDelay: 0.75
 --- !u!1 &1942133332
 GameObject:
   m_ObjectHideFlags: 0
@@ -13875,7 +13879,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1917302446}
         m_TargetAssemblyTypeName: SaveSystem, Assembly-CSharp
-        m_MethodName: SaveBiome
+        m_MethodName: SavePlayerBiome
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

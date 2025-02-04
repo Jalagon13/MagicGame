@@ -213,7 +213,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		if(LocalClientInstance.CurrentBiome.Value != _spawnBiome)
 		{
-			WorldManager.Instance.LoadEnvironment(_spawnBiome, _spawnPoint, isPlayerRespawning: true);
+			WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint, false);
 		}
 
 		OnRespawn?.Invoke(this, new PlayerIdEventArgs

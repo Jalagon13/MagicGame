@@ -51,7 +51,6 @@ public class Pathfinding : NetworkBehaviour
 	{
 		if(!_playerToChunks.ContainsKey(clientId))
 		{
-			Debug.Log($"Creating player {clientId}'s pathfinding chunks list");
 			_playerToChunks.Add(clientId, new());
 		}
 	}
@@ -111,33 +110,33 @@ public class Pathfinding : NetworkBehaviour
 		BiomeToLoadedPathfindingChunks[environment].WallColliderTm.SetTile((Vector3Int)position, null);
 	}
 
-	public void UpdateChunkPathfinding(Vector2Int chunkPos, ChunkGameData chunkGameData, BiomeType environment, ulong clientId)
+	public void UpdateChunkPathfinding(Vector2Int chunkPos, ChunkGameData chunkGameData, BiomeType biome, ulong clientId)
 	{
 		// No matter what, add this chunk to this player's chunk list
 		_playerToChunks[clientId].Add(chunkPos);
 
-		if(BiomeToLoadedPathfindingChunks.ContainsKey(environment))
+		if(BiomeToLoadedPathfindingChunks.ContainsKey(biome))
 		{
-			if(!BiomeToLoadedPathfindingChunks[environment].Chunks.Contains(chunkPos))
+			if(!BiomeToLoadedPathfindingChunks[biome].Chunks.Contains(chunkPos))
 			{
-				AddWallColliderChunk(environment, chunkGameData);
+				AddWallColliderChunk(biome, chunkGameData);
 			}
 		}
 		else
 		{
-			BiomeToLoadedPathfindingChunks.Add(environment, new PathfindingData(new(), CreateWallColliderTilemap(environment)));
-			AddWallColliderChunk(environment, chunkGameData);
+			BiomeToLoadedPathfindingChunks.Add(biome, new PathfindingData(new(), CreateWallColliderTilemap(biome)));
+			AddWallColliderChunk(biome, chunkGameData);
 		}
 	}
 	
-	private void AddWallColliderChunk(BiomeType environment, ChunkGameData chunkGameData)
+	private void AddWallColliderChunk(BiomeType biome, ChunkGameData chunkGameData)
 	{
-		BiomeToLoadedPathfindingChunks[environment].Chunks.Add(chunkGameData.ChunkPosition);
+		BiomeToLoadedPathfindingChunks[biome].Chunks.Add(chunkGameData.ChunkPosition);
 		
 		// Loop through all the wall data and inst a wall tile for it on the tilemap
 		foreach (TileGameData wallTileGameData in chunkGameData.WallTileGameDataList)
 		{
-			BiomeToLoadedPathfindingChunks[environment].WallColliderTm.SetTile((Vector3Int)wallTileGameData.TilePosition, _wallTile);
+			BiomeToLoadedPathfindingChunks[biome].WallColliderTm.SetTile((Vector3Int)wallTileGameData.TilePosition, _wallTile);
 		}
 	}
 
@@ -162,20 +161,22 @@ public class Pathfinding : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RequestUnloadChunkServerRpc(Vector2Int chunkPos, ulong clientId, BiomeType environment)
+	private void RequestUnloadChunkServerRpc(Vector2Int chunkPos, ulong clientId, BiomeType biome)
 	{
 		_playerToChunks[clientId].Remove(chunkPos);
-	
-		if(!IsChunkInUse(chunkPos, environment))
+
+		if(!IsChunkInUse(chunkPos, biome))
 		{
-			BiomeToLoadedPathfindingChunks[environment].Chunks.Remove(chunkPos);
+			if(!BiomeToLoadedPathfindingChunks.ContainsKey(biome)) return;
+		
+			BiomeToLoadedPathfindingChunks[biome].Chunks.Remove(chunkPos);
 			
-			RemoveWallColliderChunk(environment, chunkPos);
+			RemoveWallColliderChunk(biome, chunkPos);
 			
-			if(BiomeToLoadedPathfindingChunks[environment].Chunks.Count <= 0)
+			if(BiomeToLoadedPathfindingChunks[biome].Chunks.Count <= 0)
 			{
-				Destroy(BiomeToLoadedPathfindingChunks[environment].WallColliderTm.gameObject);
-				BiomeToLoadedPathfindingChunks.Remove(environment);
+				Destroy(BiomeToLoadedPathfindingChunks[biome].WallColliderTm.gameObject);
+				BiomeToLoadedPathfindingChunks.Remove(biome);
 			}
 		}
 	}
@@ -203,13 +204,13 @@ public class Pathfinding : NetworkBehaviour
 	}
 
 	// Checks if another player needs the pathfinding for this chunk
-	private bool IsChunkInUse(Vector2Int chunkPos, BiomeType environment)
+	private bool IsChunkInUse(Vector2Int chunkPos, BiomeType biome)
 	{
 		// If a player still has chunk active
 		foreach (var kvp in _playerToChunks)
 		{
 			// Loop through only players in the same environment being tested
-			if(NetworkManager.ConnectedClients[kvp.Key].PlayerObject.GetComponent<Player>().CurrentBiome.Value != environment) continue;
+			if(NetworkManager.ConnectedClients[kvp.Key].PlayerObject.GetComponent<Player>().CurrentBiome.Value != biome) continue;
 		
 			var chunksLoaded = kvp.Value;
 			

@@ -7,8 +7,6 @@ using UnityEngine;
 
 public class SaveSystem : MonoBehaviour
 {
-	public event EventHandler OnNoFileFoundToDeserialize;
-
 	public static SaveSystem Instance { get; private set; }
 	
 	private BiomeFileData _biomeFileDataForSaving = new();
@@ -28,6 +26,7 @@ public class SaveSystem : MonoBehaviour
 	{
 		if(!BiomesInMemory.Contains(biome))
 		{
+			Debug.Log($"Adding biome to biomes in memeory {biome}");
 			BiomesInMemory.Add(biome);
 		}
 	}
@@ -59,7 +58,7 @@ public class SaveSystem : MonoBehaviour
 	
 	private async Task SerializeDataAndWriteToFile(BiomeType biomeToSave)
 	{
-		Debug.Log($"<color=orange>=============================================</color>");
+		Debug.Log($"<color=orange>=====================SAVING========================</color>");
 		Debug.Log($"Path: " + Application.dataPath + $"/_MagicGame/Configuration/JsonData/{biomeToSave}_data.json");
 	
 		_path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{biomeToSave}_data.json";
@@ -73,13 +72,13 @@ public class SaveSystem : MonoBehaviour
 		await WriteCurrentEnvironmentDataToFile();
 	}
 	
-	private void SerializeObjectDataOfCurrentEnvironment(BiomeType environmentToSerialize)
+	private void SerializeObjectDataOfCurrentEnvironment(BiomeType biomeToSave)
 	{
 		// Clear assets
 		_biomeFileDataForSaving.WorldObjectsList.Clear();
 		
 		// Loop through all assets and push them to _sceneData before serializing it
-		foreach (var chunkPosChunkDataKVP in ChunkManager.Instance.GetChunksFromBiome(environmentToSerialize))
+		foreach (var chunkPosChunkDataKVP in ChunkManager.Instance.GetChunksFromBiome(biomeToSave))
 		{
 			List<WorldObjectGameData> worldObjectGameDataList = chunkPosChunkDataKVP.Value.WorldObjectGameDataList;
 		
@@ -95,7 +94,6 @@ public class SaveSystem : MonoBehaviour
 						
 						if(worldObjectGameData is DoorObjectGameData doorObjectGameData)
 						{
-							Debug.Log($"Serializing door. door open: {doorObjectGameData.IsOpen}");
 							worldAssetData = new DoorObjectFileData(GameManager.Instance.GetByteIDFromWorldObject(worldObjectGameData.Asset), worldObjectGameData.Position, doorObjectGameData.IsOpen);
 						}
 						else
@@ -110,10 +108,10 @@ public class SaveSystem : MonoBehaviour
 			}
 		}
 		
-		Debug.Log($"<color=orange>Asset Data of </color>{environmentToSerialize}<color=orange> Serialized</color>");
+		Debug.Log($"<color=orange>Asset Data of </color>{biomeToSave}<color=orange> Serialized</color>");
 	}
 	
-	private void SerializeChunkDataOfCurrentEnvironment(BiomeType environmentToSerialize)
+	private void SerializeChunkDataOfCurrentEnvironment(BiomeType biomeToSave)
 	{
 		// Clear world chunks for new data
 		_biomeFileDataForSaving.ChunksList.Clear();
@@ -122,7 +120,7 @@ public class SaveSystem : MonoBehaviour
 		List<ChunkFileData> sceneDataChunks = new();
 		
 		// Convert chunks into ChunkData for serialization
-		foreach (var kvp in ChunkManager.Instance.GetChunksFromBiome(environmentToSerialize))
+		foreach (var kvp in ChunkManager.Instance.GetChunksFromBiome(biomeToSave))
 		{
 			ChunkFileData chunkData = new()
 			{
@@ -166,7 +164,7 @@ public class SaveSystem : MonoBehaviour
 		
 		// Push chunk scene data to current SceneSaveHandler
 		_biomeFileDataForSaving.ChunksList = sceneDataChunks;
-		Debug.Log($"<color=orange>Chunk Data of </color>{environmentToSerialize}<color=orange> Serialized</color>");
+		Debug.Log($"<color=orange>Chunk Data of </color>{biomeToSave}<color=orange> Serialized</color>");
 	}
 
 	private void SerializeChestDataOfCurrentEnvironment(BiomeType environmentToSerialize)
@@ -204,7 +202,7 @@ public class SaveSystem : MonoBehaviour
 		await File.WriteAllTextAsync(_path, json);
 		
 		Debug.Log($"<color=orange>Biome: </color>{Player.LocalClientInstance.CurrentBiome.Value}<color=orange> writing data to file complete!</color>");
-		Debug.Log($"<color=orange>=============================================</color>");
+		Debug.Log($"<color=orange>=====================SAVING========================</color>");
 	}
 
 	#endregion
@@ -225,7 +223,7 @@ public class SaveSystem : MonoBehaviour
 		
 		if (File.Exists(_path))
 		{
-			Debug.Log($"<color=orange>=============================================</color>");
+			Debug.Log($"<color=orange>=====================LOADING========================</color>");
 			Debug.Log($"Path: " + Application.dataPath + $"/_MagicGame/Configuration/JsonData/{biomeToLoad}_data.json");
 			Debug.Log($"<color=orange>Deserializing </color>{biomeToLoad}<color=orange> Data From File...</color>");
 			
@@ -240,10 +238,11 @@ public class SaveSystem : MonoBehaviour
 			DeserializeObjectData(biomeToLoad);
 			DeserializeChestData(biomeToLoad);
 			
-			Debug.Log($"<color=orange>Chunk and Asset Data of: </color>{biomeToLoad}<color=orange> Deserialized! </color>");
-			
 			// Mark this biome as loaded
 			AddBiomeToMemorySessionTracker(biomeToLoad);
+			
+			Debug.Log($"<color=orange>Chunk and Asset Data of: </color>{biomeToLoad}<color=orange> Deserialized! </color>");
+			Debug.Log($"<color=orange>=====================LOADING========================</color>");
 		}
 		
 		IsDeserializing = false;
@@ -251,10 +250,10 @@ public class SaveSystem : MonoBehaviour
 		// NTFS: Write condition for non existant path
 	}
 
-	private void DeserializeChunkData(BiomeType environmentToDeserialize)
+	private void DeserializeChunkData(BiomeType biomeToLoad)
 	{
 		// Unpack chunk data
-		List<ChunkFileData> chunkFileData = _biomeFileDataForSaving.ChunksList;
+		List<ChunkFileData> chunkFileData = _biomeFileDataForLoading.ChunksList;
 		
 		// Construct a new Dictionary<Vector2Int, Chunk> of deserialized chunk data and send it to ChunkManager to use
 		Dictionary<Vector2Int, ChunkGameData> deserializedChunks = new Dictionary<Vector2Int, ChunkGameData>();
@@ -272,9 +271,9 @@ public class SaveSystem : MonoBehaviour
 		}
 		
 		// Update player chunks so assets can deserialize properly
-		ChunkManager.Instance.LoadChunksForBiome(environmentToDeserialize, deserializedChunks);
+		ChunkManager.Instance.LoadChunksForBiome(biomeToLoad, deserializedChunks);
 		
-		Debug.Log($"<color=orange>Chunk Data of: </color>{environmentToDeserialize}<color=orange> Deserialized And Updated </color>");
+		Debug.Log($"<color=orange>Chunk Data of: </color>{biomeToLoad}<color=orange> Deserialized And Updated </color>");
 	}
 	
 	// Convert tile file data to tile game data
@@ -296,7 +295,7 @@ public class SaveSystem : MonoBehaviour
 	private void DeserializeObjectData(BiomeType biomeToDeserialize)
 	{
 		// Unpack asset data need to make a new list to avoid error that said I was modifying this list as it was being processed
-		List<WorldObjectFileData> worldObjectFileData = new(_biomeFileDataForSaving.WorldObjectsList);
+		List<WorldObjectFileData> worldObjectFileData = new(_biomeFileDataForLoading.WorldObjectsList);
 		
 		// Instantiate each asset
 		foreach (WorldObjectFileData data in worldObjectFileData)
@@ -311,7 +310,7 @@ public class SaveSystem : MonoBehaviour
 	
 	private void DeserializeChestData(BiomeType environmentToDeserialize)
 	{
-		List<ChestFileData> chestDataList = new(_biomeFileDataForSaving.ChestList);
+		List<ChestFileData> chestDataList = new(_biomeFileDataForLoading.ChestList);
 		ChestManager.Instance.GetChestDataFromEnvironment(environmentToDeserialize).Clear();
 		
 		

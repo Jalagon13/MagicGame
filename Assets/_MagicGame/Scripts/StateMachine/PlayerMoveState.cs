@@ -34,7 +34,7 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override PlayerStateMachine.PlayerState GetNextState()
 	{
-		if(_ctx.MoveVector.magnitude == 0 || _ctx.IsDead)
+		if(_ctx.MoveVector.magnitude == 0 || _ctx.IsDead || !_ctx.CanMove)
 			return PlayerStateMachine.PlayerState.Idle;
 	
 		return StateKey;

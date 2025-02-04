@@ -29,6 +29,15 @@ public class Environment : NetworkBehaviour
 	{
 		ChunkManager.Instance.OnLoadChunk += ChunkManager_OnLoadChunk;
 		ChunkManager.Instance.OnUnloadChunk += ChunkManager_OnUnloadChunk;
+		WorldManager.Instance.OnStartBiomeTransition += ClearLocalTilemaps;
+	}
+
+	private void ClearLocalTilemaps(object sender, EventArgs e)
+	{
+		// Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
+		_groundTilemapData.GetTilemap().ClearAllTiles();
+		_floorTilemapData.GetTilemap().ClearAllTiles();
+		_wallTilemapData.GetTilemap().ClearAllTiles();
 	}
 
 	private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)
@@ -82,30 +91,28 @@ public class Environment : NetworkBehaviour
 	public void PlaceTile(Vector3Int pos, TileSO wallTile, TileType syncTileType, BiomeType environment)
 	{
 		// Debug.Log("Some Client is placing a tile");
-		Vector2Int syncPos = new(pos.x, pos.y);
 		byte syncTileId = GameManager.Instance.GetByteIDFromTileObjectSO(wallTile);
 		
-		AddTileDataServerRpc(syncPos, syncTileId, syncTileType, environment);
+		AddTileDataServerRpc(pos, syncTileId, syncTileType, environment);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void AddTileDataServerRpc(Vector2Int syncPos, byte syncTileId, TileType syncTileType, BiomeType environment)
+	private void AddTileDataServerRpc(Vector3Int syncPos, byte syncTileId, TileType syncTileType, BiomeType environment)
 	{
 		// Debug.Log("Server is adding tile data to official world data");
-		ChunkManager.Instance.AddWallTileDataToChunk(new(syncPos.x, syncPos.y), syncTileId, environment);
+		ChunkManager.Instance.AddWallTileDataToChunk((Vector2Int)syncPos, syncTileId, environment);
 		
 		HandleTileVisualClientRpc(syncPos, syncTileId, syncTileType);
 	}
 	
 	[Rpc(SendTo.ClientsAndHost)]
-	private void HandleTileVisualClientRpc(Vector2Int syncPos, byte syncTileId, TileType syncTileType)
+	private void HandleTileVisualClientRpc(Vector3Int syncPos, byte syncTileId, TileType syncTileType)
 	{
 		// Debug.Log("Distributing visual placement information for each client to decide if it is worth placing based on chunks being loaded");
-		Vector3Int position = new(syncPos.x, syncPos.y);
 		TileSO tileToPlace = GameManager.Instance.GetTileSOFromID(syncTileId);
 
 		// If ground tilemap has a tile at this location, that means the chunk is loaded and is able to accept visual changes
-		if(_groundTilemapData.GetTilemap().HasTile(position))
+		if(_groundTilemapData.GetTilemap().HasTile(syncPos))
 		{
 			// Chunk is loaded visually, therefore visually update whatever tile wants to be updated
 			switch(syncTileType)
@@ -113,10 +120,10 @@ public class Environment : NetworkBehaviour
 				case TileType.Ground:
 					break;
 				case TileType.Floor:
-					_floorTilemapData.GetTilemap().SetTile(position, tileToPlace);
+					_floorTilemapData.GetTilemap().SetTile(syncPos, tileToPlace);
 					break;
 				case TileType.Wall:
-					_wallTilemapData.GetTilemap().SetTile(position, tileToPlace);
+					_wallTilemapData.GetTilemap().SetTile(syncPos, tileToPlace);
 					break;
 			}
 		}
@@ -154,5 +161,6 @@ public class Environment : NetworkBehaviour
 		base.OnDestroy();
 		ChunkManager.Instance.OnLoadChunk -= ChunkManager_OnLoadChunk;
 		ChunkManager.Instance.OnUnloadChunk -= ChunkManager_OnUnloadChunk;
+		WorldManager.Instance.OnStartBiomeTransition -= ClearLocalTilemaps;
 	}
 }

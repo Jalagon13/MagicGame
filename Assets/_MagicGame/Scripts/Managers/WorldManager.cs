@@ -17,7 +17,9 @@ public class WorldManager : NetworkBehaviour
 {
 	public static WorldManager Instance { get; private set; }
 	
-	public event EventHandler OnBiomeLoaded;
+	public event EventHandler OnStartBiomeTransition;
+	public event EventHandler OnEndBiomeTransition;
+	public event EventHandler OnBiomeDataLoaded;
 	public event EventHandler<OnTickEventArgs> OnTick;
 	public class OnTickEventArgs : EventArgs 
 	{
@@ -27,7 +29,7 @@ public class WorldManager : NetworkBehaviour
 	public bool IsNight { get; private set; }
 	public bool IsLoadingBiome { get; private set; }
 
-	[Title("Bounaries", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
+	[Title("Boundaries", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private float _dayDurationInSeconds;
 	[SerializeField] private float _startingTime = 0.0f;
 	[SerializeField] private bool _isTicking = true;
@@ -36,10 +38,11 @@ public class WorldManager : NetworkBehaviour
 	[SerializeField] private bool _randomSeed = false;
 	[SerializeField] private string _customSeed = 123.ToString();
 	[SerializeField] private WorldObject _portalObjectPrefab;
+	[SerializeField] private float _portalSearchRadius = 10f;
+	[SerializeField] private float _portalSearchDelayOnBiomeLoad = 0.75f;
+	[SerializeField] private float _endBiomeTransitionDelay = 1f;
 	
-	private List<BiomeType> _environmentList = new(); // Used to keep track which environments have been generated or not
 	private float _currentTime;
-	private bool _isTransitioningEnvironment, _isPlayerRespawning;
 	
 	public string Seed 
 	{ 
@@ -124,51 +127,27 @@ public class WorldManager : NetworkBehaviour
 		_dayDurationInSeconds = dayDurationInSeconds;
 	}
 
-	public void GenerateEnvironment(BiomeType biomeToGenerate)
+	public void LoadBiome(BiomeType targetBiome, Vector2 portalPosition, bool searchForPortal = true)
 	{
-		// Check if environment is already generated
-		if(_environmentList.Count > 0)
-		{
-			foreach (BiomeType environment in _environmentList)
-			{
-				if(environment == biomeToGenerate)
-				{
-					// Environment found, should not generate an environment already found
-					Debug.LogError("Should not be trying to generate an environment that is already generated");
-					return;
-				}
-			}
-		}
-		
-		LoadEnvironment(biomeToGenerate, Player.LocalClientInstance.transform.position);
-	}
-	
-	public void LoadEnvironment(BiomeType targetBiome, Vector2 portalPosition, bool isPlayerRespawning = false)
-	{
-		_isPlayerRespawning = isPlayerRespawning;
-		IsLoadingBiome = true;
-		
-		// NTFS: make sure player is not able to move during this process and add a loading screen
-		
-		// Teleport player to portal he is entering
 		PlacePlayerAt(portalPosition);
 		
-		// Clear all client visuals
+		OnStartBiomeTransition?.Invoke(this, EventArgs.Empty); 
+		
+		IsLoadingBiome = true;
 		ChunkManager.Instance.UnloadAllChunks();
 		ObjectManager.Instance.ClearAllEnvironmentObjectVisuals();
-		// ChunkManager.Instance.OnLoadedPlayerChunksUpdated += OnClientEnvironmentTransitionEnd;
-		Debug.Log("a");
-		LoadEnvironmentServerRpc(Player.LocalClientInstance.CurrentBiome.Value, targetBiome);
+		Debug.Log($"a");
+		LoadEnvironmentServerRpc(searchForPortal, portalPosition, Player.LocalClientInstance.CurrentBiome.Value, targetBiome);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void LoadEnvironmentServerRpc(BiomeType fromBiome, BiomeType toBiome)
+	private void LoadEnvironmentServerRpc(bool searchForPortal, Vector2 portalPosition, BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
 	{
 		Debug.Log("b");
-		AsyncLoadEnvironment(fromBiome, toBiome);
+		AsyncLoadEnvironment(searchForPortal, portalPosition, fromBiome, toBiome, rpcParams);
 	}
 
-	private async void AsyncLoadEnvironment(BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
+	private async void AsyncLoadEnvironment(bool searchForPortal, Vector2 portalPosition, BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
 	{
 		// Save the last biome it came from and set the player's burrent biome to tobiome.
 		if(!SaveSystem.Instance.IsSaving && SaveSystem.Instance.BiomeLoadedInMemory(fromBiome))
@@ -176,15 +155,14 @@ public class WorldManager : NetworkBehaviour
 			Debug.Log($"Saving biome because is not saving and biome is loaded in memeory");
 			await SaveSystem.Instance.SaveBiome(fromBiome);
 		}
-		Debug.Log("c");
-		NetworkManager.Singleton.ConnectedClients[rpcParams.Receive.SenderClientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value = toBiome;
+		Debug.Log($"c, sender client id: {rpcParams.Receive.SenderClientId}");
 		
 		// If the targetBiome is already loaded into memory, 
 		if(SaveSystem.Instance.BiomesInMemory.Contains(toBiome))
 		{
 			// Load chunks around this player
 			Debug.Log($"Biome in memory already");
-			LoadChunksClientRpc(RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+			LoadChunksClientRpc(toBiome, searchForPortal, portalPosition, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
 		}
 		else
 		{
@@ -204,7 +182,7 @@ public class WorldManager : NetworkBehaviour
 				await SaveSystem.Instance.SaveBiome(fromBiome);
 			}
 			
-			LoadChunksClientRpc(RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+			LoadChunksClientRpc(toBiome, searchForPortal, portalPosition, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
 		}
 	}
 
@@ -213,85 +191,73 @@ public class WorldManager : NetworkBehaviour
 		switch (toBiome)
 		{
 			case BiomeType.Forest:
-				_environmentList.Add(BiomeType.Forest);
 				GetComponent<ForestGeneration>().GenerateForest();
 				break;
 			case BiomeType.Cave:
-				_environmentList.Add(BiomeType.Cave);
 				GetComponent<CaveGeneration>().GenerateCave();
 				break;
 		}
 	}
 
 	[Rpc(SendTo.SpecifiedInParams)]
-	private void LoadChunksClientRpc(RpcParams rpcParams)
+	private void LoadChunksClientRpc(BiomeType toBiome, bool searchForPortal, Vector2 portalPosition, RpcParams rpcParams)
 	{
-		Debug.Log($"Allowing client to load chunks");
+		Debug.Log($"Player biome: {toBiome}Allowing client to load chunks");
+		Player.LocalClientInstance.CurrentBiome.Value = toBiome;
+		
 		// Invoke it first to prep the last chunk position to garentee a new set of chunks to generate, then set loadingbiome to true to resume the update method
-		OnBiomeLoaded?.Invoke(this, EventArgs.Empty);
+		OnBiomeDataLoaded?.Invoke(this, EventArgs.Empty);
 		IsLoadingBiome = false;
+		
+		StartCoroutine(SearchForPortal(searchForPortal, portalPosition));
+		
+		
 	}
 	
-	private void OnClientEnvironmentTransitionEnd(object sender, ChunkManager.OnActiveChunksUpdatedEventArgs e)
+	
+
+	private IEnumerator SearchForPortal(bool searchForPortal, Vector2 portalPosition)
 	{
-		// ChunkManager.Instance.OnLoadedPlayerChunksUpdated -= OnClientEnvironmentTransitionEnd;
-		
-		SearchForPortal(Player.LocalClientInstance.transform.position);
-	}
-
-	private void SearchForPortal(Vector2 portalPosition)
-	{
-		// If player is respawning after loading this environment, do not search for portal
-		if(_isPlayerRespawning)
+		if(searchForPortal)
 		{
-			_isPlayerRespawning = false;
-			return;
-		}
-		
-		_isPlayerRespawning = false;
+			yield return new WaitForSeconds(_portalSearchDelayOnBiomeLoad);
 
-		// If there is a portal in lets say a 10 tile radius, grab it's position, and teleport player to that portal
-		float searchRadius = 10f;
+			Collider2D[] colliders = Physics2D.OverlapCircleAll(portalPosition, _portalSearchRadius);
 
-		// Find all colliders in the circular search area
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(portalPosition, searchRadius);
+			Portal closestPortal = null;
+			float closestDistance = float.MaxValue;
 
-		// Initialize variables to track the closest portal
-		Portal closestPortal = null;
-		float closestDistance = float.MaxValue;
-
-		// Loop through the colliders to find portals and the closest one
-		foreach (var collider in colliders)
-		{
-			// Check if the collider has a Portal component
-			Portal portal = collider.GetComponent<Portal>();
-			if (portal != null)
+			// Loop through the colliders to find portals and the closest one
+			foreach (var collider in colliders)
 			{
-				// Calculate the distance from the portal to the given portal position
-				float distance = Vector2.Distance(portal.transform.position, portalPosition);
-
-				// Update the closest portal if this one is closer
-				if (distance < closestDistance)
+				Portal portal = collider.GetComponent<Portal>();
+				if (portal != null)
 				{
-					closestPortal = portal;
-					closestDistance = distance;
+					float distance = Vector2.Distance(portal.transform.position, portalPosition);
+
+					if (distance < closestDistance)
+					{
+						closestPortal = portal;
+						closestDistance = distance;
+					}
 				}
 			}
-		}
 
-		// If a closest portal was found, do something with it
-		if (closestPortal != null)
-		{
-			// Example: Log the closest portal's position (you can replace this with your desired logic)
-			Debug.Log($"Closest portal found at: {closestPortal.transform.position}");
-			PlacePlayerAt(closestPortal.transform.position);
-			// Your custom logic here (e.g., teleport the player to this portal)
+			if (closestPortal != null)
+			{
+				Debug.Log($"Closest portal found at: {closestPortal.transform.position}");
+				PlacePlayerAt(closestPortal.transform.position);
+			}
+			else
+			{
+				Debug.Log("No portal found within the search radius.");
+				SpawnPortal(portalPosition);
+			}
 		}
-		else
-		{
-			Debug.Log("No portal found within the search radius.");
-			SpawnPortal(portalPosition);
-		}
+		
+		yield return new WaitForSeconds(_endBiomeTransitionDelay);
+		
+		OnEndBiomeTransition?.Invoke(this, EventArgs.Empty); 
 	}
 
 	private void SpawnPortal(Vector2 portalPosition)
@@ -319,11 +285,6 @@ public class WorldManager : NetworkBehaviour
 				Environment.Instance.GetWallTilemapData().DeleteTile(new(neighborPosition.x, neighborPosition.y), Player.LocalClientInstance.CurrentBiome.Value);
 			}
 		}
-	}
-	
-	public bool GetIsTransitioningEnvironment()
-	{
-		return _isTransitioningEnvironment;
 	}
 	
 	public bool IsTicking()

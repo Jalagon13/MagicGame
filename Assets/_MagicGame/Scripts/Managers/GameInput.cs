@@ -35,7 +35,7 @@ public class GameInput : MonoBehaviour
 	
 	private PlayerInput _playerInput;
 	
-	private bool _inventoryOpen, _primaryHeldDown, _secondaryHeldDown, _shiftHeldDown;
+	private bool _inventoryOpen, _primaryHeldDown, _secondaryHeldDown, _shiftHeldDown, _inputsEnabled = true;
 	private int _selectedSlotIndex = 0;
 	
 	private void Awake()
@@ -73,6 +73,18 @@ public class GameInput : MonoBehaviour
 	private void Start()
 	{
 		ChestManager.Instance.OnChestOpen += ChestManager_OnChestOpen;
+		WorldManager.Instance.OnStartBiomeTransition += WorldManager_DisableInputs;
+		WorldManager.Instance.OnEndBiomeTransition += WorldManager_EnableInputs;
+	}
+
+	private void WorldManager_EnableInputs(object sender, EventArgs e)
+	{
+		_inputsEnabled = true;
+	}
+
+	private void WorldManager_DisableInputs(object sender, EventArgs e)
+	{
+		_inputsEnabled = false;
 	}
 
 	private void ChestManager_OnChestOpen(object sender, ChestManager.ChestEventArgs e)
@@ -107,6 +119,8 @@ public class GameInput : MonoBehaviour
 
 	private void PlayerInput_SecondaryAction(InputAction.CallbackContext context)
 	{
+		if(!_inputsEnabled) return;
+	
 		_secondaryHeldDown = context.performed;
 	
 		OnSecondaryAction?.Invoke(this, new OnPrimaryOrSecondaryActionEventArgs
@@ -117,11 +131,15 @@ public class GameInput : MonoBehaviour
 	
 	private void PlayerInput_SecondaryActionStarted(InputAction.CallbackContext context)
 	{
+		if(!_inputsEnabled) return;
+	
 		OnSecondaryActionStarted?.Invoke(this, EventArgs.Empty);
 	}
 
 	private void PlayerInput_PrimaryAction(InputAction.CallbackContext context)
 	{
+		if(!_inputsEnabled) return;
+	
 		_primaryHeldDown = context.performed;
 	
 		OnPrimaryAction?.Invoke(this, new OnPrimaryOrSecondaryActionEventArgs
@@ -206,6 +224,9 @@ public class GameInput : MonoBehaviour
 	{
 		_playerInput.Disable();
 		_playerInput.Dispose();	
+		
 		ChestManager.Instance.OnChestOpen -= ChestManager_OnChestOpen;
+		WorldManager.Instance.OnStartBiomeTransition -= WorldManager_DisableInputs;
+		WorldManager.Instance.OnEndBiomeTransition -= WorldManager_EnableInputs;
 	}
 }

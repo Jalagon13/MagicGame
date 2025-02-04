@@ -15,10 +15,10 @@ public class Portal : MonoBehaviour
 	private void GameInput_OnSecondaryAction(object sender, GameInput.OnPrimaryOrSecondaryActionEventArgs e)
 	{
 		if(!_worldInput.IsMouseOverIndputDetector()) return;
-		
+		Debug.Log($"Portal Right clicked");
 		// Just hard code it like this for now will change once more environments are added
 		BiomeType destination = Player.LocalClientInstance.CurrentBiome.Value == BiomeType.Cave ? BiomeType.Forest : BiomeType.Cave;
-		WorldManager.Instance.LoadEnvironment(destination, transform.position);
+		WorldManager.Instance.LoadBiome(destination, transform.position);
 	}
 	
 	private void OnDestroy()
