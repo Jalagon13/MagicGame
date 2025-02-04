@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MoreMountains.Feedbacks;
@@ -20,10 +21,13 @@ public class Item : NetworkBehaviour
 	private Rigidbody2D _rb;
 	private ushort _itemId;
 	private ushort _itemAmount;
+	private BiomeType _itemBiome;
+	private Collider2D _itemCollider;
+	private GameObject _itemGameObject;
 	
 	private void Awake()
 	{
-		_sr = transform.GetChild(0).GetComponent<SpriteRenderer>();
+		_sr = transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
 		_rb = GetComponent<Rigidbody2D>();
 	}
 	
@@ -35,10 +39,14 @@ public class Item : NetworkBehaviour
 
 	public override void OnNetworkSpawn()
 	{
-		if(NetworkManager.LocalClientId == NetworkManager.ServerClientId)
+		if(IsServer)
 		{
 			_itemIdNetworkVariable.Value = _itemId;
 			_itemAmountNetworkVariable.Value = _itemAmount;
+			_itemCollider = GetComponent<Collider2D>();
+			_itemGameObject = transform.GetChild(0).gameObject;
+
+			NetworkManager.NetworkTickSystem.Tick += HandleBiomeVisibility;
 		}
 		
 		UpdateItemDataAndVisuals();
@@ -46,6 +54,66 @@ public class Item : NetworkBehaviour
 		base.OnNetworkSpawn();
 	}
 	
+	public void Initialize(ushort itemId, ushort itemAmount, BiomeType biome)
+	{
+		_itemId = itemId;
+		_itemAmount = itemAmount;
+		_itemBiome = biome;
+	}
+
+	private void HandleBiomeVisibility()
+	{
+		foreach (var clientId in NetworkManager.ConnectedClientsIds)
+		{
+			var isInSameEnvironment = CheckIfInSameEnvironment(clientId);
+			var isVisibile = NetworkObjectVisibleTo(clientId);
+			
+			if(isInSameEnvironment && !isVisibile)
+			{
+				ShowItem(clientId);
+			}
+			else if(!isInSameEnvironment && isVisibile)
+			{
+				HideItem(clientId);
+			}
+		}
+	}
+
+	private bool CheckIfInSameEnvironment(ulong clientId)
+	{
+		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value == _itemBiome;
+	}
+
+	private bool NetworkObjectVisibleTo(ulong clientId)
+	{
+		return clientId == NetworkManager.ServerClientId ? _itemGameObject.activeInHierarchy : NetworkObject.IsNetworkVisibleTo(clientId);
+	}
+
+	private void ShowItem(ulong clientId)
+	{
+		if(clientId == NetworkManager.ServerClientId)
+		{
+			_itemGameObject.SetActive(true);
+			if(_itemCollider != null)
+			{
+				_itemCollider.enabled = true;
+			}
+		}
+				
+		NetworkObject.NetworkShow(clientId);
+	}
+
+	private void HideItem(ulong clientId)
+	{
+		if(clientId == NetworkManager.ServerClientId)
+		{
+			_itemGameObject.SetActive(false);
+			_itemCollider.enabled = false;
+		}
+				
+		NetworkObject.NetworkHide(clientId);
+	}
+
 	private void FixedUpdate()
 	{
 		if (!_canCollect || _itemCollected) return;
@@ -111,18 +179,11 @@ public class Item : NetworkBehaviour
 		}
 	}
 
-	public void SetItemIdAndAmount(ushort itemId, ushort itemAmount)
-	{
-		_itemId = itemId;
-		_itemAmount = itemAmount;
-	}
-	
 	private void UpdateItemDataAndVisuals()
 	{
 		ItemSO itemSO = GameManager.Instance.GetItemSOFromItemId(_itemIdNetworkVariable.Value);
 		
 		_itemInventoryItem = new(itemSO, _itemAmountNetworkVariable.Value);
-		
 		_sr.sprite = _itemInventoryItem.Item.UiDisplay;
 		gameObject.name = $"Item_{_itemInventoryItem.Item.Name}";
 	}
@@ -130,5 +191,15 @@ public class Item : NetworkBehaviour
 	public void DestroySelf()
 	{
 		Destroy(gameObject);
+	}
+	
+	public override void OnNetworkDespawn()
+	{
+		if (IsServer)
+		{
+			NetworkManager.NetworkTickSystem.Tick -= HandleBiomeVisibility;
+		}
+
+		base.OnNetworkDespawn();
 	}
 }

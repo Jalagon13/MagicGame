@@ -117,7 +117,7 @@ public class TilemapData : NetworkBehaviour
 	
 	private void DestroyTile(Vector2Int position, byte tileId, BiomeType biome)
 	{
-		GameManager.Instance.SpawnItem(GameManager.Instance.GetTileSOFromID(tileId).DropItem, 3, position);
+		GameManager.Instance.SpawnItem(GameManager.Instance.GetTileSOFromID(tileId).DropItem, 3, position, biome);
 		ChunkManager.Instance.RemoveWallTileDataFromChunk(position, biome);
 		Pathfinding.Instance.RemovePfWallTile(position, biome);
 		

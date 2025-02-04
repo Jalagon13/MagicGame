@@ -34,7 +34,7 @@ public class ResourceObject : WorldObject
 	
 	public void DestroyResourceAsset()
 	{
-		_lootTable.SpawnLoot((Vector2)transform.position + _dropPosOffset);
+		_lootTable.SpawnLoot((Vector2)transform.position + _dropPosOffset, Player.LocalClientInstance.CurrentBiome.Value);
 		
 		SoundManager.Instance.PlayOneShot(ResourceDestroyed, transform.position);
 		

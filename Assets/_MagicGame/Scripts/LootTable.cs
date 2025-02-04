@@ -9,7 +9,7 @@ public class LootTable
 {
     public List<Loot> Table;
 	
-    public void SpawnLoot(Vector2 spawnPos)
+    public void SpawnLoot(Vector2 spawnPos, BiomeType biome)
     {
         var itemsToSpawn = GetItemsToSpawn();
 
@@ -22,7 +22,7 @@ public class LootTable
                 ItemSO itemToSpawn = itemsToSpawnKVP.Key;
                 int amountToSpawn = itemsToSpawnKVP.Value;	
 				
-                GameManager.Instance.SpawnItem(itemToSpawn, amountToSpawn, spawnPos);
+                GameManager.Instance.SpawnItem(itemToSpawn, amountToSpawn, spawnPos, biome);
             }
         }
     }

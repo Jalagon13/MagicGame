@@ -80,7 +80,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 	
 	public void DropLoot()
 	{
-		_lootTable.SpawnLoot(transform.position);
+		_lootTable.SpawnLoot(transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
 	}
 	
 	public void DestroySelf()

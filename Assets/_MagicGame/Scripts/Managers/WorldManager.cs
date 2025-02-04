@@ -198,8 +198,6 @@ public class WorldManager : NetworkBehaviour
 		IsLoadingBiome = false;
 		
 		StartCoroutine(SearchForPortal(searchForPortal, portalPosition));
-		
-		
 	}
 	
 	

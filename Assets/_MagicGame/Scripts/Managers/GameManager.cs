@@ -249,16 +249,18 @@ public class GameManager : NetworkBehaviour
 			dummyProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected);
 		}
 		
-		SpawnMiningProjectileServerRpc(spawnPoint, travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.IsHost);
+		SpawnMiningProjectileServerRpc(Player.LocalClientInstance.CurrentBiome.Value, spawnPoint, travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.IsHost);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnMiningProjectileServerRpc(Vector2 spawnPoint, Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected, ulong clientSenderId, bool isHost)
+	private void SpawnMiningProjectileServerRpc(BiomeType spawnBiome, Vector2 spawnPoint, Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected, ulong clientSenderId, bool isHost)
 	{
 		MiningProjectile miningProjectile = Instantiate(_miningProjectilePrefab, spawnPoint, Quaternion.identity);
 		
-		miningProjectile.GetComponent<NetworkObject>().Spawn(true);
+		var spellNetworkComponent = miningProjectile.GetComponent<SpellNetworkComponent>();
+		spellNetworkComponent.InitializeSpell(spawnBiome, clientSenderId, 2f, 10101);
 		
+		miningProjectile.GetComponent<NetworkObject>().Spawn(true);
 		miningProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected);
 		
 		if(!isHost)
@@ -267,7 +269,7 @@ public class GameManager : NetworkBehaviour
 		}
 	}
 	
-	public void SpawnItem(ItemSO itemToSpawn, int amount, Vector2 spawnPos)
+	public void SpawnItem(ItemSO itemToSpawn, int amount, Vector2 spawnPos, BiomeType biome)
 	{
 		if(itemToSpawn == null)
 		{
@@ -278,16 +280,16 @@ public class GameManager : NetworkBehaviour
 		int itemId = GetItemIdFromItemSO(itemToSpawn); 
 		ushort itemAmount = (ushort)amount;
 		
-		SpawnItemServerRpc((ushort)itemId, itemAmount, spawnPos);
+		SpawnItemServerRpc((ushort)itemId, itemAmount, spawnPos, biome);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnItemServerRpc(ushort itemId, ushort itemAmount, Vector2 spawnPos)
+	private void SpawnItemServerRpc(ushort itemId, ushort itemAmount, Vector2 spawnPos, BiomeType biome)
 	{
 		GameObject itemGameObject = Instantiate(_itemBasePrefab, spawnPos, Quaternion.identity);
 		
 		Item item = itemGameObject.GetComponent<Item>();
-		item.SetItemIdAndAmount(itemId, itemAmount);
+		item.Initialize(itemId, itemAmount, biome);
 		
 		NetworkObject itemNetworkObject = itemGameObject.GetComponent<NetworkObject>();
 		itemNetworkObject.Spawn(true);

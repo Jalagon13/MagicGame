@@ -58,6 +58,14 @@ public class ChunkManager : NetworkBehaviour
 		InvokeRepeating(nameof(TryToLoadChunk), _chunkLoadCooldown, _chunkLoadCooldown);
 	}
 	
+	private void OnBiomeDataLoaded(object sender, EventArgs e)
+	{
+		_chunksToLoad.Clear();
+		_chunksToUnload.Clear();
+	
+		_lastChunkPosition = new Vector2Int(-99, 99); // Set it to an impossible chunk position so UpdateChunksAroundPlayer executes;
+	}
+	
 	private void TryToLoadChunk()
 	{
 		if(Player.LocalClientInstance == null || IS_GENERATING_BIOME || WorldManager.Instance.IsLoadingBiome) return;
@@ -108,14 +116,6 @@ public class ChunkManager : NetworkBehaviour
 		MaxLoadedTilePosition = maxLoadedTilePos;
 		
 		Lightmap.Instance.UpdateLightMap(minLoadedTilePos, maxLoadedTilePos);
-	}
-	
-	private void OnBiomeDataLoaded(object sender, EventArgs e)
-	{
-		_chunksToLoad.Clear();
-		_chunksToUnload.Clear();
-	
-		_lastChunkPosition = new Vector2Int(-99, 99); // Set it to an impossible chunk position so UpdateChunksAroundPlayer executes;
 	}
 	
 	public void UpdateChunksAroundPlayer()

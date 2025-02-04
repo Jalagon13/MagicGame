@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -103,7 +104,7 @@ public class Lightmap : MonoBehaviour
 	public void UpdateLightMap(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos)
 	{
 		if(!WorldManager.Instance.IsTicking()) return;
-	
+		Debug.Log($"Updating light map from chunkmanager");
 		_minLoadedTilePos = minLoadedTilePos;
 		_maxLoadedTilePos = maxLoadedTilePos;
 		
@@ -165,7 +166,7 @@ public class Lightmap : MonoBehaviour
 		// Set up the tile visibility array and compute buffer
 		TileVisibility[] tileVisibilityArray = new TileVisibility[renderTextureWidth * renderTextureHeight];
 		PopulateTileVisibilityArray(_minLoadedTilePos, _maxLoadedTilePos, _lightmapScale, tileVisibilityArray, renderTextureWidth);
-
+		
 		// Create and set the compute buffer for tile visibility
 		ComputeBuffer tileDataBuffer = new ComputeBuffer(tileVisibilityArray.Length, sizeof(uint));
 		tileDataBuffer.SetData(tileVisibilityArray);

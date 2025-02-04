@@ -47,13 +47,6 @@ public class Environment : NetworkBehaviour
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			GroundTmData.GetTilemap().SetTile(tilePosV3Int, tile.TileSO);
-			
-			// Populate Dicionary with tile visibility
-			if(!TileVisibilityDict.ContainsKey(tilePosV3Int))
-			{
-				var isOpaque = e.Chunk.WallTileGameDataList.Exists(wallTile => wallTile.TilePosition == tile.TilePosition);
-				TileVisibilityDict.Add(tilePosV3Int, new TileVisibility {Visibility = isOpaque ? 1 : 0});
-			}
 		}
 			
 		// loop through all wall tiles and set them on tilemap
@@ -61,6 +54,13 @@ public class Environment : NetworkBehaviour
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			WallTmData.GetTilemap().SetTile(tilePosV3Int, tile.TileSO);
+			
+			// Populate Dicionary with tile visibility
+			if(!TileVisibilityDict.ContainsKey(tilePosV3Int))
+			{
+				// var isOpaque = e.Chunk.WallTileGameDataList.Exists(wallTile => wallTile.TilePosition == tile.TilePosition);
+				TileVisibilityDict.Add(tilePosV3Int, new TileVisibility {Visibility = 1/* isOpaque ? 1 : 0 */});
+			}
 		}
 	}
 
@@ -108,29 +108,36 @@ public class Environment : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void HandleTileVisualClientRpc(Vector3Int syncPos, byte syncTileId, TileType syncTileType, BiomeType biome)
 	{
-		if(Player.LocalClientInstance.CurrentBiome.Value != biome) return;
-	
+		if(Player.LocalClientInstance.CurrentBiome.Value != biome || !ObjectPositionInLoadedChunks((Vector2Int)syncPos)) return;
+		
 		TileSO tileToPlace = GameManager.Instance.GetTileSOFromID(syncTileId);
 
-		if(GroundTmData.GetTilemap().HasTile(syncPos))
+		// Chunk is loaded visually, therefore visually update whatever tile wants to be updated
+		switch(syncTileType)
 		{
-			// Chunk is loaded visually, therefore visually update whatever tile wants to be updated
-			switch(syncTileType)
-			{
-				case TileType.Ground:
-					break;
-				case TileType.Floor:
-					FloorTmData.GetTilemap().SetTile(syncPos, tileToPlace);
-					break;
-				case TileType.Wall:
-					WallTmData.GetTilemap().SetTile(syncPos, tileToPlace);
+			case TileType.Ground:
+				break;
+			case TileType.Floor:
+				FloorTmData.GetTilemap().SetTile(syncPos, tileToPlace);
+				break;
+			case TileType.Wall:
+				WallTmData.GetTilemap().SetTile(syncPos, tileToPlace);
 					
-					TileVisibilityDict[syncPos] = new TileVisibility {Visibility = 1};
+				TileVisibilityDict[syncPos] = new TileVisibility {Visibility = 1};
 					
-					Lightmap.Instance.UpdateLightMap();
-					break;
-			}
+				Lightmap.Instance.UpdateLightMap();
+				break;
 		}
+	}
+	
+	private bool ObjectPositionInLoadedChunks(Vector2Int position)
+	{
+		var minLoadedTilePos = ChunkManager.Instance.MinLoadedTilePosition;
+		var maxLoadedTilePos = ChunkManager.Instance.MaxLoadedTilePosition;
+
+		// Check if the position is within the bounds
+		return position.x >= minLoadedTilePos.x && position.x <= maxLoadedTilePos.x &&
+			   position.y >= minLoadedTilePos.y && position.y <= maxLoadedTilePos.y;
 	}
 	
 	public override void OnDestroy()
