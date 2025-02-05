@@ -191,7 +191,7 @@ public class ChunkManager : NetworkBehaviour
 		}
 	}
 	
-	public ChunkGameData GetChunkData(BiomeType environment, Vector2Int chunkPosition)
+	public ChunkGameData GetChunkFromChunkPosition(BiomeType environment, Vector2Int chunkPosition)
 	{
 		switch(environment)
 		{
@@ -257,7 +257,7 @@ public class ChunkManager : NetworkBehaviour
 	{
 		if(!IsServer) return false;
 		
-		ChunkGameData chunk = GetChunk(doorPos, biome);
+		ChunkGameData chunk = GetChunkFromAnyWorldPos(doorPos, biome);
 		
 		foreach (WorldObjectGameData worldObject in chunk.WorldObjectGameDataList)
 		{
@@ -278,7 +278,7 @@ public class ChunkManager : NetworkBehaviour
 	{
 		if(!IsServer) return;
 		
-		ChunkGameData chunk = GetChunk(worldObjectFileData.Pos, biome);
+		ChunkGameData chunk = GetChunkFromAnyWorldPos(worldObjectFileData.Pos, biome);
 		
 		chunk.AddObjectData(worldObjectFileData, worldObject);
 	}
@@ -287,7 +287,7 @@ public class ChunkManager : NetworkBehaviour
 	{
 		if(!IsServer) return;
 		
-		ChunkGameData chunk = GetChunk(position, environmentToPlaceIn);
+		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, environmentToPlaceIn);
 		chunk.AddObjectData(position, worldObject);
 	}
 	
@@ -295,7 +295,7 @@ public class ChunkManager : NetworkBehaviour
 	{
 		if(!IsServer) return;
 		
-		ChunkGameData chunk = GetChunk(position, environmentToRemoveFrom);
+		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, environmentToRemoveFrom);
 		
 		chunk.RemoveObjectData(position);
 	}
@@ -305,7 +305,7 @@ public class ChunkManager : NetworkBehaviour
 		if(!IsServer) return;
 	
 		// Get chunk tile was placed in
-		ChunkGameData chunk = GetChunk(position, biomeToAddTileData);
+		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, biomeToAddTileData);
 		
 		// Add that tile data to this chunk
 		chunk.AddWallTileData(position, GameManager.Instance.GetTileSOFromID(tileID));
@@ -316,15 +316,15 @@ public class ChunkManager : NetworkBehaviour
 		if(!IsServer) return;
 	
 		// Get chunk tile was destroyed in
-		ChunkGameData chunk = GetChunk(position, environmentToRemoveTileData);
+		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, environmentToRemoveTileData);
 		
 		// Delete that tile data from this chunk
 		chunk.RemoveWallTileData(position);
 	}
 	
-	public ChunkGameData GetChunk(Vector2Int position, BiomeType environmentToGetChunkFrom)
+	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType environmentToGetChunkFrom)
 	{
-		Vector2Int chunkCoord = GetChunkCoordFromPosition(position);
+		Vector2Int chunkCoord = GetChunkCoordFromPosition(anyWorldPos);
 		
 		var chunks = GetChunksFromBiome(environmentToGetChunkFrom);
 		chunks.TryGetValue(chunkCoord, out ChunkGameData chunk);

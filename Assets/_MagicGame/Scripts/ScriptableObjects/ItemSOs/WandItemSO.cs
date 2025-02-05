@@ -84,11 +84,11 @@ public class WandItemSO : ItemSO
 		
 		if(mouseOverFloor)
 		{
-			return Environment.Instance.FloorTmData.GetHarvestType(tilePos);
+			return Environment.Instance.FloorTm.GetHarvestType(tilePos);
 		}
 		else if(mouseOverWall)
 		{
-			return Environment.Instance.WallTmData.GetHarvestType(tilePos);
+			return Environment.Instance.WallTm.GetHarvestType(tilePos);
 		}
 		else if(resourceSelected)
 		{
@@ -122,7 +122,7 @@ public class WandItemSO : ItemSO
 	
 	private bool GetMouseOverWall()
 	{
-		Tilemap wallTilemap = Environment.Instance.WallTmData.GetTilemap();
+		Tilemap wallTilemap = Environment.Instance.WallTm.GetTilemap();
 		Vector3Int tilePosition = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
 		
 		return wallTilemap.HasTile(tilePosition);

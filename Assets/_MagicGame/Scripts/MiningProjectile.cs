@@ -107,12 +107,12 @@ public class MiningProjectile : NetworkBehaviour
 	
 		if(_mouseOverWall)
 		{
-			Environment.Instance.WallTmData.HitTile(tilePos, _miningPower, Player.LocalClientInstance.CurrentBiome.Value);
+			Environment.Instance.WallTm.HitTile(tilePos, _miningPower, Player.LocalClientInstance.CurrentBiome.Value);
 			return;
 		}
 		else if(_mouseOverFloor)
 		{
-			Environment.Instance.FloorTmData.HitTile(tilePos, _miningPower, Player.LocalClientInstance.CurrentBiome.Value);
+			Environment.Instance.FloorTm.HitTile(tilePos, _miningPower, Player.LocalClientInstance.CurrentBiome.Value);
 			return;
 		}
 	}

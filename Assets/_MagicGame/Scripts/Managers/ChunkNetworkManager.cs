@@ -14,7 +14,7 @@ public class ChunkNetworkManager : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void RequestChunkDataServerRpc(ulong clientId, BiomeType requestBiome, Vector2Int chunkPosition, RpcParams rpcParams = default)
 	{
-		var chunkData = ChunkManager.Instance.GetChunkData(requestBiome, chunkPosition);
+		var chunkData = ChunkManager.Instance.GetChunkFromChunkPosition(requestBiome, chunkPosition);
 		var syncChunkData = ConvertToSyncChunkData(chunkData);
 		
 		Pathfinding.Instance.UpdateChunkPathfinding(chunkPosition, chunkData, requestBiome, clientId);

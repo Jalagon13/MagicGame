@@ -268,7 +268,7 @@ public class WorldManager : NetworkBehaviour
 			for (int y = -1; y <= 1; y++)
 			{
 				Vector3Int neighborPosition = new(centerPositionInt.x + x, centerPositionInt.y + y, centerPositionInt.z);
-				Environment.Instance.WallTmData.DeleteTile(new(neighborPosition.x, neighborPosition.y), Player.LocalClientInstance.CurrentBiome.Value);
+				Environment.Instance.WallTm.DeleteTile(new(neighborPosition.x, neighborPosition.y), Player.LocalClientInstance.CurrentBiome.Value);
 			}
 		}
 	}

@@ -15,7 +15,7 @@ public class BuildItemSO : ItemSO
 	{
 		var pos = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
 		
-		Tilemap wallTilemap = Environment.Instance.WallTmData.GetTilemap();
+		Tilemap wallTilemap = Environment.Instance.WallTm.GetTilemap();
 		
 		bool wallTmHasTile = wallTilemap.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition));
 		
