@@ -136,7 +136,7 @@ public class ObjectManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void HandleObjectVisualsClientRpc(Vector2Int position, byte assetID, BiomeType objectBiome)
 	{
-		if(objectBiome == Player.LocalClientInstance.CurrentBiome.Value && ObjectPositionInLoadedChunks(position))
+		if(objectBiome == Player.LocalClientInstance.CurrentBiome.Value && ChunkManager.Instance.ObjectPositionInLoadedChunks(position))
 		{
 			// Visually place it down for everyone
 			WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);
@@ -150,16 +150,6 @@ public class ObjectManager : NetworkBehaviour
 		}
 	}
 	
-	private bool ObjectPositionInLoadedChunks(Vector2Int position)
-	{
-		var minLoadedTilePos = ChunkManager.Instance.MinLoadedTilePosition;
-		var maxLoadedTilePos = ChunkManager.Instance.MaxLoadedTilePosition;
-
-		// Check if the position is within the bounds
-		return position.x >= minLoadedTilePos.x && position.x <= maxLoadedTilePos.x &&
-			   position.y >= minLoadedTilePos.y && position.y <= maxLoadedTilePos.y;
-	}
-
 	public void DamageObject(Vector2Int position, ushort incomingDamage, BiomeType environment)
 	{
 		if(ResourceObjectFoundAtPosition(position, out ResourceObject resourceObjectFound))

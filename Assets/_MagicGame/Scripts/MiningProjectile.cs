@@ -104,17 +104,6 @@ public class MiningProjectile : NetworkBehaviour
 	private void HitTilemap()
 	{
 		Vector2Int tilePos = new(Mathf.FloorToInt(_travelPoint.x), Mathf.FloorToInt(_travelPoint.y));
-	
-		if(_mouseOverWall)
-		{
-			Environment.Instance.WallTm.HitTile(tilePos, _miningPower, Player.LocalClientInstance.CurrentBiome.Value);
-			return;
-		}
-		else if(_mouseOverFloor)
-		{
-			Environment.Instance.FloorTm.HitTile(tilePos, _miningPower, Player.LocalClientInstance.CurrentBiome.Value);
-			return;
-		}
 	}
 
 	private void StopProjectile()

@@ -259,7 +259,7 @@ MonoBehaviour:
         AuthoringAssetID:
           m_Value0: 9485884951211249956
           m_Value1: 6650250743938198344
-        m_DebugInfo: {fileID: 0}
+        m_DebugInfo: {fileID: 3184272958850210850}
         Root:
           rid: 7040998723637215724
         BlackboardReference:
@@ -354,8 +354,10 @@ MonoBehaviour:
           rid: 7040998723637215731
         IsDamaged:
           rid: 7040998723637215736
-        DamageSourcePosition:
-          rid: 7040998723637215737
+        DamagerPosition:
+          rid: -2
+        KnockbackResist:
+          rid: -2
     - rid: 7040998723637215731
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -852,7 +854,7 @@ MonoBehaviour:
   - rid: 2948846928740484595
   - rid: 2948846928740484615
   - rid: 2948846928740484618
-  m_VersionTimestamp: 638739999172264090
+  m_VersionTimestamp: 638743501114694750
   m_DebugInfo: {fileID: 3184272958850210850}
   m_RuntimeGraph: {fileID: -2886738209571348641}
   AssetID:
@@ -980,7 +982,8 @@ MonoBehaviour:
     Variables: []
     NamedChildren: []
   - Name: RegisterOnNpcDamage
-    Story: '[Self] Registers Npc OnDamaged For [IsDamaged]'
+    Story: '[Self] Registers Damage Event For [IsDamaged] and [DamagerPosition] with
+      [KnockbackResist]'
     RuntimeTypeID:
       m_Value0: 10706711820429578659
       m_Value1: 4807917601732252143
@@ -995,10 +998,15 @@ MonoBehaviour:
         m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
       Tooltip: 
-    - Name: DamageSourcePosition
+    - Name: DamagerPosition
       Type:
         m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
+      Tooltip: 
+    - Name: KnockbackResist
+      Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
       Tooltip: 
     NamedChildren: []
   - Name: Knockback
@@ -2658,7 +2666,8 @@ MonoBehaviour:
         m_FieldValues:
         - rid: 2948846928740483403
         - rid: 2948846928740483407
-        - rid: 2948846928740483713
+        - rid: 7040998797327204538
+        - rid: 7040998797327204539
     - rid: 2948846928740483353
       type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
@@ -2814,35 +2823,6 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 0
-    - rid: 2948846928740483713
-      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
-      data:
-        FieldName: DamageSourcePosition
-        Type:
-          m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-        LocalValue:
-          rid: 2948846928740483714
-        LinkedVariable:
-          rid: 2948846928740483716
-    - rid: 2948846928740483714
-      type: {class: 'BlackboardVariable`1[[UnityEngine.Vector2, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: {x: 0, y: 0}
-    - rid: 2948846928740483716
-      type: {class: 'TypedVariableModel`1[[UnityEngine.Vector2, UnityEngine.CoreModule]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        ID:
-          m_Value0: 18086611916581590872
-          m_Value1: 3710832202480543075
-        Name: DamageSourcePosition
-        IsExposed: 0
-        m_IsShared: 0
-        m_Value: {x: 0, y: 0}
     - rid: 2948846928740483778
       type: {class: ActionNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
@@ -3556,6 +3536,44 @@ MonoBehaviour:
         IsExposed: 1
         m_IsShared: 0
         m_Value: 0.15
+    - rid: 7040998797327204538
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: DamagerPosition
+        Type:
+          m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 7040998797327204540
+        LinkedVariable:
+          rid: -2
+    - rid: 7040998797327204539
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: KnockbackResist
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 7040998797327204541
+        LinkedVariable:
+          rid: -2
+    - rid: 7040998797327204540
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Vector2, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: {x: 0, y: 0}
+    - rid: 7040998797327204541
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0
 --- !u!114 &3184272958850210850
 MonoBehaviour:
   m_ObjectHideFlags: 0

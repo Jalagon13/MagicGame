@@ -300,28 +300,61 @@ public class ChunkManager : NetworkBehaviour
 		chunk.RemoveObjectData(position);
 	}
 	
-	public void AddWallTileDataToChunk(Vector2Int position, byte tileID, BiomeType biomeToAddTileData)
+	public void AddWallTileDataToChunk(Vector2Int position, byte tileID, BiomeType biomeToAddTileData, TileType tileType)
 	{
 		if(!IsServer) return;
 	
-		// Get chunk tile was placed in
 		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, biomeToAddTileData);
-		
-		// Add that tile data to this chunk
 		chunk.AddWallTileData(position, GameManager.Instance.GetTileSOFromID(tileID));
+		HandleTileVisualClientRpc((Vector3Int)position, tileID, tileType, biomeToAddTileData);
 	}
 	
-	public void RemoveWallTileDataFromChunk(Vector2Int position, BiomeType environmentToRemoveTileData)
+	[Rpc(SendTo.ClientsAndHost)]
+	private void HandleTileVisualClientRpc(Vector3Int pos, byte syncTileId, TileType syncTileType, BiomeType biome)
+	{
+		if(Player.LocalClientInstance.CurrentBiome.Value != biome || !ChunkManager.Instance.ObjectPositionInLoadedChunks((Vector2Int)pos)) return;
+		
+		TileSO tileToPlace = GameManager.Instance.GetTileSOFromID(syncTileId);
+
+		// Chunk is loaded visually, therefore visually update whatever tile wants to be updated
+		switch(syncTileType)
+		{
+			case TileType.Ground:
+				break;
+			case TileType.Floor:
+				Environment.Instance.FloorTm.SetTile(pos, tileToPlace);
+				break;
+			case TileType.Wall:
+				Environment.Instance.WallTm.SetTile(pos, tileToPlace);
+				Environment.Instance.TileVisibilityDict[pos] = new TileVisibility {Visibility = 1};
+				Lightmap.Instance.UpdateLightMap();
+				break;
+		}
+	}
+	
+	public void RemoveWallTileDataFromChunk(Vector2Int position, BiomeType biomeToRemoveTileData)
 	{
 		if(!IsServer) return;
 	
-		// Get chunk tile was destroyed in
-		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, environmentToRemoveTileData);
-		
-		// Delete that tile data from this chunk
+		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, biomeToRemoveTileData);
 		chunk.RemoveWallTileData(position);
+		TryToRemoveWallTileClientRpc(position, biomeToRemoveTileData);
+	}
+
+	[Rpc(SendTo.ClientsAndHost)]
+	private void TryToRemoveWallTileClientRpc(Vector2Int position, BiomeType biomeToRemoveTileData)
+	{
+		if(Player.LocalClientInstance.CurrentBiome.Value != biomeToRemoveTileData || !ObjectPositionInLoadedChunks(position)) return;
+		
+		Environment.Instance.WallTm.SetTile((Vector3Int)position, null);
 	}
 	
+	public bool ObjectPositionInLoadedChunks(Vector2Int position) // Check if the position is within the bounds
+	{
+		return position.x >= MinLoadedTilePosition.x && position.x <= MaxLoadedTilePosition.x &&
+			   position.y >= MinLoadedTilePosition.y && position.y <= MaxLoadedTilePosition.y;
+	}
+
 	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType environmentToGetChunkFrom)
 	{
 		Vector2Int chunkCoord = GetChunkCoordFromPosition(anyWorldPos);

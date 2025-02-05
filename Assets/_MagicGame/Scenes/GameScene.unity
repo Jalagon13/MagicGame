@@ -2900,9 +2900,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <GroundTmData>k__BackingField: {fileID: 793914368}
-  <FloorTmData>k__BackingField: {fileID: 1170602979}
-  <WallTmData>k__BackingField: {fileID: 194269728117138980}
+  <GroundTm>k__BackingField: {fileID: 793914367}
+  <FloorTm>k__BackingField: {fileID: 1170602981}
+  <WallTm>k__BackingField: {fileID: 3724763379825386475}
 --- !u!156049354 &429902439
 Grid:
   m_ObjectHideFlags: 0
@@ -5618,9 +5618,8 @@ GameObject:
   - component: {fileID: 793914365}
   - component: {fileID: 793914367}
   - component: {fileID: 793914366}
-  - component: {fileID: 793914368}
   m_Layer: 0
-  m_Name: GroundTilemap
+  m_Name: GroundTm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5731,20 +5730,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!114 &793914368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793914364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ae0333760a6c4395abcaf2141fa01d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  _canMine: 0
 --- !u!1 &806501532
 GameObject:
   m_ObjectHideFlags: 0
@@ -7892,7 +7877,6 @@ GameObject:
   - component: {fileID: 1170602978}
   - component: {fileID: 1170602981}
   - component: {fileID: 1170602980}
-  - component: {fileID: 1170602979}
   m_Layer: 0
   m_Name: FloorTm
   m_TagString: Untagged
@@ -7915,20 +7899,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 429902436}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1170602979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1170602977}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ae0333760a6c4395abcaf2141fa01d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  _canMine: 1
 --- !u!483693784 &1170602980
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -14551,20 +14521,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8647233024148281885}
   m_CullTransparentMesh: 1
---- !u!114 &194269728117138980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6347991512982642279}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ae0333760a6c4395abcaf2141fa01d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  _canMine: 1
 --- !u!4 &285752937211302053
 Transform:
   m_ObjectHideFlags: 0
@@ -14745,9 +14701,8 @@ GameObject:
   - component: {fileID: 3724763379825386475}
   - component: {fileID: 8595758921929250133}
   - component: {fileID: 8595758921929250134}
-  - component: {fileID: 194269728117138980}
   m_Layer: 9
-  m_Name: LocalWallTm
+  m_Name: WallTm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

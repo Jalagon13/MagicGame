@@ -10,7 +10,6 @@ public class Item : NetworkBehaviour
 	[SerializeField] private float _attractRange = 2.75f;
 	[SerializeField] private float _attractSpeed = 5f;
 	[SerializeField] private float _initialCollectDelay = 0.5f;
-	[SerializeField] private MMF_Player _pickUpFeedback;
 
 	private NetworkVariable<int> _itemIdNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private NetworkVariable<int> _itemAmountNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -25,6 +24,7 @@ public class Item : NetworkBehaviour
 	
 	private void Awake()
 	{
+		_itemGameObject = transform.GetChild(0).gameObject;
 		_sr = transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
 		_rb = GetComponent<Rigidbody2D>();
 	}
@@ -42,7 +42,6 @@ public class Item : NetworkBehaviour
 			_itemIdNetworkVariable.Value = _itemId;
 			_itemAmountNetworkVariable.Value = _itemAmount;
 			_itemCollider = GetComponent<Collider2D>();
-			_itemGameObject = transform.GetChild(0).gameObject;
 
 			NetworkManager.NetworkTickSystem.Tick += HandleBiomeVisibility;
 		}
@@ -50,6 +49,64 @@ public class Item : NetworkBehaviour
 		UpdateItemDataAndVisuals();
 		
 		base.OnNetworkSpawn();
+	}
+	
+	private void FixedUpdate()
+	{
+		if (!_canCollect || _itemCollected || !IsServer) return;
+
+		
+		CollectTag closestPlayerCollectTag = null;
+		float closestDist = Mathf.Infinity;
+		
+		foreach (var clientId in NetworkManager.ConnectedClientsIds)
+		{
+			Player player = NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>();
+			float dist = Vector2.Distance(transform.position, player.CollectTag.transform.position);
+		
+			if(dist < closestDist && dist < _attractRange && player.CurrentBiome.Value == _itemBiome)
+			{
+				closestPlayerCollectTag = player.CollectTag;
+				closestDist = dist;
+			}
+		}
+		
+		// Move towards the closest collider if found
+		if (closestPlayerCollectTag != null)
+		{
+			Vector2 currentPosition = _rb.position;
+			Vector2 targetPosition = closestPlayerCollectTag.transform.position;
+			Vector2 direction = (targetPosition - currentPosition).normalized;
+			Debug.Log($"closest player: {closestPlayerCollectTag.transform.root.name}");
+			_rb.MovePosition(currentPosition + direction * _attractSpeed * Time.fixedDeltaTime);
+			
+			// Check if the item is within the bounds of any CollectTag collider
+			if(Vector2.Distance(currentPosition, targetPosition) < 0.25f)
+			{
+				if (/* closestValidCollectCollider.transform.root.GetComponent<Player>().OwnerClientId == NetworkManager.LocalClientId && */ _canCollect && !_itemCollected /* && !InventoryFull() */)
+				{
+					_itemCollected = true;
+
+					AddItemClientRpc(GameManager.Instance.GetItemIdFromItemSO(_itemInventoryItem.Item), _itemInventoryItem.Quantity, RpcTarget.Single(closestPlayerCollectTag.transform.root.GetComponent<Player>().OwnerClientId, RpcTargetUse.Persistent));
+					return;
+				}
+			}
+		}
+	}
+	
+	[Rpc(SendTo.SpecifiedInParams)]
+	private void AddItemClientRpc(int itemId, int amount, RpcParams rpcParams = default)
+	{
+		InventoryManager.Instance.AddItem(GameManager.Instance.GetItemSOFromItemId(itemId), amount);
+		GameManager.Instance.DestroyItem(this);
+	}
+	
+	private void OnTriggerStay2D(Collider2D other)
+	{
+		if(other.TryGetComponent(out CollectTag player))
+		{
+			// _sr.enabled = false;
+		}
 	}
 	
 	public void Initialize(ushort itemId, ushort itemAmount, BiomeType biome)
@@ -110,71 +167,6 @@ public class Item : NetworkBehaviour
 		}
 				
 		NetworkObject.NetworkHide(clientId);
-	}
-
-	private void FixedUpdate()
-	{
-		if (!_canCollect || _itemCollected) return;
-
-		Collider2D closestValidCollectCollider = null;
-		float closestDistanceSqr = Mathf.Infinity;
-
-		var collidersFound = Physics2D.OverlapCircleAll(transform.position, _attractRange);
-
-		foreach (Collider2D collider in collidersFound)
-		{
-			if (collider.TryGetComponent(out CollectTag collectTag))
-			{
-				// NTFS: Implement logic for checking inventory space here later
-				if (collectTag.transform.root.GetComponent<Player>().IsDead()) 
-					continue;
-
-				float distanceSqr = (collider.transform.position - transform.position).sqrMagnitude;
-
-				if (distanceSqr < closestDistanceSqr)
-				{
-					closestDistanceSqr = distanceSqr;
-					closestValidCollectCollider = collider;
-				}
-			}
-		}
-
-		// Move towards the closest collider if found
-		if (closestValidCollectCollider != null)
-		{
-			Vector2 currentPosition = _rb.position;
-			Vector2 targetPosition = closestValidCollectCollider.transform.position;
-			Vector2 direction = (targetPosition - currentPosition).normalized;
-
-			_rb.MovePosition(currentPosition + direction * _attractSpeed * Time.fixedDeltaTime);
-		}
-
-		// Check if the item is within the bounds of any CollectTag collider
-		foreach (Collider2D collider in collidersFound)
-		{
-			if (collider.TryGetComponent(out CollectTag collectTag))
-			{
-				// If player attached to this collect tag is dead, continue
-				if (collectTag.transform.root.GetComponent<Player>().IsDead()) 
-					continue;
-
-				if(collider.IsTouching(GetComponent<Collider2D>()))
-				{
-					if (collectTag.OwnerClientId == NetworkManager.LocalClientId && _canCollect && !_itemCollected /* && !InventoryFull() */)
-					{
-						// Local player is collecting the item
-						InventoryManager.Instance.AddItem(_itemInventoryItem.Item, _itemInventoryItem.Quantity);
-
-						_pickUpFeedback?.PlayFeedbacks();
-
-						_itemCollected = true;
-
-						GameManager.Instance.DestroyItem(this);
-						return; // Exit once the item is collected
-					}
-				}
-			}
-		}
 	}
 
 	private void UpdateItemDataAndVisuals()

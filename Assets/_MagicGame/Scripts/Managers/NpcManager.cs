@@ -39,6 +39,8 @@ public class NpcManager : NetworkBehaviour
 
 	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
 	{
+		if(!_enableSpawning) return;
+		
 		SpawnNpc(ActionManager.MouseWorldPosition, _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().GetRandomNpc());
 	}
 
@@ -181,7 +183,7 @@ public class NpcManager : NetworkBehaviour
 	{
 		Vector3Int tilePos = new(Mathf.RoundToInt(point.x), Mathf.RoundToInt(point.y));
 		
-		return Environment.Instance.WallTm.GetTilemap().HasTile(tilePos);
+		return Environment.Instance.WallTm.HasTile(tilePos);
 	}
 	
 	private bool PointInRectangle(Vector2 point, Vector2 rectCenter, float rectWidth, float rectHeight)

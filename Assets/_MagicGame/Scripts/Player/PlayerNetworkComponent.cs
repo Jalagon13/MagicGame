@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class PlayerNetworkComponent : NetworkBehaviour
 {
+	private GameObject _playerGameObject;
+
 	public override void OnNetworkSpawn()
 	{
 		if (IsServer)
 		{
 			NetworkObject.CheckObjectVisibility += CheckVisibility;
 			NetworkManager.NetworkTickSystem.Tick += HandleOtherPlayerVisibility;
+			
+			_playerGameObject = transform.GetChild(0).gameObject;
 		}
 		base.OnNetworkSpawn();
 	}
@@ -43,9 +47,9 @@ public class PlayerNetworkComponent : NetworkBehaviour
 			if(shouldBeVisible && !isVisibile)
 			{
 				// Debug.Log($"Showing {clientId}'s player from {OwnerClientId}");
-				if(OwnerClientId == NetworkManager.ServerClientId)
+				if(clientId == NetworkManager.ServerClientId)
 				{
-					NetworkManager.ConnectedClients[clientId].PlayerObject.gameObject.SetActive(true);
+					_playerGameObject.SetActive(true);
 				}
 				
 				NetworkObject.NetworkShow(clientId);
@@ -53,9 +57,9 @@ public class PlayerNetworkComponent : NetworkBehaviour
 			else if(!shouldBeVisible && isVisibile)
 			{
 				// Debug.Log($"Hiding {clientId}'s player from {OwnerClientId}");
-				if(OwnerClientId == NetworkManager.ServerClientId)
+				if(clientId == NetworkManager.ServerClientId)
 				{
-					NetworkManager.ConnectedClients[clientId].PlayerObject.gameObject.SetActive(false);
+					_playerGameObject.SetActive(false);
 				}
 				
 				NetworkObject.NetworkHide(clientId);
@@ -65,14 +69,7 @@ public class PlayerNetworkComponent : NetworkBehaviour
 	
 	private bool NetworkObjectVisibleTo(ulong clientId)
 	{
-		if(OwnerClientId == NetworkManager.ServerClientId)
-		{
-			return NetworkManager.ConnectedClients[clientId].PlayerObject.gameObject.activeInHierarchy;
-		}
-		else
-		{
-			return NetworkObject.IsNetworkVisibleTo(clientId);
-		}
+		return clientId == NetworkManager.ServerClientId ? _playerGameObject.activeInHierarchy : NetworkObject.IsNetworkVisibleTo(clientId);
 	}
 
 	public override void OnNetworkDespawn()

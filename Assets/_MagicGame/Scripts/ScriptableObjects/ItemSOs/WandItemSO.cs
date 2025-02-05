@@ -40,26 +40,18 @@ public class WandItemSO : ItemSO
 	
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
-		if(inventoryItem is not WandInventoryItem || !Player.LocalClientInstance.gameObject.GetComponent<Player>().IsHoldingAWand() || !PlayerInRangeOfMouse()) return _baseActionCooldown;
+		if(inventoryItem is not WandInventoryItem || 
+			!Player.LocalClientInstance.gameObject.GetComponent<Player>().IsHoldingAWand() || 
+			!PlayerInRangeOfMouse() || 
+			!Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition))) return _baseActionCooldown;
 		
 		_wandInventoryItem = inventoryItem as WandInventoryItem;
-		bool mouseOverWall = GetMouseOverWall();
-		bool resourceSelected = GetResourceSelected();
 
-		if (!mouseOverWall && !resourceSelected) return _baseActionCooldown;
-		
-		WandAttribute wandAttribute = GetHarvestType(false, mouseOverWall, resourceSelected);
-		AttributeData hitData = _wandInventoryItem.GetAttributeData(wandAttribute);
-		
-		GameManager.Instance.SpawnMiningProjectile(
-			playerHand.ProjectileSpawnTransform.position,
-			ActionManager.MouseWorldPosition,
-			hitData.MiningPower,
-			false, mouseOverWall, resourceSelected);
-			
+		AttributeData hitData = _wandInventoryItem.GetAttributeData(WandAttribute.Mining);
+		Environment.Instance.HitWallTile(Player.LocalClientInstance.CurrentBiome.Value, Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), hitData.MiningPower);
 		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.transform.position);
 			
-		return CalcMiningSpeed(wandAttribute);
+		return CalcMiningSpeed(WandAttribute.Mining);
 	}
 	
 	private bool PlayerInRangeOfMouse()
@@ -75,28 +67,6 @@ public class WandItemSO : ItemSO
 		
 		// Implement future buffs or speed prefex modifiers here.
 		return finalSpeed;
-	}
-	
-	private WandAttribute GetHarvestType(bool mouseOverFloor, bool mouseOverWall, bool resourceSelected)
-	{
-		Vector3Int tilePosMouseIsHovering = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
-		Vector2Int tilePos = new (tilePosMouseIsHovering.x, tilePosMouseIsHovering.y);
-		
-		if(mouseOverFloor)
-		{
-			return Environment.Instance.FloorTm.GetHarvestType(tilePos);
-		}
-		else if(mouseOverWall)
-		{
-			return Environment.Instance.WallTm.GetHarvestType(tilePos);
-		}
-		else if(resourceSelected)
-		{
-			return _resourceObjectSelected.GetHarvestType();
-		}
-		
-		Debug.LogError($"Error, could not find a harvest type for mining");
-		return default;
 	}
 	
 	private bool GetResourceSelected()
@@ -120,40 +90,6 @@ public class WandItemSO : ItemSO
 		return _resourceObjectSelected != null;
 	}
 	
-	private bool GetMouseOverWall()
-	{
-		Tilemap wallTilemap = Environment.Instance.WallTm.GetTilemap();
-		Vector3Int tilePosition = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
-		
-		return wallTilemap.HasTile(tilePosition);
-	}
-	
-	// private void PerformSecondaryMiningAction()
-	// {
-	// 	bool mouseOverFloor = GetMouseOverFloor();
-
-	// 	if (!mouseOverFloor) return;
-
-	// 	WandAttribute wandAttribute = GetHarvestType(true, false, false);
-	// 	AttributeData hitData = _wandItem.GetAttributeData(wandAttribute);
-
-	// 	GameManager.Instance.SpawnMiningProjectile(
-	// 		Player.LocalClientInstance.GetWandProjectileSpawnPoint().position,
-	// 		MouseWorldPosition,
-	// 		hitData.MiningPower,
-	// 		true, false, false);
-
-	// 	CalcMiningSpeed(wandAttribute);
-	// }
-	
-	// private bool GetMouseOverFloor()
-	// {
-	// 	Tilemap floorTilemap = Environment.Instance.GetFloorTilemapData().GetTilemap();
-	// 	Vector3Int tilePosition = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
-		
-	// 	return floorTilemap.HasTile(tilePosition);
-	// }
-
 	public override string GetDescription()
 	{
 		return Description;

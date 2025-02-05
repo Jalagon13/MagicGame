@@ -33,6 +33,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
 	[field: SerializeField] public PlayerHand OffHand { get; private set; }
+	[field: SerializeField] public CollectTag CollectTag { get; private set; }
 	[SerializeField] private float _respawnTimerDuration;
 	[SerializeField] private List<InventoryItem> _startingItems = new();
 	

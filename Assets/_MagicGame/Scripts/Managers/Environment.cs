@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -12,24 +13,35 @@ public struct TileVisibility
 
 public class TileHpData
 {
-	public Vector2Int TilePosition;
+	public Vector2Int TilePosition { get; private set; }
 	public TileSO TileSO { get; private set; }
 	public int CurrentTileHp { get; private set; }
+	public bool IsDestroyed { get { return CurrentTileHp <= 0;  } }
 	
-	public TileHpData(TileSO tileSO)
+	private BiomeType _biome;
+	
+	public TileHpData(TileSO tileSO, BiomeType biome, Vector2Int tilePosition)
 	{
+		TilePosition = tilePosition;
 		TileSO = tileSO;
 		CurrentTileHp = tileSO.MaxHitPoints;
+		_biome = biome;
 	}
 	
 	public void DamageTile(int amount)
 	{
 		CurrentTileHp -= amount;
 		
-		if(CurrentTileHp <= 0)
-		{
-			// Destroy logic
-		}
+		var spawnPos = new Vector2(TilePosition.x + 0.5f, TilePosition.y + 0.5f);
+		SoundManager.Instance.PlayOneShot(TileSO.HitSound, spawnPos);
+	}
+	
+	public void OnTileDestroy()
+	{
+		var spawnPos = new Vector2(TilePosition.x + 0.5f, TilePosition.y + 0.5f);
+		GameManager.Instance.SpawnItem(TileSO.DropItem, 1, spawnPos, _biome);
+		ChunkManager.Instance.RemoveWallTileDataFromChunk(TilePosition, _biome);
+		SoundManager.Instance.PlayOneShot(TileSO.DestroySound, spawnPos);
 	}
 }
 
@@ -57,44 +69,119 @@ public class Environment : NetworkBehaviour
 		WorldManager.Instance.OnStartBiomeTransition += ClearLocalTilemaps;
 	}
 	
+	// Handles placing the visual of the tile, NOT the tile data that is being synced
+	public void PlaceTile(Vector3Int pos, TileSO wallTile, TileType syncTileType, BiomeType environment)
+	{
+		byte syncTileId = GameManager.Instance.GetByteIDFromTileObjectSO(wallTile);
+		
+		AddTileDataServerRpc(pos, syncTileId, syncTileType, environment);
+	}
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void AddTileDataServerRpc(Vector3Int syncPos, byte syncTileId, TileType syncTileType, BiomeType biome)
+	{
+		ChunkManager.Instance.AddWallTileDataToChunk((Vector2Int)syncPos, syncTileId, biome, syncTileType);
+	}
+	
 	public void HitFloorTile(BiomeType biome, Vector2Int tilePos, int amount)
 	{
-		HitTile(_biomeFloorTileHpDict, biome, tilePos, amount);
+		HitFloorTileServerRpc(biome, tilePos, amount);
+	}
+	
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void HitFloorTileServerRpc(BiomeType biome, Vector2Int tilePos, int amount)
+	{
+		var chunkGameData = ChunkManager.Instance.GetChunkFromAnyWorldPos(tilePos, biome);
+		foreach (TileGameData tileGameData in chunkGameData.WallTileGameDataList)
+		{
+			if(tileGameData.TilePosition == tilePos)
+			{
+				// Found wall tile to hit
+				HitTile(_biomeFloorTileHpDict, biome, tilePos, amount, tileGameData.TileSO);
+				return;
+			}
+		}
+		
+		Debug.LogWarning($"Did not find floor tile to hit at {tilePos} in biome {biome}");
 	}
 
 	public void HitWallTile(BiomeType biome, Vector2Int tilePos, int amount)
 	{
-		HitTile(_biomeWallTileHpDict, biome, tilePos, amount);
+		HitWallTileServerRpc(biome, tilePos, amount);
+	}
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void HitWallTileServerRpc(BiomeType biome, Vector2Int tilePos, int amount)
+	{
+		var chunkGameData = ChunkManager.Instance.GetChunkFromAnyWorldPos(tilePos, biome);
+		foreach (TileGameData tileGameData in chunkGameData.WallTileGameDataList)
+		{
+			if(tileGameData.TilePosition == tilePos)
+			{
+				// Found wall tile to hit
+				HitTile(_biomeWallTileHpDict, biome, tilePos, amount, tileGameData.TileSO);
+				return;
+			}
+		}
+	
+		Debug.LogWarning($"Did not find wall tile to hit at {tilePos} in biome {biome}");
 	}
 	
-	private void HitTile(Dictionary<BiomeType, HashSet<TileHpData>> tileHpDict, BiomeType biome, Vector2Int tilePos, int amount)
+	private void HitTile(Dictionary<BiomeType, HashSet<TileHpData>> tileHpDict, BiomeType biome, Vector2Int tilePos, int amount, TileSO tileSO)
 	{
 		if(tileHpDict.ContainsKey(biome))
 		{
+			// Try to find tile to damage
 			foreach (TileHpData tileHpData in tileHpDict[biome])
 			{
 				if(tileHpData.TilePosition == tilePos)
 				{
 					// Found tile to damage, so damage it
-					tileHpData.DamageTile(amount);
+					Debug.Log($"Found tile and damaging it");
+					DamageTile(tileHpDict, biome, amount, tileHpData);
 					return;
 				}
 			}
 			
-			// Did not find tile to damage, add it and damage it
-			var chunkGameData = ChunkManager.Instance.GetChunkFromAnyWorldPos(tilePos, biome);
-			
-			
-			tileHpDict[biome].Add(new TileHpData());
+			// Did not find tile to damage, create a new one, damage it
+			Debug.Log($"Biome found, did not find tile, adding tile and damaging it");
+			DamageTile(tileHpDict, biome, amount, new TileHpData(tileSO, biome, tilePos));
 		}
 		else
 		{
+			// Biome does not exist, create it and add tile entry
 			tileHpDict.Add(biome, new());
+			Debug.Log($"Biome not found, added biome, adding tile and damaging it");
+			DamageTile(tileHpDict, biome, amount, new TileHpData(tileSO, biome, tilePos));
 			
-			var chunkGameData = ChunkManager.Instance.GetChunkFromAnyWorldPos(tilePos, biome);
-			var tile = chunkGameData.
+			if(tileHpDict[biome].Count <= 0)
+			{
+				tileHpDict.Remove(biome);
+			}
+		}
+	}
+	
+	private void DamageTile(Dictionary<BiomeType, HashSet<TileHpData>> tileHpDict, BiomeType biome, int amount, TileHpData tileToDamage)
+	{
+		tileToDamage.DamageTile(amount);
+		Debug.Log($"Tile {tileToDamage.TileSO.name} Hp: {tileToDamage.CurrentTileHp}/{tileToDamage.TileSO.MaxHitPoints}");
+		if(tileToDamage.IsDestroyed)
+		{
+			tileToDamage.OnTileDestroy();
 			
-			tileHpDict[biome].Add(new TileHpData());
+			// Check if tile exists in database, if so remove it
+			foreach (TileHpData tileHpData in tileHpDict[biome].ToList())
+			{
+				if(tileHpData.TilePosition == tileToDamage.TilePosition)
+				{
+					// Found tile to destroy, delete it from the database
+					tileHpDict[biome].Remove(tileHpData);
+				}
+			}
+		}
+		else
+		{
+			tileHpDict[biome].Add(tileToDamage);
 		}
 	}
 
@@ -151,59 +238,6 @@ public class Environment : NetworkBehaviour
 		}
 		
 		Pathfinding.Instance.RequestUnloadChunk(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentBiome.Value);
-	}
-	
-	// Handles placing the visual of the tile, NOT the tile data that is being synced
-	public void PlaceTile(Vector3Int pos, TileSO wallTile, TileType syncTileType, BiomeType environment)
-	{
-		// Debug.Log("Some Client is placing a tile");
-		byte syncTileId = GameManager.Instance.GetByteIDFromTileObjectSO(wallTile);
-		
-		AddTileDataServerRpc(pos, syncTileId, syncTileType, environment);
-	}
-
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void AddTileDataServerRpc(Vector3Int syncPos, byte syncTileId, TileType syncTileType, BiomeType biome)
-	{
-		// Debug.Log("Server is adding tile data to official world data");
-		ChunkManager.Instance.AddWallTileDataToChunk((Vector2Int)syncPos, syncTileId, biome);
-		
-		HandleTileVisualClientRpc(syncPos, syncTileId, syncTileType, biome);
-	}
-	
-	[Rpc(SendTo.ClientsAndHost)]
-	private void HandleTileVisualClientRpc(Vector3Int syncPos, byte syncTileId, TileType syncTileType, BiomeType biome)
-	{
-		if(Player.LocalClientInstance.CurrentBiome.Value != biome || !ObjectPositionInLoadedChunks((Vector2Int)syncPos)) return;
-		
-		TileSO tileToPlace = GameManager.Instance.GetTileSOFromID(syncTileId);
-
-		// Chunk is loaded visually, therefore visually update whatever tile wants to be updated
-		switch(syncTileType)
-		{
-			case TileType.Ground:
-				break;
-			case TileType.Floor:
-				FloorTm.SetTile(syncPos, tileToPlace);
-				break;
-			case TileType.Wall:
-				WallTm.SetTile(syncPos, tileToPlace);
-					
-				TileVisibilityDict[syncPos] = new TileVisibility {Visibility = 1};
-					
-				Lightmap.Instance.UpdateLightMap();
-				break;
-		}
-	}
-	
-	private bool ObjectPositionInLoadedChunks(Vector2Int position)
-	{
-		var minLoadedTilePos = ChunkManager.Instance.MinLoadedTilePosition;
-		var maxLoadedTilePos = ChunkManager.Instance.MaxLoadedTilePosition;
-
-		// Check if the position is within the bounds
-		return position.x >= minLoadedTilePos.x && position.x <= maxLoadedTilePos.x &&
-			   position.y >= minLoadedTilePos.y && position.y <= maxLoadedTilePos.y;
 	}
 	
 	public override void OnDestroy()
