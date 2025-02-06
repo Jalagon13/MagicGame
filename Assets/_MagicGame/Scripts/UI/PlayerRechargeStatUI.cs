@@ -22,7 +22,7 @@ public class PlayerRechargeStatUI : MonoBehaviour
 	{
 		var mainHandItemSO = GameManager.Instance.GetItemSOFromItemId(e.MainHandItemIndex);
 		
-		if(mainHandItemSO is not SpellBookItemSO)
+		if(mainHandItemSO is not WandItemSO)
 		{
 			HideBar();
 		}

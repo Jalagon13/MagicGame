@@ -1,65 +1,170 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
+using UnityEngine.Tilemaps;
+using System.Linq;
 
-[CreateAssetMenu(fileName = "New Spell Book", menuName = "Create Item/New Spell Book")]
+public enum WandAttribute 
+{
+	Mining, 
+	WoodCutting,
+	Construction,
+	Range,
+}
+
+// Wand upgrades and upgrade data need to live in here and injected into WandInventoryItem somehow
+// Level system must stay in WandInventoryItem and Wand upgrade data in here
+[CreateAssetMenu(fileName = "New SpellBook", menuName = "Create Item/New SpellBook")]
 public class SpellBookItemSO : ItemSO
 {
-	[field: Tooltip("The number of spells cast simultaneously per use of the spell book.")]
-	[field: SerializeField] public int SpellsCast { get; private set; } = 1;
-
-	[field: Tooltip("The delay (in seconds) between individual casts of the spell book.")]
-	[field: SerializeField] public float CastDelay { get; private set; } = 0.2f;
-
-	[field: Tooltip("The cooldown time (in seconds) before the spell book can be used again.")]
-	[field: SerializeField] public float RechargeTime { get; private set; } = 0.5f;
-
-	[field: Tooltip("The maximum amount of mana the spell book can hold.")]
-	[field: SerializeField] public int MaxMana { get; private set; } = 150;
-
-	[field: Tooltip("The rate at which mana is regenerated (mana per second).")]
-	[field: SerializeField] public int ManaChargeSpeed { get; private set; } = 50;
-
-	[field: Tooltip("The number of spells that can be stored in the spell book.")]
-	[field: SerializeField] public int Capacity { get; private set; } = 2;
-
-	[field: Tooltip("The amount of randomness in the trajectory of spells (in degrees). A higher value means more spread.")]
-	[field: SerializeField] public float Spread { get; private set; } = 0f;
-
+	[Space(10)]
+	[Title("Mining Upgrades", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
+	public List<AttributeData> MiningUpgrades = new();
+	
+	[Space(10)]
+	[Title("WoodCutting Upgrades", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
+	public List<AttributeData> WoodCuttingUpgrades = new();
+	
+	[Space(10)]
+	[Title("Construction Upgrades", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
+	public List<AttributeData> ConstructionUpgrades = new();
+	
+	[Space(10)]
+	[Title("Range Upgrades", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
+	public List<RangeData> RangeUpgrades = new();
+	
+	private ResourceObject _resourceObjectSelected;
+	private SpellBookInventoryItem _wandInventoryItem;
+	
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
-		SpellBookInventoryItem spellBookInventoryItem = inventoryItem as SpellBookInventoryItem;
-		SpellProjectileItemSO currentSpell = spellBookInventoryItem.GetCurrentSpell();
+		if(inventoryItem is not SpellBookInventoryItem || 
+			!Player.LocalClientInstance.gameObject.GetComponent<Player>().IsHoldingAWand() || 
+			!PlayerInRangeOfMouse() || 
+			!Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition))) return _baseActionCooldown;
+		
+		_wandInventoryItem = inventoryItem as SpellBookInventoryItem;
 
-		if (currentSpell == null)
+		AttributeData hitData = _wandInventoryItem.GetAttributeData(WandAttribute.Mining);
+		Environment.Instance.HitWallTile(Player.LocalClientInstance.CurrentBiome.Value, Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), hitData.MiningPower);
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.transform.position);
+			
+		return CalcMiningSpeed(WandAttribute.Mining);
+	}
+	
+	private bool PlayerInRangeOfMouse()
+	{
+		return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= 4;
+	}
+	
+	private float CalcMiningSpeed(WandAttribute wandAttribute)
+	{
+		AttributeData upgradeData = _wandInventoryItem.GetAttributeData(wandAttribute);
+		float wandSpeedOfAttribute = upgradeData.MiningSpeed;
+		float finalSpeed = wandSpeedOfAttribute / 60f;
+		
+		// Implement future buffs or speed prefex modifiers here.
+		return finalSpeed;
+	}
+	
+	private bool GetResourceSelected()
+	{
+		Collider2D[] colliders = Physics2D.OverlapPointAll(ActionManager.MouseWorldPosition);
+		List<ResourceObject> resourceObjectsFound = new();
+
+		if (colliders.Count() > 0)
 		{
-			Debug.LogWarning("No valid spell to cast.");
-			return RechargeTime; // Fallback in case there are no valid spells
+			foreach (Collider2D c in colliders)
+			{
+				if (c.TryGetComponent(out ResourceObject resourceObject))
+				{
+					resourceObjectsFound.Add(resourceObject);
+				}
+			}
 		}
 
-		// Calculate the total spread
-		float calculatedSpread = Spread + currentSpell.Spread;
-		if (calculatedSpread < 0)
-		{
-			calculatedSpread = 0; // Clamp spread to a minimum of 0
-		}
-
-		// Generate a random angle within the spread range
-		float randomAngle = Random.Range(-calculatedSpread, calculatedSpread);
-		Vector3 directionNormalized = ((Vector3)ActionManager.MouseWorldPosition - playerHand.ProjectileSpawnTransform.position).normalized;
-		Vector3 rotatedDirection = Quaternion.Euler(0, 0, randomAngle) * directionNormalized;
-
-		GameManager.Instance.SpawnSpellProjectile(Player.LocalClientInstance.CurrentBiome.Value, currentSpell, playerHand.ProjectileSpawnTransform.position, rotatedDirection, currentSpell.Speed, currentSpell.Damage, currentSpell.Lifetime);
-
-		// Advance to the next spell and return the appropriate delay
-		return spellBookInventoryItem.AdvanceToNextSpell(RechargeTime, CastDelay);
+		_resourceObjectSelected = resourceObjectsFound.Count > 0 ? resourceObjectsFound.Last() : null;
+		
+		return _resourceObjectSelected != null;
+	}
+	
+	public override string GetDescription()
+	{
+		return Description;
 	}
 	
 	public override InventoryItem CreateInventoryItem(int quantity)
 	{
-		return new SpellBookInventoryItem(this, quantity, Capacity);
+		return new SpellBookInventoryItem(this, quantity);
 	}
-
-	public override string GetDescription()
+	
+	public int GetMaxUpgradeLevelAmount(WandAttribute upgradeType)
 	{
-		return string.Empty;
+		switch (upgradeType)
+		{
+			case WandAttribute.Mining:
+				return MiningUpgrades.Count;
+			case WandAttribute.WoodCutting:
+				return WoodCuttingUpgrades.Count;
+			case WandAttribute.Construction:
+				return ConstructionUpgrades.Count;
+			case WandAttribute.Range:
+				return RangeUpgrades.Count;
+		}
+		Debug.LogError("Unsupported Upgrade, returnign 0 for max upgrade level index");
+		return 0;
 	}
+	
+	public AttributeData GetUpgradeData(WandAttribute upgradeType, int levelIndex)
+	{
+		switch (upgradeType)
+		{
+			case WandAttribute.Mining:
+				if (levelIndex < MiningUpgrades.Count)
+					return MiningUpgrades[levelIndex];
+				break;
+			case WandAttribute.WoodCutting:
+				if (levelIndex < WoodCuttingUpgrades.Count)
+					return WoodCuttingUpgrades[levelIndex];
+				break;
+			case WandAttribute.Construction:
+				if (levelIndex < ConstructionUpgrades.Count)
+					return ConstructionUpgrades[levelIndex];
+				break;
+		}
+		
+		Debug.LogWarning("Returning default upgrade data for " + upgradeType.ToString() + " level " + levelIndex + 
+		"/nBecause either level index is out of range or could not find " + upgradeType.ToString());
+		return default;
+	}
+	
+	public RangeData GetRangeData(int levelIndex)
+	{
+		if (levelIndex < RangeUpgrades.Count)
+			return RangeUpgrades[levelIndex];
+			
+		Debug.LogWarning("Returning default range data for level " + levelIndex + 
+		"/nBecause either level index is out of range");
+		return default;
+	}
+}
+
+
+[Serializable]
+public struct AttributeData 
+{
+	[GUIColor(1.0f, 1.0f, 0.0f)]
+	public int MiningPower;
+	public int MiningSpeed;
+	public List<InventoryItem> Requirements;
+}
+
+[Serializable]
+public struct RangeData 
+{
+	[GUIColor(1.0f, 1.0f, 0.0f)]
+	public float RangeValue;
+	public List<InventoryItem> Requirements;
 }

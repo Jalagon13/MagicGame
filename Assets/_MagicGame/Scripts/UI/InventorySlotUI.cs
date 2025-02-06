@@ -60,7 +60,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 		_hovered = true;
 		if(_item.HasItem)
 		{
-			TooltipManager.Instance.Show(_item is WandInventoryItem wandItem ? wandItem.GetDescription() : _item.Item.GetDescription(), _item.Item.Name);
+			TooltipManager.Instance.Show(_item is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : _item.Item.GetDescription(), _item.Item.Name);
 		}
 	}
 

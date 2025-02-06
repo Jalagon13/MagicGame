@@ -1,178 +1,113 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
+
+
+[Serializable]
 public class SpellBookInventoryItem : InventoryItem
 {
-	public SpellProjectileItemSO[] SpellsArray { get; private set; }
-	private int _spellIndex = -1;
+    public SpellBookItemSO WandObject => (SpellBookItemSO) Item;
+    public Dictionary<WandAttribute, int> AttributesAndLevelIndex = new(); // Holds the upgrade type and its level
 
-	public SpellBookInventoryItem(ItemSO itemSO, int quantity, int capacity) : base(itemSO, quantity)
-	{
-		Item = itemSO;
-		Quantity = quantity;
-		SpellsArray = new SpellProjectileItemSO[capacity]; // Initialize the array with the given capacity
-	}
-
-	public (int, int) ResetSpellBook()
-	{
-		var spellBookItemSO = Item as SpellBookItemSO;
-
-		// Find the first valid spell index
-		for (int i = 0; i < SpellsArray.Length; i++)
-		{
-			if (SpellsArray[i] != null)
-			{
-				_spellIndex = i - 1; // Set to one before the first valid spell, so the next cast starts here
-				return (spellBookItemSO.MaxMana, spellBookItemSO.ManaChargeSpeed);
-			}
-		}
-
-		// If no valid spells, reset the index to -1
-		_spellIndex = -1;
-
-		return (spellBookItemSO.MaxMana, spellBookItemSO.ManaChargeSpeed);
-	}
-
-	public bool HasSpells()
-	{
-		for (int i = 0; i < SpellsArray.Length; i++)
-		{
-			if (SpellsArray[i] != null)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
+    public SpellBookInventoryItem(ItemSO itemObject, int quantity)
+    {
+        Item = itemObject as SpellBookItemSO;
+        Quantity = quantity;
+		
+        // Initialize new UpgradeStorage with default values for all upgrade types
+        AttributesAndLevelIndex = new() 
+        {  
+            [WandAttribute.Mining] = 0,
+            [WandAttribute.WoodCutting] = 0,
+            [WandAttribute.Construction] = 0,
+            [WandAttribute.Range] = 0,
+            // Add more upgrade types as needed
+        };
+    }
 	
-	public bool IsCurrentSpellFinalSpell()
-	{
-		// Collect valid spell indices (non-null) into a list
-		List<int> validSpellIndices = new();
-		for (int i = 0; i < SpellsArray.Length; i++)
-		{
-			if (SpellsArray[i] != null)
-			{
-				validSpellIndices.Add(i);
-			}
-		}
-
-		// If no valid spells are available, return false
-		if (validSpellIndices.Count == 0)
-		{
-			return false;
-		}
-
-		// Check if the current spell is the last valid spell
-		int lastSpellIndex = validSpellIndices[validSpellIndices.Count - 1];
-		return _spellIndex == lastSpellIndex;
-	}
-
-	public SpellProjectileItemSO GetCurrentSpell()
-	{
-		if (_spellIndex >= 0 && _spellIndex < SpellsArray.Length && SpellsArray[_spellIndex] != null)
-		{
-			return SpellsArray[_spellIndex];
-		}
-
-		// If the current index is invalid or null, find the first valid spell
-		for (int i = 0; i < SpellsArray.Length; i++)
-		{
-			if (SpellsArray[i] != null)
-			{
-				_spellIndex = i; // Update the index to the first valid spell
-				return SpellsArray[i];
-			}
-		}
-
-		// If no valid spells exist, return null
-		Debug.LogWarning($"Warning no valid spells exist, this warning should not be seen because check for empty spell book should already have been checked prior to this call");
-		return null;
-	}
-
-	public float AdvanceToNextSpell(float rechargeTime, float spellBookCastDelay)
-	{
-		// Collect valid spells (non-null) into a list of indices
-		List<int> validSpellIndices = new();
-		for (int i = 0; i < SpellsArray.Length; i++)
-		{
-			if (SpellsArray[i] != null)
-			{
-				validSpellIndices.Add(i);
-			}
-		}
-
-		// If there are no spells to cast, log a warning and return default recharge time
-		if (validSpellIndices.Count == 0)
-		{
-			Debug.LogWarning("No spells available to cast.");
-			return rechargeTime;
-		}
+    public string GetDescription()
+    {
+        StringBuilder description = new();
+        description.Append($"{WandObject.GetDescription()}<br>");
+        description.Append($"<br>Attributes:<br>");
+        foreach (var kvp in AttributesAndLevelIndex)
+        {
+            if(kvp.Key == WandAttribute.Range)
+            {
+                string toolSkillName = kvp.Key.ToString();
+                int toolSkillLevel = kvp.Value + 1;
+                float rangeValue = GetRangeValue();
+                description.Append($"<color=yellow>Lvl {toolSkillLevel} {toolSkillName} </color=yellow> | " + 
+                $"<color=orange>{rangeValue}  Tiles</color=orange><br>");
+            }
+            else
+            {
+                string toolSkillName = kvp.Key.ToString();
+                AttributeData attributeData = GetAttributeData(kvp.Key);
+                int toolSkillLevel = kvp.Value + 1;
+                int attributePower = attributeData.MiningPower;
+                int attributeSpeed = attributeData.MiningSpeed;
+                description.Append($"<color=yellow>Lvl {toolSkillLevel} {toolSkillName} </color=yellow> | " + 
+                $"<color=orange>{attributePower}  Power </color=orange>| <color=green>{30 - attributeSpeed} Speed</color=green><br>");
+            }
+        }
 		
-		// Check if we are at the last spell in the sequence
-		if (_spellIndex == validSpellIndices[validSpellIndices.Count - 1])
-		{
-			_spellIndex = (_spellIndex + 1) % validSpellIndices.Count;
-			return rechargeTime;
-		}
-
-		// Otherwise, return the cast delay for the current spell
-		float spellCastDelay = SpellsArray[validSpellIndices[_spellIndex]].CastDelay;
+        return description.ToString();
+    }
+	
+    public float GetRangeValue()
+    {
+        int levelIndex = AttributesAndLevelIndex[WandAttribute.Range];
+        RangeData rangeData = WandObject.GetRangeData(levelIndex);
+        return rangeData.RangeValue;
+    }
+	
+    public bool NextUpgradeExists(WandAttribute upgradeType)
+    {
+        if(AttributesAndLevelIndex.ContainsKey(upgradeType))
+        {
+            int levelIndex = AttributesAndLevelIndex[upgradeType];
+            int maxLevelCount = WandObject.GetMaxUpgradeLevelAmount(upgradeType);
+            int maxLevelIndex = maxLevelCount - 1;
+			
+            if(levelIndex < maxLevelIndex)
+            {
+                return true;
+            }
+        }
 		
-		_spellIndex = (_spellIndex + 1) % validSpellIndices.Count;
-		
-		return spellBookCastDelay + spellCastDelay;
-	}
-
-	public void SetSpell(int slotIndex, SpellProjectileItemSO spell)
-	{
-		if (slotIndex < 0 || slotIndex >= SpellsArray.Length)
-		{
-			Debug.LogWarning("Invalid spell slot index.");
-			return;
-		}
-
-		SpellsArray[slotIndex] = spell;
-	}
-
-	public SpellProjectileItemSO RemoveSpell(int slotIndex)
-	{
-		if (slotIndex < 0 || slotIndex >= SpellsArray.Length)
-		{
-			Debug.LogWarning("Invalid spell slot index.");
-			return null;
-		}
-
-		SpellProjectileItemSO removedSpell = SpellsArray[slotIndex];
-		SpellsArray[slotIndex] = null; // Clear the slot
-		return removedSpell; // Return the removed spell
-	}
-
-	public SpellProjectileItemSO SwapSpells(SpellProjectileItemSO spell, int slotIndex)
-	{
-		if (slotIndex < 0 || slotIndex >= SpellsArray.Length)
-		{
-			Debug.LogWarning("Invalid spell slot index.");
-			return null;
-		}
-
-		SpellProjectileItemSO swappedSpell = SpellsArray[slotIndex]; // Store the spell currently in the slot
-		SpellsArray[slotIndex] = spell; // Place the new spell in the slot
-		return swappedSpell; // Return the swapped-out spell
-	}
-
-	public override string ToString()
-	{
-		string spellList = string.Empty;
-		for (int i = 0; i < SpellsArray.Length; i++)
-		{
-			spellList += SpellsArray[i] != null ? SpellsArray[i].name : "Empty Slot";
-			if (i < SpellsArray.Length - 1)
-			{
-				spellList += ", ";
-			}
-		}
-		return $"SpellBookInventoryItem: [Spells: {spellList}]";
-	}
+        return false;
+    }
+	
+    public void UpgradeWand(WandAttribute upgradeType)
+    {
+        if(AttributesAndLevelIndex.ContainsKey(upgradeType))
+        {
+            AttributesAndLevelIndex[upgradeType]++;
+            int levelDisplay = AttributesAndLevelIndex[upgradeType] + 1;
+            Debug.Log("Upgraded " + upgradeType.ToString() + " to level " + levelDisplay);
+        }
+    }
+	
+    public AttributeData GetAttributeData(WandAttribute upgradeType)
+    {
+        if (AttributesAndLevelIndex.ContainsKey(upgradeType))
+        {
+            int levelIndex = AttributesAndLevelIndex[upgradeType];
+            AttributeData upgradeData = WandObject.GetUpgradeData(upgradeType, levelIndex);
+            return upgradeData;
+        }
+        Debug.LogError($"UpgradeStorage does not contain key: {upgradeType}, returning default instead.");
+        return default;
+    }
+	
+    public RangeData GetRangeData()
+    {
+        int levelIndex = AttributesAndLevelIndex[WandAttribute.Range];
+        RangeData rangeData = WandObject.GetRangeData(levelIndex);
+        return rangeData;
+    }
 }

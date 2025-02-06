@@ -11,11 +11,17 @@ public class InventoryItem
 	public ItemSO Item;
 	public int Quantity;
 	public bool HasItem => Item != null;
+	public ulong Id { get; private set; }
 	
 	public InventoryItem(ItemSO itemSO, int quantity)
 	{
 		Item = itemSO;
-		Quantity = quantity;
+		
+		if(Item != null)
+		{
+			Quantity = quantity;
+			Id = IdGenerator.GenerateRandomId();
+		}
 	}
 	
 	public InventoryItem()

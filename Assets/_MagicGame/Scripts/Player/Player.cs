@@ -275,10 +275,10 @@ public class Player : NetworkBehaviour, IHasHealth
 	public bool IsHoldingAWand()
 	{
 		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromItemId(MainHandItemIndexNetworkVariable.Value);
-		bool mainHandHoldingWand = mainHandItem != null && mainHandItem is WandItemSO;
+		bool mainHandHoldingWand = mainHandItem != null && mainHandItem is SpellBookItemSO;
 		
 		ItemSO offHandItem = GameManager.Instance.GetItemSOFromItemId(OffHandItemIndexNetworkVariable.Value);
-		bool offHandHoldingWand = offHandItem != null && offHandItem is WandItemSO;
+		bool offHandHoldingWand = offHandItem != null && offHandItem is SpellBookItemSO;
 		
 		return mainHandHoldingWand || offHandHoldingWand;
 	}

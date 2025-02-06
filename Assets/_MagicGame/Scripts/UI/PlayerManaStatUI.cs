@@ -18,7 +18,7 @@ public class PlayerManaStatUI : MonoBehaviour
 	{
 		var mainHandItemSO = GameManager.Instance.GetItemSOFromItemId(e.MainHandItemIndex);
 		
-		if(mainHandItemSO is SpellBookItemSO)
+		if(mainHandItemSO is WandItemSO)
 		{
 			ShowBar();
 		}

@@ -54,7 +54,7 @@ public class InventoryManager : MonoBehaviour
 	
 	private void Start()
 	{
-		GameInput.Instance.OnSwapHands += GameInput_OnSwapHands;
+		// GameInput.Instance.OnSwapHands += GameInput_OnSwapHands;
 	}
 
 	private void Update()
@@ -83,17 +83,17 @@ public class InventoryManager : MonoBehaviour
 		}
 	}
 	
-	private void GameInput_OnSwapHands(object sender, EventArgs e)
-	{
-		var mainHandInventoryItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
+	// private void GameInput_OnSwapHands(object sender, EventArgs e)
+	// {
+	// 	var mainHandInventoryItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
 		
-		_inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()] = _inventoryModel.InventoryItems[_inventoryModel.InventoryItems.Count - 1];
-		_inventoryModel.InventoryItems[_inventoryModel.InventoryItems.Count - 1] = mainHandInventoryItem;;
+	// 	_inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()] = _inventoryModel.InventoryItems[_inventoryModel.InventoryItems.Count - 1];
+	// 	_inventoryModel.InventoryItems[_inventoryModel.InventoryItems.Count - 1] = mainHandInventoryItem;;
 		
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.LocalClientInstance.transform.position);
+	// 	SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.LocalClientInstance.transform.position);
 		
-		_inventoryModel.UpdateInventory();
-	}
+	// 	_inventoryModel.UpdateInventory();
+	// }
 	
 	public bool MainHandItemExists(out InventoryItem mainHandInventoryItem)
 	{
@@ -345,7 +345,7 @@ public class InventoryManager : MonoBehaviour
 				if(_mouseItemModel.MouseInventoryItem.Quantity <= 0)
 				{
 					_mouseItemModel = new();
-					TooltipManager.Instance.Show(mouseItem is WandInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
+					TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
 				}
 			}
 		}
@@ -378,7 +378,7 @@ public class InventoryManager : MonoBehaviour
 				{
 					_inventoryModel.InventoryItems[clickedInventorySlotIndex].Quantity += mouseItem.Quantity;
 					_mouseItemModel.MouseInventoryItem = new();
-					TooltipManager.Instance.Show(mouseItem is WandInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
+					TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
 				}
 				else
 				{
@@ -402,7 +402,7 @@ public class InventoryManager : MonoBehaviour
 			{
 				_inventoryModel.InventoryItems[clickedInventorySlotIndex] = mouseItem;
 				_mouseItemModel.MouseInventoryItem = new();
-				TooltipManager.Instance.Show(mouseItem is WandInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
+				TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
 			}
 		}
 		

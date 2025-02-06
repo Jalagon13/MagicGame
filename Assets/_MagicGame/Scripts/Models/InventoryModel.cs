@@ -6,6 +6,14 @@ using UnityEngine;
 [Serializable]
 public class InventoryModel
 {
+	public event EventHandler<WandEventArgs> OnWandCollected;
+	public event EventHandler<WandEventArgs> OnWandRemoved;
+	public class WandEventArgs : EventArgs
+	{
+		public WandItemSO WandItemSO;
+		public ulong WandId;
+	}
+	
 	public event Action<List<InventoryItem>> OnInventoryUpdate;
 	private List<InventoryItem> _inventoryItems = new();
 	private int _slotAmount;
@@ -77,7 +85,17 @@ public class InventoryModel
 					{
 						// Override this spot with itemToAdd
 						_inventoryItems[j] = itemToAdd;
-						break;
+						
+						// If item being added was a wand, send this event
+						if(_inventoryItems[j].Item is WandItemSO wandItemSO)
+						{
+							OnWandCollected?.Invoke(this, new WandEventArgs
+							{
+								WandItemSO = wandItemSO,
+								WandId = _inventoryItems[j].Id
+							});
+						}
+						return;
 					}
 				}
 			}
@@ -104,6 +122,16 @@ public class InventoryModel
 				if(_inventoryItems[i].Quantity <= 0)
 				{
 					// Note to future self: BUG: You are able to remove an amount of items even if it is greater than what it is in the stack. Need to fix this later
+					
+					if(_inventoryItems[i].Item is WandItemSO wandItemSO)
+					{
+						OnWandRemoved?.Invoke(this, new WandEventArgs
+						{
+							WandItemSO = wandItemSO,
+							WandId = _inventoryItems[i].Id
+						});
+					}
+					
 					_inventoryItems[i] = new();
 				}
 				

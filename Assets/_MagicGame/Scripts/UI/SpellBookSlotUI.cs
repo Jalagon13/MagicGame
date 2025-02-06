@@ -17,45 +17,45 @@ public class SpellBookSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
 	public void OnPointerClick(PointerEventData eventData)
 	{
-		InventoryItem mouseItem = InventoryManager.Instance.GetMouseItem().MouseInventoryItem;
+		// InventoryItem mouseItem = InventoryManager.Instance.GetMouseItem().MouseInventoryItem;
 		
-		if(_spellBookMenuUI.HasSpellBook())
-		{
-			if(mouseItem.HasItem && mouseItem is SpellBookInventoryItem mouseSpellInventoryItem)
-			{
-				InventoryManager.Instance.GetMouseItem().MouseInventoryItem = _spellBookMenuUI.SwapSpellBooks(mouseSpellInventoryItem);
-			}
-			else
-			{
-				if(GameInput.Instance.GetShiftHeldDown())
-				{
-					InventoryManager.Instance.AddItem(_spellBookMenuUI.RemoveSelectedSpellBook());
-				}
-				else
-				{
-					InventoryManager.Instance.GetMouseItem().MouseInventoryItem = _spellBookMenuUI.RemoveSelectedSpellBook();
-				}
-			}
-		}
-		else if(mouseItem.HasItem && mouseItem is SpellBookInventoryItem mouseSpellInventoryItem)
-		{
-			_spellBookMenuUI.PlaceSelectedSpellBook(mouseSpellInventoryItem);
-			InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
-		}
+		// if(_spellBookMenuUI.HasSpellBook())
+		// {
+		// 	if(mouseItem.HasItem && mouseItem is SpellBookInventoryItem mouseSpellInventoryItem)
+		// 	{
+		// 		InventoryManager.Instance.GetMouseItem().MouseInventoryItem = _spellBookMenuUI.SwapSpellBooks(mouseSpellInventoryItem);
+		// 	}
+		// 	else
+		// 	{
+		// 		if(GameInput.Instance.GetShiftHeldDown())
+		// 		{
+		// 			InventoryManager.Instance.AddItem(_spellBookMenuUI.RemoveSelectedSpellBook());
+		// 		}
+		// 		else
+		// 		{
+		// 			InventoryManager.Instance.GetMouseItem().MouseInventoryItem = _spellBookMenuUI.RemoveSelectedSpellBook();
+		// 		}
+		// 	}
+		// }
+		// else if(mouseItem.HasItem && mouseItem is SpellBookInventoryItem mouseSpellInventoryItem)
+		// {
+		// 	_spellBookMenuUI.PlaceSelectedSpellBook(mouseSpellInventoryItem);
+		// 	InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
+		// }
 		
-		UpdateSlotUI();
+		// UpdateSlotUI();
 		
-		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
+		// InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
 		_hovered = true;
 		
-		if(_spellBookMenuUI.HasSpellBook())
-		{
-			// TooltipManager.Instance.Show(_wandItem.GetDescription(), _wandItem.Item.Name);
-		}
+		// if(_spellBookMenuUI.HasSpellBook())
+		// {
+		// 	// TooltipManager.Instance.Show(_wandItem.GetDescription(), _wandItem.Item.Name);
+		// }
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
@@ -66,17 +66,17 @@ public class SpellBookSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 	
 	public void UpdateSlotUI()
 	{
-		_backgroundIcon.enabled = !_spellBookMenuUI.HasSpellBook();
-		_spellBookIcon.enabled = _spellBookMenuUI.HasSpellBook();
+		// _backgroundIcon.enabled = !_spellBookMenuUI.HasSpellBook();
+		// _spellBookIcon.enabled = _spellBookMenuUI.HasSpellBook();
 		
-		if(_spellBookMenuUI.HasSpellBook())
-		{
-			_spellBookIcon.sprite = _spellBookMenuUI.SelectedSpellBook.Item.UiDisplay;
+		// if(_spellBookMenuUI.HasSpellBook())
+		// {
+		// 	_spellBookIcon.sprite = _spellBookMenuUI.SelectedSpellBook.Item.UiDisplay;
 			
-			if(_hovered)
-			{
-				// TooltipManager.Instance.Show(wandItem.GetDescription(), wandItem.Item.Name);
-			}
-		}
+		// 	if(_hovered)
+		// 	{
+		// 		// TooltipManager.Instance.Show(wandItem.GetDescription(), wandItem.Item.Name);
+		// 	}
+		// }
 	}
 }

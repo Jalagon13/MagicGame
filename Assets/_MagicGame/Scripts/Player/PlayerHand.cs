@@ -96,7 +96,7 @@ public class PlayerHand : NetworkBehaviour
 		{
 			TryToSwing();
 		}
-		else if ((_heldItem is WandItemSO || _heldItem is SpellBookItemSO) && !_isSwinging)
+		else if ((_heldItem is SpellBookItemSO || _heldItem is WandItemSO) && !_isSwinging)
 		{
 			RotateArmBasedOnAngle();
 		}
@@ -173,7 +173,7 @@ public class PlayerHand : NetworkBehaviour
 		var tempItem = _heldItem;
 		_heldItem = GameManager.Instance.GetItemSOFromItemId(newValue);
 
-		if ((tempItem is WandItemSO || tempItem is SpellBookItemSO) && (_heldItem is not WandItemSO || _heldItem is not SpellBookItemSO) && !_isSwinging)
+		if ((tempItem is SpellBookItemSO || tempItem is WandItemSO) && (_heldItem is not SpellBookItemSO || _heldItem is not WandItemSO) && !_isSwinging)
 		{
 			OnHoldingWandEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 		}
@@ -183,7 +183,7 @@ public class PlayerHand : NetworkBehaviour
 			_stoppingSwing = true;
 		}
 
-		if (_heldItem is WandItemSO || _heldItem is SpellBookItemSO)
+		if (_heldItem is SpellBookItemSO || _heldItem is WandItemSO)
 		{
 			ShowArm();
 			ApplyPreset(_holdingWandPreset);
@@ -266,7 +266,7 @@ public class PlayerHand : NetworkBehaviour
 
 	private void HandleSwingStop(CardinalDirection direction, float duration, Quaternion endRotation)
 	{
-		if (_heldItem is WandItemSO) ShowArm();
+		if (_heldItem is SpellBookItemSO) ShowArm();
 		else HideArm();
 
 		OnSwingEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });

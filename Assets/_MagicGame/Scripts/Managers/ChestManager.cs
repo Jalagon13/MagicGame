@@ -307,7 +307,7 @@ public class ChestManager : NetworkBehaviour
 				if (InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity <= 0)
 				{
 					InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
-					TooltipManager.Instance.Show(mouseItem is WandInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
+					TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
 				}
 			}
 		}
@@ -335,7 +335,7 @@ public class ChestManager : NetworkBehaviour
 					// If the items are the same and stackable, add the mouse item's quantity to the chest slot
 					GetChestItemEntry(clickedChestSlotIndex).Quantity += mouseItem.Quantity;
 					InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
-					TooltipManager.Instance.Show(mouseItem is WandInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
+					TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
 				}
 				else
 				{
@@ -363,7 +363,7 @@ public class ChestManager : NetworkBehaviour
 				AddChestItemEntry(clickedChestSlotIndex, GameManager.Instance.GetItemIdFromItemSO(mouseItem.Item), mouseItem.Quantity);
 
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
-				TooltipManager.Instance.Show(mouseItem is WandInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
+				TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
 			}
 		}
 
