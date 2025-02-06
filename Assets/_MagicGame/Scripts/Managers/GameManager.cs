@@ -18,7 +18,6 @@ public class GameManager : NetworkBehaviour
 	[Title("Item Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private GameObject _itemBasePrefab;
 	[SerializeField] private GameObject _playerPrefab;
-	[SerializeField] private MiningProjectile _miningProjectilePrefab;
 	
 	[Title("Database Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private ItemDataBaseSO _itemDataBaseSO;
@@ -237,35 +236,6 @@ public class GameManager : NetworkBehaviour
 			Debug.Log($"Fake projectile found and destroyed for proj id {projectileId}");
 			Destroy(fakeProjectile);
 			_fakeProjectiles.Remove(projectileId);
-		}
-	}
-
-	public void SpawnMiningProjectile(Vector2 spawnPoint, Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected)
-	{
-		if(!Player.LocalClientInstance.IsHost)
-		{
-			// If player is not host, spawn the fake projectile and hide the actual server projectile
-			MiningProjectile dummyProjectile = Instantiate(_miningProjectilePrefab, spawnPoint, Quaternion.identity);
-			dummyProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected);
-		}
-		
-		SpawnMiningProjectileServerRpc(Player.LocalClientInstance.CurrentBiome.Value, spawnPoint, travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.IsHost);
-	}
-	
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnMiningProjectileServerRpc(BiomeType spawnBiome, Vector2 spawnPoint, Vector2 travelPoint, int miningPower, bool mouseOverFloor, bool mouseOverWall, bool resourceSelected, ulong clientSenderId, bool isHost)
-	{
-		MiningProjectile miningProjectile = Instantiate(_miningProjectilePrefab, spawnPoint, Quaternion.identity);
-		
-		var spellNetworkComponent = miningProjectile.GetComponent<SpellNetworkComponent>();
-		spellNetworkComponent.InitializeSpell(spawnBiome, clientSenderId, 2f, 10101);
-		
-		miningProjectile.GetComponent<NetworkObject>().Spawn(true);
-		miningProjectile.InitializeMiningSpell(travelPoint, miningPower, mouseOverFloor, mouseOverWall, resourceSelected);
-		
-		if(!isHost)
-		{
-			miningProjectile.GetComponent<NetworkObject>().NetworkHide(clientSenderId);
 		}
 	}
 	

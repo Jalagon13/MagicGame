@@ -81,6 +81,7 @@ public class Environment : NetworkBehaviour
 	private void AddTileDataServerRpc(Vector3Int syncPos, byte syncTileId, TileType syncTileType, BiomeType biome)
 	{
 		ChunkManager.Instance.AddWallTileDataToChunk((Vector2Int)syncPos, syncTileId, biome, syncTileType);
+		Pathfinding.Instance.AddPfWallTile((Vector2Int)syncPos, biome);
 	}
 	
 	public void HitFloorTile(BiomeType biome, Vector2Int tilePos, int amount)
@@ -137,21 +138,18 @@ public class Environment : NetworkBehaviour
 				if(tileHpData.TilePosition == tilePos)
 				{
 					// Found tile to damage, so damage it
-					Debug.Log($"Found tile and damaging it");
 					DamageTile(tileHpDict, biome, amount, tileHpData);
 					return;
 				}
 			}
 			
 			// Did not find tile to damage, create a new one, damage it
-			Debug.Log($"Biome found, did not find tile, adding tile and damaging it");
 			DamageTile(tileHpDict, biome, amount, new TileHpData(tileSO, biome, tilePos));
 		}
 		else
 		{
 			// Biome does not exist, create it and add tile entry
 			tileHpDict.Add(biome, new());
-			Debug.Log($"Biome not found, added biome, adding tile and damaging it");
 			DamageTile(tileHpDict, biome, amount, new TileHpData(tileSO, biome, tilePos));
 			
 			if(tileHpDict[biome].Count <= 0)
@@ -164,7 +162,7 @@ public class Environment : NetworkBehaviour
 	private void DamageTile(Dictionary<BiomeType, HashSet<TileHpData>> tileHpDict, BiomeType biome, int amount, TileHpData tileToDamage)
 	{
 		tileToDamage.DamageTile(amount);
-		Debug.Log($"Tile {tileToDamage.TileSO.name} Hp: {tileToDamage.CurrentTileHp}/{tileToDamage.TileSO.MaxHitPoints}");
+		
 		if(tileToDamage.IsDestroyed)
 		{
 			tileToDamage.OnTileDestroy();
@@ -178,6 +176,8 @@ public class Environment : NetworkBehaviour
 					tileHpDict[biome].Remove(tileHpData);
 				}
 			}
+			
+			Pathfinding.Instance.RemovePfWallTile(tileToDamage.TilePosition, biome);
 		}
 		else
 		{

@@ -312,7 +312,7 @@ public class ChunkManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void HandleTileVisualClientRpc(Vector3Int pos, byte syncTileId, TileType syncTileType, BiomeType biome)
 	{
-		if(Player.LocalClientInstance.CurrentBiome.Value != biome || !ChunkManager.Instance.ObjectPositionInLoadedChunks((Vector2Int)pos)) return;
+		if(Player.LocalClientInstance.CurrentBiome.Value != biome || !ObjectPositionInLoadedChunks((Vector2Int)pos)) return;
 		
 		TileSO tileToPlace = GameManager.Instance.GetTileSOFromID(syncTileId);
 

@@ -59,7 +59,6 @@ public class Pathfinding : NetworkBehaviour
 	{
 		if(_playerToChunks.ContainsKey(clientId))
 		{
-			Debug.Log($"Removing player {clientId}'s pathfinding chunks list");
 			_playerToChunks.Remove(clientId);
 			
 			var environment = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value;

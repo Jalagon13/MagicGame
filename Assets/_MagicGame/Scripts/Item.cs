@@ -77,7 +77,7 @@ public class Item : NetworkBehaviour
 			Vector2 currentPosition = _rb.position;
 			Vector2 targetPosition = closestPlayerCollectTag.transform.position;
 			Vector2 direction = (targetPosition - currentPosition).normalized;
-			Debug.Log($"closest player: {closestPlayerCollectTag.transform.root.name}");
+			
 			_rb.MovePosition(currentPosition + direction * _attractSpeed * Time.fixedDeltaTime);
 			
 			// Check if the item is within the bounds of any CollectTag collider
