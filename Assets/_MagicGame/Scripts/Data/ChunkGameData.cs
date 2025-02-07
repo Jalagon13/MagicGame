@@ -96,12 +96,12 @@ public class ChunkGameData
 
 public class WorldObjectGameData
 {
-	public WorldObject Asset { get; private set; }
+	public WorldObject WO { get; private set; }
 	public Vector2Int Position { get; private set; }
 	
 	public WorldObjectGameData(WorldObject worldObject, Vector2Int position)
 	{
-		Asset = worldObject;
+		WO = worldObject;
 		Position = position;
 	}
 }

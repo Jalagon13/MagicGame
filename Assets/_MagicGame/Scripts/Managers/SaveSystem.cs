@@ -87,18 +87,18 @@ public class SaveSystem : MonoBehaviour
 				foreach (WorldObjectGameData worldObjectGameData in worldObjectGameDataList)
 				{
 					// If so, serialize it
-					if(worldObjectGameData.Asset != null)
+					if(worldObjectGameData.WO != null)
 					{
 						// Create new filedata for this asset
 						WorldObjectFileData worldAssetData;
 						
 						if(worldObjectGameData is DoorObjectGameData doorObjectGameData)
 						{
-							worldAssetData = new DoorObjectFileData(GameManager.Instance.GetByteIDFromWorldObject(worldObjectGameData.Asset), worldObjectGameData.Position, doorObjectGameData.IsOpen);
+							worldAssetData = new DoorObjectFileData(GameManager.Instance.GetIDFromWorldObject(worldObjectGameData.WO), worldObjectGameData.Position, doorObjectGameData.IsOpen);
 						}
 						else
 						{
-							worldAssetData = new WorldObjectFileData(GameManager.Instance.GetByteIDFromWorldObject(worldObjectGameData.Asset), worldObjectGameData.Position);
+							worldAssetData = new WorldObjectFileData(GameManager.Instance.GetIDFromWorldObject(worldObjectGameData.WO), worldObjectGameData.Position);
 						}
 						
 						// Push it to WorldAssets in sceneData
@@ -137,7 +137,7 @@ public class SaveSystem : MonoBehaviour
 				TileFileData tileData = new()
 				{
 					Pos = tile.TilePosition,
-					TileId = GameManager.Instance.GetByteIDFromTileObjectSO(tileObjectSO),
+					TileId = GameManager.Instance.GetIDFromTileObjectSO(tileObjectSO),
 					TileType = tileObjectSO.TileType
 				};
 				
@@ -151,7 +151,7 @@ public class SaveSystem : MonoBehaviour
 				TileFileData tileData = new()
 				{
 					Pos = tile.TilePosition,
-					TileId = GameManager.Instance.GetByteIDFromTileObjectSO(tileObjectSO),
+					TileId = GameManager.Instance.GetIDFromTileObjectSO(tileObjectSO),
 					TileType = tileObjectSO.TileType
 				};
 				

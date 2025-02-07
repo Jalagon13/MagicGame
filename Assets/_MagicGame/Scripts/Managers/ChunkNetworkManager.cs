@@ -60,7 +60,7 @@ public class ChunkNetworkManager : NetworkBehaviour
 		// Convert world asset game data to agnostic sync data
 		foreach (var worldObjectGameData in chunkGameData.WorldObjectGameDataList)
 		{
-			byte id = GameManager.Instance.GetByteIDFromWorldObject(worldObjectGameData.Asset);
+			byte id = (byte)GameManager.Instance.GetIDFromWorldObject(worldObjectGameData.WO);
 			
 			if(worldObjectGameData is DoorObjectGameData doorObjectGameData)
 			{

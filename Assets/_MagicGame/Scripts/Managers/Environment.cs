@@ -72,13 +72,13 @@ public class Environment : NetworkBehaviour
 	// Handles placing the visual of the tile, NOT the tile data that is being synced
 	public void PlaceTile(Vector3Int pos, TileSO wallTile, TileType syncTileType, BiomeType environment)
 	{
-		byte syncTileId = GameManager.Instance.GetByteIDFromTileObjectSO(wallTile);
+		int syncTileId = GameManager.Instance.GetIDFromTileObjectSO(wallTile);
 		
 		AddTileDataServerRpc(pos, syncTileId, syncTileType, environment);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void AddTileDataServerRpc(Vector3Int syncPos, byte syncTileId, TileType syncTileType, BiomeType biome)
+	private void AddTileDataServerRpc(Vector3Int syncPos, int syncTileId, TileType syncTileType, BiomeType biome)
 	{
 		ChunkManager.Instance.AddWallTileDataToChunk((Vector2Int)syncPos, syncTileId, biome, syncTileType);
 		Pathfinding.Instance.AddPfWallTile((Vector2Int)syncPos, biome);

@@ -789,14 +789,10 @@ MonoBehaviour:
     Quantity: 1
   - Item: {fileID: 11400000, guid: bf1d2a5b5f1334f7f9a6d0aa32605231, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: eec90eccf97c54df492c67a49317a79c, type: 2}
-    Quantity: 1
   - Item: {fileID: 11400000, guid: d4e4d8d6ce2d3416b87474a4415b1967, type: 2}
     Quantity: 2
-  - Item: {fileID: 11400000, guid: 78d4495e64216404c85d1a0daa71cc1b, type: 2}
+  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
     Quantity: 10
-  - Item: {fileID: 11400000, guid: 0bbe5ed2ce12a40c68c8b138cd42c001, type: 2}
-    Quantity: 1
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Portal : MonoBehaviour
+public class PortalObject : WorldObject
 {
 	[SerializeField] private WorldInput _worldInput;
 	

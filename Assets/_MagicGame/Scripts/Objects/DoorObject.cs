@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class DoorObject : ResourceObject
+public class DoorObject : WorldObject
 {
 	[SerializeField] private WorldInput _worldInput;
 	[SerializeField] private float _doorOpenDistance = 2.75f; 
@@ -11,10 +11,8 @@ public class DoorObject : ResourceObject
 	
 	private bool _isOpen;
 	
-	protected override void Start()
+	private void Start()
 	{
-		base.Start();
-		
 		GameInput.Instance.OnSecondaryActionStarted += GameInput_OnSecondaryActionStarted;
 	}
 	

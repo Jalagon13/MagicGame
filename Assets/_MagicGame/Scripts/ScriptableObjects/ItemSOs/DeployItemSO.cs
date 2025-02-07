@@ -57,7 +57,7 @@ public class DeployItemSO : ItemSO
 
 		foreach(Collider2D col in colliders)
 		{
-			if(col.TryGetComponent(out ResourceObject clickable)) 
+			if(col.TryGetComponent(out WorldObject clickable)) 
 				return false;
 		}
 

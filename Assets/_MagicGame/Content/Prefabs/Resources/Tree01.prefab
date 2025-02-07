@@ -56,6 +56,78 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <MaxHp>k__BackingField
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <HarvestType>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <WorldObjectName>k__BackingField
+      value: Tree
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceHit>k__BackingField.Path
+      value: event:/WoodHit
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceDestroyed>k__BackingField.Path
+      value: event:/WoodDestroyed
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceHit>k__BackingField.Guid.Data1
+      value: 1812228115
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceHit>k__BackingField.Guid.Data2
+      value: 1207244471
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceHit>k__BackingField.Guid.Data3
+      value: 1013332110
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceHit>k__BackingField.Guid.Data4
+      value: -2033662663
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[0].Max
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[0].Min
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[0].Item
+      value: 
+      objectReference: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[0].Chance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceDestroyed>k__BackingField.Guid.Data1
+      value: 15823222
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceDestroyed>k__BackingField.Guid.Data2
+      value: 1125522555
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceDestroyed>k__BackingField.Guid.Data3
+      value: -1633797458
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <ResourceDestroyed>k__BackingField.Guid.Data4
+      value: 490440430
+      objectReference: {fileID: 0}
     - target: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Size.x
       value: 0.62
@@ -188,7 +260,8 @@ PrefabInstance:
       propertyPath: m_Offset.y
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

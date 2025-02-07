@@ -127,13 +127,13 @@ public class GameManager : NetworkBehaviour
 		return _worldObjectDataBaseSO.WorldObjectList[id];
 	}
 	
-	public byte GetByteIDFromWorldObject(WorldObject worldObject)
+	public int GetIDFromWorldObject(WorldObject worldObject)
 	{
 		foreach (WorldObject wo in _worldObjectDataBaseSO.WorldObjectList)
 		{
-			if(wo.GetWorldObjectName() == worldObject.GetWorldObjectName())
+			if(wo.WorldObjectName == worldObject.WorldObjectName)
 			{
-				return (byte)_worldObjectDataBaseSO.WorldObjectList.IndexOf(wo);
+				return _worldObjectDataBaseSO.WorldObjectList.IndexOf(wo);
 			}
 		}
 		
@@ -159,14 +159,14 @@ public class GameManager : NetworkBehaviour
 	{
 		if(tilemap.HasTile(position))
 		{
-			return GetByteIDFromTileObjectSO(tilemap.GetTile(position) as TileSO);
+			return GetIDFromTileObjectSO(tilemap.GetTile(position) as TileSO);
 		}
 		
 		Debug.LogError($"Cannot return tile on tilemap {tilemap.name} on {position} because {tilemap.name} has no tile at that position");
 		return default;
 	}
 	
-	public byte GetByteIDFromTileObjectSO(TileSO tileObjectSO)
+	public byte GetIDFromTileObjectSO(TileSO tileObjectSO)
 	{
 		return (byte)_tileDataBaseSO.TileObjectSOList.IndexOf(tileObjectSO);
 	}

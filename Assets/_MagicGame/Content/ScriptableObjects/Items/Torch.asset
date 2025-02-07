@@ -14,17 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Torch
   <UiDisplay>k__BackingField: {fileID: -1599595118, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <CustomBehaviorPrefab>k__BackingField: {fileID: 7396404079601565081, guid: 0ca268e2e87dd4e738bdac060a63ad9e, type: 3}
-  <BaseDamage>k__BackingField: 3
-  <ManaCost>k__BackingField: 3
-  <BaseDistance>k__BackingField: 6
-  <BaseSpeed>k__BackingField: 10
-  <CastCooldown>k__BackingField: 0.375
-  <RotationSpeedDegreesPerSecond>k__BackingField: 270
+  <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
   <DefaultParameterList>k__BackingField:
   - Parameter: {fileID: 11400000, guid: 7d0caf3b965b54f63a502974443886c9, type: 2}
     Value: 3
-  _deployObjectPrefab: {fileID: 7144565208274136493, guid: beba537ea73434d4fb7eed0f1a7fc2fc, type: 3}
+  _deployObjectPrefab: {fileID: 5780725128829530697, guid: beba537ea73434d4fb7eed0f1a7fc2fc, type: 3}
   _deploySound: {fileID: 0}

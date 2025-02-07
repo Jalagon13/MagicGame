@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
@@ -17,7 +18,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 
 	[SerializeField] private int _maxHealth;
 	[SerializeField] private MMF_Player _damageNumberFeedbacks;
-	[SerializeField] private LootTable _lootTable;
+	[SerializeField] private List<Loot> _lootTable = new();
 	
 	private NetworkVariable<int> _npcHealthPointNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private Vector2 _damageSourcePosition;
@@ -80,7 +81,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 	
 	public void DropLoot()
 	{
-		_lootTable.SpawnLoot(transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
+		LootTable.SpawnLoot(_lootTable, transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
 	}
 	
 	public void DestroySelf()

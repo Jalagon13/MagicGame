@@ -4,60 +4,58 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[Serializable]
-public class LootTable
-{
-    public List<Loot> Table;
-	
-    public void SpawnLoot(Vector2 spawnPos, BiomeType biome)
-    {
-        var itemsToSpawn = GetItemsToSpawn();
-
-        if(itemsToSpawn.Count > 0)
-        {
-            foreach (var itemsToSpawnKVP in itemsToSpawn)
-            {
-                // Spawn Loot here.
-				
-                ItemSO itemToSpawn = itemsToSpawnKVP.Key;
-                int amountToSpawn = itemsToSpawnKVP.Value;	
-				
-                GameManager.Instance.SpawnItem(itemToSpawn, amountToSpawn, spawnPos, biome);
-            }
-        }
-    }
-	
-    public Dictionary<ItemSO, int> GetItemsToSpawn()
-    {
-        Dictionary<ItemSO, int> lootToDrop = new();
-
-        foreach (Loot loot in Table)
-        {
-            if (Random.Range(0, 100) < loot.Chance)
-            {
-                int dropAmount = Random.Range(loot.Min, loot.Max + 1);
-
-                if (lootToDrop.TryGetValue(loot.Item, out int existingAmount))
-                {
-                    lootToDrop[loot.Item] = existingAmount + dropAmount;
-                }
-                else
-                {
-                    lootToDrop.Add(loot.Item, dropAmount);
-                }
-            }
-        }
-
-        return lootToDrop;
-    }
-}
 
 [Serializable]
 public class Loot 
 {
-    public ItemSO Item;
-    public int Min;
-    public int Max;
-    [Range(0.0f, 100.0f)]
-    public float Chance;
+	public ItemSO Item;
+	public int Min = 1;
+	public int Max = 1;
+	[Range(0.0f, 100.0f)]
+	public float Chance = 100f;
 }
+
+public static class LootTable
+{
+	public static void SpawnLoot(List<Loot> lootTable, Vector2 spawnPos, BiomeType biome)
+	{
+		var itemsToSpawn = GetItemsToSpawn(lootTable);
+
+		if(itemsToSpawn.Count > 0)
+		{
+			foreach (var itemsToSpawnKVP in itemsToSpawn)
+			{
+				// Spawn Loot here.
+				ItemSO itemToSpawn = itemsToSpawnKVP.Key;
+				int amountToSpawn = itemsToSpawnKVP.Value;	
+				Debug.Log($"Spawning itme");
+				GameManager.Instance.SpawnItem(itemToSpawn, amountToSpawn, spawnPos, biome);
+			}
+		}
+	}
+	
+	private static Dictionary<ItemSO, int> GetItemsToSpawn(List<Loot> lootTable)
+	{
+		Dictionary<ItemSO, int> lootToDrop = new();
+
+		foreach (Loot loot in lootTable)
+		{
+			if (Random.Range(0, 100) < loot.Chance)
+			{
+				int dropAmount = Random.Range(loot.Min, loot.Max + 1);
+
+				if (lootToDrop.TryGetValue(loot.Item, out int existingAmount))
+				{
+					lootToDrop[loot.Item] = existingAmount + dropAmount;
+				}
+				else
+				{
+					lootToDrop.Add(loot.Item, dropAmount);
+				}
+			}
+		}
+
+		return lootToDrop;
+	}
+}
+

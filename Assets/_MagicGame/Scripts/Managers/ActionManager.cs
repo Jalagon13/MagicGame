@@ -60,11 +60,47 @@ public class ActionManager : MonoBehaviour
 		
 		TickTimers(Time.deltaTime);
 		TickWands(Time.deltaTime);
-		HandleUI();
+		HandleWandUI();
 		HandleItemActionExecutions();
 	}
+	
+	private void HandleItemActionExecutions()
+	{
+		if(Player.LocalClientInstance.IsDead() || Pointer.IsOverUI()) return;
 
-	private void HandleUI()
+		if (GameInput.Instance.GetPrimaryHeldDown() && InventoryManager.Instance.MainHandItemExists(out InventoryItem selectedInventoryItem))
+		{
+			if(_primaryActionTimer.RemainingSeconds <= 0)
+			{
+				_primaryActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.LocalClientInstance.MainHand);
+			}
+		
+			if(WandDict.ContainsKey(selectedInventoryItem.Id))
+			{
+				// Player is holding down primary on a wand, try to shoot wand
+				WandDict[selectedInventoryItem.Id].CastSpell();
+			}
+		}
+	}
+
+	private void TickWands(float deltaTile)
+	{
+		if(WandDict.Count > 0)
+		{
+			foreach (var wand in WandDict)
+			{
+				wand.Value.Tick(deltaTile);
+			}
+		}
+	}
+
+	private void TickTimers(float deltaTime)
+	{
+		_primaryActionTimer.Tick(deltaTime);
+		_secondaryActionTimer.Tick(deltaTime);
+	}
+	
+	private void HandleWandUI()
 	{
 		if(InventoryManager.Instance.MainHandItemExists(out InventoryItem selectedInventoryItem) && selectedInventoryItem is WandInventoryItem wandInvItem)
 		{
@@ -91,42 +127,6 @@ public class ActionManager : MonoBehaviour
 					MaxAmount = MaxRecharge,
 					CurrentAmount = currentRecharge
 				});
-			}
-		}
-	}
-
-	private void TickWands(float deltaTile)
-	{
-		if(WandDict.Count > 0)
-		{
-			foreach (var wand in WandDict)
-			{
-				wand.Value.Tick(deltaTile);
-			}
-		}
-	}
-
-	private void TickTimers(float deltaTime)
-	{
-		_primaryActionTimer.Tick(deltaTime);
-		_secondaryActionTimer.Tick(deltaTime);
-	}
-
-	private void HandleItemActionExecutions()
-	{
-		if(Player.LocalClientInstance.IsDead() || Pointer.IsOverUI()) return;
-
-		if (GameInput.Instance.GetPrimaryHeldDown() && InventoryManager.Instance.MainHandItemExists(out InventoryItem selectedInventoryItem))
-		{
-			if(_primaryActionTimer.RemainingSeconds <= 0)
-			{
-				_primaryActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.LocalClientInstance.MainHand);
-			}
-		
-			if(WandDict.ContainsKey(selectedInventoryItem.Id))
-			{
-				// Player is holding down primary on a wand, try to shoot wand
-				WandDict[selectedInventoryItem.Id].CastSpell();
 			}
 		}
 	}

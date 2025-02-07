@@ -35,21 +35,25 @@ public class SpellBookItemSO : ItemSO
 	[Title("Range Upgrades", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	public List<RangeData> RangeUpgrades = new();
 	
-	private ResourceObject _resourceObjectSelected;
+	private WorldObject _resourceObjectSelected;
 	private SpellBookInventoryItem _wandInventoryItem;
 	
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
-		if(inventoryItem is not SpellBookInventoryItem || 
-			!Player.LocalClientInstance.gameObject.GetComponent<Player>().IsHoldingAWand() || 
-			!PlayerInRangeOfMouse() || 
-			!Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition))) return _baseActionCooldown;
+		if(inventoryItem is not SpellBookInventoryItem || !Player.LocalClientInstance.gameObject.GetComponent<Player>().IsHoldingAWand() || !PlayerInRangeOfMouse()) return _baseActionCooldown;
 		
 		_wandInventoryItem = inventoryItem as SpellBookInventoryItem;
-
 		AttributeData hitData = _wandInventoryItem.GetAttributeData(WandAttribute.Mining);
-		Environment.Instance.HitWallTile(Player.LocalClientInstance.CurrentBiome.Value, Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), hitData.MiningPower);
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.transform.position);
+		
+		if(Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition)))
+		{
+			Environment.Instance.HitWallTile(Player.LocalClientInstance.CurrentBiome.Value, Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), hitData.MiningPower);
+			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.transform.position);
+		}
+		else if(ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo))
+		{
+			ObjectManager.Instance.HitObject(Player.LocalClientInstance.CurrentBiome.Value, wo, hitData.MiningPower);
+		}
 			
 		return CalcMiningSpeed(WandAttribute.Mining);
 	}
@@ -72,13 +76,13 @@ public class SpellBookItemSO : ItemSO
 	private bool GetResourceSelected()
 	{
 		Collider2D[] colliders = Physics2D.OverlapPointAll(ActionManager.MouseWorldPosition);
-		List<ResourceObject> resourceObjectsFound = new();
+		List<WorldObject> resourceObjectsFound = new();
 
 		if (colliders.Count() > 0)
 		{
 			foreach (Collider2D c in colliders)
 			{
-				if (c.TryGetComponent(out ResourceObject resourceObject))
+				if (c.TryGetComponent(out WorldObject resourceObject))
 				{
 					resourceObjectsFound.Add(resourceObject);
 				}

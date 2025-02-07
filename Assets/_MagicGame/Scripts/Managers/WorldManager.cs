@@ -210,13 +210,13 @@ public class WorldManager : NetworkBehaviour
 
 			Collider2D[] colliders = Physics2D.OverlapCircleAll(portalPosition, _portalSearchRadius);
 
-			Portal closestPortal = null;
+			PortalObject closestPortal = null;
 			float closestDistance = float.MaxValue;
 
 			// Loop through the colliders to find portals and the closest one
 			foreach (var collider in colliders)
 			{
-				Portal portal = collider.GetComponent<Portal>();
+				PortalObject portal = collider.GetComponent<PortalObject>();
 				if (portal != null)
 				{
 					float distance = Vector2.Distance(portal.transform.position, portalPosition);

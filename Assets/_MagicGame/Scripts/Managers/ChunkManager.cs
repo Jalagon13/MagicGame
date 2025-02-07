@@ -283,24 +283,34 @@ public class ChunkManager : NetworkBehaviour
 		chunk.AddObjectData(worldObjectFileData, worldObject);
 	}
 	
-	public void AddObjectDataToChunk(Vector2Int position, WorldObject worldObject, BiomeType environmentToPlaceIn)
+	public void AddObjectDataToChunk(Vector2Int position, WorldObject worldObject, BiomeType biomeToPlaceIn)
 	{
 		if(!IsServer) return;
 		
-		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, environmentToPlaceIn);
+		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, biomeToPlaceIn);
 		chunk.AddObjectData(position, worldObject);
 	}
 	
-	public void RemoveObjectDataFromChunk(Vector2Int position, BiomeType environmentToRemoveFrom)
+	public void RemoveObjectDataFromChunk(Vector2Int position, BiomeType biomeToRemoveFrom)
 	{
 		if(!IsServer) return;
 		
-		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, environmentToRemoveFrom);
-		
-		chunk.RemoveObjectData(position);
+		GetChunkFromAnyWorldPos(position, biomeToRemoveFrom).RemoveObjectData(position);
+		TryToRemoveObjectClientRpc(position, biomeToRemoveFrom);
 	}
 	
-	public void AddWallTileDataToChunk(Vector2Int position, byte tileID, BiomeType biomeToAddTileData, TileType tileType)
+	[Rpc(SendTo.ClientsAndHost)]
+	private void TryToRemoveObjectClientRpc(Vector2Int position, BiomeType biomeToRemoveObjData)
+	{
+		if(Player.LocalClientInstance.CurrentBiome.Value != biomeToRemoveObjData || !ObjectPositionInLoadedChunks(position)) return;
+		
+		if(ObjectManager.Instance.TryToFindWorldObject(position, out WorldObject wo))
+		{
+			wo.DestroySelf();
+		}
+	}
+	
+	public void AddWallTileDataToChunk(Vector2Int position, int tileID, BiomeType biomeToAddTileData, TileType tileType)
 	{
 		if(!IsServer) return;
 	
@@ -310,7 +320,7 @@ public class ChunkManager : NetworkBehaviour
 	}
 	
 	[Rpc(SendTo.ClientsAndHost)]
-	private void HandleTileVisualClientRpc(Vector3Int pos, byte syncTileId, TileType syncTileType, BiomeType biome)
+	private void HandleTileVisualClientRpc(Vector3Int pos, int syncTileId, TileType syncTileType, BiomeType biome)
 	{
 		if(Player.LocalClientInstance.CurrentBiome.Value != biome || !ObjectPositionInLoadedChunks((Vector2Int)pos)) return;
 		
@@ -336,8 +346,7 @@ public class ChunkManager : NetworkBehaviour
 	{
 		if(!IsServer) return;
 	
-		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, biomeToRemoveTileData);
-		chunk.RemoveWallTileData(position);
+		GetChunkFromAnyWorldPos(position, biomeToRemoveTileData).RemoveWallTileData(position);
 		TryToRemoveWallTileClientRpc(position, biomeToRemoveTileData);
 	}
 
