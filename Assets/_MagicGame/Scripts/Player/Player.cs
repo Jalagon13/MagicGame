@@ -31,6 +31,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		public int MaxValue;
 	}
 	
+	[field: SerializeField] public Transform ProjectileSpawnPointTf { get; private set; }
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
 	[field: SerializeField] public PlayerHand OffHand { get; private set; }
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
@@ -43,14 +44,13 @@ public class Player : NetworkBehaviour, IHasHealth
 	public NetworkVariable<BiomeType> CurrentBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public Collider2D HitCollider { get; private set; }
 	public bool IsPerformingSwing { get; set; }
-	
-	private NetworkVariable<int> _healthNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+    private NetworkVariable<int> _healthNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private Knockback _knockback;
 	private Rigidbody2D _rb;
 	private Timer _respawnTimer;
 	private Vector2 _spawnPoint;
 	private BiomeType _spawnBiome;
-	
 	
 	private void Awake()
 	{

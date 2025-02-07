@@ -5,6 +5,7 @@ using TMPro;
 
 public class PlayerRechargeStatUI : MonoBehaviour
 {
+	[SerializeField] private PlayerManaStatUI _manaStatUI;
 	[SerializeField] private MMProgressBar _rechargeBar;
 	[SerializeField] private RectTransform _border; // Set width to max mana dynamically
 	[SerializeField] private TextMeshProUGUI _amountText;
@@ -30,7 +31,7 @@ public class PlayerRechargeStatUI : MonoBehaviour
 
 	private void OnPlayerManaRechargeUpdated(object sender, ActionManager.OnStatUpdatedEventArgs e)
 	{
-		if(e.NewValue < e.MaxValue)
+		if(e.CurrentAmount < e.MaxAmount)
 		{
 			ShowBar();
 		}
@@ -39,13 +40,13 @@ public class PlayerRechargeStatUI : MonoBehaviour
 			HideBar();
 		}
 		
-		UpdateBarFill(e.NewValue, e.MaxValue);
+		UpdateBarFill(e.CurrentAmount, e.MaxAmount);
 	}
 
-	public void UpdateBarFill(int currentAmount, int maxAmount)
+	public void UpdateBarFill(float currentAmount, float maxAmount)
 	{
 		_rechargeBar.UpdateBar(currentAmount, 0, maxAmount);
-		_border.sizeDelta = new Vector2(maxAmount, _border.sizeDelta.y);
+		_border.sizeDelta = new Vector2(_manaStatUI.MaxMana, _border.sizeDelta.y);
 		_amountText.text = $"{currentAmount}/{maxAmount}";
 	}
 	

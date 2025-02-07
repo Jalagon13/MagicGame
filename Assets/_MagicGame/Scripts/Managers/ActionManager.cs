@@ -14,11 +14,13 @@ public class ActionManager : MonoBehaviour
 	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerManaRechargeUpdated;
 	public class OnStatUpdatedEventArgs : EventArgs
 	{
-		public int PreviousValue, NewValue, MaxValue;
+		public float CurrentAmount, MaxAmount;
 	}
+	
+	public Dictionary<ulong, Wand> WandDict { get; private set; } = new(); // Holds all wand data in your inventory
 
 	private Timer _primaryActionTimer, _secondaryActionTimer;
-	private Dictionary<ulong, Wand> _wandDict = new(); // Holds all wand data in your inventory
+	private ulong _wandHeldId;
 
 	private void Awake()
 	{
@@ -36,25 +38,17 @@ public class ActionManager : MonoBehaviour
 
 	private void OnWandCollected(object sender, InventoryModel.WandEventArgs e)
 	{
-		if(!_wandDict.ContainsKey(e.WandId))
+		if(!WandDict.ContainsKey(e.WandInvItem.Id))
 		{
-			_wandDict.Add(e.WandId, new Wand(e.WandItemSO));
-		}
-		else
-		{
-			Debug.LogError($"Trying to add a wand that already exist. {e.WandItemSO.Name} ID: {e.WandId}");
+			WandDict.Add(e.WandInvItem.Id, new Wand(e.WandInvItem));
 		}
 	}
 
 	private void OnWandRemoved(object sender, InventoryModel.WandEventArgs e)
 	{
-		if(_wandDict.ContainsKey(e.WandId))
+		if(WandDict.ContainsKey(e.WandInvItem.Id))
 		{
-			_wandDict.Remove(e.WandId);
-		}
-		else
-		{
-			Debug.LogError($"Trying to remove wand that does not exist. {e.WandItemSO.Name} ID: {e.WandId}");
+			WandDict.Remove(e.WandInvItem.Id);
 		}
 	}
 
@@ -64,16 +58,48 @@ public class ActionManager : MonoBehaviour
 		
 		MouseWorldPosition = (Vector2)Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 		
-		HandleItemActionExecutions();
 		TickTimers(Time.deltaTime);
 		TickWands(Time.deltaTime);
+		HandleUI();
+		HandleItemActionExecutions();
+	}
+
+	private void HandleUI()
+	{
+		if(InventoryManager.Instance.MainHandItemExists(out InventoryItem selectedInventoryItem) && selectedInventoryItem is WandInventoryItem wandInvItem)
+		{
+			// Update the UI stats for this wand
+			float currentMana = WandDict[wandInvItem.Id].CurrentMana;
+			int maxMana = WandDict[wandInvItem.Id].WandSO.MaxMana;
+			
+			if(currentMana <= maxMana)
+			{
+				OnPlayerManaUpdated?.Invoke(this, new OnStatUpdatedEventArgs
+				{
+					MaxAmount = maxMana,
+					CurrentAmount = currentMana
+				});
+			}
+			
+			float currentRecharge = WandDict[wandInvItem.Id].CurrentRecharge;
+			float MaxRecharge = WandDict[wandInvItem.Id].WandSO.MaxRechargeDuration;
+			
+			if(currentRecharge <= MaxRecharge)
+			{
+				OnPlayerManaRechargeUpdated?.Invoke(this, new OnStatUpdatedEventArgs
+				{
+					MaxAmount = MaxRecharge,
+					CurrentAmount = currentRecharge
+				});
+			}
+		}
 	}
 
 	private void TickWands(float deltaTile)
 	{
-		if(_wandDict.Count > 0)
+		if(WandDict.Count > 0)
 		{
-			foreach (var wand in _wandDict)
+			foreach (var wand in WandDict)
 			{
 				wand.Value.Tick(deltaTile);
 			}
@@ -89,18 +115,22 @@ public class ActionManager : MonoBehaviour
 	private void HandleItemActionExecutions()
 	{
 		if(Player.LocalClientInstance.IsDead() || Pointer.IsOverUI()) return;
-	
-		if (GameInput.Instance.GetPrimaryHeldDown() && _primaryActionTimer.RemainingSeconds <= 0 && InventoryManager.Instance.MainHandItemExists(out InventoryItem mainHandInventoryItem))
-		{
-			_primaryActionTimer.RemainingSeconds = mainHandInventoryItem.Item.ExecuteItemAction(mainHandInventoryItem, Player.LocalClientInstance.MainHand);
-		}
 
-		if (GameInput.Instance.GetSecondaryHeldDown() && _secondaryActionTimer.RemainingSeconds <= 0 && InventoryManager.Instance.OffHandItemExists(out InventoryItem offHandInventoryItem))
+		if (GameInput.Instance.GetPrimaryHeldDown() && InventoryManager.Instance.MainHandItemExists(out InventoryItem selectedInventoryItem))
 		{
-			_secondaryActionTimer.RemainingSeconds = offHandInventoryItem.Item.ExecuteItemAction(offHandInventoryItem, Player.LocalClientInstance.OffHand);
+			if(_primaryActionTimer.RemainingSeconds <= 0)
+			{
+				_primaryActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.LocalClientInstance.MainHand);
+			}
+		
+			if(WandDict.ContainsKey(selectedInventoryItem.Id))
+			{
+				// Player is holding down primary on a wand, try to shoot wand
+				WandDict[selectedInventoryItem.Id].CastSpell();
+			}
 		}
 	}
-
+	
 	private void OnDestroy()
 	{
 		InventoryManager.Instance.GetInventoryModel().OnWandCollected -= OnWandCollected;

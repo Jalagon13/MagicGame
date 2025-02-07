@@ -15,7 +15,7 @@ public class SpellProjectileItemSO : ItemSO
 	[field: Tooltip("The amount of randomness in the projectile's trajectory (in degrees). A higher value means more spread.")]
 	[field: SerializeField] public float Spread { get; private set; } = 1f;
 	
-	[field: Tooltip("The lighttime in seconds of the projectile.")]
+	[field: Tooltip("The lifetime in seconds of the projectile.")]
 	[field: SerializeField] public float Lifetime { get; private set; } = 2f;
 
 	[field: Tooltip("The speed at which the projectile travels.")]
@@ -23,6 +23,24 @@ public class SpellProjectileItemSO : ItemSO
 
 	[field: Tooltip("The additional delay (in seconds) added to the casting time of this projectile. Negative values reduce the delay.")]
 	[field: SerializeField] public float CastDelay { get; private set; } = 0.1f;
+
+	public void CastSpell(WandItemSO wandSO)
+	{
+		Vector2 baseDirection = (ActionManager.MouseWorldPosition - (Vector2)Player.LocalClientInstance.ProjectileSpawnPointTf.position).normalized;
+		float spread = Spread + wandSO.Spread;
+		float randomAngle = Random.Range(-spread, spread); // Generate a random angle within the spread range
+		Vector2 spreadDirection = Quaternion.Euler(0, 0, randomAngle) * baseDirection; // Rotate the direction by the random angle
+		
+		GameManager.Instance.SpawnSpellProjectile(
+			Player.LocalClientInstance.CurrentBiome.Value, 
+			this, 
+			Player.LocalClientInstance.ProjectileSpawnPointTf.position, 
+			spreadDirection, 
+			Speed, 
+			Damage, 
+			Lifetime
+		);
+	}
 
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{

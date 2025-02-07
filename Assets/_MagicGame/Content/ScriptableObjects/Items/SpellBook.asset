@@ -12,15 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9486b8ae30ede473d930ac44d01ec3aa, type: 3}
   m_Name: SpellBook
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Wood Wand
-  <UiDisplay>k__BackingField: {fileID: -1593785014, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <CustomBehaviorPrefab>k__BackingField: {fileID: 0}
-  <BaseDamage>k__BackingField: 3
-  <ManaCost>k__BackingField: 3
-  <BaseDistance>k__BackingField: 6
-  <BaseSpeed>k__BackingField: 10
-  <CastCooldown>k__BackingField: 0.375
-  <RotationSpeedDegreesPerSecond>k__BackingField: 270
+  <Name>k__BackingField: Spell Book
+  <UiDisplay>k__BackingField: {fileID: -1033124662, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Left-click to harvest wood, stone, and crops<br>Right-click
     to remove floors and ground

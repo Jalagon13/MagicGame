@@ -7,10 +7,10 @@ public class WandItemSO : ItemSO
 	[field: SerializeField] public int SpellsCast { get; private set; } = 1;
 
 	[field: Tooltip("The delay (in seconds) between individual casts of the spell book.")]
-	[field: SerializeField] public float CastDelay { get; private set; } = 0.2f;
+	[field: SerializeField] public float BaseCastDelay { get; private set; } = 0.2f;
 
 	[field: Tooltip("The cooldown time (in seconds) before the spell book can be used again.")]
-	[field: SerializeField] public float RechargeTime { get; private set; } = 0.5f;
+	[field: SerializeField] public float MaxRechargeDuration { get; private set; } = 0.5f;
 
 	[field: Tooltip("The maximum amount of mana the spell book can hold.")]
 	[field: SerializeField] public int MaxMana { get; private set; } = 150;
@@ -31,7 +31,7 @@ public class WandItemSO : ItemSO
 	
 	public override InventoryItem CreateInventoryItem(int quantity)
 	{
-		return new InventoryItem(this, quantity);
+		return new WandInventoryItem(this, quantity, Capacity);
 	}
 
 	public override string GetDescription()
