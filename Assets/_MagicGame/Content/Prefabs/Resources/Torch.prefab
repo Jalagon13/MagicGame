@@ -216,11 +216,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2632368461171692627, guid: ac698e0838c2249d8942bf90dfd85103, type: 3}
       propertyPath: _lightRadius
-      value: 10
+      value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 2632368461171692627, guid: ac698e0838c2249d8942bf90dfd85103, type: 3}
       propertyPath: _lightIntensity
-      value: 1
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 5906563809962967930, guid: ac698e0838c2249d8942bf90dfd85103, type: 3}
       propertyPath: m_Name

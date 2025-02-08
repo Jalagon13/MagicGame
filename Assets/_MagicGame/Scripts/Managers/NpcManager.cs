@@ -12,6 +12,7 @@ public class NpcManager : NetworkBehaviour
 	public static int NO_SPAWN_ZONE_WIDTH = 35; // Camera Frustum
 	public static int NO_SPAWN_ZONE_HEIGHT = 20; // Camera Frustum
 	
+	[field: SerializeField] public Npc TestDummyPrefab { get; private set; }
 	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
 	[SerializeField] private bool _enableSpawning = true;
 	[SerializeField] private float _startSpawnDelay;
@@ -39,9 +40,23 @@ public class NpcManager : NetworkBehaviour
 
 	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
 	{
-		if(!_enableSpawning) return;
+		if(!IsServer) return;
 		
-		SpawnNpc(ActionManager.MouseWorldPosition, _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().GetRandomNpc());
+		SpawnTestDummyServerRpc();
+	}
+	
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void SpawnTestDummyServerRpc()
+	{
+		GameObject npcPrefab = Instantiate(TestDummyPrefab.gameObject, ActionManager.MouseWorldPosition, Quaternion.identity);
+		
+		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
+		npcNetworkComponent.SetEnvironment(Player.LocalClientInstance.CurrentBiome.Value);
+		npcNetworkComponent.SetSpawningClientId(0);
+		npcNetworkComponent.SetNpcId(-1);
+		
+		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
+		npcPrefabNetworkObject.Spawn(true);
 	}
 
 	private void NetworkManager_OnClientConnectedCallback(ulong clientId)

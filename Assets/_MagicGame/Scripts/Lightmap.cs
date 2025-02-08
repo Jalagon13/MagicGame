@@ -13,6 +13,7 @@ public class Lightmap : MonoBehaviour
 	[SerializeField] private ComputeShader _lightmapComputeShader;
 	[SerializeField] private int _lightmapScale = 1;
 	[SerializeField] private bool _usePointFilter;
+	[SerializeField] private bool _enableDayNightCycle;
 
 	private RawImage _lightMapRawImage;
 	private RenderTexture _lightmapRenderTexture;
@@ -44,7 +45,10 @@ public class Lightmap : MonoBehaviour
 		// NTFS: Does not do anything rn
 		Color dayLightColor = _dayLightGradient.Evaluate(ratio);
 		
-		_lightMapRawImage.color = Player.LocalClientInstance.CurrentBiome.Value == BiomeType.Forest ? SetColorBasedOnBrightness(dayLightColor) : Color.white;
+		if(_enableDayNightCycle)
+		{
+			_lightMapRawImage.color = Player.LocalClientInstance.CurrentBiome.Value == BiomeType.Forest ? SetColorBasedOnBrightness(dayLightColor) : Color.white;
+		}
 	}
 	
 	// Method to set color and adjust opacity

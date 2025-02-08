@@ -791,6 +791,8 @@ MonoBehaviour:
     Quantity: 1
   - Item: {fileID: 11400000, guid: 409efbd4e22624ac882995581adb1c37, type: 2}
     Quantity: 1
+  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
+    Quantity: 25
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5485,11 +5487,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2632368461171692627, guid: ac698e0838c2249d8942bf90dfd85103, type: 3}
       propertyPath: _lightRadius
-      value: 10
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2632368461171692627, guid: ac698e0838c2249d8942bf90dfd85103, type: 3}
       propertyPath: _lightIntensity
-      value: 1
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 5906563809962967930, guid: ac698e0838c2249d8942bf90dfd85103, type: 3}
       propertyPath: m_Name

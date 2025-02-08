@@ -4362,8 +4362,9 @@ MonoBehaviour:
     m_NumColorKeys: 8
     m_NumAlphaKeys: 2
   _lightmapComputeShader: {fileID: 7200000, guid: 26fe7936a0e164328b7f319d2182e7ed, type: 3}
-  _lightmapScale: 2
-  _usePointFilter: 0
+  _lightmapScale: 16
+  _usePointFilter: 1
+  _enableDayNightCycle: 0
 --- !u!1 &640273969
 GameObject:
   m_ObjectHideFlags: 0
@@ -10775,8 +10776,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  <TestDummyPrefab>k__BackingField: {fileID: 7196159128457008191, guid: c87107d07ca65446598c8fdd66eaeab4, type: 3}
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
-  _enableSpawning: 1
+  _enableSpawning: 0
   _startSpawnDelay: 3
 --- !u!1 &1616919198
 GameObject:
@@ -12722,7 +12724,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  BumpScaleOnChange: 1
+  BumpScaleOnChange: 0
   BumpOnIncrease: 0
   BumpOnDecrease: 0
   BumpDuration: 0.15
@@ -13641,7 +13643,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _dayDurationInSeconds: 5
   _startingTime: 1
-  _isTicking: 0
+  _isTicking: 1
   _randomSeed: 0
   _customSeed: Hell world :D
   _portalObjectPrefab: {fileID: 5150323723629226184, guid: d486dbafb74344fbb99c566098694a5f, type: 3}

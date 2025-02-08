@@ -40,6 +40,8 @@ public class SpellProjectileItemSO : ItemSO
 			Damage, 
 			Lifetime
 		);
+		
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.ProjectileSpawnPointTf.position);
 	}
 
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
