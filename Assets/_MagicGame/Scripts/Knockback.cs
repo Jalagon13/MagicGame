@@ -47,7 +47,7 @@ public class Knockback : MonoBehaviour
 		});
 
 		// Apply the knockback force
-		_rb2d.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
+		_rb2d.AddForce(direction.normalized * knockbackForce, ForceMode2D.Impulse);
 		Debug.Log($"Adding knockback force");
 		
 		float knockbackTimer = _knockbackDuration; // Set the timer to knockbackDuration

@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <WorldObjectName>k__BackingField: Work Bench
   <MaxHp>k__BackingField: 50
+  <PassThrough>k__BackingField: 0
   <HarvestType>k__BackingField: 1
   <Table>k__BackingField:
   - Item: {fileID: 11400000, guid: d3be2b9539bc040428db5097cea0bed6, type: 2}

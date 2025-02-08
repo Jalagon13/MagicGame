@@ -18,7 +18,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 
 	[SerializeField] private int _maxHealth;
 	[SerializeField] private MMF_Player _damageNumberFeedbacks;
-	[SerializeField] private List<Loot> _lootTable = new();
+	[field: SerializeField] public List<Loot> Table { get; private set; }
 	
 	private NetworkVariable<int> _npcHealthPointNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private Vector2 _damageSourcePosition;
@@ -81,7 +81,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 	
 	public void DropLoot()
 	{
-		LootTable.SpawnLoot(_lootTable, transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
+		LootTable.SpawnLoot(Table, transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
 	}
 	
 	public void DestroySelf()

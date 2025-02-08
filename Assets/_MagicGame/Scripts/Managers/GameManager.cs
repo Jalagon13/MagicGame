@@ -23,7 +23,6 @@ public class GameManager : NetworkBehaviour
 	[SerializeField] private ItemDataBaseSO _itemDataBaseSO;
 	[SerializeField] private WorldObjectDataBaseSO _worldObjectDataBaseSO;
 	[SerializeField] private TileDataBaseSO _tileDataBaseSO;
-	[SerializeField] private ItemParameterDataBaseSO _itemParameterDataBaseSO;
 	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
 	
 	private Dictionary<ulong, GameObject> _fakeProjectiles = new Dictionary<ulong, GameObject>();
@@ -95,11 +94,6 @@ public class GameManager : NetworkBehaviour
 	{
 		return _biomeSpawnParamsSO.GetBiomeSpawnRule(biome).NpcSpawnTable.IndexOf(npcSpawnData);
 	}	
-	
-	public ItemParameterDataBaseSO GetItemParameterDataBaseSO()
-	{
-		return _itemParameterDataBaseSO;
-	}
 	
 	public byte GetTileIdFromTileSO(TileSO tileSO)
 	{

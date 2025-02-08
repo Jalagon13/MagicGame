@@ -20,7 +20,7 @@ MonoBehaviour:
     NpcSpawnTable:
     - Prefab: {fileID: 6633633827701661900, guid: 2ea8fc6c5eed84386a995f5f8f46a35f, type: 3}
       SlotAmount: 1
-      RelativeSpawnWeight: 50
+      RelativeSpawnWeight: 25
       SpawnCondition: 0
     - Prefab: {fileID: 3583022790027280923, guid: 76e6b789865fd4c36b4f8a08b98df0ac, type: 3}
       SlotAmount: 0.5

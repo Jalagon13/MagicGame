@@ -10776,8 +10776,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
-  _enableSpawning: 0
-  _startSpawnDelay: 5
+  _enableSpawning: 1
+  _startSpawnDelay: 3
 --- !u!1 &1616919198
 GameObject:
   m_ObjectHideFlags: 0
@@ -11025,7 +11025,6 @@ MonoBehaviour:
   _itemDataBaseSO: {fileID: 11400000, guid: f8a736388b2c44969af16475866a4801, type: 2}
   _worldObjectDataBaseSO: {fileID: 11400000, guid: de04e42d3d1784c50ae37924da4d8a99, type: 2}
   _tileDataBaseSO: {fileID: 11400000, guid: 86b92227f4ff84b0a9aee415c11b1cbe, type: 2}
-  _itemParameterDataBaseSO: {fileID: 11400000, guid: 3b8301f84a290414e984575381b8ddcf, type: 2}
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
 --- !u!114 &1655249454
 MonoBehaviour:

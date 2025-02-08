@@ -98,11 +98,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[0].Max
-      value: 1
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[0].Min
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[0].Item
