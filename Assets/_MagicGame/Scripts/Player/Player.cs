@@ -44,13 +44,14 @@ public class Player : NetworkBehaviour, IHasHealth
 	public bool IsPerformingSwing { get; set; }
 	
 	[SerializeField] private float _respawnTimerDuration;
+	[SerializeField] private float _iFrameTimerDuration;
 	[Range(0, 100), SerializeField] private float _knockbackResist;
 	[SerializeField] private List<InventoryItem> _startingItems = new();
 
 	private NetworkVariable<int> _healthNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private Knockback _knockback;
 	private Rigidbody2D _rb;
-	private Timer _respawnTimer;
+	private Timer _respawnTimer, _iFrameTimer;
 	private Vector2 _spawnPoint;
 	private BiomeType _spawnBiome;
 	
@@ -61,6 +62,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		_knockback = GetComponent<Knockback>();
 		_rb = GetComponent<Rigidbody2D>();
 		_respawnTimer = new(_respawnTimerDuration);
+		_iFrameTimer = new(_iFrameTimerDuration);
 		_healthNetworkVariable.OnValueChanged += HealthNetworkVariable_OnValueChanged;
 	}
 	
@@ -99,6 +101,8 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			_respawnTimer.Tick(Time.deltaTime);
 		}
+		
+		_iFrameTimer.Tick(Time.deltaTime);
 	}
 	
 	private void SpawnStartingItems()
@@ -123,9 +127,8 @@ public class Player : NetworkBehaviour, IHasHealth
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void ApplyPlayerDamageServerRpc(ulong damagePlayerId, int damageAmount, Vector2 damagerPosition, int knockbackForce)
 	{
-		if (!NetworkManager.ConnectedClients.ContainsKey(damagePlayerId))
+		if (!NetworkManager.ConnectedClients.ContainsKey(damagePlayerId) || _iFrameTimer.RemainingSeconds > 0)
 		{
-			Debug.LogWarning($"Invalid damagePlayerId: {damagePlayerId}");
 			return;
 		}
 	
@@ -139,7 +142,8 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		if(!isPlayerDead)
 		{
-			_knockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce); // NTFS: Need to add knockback value to this function
+			_knockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce); 
+			_iFrameTimer.RemainingSeconds = _iFrameTimerDuration;
 		}
 		
 		OnPlayerHealthChangedClientRpc(finalDamage, isPlayerDead, damagerPosition, damagePlayerId);

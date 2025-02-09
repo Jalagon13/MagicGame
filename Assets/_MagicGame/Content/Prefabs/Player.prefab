@@ -685,7 +685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 891029302
+  GlobalObjectIdHash: 1893099515
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -782,6 +782,7 @@ MonoBehaviour:
   <OffHand>k__BackingField: {fileID: 4958567346535862893}
   <CollectTag>k__BackingField: {fileID: 6231199994205774343}
   _respawnTimerDuration: 2
+  _iFrameTimerDuration: 0.67
   _knockbackResist: 0
   _startingItems:
   - Item: {fileID: 11400000, guid: f163862eaf2254f90b02b26267855a9c, type: 2}
@@ -843,9 +844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _knockbackEnabled: 1
-  Velocity: {x: 0, y: 0}
   _decayMult: 5
-  IsBeingKnockedBack: 0
 --- !u!1 &1334120334475979508
 GameObject:
   m_ObjectHideFlags: 0
