@@ -4,6 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using FMOD.Studio;
+using UnityEditor.ShaderGraph.Internal;
 
 public enum CardinalDirection
 {
@@ -35,6 +36,7 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	private bool _previousIsMoving; // Tracks the previous frame's IsMoving value
 	private Player _thisPlayer;
 	
+	[field: SerializeField] public float TurnSharpness { get; private set; }
 	public Knockback Knockback { get; private set; }
 	public Vector2 MoveVector { get { return _moveVectorNetworkVariable.Value; } set { if(IsOwner) {_moveVectorNetworkVariable.Value = value; } } }
 	public Rigidbody2D RigidBody2D { get; private set; }
@@ -45,6 +47,7 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	public bool IsMoving { get; set; }
 	public bool IsDead { get { return _thisPlayer.IsDead(); } }
 	public bool CanMove { get; private set; } = true;
+	public Vector2 Velocity { get; set; }
 	
 	private void Awake()
 	{
@@ -167,13 +170,13 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		
 		foreach(var handler in _spriteAnimationHandlerList)
 		{
-			if(IsMoving)
+			if(MoveVector.magnitude == 0 && Velocity.magnitude < 0.75f)
 			{
-				handler.PlayMoveAnimation(MovingDirection);
+				handler.PlayIdleAnimation(MovingDirection);
 			}
 			else
 			{
-				handler.PlayIdleAnimation(MovingDirection);
+				handler.PlayMoveAnimation(MovingDirection);
 			}
 		}
 	}

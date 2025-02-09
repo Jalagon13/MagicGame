@@ -48,7 +48,8 @@ public class Knockback : MonoBehaviour
 	{
 		// Reduce knockback velocity over time
 		Velocity = Vector2.Lerp(Velocity, Vector2.zero, _decayMult * Time.fixedDeltaTime);
-		IsBeingKnockedBack = Velocity.magnitude > _finalKnockback * 0.75f;
+		
+		if(Velocity.magnitude < 0.5f) Velocity = Vector2.zero;
 		
 		
 		// if(_velocity == Vector2.zero) return;

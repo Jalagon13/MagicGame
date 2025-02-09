@@ -15,6 +15,7 @@ public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override void EnterState()
 	{
+		Debug.Log($"Idle state");
 		_ctx.IsMoving = false;
 	}
 
@@ -25,7 +26,7 @@ public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override PlayerStateMachine.PlayerState GetNextState()
 	{
-		if(_ctx.MoveVector.magnitude > 0 && !_ctx.IsDead && _ctx.CanMove)
+		if(_ctx.MoveVector != Vector2.zero && !_ctx.IsDead && _ctx.CanMove)
 			return PlayerStateMachine.PlayerState.Moving;
 			
 		return StateKey;
@@ -33,8 +34,7 @@ public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override void FixedUpdate()
 	{
-		_ctx.MoveVector = Vector2.zero;
-		Vector2 finalMovement = _ctx.MoveVector + _ctx.Knockback.Velocity;
-		_ctx.RigidBody2D.MovePosition(_ctx.RigidBody2D.position + finalMovement * _ctx.Speed * Time.fixedDeltaTime);
+		_ctx.Velocity = Vector2.zero;
+		_ctx.RigidBody2D.MovePosition(_ctx.RigidBody2D.position + _ctx.Velocity);
 	}
 }

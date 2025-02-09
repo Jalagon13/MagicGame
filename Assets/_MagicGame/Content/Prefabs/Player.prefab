@@ -816,6 +816,7 @@ MonoBehaviour:
   - {fileID: 7721777825053776820}
   - {fileID: 8195383011194485763}
   - {fileID: 1299341961821722642}
+  <TurnSharpness>k__BackingField: 7.5
 --- !u!114 &5536299572111678412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -842,6 +843,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _knockbackEnabled: 1
+  Velocity: {x: 0, y: 0}
+  _decayMult: 5
+  IsBeingKnockedBack: 0
 --- !u!1 &1334120334475979508
 GameObject:
   m_ObjectHideFlags: 0
