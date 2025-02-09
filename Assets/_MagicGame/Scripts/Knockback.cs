@@ -10,12 +10,11 @@ public class Knockback : MonoBehaviour
 	}
 
 	[SerializeField] private bool _knockbackEnabled = true;
-	public Vector2 Velocity;
+	public Vector2 Velocity { get; private set; }
 	[SerializeField] private float _decayMult = 5f; // Higher = knockback fades out faster
-	private float _minKnockback = 1;
+	private float _minKnockback = 5;
 	private float _maxKnockback = 100;
 	private float _finalKnockback;
-	public bool IsBeingKnockedBack;
 
 	private void FixedUpdate()
 	{
@@ -39,8 +38,6 @@ public class Knockback : MonoBehaviour
 		float finalKnockback = knockbackForce * (1 - knockbackResist);
 		_finalKnockback = Mathf.Clamp(finalKnockback, _minKnockback, _maxKnockback);
 
-		// Apply instant velocity change for knockback
-		Debug.Log(_finalKnockback);
 		Velocity = direction * _finalKnockback;
 	}
 
@@ -49,12 +46,6 @@ public class Knockback : MonoBehaviour
 		// Reduce knockback velocity over time
 		Velocity = Vector2.Lerp(Velocity, Vector2.zero, _decayMult * Time.fixedDeltaTime);
 		
-		if(Velocity.magnitude < 0.5f) Velocity = Vector2.zero;
-		
-		
-		// if(_velocity == Vector2.zero) return;
-		// Move the object using transform position
-		// transform.position += (Vector3)(_velocity * Time.fixedDeltaTime);
-		// GetComponent<Rigidbody2D>().MovePosition((Vector2)transform.position + (_velocity * Time.fixedDeltaTime));
+		if(Velocity.magnitude < 0.75f) Velocity = Vector2.zero;
 	}
 }

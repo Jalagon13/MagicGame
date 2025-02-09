@@ -11,53 +11,44 @@ public partial class PixieMoveAction : Action
 {
 	[SerializeReference] public BlackboardVariable<GameObject> Self;
 	[SerializeReference] public BlackboardVariable<float> MoveDirectionBias;
-	[SerializeReference] public BlackboardVariable<float> MoveForce;
+	[SerializeReference] public BlackboardVariable<float> Speed;
+	[SerializeReference] public BlackboardVariable<float> TurnSharpness;
 	[SerializeReference] public BlackboardVariable<WallDetectorCollider> WallDetectorCollider;
 	
 	private Rigidbody2D _rb2d;
 	private Player _closestPlayer;
-	private float _biasModifier;
-	private float _knockbackTimer = 0f; // Timer to track transition time
-	private bool _flipPerpendicularDirection = false; // Flag to flip perpendicular direction
-	private float _knockbackTransitionTime = 1.5f; // Duration of transition
+	private bool _clockwise = false; // Flag to flip perpendicular direction
 	private float fixedUpdateInterval = 0.02f; // Default FixedUpdate interval (50 FPS)
 	private float fixedUpdateTimer = 0f;
+	private Knockback _knockback;
+	private Vector2 _velocity;
 
 	protected override Status OnStart()
 	{
-		_rb2d = Self.Value.GetComponent<Rigidbody2D>();
-		Self.Value.GetComponent<Knockback>().OnKnockbackStart += OnKnockbackStart; 
 		WallDetectorCollider.Value.OnWallCollide += OnWallCollide;
+		
+		_rb2d = Self.Value.GetComponent<Rigidbody2D>();
+		_knockback = Self.Value.GetComponent<Knockback>();
+		_knockback.OnKnockbackStart += OnKnockbackStart; 
 	
 		return Status.Running;
 	}
 	
 	private void OnWallCollide(object sender, WallDetectorCollider.WallCollisionEventArgs e)
 	{
-		// Flip perpendicular direction
+		_knockback.ApplyKnockback(e.ContactPoint, 0, UnityEngine.Random.Range(7, 10));
 		if(UnityEngine.Random.value > 0.5)
 		{
-			FlipPerpendicularDirection();
+			_clockwise = !_clockwise;
 		}
 	}
 
 	private void OnKnockbackStart(object sender, Knockback.KnockbackEventArgs e)
 	{
-		// Reset timer for the transition
-		_knockbackTimer = 0f;
-
-		// Initialize the bias modifier to 0 (start at 0)
-		_biasModifier = 0f;
-
 		if(UnityEngine.Random.value > 0.5)
 		{
-			FlipPerpendicularDirection();
+			_clockwise = !_clockwise;
 		}
-	}
-	
-	private void FlipPerpendicularDirection()
-	{
-		_flipPerpendicularDirection = !_flipPerpendicularDirection;
 	}
 
 	protected override Status OnUpdate()
@@ -77,55 +68,33 @@ public partial class PixieMoveAction : Action
 
 	private void RunFixedUpdateLogic()
 	{
-		// Handle the knockback transition
-		if (_knockbackTimer < _knockbackTransitionTime)
-		{
-			_knockbackTimer += Time.fixedDeltaTime; // Update the timer
-			// Lerp the bias modifier from 0 to 1 over the transition time
-			_biasModifier = Mathf.Lerp(0f, 1f, _knockbackTimer / _knockbackTransitionTime);
-		}
-
-		// Apply the bias modifier to TowardPlayerBias
-		float effectiveTowardPlayerBias = MoveDirectionBias * _biasModifier;
-
 		// Re-acquire the closest player each frame
 		_closestPlayer = GetClosestPlayer();
 		if (_closestPlayer == null || !_closestPlayer.gameObject.activeInHierarchy)
 		{
-			return; // No valid players available
+			return;
 		}
 
-		// Get directions
-		Vector3 directionToPlayer = (_closestPlayer.transform.position - Self.Value.transform.position).normalized;
-		Vector3 currentVelocityDirection = _rb2d.linearVelocity.normalized;
-
-		if (_rb2d.linearVelocity.magnitude < 0.1f)
+		Vector2 directionToPlayer = (_closestPlayer.transform.position - Self.Value.transform.position).normalized;
+		
+		Vector2 perpendicularDirection = _clockwise // Whether perpendicular is clockwise or not
+			? new Vector2(directionToPlayer.y, -directionToPlayer.x) 
+			: new Vector2(-directionToPlayer.y, directionToPlayer.x);
+			
+		Vector2 desiredDirection = directionToPlayer + (perpendicularDirection * MoveDirectionBias);
+		
+		desiredDirection.Normalize();
+		
+		if(_knockback.Velocity.magnitude > 0)
 		{
-			currentVelocityDirection = Vector3.zero; // Prevent jittery behavior at low speeds
+			_velocity = desiredDirection + _knockback.Velocity;
 		}
-
-		// Calculate perpendicular direction to the player
-		Vector3 perpendicularDirection = Vector3.Cross(directionToPlayer, Vector3.forward).normalized;
-
-		// Flip perpendicular direction if the flag is set
-		if (_flipPerpendicularDirection)
+		else
 		{
-			perpendicularDirection = -perpendicularDirection;
+			_velocity = Vector2.Lerp(_velocity, desiredDirection * Speed.Value, TurnSharpness.Value * Time.fixedDeltaTime);
 		}
-
-		// Determine the movement direction, prioritizing wall avoidance if active
-		Vector3 movementDirection = (directionToPlayer * effectiveTowardPlayerBias +
-		   perpendicularDirection * (1f - effectiveTowardPlayerBias) +
-		   currentVelocityDirection * 0.85f).normalized;
-
-		// Calculate angle between current velocity and the desired movement direction
-		float angle = Vector3.Angle(currentVelocityDirection, directionToPlayer);
-
-		// Scale speed based on the angle (up to 50% slower for sharp turns)
-		float speedModifier = Mathf.Lerp(1f, 0.5f, Mathf.Clamp01(angle / 90f));
-
-		// Apply force to Rigidbody
-		_rb2d.AddForce(movementDirection * MoveForce.Value * speedModifier, ForceMode2D.Force);
+		
+		_rb2d.MovePosition(_rb2d.position + _velocity * Time.fixedDeltaTime);
 	}
 	
 	private Player GetClosestPlayer()

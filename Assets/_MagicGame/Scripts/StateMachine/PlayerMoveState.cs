@@ -49,7 +49,7 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 
 		if(_ctx.Knockback.Velocity.magnitude > 0)
 		{
-			_ctx.Velocity = desiredDirection + (_ctx.Knockback.Velocity * 4);
+			_ctx.Velocity = desiredDirection + _ctx.Knockback.Velocity;
 		}
 		else
 		{

@@ -47,7 +47,7 @@ public class WallDetectorCollider : MonoBehaviour
 		}
 	}
 
-	private void OnCollisionEnter2D(Collision2D collision)
+	private void OnCollisionStay2D(Collision2D collision)
 	{
 		if (collision.gameObject.layer == 3) // Assuming layer 3 is the "Wall" layer
 		{
