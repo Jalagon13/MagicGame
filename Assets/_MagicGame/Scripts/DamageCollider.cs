@@ -3,6 +3,7 @@ using UnityEngine;
 public class DamageCollider : MonoBehaviour
 {
 	[SerializeField] private int _damageAmount;
+	[SerializeField] private int _knockbackForce;
 
 	private void OnTriggerStay2D(Collider2D other)
 	{
@@ -10,7 +11,7 @@ public class DamageCollider : MonoBehaviour
 	
 		if(other.TryGetComponent(out IHasHealth iHasHealth))
 		{
-			iHasHealth.ApplyDamage(_damageAmount, transform.root.position);
+			iHasHealth.ApplyDamage(_damageAmount, transform.parent.position, _knockbackForce);
 		}
 	}
 }

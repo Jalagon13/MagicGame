@@ -17,11 +17,20 @@ public class Npc : NetworkBehaviour, IHasHealth
 	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnHealthUpdated;
 
 	[SerializeField] private int _maxHealth;
+	[Range(0, 100), SerializeField] private float _knockbackResist;
+	[SerializeField] private bool _invincible = false;
 	[SerializeField] private MMF_Player _damageNumberFeedbacks;
 	[field: SerializeField] public List<Loot> Table { get; private set; }
 	
 	private NetworkVariable<int> _npcHealthPointNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private Vector2 _damageSourcePosition;
+	private Knockback _knockback;
+	
+	private void Awake()
+	{
+		_knockback = GetComponent<Knockback>();
+	}
+	
 	public override void OnNetworkSpawn()
 	{
 		if(IsServer)
@@ -47,9 +56,9 @@ public class Npc : NetworkBehaviour, IHasHealth
 		}
 	}
 
-	public void ApplyDamage(int damage, Vector2 damagerPosition)
+	public void ApplyDamage(int damage, Vector2 damagerPosition, int knockbackForce)
 	{
-		DamageNpcServerRpc(damage, damagerPosition);
+		DamageNpcServerRpc(damage, damagerPosition, knockbackForce);
 		
 		// Set damage and play damage feedback
 		MMF_FloatingText floatingText = _damageNumberFeedbacks.GetFeedbackOfType<MMF_FloatingText>();
@@ -58,14 +67,22 @@ public class Npc : NetworkBehaviour, IHasHealth
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void DamageNpcServerRpc(int damageAmount, Vector2 damagerPosition)
+	private void DamageNpcServerRpc(int damageAmount, Vector2 damagerPosition, int knockbackForce)
 	{
 		_damageSourcePosition = damagerPosition;
-		_npcHealthPointNetworkVariable.Value -= damageAmount;
+		
+		if(!_invincible)
+		{
+			_npcHealthPointNetworkVariable.Value -= damageAmount;
+		}
 		
 		if(_npcHealthPointNetworkVariable.Value <= 0)
 		{
 			OnNpcKilled?.Invoke(this, EventArgs.Empty);
+		}
+		else
+		{
+			_knockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce); // NTFS: Add knockback force
 		}
 	}
 	

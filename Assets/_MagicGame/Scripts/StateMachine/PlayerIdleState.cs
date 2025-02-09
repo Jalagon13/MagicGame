@@ -33,9 +33,8 @@ public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override void FixedUpdate()
 	{
-		if(!_ctx.Knockback.IsBeingKnockedBack)
-		{
-			_ctx.RigidBody2D.MovePosition(_ctx.transform.position);
-		}
+		_ctx.MoveVector = Vector2.zero;
+		Vector2 finalMovement = _ctx.MoveVector + _ctx.Knockback.Velocity;
+		_ctx.RigidBody2D.MovePosition(_ctx.RigidBody2D.position + finalMovement * _ctx.Speed * Time.fixedDeltaTime);
 	}
 }

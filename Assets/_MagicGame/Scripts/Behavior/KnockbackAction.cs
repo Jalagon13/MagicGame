@@ -13,7 +13,7 @@ public partial class KnockbackAction : Action
 
 	protected override Status OnStart()
 	{
-		Self.Value.GetComponent<Knockback>().ApplyKnockback(Self.Value.GetComponent<Rigidbody2D>(), Position);
+		// Self.Value.GetComponent<Knockback>().ApplyKnockback(Self.Value.GetComponent<Rigidbody2D>(), Position);
 	
 		return Status.Running;
 	}

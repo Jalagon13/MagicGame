@@ -42,11 +42,9 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override void FixedUpdate()
 	{
-		if(!_ctx.Knockback.IsBeingKnockedBack)
-		{
-			_playWalkSoundTimer.Tick(Time.deltaTime);
-			_ctx.RigidBody2D.MovePosition(_ctx.RigidBody2D.position + _ctx.MoveVector * _ctx.Speed * Time.fixedDeltaTime);
-		}
+		_playWalkSoundTimer.Tick(Time.deltaTime);
+		
+		_ctx.RigidBody2D.MovePosition(_ctx.RigidBody2D.position + (_ctx.MoveVector + _ctx.Knockback.Velocity) * _ctx.Speed * Time.fixedDeltaTime);
 	}
 	
 	private void PlayFootStepSound(object sender, EventArgs e)

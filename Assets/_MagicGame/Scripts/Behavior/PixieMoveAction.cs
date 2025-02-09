@@ -26,7 +26,7 @@ public partial class PixieMoveAction : Action
 	protected override Status OnStart()
 	{
 		_rb2d = Self.Value.GetComponent<Rigidbody2D>();
-		Self.Value.GetComponent<Knockback>().OnKnockbackEnd += OnKnockbackEnd; 
+		Self.Value.GetComponent<Knockback>().OnKnockbackStart += OnKnockbackStart; 
 		WallDetectorCollider.Value.OnWallCollide += OnWallCollide;
 	
 		return Status.Running;
@@ -41,7 +41,7 @@ public partial class PixieMoveAction : Action
 		}
 	}
 
-	private void OnKnockbackEnd(object sender, Knockback.KnockbackEventArgs e)
+	private void OnKnockbackStart(object sender, Knockback.KnockbackEventArgs e)
 	{
 		// Reset timer for the transition
 		_knockbackTimer = 0f;

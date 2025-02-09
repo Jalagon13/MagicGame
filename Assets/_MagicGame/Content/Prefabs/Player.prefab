@@ -782,6 +782,7 @@ MonoBehaviour:
   <OffHand>k__BackingField: {fileID: 4958567346535862893}
   <CollectTag>k__BackingField: {fileID: 6231199994205774343}
   _respawnTimerDuration: 2
+  _knockbackResist: 0
   _startingItems:
   - Item: {fileID: 11400000, guid: f163862eaf2254f90b02b26267855a9c, type: 2}
     Quantity: 1
@@ -841,7 +842,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _knockbackEnabled: 1
-  _knockbackDuration: 0.2
 --- !u!1 &1334120334475979508
 GameObject:
   m_ObjectHideFlags: 0

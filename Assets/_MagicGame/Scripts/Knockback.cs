@@ -1,76 +1,59 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Knockback : MonoBehaviour
 {
-	public event EventHandler<KnockbackEventArgs> OnKnockbackEnd;
 	public event EventHandler<KnockbackEventArgs> OnKnockbackStart;
-
 	public class KnockbackEventArgs : EventArgs
 	{
 		public Vector2 KnockBackerPosition;
 	}
 
 	[SerializeField] private bool _knockbackEnabled = true;
-	[SerializeField] private float _knockbackDuration = 0.2f; // Total time for knockback effect
-	private Coroutine _kbCoroutine;
-	private Rigidbody2D _rb2d;
-	
-	public bool IsBeingKnockedBack { get; private set; }
-	
-	public void ApplyKnockback(Rigidbody2D rb2d, Vector2 knockerSourcePosition, float knockbackForce = 20f)
+	public Vector2 Velocity;
+	[SerializeField] private float _decayMult = 5f; // Higher = knockback fades out faster
+	private float _minKnockback = 1;
+	private float _maxKnockback = 100;
+	private float _finalKnockback;
+	public bool IsBeingKnockedBack;
+
+	private void FixedUpdate()
+	{
+		ApplyVelocity();
+	}
+
+	public void ApplyKnockback(Vector2 knockerSourcePosition, float knockbackResist, float knockbackForce = -1)
 	{
 		if (!_knockbackEnabled) return;
 
-		_rb2d = rb2d;
-		var direction = (Vector2)transform.position - knockerSourcePosition;
-
-		_kbCoroutine = StartCoroutine(KnockbackRoutine(knockerSourcePosition, direction, knockbackForce));
-	}
-	
-	public void CancelKnockback()
-	{
-		_rb2d.linearVelocity = Vector2.zero;
-		StopCoroutine(_kbCoroutine);
-		IsBeingKnockedBack = false;
-	}
-	
-	private IEnumerator KnockbackRoutine(Vector2 knockerSourcePosition, Vector2 direction, float knockbackForce)
-	{
-		IsBeingKnockedBack = true;
-		
 		OnKnockbackStart?.Invoke(this, new KnockbackEventArgs
 		{
 			KnockBackerPosition = knockerSourcePosition
 		});
 
-		// Apply the knockback force
-		_rb2d.AddForce(direction.normalized * knockbackForce, ForceMode2D.Impulse);
-		Debug.Log($"Adding knockback force");
+		if (knockbackForce == -1) knockbackForce = _minKnockback;
+
+		Vector2 direction = ((Vector2)transform.position - knockerSourcePosition).normalized;
+
+		// Calculate knockback with resistance
+		float finalKnockback = knockbackForce * (1 - knockbackResist);
+		_finalKnockback = Mathf.Clamp(finalKnockback, _minKnockback, _maxKnockback);
+
+		// Apply instant velocity change for knockback
+		Debug.Log(_finalKnockback);
+		Velocity = direction * _finalKnockback;
+	}
+
+	private void ApplyVelocity()
+	{
+		// Reduce knockback velocity over time
+		Velocity = Vector2.Lerp(Velocity, Vector2.zero, _decayMult * Time.fixedDeltaTime);
+		IsBeingKnockedBack = Velocity.magnitude > _finalKnockback * 0.75f;
 		
-		float knockbackTimer = _knockbackDuration; // Set the timer to knockbackDuration
-
-		// While the knockback effect is active
-		while (knockbackTimer > 0f)
-		{
-			knockbackTimer -= Time.fixedDeltaTime; // Decrement the timer
-			// You can still add a velocity check here if needed:
-			if (_rb2d.linearVelocity.magnitude < 0.15f)
-			{
-				break; // Exit early if the velocity is sufficiently low
-			}
-
-			yield return new WaitForFixedUpdate();
-		}
-
-		// End knockback after the duration or early if velocity is low
-		IsBeingKnockedBack = false;
 		
-		OnKnockbackEnd?.Invoke(this, new KnockbackEventArgs
-		{
-			KnockBackerPosition = knockerSourcePosition
-		});
+		// if(_velocity == Vector2.zero) return;
+		// Move the object using transform position
+		// transform.position += (Vector3)(_velocity * Time.fixedDeltaTime);
+		// GetComponent<Rigidbody2D>().MovePosition((Vector2)transform.position + (_velocity * Time.fixedDeltaTime));
 	}
 }

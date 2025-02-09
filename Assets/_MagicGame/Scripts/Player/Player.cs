@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -35,17 +36,18 @@ public class Player : NetworkBehaviour, IHasHealth
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
 	[field: SerializeField] public PlayerHand OffHand { get; private set; }
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
-	[SerializeField] private float _respawnTimerDuration;
-	[SerializeField] private List<InventoryItem> _startingItems = new();
-	
 	public PlayerStats PlayerStats { get; private set; }
 	public NetworkVariable<int> MainHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<int> OffHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<BiomeType> CurrentBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public Collider2D HitCollider { get; private set; }
 	public bool IsPerformingSwing { get; set; }
+	
+	[SerializeField] private float _respawnTimerDuration;
+	[Range(0, 100), SerializeField] private float _knockbackResist;
+	[SerializeField] private List<InventoryItem> _startingItems = new();
 
-    private NetworkVariable<int> _healthNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	private NetworkVariable<int> _healthNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private Knockback _knockback;
 	private Rigidbody2D _rb;
 	private Timer _respawnTimer;
@@ -111,16 +113,15 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	#region Damage Functions
 	
-	public void ApplyDamage(int damage, Vector2 damagerPosition)
+	public void ApplyDamage(int damage, Vector2 damagerPosition, int knockbackForce)
 	{
 		if (IsDead()) return;
 		
-		// Apply the final damage to the player
-		ApplyPlayerDamageServerRpc(OwnerClientId, damage, damagerPosition);
+		ApplyPlayerDamageServerRpc(OwnerClientId, damage, damagerPosition, knockbackForce);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void ApplyPlayerDamageServerRpc(ulong damagePlayerId, int damageAmount, Vector2 damagerPosition)
+	private void ApplyPlayerDamageServerRpc(ulong damagePlayerId, int damageAmount, Vector2 damagerPosition, int knockbackForce)
 	{
 		if (!NetworkManager.ConnectedClients.ContainsKey(damagePlayerId))
 		{
@@ -130,13 +131,16 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 		int defense = NetworkManager.ConnectedClients[damagePlayerId].PlayerObject.GetComponent<Player>().PlayerStats.PlayerDefense;
 		int damageReduction = defense / 2; // Defense reduces damage by half its value
-		
-		// Apply damage reduction
-		int finalDamage = Mathf.Max(1, damageAmount - damageReduction); // Minimum damage is 1
+		int finalDamage = Mathf.Max(1, damageAmount - damageReduction); // Apply damage reduction
 	
 		_healthNetworkVariable.Value = Mathf.Max(0, _healthNetworkVariable.Value - finalDamage);
 		
 		bool isPlayerDead = _healthNetworkVariable.Value <= 0;
+		
+		if(!isPlayerDead)
+		{
+			_knockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce); // NTFS: Need to add knockback value to this function
+		}
 		
 		OnPlayerHealthChangedClientRpc(finalDamage, isPlayerDead, damagerPosition, damagePlayerId);
 	}
@@ -150,41 +154,28 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		if(isKilled)
 		{
-			OnPlayerKilled();
+			Debug.Log($"[Client {NetworkManager.LocalClientId}] {gameObject.name} is dead!");
+		
+			if(NetworkManager.LocalClientId == OwnerClientId)
+			{
+				_respawnTimer.Reset();
+				_respawnTimer.OnTimerEnd += RespawnPlayer;
+			}
+		
+			OnDeath?.Invoke(this, new PlayerIdEventArgs
+			{
+				PlayerId = OwnerClientId
+			});
 		}
 		else
 		{
-			OnPlayerDamaged(finalDamage, damagerPosition);
+			Debug.Log($"[Client {NetworkManager.LocalClientId}] Applied {finalDamage} Damage to {gameObject.name}!");
+			OnDamaged?.Invoke(this, new OnDamagedEventArgs
+			{
+				DamagerPosition = damagerPosition,
+				DamageAmount = finalDamage
+			});
 		}
-	}
-	
-	private void OnPlayerKilled()
-	{
-		Debug.Log($"[Client {NetworkManager.LocalClientId}] {gameObject.name} is dead!");
-		
-		if(NetworkManager.LocalClientId == OwnerClientId)
-		{
-			_respawnTimer.Reset();
-			_respawnTimer.OnTimerEnd += RespawnPlayer;
-		}
-		
-		OnDeath?.Invoke(this, new PlayerIdEventArgs
-		{
-			PlayerId = OwnerClientId
-		});
-	}
-	
-	private void OnPlayerDamaged(int finalDamage, Vector2 damagerPosition)
-	{
-		Debug.Log($"[Client {NetworkManager.LocalClientId}] Applied {finalDamage} Damage to {gameObject.name}!");
-		
-		_knockback?.ApplyKnockback(_rb, damagerPosition);
-		
-		OnDamaged?.Invoke(this, new OnDamagedEventArgs
-		{
-			DamagerPosition = damagerPosition,
-			DamageAmount = finalDamage
-		});
 	}
 	
 	#endregion

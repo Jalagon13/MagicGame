@@ -28,7 +28,7 @@ public class BouncySpellProjectile : NetworkBehaviour
 
 		if (other.TryGetComponent(out IHasHealth npcToDamage))
 		{
-			npcToDamage.ApplyDamage(_damage, _damagerPosition);
+			npcToDamage.ApplyDamage(_damage, _damagerPosition, 20);
 			GetComponent<SpellNetworkComponent>().StopProjectile();
 			return;
 		}

@@ -86,7 +86,7 @@ public class MeleeCollider : NetworkBehaviour
 			{
 				if (_entitiesHitThisSwing.Contains(entityToDamage)) continue;
 
-				entityToDamage.ApplyDamage(8, transform.root.position);
+				entityToDamage.ApplyDamage(8, transform.root.position, 20);
 				
 				_entitiesFoundThisSwing.Remove(entityToDamage);
 				
