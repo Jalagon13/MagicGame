@@ -1,17 +1,18 @@
+using System;
 using UnityEngine;
 
 public class LightSource : MonoBehaviour
 {
-	[SerializeField, Range(0, 1)] private float _lightIntensity = 1f;
-	[SerializeField, Range(0, 10)] private float _lightRadius = 5f;
-
+	[field: SerializeField, Range(0, 1)] public float LightIntensity { get; private set; } = 1f;
+	[field: SerializeField, Range(0, 10)] public float LightRadius { get; private set; }  = 5f;
+	
 	private Vector3 _lastWorldPosition;
 
 	private void Start()
 	{
 		_lastWorldPosition = transform.position;
 	}
-	
+
 	private void OnEnable()
 	{
 		Lightmap.Instance.RegisterLightSource(this);
@@ -33,15 +34,5 @@ public class LightSource : MonoBehaviour
 			Lightmap.Instance.UpdateLightMap();
 			_lastWorldPosition = transform.position;
 		}
-	}
-
-	public float GetIntensity()
-	{
-		return _lightIntensity;
-	}
-
-	public float GetRadius()
-	{
-		return _lightRadius;
 	}
 }

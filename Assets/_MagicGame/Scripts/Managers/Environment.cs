@@ -178,10 +178,20 @@ public class Environment : NetworkBehaviour
 			}
 			
 			Pathfinding.Instance.RemovePfWallTile(tileToDamage.TilePosition, biome);
+			UpdateTileClientRpc(biome);
 		}
 		else
 		{
 			tileHpDict[biome].Add(tileToDamage);
+		}
+	}
+	
+	[Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+	private void UpdateTileClientRpc(BiomeType biome)
+	{
+		if(Player.LocalClientInstance.CurrentBiome.Value == biome)
+		{
+			Lightmap.Instance.UpdateLightMap();
 		}
 	}
 

@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Nodes:
   - rid: 7040998709332279468
   - rid: 7040998723637215891
-  m_VersionTimestamp: 638746933701708900
+  m_VersionTimestamp: 638747835877094790
   m_DebugInfo: {fileID: -2552540242314150647}
   m_RuntimeGraph: {fileID: 5221345960659253865}
   AssetID:
@@ -668,7 +668,7 @@ MonoBehaviour:
         AuthoringAssetID:
           m_Value0: 17209478533539545690
           m_Value1: 17899044058787254008
-        m_DebugInfo: {fileID: 0}
+        m_DebugInfo: {fileID: -2552540242314150647}
         Root:
           rid: 7040998905553617095
         BlackboardReference:
@@ -731,7 +731,7 @@ MonoBehaviour:
           m_Value0: 1
           m_Value1: 0
         Name: Self
-        m_Value: {fileID: 0}
+        m_Value: {fileID: 6633633827701661900, guid: 2ea8fc6c5eed84386a995f5f8f46a35f, type: 3}
     - rid: 7040998905553617100
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:

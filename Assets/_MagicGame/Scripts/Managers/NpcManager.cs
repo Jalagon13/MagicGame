@@ -42,7 +42,7 @@ public class NpcManager : NetworkBehaviour
 	{
 		if(!IsServer) return;
 		
-		SpawnTestDummyServerRpc();
+		// SpawnTestDummyServerRpc();
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]

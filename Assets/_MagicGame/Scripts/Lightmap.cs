@@ -179,7 +179,7 @@ public class Lightmap : MonoBehaviour
 		// Set shader parameters
 		_lightmapComputeShader.SetInt("Width", renderTextureWidth);
 		_lightmapComputeShader.SetInt("Height", renderTextureHeight);
-		_lightmapComputeShader.SetInt("OpaqueTileTolerance", _lightmapScale);
+		_lightmapComputeShader.SetInt("OpaqueTileTolerance", _lightmapScale / 3);
 		_lightmapComputeShader.SetInt("NumLights", lightSourceList.Count);
 		_lightmapComputeShader.SetVector("BaseLight", GetBaseLight());
 		// Set the output texture
@@ -224,10 +224,10 @@ public class Lightmap : MonoBehaviour
 			Vector2 lightTextureCoord = WorldToRenderTextureCoords(worldPosition);
 
 			// Adjust light radius based on the lightmap scale (invert the scale to keep the radius consistent in world space)
-			float adjustedLightRadius = lightSource.GetRadius() * _lightmapScale;
+			float adjustedLightRadius = lightSource.LightRadius * _lightmapScale;
 
 			// Create light data (x, y position, intensity, adjusted radius)
-			Vector4 lightData = new Vector4(lightTextureCoord.x, lightTextureCoord.y, lightSource.GetIntensity(), adjustedLightRadius);
+			Vector4 lightData = new Vector4(lightTextureCoord.x, lightTextureCoord.y, lightSource.LightIntensity, adjustedLightRadius);
 
 			// Add to the list
 			lightSourceList.Add(lightData);
