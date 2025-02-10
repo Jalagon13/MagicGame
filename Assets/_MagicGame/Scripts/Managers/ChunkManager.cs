@@ -35,7 +35,7 @@ public class ChunkManager : NetworkBehaviour
 	[SerializeField] private int _chunkLoadRadiusX = 5;
 	[SerializeField] private int _chunkLoadRadiusY = 4;
 	
-	private Dictionary<Vector2Int, ChunkGameData> _loadedChunks = new(); // Data structure to hold chunk data that is loaded around player
+	public Dictionary<Vector2Int, ChunkGameData> LoadedChunks { get; private set; } = new(); // Data structure to hold chunk data that is loaded around player
 	private Dictionary<Vector2Int, ChunkGameData> _forestChunks = new(); // Data structure to hold chunk data
 	private Dictionary<Vector2Int, ChunkGameData> _caveChunks = new(); // Data structure to hold chunk data
 	private Queue<Vector2Int> _chunksToLoad = new Queue<Vector2Int>();
@@ -101,7 +101,7 @@ public class ChunkManager : NetworkBehaviour
 		Vector2Int minLoadedTilePos = new(int.MaxValue, int.MaxValue);
 		Vector2Int maxLoadedTilePos = new(int.MinValue, int.MinValue);
 
-		foreach (var item in _loadedChunks)
+		foreach (var item in LoadedChunks)
 		{
 			Vector2Int loadedChunkWorldPosition = item.Key * CHUNK_SIZE;
 			minLoadedTilePos = Vector2Int.Min(minLoadedTilePos, loadedChunkWorldPosition);
@@ -133,14 +133,14 @@ public class ChunkManager : NetworkBehaviour
 		// For each of those chunks, load them if they are not already loaded
 		foreach (Vector2Int chunkPos in chunksToLoadAroundPlayer)
 		{
-			if (!_loadedChunks.ContainsKey(chunkPos))
+			if (!LoadedChunks.ContainsKey(chunkPos))
 			{
 				_chunksToLoad.Enqueue(chunkPos);
 			}
 		}
 
 		// In the loaded player chunks, if any of them are not in chunksToLoadAroundPlayer, unload them
-		foreach (Vector2Int chunkPos in _loadedChunks.Keys.ToList())
+		foreach (Vector2Int chunkPos in LoadedChunks.Keys.ToList())
 		{
 			if (!chunksToLoadAroundPlayer.Contains(chunkPos))
 			{
@@ -158,36 +158,36 @@ public class ChunkManager : NetworkBehaviour
 
 	private void UnloadChunk(Vector2Int chunkPos)
 	{
-		if(_loadedChunks.ContainsKey(chunkPos))
+		if(LoadedChunks.ContainsKey(chunkPos))
 		{
-			InvokeOnUnloadChunk(_loadedChunks[chunkPos]);
+			InvokeOnUnloadChunk(LoadedChunks[chunkPos]);
 		}
 	}
 
 	public void InvokeOnLoadChunk(ChunkGameData chunkGameDataToLoad)
 	{
-		if (!_loadedChunks.ContainsKey(chunkGameDataToLoad.ChunkPosition))
+		if (!LoadedChunks.ContainsKey(chunkGameDataToLoad.ChunkPosition))
 		{
 			OnLoadChunk?.Invoke(this, new ChunkEventArgs
 			{
 				Chunk = chunkGameDataToLoad
 			});
 		
-			_loadedChunks.Add(chunkGameDataToLoad.ChunkPosition, chunkGameDataToLoad);
+			LoadedChunks.Add(chunkGameDataToLoad.ChunkPosition, chunkGameDataToLoad);
 		}
 	}
 	
 	public void InvokeOnUnloadChunk(ChunkGameData chunkGameDataToUnload)
 	{
 		// Remove the chunk from the list of loaded chunks
-		if(_loadedChunks.ContainsKey(chunkGameDataToUnload.ChunkPosition))
+		if(LoadedChunks.ContainsKey(chunkGameDataToUnload.ChunkPosition))
 		{
 			OnUnloadChunk?.Invoke(this, new ChunkEventArgs
 			{
 				Chunk = chunkGameDataToUnload
 			});
 		
-			_loadedChunks.Remove(chunkGameDataToUnload.ChunkPosition);
+			LoadedChunks.Remove(chunkGameDataToUnload.ChunkPosition);
 		}
 	}
 	
@@ -246,9 +246,9 @@ public class ChunkManager : NetworkBehaviour
 	
 	public void UnloadAllChunks()
 	{
-		for (int i = _loadedChunks.Count - 1; i >= 0; i--)
+		for (int i = LoadedChunks.Count - 1; i >= 0; i--)
 		{
-			var chunk = _loadedChunks.ElementAt(i);
+			var chunk = LoadedChunks.ElementAt(i);
 			InvokeOnUnloadChunk(chunk.Value);
 		}
 	}
@@ -310,12 +310,12 @@ public class ChunkManager : NetworkBehaviour
 		}
 	}
 	
-	public void AddWallTileDataToChunk(Vector2Int position, int tileID, BiomeType biomeToAddTileData, TileType tileType)
+	public void AddTileDataToChunk(Vector2Int position, int tileID, BiomeType biomeToAddTileData, TileType tileType)
 	{
 		if(!IsServer) return;
 	
 		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, biomeToAddTileData);
-		chunk.AddWallTileData(position, GameManager.Instance.GetTileSOFromID(tileID));
+		chunk.AddTileData(position, GameManager.Instance.GetTileSOFromID(tileID));
 		HandleTileVisualClientRpc((Vector3Int)position, tileID, tileType, biomeToAddTileData);
 	}
 	
@@ -336,26 +336,28 @@ public class ChunkManager : NetworkBehaviour
 				break;
 			case TileType.Wall:
 				Environment.Instance.WallTm.SetTile(pos, tileToPlace);
-				Environment.Instance.TileVisibilityDict[pos] = new TileVisibility {Visibility = 1};
+				Environment.Instance.AddTileVisData(pos, new TileVisibility {Visibility = 1});
 				Lightmap.Instance.UpdateLightMap();
 				break;
 		}
 	}
 	
-	public void RemoveWallTileDataFromChunk(Vector2Int position, BiomeType biomeToRemoveTileData)
+	public void RemoveTileDataFromChunk(TileSO tileSO, Vector2Int position, BiomeType biomeToRemoveTileData)
 	{
 		if(!IsServer) return;
 	
-		GetChunkFromAnyWorldPos(position, biomeToRemoveTileData).RemoveWallTileData(position);
+		GetChunkFromAnyWorldPos(position, biomeToRemoveTileData).RemoveTileData(position, tileSO.TileType);
 		TryToRemoveWallTileClientRpc(position, biomeToRemoveTileData);
 	}
-
+	
 	[Rpc(SendTo.ClientsAndHost)]
 	private void TryToRemoveWallTileClientRpc(Vector2Int position, BiomeType biomeToRemoveTileData)
 	{
 		if(Player.LocalClientInstance.CurrentBiome.Value != biomeToRemoveTileData || !ObjectPositionInLoadedChunks(position)) return;
 		
 		Environment.Instance.WallTm.SetTile((Vector3Int)position, null);
+		Environment.Instance.RemoveTileVisData((Vector3Int)position);
+		Lightmap.Instance.UpdateLightMap();
 	}
 	
 	public bool ObjectPositionInLoadedChunks(Vector2Int position) // Check if the position is within the bounds
@@ -394,7 +396,6 @@ public class ChunkManager : NetworkBehaviour
 		Debug.LogError($"Environment {environmentToGet} should exist but doesn't, add environment chunks to ChunkManager");
 		return null;
 	}
-	
 
 	public void LoadChunksForBiome(BiomeType biomeToSetChunksFor, Dictionary<Vector2Int, ChunkGameData> newChunks)
 	{
@@ -409,19 +410,5 @@ public class ChunkManager : NetworkBehaviour
 		}
 		
 		Debug.LogError("No Environment found for _activeEnvironment variable");
-	}
-	
-	
-	private Vector3Int GetPlayerTilePos()
-	{
-		int xPos = Mathf.FloorToInt(Player.LocalClientInstance.transform.position.x);
-		int yPos = Mathf.FloorToInt(Player.LocalClientInstance.transform.position.y);
-		
-		return new(xPos, yPos);
-	}
-	
-	public Dictionary<Vector2Int, ChunkGameData> GetLoadedPlayerChunks()
-	{
-		return _loadedChunks;
 	}
 }

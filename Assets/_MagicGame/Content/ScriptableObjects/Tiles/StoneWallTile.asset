@@ -1045,7 +1045,7 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
     m_RuleTransform: 0
-  TileType: 0
+  TileType: 1
   HarvestType: 0
   DropItem: {fileID: 11400000, guid: 78d4495e64216404c85d1a0daa71cc1b, type: 2}
   MaxHitPoints: 100

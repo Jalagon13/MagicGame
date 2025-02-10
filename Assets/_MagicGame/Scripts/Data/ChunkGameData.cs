@@ -10,6 +10,7 @@ public class ChunkGameData
 	public Vector2Int ChunkPosition { get; private set; }
 	public List<TileGameData> GroundTileGameDataList;
 	public List<TileGameData> WallTileGameDataList;// Note to future self: Make floor serializable too later
+	public List<TileGameData> FloorTileGameDataList;// Note to future self: Make floor serializable too later
 	public List<WorldObjectGameData> WorldObjectGameDataList;
 	public int Size { get; private set; }
 
@@ -20,20 +21,36 @@ public class ChunkGameData
 		GroundTileGameDataList = new();
 		WallTileGameDataList = new();
 		WorldObjectGameDataList = new();
+		FloorTileGameDataList = new();
 	}
 	
 	// When a tile is destroyed, delete the tile data in chunk
-	public void RemoveWallTileData(Vector2Int position)
+	public void RemoveTileData(Vector2Int position, TileType tileType)
 	{
-		// Loop through all Wall tiles and find tile at position
-		foreach (TileGameData tile in WallTileGameDataList)
+		if(tileType == TileType.Wall)
 		{
-			// If position is found
-			if(tile.TilePosition == position)
+			foreach (TileGameData tile in WallTileGameDataList)
 			{
-				// Delete data and return
-				WallTileGameDataList.Remove(tile);
-				return;
+				// If position is found
+				if(tile.TilePosition == position)
+				{
+					// Delete data and return
+					WallTileGameDataList.Remove(tile);
+					return;
+				}
+			}
+		}
+		else
+		{
+			foreach (TileGameData tile in FloorTileGameDataList)
+			{
+				// If position is found
+				if(tile.TilePosition == position)
+				{
+					// Delete data and return
+					FloorTileGameDataList.Remove(tile);
+					return;
+				}
 			}
 		}
 		
@@ -42,11 +59,18 @@ public class ChunkGameData
 	}
 	
 	// When a tile is placed, add tile data in chunk
-	public void AddWallTileData(Vector2Int position, TileSO tile)
+	public void AddTileData(Vector2Int position, TileSO tile)
 	{
 		TileGameData tileToAdd = new(tile, position);
 		
-		WallTileGameDataList.Add(tileToAdd);
+		if(tile.TileType == TileType.Wall)
+		{
+			WallTileGameDataList.Add(tileToAdd);
+		}
+		else if(tile.TileType == TileType.Floor)
+		{
+			FloorTileGameDataList.Add(tileToAdd);
+		}
 	}
 	
 	public void AddObjectData(WorldObjectFileData worldObjectFileData, WorldObject worldObject) // For deserialization

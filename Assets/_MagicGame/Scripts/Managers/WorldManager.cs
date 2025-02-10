@@ -194,13 +194,12 @@ public class WorldManager : NetworkBehaviour
 		Player.LocalClientInstance.CurrentBiome.Value = toBiome;
 		
 		// Invoke it first to prep the last chunk position to garentee a new set of chunks to generate, then set loadingbiome to true to resume the update method
+		Environment.Instance.TileVisibilityDict.Clear();
 		OnBiomeDataLoaded?.Invoke(this, EventArgs.Empty);
 		IsLoadingBiome = false;
 		
 		StartCoroutine(SearchForPortal(searchForPortal, portalPosition));
 	}
-	
-	
 
 	private IEnumerator SearchForPortal(bool searchForPortal, Vector2 portalPosition)
 	{
@@ -242,6 +241,8 @@ public class WorldManager : NetworkBehaviour
 		}
 		
 		yield return new WaitForSeconds(_endBiomeTransitionDelay);
+		
+		Lightmap.Instance.UpdateLightMap();
 		
 		OnEndBiomeTransition?.Invoke(this, EventArgs.Empty); 
 	}

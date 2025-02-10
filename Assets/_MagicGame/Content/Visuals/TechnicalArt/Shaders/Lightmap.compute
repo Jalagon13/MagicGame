@@ -74,12 +74,12 @@ float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
 			}
 			else
 			{
-				currentIntensity *= dStep ? 0.9 : 0.93; // Major reduction
+				currentIntensity *= dStep ? 0.89 : 0.92; // Major reduction
 			}
 		}
 		else // Transparent tile
 		{
-			currentIntensity *= dStep ? 0.97 : 0.98; // Minor reduction
+			currentIntensity *= dStep ? 0.98 : 0.99; // Minor reduction
 		}
 
 		// Stop if intensity is too low

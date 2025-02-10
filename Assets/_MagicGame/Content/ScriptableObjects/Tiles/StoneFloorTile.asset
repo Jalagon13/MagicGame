@@ -16,7 +16,7 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
-  TileType: 0
+  TileType: 2
   HarvestType: 0
   DropItem: {fileID: 11400000, guid: 78d4495e64216404c85d1a0daa71cc1b, type: 2}
   MaxHitPoints: 100

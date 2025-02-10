@@ -71,7 +71,7 @@ public class NpcManager : NetworkBehaviour
 	
 	public void TryToSpawnNpc()
 	{
-		if(ChunkManager.Instance.GetLoadedPlayerChunks().Count <= 0 || !_enableSpawning) return;
+		if(ChunkManager.Instance.LoadedChunks.Count <= 0 || !_enableSpawning) return;
 	
 		// Calculate the current spawn chance modifier and adjust spawn rate based on the modifier
 		float spawnModifier = GetSpawnModifier();

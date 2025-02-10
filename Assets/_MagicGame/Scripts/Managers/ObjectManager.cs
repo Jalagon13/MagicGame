@@ -223,6 +223,7 @@ public class ObjectManager : NetworkBehaviour
 			if(!objectData.WO.PassThrough)
 			{
 				Pathfinding.Instance.AddPfWallTile(objectData.Position, Player.LocalClientInstance.CurrentBiome.Value);
+				Environment.Instance.AddTileVisData((Vector3Int)objectData.Position, new TileVisibility() { Visibility = 1 });
 			}
 			
 			OnWorldObjectSpawned?.Invoke(this, new OnWorldAssetSpawnedEventArgs
@@ -241,6 +242,7 @@ public class ObjectManager : NetworkBehaviour
 			// If asset visually exists, just delete it
 			if(TryToFindWorldObject(assetData.Position, out WorldObject wo))
 			{
+				Environment.Instance.RemoveTileVisData((Vector3Int)assetData.Position);
 				wo.DestroySelf();
 			}
 		}

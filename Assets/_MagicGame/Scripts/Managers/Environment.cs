@@ -40,7 +40,7 @@ public class TileHpData
 	{
 		var spawnPos = new Vector2(TilePosition.x + 0.5f, TilePosition.y + 0.5f);
 		GameManager.Instance.SpawnItem(TileSO.DropItem, 1, spawnPos, _biome);
-		ChunkManager.Instance.RemoveWallTileDataFromChunk(TilePosition, _biome);
+		ChunkManager.Instance.RemoveTileDataFromChunk(TileSO, TilePosition, _biome);
 		SoundManager.Instance.PlayOneShot(TileSO.DestroySound, spawnPos);
 	}
 }
@@ -69,18 +69,31 @@ public class Environment : NetworkBehaviour
 		WorldManager.Instance.OnStartBiomeTransition += ClearLocalTilemaps;
 	}
 	
-	// Handles placing the visual of the tile, NOT the tile data that is being synced
-	public void PlaceTile(Vector3Int pos, TileSO wallTile, TileType syncTileType, BiomeType environment)
+	public void AddTileVisData(Vector3Int pos, TileVisibility tileVisData)
 	{
-		int syncTileId = GameManager.Instance.GetIDFromTileObjectSO(wallTile);
+		TileVisibilityDict[pos] = tileVisData;
+	}
+	
+	public void RemoveTileVisData(Vector3Int tilePosV3Int)
+	{
+		if(TileVisibilityDict.ContainsKey(tilePosV3Int))
+		{
+			TileVisibilityDict.Remove(tilePosV3Int);
+		}
+	}
+	
+	// Handles placing the visual of the tile, NOT the tile data that is being synced
+	public void PlaceTile(Vector3Int pos, TileSO tileToPlace, BiomeType biome)
+	{
+		int syncTileId = GameManager.Instance.GetIDFromTileObjectSO(tileToPlace);
 		
-		AddTileDataServerRpc(pos, syncTileId, syncTileType, environment);
+		AddTileDataServerRpc(pos, syncTileId, tileToPlace.TileType, biome);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void AddTileDataServerRpc(Vector3Int syncPos, int syncTileId, TileType syncTileType, BiomeType biome)
 	{
-		ChunkManager.Instance.AddWallTileDataToChunk((Vector2Int)syncPos, syncTileId, biome, syncTileType);
+		ChunkManager.Instance.AddTileDataToChunk((Vector2Int)syncPos, syncTileId, biome, syncTileType);
 		Pathfinding.Instance.AddPfWallTile((Vector2Int)syncPos, biome);
 	}
 	
@@ -178,7 +191,6 @@ public class Environment : NetworkBehaviour
 			}
 			
 			Pathfinding.Instance.RemovePfWallTile(tileToDamage.TilePosition, biome);
-			UpdateTileClientRpc(biome);
 		}
 		else
 		{
@@ -186,15 +198,6 @@ public class Environment : NetworkBehaviour
 		}
 	}
 	
-	[Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
-	private void UpdateTileClientRpc(BiomeType biome)
-	{
-		if(Player.LocalClientInstance.CurrentBiome.Value == biome)
-		{
-			Lightmap.Instance.UpdateLightMap();
-		}
-	}
-
 	private void ClearLocalTilemaps(object sender, EventArgs e)
 	{
 		// Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
@@ -210,6 +213,7 @@ public class Environment : NetworkBehaviour
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			GroundTm.SetTile(tilePosV3Int, tile.TileSO);
+			RemoveTileVisData(tilePosV3Int);
 		}
 			
 		// loop through all wall tiles and set them on tilemap
@@ -217,13 +221,7 @@ public class Environment : NetworkBehaviour
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			WallTm.SetTile(tilePosV3Int, tile.TileSO);
-			
-			// Populate Dicionary with tile visibility
-			if(!TileVisibilityDict.ContainsKey(tilePosV3Int))
-			{
-				// var isOpaque = e.Chunk.WallTileGameDataList.Exists(wallTile => wallTile.TilePosition == tile.TilePosition);
-				TileVisibilityDict.Add(tilePosV3Int, new TileVisibility {Visibility = 1/* isOpaque ? 1 : 0 */});
-			}
+			AddTileVisData(tilePosV3Int, new TileVisibility {Visibility = 1});
 		}
 	}
 
@@ -234,17 +232,14 @@ public class Environment : NetworkBehaviour
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			GroundTm.SetTile(tilePosV3Int, null);
-			
-			if(TileVisibilityDict.ContainsKey(tilePosV3Int))
-			{
-				TileVisibilityDict.Remove(tilePosV3Int);
-			}
+			RemoveTileVisData(tilePosV3Int);
 		}
 		
 		foreach (TileGameData tile in e.Chunk.WallTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			WallTm.SetTile(tilePosV3Int, null);
+			RemoveTileVisData(tilePosV3Int);
 		}
 		
 		Pathfinding.Instance.RequestUnloadChunk(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentBiome.Value);

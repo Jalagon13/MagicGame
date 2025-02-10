@@ -19,7 +19,7 @@ public class BuildItemSO : ItemSO
 		
 		if(IsClear(new(pos.x, pos.y)) && !wallTmHasTile && PlayerInRangeOfMouse())
 		{
-			Environment.Instance.PlaceTile(pos, _wallTile, TileType.Wall, Player.LocalClientInstance.CurrentBiome.Value);
+			Environment.Instance.PlaceTile(pos, _wallTile, Player.LocalClientInstance.CurrentBiome.Value);
 			Pathfinding.Instance.AddPfWallTile((Vector2Int)pos, Player.LocalClientInstance.CurrentBiome.Value);
 			InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 			SoundManager.Instance.PlayOneShot(_wallTile.HitSound, pos);

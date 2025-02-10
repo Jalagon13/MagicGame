@@ -98,7 +98,7 @@ public class Lightmap : MonoBehaviour
 	
 	public void UpdateLightMap()
 	{
-		if(_lightmapRenderTexture == null) return;
+		if(_lightmapRenderTexture == null || WorldManager.Instance.IsLoadingBiome) return;
 
 		UpdateOverlayRect();
 		UpdateRenderTexture();
@@ -179,7 +179,7 @@ public class Lightmap : MonoBehaviour
 		// Set shader parameters
 		_lightmapComputeShader.SetInt("Width", renderTextureWidth);
 		_lightmapComputeShader.SetInt("Height", renderTextureHeight);
-		_lightmapComputeShader.SetInt("OpaqueTileTolerance", _lightmapScale / 3);
+		_lightmapComputeShader.SetInt("OpaqueTileTolerance", _lightmapScale / 2);
 		_lightmapComputeShader.SetInt("NumLights", lightSourceList.Count);
 		_lightmapComputeShader.SetVector("BaseLight", GetBaseLight());
 		// Set the output texture
