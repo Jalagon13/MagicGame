@@ -24,6 +24,8 @@ public class WorldManager : NetworkBehaviour
 	public class OnTickEventArgs : EventArgs 
 	{
 		public float CurrentDayRatio;
+		public float CurrentTime;
+		public float DayDuration;
 	}
 	
 	public bool IsNight { get; private set; }
@@ -108,7 +110,9 @@ public class WorldManager : NetworkBehaviour
 
 		OnTick?.Invoke(this, new OnTickEventArgs
 		{
-			CurrentDayRatio = currentDayRatio
+			CurrentDayRatio = currentDayRatio,
+			CurrentTime = _currentTime,
+			DayDuration = _dayDurationInSeconds
 		});
 	}
 	

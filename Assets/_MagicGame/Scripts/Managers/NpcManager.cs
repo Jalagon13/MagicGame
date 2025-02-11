@@ -14,7 +14,7 @@ public class NpcManager : NetworkBehaviour
 	
 	[field: SerializeField] public Npc TestDummyPrefab { get; private set; }
 	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
-	[SerializeField] private bool _enableSpawning = true;
+	[SerializeField] private bool _enableSpawning = true, _enableTestSpawning = false;
 	[SerializeField] private float _startSpawnDelay;
 	
 	private readonly NetworkList<NetworkObjectReference> _activeNpcNetworkList = new();
@@ -40,9 +40,9 @@ public class NpcManager : NetworkBehaviour
 
 	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
 	{
-		if(!IsServer) return;
+		if(!IsServer || !_enableTestSpawning) return;
 		
-		// SpawnTestDummyServerRpc();
+		SpawnTestDummyServerRpc();
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
