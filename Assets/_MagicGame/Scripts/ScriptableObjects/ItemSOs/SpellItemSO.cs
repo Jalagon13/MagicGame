@@ -1,16 +1,20 @@
+using FMODUnity;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Spell Projectile", menuName = "Create Item/New Spell Projectile")]
-public class SpellProjectileItemSO : ItemSO
+[CreateAssetMenu(fileName = "New Spell", menuName = "Create Item/New Spell")]
+public class SpellItemSO : ItemSO
 {
 	[field: Tooltip("Actual Prefab for the projectile.")]
-	[field: SerializeField] public BouncySpellProjectile SpellProjectilePrefab { get; private set; }
+	[field: SerializeField] public Spell SpellProjectilePrefab { get; private set; }
 
 	[field: Tooltip("The mana cost required to cast this projectile.")]
 	[field: SerializeField] public int ManaCost { get; private set; } = 5;
 
 	[field: Tooltip("The amount of damage this projectile deals upon hitting an enemy.")]
 	[field: SerializeField] public int Damage { get; private set; } = 3;
+	
+	[field: Tooltip("The amount of knockback this projectile deals upon hitting an enemy.")]
+	[field: SerializeField] public int Knockback { get; private set; } = 3;
 
 	[field: Tooltip("The amount of randomness in the projectile's trajectory (in degrees). A higher value means more spread.")]
 	[field: SerializeField] public float Spread { get; private set; } = 1f;
@@ -23,6 +27,7 @@ public class SpellProjectileItemSO : ItemSO
 
 	[field: Tooltip("The additional delay (in seconds) added to the casting time of this projectile. Negative values reduce the delay.")]
 	[field: SerializeField] public float CastDelay { get; private set; } = 0.1f;
+	[field: SerializeField] public EventReference SpellCast { get; private set; }
 
 	public void CastSpell(WandItemSO wandSO)
 	{
@@ -38,10 +43,11 @@ public class SpellProjectileItemSO : ItemSO
 			spreadDirection, 
 			Speed, 
 			Damage, 
-			Lifetime
+			Lifetime,
+			Knockback
 		);
 		
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.ProjectileSpawnPointTf.position);
+		SoundManager.Instance.PlayOneShot(SpellCast, Player.LocalClientInstance.ProjectileSpawnPointTf.position);
 	}
 
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)

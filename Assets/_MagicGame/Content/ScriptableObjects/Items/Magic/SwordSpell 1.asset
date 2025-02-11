@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
+  m_Name: SwordSpell 1
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Sword Spell 2
+  <UiDisplay>k__BackingField: {fileID: -1843546812, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <ItemActionCooldown>k__BackingField: 0.375
+  <Stackable>k__BackingField: 0
+  <Description>k__BackingField: 
+  <SpellProjectilePrefab>k__BackingField: {fileID: 1921868941547512111, guid: dc25e922af12a4d5d942e0c80549a564, type: 3}
+  <ManaCost>k__BackingField: 10
+  <Damage>k__BackingField: 8
+  <Knockback>k__BackingField: 3
+  <Spread>k__BackingField: 0
+  <Lifetime>k__BackingField: 0.4
+  <Speed>k__BackingField: 5
+  <CastDelay>k__BackingField: 0.4
+  <SpellCast>k__BackingField:
+    Guid:
+      Data1: -2045704129
+      Data2: 1078438271
+      Data3: 153888670
+      Data4: -2048565155
+    Path: event:/Player/Woosh

@@ -11,5 +11,7 @@ public interface IHasHealth
 		public int MaxValue;
 	}
 	
+	public float IFrameLength { get; } // Read-only property
+	
 	public void ApplyDamage(int damage, Vector2 damagerPosition, int knockbackForce);
 }

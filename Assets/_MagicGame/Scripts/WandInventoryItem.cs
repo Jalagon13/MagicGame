@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class WandInventoryItem : InventoryItem
 {
-	public SpellProjectileItemSO[] SpellArray { get; private set; }
+	public SpellItemSO[] SpellArray { get; private set; }
 
 	public WandInventoryItem(ItemSO itemSO, int quantity, int capacity) : base(itemSO, quantity)
 	{
-		SpellArray = new SpellProjectileItemSO[capacity];
+		SpellArray = new SpellItemSO[capacity];
 	}
 	
-	public void SetSpell(SpellProjectileItemSO spell, int spellIndex)
+	public void SetSpell(SpellItemSO spell, int spellIndex)
 	{
 		if(spellIndex < 0 || spellIndex >= SpellArray.Length)
 		{
@@ -20,7 +20,7 @@ public class WandInventoryItem : InventoryItem
 		SpellArray[spellIndex] = spell;
 	}
 	
-	public SpellProjectileItemSO RemoveSpell(int spellIndex)
+	public SpellItemSO RemoveSpell(int spellIndex)
 	{
 		if(spellIndex < 0 || spellIndex >= SpellArray.Length)
 		{
@@ -28,12 +28,12 @@ public class WandInventoryItem : InventoryItem
 			return null;
 		}
 		
-		SpellProjectileItemSO removedSpell = SpellArray[spellIndex];
+		SpellItemSO removedSpell = SpellArray[spellIndex];
 		SpellArray[spellIndex] = null;
 		return removedSpell;
 	}
 	
-	public SpellProjectileItemSO SwapSpells(SpellProjectileItemSO spell, int spellIndex)
+	public SpellItemSO SwapSpells(SpellItemSO spell, int spellIndex)
 	{
 		if(spellIndex < 0 || spellIndex >= SpellArray.Length)
 		{
@@ -41,7 +41,7 @@ public class WandInventoryItem : InventoryItem
 			return null;
 		}
 		
-		SpellProjectileItemSO swappedSpell = SpellArray[spellIndex];
+		SpellItemSO swappedSpell = SpellArray[spellIndex];
 		SpellArray[spellIndex] = spell;
 		
 		return swappedSpell;

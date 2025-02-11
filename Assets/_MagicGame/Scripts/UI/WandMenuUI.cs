@@ -46,7 +46,7 @@ public class WandMenuUI : MonoBehaviour
 			
 			_spellBookSlotUI.UpdateSlotUI();
 		}
-		else if(e.InventoryItem.Item is SpellProjectileItemSO spellProjectileItemSO)
+		else if(e.InventoryItem.Item is SpellItemSO spellProjectileItemSO)
 		{
 			if(HasWand())
 			{

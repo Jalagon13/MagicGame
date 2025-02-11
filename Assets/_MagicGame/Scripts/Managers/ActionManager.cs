@@ -20,7 +20,6 @@ public class ActionManager : MonoBehaviour
 	public Dictionary<ulong, Wand> WandDict { get; private set; } = new(); // Holds all wand data in your inventory
 
 	private Timer _primaryActionTimer, _secondaryActionTimer;
-	private ulong _wandHeldId;
 
 	private void Awake()
 	{

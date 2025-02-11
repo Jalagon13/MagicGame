@@ -17,16 +17,28 @@ PrefabInstance:
       value: -1268719207
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _damage
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _maxHealth
-      value: 40
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _invincible
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _damageCollider
+      value: 
+      objectReference: {fileID: 475529618853946519}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _knockbackResist
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <IFrameLength>k__BackingField
+      value: 0.166
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <Table>k__BackingField.Array.size
@@ -152,6 +164,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1238610338955609330, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
   m_PrefabInstance: {fileID: 1559072833224275270}
   m_PrefabAsset: {fileID: 0}
+--- !u!58 &2327857279267960147 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 3885697903487451157, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+  m_PrefabInstance: {fileID: 1559072833224275270}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2548604085223437188 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3962188637907535554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
@@ -216,7 +233,7 @@ MonoBehaviour:
           m_Value0: 12356672323633413662
           m_Value1: 15247479222851115125
         Name: Speed
-        m_Value: 4.5
+        m_Value: 4
     - rid: 7040998905553617105
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -241,6 +258,18 @@ PrefabInstance:
       propertyPath: _knockbackForce
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 6204638039996956914, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}
+      propertyPath: ExceptionColliders.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6204638039996956914, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}
+      propertyPath: <KnockbackForce>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6204638039996956914, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}
+      propertyPath: 'ExceptionColliders.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2327857279267960147}
     - target: {fileID: 6961899944183456970, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -290,6 +319,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}
+--- !u!114 &475529618853946519 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6204638039996956914, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}
+  m_PrefabInstance: {fileID: 5801241907322578021}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aae1982cd3ceb43ada7a1a61b8840b29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &3467637410669494447 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6961899944183456970, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}

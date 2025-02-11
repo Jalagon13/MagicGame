@@ -28,7 +28,7 @@ public class Wand
 			_castTimer -= deltaTime;
 		}
 		
-		CurrentRecharge += TotalRecharge * deltaTime; // Regen recharge over time
+		CurrentRecharge += deltaTime; // Regen recharge over time
 		CurrentRecharge = Mathf.Min(CurrentRecharge, TotalRecharge); // Clamp to prevent overfilling
 		
 		CurrentMana += WandSO.ManaChargeSpeed * deltaTime; // Regenerate mana over time
@@ -71,12 +71,14 @@ public class Wand
 		{
 			// valid spells exists after cast
 			_castTimer = WandSO.BaseCastDelay + spell.CastDelay;
+			Debug.Log($"doing cast timer for {WandSO.BaseCastDelay + spell.CastDelay}");
 		}
 		else
 		{
 			// Casted the last spell in the sequence
 			CurrentRecharge = 0;
 			TotalRecharge = WandSO.MaxRechargeDuration + spell.CastDelay;
+			Debug.Log($"Total recharge {TotalRecharge}");
 		}
 	}
 }

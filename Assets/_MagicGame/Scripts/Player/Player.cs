@@ -44,13 +44,12 @@ public class Player : NetworkBehaviour, IHasHealth
 	public bool IsPerformingSwing { get; set; }
 	
 	[SerializeField] private float _respawnTimerDuration;
-	[SerializeField] private float _iFrameTimerDuration;
+	[field: SerializeField] public float IFrameLength { get; private set; } = 0.67f;
 	[Range(0, 100), SerializeField] private float _knockbackResist;
 	[SerializeField] private List<InventoryItem> _startingItems = new();
 
 	private NetworkVariable<int> _healthNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private Knockback _knockback;
-	private Rigidbody2D _rb;
 	private Timer _respawnTimer, _iFrameTimer;
 	private Vector2 _spawnPoint;
 	private BiomeType _spawnBiome;
@@ -60,9 +59,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		PlayerStats = GetComponent<PlayerStats>();
 		HitCollider = GetComponent<Collider2D>();
 		_knockback = GetComponent<Knockback>();
-		_rb = GetComponent<Rigidbody2D>();
 		_respawnTimer = new(_respawnTimerDuration);
-		_iFrameTimer = new(_iFrameTimerDuration);
 		_healthNetworkVariable.OnValueChanged += HealthNetworkVariable_OnValueChanged;
 	}
 	
@@ -91,6 +88,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		if(IsServer)
 		{
+			_iFrameTimer = new(IFrameLength);
 			_healthNetworkVariable.Value = PlayerStats.StartingPlayerHealth;
 		}
 	}
@@ -102,7 +100,10 @@ public class Player : NetworkBehaviour, IHasHealth
 			_respawnTimer.Tick(Time.deltaTime);
 		}
 		
-		_iFrameTimer.Tick(Time.deltaTime);
+		if(IsServer)
+		{
+			_iFrameTimer.Tick(Time.deltaTime);
+		}
 	}
 	
 	private void SpawnStartingItems()
@@ -143,7 +144,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		if(!isPlayerDead)
 		{
 			_knockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce); 
-			_iFrameTimer.RemainingSeconds = _iFrameTimerDuration;
+			_iFrameTimer.RemainingSeconds = IFrameLength;
 		}
 		
 		OnPlayerHealthChangedClientRpc(finalDamage, isPlayerDead, damagerPosition, damagePlayerId);
