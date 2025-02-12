@@ -32,6 +32,7 @@ public class PlayerManaStatUI : MonoBehaviour
 
 	private void OnPlayerManaUpdated(object sender, ActionManager.OnStatUpdatedEventArgs e)
 	{
+		_border.sizeDelta = new Vector2(e.MaxAmount, _border.sizeDelta.y);
 		UpdateBarFill(e.CurrentAmount, e.MaxAmount);
 	}
 
