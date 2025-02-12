@@ -62,7 +62,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		_respawnTimer = new(_respawnTimerDuration);
 		_healthNetworkVariable.OnValueChanged += HealthNetworkVariable_OnValueChanged;
 	}
-	
+
 	public override void OnNetworkSpawn()
 	{
 		gameObject.name = $"Player_{OwnerClientId}";
@@ -77,6 +77,7 @@ public class Player : NetworkBehaviour, IHasHealth
 			
 			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnMainHandSlotUpdated;
 			InventoryManager.Instance.OnOffHandItemUpdated += InventoryManager_OnOffHandItemUpdated;
+			GameInput.Instance.OnSecondaryActionStarted += DashTest;
 			
 			Invoke(nameof(SpawnStartingItems), 0.25f);
 		}
@@ -91,6 +92,12 @@ public class Player : NetworkBehaviour, IHasHealth
 			_iFrameTimer = new(IFrameLength);
 			_healthNetworkVariable.Value = PlayerStats.StartingPlayerHealth;
 		}
+	}
+
+	private void DashTest(object sender, EventArgs e)
+	{
+		if(Pointer.IsOverUI() || ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo)) return;
+		_knockback.ApplyKnockback(ActionManager.MouseWorldPosition, _knockbackResist, 30, true); 
 	}
 
 	private void Update()

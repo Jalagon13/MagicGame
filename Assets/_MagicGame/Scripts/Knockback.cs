@@ -21,7 +21,7 @@ public class Knockback : MonoBehaviour
 		ApplyVelocity();
 	}
 
-	public void ApplyKnockback(Vector2 knockerSourcePosition, float knockbackResist, float knockbackForce = -1)
+	public void ApplyKnockback(Vector2 knockerSourcePosition, float knockbackResist, float knockbackForce = -1, bool inverse = false)
 	{
 		if (!_knockbackEnabled) return;
 
@@ -33,6 +33,9 @@ public class Knockback : MonoBehaviour
 		if (knockbackForce == -1) knockbackForce = _minKnockback;
 
 		Vector2 direction = ((Vector2)transform.position - knockerSourcePosition).normalized;
+
+		if (inverse) 
+			direction *= -1;
 
 		// Calculate knockback with resistance
 		float finalKnockback = knockbackForce * (1 - knockbackResist);
