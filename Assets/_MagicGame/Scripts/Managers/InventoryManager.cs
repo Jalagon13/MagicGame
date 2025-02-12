@@ -97,8 +97,16 @@ public class InventoryManager : MonoBehaviour
 	
 	public bool MainHandItemExists(out InventoryItem mainHandInventoryItem)
 	{
-		mainHandInventoryItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
-		return _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Item != null;
+		if(_mouseItemModel.MouseInventoryItem.HasItem)
+		{
+			mainHandInventoryItem = _mouseItemModel.MouseInventoryItem;
+			return _mouseItemModel.MouseInventoryItem.Item != null;
+		}
+		else
+		{
+			mainHandInventoryItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
+			return _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Item != null;
+		}
 	}
 	
 	public bool OffHandItemExists(out InventoryItem offHandInventoryItem)
@@ -136,6 +144,8 @@ public class InventoryManager : MonoBehaviour
 		{
 			_inventoryModel.RemoveItem(item, amount);
 		}
+		
+		_inventoryModel.UpdateInventory();
 	}
 	
 	public void AddItem(InventoryItem inventoryItem, bool playCollectSound = true)

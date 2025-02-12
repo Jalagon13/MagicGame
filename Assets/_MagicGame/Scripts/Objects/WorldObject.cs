@@ -30,6 +30,9 @@ public class WorldObject : MonoBehaviour // Base class for every "physical" asse
 		{
 			Pathfinding.Instance.RemovePfWallTile(objectPosition, biome);
 		}
+		
+		Environment.Instance.RemoveTileVisData((Vector3Int)objectPosition);
+		Lightmap.Instance.UpdateLightMap();
 	}
 	
 	public void DestroySelf()

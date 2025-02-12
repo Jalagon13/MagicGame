@@ -17,6 +17,8 @@ public class PlayerRechargeStatUI : MonoBehaviour
 	{
 		ActionManager.Instance.OnPlayerManaRechargeUpdated += OnPlayerManaRechargeUpdated;
 		HotbarManager.Instance.OnFocusSlotUpdated += CheckForSpellBook;
+		
+		ShowBar();
 	}
 
 	private void CheckForSpellBook(object sender, HotbarManager.OnFocusItemSetEventArgs e)
@@ -31,23 +33,21 @@ public class PlayerRechargeStatUI : MonoBehaviour
 
 	private void OnPlayerManaRechargeUpdated(object sender, ActionManager.OnStatUpdatedEventArgs e)
 	{
-		if(e.CurrentAmount < e.MaxAmount)
-		{
-			ShowBar();
-		}
-		else
-		{
-			HideBar();
-		}
-		
+		ShowBar();
+		_border.sizeDelta = new Vector2(_manaStatUI.MaxMana, _border.sizeDelta.y);
+	
 		UpdateBarFill(e.CurrentAmount, e.MaxAmount);
 	}
 
 	public void UpdateBarFill(float currentAmount, float maxAmount)
 	{
-		_rechargeBar.UpdateBar(currentAmount, 0, maxAmount);
+		if(currentAmount <= 0) return;
+		
+		float curr = (currentAmount / maxAmount) * _manaStatUI.MaxMana;
+		
+		_rechargeBar.UpdateBar(curr, 0, _manaStatUI.MaxMana);
 		_border.sizeDelta = new Vector2(_manaStatUI.MaxMana, _border.sizeDelta.y);
-		_amountText.text = $"{currentAmount}/{maxAmount}";
+		_amountText.text = $"{curr}/{_manaStatUI.MaxMana}";
 	}
 	
 	private void ShowBar()

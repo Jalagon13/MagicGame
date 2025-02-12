@@ -10,12 +10,18 @@ public class DamageCollider : MonoBehaviour
 		public Collider2D ColliderDamaged;
 	}
 
+	[SerializeField] private bool _onlyDamagePlayer;
 	[field: SerializeField] public int DamageAmount { get; set; }
 	[field: SerializeField] public int KnockbackForce { get; set; }
 	public List<Collider2D> DamageExceptionColliders { get; private set; } = new();
 	
 	private void OnTriggerStay2D(Collider2D other)
 	{
+		if(_onlyDamagePlayer && !other.TryGetComponent(out Player plr))
+		{
+			return;
+		}
+	
 		if(!other.TryGetComponent(out IHasHealth iHasHealth) || ColliderAnException(other)) return; 
 	
 		iHasHealth.ApplyDamage(DamageAmount, transform.parent.position, KnockbackForce);

@@ -485,6 +485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aae1982cd3ceb43ada7a1a61b8840b29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _onlyDamagePlayer: 0
   <DamageAmount>k__BackingField: 0
   <KnockbackForce>k__BackingField: 0
 --- !u!1 &8022134347944052805

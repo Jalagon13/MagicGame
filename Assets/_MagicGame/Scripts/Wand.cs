@@ -6,7 +6,7 @@ public class Wand
 	public WandInventoryItem WandInvItem { get; private set; }
 	public float CurrentMana { get; private set; }
 	public float CurrentRecharge { get; private set; }
-	public float TotalRecharge { get; private set; }
+	public float TotalRechargeDuration { get; private set; }
 	public WandItemSO WandSO { get; private set; }
 	
 	private Queue<int> _validSpellIndexes = new();
@@ -29,7 +29,7 @@ public class Wand
 		}
 		
 		CurrentRecharge += deltaTime; // Regen recharge over time
-		CurrentRecharge = Mathf.Min(CurrentRecharge, TotalRecharge); // Clamp to prevent overfilling
+		CurrentRecharge = Mathf.Min(CurrentRecharge, TotalRechargeDuration); // Clamp to prevent overfilling
 		
 		CurrentMana += WandSO.ManaChargeSpeed * deltaTime; // Regenerate mana over time
 		CurrentMana = Mathf.Min(CurrentMana, WandSO.MaxMana); // Clamp to prevent overfilling
@@ -37,7 +37,7 @@ public class Wand
 	
 	public void CastSpell()
 	{
-		if(_castTimer > 0 || CurrentRecharge < TotalRecharge) return; // Cast Delay or recharge ongoing return
+		if(_castTimer > 0 || CurrentRecharge < TotalRechargeDuration) return; // Cast Delay or recharge ongoing return
 
 		if(_validSpellIndexes.Count == 0) // If validspells is empty, try to fill it up
 		{
@@ -77,8 +77,8 @@ public class Wand
 		{
 			// Casted the last spell in the sequence
 			CurrentRecharge = 0;
-			TotalRecharge = WandSO.MaxRechargeDuration + spell.CastDelay;
-			Debug.Log($"Total recharge {TotalRecharge}");
+			TotalRechargeDuration = WandSO.MaxRechargeDuration + spell.CastDelay;
+			Debug.Log($"Total recharge {TotalRechargeDuration}");
 		}
 	}
 }

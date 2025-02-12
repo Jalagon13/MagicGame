@@ -198,7 +198,12 @@ public class ObjectManager : NetworkBehaviour
 			// Visually place it down for everyone
 			WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);
 			GameObject placedAsset = Instantiate(worldAsset.gameObject, (Vector2)position, Quaternion.identity);
-		
+
+			if(placedAsset.TryGetComponent(out DoorObject doorObject))
+			{
+				doorObject.InitializeOpenState(false);
+			}
+			
 			OnWorldObjectSpawned?.Invoke(this, new OnWorldAssetSpawnedEventArgs
 			{
 				WorldObjectGameObject = placedAsset
@@ -217,7 +222,7 @@ public class ObjectManager : NetworkBehaviour
 			
 			if(assetGO.TryGetComponent(out DoorObject doorObject))
 			{
-				assetGO.GetComponent<DoorObject>().InitializeOpenState((objectData as DoorObjectGameData).IsOpen);
+				doorObject.InitializeOpenState((objectData as DoorObjectGameData).IsOpen);
 			}
 			
 			if(!objectData.WO.PassThrough)

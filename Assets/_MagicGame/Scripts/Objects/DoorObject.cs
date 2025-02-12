@@ -52,6 +52,8 @@ public class DoorObject : WorldObject
 		_localWallCollider.gameObject.SetActive(false);
 		
 		Pathfinding.Instance.RemovePfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
+		Environment.Instance.RemoveTileVisData(Vector3Int.FloorToInt(transform.position));
+		Lightmap.Instance.UpdateLightMap();
 	}
 	
 	private void CloseDoor()
@@ -60,6 +62,8 @@ public class DoorObject : WorldObject
 		_localWallCollider.gameObject.SetActive(true);
 		
 		Pathfinding.Instance.AddPfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
+		Environment.Instance.AddTileVisData(Vector3Int.FloorToInt(transform.position), new TileVisibility{ Visibility = 1 });
+		Lightmap.Instance.UpdateLightMap();
 	}
 	
 	private void OnDestroy()

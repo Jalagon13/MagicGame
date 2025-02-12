@@ -181,14 +181,11 @@ public class NpcManager : NetworkBehaviour
 	
 	private bool PointInNoSpawnZoneOfAnyOtherPlayer(Vector2 potentialSpawnPoint)
 	{
-		if(NetworkManager.ConnectedClientsList.Count > 1)
+		foreach (var clientId in NetworkManager.ConnectedClientsIds)
 		{
-			foreach (var clientId in NetworkManager.ConnectedClientsIds)
-			{
-				var otherPlayerPosition = NetworkManager.ConnectedClients[clientId].PlayerObject.transform.position;
+			var otherPlayerPosition = NetworkManager.ConnectedClients[clientId].PlayerObject.transform.position;
 			
-				if(PointInRectangle(potentialSpawnPoint, otherPlayerPosition, NO_SPAWN_ZONE_WIDTH, NO_SPAWN_ZONE_HEIGHT)) return true;
-			}
+			if(PointInRectangle(potentialSpawnPoint, otherPlayerPosition, NO_SPAWN_ZONE_WIDTH, NO_SPAWN_ZONE_HEIGHT)) return true;
 		}
 		
 		return false;

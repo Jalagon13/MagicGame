@@ -39,7 +39,7 @@ public class PlayerManaStatUI : MonoBehaviour
 	{
 		_manaBar.UpdateBar(currentAmount, 0, maxAmount);
 		_border.sizeDelta = new Vector2(maxAmount, _border.sizeDelta.y);
-		_amountText.text = $"{currentAmount}/{maxAmount}";
+		_amountText.text = $"{Mathf.RoundToInt(currentAmount)}/{maxAmount}";
 		
 		MaxMana = maxAmount;
 	}

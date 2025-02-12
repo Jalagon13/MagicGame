@@ -22,7 +22,7 @@ MonoBehaviour:
   <Damage>k__BackingField: 8
   <Knockback>k__BackingField: 3
   <Spread>k__BackingField: 0
-  <Lifetime>k__BackingField: 0.4
+  <Lifetime>k__BackingField: 0.5
   <Speed>k__BackingField: 5
   <CastDelay>k__BackingField: 0.4
   <SpellCast>k__BackingField:
