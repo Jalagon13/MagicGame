@@ -15,7 +15,6 @@ public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override void EnterState()
 	{
-		Debug.Log($"Idle state");
 		_ctx.IsMoving = false;
 	}
 

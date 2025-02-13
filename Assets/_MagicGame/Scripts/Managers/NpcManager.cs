@@ -143,7 +143,10 @@ public class NpcManager : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void DespawnNpcServerRpc(int npcId, NetworkObjectReference npcToRemoveNetworkObjectReference, ulong spawningClientId, bool killNpc)
 	{
-		_activeNpcNetworkList.Remove(npcToRemoveNetworkObjectReference);
+		if(_activeNpcNetworkList.Contains(npcToRemoveNetworkObjectReference))
+		{
+			_activeNpcNetworkList.Remove(npcToRemoveNetworkObjectReference);
+		}
 		
 		// Either kill or despawn npc depending on the conditional
 		npcToRemoveNetworkObjectReference.TryGet(out NetworkObject npcNetworkObject);
@@ -164,9 +167,12 @@ public class NpcManager : NetworkBehaviour
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void UpdateActiveNpcSlotAmountClientRpc(BiomeType biome, int npcId, RpcParams rpcParams)
 	{
-		NpcSpawnData npc = GameManager.Instance.GetNpcSpawnData(biome, npcId);
+		if(npcId != -1) // NTFS: -1 is dummy prefab
+		{
+			NpcSpawnData npc = GameManager.Instance.GetNpcSpawnData(biome, npcId);
 	
-		_activeNpcSlotAmount -= npc.SlotAmount;
+			_activeNpcSlotAmount -= npc.SlotAmount;
+		}
 	}
 	
 	private bool SpawnSpotIsValid(Vector2 potentialSpawnPoint)

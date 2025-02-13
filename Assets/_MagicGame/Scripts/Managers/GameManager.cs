@@ -172,7 +172,7 @@ public class GameManager : NetworkBehaviour
 	
 	#endregion
 
-	public void SpawnSpellProjectile(BiomeType spawnBiome, SpellItemSO currentSpellItemSO, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, int knockback)
+	public void SpawnSpellProjectile(SpellItemSO currentSpellItemSO, BiomeType spawnBiome, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, int knockback)
 	{
 		ulong projectileId = IdGenerator.GenerateRandomId();
 		

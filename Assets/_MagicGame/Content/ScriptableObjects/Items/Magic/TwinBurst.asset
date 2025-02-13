@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
-  m_Name: CinderBolt
+  m_Name: TwinBurst
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Cinder Bolt
-  <UiDisplay>k__BackingField: {fileID: -3168733581550749585, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
+  <Name>k__BackingField: Twin Burst
+  <UiDisplay>k__BackingField: {fileID: 5524590292671962877, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <SpellProjectilePrefab>k__BackingField: {fileID: 28230442587347567, guid: 3ac4f172f87a44fe0acd38ff5ed23cd1, type: 3}
+  <SpellProjectilePrefab>k__BackingField: {fileID: 3479942378436403216, guid: 887403a89fec148faaaee5f129455f63, type: 3}
   <ManaCost>k__BackingField: 10
-  <Damage>k__BackingField: 14
-  <Knockback>k__BackingField: 7
+  <Damage>k__BackingField: 4
+  <Knockback>k__BackingField: 3
   <Spread>k__BackingField: 0
-  <Lifetime>k__BackingField: 2
+  <Lifetime>k__BackingField: 1.25
   <Speed>k__BackingField: 17
   <CastDelay>k__BackingField: 0.15
   <SpellCast>k__BackingField:

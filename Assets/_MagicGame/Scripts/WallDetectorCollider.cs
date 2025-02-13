@@ -47,14 +47,12 @@ public class WallDetectorCollider : MonoBehaviour
 		}
 	}
 
-	private void OnCollisionStay2D(Collision2D collision)
+	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		if (collision.gameObject.layer == 3) // Assuming layer 3 is the "Wall" layer
-		{
-			// Pass the point of contact to the event
-			Vector2 contactPoint = collision.GetContact(0).point;
-			OnWallCollisionStateChanged(contactPoint);
-		}
+		Debug.Log(transform.root.gameObject.name + " " + collision.gameObject.name);
+		// Pass the point of contact to the event
+		Vector2 contactPoint = collision.GetContact(0).point;
+		OnWallCollisionStateChanged(contactPoint);
 	}
 
 	protected virtual void OnWallCollisionStateChanged(Vector2 contactPoint)

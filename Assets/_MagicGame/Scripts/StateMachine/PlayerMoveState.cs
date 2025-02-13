@@ -17,7 +17,6 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override void EnterState()
 	{
-		Debug.Log($"Move state");
 		PlayFootStepSound();
 	
 		_playWalkSoundTimer = new(_walkSoundCooldown);

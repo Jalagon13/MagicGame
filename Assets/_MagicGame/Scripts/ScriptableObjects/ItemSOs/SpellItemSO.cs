@@ -32,22 +32,16 @@ public class SpellItemSO : ItemSO
 	public void CastSpell(WandItemSO wandSO)
 	{
 		Vector2 baseDirection = (ActionManager.MouseWorldPosition - (Vector2)Player.LocalClientInstance.ProjectileSpawnPointTf.position).normalized;
+		
 		float spread = Spread + wandSO.Spread;
-		float randomAngle = Random.Range(-spread, spread); // Generate a random angle within the spread range
-		Vector2 spreadDirection = Quaternion.Euler(0, 0, randomAngle) * baseDirection; // Rotate the direction by the random angle
+		float randomAngle = Random.Range(-spread, spread); 
+		Vector2 spreadDirection = Quaternion.Euler(0, 0, randomAngle) * baseDirection; 
 		
-		GameManager.Instance.SpawnSpellProjectile(
-			Player.LocalClientInstance.CurrentBiome.Value, 
-			this, 
-			Player.LocalClientInstance.ProjectileSpawnPointTf.position, 
-			spreadDirection, 
-			Speed, 
-			Damage, 
-			Lifetime,
-			Knockback
-		);
+		BiomeType spawnBiome = Player.LocalClientInstance.CurrentBiome.Value;
+		Vector2 spawnPos = Player.LocalClientInstance.ProjectileSpawnPointTf.position;
 		
-		SoundManager.Instance.PlayOneShot(SpellCast, Player.LocalClientInstance.ProjectileSpawnPointTf.position);
+		GameManager.Instance.SpawnSpellProjectile(this, spawnBiome, spawnPos, spreadDirection, Speed, Damage, Lifetime, Knockback);
+		SoundManager.Instance.PlayOneShot(SpellCast, spawnPos);
 	}
 
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
