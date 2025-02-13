@@ -52,14 +52,14 @@ public class BouncingBramble : Spell
 				{
 					if (_hitNpcList.ContainsKey(npcToDamage)) continue;
             
-					npcToDamage.ApplyDamage(_damage, transform.position, _knockback + Mathf.RoundToInt(_rigidbody2D.linearVelocity.magnitude * 0.75f));
+					npcToDamage.ApplyDamage(_damage, transform.position, _knockback + Mathf.RoundToInt(_rigidbody2D.linearVelocity.magnitude * 0.5f));
 					_hitNpcList.Add(npcToDamage, _damageTimer);
                 
 					var velocity = _rigidbody2D.linearVelocity;
 					var direction = (transform.position - collider.transform.position).normalized;
 					_rigidbody2D.linearVelocity = Vector2.zero;
 
-					_rigidbody2D.AddForce(direction * (velocity.magnitude * 0.75f), ForceMode2D.Impulse);
+					_rigidbody2D.AddForce(direction * (velocity.magnitude * 0.5f), ForceMode2D.Impulse);
 				}
 			}
 		}
