@@ -6,7 +6,7 @@ public class SpellItemSO : ItemSO
 {
 	[field: Tooltip("Actual Prefab for the projectile.")]
 	[field: SerializeField] public Spell SpellProjectilePrefab { get; private set; }
-
+	
 	[field: Tooltip("The mana cost required to cast this projectile.")]
 	[field: SerializeField] public int ManaCost { get; private set; } = 5;
 

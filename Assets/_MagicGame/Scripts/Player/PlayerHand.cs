@@ -32,10 +32,10 @@ public class PlayerHand : NetworkBehaviour
 	[SerializeField] private PlayerArmVisualPreset _holdingWandPreset;
 	[SerializeField] private PlayerArmVisualPreset _armItemAnglePreset;
 	[field: SerializeField] public Transform ProjectileSpawnTransform;
+	public bool IsSwinging { get; private set; }
+	public ItemSO HeldItem { get; private set; }
 
 	private Player _thisPlayer;
-	private ItemSO _heldItem;
-	private bool _isSwinging;
 	private bool _stoppingSwing;
 
 	private NetworkVariable<float> _angleNetworkVariable = new(
@@ -92,25 +92,26 @@ public class PlayerHand : NetworkBehaviour
 		float angle = NormalizeAngle(_angleNetworkVariable.Value);
 		ArmCardinalDirection = DetermineCardinalDirection(angle);
 		
-		if (_heldItem is MeleeItemSO)
-		{
-			TryToSwing();
-		}
-		else if ((_heldItem is SpellBookItemSO || _heldItem is WandItemSO) && !_isSwinging)
+		if(HeldItem is SpellBookItemSO && !IsSwinging)
 		{
 			RotateArmBasedOnAngle();
+		}
+		else if(HeldItem is WandItemSO)
+		{
+			if(!IsSwinging)
+			{
+				RotateArmBasedOnAngle();
+			}
+
+			TryToSwing();
 		}
 	}
 	
 	private void TryToSwing()
 	{
-		if (_isSwinging || Pointer.IsOverUI() || !IsOwner) return;
+		if (IsSwinging || Pointer.IsOverUI() || !IsOwner) return;
 		
-		bool hasSwingInput = _isMainHand
-			? GameInput.Instance.GetPrimaryHeldDown()
-			: GameInput.Instance.GetSecondaryHeldDown();
-
-		if (hasSwingInput)
+		if (GameInput.Instance.GetSecondaryHeldDown())
 		{
 			switch (ArmCardinalDirection)
 			{
@@ -141,7 +142,7 @@ public class PlayerHand : NetworkBehaviour
 		{
 			OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 
-			if (_oppositeHand.IsSwinging()) _oppositeHand.StopSwing();
+			if (_oppositeHand.IsSwinging) _oppositeHand.StopSwing();
 		}
 	}
 
@@ -170,42 +171,47 @@ public class PlayerHand : NetworkBehaviour
 	
 	private void UpdateArmFromItemIndex(int newValue)
 	{
-		var tempItem = _heldItem;
-		_heldItem = GameManager.Instance.GetItemSOFromItemId(newValue);
+		var tempItem = HeldItem;
+		HeldItem = GameManager.Instance.GetItemSOFromItemId(newValue);
 
-		if ((tempItem is SpellBookItemSO || tempItem is WandItemSO) && (_heldItem is not SpellBookItemSO || _heldItem is not WandItemSO) && !_isSwinging)
+		if ((tempItem is SpellBookItemSO || tempItem is WandItemSO) && (HeldItem is not SpellBookItemSO || HeldItem is not WandItemSO) && !IsSwinging)
 		{
 			OnHoldingWandEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 		}
 		
-		if(_isSwinging)
+		if(IsSwinging)
 		{
 			_stoppingSwing = true;
 		}
 
-		if (_heldItem is SpellBookItemSO || _heldItem is WandItemSO)
+		if (HeldItem is SpellBookItemSO || HeldItem is WandItemSO)
 		{
 			ShowArm();
 			ApplyPreset(_holdingWandPreset);
 			
 			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 		}
-		else if (_heldItem is MeleeItemSO)
+		else if (HeldItem is MeleeItemSO)
 		{
 			HideArm();
 		}
 		else
 		{
-			_heldItem = null;
+			HeldItem = null;
 			HideArm();
 		}
 
-		_itemHeldSR.sprite = _heldItem?.UiDisplay;
+		_itemHeldSR.sprite = HeldItem?.UiDisplay;
 	}
 
 	#endregion
 
 	#region Swing and Wand Handling
+	
+	private void SwingEast(float duration) => SwingRpc(60, 300, duration, true, CardinalDirection.East, OwnerClientId);
+	private void SwingWest(float duration) => SwingRpc(120, 240, duration, false, CardinalDirection.West, OwnerClientId);
+	private void SwingNorth(float duration) => SwingRpc(150, 30, duration, true, CardinalDirection.North, OwnerClientId);
+	private void SwingSouth(float duration) => SwingRpc(330, 210, duration, false, CardinalDirection.South, OwnerClientId);
 	
 	[Rpc(SendTo.Everyone, RequireOwnership = false)]
 	private void SwingRpc(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction, ulong clientSenderId)
@@ -214,14 +220,15 @@ public class PlayerHand : NetworkBehaviour
 		
 		if(OwnerClientId == NetworkManager.LocalClientId)
 		{
-			if(_isSwinging)
+			if(IsSwinging)
 			{
 				return;
 			}
 		}
 		
 		SetPivotPosition(direction);
-		ApplyPreset(_meleeSwingPreset);
+		// ApplyPreset(_meleeSwingPreset);
+		ApplyPreset(_holdingWandPreset);
 		
 		StartCoroutine(SwingCoroutine(startAngle, endAngle, duration, clockwise, direction));
 	}
@@ -235,7 +242,7 @@ public class PlayerHand : NetworkBehaviour
 		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerMeleeSwing, Player.LocalClientInstance.transform.position);
 		
 		_thisPlayer.IsPerformingSwing = true;
-		_isSwinging = true;
+		IsSwinging = true;
 
 		startAngle = NormalizeAngle(startAngle);
 		endAngle = NormalizeAngle(endAngle);
@@ -266,10 +273,15 @@ public class PlayerHand : NetworkBehaviour
 
 	private void HandleSwingStop(CardinalDirection direction, float duration, Quaternion endRotation)
 	{
-		if (_heldItem is SpellBookItemSO) ShowArm();
-		else HideArm();
-
-		OnSwingEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
+		if (HeldItem is WandItemSO || HeldItem is SpellBookItemSO)
+		{
+			ShowArm();
+		}
+		else
+		{
+			HideArm();
+			OnSwingEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
+		}
 
 		StartCoroutine(FinishSwing(duration, endRotation));
 	}
@@ -277,9 +289,11 @@ public class PlayerHand : NetworkBehaviour
 	private IEnumerator FinishSwing(float duration, Quaternion endRotation)
 	{
 		yield return new WaitForSeconds(duration * 0.3f);
+		
+		ApplyPreset(_holdingWandPreset);
+		
 		_armPivotGO.transform.rotation = endRotation;
-
-		_isSwinging = false;
+		IsSwinging = false;
 		_thisPlayer.IsPerformingSwing = false;
 		_stoppingSwing = false;
 	}
@@ -354,17 +368,7 @@ public class PlayerHand : NetworkBehaviour
 	}
 
 	public bool IsArmShown() => _armGO.activeInHierarchy;
-	public bool IsSwinging() => _isSwinging;
 	public void StopSwing() => _stoppingSwing = true;
-
-	#endregion
-
-	#region Swing Direction Methods
-
-	private void SwingEast(float duration) => SwingRpc(60, 300, duration, true, CardinalDirection.East, OwnerClientId);
-	private void SwingWest(float duration) => SwingRpc(120, 240, duration, false, CardinalDirection.West, OwnerClientId);
-	private void SwingNorth(float duration) => SwingRpc(150, 30, duration, true, CardinalDirection.North, OwnerClientId);
-	private void SwingSouth(float duration) => SwingRpc(330, 210, duration, false, CardinalDirection.South, OwnerClientId);
 
 	#endregion
 }

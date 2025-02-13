@@ -8,6 +8,8 @@ public class GameInput : MonoBehaviour
 {
 	public static GameInput Instance { get; private set; }
 
+	public event EventHandler OnShiftStarted;
+	public event EventHandler OnSpaceStarted;
 	public event EventHandler OnSwapHands;
 	public event EventHandler OnSecondaryActionStarted;
 	public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnSecondaryAction;
@@ -68,13 +70,19 @@ public class GameInput : MonoBehaviour
 		_playerInput.Player.SwapHands.started += PlayerInput_SwapHands;
 		_playerInput.Player.Shift.started += PlayerInput_ShiftStart;
 		_playerInput.Player.Shift.canceled += PlayerInput_ShiftCanceled;
+		_playerInput.Player.Space.started += PlayerInput_SpaceStarted;
 	}
-	
+
 	private void Start()
 	{
 		ChestManager.Instance.OnChestOpen += ChestManager_OnChestOpen;
 		WorldManager.Instance.OnStartBiomeTransition += WorldManager_DisableInputs;
 		WorldManager.Instance.OnEndBiomeTransition += WorldManager_EnableInputs;
+	}
+	
+	private void PlayerInput_SpaceStarted(InputAction.CallbackContext context)
+	{
+		OnSpaceStarted?.Invoke(this, EventArgs.Empty);
 	}
 
 	private void WorldManager_EnableInputs(object sender, EventArgs e)
@@ -99,6 +107,8 @@ public class GameInput : MonoBehaviour
 
 	private void PlayerInput_ShiftStart(InputAction.CallbackContext context)
 	{
+		OnShiftStarted?.Invoke(this, EventArgs.Empty);
+	
 		_shiftHeldDown = true;
 	}
 	

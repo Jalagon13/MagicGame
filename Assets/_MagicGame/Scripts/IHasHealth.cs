@@ -13,5 +13,5 @@ public interface IHasHealth
 	
 	public float IFrameLength { get; } // Read-only property
 	
-	public void ApplyDamage(int damage, Vector2 damagerPosition, int knockbackForce);
+	public void ApplyDamage(int damage, Vector2 damagerPosition, int knockbackForce = 0);
 }

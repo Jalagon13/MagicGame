@@ -26,18 +26,6 @@ public class MeleeCollider : NetworkBehaviour
 	{
 		_playerHand.OnSwingStart += OnSwingStart;
 		_playerHand.OnSwingEnd += OnSwingEnd;
-		_playerHand.OnHoldingWandStart += OnHoldingWandStart;
-		_playerHand.OnHoldingWandEnd += OnHoldingWandEnd;
-	}
-
-	private void OnHoldingWandStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
-	{
-		_wandOut = true;
-	}
-
-	private void OnHoldingWandEnd(object sender, PlayerHand.CardinalDirectionEventArgs e)
-	{
-		_wandOut = false;
 	}
 
 	private void OnSwingStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
@@ -62,7 +50,7 @@ public class MeleeCollider : NetworkBehaviour
 	
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if(!IsOwner || _wandOut) return;
+		if(!IsOwner) return;
 	
 		if(collision.TryGetComponent(out IHasHealth iHasHealth))
 		{
@@ -74,7 +62,10 @@ public class MeleeCollider : NetworkBehaviour
 				_entitiesFoundThisSwing = new();
 			}
 			
-			_entitiesFoundThisSwing.Add(iHasHealth);
+			if(!_entitiesFoundThisSwing.Contains(iHasHealth))
+			{
+				_entitiesFoundThisSwing.Add(iHasHealth);
+			}
 		}
 	}
 	
@@ -85,8 +76,8 @@ public class MeleeCollider : NetworkBehaviour
 			foreach (IHasHealth entityToDamage in _entitiesFoundThisSwing.ToArray())
 			{
 				if (_entitiesHitThisSwing.Contains(entityToDamage)) continue;
-
-				entityToDamage.ApplyDamage(8, transform.root.position, 20);
+				
+				entityToDamage.ApplyDamage((_playerHand.HeldItem as WandItemSO).MeleeDamage, transform.root.position, (_playerHand.HeldItem as WandItemSO).MeleeKnockback);
 				
 				_entitiesFoundThisSwing.Remove(entityToDamage);
 				
@@ -110,8 +101,6 @@ public class MeleeCollider : NetworkBehaviour
 	{
 		_playerHand.OnSwingStart -= OnSwingStart;
 		_playerHand.OnSwingEnd -= OnSwingEnd;
-		_playerHand.OnHoldingWandStart -= OnHoldingWandStart;
-		_playerHand.OnHoldingWandEnd -= OnHoldingWandEnd;
 		
 		base.OnDestroy();
 	}

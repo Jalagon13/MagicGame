@@ -3,6 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Wand", menuName = "Create Item/New Wand")]
 public class WandItemSO : ItemSO
 {
+	[field: Tooltip("The Damage dealt when swung")]
+	[field: SerializeField] public int MeleeDamage { get; private set; } = 1;
+	[field: Tooltip("The Knockback dealt when swung")]
+	[field: SerializeField] public int MeleeKnockback { get; private set; } = 1;
 	[field: Tooltip("The number of spells cast simultaneously per use of the spell book.")]
 	[field: SerializeField] public int SpellsCast { get; private set; } = 1;
 

@@ -17,6 +17,8 @@ MonoBehaviour:
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
+  <MeleeDamage>k__BackingField: 6
+  <MeleeKnockback>k__BackingField: 3
   <SpellsCast>k__BackingField: 1
   <BaseCastDelay>k__BackingField: 0.15
   <MaxRechargeDuration>k__BackingField: 0.33

@@ -74,7 +74,7 @@ public class ActionManager : MonoBehaviour
 				_primaryActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.LocalClientInstance.MainHand);
 			}
 		
-			if(WandDict.ContainsKey(selectedInventoryItem.Id))
+			if(WandDict.ContainsKey(selectedInventoryItem.Id) && !Player.LocalClientInstance.MainHand.IsSwinging && !GameInput.Instance.GetSecondaryHeldDown())
 			{
 				// Player is holding down primary on a wand, try to shoot wand
 				WandDict[selectedInventoryItem.Id].CastSpell();

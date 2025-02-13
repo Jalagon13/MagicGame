@@ -43,9 +43,12 @@ public class SpellNetworkComponent : NetworkBehaviour
 	
 	public void StopProjectile()
 	{
-		GameManager.Instance.DestroyFakeProjectile(_sourcePlayerId, _projectileId);
-		NetworkObject.Despawn();
-		Destroy(gameObject);
+		if(NetworkObject.IsSpawned)
+		{
+			GameManager.Instance.DestroyFakeProjectile(_sourcePlayerId, _projectileId);
+			NetworkObject.Despawn();
+			Destroy(gameObject);
+		}
 	}
 
 	private void SpellNetworkTick()

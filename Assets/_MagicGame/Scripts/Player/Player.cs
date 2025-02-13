@@ -77,9 +77,9 @@ public class Player : NetworkBehaviour, IHasHealth
 			
 			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnMainHandSlotUpdated;
 			InventoryManager.Instance.OnOffHandItemUpdated += InventoryManager_OnOffHandItemUpdated;
-			GameInput.Instance.OnSecondaryActionStarted += DashTest;
+			GameInput.Instance.OnSpaceStarted += DashTest;
 			
-			Invoke(nameof(SpawnStartingItems), 0.25f);
+			Invoke(nameof(SpawnStartingItems), 0.75f);
 		}
 		
 		OnAnyPlayerSpawned?.Invoke(this, new PlayerIdEventArgs
