@@ -1,49 +1,63 @@
+using System;
 using UnityEngine;
 
 public class WandInventoryItem : InventoryItem
 {
-	public SpellItemSO[] SpellArray { get; private set; }
+	public event EventHandler OnWandContentsUpdated;
+
+	public MagicItemSO[] MagicArray { get; private set; }
 
 	public WandInventoryItem(ItemSO itemSO, int quantity, int capacity) : base(itemSO, quantity)
 	{
-		SpellArray = new SpellItemSO[capacity];
+		MagicArray = new MagicItemSO[capacity];
 	}
 	
-	public void SetSpell(SpellItemSO spell, int spellIndex)
+	public void ClearWandContentsUpdatedListeners()
 	{
-		if(spellIndex < 0 || spellIndex >= SpellArray.Length)
+		OnWandContentsUpdated = null;
+	}
+	
+	public void SetMagic(MagicItemSO MagicItem, int magicIndex)
+	{
+		if(magicIndex < 0 || magicIndex >= MagicArray.Length)
 		{
-			Debug.LogError($"Spell index out of bounds");
+			Debug.LogError($"Magic index out of bounds");
 			return;
 		}
 		
-		SpellArray[spellIndex] = spell;
+		MagicArray[magicIndex] = MagicItem;
+		OnWandContentsUpdated?.Invoke(this, EventArgs.Empty);
 	}
 	
-	public SpellItemSO RemoveSpell(int spellIndex)
+	public MagicItemSO RemoveMagic(int magicIndex)
 	{
-		if(spellIndex < 0 || spellIndex >= SpellArray.Length)
+		if(magicIndex < 0 || magicIndex >= MagicArray.Length)
 		{
-			Debug.LogError($"Spell index out of bounds");
+			Debug.LogError($"Magic index out of bounds");
 			return null;
 		}
 		
-		SpellItemSO removedSpell = SpellArray[spellIndex];
-		SpellArray[spellIndex] = null;
-		return removedSpell;
+		MagicItemSO removedMagic = MagicArray[magicIndex];
+		MagicArray[magicIndex] = null;
+		
+		OnWandContentsUpdated?.Invoke(this, EventArgs.Empty);
+		
+		return removedMagic;
 	}
 	
-	public SpellItemSO SwapSpells(SpellItemSO spell, int spellIndex)
+	public MagicItemSO SwapMagic(MagicItemSO magic, int magicIndex)
 	{
-		if(spellIndex < 0 || spellIndex >= SpellArray.Length)
+		if(magicIndex < 0 || magicIndex >= MagicArray.Length)
 		{
-			Debug.LogError($"Spell index out of bounds");
+			Debug.LogError($"Magic index out of bounds");
 			return null;
 		}
 		
-		SpellItemSO swappedSpell = SpellArray[spellIndex];
-		SpellArray[spellIndex] = spell;
+		MagicItemSO swappedMagic = MagicArray[magicIndex];
+		MagicArray[magicIndex] = magic;
 		
-		return swappedSpell;
+		OnWandContentsUpdated?.Invoke(this, EventArgs.Empty);
+		
+		return swappedMagic;
 	}
 }

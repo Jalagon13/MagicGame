@@ -47,6 +47,7 @@ public class ActionManager : MonoBehaviour
 	{
 		if(WandDict.ContainsKey(e.WandInvItem.Id))
 		{
+			WandDict[e.WandInvItem.Id].WandInvItem.ClearWandContentsUpdatedListeners();
 			WandDict.Remove(e.WandInvItem.Id);
 		}
 	}

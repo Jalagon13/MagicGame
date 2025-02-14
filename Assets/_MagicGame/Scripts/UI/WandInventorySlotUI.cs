@@ -26,22 +26,22 @@ public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointer
 		{
 			if(GameInput.Instance.GetShiftHeldDown())
 			{
-				InventoryManager.Instance.AddItem(_wandInvItem.RemoveSpell(_spellIndex), 1);
+				InventoryManager.Instance.AddItem(_wandInvItem.RemoveMagic(_spellIndex), 1);
 			}
 			else if(mouseItem.HasItem && mouseItem.Item is SpellItemSO mouseSpellProjectileItemSO)
 			{
-				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _wandInvItem.SwapSpells(mouseSpellProjectileItemSO, _spellIndex);
+				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _wandInvItem.SwapMagic(mouseSpellProjectileItemSO, _spellIndex);
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = 1;
 			}
 			else
 			{
-				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _wandInvItem.RemoveSpell(_spellIndex);
+				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _wandInvItem.RemoveMagic(_spellIndex);
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = 1;
 			}
 		}
 		else if(mouseItem.HasItem && mouseItem.Item is SpellItemSO mouseSpellProjectileItemSO)
 		{
-			_wandInvItem.SetSpell(mouseSpellProjectileItemSO, _spellIndex);
+			_wandInvItem.SetMagic(mouseSpellProjectileItemSO, _spellIndex);
 			InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
 		}
 		
@@ -50,9 +50,9 @@ public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointer
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
 	
-	public void SetSpell(SpellItemSO spell)
+	public void SetMagic(MagicItemSO magicItem)
 	{
-		_wandInvItem.SetSpell(spell, _spellIndex);
+		_wandInvItem.SetMagic(magicItem, _spellIndex);
 		UpdateSlotUI();
 	}
 
@@ -68,14 +68,14 @@ public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointer
 	
 	public bool WandInventorySlotIsOccupied()
 	{
-		return _wandInvItem.SpellArray[_spellIndex] != null;
+		return _wandInvItem.MagicArray[_spellIndex] != null;
 	}
 	
 	public void UpdateSlotUI()
 	{
 		if(WandInventorySlotIsOccupied())
 		{
-			_spellIcon.sprite = _wandInvItem.SpellArray[_spellIndex].UiDisplay;
+			_spellIcon.sprite = _wandInvItem.MagicArray[_spellIndex].UiDisplay;
 			_spellIcon.color = new(1,1,1,1);
 		}
 		else

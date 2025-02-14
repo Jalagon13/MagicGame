@@ -2,7 +2,7 @@ using FMODUnity;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Spell", menuName = "Create Item/New Spell")]
-public class SpellItemSO : ItemSO
+public class SpellItemSO : MagicItemSO
 {
 	[field: Tooltip("Actual Prefab for the projectile.")]
 	[field: SerializeField] public Spell SpellProjectilePrefab { get; private set; }
@@ -42,20 +42,5 @@ public class SpellItemSO : ItemSO
 		
 		GameManager.Instance.SpawnSpellProjectile(this, spawnBiome, spawnPos, spreadDirection, Speed, Damage, Lifetime, Knockback);
 		SoundManager.Instance.PlayOneShot(SpellCast, spawnPos);
-	}
-
-	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
-	{
-		return _baseActionCooldown;
-	}
-	
-	public override InventoryItem CreateInventoryItem(int quantity)
-	{
-		return new InventoryItem(this, quantity);
-	}
-
-	public override string GetDescription()
-	{
-		return string.Empty;
 	}
 }

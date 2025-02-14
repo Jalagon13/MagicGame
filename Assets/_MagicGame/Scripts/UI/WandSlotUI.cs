@@ -29,17 +29,17 @@ public class WandSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 			{
 				if(GameInput.Instance.GetShiftHeldDown())
 				{
-					InventoryManager.Instance.AddItem(_wandMenuUI.RemoveSelectedSpellBook());
+					InventoryManager.Instance.AddItem(_wandMenuUI.RemoveSelectedWand());
 				}
 				else
 				{
-					InventoryManager.Instance.GetMouseItem().MouseInventoryItem = _wandMenuUI.RemoveSelectedSpellBook();
+					InventoryManager.Instance.GetMouseItem().MouseInventoryItem = _wandMenuUI.RemoveSelectedWand();
 				}
 			}
 		}
 		else if(mouseItem.HasItem && mouseItem is WandInventoryItem mouseWandInventoryItem)
 		{
-			_wandMenuUI.PlaceSelectedSpellBook(mouseWandInventoryItem);
+			_wandMenuUI.PlaceSelectedWand(mouseWandInventoryItem);
 			InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
 		}
 		

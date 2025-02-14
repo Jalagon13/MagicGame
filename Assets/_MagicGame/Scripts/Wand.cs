@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,18 +10,26 @@ public class Wand
 	public float TotalRechargeDuration { get; private set; }
 	public WandItemSO WandSO { get; private set; }
 	
-	private Queue<int> _validSpellIndexes = new();
+	private Queue<int> _validMagicIndexes = new();
 	private float _castTimer;
-	private int _spellIndex;
 
 	public Wand(WandInventoryItem wandInventoryItem)
 	{
 		WandInvItem = wandInventoryItem;
 		WandSO = WandInvItem.Item as WandItemSO;
 		CurrentMana = WandSO.MaxMana;
-		_spellIndex = -1;
+		WandInvItem.OnWandContentsUpdated += OnWandContentsUpdated;
+		
+		ResetValidMagicIndexes();
 	}
+
+	private void OnWandContentsUpdated(object sender, EventArgs e)
+	{
+		Debug.Log($"Resseting valid magic idnexes");
 	
+		ResetValidMagicIndexes();
+	}
+
 	public void Tick(float deltaTime)
 	{
 		if(_castTimer > 0)
@@ -39,44 +48,93 @@ public class Wand
 	{
 		if(_castTimer > 0 || CurrentRecharge < TotalRechargeDuration) return; // Cast Delay or recharge ongoing return
 
-		if(_validSpellIndexes.Count == 0) // If validspells is empty, try to fill it up
+		if(_validMagicIndexes.Count == 0) // If validspells is empty, try to fill it up
 		{
-			for (int i = 0; i < WandInvItem.SpellArray.Length; i++)
+			TryToRefillValidMagicIndexes();
+		}
+		
+		if(_validMagicIndexes.Count == 0) return; // If still empty after fill, return
+
+		MagicItemSO magic = WandInvItem.MagicArray[_validMagicIndexes.Peek()];
+		
+		if(magic is MultiCastItemSO multiCast)
+		{
+			Debug.Log($"Found Multicast");
+			_validMagicIndexes.Dequeue();
+			
+			if(_validMagicIndexes.Count == 0)
 			{
-				if(WandInvItem.SpellArray[i] != null)
+				TryToRefillValidMagicIndexes();
+			}
+			
+			int numOfSpellsCast = 0;
+			float cumulativeCastDelay = 0;
+
+			while (_validMagicIndexes.Count > 0)
+			{
+				if (numOfSpellsCast == multiCast.MultiCastAmount) 
+					break;
+
+				// Dequeue the next valid index to process it
+				int validMagicIndex = _validMagicIndexes.Dequeue();
+
+				if (WandInvItem.MagicArray[validMagicIndex] is SpellItemSO potentialSpellToShoot)
 				{
-					_validSpellIndexes.Enqueue(i);
+					Debug.Log($"Found spell for multicast: {potentialSpellToShoot.Name}");
+
+					if (potentialSpellToShoot.ManaCost <= CurrentMana)
+					{
+						CurrentMana -= potentialSpellToShoot.ManaCost;
+					
+						Debug.Log($"Casting {potentialSpellToShoot.Name}");
+						potentialSpellToShoot.CastSpell(WandSO);
+						numOfSpellsCast++;
+						cumulativeCastDelay += potentialSpellToShoot.CastDelay;
+					}
+				}
+
+				// If the queue is empty but we still need more spells, try refilling it
+				if (_validMagicIndexes.Count == 0 && numOfSpellsCast < multiCast.MultiCastAmount)
+				{
+					Debug.Log("Queue is empty but I still need more spells, refilling...");
+					TryToRefillValidMagicIndexes();
 				}
 			}
+			
+			if(_validMagicIndexes.Count > 0)
+			{
+				_castTimer = WandSO.BaseCastDelay + cumulativeCastDelay;
+			}
+			else
+			{
+				CurrentRecharge = 0;
+				TotalRechargeDuration = WandSO.MaxRechargeDuration + cumulativeCastDelay;
+			}
+		}
+		else if(magic is SpellItemSO spellToCast)
+		{
+			_validMagicIndexes.Dequeue(); 
+			_castTimer = WandSO.BaseCastDelay + spellToCast.CastDelay;
+			
+			spellToCast.CastSpell(WandSO);
 		}
 		
-		if(_validSpellIndexes.Count == 0) return; // If still empty after fill, return
+		
+	}
+	
+	private void ResetValidMagicIndexes()
+	{
+		_validMagicIndexes.Clear();
+	}
 
-		if(WandInvItem.SpellArray[_validSpellIndexes.Peek()].ManaCost > CurrentMana)
+	private void TryToRefillValidMagicIndexes()
+	{
+		for (int i = 0; i < WandInvItem.MagicArray.Length; i++)
 		{
-			CurrentRecharge = 0;
-			return;
-		}
-		
-		_spellIndex = _validSpellIndexes.Dequeue(); 
-		
-		var spell = WandInvItem.SpellArray[_spellIndex];
-		
-		spell.CastSpell(WandSO); // Grab the next spell in line and cast it
-		
-		CurrentMana -= spell.ManaCost;
-		CurrentMana = Mathf.Max(0, CurrentMana);
-		
-		if(_validSpellIndexes.Count > 0)
-		{
-			// valid spells exists after cast
-			_castTimer = WandSO.BaseCastDelay + spell.CastDelay;
-		}
-		else
-		{
-			// Casted the last spell in the sequence
-			CurrentRecharge = 0;
-			TotalRechargeDuration = WandSO.MaxRechargeDuration + spell.CastDelay;
+			if(WandInvItem.MagicArray[i] != null)
+			{
+				_validMagicIndexes.Enqueue(i);
+			}
 		}
 	}
 }

@@ -10574,7 +10574,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d538a69c7b8344cb7a67f5514d6bb9c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spellBookInventorySlotPrefab: {fileID: 7064032505047427461, guid: 3df652b1e7fd54fd9b7fa5c7c70280a6, type: 3}
+  _wandInvSlotPrefab: {fileID: 7064032505047427461, guid: 3df652b1e7fd54fd9b7fa5c7c70280a6, type: 3}
   _spellBookSlotsHolder: {fileID: 329849560}
   _spellBookSlotUI: {fileID: 806501534}
 --- !u!1 &1579686763

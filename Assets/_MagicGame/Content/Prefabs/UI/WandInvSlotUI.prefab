@@ -275,7 +275,7 @@ GameObject:
   - component: {fileID: 5094775120031666383}
   - component: {fileID: 7064032505047427461}
   m_Layer: 5
-  m_Name: SpellBookInventorySlotUI
+  m_Name: WandInvSlotUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

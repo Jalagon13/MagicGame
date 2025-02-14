@@ -6,7 +6,7 @@ public class WandMenuUI : MonoBehaviour
 {
 	public WandInventoryItem SelectedWand { get; private set; } 
 	
-	[SerializeField] private WandInventorySlotUI _spellBookInventorySlotPrefab;
+	[SerializeField] private WandInventorySlotUI _wandInvSlotPrefab;
 	[SerializeField] private Transform _spellBookSlotsHolder;
 	[SerializeField] private WandSlotUI _spellBookSlotUI;
 	
@@ -24,7 +24,7 @@ public class WandMenuUI : MonoBehaviour
 			InventoryManager.Instance.AddItem(SelectedWand);
 		}
 		
-		RemoveSelectedSpellBook();
+		RemoveSelectedWand();
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
 	
@@ -40,13 +40,13 @@ public class WandMenuUI : MonoBehaviour
 			}
 			else
 			{
-				PlaceSelectedSpellBook(wandInInv);
+				PlaceSelectedWand(wandInInv);
 				InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
 			}
 			
 			_spellBookSlotUI.UpdateSlotUI();
 		}
-		else if(e.InventoryItem.Item is SpellItemSO spellProjectileItemSO)
+		else if(e.InventoryItem.Item is MagicItemSO magicItemSO)
 		{
 			if(HasWand())
 			{
@@ -64,7 +64,7 @@ public class WandMenuUI : MonoBehaviour
 				if(firstEmptySpellBookInventorySlotUI != null)
 				{
 					// Found an empty spot
-					firstEmptySpellBookInventorySlotUI.SetSpell(spellProjectileItemSO);
+					firstEmptySpellBookInventorySlotUI.SetMagic(magicItemSO);
 					InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
 				}
 			}
@@ -78,7 +78,7 @@ public class WandMenuUI : MonoBehaviour
 		return SelectedWand != null;
 	}
 
-	public WandInventoryItem RemoveSelectedSpellBook()
+	public WandInventoryItem RemoveSelectedWand()
 	{
 		WandInventoryItem removedWand = SelectedWand;
 
@@ -89,7 +89,7 @@ public class WandMenuUI : MonoBehaviour
 		return removedWand;
 	}
 
-	public void PlaceSelectedSpellBook(WandInventoryItem newSpellBook)
+	public void PlaceSelectedWand(WandInventoryItem newSpellBook)
 	{
 		if (newSpellBook == null)
 		{
@@ -98,7 +98,7 @@ public class WandMenuUI : MonoBehaviour
 
 		SelectedWand = newSpellBook;
 		
-		UpdateSpellBookSlotsUI();
+		UpdateWandSlotsUI();
 	}
 
 	public WandInventoryItem SwapWands(WandInventoryItem newWand)
@@ -117,13 +117,13 @@ public class WandMenuUI : MonoBehaviour
 		Debug.Log($"Swapped spellbook. New selected spellbook: {SelectedWand.Item.Name}");
 
 		// Update the UI
-		UpdateSpellBookSlotsUI();
+		UpdateWandSlotsUI();
 
 		// Return the previous spellbook
 		return previousWand;
 	}
 	
-	private void UpdateSpellBookSlotsUI()
+	private void UpdateWandSlotsUI()
 	{
 		// Clear existing craft nodes
 		RemoveUI();
@@ -131,10 +131,10 @@ public class WandMenuUI : MonoBehaviour
 		// Create new craft nodes based on the crafting model's recipe list
 		if (SelectedWand != null)
 		{
-			for (int i = 0; i < SelectedWand.SpellArray.Length; i++)
+			for (int i = 0; i < SelectedWand.MagicArray.Length; i++)
 			{
-				WandInventorySlotUI spellBookInventorySlot = Instantiate(_spellBookInventorySlotPrefab, _spellBookSlotsHolder);
-				spellBookInventorySlot.Initialize(SelectedWand, i);
+				WandInventorySlotUI wandInvSlotUI = Instantiate(_wandInvSlotPrefab, _spellBookSlotsHolder);
+				wandInvSlotUI.Initialize(SelectedWand, i);
 			}
 		}
 	}
