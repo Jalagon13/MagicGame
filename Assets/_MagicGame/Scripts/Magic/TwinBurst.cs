@@ -17,10 +17,7 @@ public class TwinBurst : Spell
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if(!Player.LocalClientInstance.IsServer) return;
-		
-		if(NetworkManager.ConnectedClients[_sourcePlayerIdRef].PlayerObject == null || 
-		NetworkManager.ConnectedClients[_sourcePlayerIdRef].PlayerObject.GetComponent<Player>().HitCollider == other) return;
+		if(!Player.LocalClientInstance.IsServer || ColliderIsSourcePlayer(other)) return;
 		
 		if (other.TryGetComponent(out IHasHealth npcToDamage))
 		{

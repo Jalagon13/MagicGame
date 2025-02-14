@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BouncingBramble : Spell
+public class BouncyBattleBall : Spell
 {
+	[SerializeField] private float _velocityPercentKeptOnBounce = 0.75f;
 	[SerializeField] private float _damageTimer = 0.16f;
 	[SerializeField] private float _rotationSpeedMultiplier = 50f;
 	[SerializeField] private SpriteRenderer _projectileSr;
@@ -21,7 +22,7 @@ public class BouncingBramble : Spell
 		// Rotate based on velocity magnitude
 		float spinSpeed = _rigidbody2D.linearVelocity.magnitude * _rotationSpeedMultiplier;
 		_projectileSr.transform.Rotate(0, 0, spinSpeed * Time.fixedDeltaTime);
-    
+	
 		if (IsServer)
 		{
 			// Update damage timers and remove expired entries
@@ -34,7 +35,7 @@ public class BouncingBramble : Spell
 				if (_hitNpcList[npc] <= 0)
 					npcsToRemove.Add(npc);
 			}
-        
+		
 			for (int i = 0; i < npcsToRemove.Count; i++)
 			{
 				var npc = npcsToRemove[i];
@@ -44,22 +45,21 @@ public class BouncingBramble : Spell
 			Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _collider.radius);
 			foreach (var collider in hitColliders)
 			{
-				if (NetworkManager.ConnectedClients[_sourcePlayerId].PlayerObject == null || 
-					NetworkManager.ConnectedClients[_sourcePlayerId].PlayerObject.GetComponent<Player>().HitCollider == collider) 
+				if (ColliderIsSourcePlayer(collider)) 
 					continue;
-            
+			
 				if (collider.TryGetComponent(out IHasHealth npcToDamage))
 				{
 					if (_hitNpcList.ContainsKey(npcToDamage)) continue;
-            
-					npcToDamage.ApplyDamage(_damage, transform.position, _knockback + Mathf.RoundToInt(_rigidbody2D.linearVelocity.magnitude * 0.5f));
+			
+					npcToDamage.ApplyDamage(_damage, transform.position, _knockback + Mathf.RoundToInt(_rigidbody2D.linearVelocity.magnitude * _velocityPercentKeptOnBounce));
 					_hitNpcList.Add(npcToDamage, _damageTimer);
-                
+				
 					var velocity = _rigidbody2D.linearVelocity;
 					var direction = (transform.position - collider.transform.position).normalized;
 					_rigidbody2D.linearVelocity = Vector2.zero;
 
-					_rigidbody2D.AddForce(direction * (velocity.magnitude * 0.5f), ForceMode2D.Impulse);
+					_rigidbody2D.AddForce(direction * (velocity.magnitude * _velocityPercentKeptOnBounce), ForceMode2D.Impulse);
 				}
 			}
 		}

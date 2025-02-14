@@ -18,10 +18,7 @@ public class CinderBolt : Spell
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (!IsServer) return;
-		
-		if (NetworkManager.ConnectedClients[_sourcePlayerId].PlayerObject == null || 
-		NetworkManager.ConnectedClients[_sourcePlayerId].PlayerObject.GetComponent<Player>().HitCollider == other) return;
+		if (!IsServer || ColliderIsSourcePlayer(other)) return;
 		
 		if (other.TryGetComponent(out IHasHealth npcToDamage))
 		{
@@ -61,6 +58,8 @@ public class CinderBolt : Spell
 			Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _explosionRadius);
 			foreach (var collider in hitColliders)
 			{
+				if(ColliderIsSourcePlayer(collider)) continue;
+			
 				if (collider.TryGetComponent(out IHasHealth npcToDamage))
 				{
 					npcToDamage.ApplyDamage(_damage, transform.position, _knockback);

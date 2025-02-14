@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 8269354046363732758}
   - component: {fileID: 6035814809352226819}
   m_Layer: 0
-  m_Name: BouncingBramble
+  m_Name: BouncyBattleBall
   m_TagString: Untagged
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1901879802
+  GlobalObjectIdHash: 1696162248
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -327,8 +327,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _velocityPercentKeptOnBounce: 0.75
   _damageTimer: 0.16
-  _rotationSpeedMultiplier: 50
+  _rotationSpeedMultiplier: 75
   _projectileSr: {fileID: 292624682833923340}
 --- !u!1 &8022134347944052805
 GameObject:

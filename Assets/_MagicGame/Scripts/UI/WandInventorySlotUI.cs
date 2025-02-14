@@ -28,9 +28,9 @@ public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointer
 			{
 				InventoryManager.Instance.AddItem(_wandInvItem.RemoveMagic(_spellIndex), 1);
 			}
-			else if(mouseItem.HasItem && mouseItem.Item is SpellItemSO mouseSpellProjectileItemSO)
+			else if(mouseItem.HasItem && mouseItem.Item is MagicItemSO mouseMagicItemSO)
 			{
-				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _wandInvItem.SwapMagic(mouseSpellProjectileItemSO, _spellIndex);
+				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _wandInvItem.SwapMagic(mouseMagicItemSO, _spellIndex);
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = 1;
 			}
 			else
@@ -39,9 +39,9 @@ public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointer
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = 1;
 			}
 		}
-		else if(mouseItem.HasItem && mouseItem.Item is SpellItemSO mouseSpellProjectileItemSO)
+		else if(mouseItem.HasItem && mouseItem.Item is MagicItemSO mouseMagicItemSO)
 		{
-			_wandInvItem.SetMagic(mouseSpellProjectileItemSO, _spellIndex);
+			_wandInvItem.SetMagic(mouseMagicItemSO, _spellIndex);
 			InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
 		}
 		

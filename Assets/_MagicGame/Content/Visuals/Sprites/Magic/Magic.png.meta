@@ -103,13 +103,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spell_bouncing_bramble
+      name: spell_bouncy_battle_ball
       rect:
         serializedVersion: 2
-        x: 0
-        y: 80
-        width: 15
-        height: 14
+        x: 2
+        y: 81
+        width: 13
+        height: 13
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,7 +140,7 @@ TextureImporter:
     nameFileIdTable:
       Magic_0: 1985458593
       Magic_1: 4791746620587977043
-      spell_bouncing_bramble: -369004858089563195
+      spell_bouncy_battle_ball: -369004858089563195
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

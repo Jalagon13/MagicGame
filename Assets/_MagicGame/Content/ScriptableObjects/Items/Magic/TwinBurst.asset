@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TwinBurst
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Twin Burst
-  <UiDisplay>k__BackingField: {fileID: 5524590292671962877, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -686089455, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
@@ -22,7 +22,7 @@ MonoBehaviour:
   <Damage>k__BackingField: 4
   <Knockback>k__BackingField: 3
   <Spread>k__BackingField: 0
-  <Lifetime>k__BackingField: 1.25
+  <Lifetime>k__BackingField: 1
   <Speed>k__BackingField: 17
   <CastDelay>k__BackingField: 0.15
   <SpellCast>k__BackingField:

@@ -24,4 +24,9 @@ public class Spell : NetworkBehaviour
 		_knockback = knockback;
 		_lifeTime = lifeTime;
 	}
+	
+	protected bool ColliderIsSourcePlayer(Collider2D col)
+	{
+		return NetworkManager.ConnectedClients[_sourcePlayerId].PlayerObject == null || NetworkManager.ConnectedClients[_sourcePlayerId].PlayerObject.GetComponent<Player>().HitCollider == col;
+	}
 }

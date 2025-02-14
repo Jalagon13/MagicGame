@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CinderBolt
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Cinder Bolt
-  <UiDisplay>k__BackingField: {fileID: -3168733581550749585, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
+  <UiDisplay>k__BackingField: {fileID: 16873710, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 

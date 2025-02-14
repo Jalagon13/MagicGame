@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DoubleCast
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Double Cast
-  <UiDisplay>k__BackingField: {fileID: 21300014, guid: 358b5d9f23bc9413e87c9948acc67ee1, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -530616504, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 

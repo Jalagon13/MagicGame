@@ -59,6 +59,8 @@ public class Wand
 		
 		if(magic is MultiCastItemSO multiCast)
 		{
+			List<int> spellsShot = new();
+		
 			Debug.Log($"Found Multicast");
 			_validMagicIndexes.Dequeue();
 			
@@ -80,6 +82,8 @@ public class Wand
 
 				if (WandInvItem.MagicArray[validMagicIndex] is SpellItemSO potentialSpellToShoot)
 				{
+					if(spellsShot.Contains(validMagicIndex)) continue; // If spell has been shot already, skip it
+				
 					Debug.Log($"Found spell for multicast: {potentialSpellToShoot.Name}");
 
 					if (potentialSpellToShoot.ManaCost <= CurrentMana)
@@ -90,6 +94,7 @@ public class Wand
 						potentialSpellToShoot.CastSpell(WandSO);
 						numOfSpellsCast++;
 						cumulativeCastDelay += potentialSpellToShoot.CastDelay;
+						spellsShot.Add(validMagicIndex);
 					}
 				}
 
@@ -115,7 +120,7 @@ public class Wand
 		{
 			_validMagicIndexes.Dequeue(); 
 			_castTimer = WandSO.BaseCastDelay + spellToCast.CastDelay;
-			
+			CurrentMana -= spellToCast.ManaCost;
 			spellToCast.CastSpell(WandSO);
 		}
 		
