@@ -4561,7 +4561,7 @@ MonoBehaviour:
   _lightmapComputeShader: {fileID: 7200000, guid: 26fe7936a0e164328b7f319d2182e7ed, type: 3}
   _lightmapScale: 10
   _usePointFilter: 0
-  _enableDayNightCycle: 0
+  _enableDayNightCycle: 1
 --- !u!1 &640273969
 GameObject:
   m_ObjectHideFlags: 0
@@ -10974,7 +10974,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <TestDummyPrefab>k__BackingField: {fileID: 4084959978081132949, guid: 2ea8fc6c5eed84386a995f5f8f46a35f, type: 3}
+  <TestDummyPrefab>k__BackingField: {fileID: 7196159128457008191, guid: c87107d07ca65446598c8fdd66eaeab4, type: 3}
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
   _enableSpawning: 0
   _enableTestSpawning: 1

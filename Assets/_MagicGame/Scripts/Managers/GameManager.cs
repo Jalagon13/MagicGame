@@ -34,13 +34,11 @@ public class GameManager : NetworkBehaviour
 	
 	private void OnEnable()
 	{
-		// Subscribe to the sceneLoaded event
 		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
 	private void OnDisable()
 	{
-		// Unsubscribe from the sceneLoaded event to avoid memory leaks
 		SceneManager.sceneLoaded -= OnSceneLoaded;
 	}
 
@@ -177,34 +175,34 @@ public class GameManager : NetworkBehaviour
 		int spellindex = GetItemIdFromItemSO(currentSpellItemSO);
 		ulong sourcePlayerId = Player.LocalClientInstance.OwnerClientId;
 		
-		if(!Player.LocalClientInstance.IsHost)
-		{
-			// If player is not host, spawn fake projectile, and add it to fake projectiles dictionary
-			if(currentSpellItemSO.SpellProjectilePrefab == null)
-			{
-				Debug.Log($"{currentSpellItemSO} spell projectile is null");
-				return;
-			}
-			
-			Spell fakeSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, spawnPoint, Quaternion.identity);
-			fakeSpell.Initialize(spawnBiome, speed, damage, direction, sourcePlayerId, knockback, lifetime, projectileId);
-			fakeSpell.CastSpell();
-			RegisterFakeProjectile(projectileId, fakeSpell.gameObject);
-		}
-		
-		
 		SpawnSpellProjectileServerRpc(spawnBiome, spellindex, spawnPoint, direction, speed, damage, lifetime, sourcePlayerId, projectileId, knockback);
 	}
-
+	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnSpellProjectileServerRpc(BiomeType spawnBiome, int itemIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, ulong sourcePlayerId, ulong projectileId, int knockback)
+	private void SpawnSpellProjectileServerRpc(BiomeType spawnBiome, int spellIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, ulong sourcePlayerId, ulong projectileId, int knockback)
 	{
-		var spellPrefab = (GetItemSOFromItemId(itemIndex) as SpellItemSO).SpellProjectilePrefab;
+		var spellPrefab = (GetItemSOFromItemId(spellIndex) as SpellItemSO).SpellProjectilePrefab;
 		Spell spell = Instantiate(spellPrefab, spawnPoint, Quaternion.identity);
 		
 		spell.GetComponent<NetworkObject>().Spawn(true);
 		spell.Initialize(spawnBiome, speed, damage, direction, sourcePlayerId, knockback, lifetime, projectileId);
 		spell.CastSpell();
+		
+		if(sourcePlayerId == NetworkManager.ServerClientId) return;
+		
+		SpawnClientProjectileClientRpc(spawnBiome, spellIndex, spawnPoint, direction, speed, damage, lifetime, sourcePlayerId, projectileId, knockback, RpcTarget.Single(sourcePlayerId, RpcTargetUse.Persistent));
+	}
+	
+	[Rpc(SendTo.SpecifiedInParams)]
+	private void SpawnClientProjectileClientRpc(BiomeType spawnBiome, int itemIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, ulong sourcePlayerId, ulong projectileId, int knockback, RpcParams rpcParams = default)
+	{
+		var spellPrefab = (GetItemSOFromItemId(itemIndex) as SpellItemSO).SpellProjectilePrefab;
+		Spell fakeSpell = Instantiate(spellPrefab, spawnPoint, Quaternion.identity);
+		
+		fakeSpell.Initialize(spawnBiome, speed, damage, direction, sourcePlayerId, knockback, lifetime, projectileId);
+		fakeSpell.CastSpell();
+		
+		RegisterFakeProjectile(projectileId, fakeSpell.gameObject);
 	}
 	
 	public void DestroyFakeProjectile(ulong sourcePlayerId, ulong projectileId)

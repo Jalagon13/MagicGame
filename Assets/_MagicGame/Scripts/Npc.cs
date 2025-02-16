@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
+using Unity.Behavior;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -19,8 +20,8 @@ public class Npc : NetworkBehaviour, IHasHealth
 	[SerializeField] private bool _invincible = false;
 	[SerializeField] private int _maxHealth;
 	[Range(0, 100), SerializeField] private float _knockbackResist;
-	[SerializeField] private int _damage;
 	[field: SerializeField] public float IFrameLength { get; private set; } = 0.166f;
+	[SerializeField] private int _damage;
 	[SerializeField] private DamageCollider _damageCollider;
 	[SerializeField] private MMF_Player _damageNumberFeedbacks;
 	[field: SerializeField] public List<Loot> Table { get; private set; }
@@ -29,11 +30,14 @@ public class Npc : NetworkBehaviour, IHasHealth
 	private Vector2 _damageSourcePosition;
 	private Knockback _knockback;
 	private Timer _iFrameTimer;
+	[SerializeField] private BehaviorGraphAgent _behaviorGraph;
+	private Rigidbody2D _rb2d;
 	
 	private void Awake()
 	{
 		_knockback = GetComponent<Knockback>();
-		
+		_behaviorGraph = GetComponent<BehaviorGraphAgent>();
+		_rb2d = GetComponent<Rigidbody2D>();
 		
 		if(_damageCollider != null)
 		{
@@ -61,6 +65,11 @@ public class Npc : NetworkBehaviour, IHasHealth
 		if(IsServer)
 		{
 			_iFrameTimer.Tick(Time.deltaTime);
+		}
+		
+		if(_knockback != null && _rb2d != null && _behaviorGraph == null) // If has knockback but no behavior, handle knockback here
+		{
+			_rb2d.MovePosition(_rb2d.position + _knockback.Velocity * Time.fixedDeltaTime);
 		}
 	}
 
@@ -102,7 +111,11 @@ public class Npc : NetworkBehaviour, IHasHealth
 		}
 		else
 		{
-			_knockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce); // NTFS: Add knockback force
+			if(_knockback != null)
+			{
+				_knockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce);
+			}
+			
 			_iFrameTimer.RemainingSeconds = IFrameLength;
 		}
 		

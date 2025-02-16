@@ -39,6 +39,38 @@ public class BouncyBattleBall : Spell
 		float spinSpeed = _velocity.magnitude * _rotationSpeedMultiplier;
 		_projectileSr.transform.Rotate(0, 0, spinSpeed * Time.fixedDeltaTime);
 	
+		_velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
+		_rigidbody2D.MovePosition(_rigidbody2D.position + _velocity * Time.fixedDeltaTime);
+
+		UpdateTimers();
+		HitCheck();
+	}
+	
+	private void HitCheck()
+	{
+		Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _collider.radius);
+		foreach (var collider in hitColliders)
+		{
+			if (ColliderIsSourcePlayer(collider)) 
+				continue;
+			
+			if (collider.TryGetComponent(out IHasHealth npcToDamage))
+			{
+				if (_hitNpcList.ContainsKey(npcToDamage)) continue;
+			
+				if(IsServer)
+				{
+					npcToDamage.ApplyDamage(_damage, transform.position, _knockback);
+					_hitNpcList.Add(npcToDamage, _damageTimer);
+					
+					_spellNetworkComponent.StopProjectile();
+				}
+			}
+		}
+	}
+	
+	private void UpdateTimers()
+	{
 		// Update damage timers and remove expired entries
 		List<IHasHealth> npcsToRemove = new();
 		var hitNpcKeys = new List<IHasHealth>(_hitNpcList.Keys);
@@ -54,53 +86,12 @@ public class BouncyBattleBall : Spell
 			var npc = npcsToRemove[i];
 			_hitNpcList.Remove(npc);
 		}
-		
-		// if(IsServer)
-		// {
-		// 	Velocity = Vector2.Lerp(Velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
-		// 	_rigidbody2D.MovePosition(_rigidbody2D.position + Velocity * Time.fixedDeltaTime);
-		// }
-		// else
-		// {
-		// 	Vector2 pos = Vector2.Lerp(_rigidbody2D.position, _realPosition, _lerpFactor);
-		// 	_rigidbody2D.MovePosition(pos + _realVelocity * Time.fixedDeltaTime);
-		// }
-		
-		_velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
-		_rigidbody2D.MovePosition(_rigidbody2D.position + _velocity * Time.fixedDeltaTime);
-
-		Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _collider.radius);
-		foreach (var collider in hitColliders)
-		{
-			if (ColliderIsSourcePlayer(collider)) 
-				continue;
-			
-			if (collider.TryGetComponent(out IHasHealth npcToDamage))
-			{
-				if (_hitNpcList.ContainsKey(npcToDamage)) continue;
-			
-				if(IsServer)
-				{
-					npcToDamage.ApplyDamage(_damage, transform.position, _knockback + Mathf.RoundToInt(_rigidbody2D.linearVelocity.magnitude * _velocityPercentKeptOnBounce));
-					_hitNpcList.Add(npcToDamage, _damageTimer);
-					_spellNetworkComponent.StopProjectile();
-				}
-				
-				// var velocity = _rigidbody2D.linearVelocity;
-				// var direction = (transform.position - collider.transform.position).normalized;
-					
-				// _rigidbody2D.linearVelocity = Vector2.zero;
-				// _rigidbody2D.AddForce(direction * (velocity.magnitude * _velocityPercentKeptOnBounce), ForceMode2D.Impulse);
-			}
-		}
 	}
 	
 	public override void CastSpell()
 	{
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 		_velocity = _directionNormalized * _speed;
-		// _realPosition = transform.position;
-		// _realVelocity = _directionNormalized * _speed;
 	}
 
 	public override void OnDestroy()
@@ -109,32 +100,4 @@ public class BouncyBattleBall : Spell
 		
 		base.OnDestroy();
 	}
-
-
-
-	// public override void Sync()
-	// {
-	// 	SyncVelocityAndPositionClientRpc(transform.position, _projectileId, Velocity, RpcTarget.Single(_sourcePlayerIdRef, RpcTargetUse.Persistent));
-	// }
-
-	// [Rpc(SendTo.SpecifiedInParams)]
-	// private void SyncVelocityAndPositionClientRpc(Vector2 realPosition, ulong projectileId, Vector3 realVelocity, RpcParams rpcParams = default)
-	// {
-	// 	if(GameManager.Instance.FakeProjectilesDict.ContainsKey(projectileId))
-	// 	{
-	// 		// Get the fake projectile
-	// 		BouncyBattleBall fakeBouncyBattleBall = GameManager.Instance.FakeProjectilesDict[projectileId].GetComponent<BouncyBattleBall>();
-
-	// 		if (fakeBouncyBattleBall != null)
-	// 		{
-	// 			fakeBouncyBattleBall.SetServerVariables(realPosition, realVelocity);
-	// 		}
-	// 	}
-	// }
-
-	// public void SetServerVariables(Vector2 realPosition, Vector3 realVelocity)
-	// {
-	// 	_realPosition = realPosition;
-	// 	_realVelocity = realVelocity;
-	// }
 }
