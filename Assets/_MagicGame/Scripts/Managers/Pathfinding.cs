@@ -31,6 +31,7 @@ public class Pathfinding : NetworkBehaviour
 	
 	public Dictionary<BiomeType, PathfindingData> BiomeToLoadedPathfindingChunks { get; private set; } = new();
 	private Dictionary<ulong, HashSet<Vector2Int>> _playerToChunks = new(); // Keeps track of chunks loaded by player using clientId
+	private BiomeType _currentPlayerBiome;
 	
 	private void Awake()
 	{
@@ -40,6 +41,12 @@ public class Pathfinding : NetworkBehaviour
 	private void Start()
 	{
 		GameInput.Instance.OnResearchMenuButton += GameInput_OnResearchMenuButton;
+		WorldManager.Instance.OnBiomeDataLoaded += CacheCurrentPlayerBiome;
+	}
+
+	private void CacheCurrentPlayerBiome(object sender, EventArgs e)
+	{
+		_currentPlayerBiome = Player.LocalClientInstance.CurrentBiome.Value;
 	}
 
 	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
@@ -59,21 +66,19 @@ public class Pathfinding : NetworkBehaviour
 	{
 		if(_playerToChunks.ContainsKey(clientId))
 		{
-			var environment = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value;
-			
 			// Loop through all chunks this player has loaded and try to remove them from the pathfinding tilemap
 			foreach (Vector2Int chunkPos in _playerToChunks[clientId])
 			{
-				if(!IsChunkInUse(chunkPos, environment))
+				if(!IsChunkInUse(chunkPos, _currentPlayerBiome))
 				{
-					BiomeToLoadedPathfindingChunks[environment].Chunks.Remove(chunkPos);
+					BiomeToLoadedPathfindingChunks[_currentPlayerBiome].Chunks.Remove(chunkPos);
 					
-					RemoveWallColliderChunk(environment, chunkPos);
+					RemoveWallColliderChunk(_currentPlayerBiome, chunkPos);
 					
-					if(BiomeToLoadedPathfindingChunks[environment].Chunks.Count <= 0)
+					if(BiomeToLoadedPathfindingChunks[_currentPlayerBiome].Chunks.Count <= 0)
 					{
-						Destroy(BiomeToLoadedPathfindingChunks[environment].WallColliderTm.gameObject);
-						BiomeToLoadedPathfindingChunks.Remove(environment);
+						Destroy(BiomeToLoadedPathfindingChunks[_currentPlayerBiome].WallColliderTm.gameObject);
+						BiomeToLoadedPathfindingChunks.Remove(_currentPlayerBiome);
 					}
 				}
 			}

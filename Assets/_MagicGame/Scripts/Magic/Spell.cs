@@ -11,7 +11,7 @@ public abstract class Spell : NetworkBehaviour
 	protected int _knockback;
 	protected float _lifetime;
 	protected Vector3 _directionNormalized;
-	protected Vector3 _damagerPosition;
+	protected Vector3 _projSpawnPoint;
 	protected SpellNetworkComponent _spellNetworkComponent;
 	protected ulong _projectileId;
 	protected BiomeType _biome;
@@ -43,7 +43,7 @@ public abstract class Spell : NetworkBehaviour
 	public void Initialize(BiomeType biome, int speed, int damage, Vector3 directionNormalized, ulong sourcePlayerId, int knockback, float lifeTime, ulong projectileId)
 	{
 		_sourcePlayerIdRef = sourcePlayerId;
-		_damagerPosition = transform.position;
+		_projSpawnPoint = transform.position;
 		_speed = speed;
 		_damage = damage;
 		_directionNormalized = directionNormalized;

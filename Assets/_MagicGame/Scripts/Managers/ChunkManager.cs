@@ -360,7 +360,7 @@ public class ChunkManager : NetworkBehaviour
 		Lightmap.Instance.UpdateLightMap();
 	}
 	
-	public bool ObjectPositionInLoadedChunks(Vector2Int position) // Check if the position is within the bounds
+	public bool ObjectPositionInLoadedChunks(Vector2 position) // Check if the position is within the bounds
 	{
 		return position.x >= MinLoadedTilePosition.x && position.x <= MaxLoadedTilePosition.x &&
 			   position.y >= MinLoadedTilePosition.y && position.y <= MaxLoadedTilePosition.y;

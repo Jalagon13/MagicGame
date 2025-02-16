@@ -10,6 +10,11 @@ using UnityEngine;
 
 public class Relay : MonoBehaviour
 {
+	public static string JOIN_CODE;
+
+	private bool _createdRelay;
+	private bool _joinedRelay;
+
 	private async void Start()
 	{
 		await UnityServices.InitializeAsync();
@@ -23,12 +28,16 @@ public class Relay : MonoBehaviour
 
 	public async void CreateRelay()
 	{
+		if(_createdRelay) return;
+	
 		try
 		{
+			_createdRelay = true;
+			
 			Allocation allocation = await RelayService.Instance.CreateAllocationAsync(7);
 
 			string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-
+			JOIN_CODE = joinCode;
 			Debug.Log(allocation.Region);
 			Debug.Log(joinCode);
 
@@ -38,6 +47,7 @@ public class Relay : MonoBehaviour
 
 			Loader.IsHost = true;
 			Loader.Load(Loader.Scene.GameScene);
+			
 		}
 		catch (RelayServiceException e)
 		{
@@ -47,8 +57,12 @@ public class Relay : MonoBehaviour
 
 	public async void JoinRelay(string joinCode)
 	{
+		if(_joinedRelay) return;
+	
 		try
 		{
+			_joinedRelay = true;
+		
 			Debug.Log($"Joining Relay with {joinCode}");
 			JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
 

@@ -48,9 +48,11 @@ public class Player : NetworkBehaviour, IHasHealth
 	[Range(0, 100), SerializeField] private float _knockbackResist;
 	[SerializeField] private List<InventoryItem> _startingItems = new();
 
-	private NetworkVariable<int> _healthNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	private Knockback _knockback;
-	private Timer _respawnTimer, _iFrameTimer;
+	public NetworkVariable<int> HealthNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	public NetworkVariable<bool> ExecutingIFrames { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	
+	public Knockback _playerKnockback { get; private set; }
+	private Timer _respawnTimer;
 	private Vector2 _spawnPoint;
 	private BiomeType _spawnBiome;
 	
@@ -58,9 +60,10 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		PlayerStats = GetComponent<PlayerStats>();
 		HitCollider = GetComponent<Collider2D>();
-		_knockback = GetComponent<Knockback>();
+		HealthNetworkVariable.OnValueChanged += HealthNetworkVariable_OnValueChanged;
+		
+		_playerKnockback = GetComponent<Knockback>();
 		_respawnTimer = new(_respawnTimerDuration);
-		_healthNetworkVariable.OnValueChanged += HealthNetworkVariable_OnValueChanged;
 	}
 
 	public override void OnNetworkSpawn()
@@ -79,7 +82,7 @@ public class Player : NetworkBehaviour, IHasHealth
 			InventoryManager.Instance.OnOffHandItemUpdated += InventoryManager_OnOffHandItemUpdated;
 			GameInput.Instance.OnSpaceStarted += DashTest;
 			
-			Invoke(nameof(SpawnStartingItems), 0.75f);
+			StartCoroutine(SpawnStartingItems());
 		}
 		
 		OnAnyPlayerSpawned?.Invoke(this, new PlayerIdEventArgs
@@ -89,15 +92,15 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		if(IsServer)
 		{
-			_iFrameTimer = new(IFrameLength);
-			_healthNetworkVariable.Value = PlayerStats.StartingPlayerHealth;
+			HealthNetworkVariable.Value = PlayerStats.StartingPlayerHealth;
+			ExecutingIFrames.Value = false;
 		}
 	}
 
 	private void DashTest(object sender, EventArgs e)
 	{
 		if(Pointer.IsOverUI() || ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo)) return;
-		_knockback.ApplyKnockback(ActionManager.MouseWorldPosition, _knockbackResist, 30, true); 
+		_playerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, _knockbackResist, 30, true); 
 	}
 
 	private void Update()
@@ -106,18 +109,16 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			_respawnTimer.Tick(Time.deltaTime);
 		}
-		
-		if(IsServer)
-		{
-			_iFrameTimer.Tick(Time.deltaTime);
-		}
 	}
 	
-	private void SpawnStartingItems()
+	private IEnumerator SpawnStartingItems()
 	{
+		yield return null;
+		
 		foreach (InventoryItem item in _startingItems)
 		{
 			InventoryManager.Instance.AddItem(item.Item, item.Quantity);
+			yield return null;
 		}
 		
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
@@ -128,40 +129,47 @@ public class Player : NetworkBehaviour, IHasHealth
 	public void ApplyDamage(int damage, Vector2 damagerPosition, int knockbackForce)
 	{
 		if (IsDead()) return;
-		
+		Debug.Log($"Damaging {gameObject.name} from damager pos {damagerPosition}, with knockback {knockbackForce}");
 		ApplyPlayerDamageServerRpc(OwnerClientId, damage, damagerPosition, knockbackForce);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void ApplyPlayerDamageServerRpc(ulong damagePlayerId, int damageAmount, Vector2 damagerPosition, int knockbackForce)
 	{
-		if (!NetworkManager.ConnectedClients.ContainsKey(damagePlayerId) || _iFrameTimer.RemainingSeconds > 0)
-		{
-			return;
-		}
+		if (!NetworkManager.ConnectedClients.ContainsKey(damagePlayerId)) return;
 	
-		int defense = NetworkManager.ConnectedClients[damagePlayerId].PlayerObject.GetComponent<Player>().PlayerStats.PlayerDefense;
-		int damageReduction = defense / 2; // Defense reduces damage by half its value
-		int finalDamage = Mathf.Max(1, damageAmount - damageReduction); // Apply damage reduction
-	
-		_healthNetworkVariable.Value = Mathf.Max(0, _healthNetworkVariable.Value - finalDamage);
+		NetworkObject playerNetworkObject = NetworkManager.ConnectedClients[damagePlayerId].PlayerObject;
 		
-		bool isPlayerDead = _healthNetworkVariable.Value <= 0;
+		if(playerNetworkObject.GetComponent<Player>().ExecutingIFrames.Value) return;
 		
-		if(!isPlayerDead)
-		{
-			_knockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce); 
-			_iFrameTimer.RemainingSeconds = IFrameLength;
-		}
+		int defense = playerNetworkObject.GetComponent<Player>().PlayerStats.PlayerDefense;
+		int damageReduction = defense / 2;
+		int finalDamage = Mathf.Max(1, damageAmount - damageReduction); 
 		
-		OnPlayerHealthChangedClientRpc(finalDamage, isPlayerDead, damagerPosition, damagePlayerId);
+		playerNetworkObject.GetComponent<Player>().HealthNetworkVariable.Value = Mathf.Max(0, HealthNetworkVariable.Value - finalDamage);
+		playerNetworkObject.GetComponent<Player>().ExecuteIFrames();
+		
+		GameManager.Instance.PlayDamageNumbers(damageAmount, transform.position, CurrentBiome.Value);
+		
+		bool isPlayerDead = HealthNetworkVariable.Value <= 0;
+		
+		OnPlayerHealthChangedClientRpc(finalDamage, isPlayerDead, damagerPosition, knockbackForce, RpcTarget.Single(damagePlayerId, RpcTargetUse.Persistent));
 	}
 	
-	[Rpc(SendTo.ClientsAndHost)]
-	private void OnPlayerHealthChangedClientRpc(int finalDamage, bool isKilled, Vector2 damagerPosition, ulong damagePlayerId)
+	public void ExecuteIFrames() => StartCoroutine(IframeRoutine());
+	
+	private IEnumerator IframeRoutine()
 	{
-		if(OwnerClientId != damagePlayerId) return;
+		ExecutingIFrames.Value = true;
 		
+		yield return new WaitForSeconds(IFrameLength);
+		
+		ExecutingIFrames.Value = false;
+	}
+	
+	[Rpc(SendTo.SpecifiedInParams)]
+	private void OnPlayerHealthChangedClientRpc(int finalDamage, bool isKilled, Vector2 damagerPosition, float knockbackForce, RpcParams rpcParams = default)
+	{
 		Debug.Log($"[Client {NetworkManager.LocalClientId}] {gameObject.name} health changed");
 		
 		if(isKilled)
@@ -182,6 +190,9 @@ public class Player : NetworkBehaviour, IHasHealth
 		else
 		{
 			Debug.Log($"[Client {NetworkManager.LocalClientId}] Applied {finalDamage} Damage to {gameObject.name}!");
+			
+			_playerKnockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce); 
+			
 			OnDamaged?.Invoke(this, new OnDamagedEventArgs
 			{
 				DamagerPosition = damagerPosition,
@@ -202,7 +213,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void RespawnPlayerServerRpc(ulong respawnerId, int healthToRespawnWith)
 	{
-		_healthNetworkVariable.Value = healthToRespawnWith;
+		HealthNetworkVariable.Value = healthToRespawnWith;
 		
 		RespawnPlayerClientRpc(RpcTarget.Single(respawnerId, RpcTargetUse.Persistent));
 	}
@@ -272,7 +283,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	public bool IsDead()
 	{
-		return _healthNetworkVariable.Value <= 0;
+		return HealthNetworkVariable.Value <= 0;
 	}
 	
 	public bool IsHoldingAWand()
@@ -290,7 +301,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		base.OnDestroy();
 		
-		_healthNetworkVariable.OnValueChanged -= HealthNetworkVariable_OnValueChanged;
+		HealthNetworkVariable.OnValueChanged -= HealthNetworkVariable_OnValueChanged;
 		
 		if(IsOwner)
 		{

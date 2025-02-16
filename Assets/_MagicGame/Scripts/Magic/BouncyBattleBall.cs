@@ -6,19 +6,15 @@ using UnityEngine;
 public class BouncyBattleBall : Spell
 {
 	[SerializeField] private WallDetectorCollider _wallDetectorCollider;
-	[SerializeField] private float _lerpFactor = 3f; 
 	[SerializeField] private float _velocityDecay = 5f; 
-	[SerializeField] private float _velocityPercentKeptOnBounce = 0.75f;
 	[SerializeField] private float _damageTimer = 0.16f;
 	[SerializeField] private float _rotationSpeedMultiplier = 50f;
 	[SerializeField] private SpriteRenderer _projectileSr;
+	
 	private Rigidbody2D _rigidbody2D;
 	private CircleCollider2D _collider;
 	private Dictionary<IHasHealth, float> _hitNpcList = new();
 	private Vector2 _velocity;
-	
-	// private Vector2 _realVelocity;
-	// private Vector2 _realPosition;
 
 	private void Awake()
 	{
@@ -60,7 +56,7 @@ public class BouncyBattleBall : Spell
 			
 				if(IsServer)
 				{
-					npcToDamage.ApplyDamage(_damage, transform.position, _knockback);
+					npcToDamage.ApplyDamage(_damage, _projSpawnPoint, _knockback);
 					_hitNpcList.Add(npcToDamage, _damageTimer);
 					
 					_spellNetworkComponent.StopProjectile();

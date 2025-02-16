@@ -119,10 +119,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 			_iFrameTimer.RemainingSeconds = IFrameLength;
 		}
 		
-		// Set damage and play damage feedback
-		MMF_FloatingText floatingText = _damageNumberFeedbacks.GetFeedbackOfType<MMF_FloatingText>();
-		floatingText.Value = damageAmount.ToString();
-		_damageNumberFeedbacks.PlayFeedbacks(transform.position);
+		GameManager.Instance.PlayDamageNumbers(damageAmount, transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
 	}
 	
 	private void UpdateHealthUI(int previousValue, int newValue)

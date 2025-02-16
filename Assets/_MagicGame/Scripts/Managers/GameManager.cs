@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using MoreMountains.Feedbacks;
 using MoreMountains.Tools;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
@@ -32,6 +33,7 @@ public class GameManager : NetworkBehaviour
 		Instance = this;
 	}
 	
+	#region Scene Functions
 	private void OnEnable()
 	{
 		SceneManager.sceneLoaded += OnSceneLoaded;
@@ -79,8 +81,22 @@ public class GameManager : NetworkBehaviour
 		}
 	}
 	
+	#endregion
 	
 	#region DataBase Functions
+	
+	public ItemSO GetItemSOFromItemId(int index)
+	{
+		if(index >= 0 && index < _itemDataBaseSO.ItemSOList.Count)
+		{
+			return _itemDataBaseSO.ItemSOList[index];
+		}
+		else
+		{
+			// Debug.LogWarning($"ItemSO for index: {index} can't be found, returning null");
+			return null;
+		}
+	}
 	
 	public NpcSpawnData GetNpcSpawnData(BiomeType biome, int id)
 	{
@@ -169,40 +185,42 @@ public class GameManager : NetworkBehaviour
 	
 	#endregion
 
-	public void SpawnSpellProjectile(SpellItemSO currentSpellItemSO, BiomeType spawnBiome, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, int knockback)
+	#region Spell Projectile Functions
+	public void SpawnSpellProjectile(SpellItemSO currentSpellItemSO, BiomeType spawnBiome, Vector2 mouseWorldPos, int speed, int damage, float lifetime, int knockback, float totalSpread)
 	{
 		ulong projectileId = IdGenerator.GenerateRandomId();
 		int spellindex = GetItemIdFromItemSO(currentSpellItemSO);
 		ulong sourcePlayerId = Player.LocalClientInstance.OwnerClientId;
 		
-		SpawnSpellProjectileServerRpc(spawnBiome, spellindex, spawnPoint, direction, speed, damage, lifetime, sourcePlayerId, projectileId, knockback);
+		Vector2 playerProjSpawnPoint = NetworkManager.ConnectedClients[sourcePlayerId].PlayerObject.GetComponent<Player>().ProjectileSpawnPointTf.position;
+		Vector2 baseDirection = (mouseWorldPos - playerProjSpawnPoint).normalized;
+		float randomAngle = UnityEngine.Random.Range(-totalSpread, totalSpread); 
+		Vector2 finalDirection = Quaternion.Euler(0, 0, randomAngle) * baseDirection; 
+		
+		if(sourcePlayerId != NetworkManager.ServerClientId)
+		{
+			Spell fakeSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, playerProjSpawnPoint, Quaternion.identity);
+
+			fakeSpell.Initialize(spawnBiome, speed, damage, finalDirection, sourcePlayerId, knockback, lifetime, projectileId);
+			fakeSpell.CastSpell();
+		
+			RegisterFakeProjectile(projectileId, fakeSpell.gameObject);
+		}
+		
+		SpawnSpellProjectileServerRpc(spawnBiome, spellindex, speed, damage, lifetime, sourcePlayerId, projectileId, knockback, finalDirection);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnSpellProjectileServerRpc(BiomeType spawnBiome, int spellIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, ulong sourcePlayerId, ulong projectileId, int knockback)
+	private void SpawnSpellProjectileServerRpc(BiomeType spawnBiome, int spellIndex, int speed, int damage, float lifetime, ulong sourcePlayerId, ulong projectileId, int knockback, Vector2 finalDirection)
 	{
+		Vector2 playerProjSpawnPoint = NetworkManager.ConnectedClients[sourcePlayerId].PlayerObject.GetComponent<Player>().ProjectileSpawnPointTf.position;
+	
 		var spellPrefab = (GetItemSOFromItemId(spellIndex) as SpellItemSO).SpellProjectilePrefab;
-		Spell spell = Instantiate(spellPrefab, spawnPoint, Quaternion.identity);
+		Spell spell = Instantiate(spellPrefab, playerProjSpawnPoint, Quaternion.identity);
 		
 		spell.GetComponent<NetworkObject>().Spawn(true);
-		spell.Initialize(spawnBiome, speed, damage, direction, sourcePlayerId, knockback, lifetime, projectileId);
+		spell.Initialize(spawnBiome, speed, damage, finalDirection, sourcePlayerId, knockback, lifetime, projectileId);
 		spell.CastSpell();
-		
-		if(sourcePlayerId == NetworkManager.ServerClientId) return;
-		
-		SpawnClientProjectileClientRpc(spawnBiome, spellIndex, spawnPoint, direction, speed, damage, lifetime, sourcePlayerId, projectileId, knockback, RpcTarget.Single(sourcePlayerId, RpcTargetUse.Persistent));
-	}
-	
-	[Rpc(SendTo.SpecifiedInParams)]
-	private void SpawnClientProjectileClientRpc(BiomeType spawnBiome, int itemIndex, Vector2 spawnPoint, Vector2 direction, int speed, int damage, float lifetime, ulong sourcePlayerId, ulong projectileId, int knockback, RpcParams rpcParams = default)
-	{
-		var spellPrefab = (GetItemSOFromItemId(itemIndex) as SpellItemSO).SpellProjectilePrefab;
-		Spell fakeSpell = Instantiate(spellPrefab, spawnPoint, Quaternion.identity);
-		
-		fakeSpell.Initialize(spawnBiome, speed, damage, direction, sourcePlayerId, knockback, lifetime, projectileId);
-		fakeSpell.CastSpell();
-		
-		RegisterFakeProjectile(projectileId, fakeSpell.gameObject);
 	}
 	
 	public void DestroyFakeProjectile(ulong sourcePlayerId, ulong projectileId)
@@ -229,6 +247,10 @@ public class GameManager : NetworkBehaviour
 			FakeProjectilesDict.Remove(projectileId);
 		}
 	}
+	
+	#endregion
+	
+	#region Item Functions
 	
 	public void SpawnItem(ItemSO itemToSpawn, int amount, Vector2 spawnPos, BiomeType biome)
 	{
@@ -261,19 +283,6 @@ public class GameManager : NetworkBehaviour
 		DestroyItemServerRpc(itemToDestroy.NetworkObject);
 	}
 	
-	public ItemSO GetItemSOFromItemId(int index)
-	{
-		if(index >= 0 && index < _itemDataBaseSO.ItemSOList.Count)
-		{
-			return _itemDataBaseSO.ItemSOList[index];
-		}
-		else
-		{
-			// Debug.LogWarning($"ItemSO for index: {index} can't be found, returning null");
-			return null;
-		}
-	}
-
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void DestroyItemServerRpc(NetworkObjectReference itemNetworkObjectReference)
 	{
@@ -282,4 +291,30 @@ public class GameManager : NetworkBehaviour
 		
 		item.DestroySelf();
 	}
+	
+	#endregion
+	
+	#region Damage Number Functions
+	
+	public void PlayDamageNumbers(int amount, Vector2 position, BiomeType biome)
+	{
+		PlayDamageNumbersClibentRpc(amount, position, biome);
+	}
+	
+	[Rpc(SendTo.ClientsAndHost)]
+	private void PlayDamageNumbersClibentRpc(int damageAmount, Vector2 position, BiomeType biome)
+	{
+		if(biome == Player.LocalClientInstance.CurrentBiome.Value && ChunkManager.Instance.ObjectPositionInLoadedChunks(position))
+		{
+			MMF_Player damageNumberFeedbacks = transform.GetChild(0).GetComponent<MMF_Player>();
+			MMF_FloatingText floatingText = damageNumberFeedbacks.GetFeedbackOfType<MMF_FloatingText>();
+	
+			floatingText.Value = damageAmount.ToString();
+			damageNumberFeedbacks.transform.position = position;
+			damageNumberFeedbacks.PlayFeedbacks(position);
+		}
+	}
+	
+	#endregion
+	
 }

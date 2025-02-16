@@ -328,9 +328,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _wallDetectorCollider: {fileID: 8477178979991276337}
-  _lerpFactor: 0.15
   _velocityDecay: 1.5
-  _velocityPercentKeptOnBounce: 0.75
   _damageTimer: 0.16
   _rotationSpeedMultiplier: 75
   _projectileSr: {fileID: 292624682833923340}

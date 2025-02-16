@@ -30,7 +30,7 @@ public class CinderBolt : Spell
 				}
 				else
 				{
-					npcToDamage.ApplyDamage(_damage, _damagerPosition);
+					npcToDamage.ApplyDamage(_damage, _projSpawnPoint);
 				
 					_npcsFound.Add(npcToDamage);
 					_pierceCount++;
