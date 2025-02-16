@@ -59,8 +59,6 @@ public class Pathfinding : NetworkBehaviour
 	{
 		if(_playerToChunks.ContainsKey(clientId))
 		{
-			_playerToChunks.Remove(clientId);
-			
 			var environment = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value;
 			
 			// Loop through all chunks this player has loaded and try to remove them from the pathfinding tilemap
@@ -79,6 +77,8 @@ public class Pathfinding : NetworkBehaviour
 					}
 				}
 			}
+			
+			_playerToChunks.Remove(clientId);
 		}
 	}
 	

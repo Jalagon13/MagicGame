@@ -4561,7 +4561,7 @@ MonoBehaviour:
   _lightmapComputeShader: {fileID: 7200000, guid: 26fe7936a0e164328b7f319d2182e7ed, type: 3}
   _lightmapScale: 10
   _usePointFilter: 0
-  _enableDayNightCycle: 1
+  _enableDayNightCycle: 0
 --- !u!1 &640273969
 GameObject:
   m_ObjectHideFlags: 0

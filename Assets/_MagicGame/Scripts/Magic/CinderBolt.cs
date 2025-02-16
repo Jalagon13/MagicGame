@@ -18,7 +18,7 @@ public class CinderBolt : Spell
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (!IsServer || ColliderIsSourcePlayer(other)) return;
+		if (!PlayerOwnerClientIdEqualsServerId() || ColliderIsSourcePlayer(other)) return;
 		
 		if (other.TryGetComponent(out IHasHealth npcToDamage))
 		{
@@ -26,8 +26,7 @@ public class CinderBolt : Spell
 			{
 				if(_pierceCount >= _pierceMax)
 				{
-					// Detonate
-					GetComponent<SpellNetworkComponent>().StopProjectile();
+					_spellNetworkComponent.StopProjectile(); // -> Triggers detonation
 				}
 				else
 				{
@@ -39,17 +38,17 @@ public class CinderBolt : Spell
 			}
 		}
 	}
-
-	public override void Initialize(BiomeType biome, int speed, int damage, Vector3 directionNormalized, ulong sourcePlayerId, int knockback, float lifetime)
+	
+	public override void CastSpell()
 	{
-		base.Initialize(biome, speed, damage, directionNormalized, sourcePlayerId, knockback, lifetime);
-		
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 		_rigidbody2D.AddForce(_directionNormalized * _speed, ForceMode2D.Impulse);
 	}
 
 	public override void OnDestroy()
 	{
+		Debug.Log($"{name}");
+	
 		var go = Instantiate(_detonateParticles.gameObject, transform.position, Quaternion.identity);
 		go.GetComponent<ParticleSystem>().Play();
 
@@ -60,9 +59,9 @@ public class CinderBolt : Spell
 			{
 				if(ColliderIsSourcePlayer(collider)) continue;
 			
-				if (collider.TryGetComponent(out IHasHealth npcToDamage))
+				if (collider.TryGetComponent(out IHasHealth npcToDamage2))
 				{
-					npcToDamage.ApplyDamage(_damage, transform.position, _knockback);
+					npcToDamage2.ApplyDamage(_damage, transform.position, _knockback);
 				}
 			}
 		}

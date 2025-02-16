@@ -1,4 +1,5 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
 public class TwinBurst : Spell
@@ -8,49 +9,58 @@ public class TwinBurst : Spell
 
 	private Rigidbody2D _rigidbody2D;
 	private int _damageRef;
-	private ulong _sourcePlayerIdRef;
 
 	private void Awake()
 	{
 		_rigidbody2D = GetComponent<Rigidbody2D>();
 	}
 
-	private void OnTriggerEnter2D(Collider2D other)
+    void Start()
+    {
+		_wallDetectorCollider.OnWallCollide += OnWallCollide;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
 	{
 		if(!Player.LocalClientInstance.IsServer || ColliderIsSourcePlayer(other)) return;
 		
 		if (other.TryGetComponent(out IHasHealth npcToDamage))
 		{
 			npcToDamage.ApplyDamage(_damageRef, Player.LocalClientInstance.transform.position);
-			StopProjectile();
+			_spellNetworkComponent.StopProjectile();
 			return;
 		}
 		else if(other.gameObject.layer == 9)
 		{
-			StopProjectile();
+			_spellNetworkComponent.StopProjectile();
 		}
 	}
-
-	public override void Initialize(BiomeType biome, int speed, int damage, Vector3 directionNormalized, ulong sourcePlayerId, int knockback, float lifetime)
+	
+	public override void CastSpell()
 	{
-		base.Initialize(biome, speed, damage, directionNormalized, sourcePlayerId, knockback, lifetime);
-		
-		Vector3 perpendicular1 = new Vector2(directionNormalized.y, -directionNormalized.x).normalized;
-		Vector3 perpendicular2 = new Vector2(-directionNormalized.y, directionNormalized.x).normalized;
+		Vector3 perpendicular1 = new Vector2(_directionNormalized.y, -_directionNormalized.x).normalized;
+		Vector3 perpendicular2 = new Vector2(-_directionNormalized.y, _directionNormalized.x).normalized;
 		
 		Vector2 copySpawnPos = transform.position + perpendicular1;
-		var go = Instantiate(gameObject, copySpawnPos, Quaternion.identity);
-		go.GetComponent<TwinBurst>().StartProjectile(speed, lifetime, damage, sourcePlayerId);
+		GameObject twinBurstCopy = Instantiate(gameObject, copySpawnPos, Quaternion.identity);
+		
+		if(IsServer)
+		{
+			Debug.Log($"Initializing the copy of {gameObject.name} to spell network component");
+			twinBurstCopy.GetComponent<NetworkObject>().Spawn(true);
+			twinBurstCopy.GetComponent<Spell>().Initialize(_biome, _speed, _damage, _directionNormalized, _sourcePlayerId.Value, _knockback, _lifetime, _projectileId);
+			twinBurstCopy.GetComponent<TwinBurst>().CastSpell();
+		}
+		
+		twinBurstCopy.GetComponent<TwinBurst>().StartProjectile(_speed, _lifetime, _damage, _sourcePlayerId.Value);
 		
 		transform.position += perpendicular2;
 		
-		StartProjectile(speed, lifetime, damage, sourcePlayerId);
+		StartProjectile(_speed, _lifetime, _damage, _sourcePlayerId.Value);
 	}
 	
 	public void StartProjectile(int speed, float lifetime, int damage, ulong sourcePlayerId)
 	{
-		_wallDetectorCollider.OnWallCollide += OnWallCollide;
-	
 		Vector2 direction = (ActionManager.MouseWorldPosition - (Vector2)transform.position).normalized;
 	
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
@@ -59,20 +69,22 @@ public class TwinBurst : Spell
 		_damageRef = damage;
 		_sourcePlayerIdRef = sourcePlayerId;
 		
-		Invoke(nameof(StopProjectile), lifetime);
+		if(_spellNetworkComponent == null)
+			_spellNetworkComponent = GetComponent<SpellNetworkComponent>();
 	}
 
 	private void OnWallCollide(object sender, WallDetectorCollider.WallCollisionEventArgs e)
 	{
-		StopProjectile();
+		_spellNetworkComponent.StopProjectile();
 	}
-
-	private void StopProjectile()
+	
+	public override void OnDestroy()
 	{
+		_wallDetectorCollider.OnWallCollide -= OnWallCollide;
+	
 		var go = Instantiate(_hitParticles.gameObject, transform.position, Quaternion.identity);
 		go.GetComponent<ParticleSystem>().Play();
-	
-		_wallDetectorCollider.OnWallCollide -= OnWallCollide;
-		GetComponent<SpellNetworkComponent>().StopProjectile();
+
+		base.OnDestroy();
 	}
 }

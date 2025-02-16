@@ -36,7 +36,7 @@ public partial class PixieMoveAction : Action
 	
 	private void OnWallCollide(object sender, WallDetectorCollider.WallCollisionEventArgs e)
 	{
-		_knockback.ApplyKnockback(e.ContactPoint, 0, UnityEngine.Random.Range(7, 10));
+		_knockback.ApplyKnockback(e.ContactNormal, 0, UnityEngine.Random.Range(7, 10));
 		if(UnityEngine.Random.value > 0.5)
 		{
 			_clockwise = !_clockwise;

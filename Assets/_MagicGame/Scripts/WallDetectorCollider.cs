@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -9,7 +10,7 @@ public class WallDetectorCollider : MonoBehaviour
 	public event EventHandler<WallCollisionEventArgs> OnWallCollide;
 	public class WallCollisionEventArgs : EventArgs
 	{
-		public Vector2 ContactPoint;
+		public Vector2 ContactNormal;
 	} 
 	
 	private BiomeType _colliderBiome;
@@ -49,17 +50,15 @@ public class WallDetectorCollider : MonoBehaviour
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		Debug.Log(transform.root.gameObject.name + " " + collision.gameObject.name);
+		if(Player.LocalClientInstance.OwnerClientId == NetworkManager.ServerClientId)
+		{
+			if(collision.gameObject.layer == 9) return; // If is server, do not collide with local walls
+		}
+		
 		// Pass the point of contact to the event
-		Vector2 contactPoint = collision.GetContact(0).point;
-		OnWallCollisionStateChanged(contactPoint);
-	}
-
-	protected virtual void OnWallCollisionStateChanged(Vector2 contactPoint)
-	{
 		OnWallCollide?.Invoke(this, new WallCollisionEventArgs()
 		{
-			ContactPoint = contactPoint
+			ContactNormal = collision.contacts[0].normal
 		});
 	}
 	

@@ -25,7 +25,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 		base.OnNetworkSpawn();
 	}
 	
-	public void InitializeSpell(BiomeType biome, ulong sourcePlayerId, float lifetime, ulong projectileId)
+	public void InitializeSpellNetwork(BiomeType biome, ulong sourcePlayerId, float lifetime, ulong projectileId)
 	{
 		SpellBiomeType = biome;
 		_sourcePlayerId = sourcePlayerId;
@@ -43,9 +43,10 @@ public class SpellNetworkComponent : NetworkBehaviour
 	
 	public void StopProjectile()
 	{
+		GameManager.Instance.DestroyFakeProjectile(_sourcePlayerId, _projectileId);
+		
 		if(NetworkObject.IsSpawned)
 		{
-			GameManager.Instance.DestroyFakeProjectile(_sourcePlayerId, _projectileId);
 			NetworkObject.Despawn();
 		}
 		

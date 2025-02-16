@@ -20,10 +20,10 @@ MonoBehaviour:
   <SpellProjectilePrefab>k__BackingField: {fileID: 6035814809352226819, guid: b690059f7ea154d8bb5b67392ed3195f, type: 3}
   <ManaCost>k__BackingField: 10
   <Damage>k__BackingField: 8
-  <Knockback>k__BackingField: 5
+  <Knockback>k__BackingField: 10
   <Spread>k__BackingField: 0
   <Lifetime>k__BackingField: 3
-  <Speed>k__BackingField: 20
+  <Speed>k__BackingField: 17
   <CastDelay>k__BackingField: 0.15
   <SpellCast>k__BackingField:
     Guid:

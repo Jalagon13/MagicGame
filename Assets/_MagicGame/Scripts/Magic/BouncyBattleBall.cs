@@ -1,8 +1,13 @@
+using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class BouncyBattleBall : Spell
 {
+	[SerializeField] private WallDetectorCollider _wallDetectorCollider;
+	[SerializeField] private float _lerpFactor = 3f; 
+	[SerializeField] private float _velocityDecay = 5f; 
 	[SerializeField] private float _velocityPercentKeptOnBounce = 0.75f;
 	[SerializeField] private float _damageTimer = 0.16f;
 	[SerializeField] private float _rotationSpeedMultiplier = 50f;
@@ -10,66 +15,126 @@ public class BouncyBattleBall : Spell
 	private Rigidbody2D _rigidbody2D;
 	private CircleCollider2D _collider;
 	private Dictionary<IHasHealth, float> _hitNpcList = new();
+	private Vector2 _velocity;
+	
+	// private Vector2 _realVelocity;
+	// private Vector2 _realPosition;
 
 	private void Awake()
 	{
 		_rigidbody2D = GetComponent<Rigidbody2D>();
 		_collider = GetComponent<CircleCollider2D>();
+		_wallDetectorCollider.OnWallCollide += OnWallCollide;
+	}
+
+	private void OnWallCollide(object sender, WallDetectorCollider.WallCollisionEventArgs e)
+	{
+		var direction = Vector2.Reflect(_velocity, e.ContactNormal).normalized;
+		_velocity = direction * _velocity.magnitude;
 	}
 	
 	private void FixedUpdate()
 	{
 		// Rotate based on velocity magnitude
-		float spinSpeed = _rigidbody2D.linearVelocity.magnitude * _rotationSpeedMultiplier;
+		float spinSpeed = _velocity.magnitude * _rotationSpeedMultiplier;
 		_projectileSr.transform.Rotate(0, 0, spinSpeed * Time.fixedDeltaTime);
 	
-		if (IsServer)
+		// Update damage timers and remove expired entries
+		List<IHasHealth> npcsToRemove = new();
+		var hitNpcKeys = new List<IHasHealth>(_hitNpcList.Keys);
+		for (int i = 0; i < hitNpcKeys.Count; i++)
 		{
-			// Update damage timers and remove expired entries
-			List<IHasHealth> npcsToRemove = new();
-			var hitNpcKeys = new List<IHasHealth>(_hitNpcList.Keys);
-			for (int i = 0; i < hitNpcKeys.Count; i++)
-			{
-				var npc = hitNpcKeys[i];
-				_hitNpcList[npc] -= Time.fixedDeltaTime;
-				if (_hitNpcList[npc] <= 0)
-					npcsToRemove.Add(npc);
-			}
+			var npc = hitNpcKeys[i];
+			_hitNpcList[npc] -= Time.fixedDeltaTime;
+			if (_hitNpcList[npc] <= 0)
+				npcsToRemove.Add(npc);
+		}
+		for (int i = 0; i < npcsToRemove.Count; i++)
+		{
+			var npc = npcsToRemove[i];
+			_hitNpcList.Remove(npc);
+		}
 		
-			for (int i = 0; i < npcsToRemove.Count; i++)
-			{
-				var npc = npcsToRemove[i];
-				_hitNpcList.Remove(npc);
-			}
+		// if(IsServer)
+		// {
+		// 	Velocity = Vector2.Lerp(Velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
+		// 	_rigidbody2D.MovePosition(_rigidbody2D.position + Velocity * Time.fixedDeltaTime);
+		// }
+		// else
+		// {
+		// 	Vector2 pos = Vector2.Lerp(_rigidbody2D.position, _realPosition, _lerpFactor);
+		// 	_rigidbody2D.MovePosition(pos + _realVelocity * Time.fixedDeltaTime);
+		// }
+		
+		_velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
+		_rigidbody2D.MovePosition(_rigidbody2D.position + _velocity * Time.fixedDeltaTime);
 
-			Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _collider.radius);
-			foreach (var collider in hitColliders)
+		Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _collider.radius);
+		foreach (var collider in hitColliders)
+		{
+			if (ColliderIsSourcePlayer(collider)) 
+				continue;
+			
+			if (collider.TryGetComponent(out IHasHealth npcToDamage))
 			{
-				if (ColliderIsSourcePlayer(collider)) 
-					continue;
+				if (_hitNpcList.ContainsKey(npcToDamage)) continue;
 			
-				if (collider.TryGetComponent(out IHasHealth npcToDamage))
+				if(IsServer)
 				{
-					if (_hitNpcList.ContainsKey(npcToDamage)) continue;
-			
 					npcToDamage.ApplyDamage(_damage, transform.position, _knockback + Mathf.RoundToInt(_rigidbody2D.linearVelocity.magnitude * _velocityPercentKeptOnBounce));
 					_hitNpcList.Add(npcToDamage, _damageTimer);
-				
-					var velocity = _rigidbody2D.linearVelocity;
-					var direction = (transform.position - collider.transform.position).normalized;
-					_rigidbody2D.linearVelocity = Vector2.zero;
-
-					_rigidbody2D.AddForce(direction * (velocity.magnitude * _velocityPercentKeptOnBounce), ForceMode2D.Impulse);
+					_spellNetworkComponent.StopProjectile();
 				}
+				
+				// var velocity = _rigidbody2D.linearVelocity;
+				// var direction = (transform.position - collider.transform.position).normalized;
+					
+				// _rigidbody2D.linearVelocity = Vector2.zero;
+				// _rigidbody2D.AddForce(direction * (velocity.magnitude * _velocityPercentKeptOnBounce), ForceMode2D.Impulse);
 			}
 		}
 	}
 	
-	public override void Initialize(BiomeType biome, int speed, int damage, Vector3 directionNormalized, ulong sourcePlayerId, int knockback, float lifetime)
+	public override void CastSpell()
 	{
-		base.Initialize(biome, speed, damage, directionNormalized, sourcePlayerId, knockback, lifetime);
-		
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-		_rigidbody2D.AddForce(_directionNormalized * _speed, ForceMode2D.Impulse);
+		_velocity = _directionNormalized * _speed;
+		// _realPosition = transform.position;
+		// _realVelocity = _directionNormalized * _speed;
 	}
+
+	public override void OnDestroy()
+	{
+		_wallDetectorCollider.OnWallCollide -= OnWallCollide;
+		
+		base.OnDestroy();
+	}
+
+
+
+	// public override void Sync()
+	// {
+	// 	SyncVelocityAndPositionClientRpc(transform.position, _projectileId, Velocity, RpcTarget.Single(_sourcePlayerIdRef, RpcTargetUse.Persistent));
+	// }
+
+	// [Rpc(SendTo.SpecifiedInParams)]
+	// private void SyncVelocityAndPositionClientRpc(Vector2 realPosition, ulong projectileId, Vector3 realVelocity, RpcParams rpcParams = default)
+	// {
+	// 	if(GameManager.Instance.FakeProjectilesDict.ContainsKey(projectileId))
+	// 	{
+	// 		// Get the fake projectile
+	// 		BouncyBattleBall fakeBouncyBattleBall = GameManager.Instance.FakeProjectilesDict[projectileId].GetComponent<BouncyBattleBall>();
+
+	// 		if (fakeBouncyBattleBall != null)
+	// 		{
+	// 			fakeBouncyBattleBall.SetServerVariables(realPosition, realVelocity);
+	// 		}
+	// 	}
+	// }
+
+	// public void SetServerVariables(Vector2 realPosition, Vector3 realVelocity)
+	// {
+	// 	_realPosition = realPosition;
+	// 	_realVelocity = realVelocity;
+	// }
 }

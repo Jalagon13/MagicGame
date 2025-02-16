@@ -39,7 +39,8 @@ public class SpellItemSO : MagicItemSO
 		
 		BiomeType spawnBiome = Player.LocalClientInstance.CurrentBiome.Value;
 		Vector2 spawnPos = Player.LocalClientInstance.ProjectileSpawnPointTf.position;
-		
+		// NTFS: Make the direction calculated on the server and the local player because the local palyer position might be ahead of the server when sending its base direction so calculate the fake projectile
+		// direction the client and another direction for the official server player for the real projectile.
 		GameManager.Instance.SpawnSpellProjectile(this, spawnBiome, spawnPos, spreadDirection, Speed, Damage, Lifetime, Knockback);
 		SoundManager.Instance.PlayOneShot(SpellCast, spawnPos);
 	}
