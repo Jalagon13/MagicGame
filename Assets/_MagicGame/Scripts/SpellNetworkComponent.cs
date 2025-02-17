@@ -20,6 +20,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 			_spellGameObject = transform.GetChild(0).gameObject;
 			_spellCollider = GetComponent<Collider2D>();
 		
+			// HandleBiomeVisibility();
 			NetworkManager.NetworkTickSystem.Tick += SpellNetworkTick;
 		}
 		base.OnNetworkSpawn();
@@ -93,12 +94,10 @@ public class SpellNetworkComponent : NetworkBehaviour
 		if(clientId == NetworkManager.ServerClientId)
 		{
 			_spellGameObject.SetActive(true);
-			if(_spellCollider != null)
-			{
-				_spellCollider.enabled = true;
-			}
+			_spellCollider.enabled = true;
+			_spellCollider.isTrigger = true;
 		}
-				
+		
 		NetworkObject.NetworkShow(clientId);
 	}
 
@@ -107,9 +106,10 @@ public class SpellNetworkComponent : NetworkBehaviour
 		if(clientId == NetworkManager.ServerClientId)
 		{
 			_spellGameObject.SetActive(false);
-			_spellCollider.enabled = false;
+			_spellCollider.enabled = false;		
+			_spellCollider.isTrigger = false;
 		}
-				
+		
 		NetworkObject.NetworkHide(clientId);
 	}
 

@@ -39,32 +39,26 @@ public class BouncyBattleBall : Spell
 		_rigidbody2D.MovePosition(_rigidbody2D.position + _velocity * Time.fixedDeltaTime);
 
 		UpdateTimers();
-		HitCheck();
 	}
-	
-	private void HitCheck()
+
+	void OnTriggerEnter2D(Collider2D collider)
 	{
-		Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _collider.radius);
-		foreach (var collider in hitColliders)
+		if (ColliderIsSourcePlayer(collider)) return;
+		
+		if (collider.TryGetComponent(out IHasHealth npcToDamage))
 		{
-			if (ColliderIsSourcePlayer(collider)) 
-				continue;
+			if (_hitNpcList.ContainsKey(npcToDamage)) return;
 			
-			if (collider.TryGetComponent(out IHasHealth npcToDamage))
+			if(IsServer)
 			{
-				if (_hitNpcList.ContainsKey(npcToDamage)) continue;
-			
-				if(IsServer)
-				{
-					npcToDamage.ApplyDamage(_damage, _projSpawnPoint, _knockback);
-					_hitNpcList.Add(npcToDamage, _damageTimer);
+				npcToDamage.ApplyDamage(_damage, _projSpawnPoint, _knockback);
+				_hitNpcList.Add(npcToDamage, _damageTimer);
 					
-					_spellNetworkComponent.StopProjectile();
-				}
+				_spellNetworkComponent.StopProjectile();
 			}
 		}
 	}
-	
+
 	private void UpdateTimers()
 	{
 		// Update damage timers and remove expired entries

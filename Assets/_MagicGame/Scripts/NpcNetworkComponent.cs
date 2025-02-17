@@ -111,10 +111,8 @@ public class NpcNetworkComponent : NetworkBehaviour
 		if(clientId == NetworkManager.ServerClientId)
 		{
 			_npcGameObject.SetActive(true);
-			if(_npcCollider != null)
-			{
-				_npcCollider.enabled = true;
-			}
+			_npcCollider.enabled = true;
+			_npcCollider.isTrigger = true;
 		}
 				
 		NetworkObject.NetworkShow(clientId);
@@ -126,6 +124,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 		{
 			_npcGameObject.SetActive(false);
 			_npcCollider.enabled = false;
+			_npcCollider.isTrigger = false;
 		}
 				
 		NetworkObject.NetworkHide(clientId);

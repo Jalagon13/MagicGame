@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerNetworkComponent : NetworkBehaviour
 {
 	private GameObject _playerGameObject;
+	private Collider2D _playerCollider;
 
 	public override void OnNetworkSpawn()
 	{
@@ -14,6 +15,7 @@ public class PlayerNetworkComponent : NetworkBehaviour
 			NetworkManager.NetworkTickSystem.Tick += HandleOtherPlayerVisibility;
 			
 			_playerGameObject = transform.GetChild(0).gameObject;
+			_playerCollider = GetComponent<Collider2D>();
 		}
 		base.OnNetworkSpawn();
 	}
@@ -50,6 +52,8 @@ public class PlayerNetworkComponent : NetworkBehaviour
 				if(clientId == NetworkManager.ServerClientId)
 				{
 					_playerGameObject.SetActive(true);
+					_playerCollider.enabled = true;
+					_playerCollider.isTrigger = true;
 				}
 				
 				NetworkObject.NetworkShow(clientId);
@@ -60,6 +64,8 @@ public class PlayerNetworkComponent : NetworkBehaviour
 				if(clientId == NetworkManager.ServerClientId)
 				{
 					_playerGameObject.SetActive(false);
+					_playerCollider.enabled = false;
+					_playerCollider.isTrigger = false;
 				}
 				
 				NetworkObject.NetworkHide(clientId);

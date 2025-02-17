@@ -17,24 +17,35 @@ public abstract class Spell : NetworkBehaviour
 	protected BiomeType _biome;
 	protected NetworkVariable<ulong> _sourcePlayerId = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	protected ulong _sourcePlayerIdRef;
-	
+	private bool _isLocalProjectile;
+	private GameObject _spellGameObject;
+	private Collider2D _spellCollider;
+
 	public override void OnNetworkSpawn()
 	{
-		// if(IsServer)
-		// {
-		// 	_sourcePlayerId.Value = _sourcePlayerIdRef;
-		// }
-	
-		if(Player.LocalClientInstance.OwnerClientId == _sourcePlayerId.Value && Player.LocalClientInstance.OwnerClientId != NetworkManager.ServerClientId)
-		{
-			// On player who spawned this projectile
-			Debug.Log($"On the source player's instance, disabling gameobject");
-			// transform.GetChild(0).gameObject.SetActive(false);
-		}
-		
+		// transform.GetChild(0).gameObject.SetActive(false);
 		base.OnNetworkSpawn();
 	}
-	
+
+	void Update()
+	{
+		if(!_isLocalProjectile) return;
+		
+		// Local projectile visibility code here
+		if(Player.LocalClientInstance.CurrentBiome.Value == _biome)
+		{
+			_spellGameObject.SetActive(true);
+			_spellCollider.enabled = true;
+			_spellCollider.isTrigger = true;
+		}
+		else
+		{
+			_spellGameObject.SetActive(false);
+			_spellCollider.enabled = false;
+			_spellCollider.isTrigger = false;
+		}
+	}
+
 	protected bool PlayerOwnerClientIdEqualsServerId()
 	{
 		return Player.LocalClientInstance.OwnerClientId == NetworkManager.ServerClientId;
@@ -42,6 +53,9 @@ public abstract class Spell : NetworkBehaviour
 
 	public void Initialize(BiomeType biome, int speed, int damage, Vector3 directionNormalized, ulong sourcePlayerId, int knockback, float lifeTime, ulong projectileId)
 	{
+		_spellGameObject = transform.GetChild(0).gameObject;
+		_spellCollider = GetComponent<Collider2D>();
+	
 		_sourcePlayerIdRef = sourcePlayerId;
 		_projSpawnPoint = transform.position;
 		_speed = speed;
@@ -52,8 +66,11 @@ public abstract class Spell : NetworkBehaviour
 		_projectileId = projectileId;
 		_biome = biome;
 		
+		_isLocalProjectile = !IsServer;
+		
 		if(IsServer)
 		{
+			// Real projectile code here
 			_spellNetworkComponent = GetComponent<SpellNetworkComponent>();
 			_spellNetworkComponent.InitializeSpellNetwork(_biome, _sourcePlayerIdRef, _lifetime, _projectileId);
 			

@@ -103,7 +103,7 @@ public class PlayerHand : NetworkBehaviour
 				RotateArmBasedOnAngle();
 			}
 
-			TryToSwing();
+			// TryToSwing();
 		}
 	}
 	

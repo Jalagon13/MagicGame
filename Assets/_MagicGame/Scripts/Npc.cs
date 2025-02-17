@@ -32,6 +32,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 	private Timer _iFrameTimer;
 	[SerializeField] private BehaviorGraphAgent _behaviorGraph;
 	private Rigidbody2D _rb2d;
+	public BiomeType Biome { get { return GetComponent<NpcNetworkComponent>().NpcBiomeType; } }
 	
 	private void Awake()
 	{

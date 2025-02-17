@@ -12,6 +12,7 @@ public interface IHasHealth
 	}
 	
 	public float IFrameLength { get; } // Read-only property
+	public BiomeType Biome { get; }
 	
 	public void ApplyDamage(int damage, Vector2 damagerPosition, int knockbackForce = 0);
 }
