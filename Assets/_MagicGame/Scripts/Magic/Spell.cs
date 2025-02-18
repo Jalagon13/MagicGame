@@ -15,53 +15,15 @@ public abstract class Spell : NetworkBehaviour
 	protected SpellNetworkComponent _spellNetworkComponent;
 	protected ulong _projectileId;
 	protected BiomeType _biome;
-	protected NetworkVariable<ulong> _sourcePlayerId = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	protected ulong _sourcePlayerIdRef;
-	private bool _isLocalProjectile;
-	private GameObject _spellGameObject;
-	private Collider2D _spellCollider;
-
-	void Awake()
-	{
-		Debug.Log($"_spellCollider == false");
-		_spellCollider.enabled = false;
-	}
-
-	public override void OnNetworkSpawn()
-	{
-		// transform.GetChild(0).gameObject.SetActive(false);
-		base.OnNetworkSpawn();
-	}
-
-	void Update()
-	{
-		if(!_isLocalProjectile) return;
-		
-		// Local projectile visibility code here
-		if(Player.LocalClientInstance.CurrentBiome.Value == _biome)
-		{
-			_spellGameObject.SetActive(true);
-			_spellCollider.enabled = true;
-			_spellCollider.isTrigger = true;
-		}
-		else
-		{
-			_spellGameObject.SetActive(false);
-			_spellCollider.enabled = false;
-			_spellCollider.isTrigger = false;
-		}
-	}
 
 	protected bool PlayerOwnerClientIdEqualsServerId()
 	{
 		return Player.LocalClientInstance.OwnerClientId == NetworkManager.ServerClientId;
 	}
 
-	public void Initialize(BiomeType biome, int speed, int damage, Vector3 directionNormalized, ulong sourcePlayerId, int knockback, float lifeTime, ulong projectileId)
+	public void InitializeBaseSpell(BiomeType biome, int speed, int damage, Vector3 directionNormalized, ulong sourcePlayerId, int knockback, float lifeTime, ulong projectileId)
 	{
-		_spellGameObject = transform.GetChild(0).gameObject;
-		_spellCollider = GetComponent<Collider2D>();
-	
 		_sourcePlayerIdRef = sourcePlayerId;
 		_projSpawnPoint = transform.position;
 		_speed = speed;
@@ -71,8 +33,6 @@ public abstract class Spell : NetworkBehaviour
 		_lifetime = lifeTime;
 		_projectileId = projectileId;
 		_biome = biome;
-		
-		_isLocalProjectile = !IsServer;
 		
 		if(IsServer)
 		{

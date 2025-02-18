@@ -26,7 +26,7 @@ public class GameManager : NetworkBehaviour
 	[SerializeField] private TileDataBaseSO _tileDataBaseSO;
 	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
 	
-	public Dictionary<ulong, GameObject> FakeProjectilesDict { get; private set; } = new Dictionary<ulong, GameObject>();
+	public Dictionary<ulong, GameObject> LocalProjectilesDict { get; private set; } = new Dictionary<ulong, GameObject>();
 	
 	private void Awake()
 	{
@@ -199,12 +199,12 @@ public class GameManager : NetworkBehaviour
 		
 		if(sourcePlayerId != NetworkManager.ServerClientId)
 		{
-			Spell fakeSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, playerProjSpawnPoint, Quaternion.identity);
-			Debug.Log($"SPawning fake projectile");
-			fakeSpell.Initialize(spawnBiome, speed, damage, finalDirection, sourcePlayerId, knockback, lifetime, projectileId);
-			fakeSpell.CastSpell();
+			Spell localSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, playerProjSpawnPoint, Quaternion.identity);
+			localSpell.InitializeBaseSpell(spawnBiome, speed, damage, finalDirection, sourcePlayerId, knockback, lifetime, projectileId);
+			Debug.Log($"intialized spell");
+			localSpell.CastSpell();
 		
-			RegisterFakeProjectile(projectileId, fakeSpell.gameObject);
+			RegisterLocalProjectile(projectileId, localSpell.gameObject);
 		}
 		
 		SpawnSpellProjectileServerRpc(spawnBiome, spellindex, speed, damage, lifetime, sourcePlayerId, projectileId, knockback, finalDirection);
@@ -216,39 +216,14 @@ public class GameManager : NetworkBehaviour
 		Vector2 playerProjSpawnPoint = NetworkManager.ConnectedClients[sourcePlayerId].PlayerObject.GetComponent<Player>().ProjectileSpawnPointTf.position;
 	
 		var spellPrefab = (GetItemSOFromItemId(spellIndex) as SpellItemSO).SpellProjectilePrefab;
-		Spell spell = Instantiate(spellPrefab, playerProjSpawnPoint, Quaternion.identity);
+		Spell realSpell = Instantiate(spellPrefab, playerProjSpawnPoint, Quaternion.identity);
 		
-		NetworkObject spellNetworkObject = spell.GetComponent<NetworkObject>();
+		NetworkObject spellNetworkObject = realSpell.GetComponent<NetworkObject>();
 		spellNetworkObject.SpawnWithObservers = false;
-		
-		foreach (var client in NetworkManager.ConnectedClients)
-		{
-			ulong clientId = client.Key;
-			bool isObserved = spellNetworkObject.IsNetworkVisibleTo(clientId);
-			Debug.Log($"For client {clientId}, is observing spell: {isObserved}");
-		}
-		
-		Debug.Log($"Spawning spell {spell}");
 		spellNetworkObject.Spawn(true);
 		
-		
-		
-		spell.Initialize(spawnBiome, speed, damage, finalDirection, sourcePlayerId, knockback, lifetime, projectileId);
-		foreach (var client in NetworkManager.ConnectedClients)
-		{
-			ulong clientId = client.Key;
-			Debug.Log($"client {clientId} biome: {NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value}");
-			if (NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value == spell.GetComponent<SpellNetworkComponent>().SpellBiomeType) 
-			{
-				spellNetworkObject.NetworkShow(clientId);
-			}
-			else
-			{
-				spellNetworkObject.NetworkHide(clientId);
-			}
-		}
-		
-		spell.CastSpell();
+		realSpell.InitializeBaseSpell(spawnBiome, speed, damage, finalDirection, sourcePlayerId, knockback, lifetime, projectileId);
+		realSpell.CastSpell();
 	}
 	
 	public void DestroyFakeProjectile(ulong sourcePlayerId, ulong projectileId)
@@ -259,20 +234,20 @@ public class GameManager : NetworkBehaviour
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void DestroyFakeProjectileClientRpc(ulong projectileId, RpcParams rpcParams = default)
 	{
-		RemoveFakeProjectile(projectileId);
+		RemoveLocalProjectile(projectileId);
 	}
 	
-	private void RegisterFakeProjectile(ulong projectileId, GameObject projectileGameObject)
+	private void RegisterLocalProjectile(ulong projectileId, GameObject projectileGameObject)
 	{
-		FakeProjectilesDict.Add(projectileId, projectileGameObject);
+		LocalProjectilesDict.Add(projectileId, projectileGameObject);
 	}
 	
-	private void RemoveFakeProjectile(ulong projectileId)
+	private void RemoveLocalProjectile(ulong projectileId)
 	{
-		if (FakeProjectilesDict.TryGetValue(projectileId, out GameObject fakeProjectile))
+		if (LocalProjectilesDict.TryGetValue(projectileId, out GameObject localProjectile))
 		{
-			Destroy(fakeProjectile);
-			FakeProjectilesDict.Remove(projectileId);
+			Destroy(localProjectile);
+			LocalProjectilesDict.Remove(projectileId);
 		}
 	}
 	

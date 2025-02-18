@@ -48,15 +48,15 @@ public class TwinBurst : Spell
 		{
 			Debug.Log($"Initializing the copy of {gameObject.name} to spell network component");
 			twinBurstCopy.GetComponent<NetworkObject>().Spawn(true);
-			twinBurstCopy.GetComponent<Spell>().Initialize(_biome, _speed, _damage, _directionNormalized, _sourcePlayerId.Value, _knockback, _lifetime, _projectileId);
+			twinBurstCopy.GetComponent<Spell>().InitializeBaseSpell(_biome, _speed, _damage, _directionNormalized, _sourcePlayerIdRef, _knockback, _lifetime, _projectileId);
 			twinBurstCopy.GetComponent<TwinBurst>().CastSpell();
 		}
 		
-		twinBurstCopy.GetComponent<TwinBurst>().StartProjectile(_speed, _lifetime, _damage, _sourcePlayerId.Value);
+		twinBurstCopy.GetComponent<TwinBurst>().StartProjectile(_speed, _lifetime, _damage, _sourcePlayerIdRef);
 		
 		transform.position += perpendicular2;
 		
-		StartProjectile(_speed, _lifetime, _damage, _sourcePlayerId.Value);
+		StartProjectile(_speed, _lifetime, _damage, _sourcePlayerIdRef);
 	}
 	
 	public void StartProjectile(int speed, float lifetime, int damage, ulong sourcePlayerId)

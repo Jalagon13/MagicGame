@@ -11,10 +11,10 @@ public class CinderBolt : Spell
 	private List<IHasHealth> _npcsFound = new();
 	private int _pierceCount;
 
-	private void Awake()
-	{
+    private void Awake()
+    {
 		_rigidbody2D = GetComponent<Rigidbody2D>();
-	}
+    }
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{

@@ -14,7 +14,7 @@ public class BouncyBattleBall : Spell
 	private Rigidbody2D _rigidbody2D;
 	private CircleCollider2D _collider;
 	private Dictionary<IHasHealth, float> _hitNpcList = new();
-	private Vector2 _velocity;
+	private NetworkVariable<Vector2> _velocityNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
 	private void Awake()
 	{
@@ -25,18 +25,19 @@ public class BouncyBattleBall : Spell
 
 	private void OnWallCollide(object sender, WallDetectorCollider.WallCollisionEventArgs e)
 	{
-		var direction = Vector2.Reflect(_velocity, e.ContactNormal).normalized;
-		_velocity = direction * _velocity.magnitude;
+		var direction = Vector2.Reflect(_velocityNetworkVariable.Value, e.ContactNormal).normalized;
+		_velocityNetworkVariable.Value = direction * _velocityNetworkVariable.Value.magnitude;
 	}
 	
 	private void FixedUpdate()
 	{
 		// Rotate based on velocity magnitude
-		float spinSpeed = _velocity.magnitude * _rotationSpeedMultiplier;
+		float spinSpeed = _velocityNetworkVariable.Value.magnitude * _rotationSpeedMultiplier;
+		Debug.Log($"spin speed: {spinSpeed}, vel mag: {_velocityNetworkVariable.Value.magnitude}, vel: {_velocityNetworkVariable.Value}, rot: {_rotationSpeedMultiplier}");
 		_projectileSr.transform.Rotate(0, 0, spinSpeed * Time.fixedDeltaTime);
 	
-		_velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
-		_rigidbody2D.MovePosition(_rigidbody2D.position + _velocity * Time.fixedDeltaTime);
+		_velocityNetworkVariable.Value = Vector2.Lerp(_velocityNetworkVariable.Value, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
+		_rigidbody2D.MovePosition(_rigidbody2D.position + _velocityNetworkVariable.Value * Time.fixedDeltaTime);
 
 		UpdateTimers();
 	}
@@ -80,8 +81,10 @@ public class BouncyBattleBall : Spell
 	
 	public override void CastSpell()
 	{
+		Debug.Log($"Yo wtf");
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-		_velocity = _directionNormalized * _speed;
+		_velocityNetworkVariable.Value = _directionNormalized * _speed;
+		Debug.Log($"Casting spell: {_velocityNetworkVariable.Value}");
 	}
 
 	public override void OnDestroy()
