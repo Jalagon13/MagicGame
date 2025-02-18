@@ -21,6 +21,12 @@ public abstract class Spell : NetworkBehaviour
 	private GameObject _spellGameObject;
 	private Collider2D _spellCollider;
 
+	void Awake()
+	{
+		Debug.Log($"_spellCollider == false");
+		_spellCollider.enabled = false;
+	}
+
 	public override void OnNetworkSpawn()
 	{
 		// transform.GetChild(0).gameObject.SetActive(false);

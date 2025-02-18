@@ -19,10 +19,13 @@ public class SpellNetworkComponent : NetworkBehaviour
 		{
 			_spellGameObject = transform.GetChild(0).gameObject;
 			_spellCollider = GetComponent<Collider2D>();
-		
-			// HandleBiomeVisibility();
+			
+			HideSpell(NetworkManager.ServerClientId);
+			
+			NetworkObject.CheckObjectVisibility += CheckVis;
 			NetworkManager.NetworkTickSystem.Tick += SpellNetworkTick;
 		}
+		
 		base.OnNetworkSpawn();
 	}
 	
@@ -65,7 +68,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 		{
 			var isInSameEnvironment = CheckIfInSameEnvironment(clientId);
 			var isVisibile = NetworkObjectVisibleTo(clientId);
-			
+			Debug.Log($"in same biome: {isInSameEnvironment} is visible {isVisibile}");
 			if(isInSameEnvironment && !isVisibile)
 			{
 				ShowSpell(clientId);
@@ -75,6 +78,12 @@ public class SpellNetworkComponent : NetworkBehaviour
 				HideSpell(clientId);
 			}
 		}
+	}
+	
+	private bool CheckVis(ulong clientId)
+	{
+		Debug.Log($"For client: {clientId} this visibile?: {NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value == SpellBiomeType}");
+		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value == SpellBiomeType;
 	}
 	
 	private bool CheckIfInSameEnvironment(ulong clientId)
@@ -89,16 +98,18 @@ public class SpellNetworkComponent : NetworkBehaviour
 
 	private void ShowSpell(ulong clientId)
 	{
-		if(clientId == _sourcePlayerId) return; // Do this because source player should only see the fake projectile
-	
 		if(clientId == NetworkManager.ServerClientId)
 		{
 			_spellGameObject.SetActive(true);
 			_spellCollider.enabled = true;
 			_spellCollider.isTrigger = true;
 		}
+		else
+		{
+			if(clientId == _sourcePlayerId) return; // Do this because source player should only see the fake projectile
 		
-		NetworkObject.NetworkShow(clientId);
+			NetworkObject.NetworkShow(clientId);
+		}
 	}
 
 	private void HideSpell(ulong clientId)
@@ -109,14 +120,17 @@ public class SpellNetworkComponent : NetworkBehaviour
 			_spellCollider.enabled = false;		
 			_spellCollider.isTrigger = false;
 		}
-		
-		NetworkObject.NetworkHide(clientId);
+		else
+		{
+			NetworkObject.NetworkHide(clientId);
+		}
 	}
 
 	public override void OnNetworkDespawn()
 	{
 		if (IsServer)
 		{
+			NetworkObject.CheckObjectVisibility -= CheckIfInSameEnvironment;
 			NetworkManager.NetworkTickSystem.Tick -= SpellNetworkTick;
 		}
 

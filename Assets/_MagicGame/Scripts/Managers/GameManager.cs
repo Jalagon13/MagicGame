@@ -200,7 +200,7 @@ public class GameManager : NetworkBehaviour
 		if(sourcePlayerId != NetworkManager.ServerClientId)
 		{
 			Spell fakeSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, playerProjSpawnPoint, Quaternion.identity);
-
+			Debug.Log($"SPawning fake projectile");
 			fakeSpell.Initialize(spawnBiome, speed, damage, finalDirection, sourcePlayerId, knockback, lifetime, projectileId);
 			fakeSpell.CastSpell();
 		
@@ -218,8 +218,36 @@ public class GameManager : NetworkBehaviour
 		var spellPrefab = (GetItemSOFromItemId(spellIndex) as SpellItemSO).SpellProjectilePrefab;
 		Spell spell = Instantiate(spellPrefab, playerProjSpawnPoint, Quaternion.identity);
 		
-		spell.GetComponent<NetworkObject>().Spawn(true);
+		NetworkObject spellNetworkObject = spell.GetComponent<NetworkObject>();
+		spellNetworkObject.SpawnWithObservers = false;
+		
+		foreach (var client in NetworkManager.ConnectedClients)
+		{
+			ulong clientId = client.Key;
+			bool isObserved = spellNetworkObject.IsNetworkVisibleTo(clientId);
+			Debug.Log($"For client {clientId}, is observing spell: {isObserved}");
+		}
+		
+		Debug.Log($"Spawning spell {spell}");
+		spellNetworkObject.Spawn(true);
+		
+		
+		
 		spell.Initialize(spawnBiome, speed, damage, finalDirection, sourcePlayerId, knockback, lifetime, projectileId);
+		foreach (var client in NetworkManager.ConnectedClients)
+		{
+			ulong clientId = client.Key;
+			Debug.Log($"client {clientId} biome: {NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value}");
+			if (NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value == spell.GetComponent<SpellNetworkComponent>().SpellBiomeType) 
+			{
+				spellNetworkObject.NetworkShow(clientId);
+			}
+			else
+			{
+				spellNetworkObject.NetworkHide(clientId);
+			}
+		}
+		
 		spell.CastSpell();
 	}
 	
