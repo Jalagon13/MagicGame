@@ -9,7 +9,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 	public BiomeType SpellBiomeType { get; private set; }
 
 	private GameObject _spellGameObject;
-	private ulong _sourcePlayerId;
+	private ulong _spawnPlayerId;
 	private ulong _projectileId;
 	private Collider2D _spellCollider;
 
@@ -29,11 +29,16 @@ public class SpellNetworkComponent : NetworkBehaviour
 		base.OnNetworkSpawn();
 	}
 	
-	public void InitializeSpellNetwork(BiomeType biome, ulong sourcePlayerId, float lifetime, ulong projectileId)
+	public void InitializeSpellNetwork(BiomeType biome, ulong spawnPlayerId, float lifetime, ulong projectileId)
 	{
 		SpellBiomeType = biome;
-		_sourcePlayerId = sourcePlayerId;
+		_spawnPlayerId = spawnPlayerId;
 		_projectileId = projectileId;
+		
+		if(_spawnPlayerId != NetworkManager.ServerClientId)
+		{
+			NetworkObject.NetworkHide(_spawnPlayerId);
+		}
 		
 		// Find walldetectorcollider and populate it
 		var wallDetectorCollider = GetComponentInChildren<WallDetectorCollider>();
@@ -47,7 +52,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 	
 	public void StopProjectile()
 	{
-		GameManager.Instance.DestroyFakeProjectile(_sourcePlayerId, _projectileId);
+		GameManager.Instance.DestroyLocalProjectile(_spawnPlayerId, _projectileId);
 		
 		if(NetworkObject.IsSpawned)
 		{
@@ -100,7 +105,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 		}
 		else
 		{
-			if(clientId == _sourcePlayerId) return; // Do this because source player should only see the fake projectile
+			if(clientId == _spawnPlayerId) return; // Do this because source player should only see the fake projectile
 		
 			NetworkObject.NetworkShow(clientId);
 		}

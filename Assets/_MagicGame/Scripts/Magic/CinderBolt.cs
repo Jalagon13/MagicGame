@@ -6,15 +6,23 @@ public class CinderBolt : Spell
 	[SerializeField] private int _pierceMax;
 	[SerializeField] private float _explosionRadius;
 	[SerializeField] private ParticleSystem _detonateParticles;
+	[SerializeField] private float _damageTimer = 0.16f;
 
 	private Rigidbody2D _rigidbody2D;
 	private List<IHasHealth> _npcsFound = new();
 	private int _pierceCount;
+	private Dictionary<IHasHealth, float> _hitNpcList = new();
 
-    private void Awake()
-    {
+	private void Awake()
+	{
 		_rigidbody2D = GetComponent<Rigidbody2D>();
-    }
+	}
+
+	// private void OnWallCollide(object sender, WallDetectorCollider.WallCollisionEventArgs e)
+	// {
+	// 	var direction = Vector2.Reflect(_velocity, e.ContactNormal).normalized;
+	// 	_velocity = direction * _velocity.magnitude;
+	// }
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
@@ -39,10 +47,30 @@ public class CinderBolt : Spell
 		}
 	}
 	
-	public override void CastSpell()
+	
+	protected override void CastSpell()
 	{
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 		_rigidbody2D.AddForce(_directionNormalized * _speed, ForceMode2D.Impulse);
+	}
+
+	private void UpdateTimers()
+	{
+		// Update damage timers and remove expired entries
+		List<IHasHealth> npcsToRemove = new();
+		var hitNpcKeys = new List<IHasHealth>(_hitNpcList.Keys);
+		for (int i = 0; i < hitNpcKeys.Count; i++)
+		{
+			var npc = hitNpcKeys[i];
+			_hitNpcList[npc] -= Time.fixedDeltaTime;
+			if (_hitNpcList[npc] <= 0)
+				npcsToRemove.Add(npc);
+		}
+		for (int i = 0; i < npcsToRemove.Count; i++)
+		{
+			var npc = npcsToRemove[i];
+			_hitNpcList.Remove(npc);
+		}
 	}
 
 	public override void OnDestroy()

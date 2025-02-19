@@ -108,7 +108,7 @@ public class Lightmap : MonoBehaviour
 	public void UpdateLightMap(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos)
 	{
 		if(!WorldManager.Instance.IsTicking()) return;
-		Debug.Log($"Updating light map from chunkmanager");
+		
 		_minLoadedTilePos = minLoadedTilePos;
 		_maxLoadedTilePos = maxLoadedTilePos;
 		

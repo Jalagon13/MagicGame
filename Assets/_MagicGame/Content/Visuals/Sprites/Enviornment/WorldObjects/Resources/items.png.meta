@@ -682,7 +682,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_bouncy_battle_ball
+      name: item_mana_bolt
       rect:
         serializedVersion: 2
         x: 32
@@ -787,7 +787,6 @@ TextureImporter:
       item_axe: -1431561084
       item_blacksmith: -89414543
       item_blue_bell: -1747701128
-      item_bouncy_battle_ball: -488747044
       item_campfire: -925800054
       item_chest: -1010797688
       item_chicken: 1104096443
@@ -802,6 +801,7 @@ TextureImporter:
       item_hoe: 535866517
       item_iron_ingot: -307808466
       item_iron_ore: -651821871
+      item_mana_bolt: -488747044
       item_mana_crystal: -984316580
       item_mana_potion: -854955160
       item_meat_cooked: 1280716566

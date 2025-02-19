@@ -6,25 +6,43 @@ using UnityEngine;
 
 public abstract class Spell : NetworkBehaviour
 {
-	protected int _speed;
-	protected int _damage;
-	protected int _knockback;
+	protected int _damage, _knockback, _speed;
+	protected ulong _projectileId, _spawnPlayerId;
 	protected float _lifetime;
-	protected Vector3 _directionNormalized;
-	protected Vector3 _projSpawnPoint;
+	protected bool _isLocalProjectile;
+	protected Vector3 _directionNormalized, _projSpawnPoint;
 	protected SpellNetworkComponent _spellNetworkComponent;
-	protected ulong _projectileId;
 	protected BiomeType _biome;
-	protected ulong _sourcePlayerIdRef;
+	protected GameObject _spellGameObject;
+	protected Collider2D _spellCollider;
 
-	protected bool PlayerOwnerClientIdEqualsServerId()
+	private void Update()
 	{
-		return Player.LocalClientInstance.OwnerClientId == NetworkManager.ServerClientId;
+		if(!_isLocalProjectile) return;
+		
+		// Local projectile visibility code here
+		if(Player.LocalClientInstance.CurrentBiome.Value == _biome)
+		{
+			_spellGameObject.SetActive(true);
+			_spellCollider.enabled = true;
+			_spellCollider.isTrigger = true;
+		}
+		else
+		{
+			_spellGameObject.SetActive(false);
+			_spellCollider.enabled = false;
+			_spellCollider.isTrigger = false;
+		}
 	}
-
-	public void InitializeBaseSpell(BiomeType biome, int speed, int damage, Vector3 directionNormalized, ulong sourcePlayerId, int knockback, float lifeTime, ulong projectileId)
+	
+	protected abstract void CastSpell();
+	
+	public void InitializeBaseSpell(BiomeType biome, int speed, int damage, Vector3 directionNormalized, ulong spawnPlayerId, int knockback, float lifeTime, ulong projectileId)
 	{
-		_sourcePlayerIdRef = sourcePlayerId;
+		_spellGameObject = transform.GetChild(0).gameObject;
+		_spellCollider = GetComponent<Collider2D>();
+		_spellNetworkComponent = GetComponent<SpellNetworkComponent>();
+		_spawnPlayerId = spawnPlayerId;
 		_projSpawnPoint = transform.position;
 		_speed = speed;
 		_damage = damage;
@@ -33,24 +51,24 @@ public abstract class Spell : NetworkBehaviour
 		_lifetime = lifeTime;
 		_projectileId = projectileId;
 		_biome = biome;
+		_isLocalProjectile = !IsServer;
 		
 		if(IsServer)
 		{
-			// Real projectile code here
-			_spellNetworkComponent = GetComponent<SpellNetworkComponent>();
-			_spellNetworkComponent.InitializeSpellNetwork(_biome, _sourcePlayerIdRef, _lifetime, _projectileId);
-			
-			if(sourcePlayerId != NetworkManager.ServerClientId)
-			{
-				NetworkObject.NetworkHide(_sourcePlayerIdRef);
-			}
+			_spellNetworkComponent.InitializeSpellNetwork(_biome, _spawnPlayerId, _lifetime, _projectileId);
 		}
+		
+		CastSpell();
 	}
-	
-	public abstract void CastSpell();
+
+	protected bool PlayerOwnerClientIdEqualsServerId()
+	{
+		return Player.LocalClientInstance.OwnerClientId == NetworkManager.ServerClientId;
+	}
+
 	
 	protected bool ColliderIsSourcePlayer(Collider2D col)
 	{
-		return NetworkManager.ConnectedClients[_sourcePlayerIdRef].PlayerObject == null || NetworkManager.ConnectedClients[_sourcePlayerIdRef].PlayerObject.GetComponent<Player>().HitCollider == col;
+		return NetworkManager.ConnectedClients[_spawnPlayerId].PlayerObject == null || NetworkManager.ConnectedClients[_spawnPlayerId].PlayerObject.GetComponent<Player>().HitCollider == col;
 	}
 }

@@ -188,45 +188,39 @@ public class GameManager : NetworkBehaviour
 	#region Spell Projectile Functions
 	public void SpawnSpellProjectile(SpellItemSO currentSpellItemSO, BiomeType spawnBiome, Vector2 mouseWorldPos, int speed, int damage, float lifetime, int knockback, float totalSpread)
 	{
-		ulong projectileId = IdGenerator.GenerateRandomId();
 		int spellindex = GetItemIdFromItemSO(currentSpellItemSO);
+		ulong projectileId = IdGenerator.GenerateRandomId();
 		ulong sourcePlayerId = Player.LocalClientInstance.OwnerClientId;
 		
-		Vector2 playerProjSpawnPoint = NetworkManager.ConnectedClients[sourcePlayerId].PlayerObject.GetComponent<Player>().ProjectileSpawnPointTf.position;
-		Vector2 baseDirection = (mouseWorldPos - playerProjSpawnPoint).normalized;
+		Vector2 projSpawnPos = NetworkManager.ConnectedClients[sourcePlayerId].PlayerObject.GetComponent<Player>().ProjectileSpawnPointTf.position;
+		Vector2 baseDirection = (mouseWorldPos - projSpawnPos).normalized;
 		float randomAngle = UnityEngine.Random.Range(-totalSpread, totalSpread); 
 		Vector2 finalDirection = Quaternion.Euler(0, 0, randomAngle) * baseDirection; 
 		
 		if(sourcePlayerId != NetworkManager.ServerClientId)
 		{
-			Spell localSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, playerProjSpawnPoint, Quaternion.identity);
+			Spell localSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, projSpawnPos, Quaternion.identity);
 			localSpell.InitializeBaseSpell(spawnBiome, speed, damage, finalDirection, sourcePlayerId, knockback, lifetime, projectileId);
-			Debug.Log($"intialized spell");
-			localSpell.CastSpell();
 		
 			RegisterLocalProjectile(projectileId, localSpell.gameObject);
 		}
 		
-		SpawnSpellProjectileServerRpc(spawnBiome, spellindex, speed, damage, lifetime, sourcePlayerId, projectileId, knockback, finalDirection);
+		SpawnSpellProjectileServerRpc(spawnBiome, spellindex, speed, damage, lifetime, sourcePlayerId, projectileId, knockback, finalDirection, projSpawnPos);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnSpellProjectileServerRpc(BiomeType spawnBiome, int spellIndex, int speed, int damage, float lifetime, ulong sourcePlayerId, ulong projectileId, int knockback, Vector2 finalDirection)
+	private void SpawnSpellProjectileServerRpc(BiomeType spawnBiome, int spellIndex, int speed, int damage, float lifetime, ulong sourcePlayerId, ulong projectileId, int knockback, Vector2 finalDirection, Vector2 projSpawnPoint)
 	{
-		Vector2 playerProjSpawnPoint = NetworkManager.ConnectedClients[sourcePlayerId].PlayerObject.GetComponent<Player>().ProjectileSpawnPointTf.position;
-	
 		var spellPrefab = (GetItemSOFromItemId(spellIndex) as SpellItemSO).SpellProjectilePrefab;
-		Spell realSpell = Instantiate(spellPrefab, playerProjSpawnPoint, Quaternion.identity);
+		Spell realSpell = Instantiate(spellPrefab, projSpawnPoint, Quaternion.identity);
 		
 		NetworkObject spellNetworkObject = realSpell.GetComponent<NetworkObject>();
 		spellNetworkObject.SpawnWithObservers = false;
 		spellNetworkObject.Spawn(true);
-		
 		realSpell.InitializeBaseSpell(spawnBiome, speed, damage, finalDirection, sourcePlayerId, knockback, lifetime, projectileId);
-		realSpell.CastSpell();
 	}
 	
-	public void DestroyFakeProjectile(ulong sourcePlayerId, ulong projectileId)
+	public void DestroyLocalProjectile(ulong sourcePlayerId, ulong projectileId)
 	{
 		DestroyFakeProjectileClientRpc(projectileId, RpcTarget.Single(sourcePlayerId, RpcTargetUse.Persistent));
 	}

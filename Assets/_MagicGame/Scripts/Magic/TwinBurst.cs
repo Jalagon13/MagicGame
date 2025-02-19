@@ -36,7 +36,7 @@ public class TwinBurst : Spell
 		}
 	}
 	
-	public override void CastSpell()
+	protected override void CastSpell()
 	{
 		Vector3 perpendicular1 = new Vector2(_directionNormalized.y, -_directionNormalized.x).normalized;
 		Vector3 perpendicular2 = new Vector2(-_directionNormalized.y, _directionNormalized.x).normalized;
@@ -48,15 +48,15 @@ public class TwinBurst : Spell
 		{
 			Debug.Log($"Initializing the copy of {gameObject.name} to spell network component");
 			twinBurstCopy.GetComponent<NetworkObject>().Spawn(true);
-			twinBurstCopy.GetComponent<Spell>().InitializeBaseSpell(_biome, _speed, _damage, _directionNormalized, _sourcePlayerIdRef, _knockback, _lifetime, _projectileId);
+			twinBurstCopy.GetComponent<Spell>().InitializeBaseSpell(_biome, _speed, _damage, _directionNormalized, _spawnPlayerId, _knockback, _lifetime, _projectileId);
 			twinBurstCopy.GetComponent<TwinBurst>().CastSpell();
 		}
 		
-		twinBurstCopy.GetComponent<TwinBurst>().StartProjectile(_speed, _lifetime, _damage, _sourcePlayerIdRef);
+		twinBurstCopy.GetComponent<TwinBurst>().StartProjectile(_speed, _lifetime, _damage, _spawnPlayerId);
 		
 		transform.position += perpendicular2;
 		
-		StartProjectile(_speed, _lifetime, _damage, _sourcePlayerIdRef);
+		StartProjectile(_speed, _lifetime, _damage, _spawnPlayerId);
 	}
 	
 	public void StartProjectile(int speed, float lifetime, int damage, ulong sourcePlayerId)
@@ -67,7 +67,7 @@ public class TwinBurst : Spell
 		_rigidbody2D.AddForce(direction * speed, ForceMode2D.Impulse);
 		
 		_damageRef = damage;
-		_sourcePlayerIdRef = sourcePlayerId;
+		_spawnPlayerId = sourcePlayerId;
 		
 		if(_spellNetworkComponent == null)
 			_spellNetworkComponent = GetComponent<SpellNetworkComponent>();
