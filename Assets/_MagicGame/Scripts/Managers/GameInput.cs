@@ -65,7 +65,7 @@ public class GameInput : MonoBehaviour
 		_playerInput.Player.PrimaryAction.canceled += PlayerInput_PrimaryAction; 
 		_playerInput.Player.SecondaryAction.started += PlayerInput_SecondaryActionStarted; 
 		_playerInput.Player.SecondaryAction.performed += PlayerInput_SecondaryAction; 
-		_playerInput.Player.SecondaryAction.canceled += PlayerInput_SecondaryAction; 
+		_playerInput.Player.SecondaryAction.canceled += PlayerInput_SecondaryActionCanceled; 
 		_playerInput.Player.ResearchMenu.started += PlayerInput_ResearchMenu;
 		_playerInput.Player.SwapHands.started += PlayerInput_SwapHands;
 		_playerInput.Player.Shift.started += PlayerInput_ShiftStart;
@@ -126,18 +126,6 @@ public class GameInput : MonoBehaviour
 	{
 		OnResearchMenuButton?.Invoke(this, EventArgs.Empty);
 	}
-
-	private void PlayerInput_SecondaryAction(InputAction.CallbackContext context)
-	{
-		if(!_inputsEnabled) return;
-	
-		_secondaryHeldDown = context.performed;
-	
-		OnSecondaryAction?.Invoke(this, new OnPrimaryOrSecondaryActionEventArgs
-		{
-			IsHeldDown = _secondaryHeldDown
-		});
-	}
 	
 	private void PlayerInput_SecondaryActionStarted(InputAction.CallbackContext context)
 	{
@@ -146,11 +134,28 @@ public class GameInput : MonoBehaviour
 		OnSecondaryActionStarted?.Invoke(this, EventArgs.Empty);
 	}
 
-	private void PlayerInput_PrimaryAction(InputAction.CallbackContext context)
+	private void PlayerInput_SecondaryAction(InputAction.CallbackContext context)
 	{
+		_secondaryHeldDown = context.performed;
+	
 		if(!_inputsEnabled) return;
 	
+		OnSecondaryAction?.Invoke(this, new OnPrimaryOrSecondaryActionEventArgs
+		{
+			IsHeldDown = _secondaryHeldDown
+		});
+	}
+	
+	private void PlayerInput_SecondaryActionCanceled(InputAction.CallbackContext context)
+	{
+		_secondaryHeldDown = context.performed;
+	}
+
+	private void PlayerInput_PrimaryAction(InputAction.CallbackContext context)
+	{
 		_primaryHeldDown = context.performed;
+		
+		if(!_inputsEnabled) return;
 	
 		OnPrimaryAction?.Invoke(this, new OnPrimaryOrSecondaryActionEventArgs
 		{
@@ -228,6 +233,11 @@ public class GameInput : MonoBehaviour
 	public bool GetShiftHeldDown()
 	{
 		return _shiftHeldDown;
+	}
+	
+	public bool GetInputsEnabled()
+	{
+		return _inputsEnabled;
 	}
 
 	private void OnDestroy()

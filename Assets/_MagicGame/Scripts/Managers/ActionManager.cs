@@ -66,7 +66,7 @@ public class ActionManager : MonoBehaviour
 	
 	private void HandleItemActionExecutions()
 	{
-		if(Player.LocalClientInstance.IsDead() || Pointer.IsOverUI()) return;
+		if(Player.LocalClientInstance.IsDead() || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled()) return;
 
 		if (GameInput.Instance.GetPrimaryHeldDown() && InventoryManager.Instance.MainHandItemExists(out InventoryItem selectedInventoryItem))
 		{
@@ -74,7 +74,7 @@ public class ActionManager : MonoBehaviour
 			{
 				_primaryActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.LocalClientInstance.MainHand);
 			}
-		
+				
 			if(WandDict.ContainsKey(selectedInventoryItem.Id) && !Player.LocalClientInstance.MainHand.IsSwinging && !GameInput.Instance.GetSecondaryHeldDown())
 			{
 				// Player is holding down primary on a wand, try to shoot wand

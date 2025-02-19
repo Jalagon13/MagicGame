@@ -16,6 +16,18 @@ public abstract class Spell : NetworkBehaviour
 	protected GameObject _spellGameObject;
 	protected Collider2D _spellCollider;
 
+	private void Awake()
+	{
+		Initialize();
+	}
+	
+	protected void Initialize()
+	{
+		_spellGameObject = transform.GetChild(0).gameObject;
+		_spellCollider = GetComponent<Collider2D>();
+		_spellNetworkComponent = GetComponent<SpellNetworkComponent>();
+	}
+
 	private void Update()
 	{
 		if(!_isLocalProjectile) return;
@@ -39,9 +51,7 @@ public abstract class Spell : NetworkBehaviour
 	
 	public void InitializeBaseSpell(BiomeType biome, int speed, int damage, Vector3 directionNormalized, ulong spawnPlayerId, int knockback, float lifeTime, ulong projectileId)
 	{
-		_spellGameObject = transform.GetChild(0).gameObject;
-		_spellCollider = GetComponent<Collider2D>();
-		_spellNetworkComponent = GetComponent<SpellNetworkComponent>();
+		Initialize();
 		_spawnPlayerId = spawnPlayerId;
 		_projSpawnPoint = transform.position;
 		_speed = speed;

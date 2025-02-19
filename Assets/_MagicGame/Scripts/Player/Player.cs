@@ -34,7 +34,6 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	[field: SerializeField] public Transform ProjectileSpawnPointTf { get; private set; }
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
-	[field: SerializeField] public PlayerHand OffHand { get; private set; }
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
 	public PlayerStats PlayerStats { get; private set; }
 	public NetworkVariable<int> MainHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -121,8 +120,6 @@ public class Player : NetworkBehaviour, IHasHealth
 			InventoryManager.Instance.AddItem(item.Item, item.Quantity);
 			yield return null;
 		}
-		
-		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
 	
 	#region Damage Functions

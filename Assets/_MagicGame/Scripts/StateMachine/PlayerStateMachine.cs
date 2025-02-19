@@ -23,7 +23,6 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	}
 	
 	[SerializeField] private PlayerHand _mainHand;
-	[SerializeField] private PlayerHand _offHand;
 	[Range(1f, 100f)]
 	[Tooltip("(Linear drag), higher this value, the more drag (knock back resistant) this entity experiences")]
 	[SerializeField] private int _knockbackResist = 20; 
@@ -75,12 +74,6 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		_mainHand.OnCastingArmDirectionChanged += OnCastingArmDirectionChanged;
 		_mainHand.OnHoldingWandStart += OnHoldingWandStart;
 		_mainHand.OnHoldingWandEnd += OnHoldingWandEnd;
-		
-		_offHand.OnSwingStart += OnSwingStart;
-		_offHand.OnSwingEnd += OnSwingEnd;
-		_offHand.OnCastingArmDirectionChanged += OnCastingArmDirectionChanged;
-		_offHand.OnHoldingWandStart += OnHoldingWandStart;
-		_offHand.OnHoldingWandEnd += OnHoldingWandEnd;
 		
 		if(IsOwner)
 		{
@@ -235,12 +228,6 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		_mainHand.OnCastingArmDirectionChanged -= OnCastingArmDirectionChanged;
 		_mainHand.OnHoldingWandStart -= OnHoldingWandStart;
 		_mainHand.OnHoldingWandEnd -= OnHoldingWandEnd;
-		
-		_offHand.OnSwingStart -= OnSwingStart;
-		_offHand.OnSwingEnd -= OnSwingEnd;
-		_offHand.OnCastingArmDirectionChanged -= OnCastingArmDirectionChanged;
-		_offHand.OnHoldingWandStart -= OnHoldingWandStart;
-		_offHand.OnHoldingWandEnd -= OnHoldingWandEnd;
 		
 		_thisPlayer.OnDeath -= Player_OnKilled;
 		_thisPlayer.OnRespawn -= Player_OnRespawn;

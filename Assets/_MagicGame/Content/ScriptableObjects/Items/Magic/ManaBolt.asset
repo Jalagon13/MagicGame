@@ -21,9 +21,9 @@ MonoBehaviour:
   <ManaCost>k__BackingField: 10
   <Damage>k__BackingField: 8
   <Knockback>k__BackingField: 5
-  <Spread>k__BackingField: 0
-  <Lifetime>k__BackingField: 2
-  <Speed>k__BackingField: 17
+  <Spread>k__BackingField: 5
+  <Lifetime>k__BackingField: 1.5
+  <Speed>k__BackingField: 15
   <CastDelay>k__BackingField: 0.15
   <SpellCast>k__BackingField:
     Guid:

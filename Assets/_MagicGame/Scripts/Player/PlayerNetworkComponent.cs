@@ -11,11 +11,11 @@ public class PlayerNetworkComponent : NetworkBehaviour
 	{
 		if (IsServer)
 		{
-			NetworkObject.CheckObjectVisibility += CheckVisibility;
-			NetworkManager.NetworkTickSystem.Tick += HandleOtherPlayerVisibility;
-			
 			_playerGameObject = transform.GetChild(0).gameObject;
 			_playerCollider = GetComponent<Collider2D>();
+			
+			NetworkObject.CheckObjectVisibility += CheckVisibility;
+			NetworkManager.NetworkTickSystem.Tick += HandleOtherPlayerVisibility;
 		}
 		base.OnNetworkSpawn();
 	}
@@ -48,28 +48,40 @@ public class PlayerNetworkComponent : NetworkBehaviour
 			
 			if(shouldBeVisible && !isVisibile)
 			{
-				// Debug.Log($"Showing {clientId}'s player from {OwnerClientId}");
-				if(clientId == NetworkManager.ServerClientId)
-				{
-					_playerGameObject.SetActive(true);
-					_playerCollider.enabled = true;
-					_playerCollider.isTrigger = true;
-				}
-				
-				NetworkObject.NetworkShow(clientId);
+				ShowPlayer(clientId);
 			}
 			else if(!shouldBeVisible && isVisibile)
 			{
-				// Debug.Log($"Hiding {clientId}'s player from {OwnerClientId}");
-				if(clientId == NetworkManager.ServerClientId)
-				{
-					_playerGameObject.SetActive(false);
-					_playerCollider.enabled = false;
-					_playerCollider.isTrigger = false;
-				}
-				
-				NetworkObject.NetworkHide(clientId);
+				HidePlayer(clientId);
 			}
+		}
+	}
+	
+	private void ShowPlayer(ulong playerId)
+	{
+		if(playerId == NetworkManager.ServerClientId)
+		{
+			_playerGameObject.SetActive(true);
+			_playerCollider.enabled = true;
+			_playerCollider.isTrigger = true;
+		}
+		else
+		{
+			NetworkObject.NetworkShow(playerId);
+		}
+	}
+	
+	private void HidePlayer(ulong playerId)
+	{
+		if(playerId == NetworkManager.ServerClientId)
+		{
+			_playerGameObject.SetActive(false);
+			_playerCollider.enabled = false;
+			_playerCollider.isTrigger = false;
+		}
+		else
+		{
+			NetworkObject.NetworkHide(playerId);
 		}
 	}
 	

@@ -20,7 +20,6 @@ public class PlayerHand : NetworkBehaviour
 	}
 
 	[SerializeField] private bool _isMainHand;
-	[SerializeField] private PlayerHand _oppositeHand;
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _northPivot;
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _southPivot;
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _eastPivot;
@@ -141,8 +140,6 @@ public class PlayerHand : NetworkBehaviour
 		if (_thisPlayer.GetComponent<PlayerStateMachine>().MovingDirection != ArmCardinalDirection)
 		{
 			OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
-
-			if (_oppositeHand.IsSwinging) _oppositeHand.StopSwing();
 		}
 	}
 

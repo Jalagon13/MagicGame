@@ -272,6 +272,7 @@ public class GameManager : NetworkBehaviour
 		item.Initialize(itemId, itemAmount, biome);
 		
 		NetworkObject itemNetworkObject = itemGameObject.GetComponent<NetworkObject>();
+		itemNetworkObject.SpawnWithObservers = false;
 		itemNetworkObject.Spawn(true);
 	}
 	

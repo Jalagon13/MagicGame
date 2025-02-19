@@ -29,7 +29,11 @@ public class NpcNetworkComponent : NetworkBehaviour
 			_despawnTimer.OnTimerEnd += HandleDespawnTimerEnd;
 			
 			_npcCollider = GetComponent<Collider2D>();
-		
+			
+			HideNpc(NetworkManager.ServerClientId);
+
+			NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;
+			
 			if (_continuallyCheckVisibility)
 			{
 				NetworkManager.NetworkTickSystem.Tick += NpcNetworkTick;
@@ -52,15 +56,19 @@ public class NpcNetworkComponent : NetworkBehaviour
 		_npcIsBeingRemoved = true;
 		NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, true);
 	}
-
-	public void SetSpawningClientId(ulong sourceClientId)
-	{
-		_spawningClientId = sourceClientId;
-	}
 	
-	public void SetNpcId(int npcId)
+	public void InitialieNpcNetwork(ulong sourceClientId, int npcId, BiomeType biome)
 	{
+		NpcBiomeType = biome;
+		_spawningClientId = sourceClientId;
 		_npcId = npcId;
+		
+		// Find walldetectorcollider and populate it
+		var wallDetectorCollider = GetComponentInChildren<WallDetectorCollider>();
+		if(wallDetectorCollider != null)
+		{
+			wallDetectorCollider.SetEnvironment(biome, Pathfinding.Instance.GetExistingPathfindingBiomes());
+		}
 	}
 
 	private bool CheckIfInSpawnZone(ulong clientId)
@@ -114,8 +122,10 @@ public class NpcNetworkComponent : NetworkBehaviour
 			_npcCollider.enabled = true;
 			_npcCollider.isTrigger = true;
 		}
-				
-		NetworkObject.NetworkShow(clientId);
+		else
+		{
+			NetworkObject.NetworkShow(clientId);
+		}
 	}
 	
 	private void HideNpc(ulong clientId)
@@ -126,8 +136,10 @@ public class NpcNetworkComponent : NetworkBehaviour
 			_npcCollider.enabled = false;
 			_npcCollider.isTrigger = false;
 		}
-				
-		NetworkObject.NetworkHide(clientId);
+		else
+		{
+			NetworkObject.NetworkHide(clientId);
+		}
 	}
 	
 	private bool NetworkObjectVisibleTo(ulong clientId)
@@ -157,9 +169,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 
 	private bool CheckIfInSameEnvironment(ulong clientId)
 	{
-		var clientEnvironment = NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value;
-	
-		return clientEnvironment == NpcBiomeType;
+		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value == NpcBiomeType;
 	}
 
 	private void UpdateDespawnTimer()
@@ -235,23 +245,12 @@ public class NpcNetworkComponent : NetworkBehaviour
 		_npcIsBeingRemoved = true;
 		NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, false);
 	}
-	
-	public void SetEnvironment(BiomeType biome)
-	{
-		NpcBiomeType = biome;
-		
-		// Find walldetectorcollider and populate it
-		var wallDetectorCollider = GetComponentInChildren<WallDetectorCollider>();
-		if(wallDetectorCollider != null)
-		{
-			wallDetectorCollider.SetEnvironment(biome, Pathfinding.Instance.GetExistingPathfindingBiomes());
-		}
-	}
 
 	public override void OnNetworkDespawn()
 	{
 		if (IsServer)
 		{
+			NetworkObject.CheckObjectVisibility -= CheckIfInSameEnvironment;
 			NetworkManager.NetworkTickSystem.Tick -= NpcNetworkTick;
 			_npc.OnNpcKilled -= Npc_OnNpcKilled;
 		}

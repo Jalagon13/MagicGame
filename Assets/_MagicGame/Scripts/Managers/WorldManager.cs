@@ -194,7 +194,7 @@ public class WorldManager : NetworkBehaviour
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void LoadChunksClientRpc(BiomeType toBiome, bool searchForPortal, Vector2 portalPosition, RpcParams rpcParams)
 	{
-		Debug.Log($"Player biome: {toBiome}Allowing client to load chunks");
+		Debug.Log($"Player biome: {toBiome} Allowing client to load chunks");
 		Player.LocalClientInstance.CurrentBiome.Value = toBiome;
 		
 		// Invoke it first to prep the last chunk position to garentee a new set of chunks to generate, then set loadingbiome to true to resume the update method

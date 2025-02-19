@@ -42,7 +42,10 @@ public class Item : NetworkBehaviour
 			_itemIdNetworkVariable.Value = _itemId;
 			_itemAmountNetworkVariable.Value = _itemAmount;
 			_itemCollider = GetComponent<Collider2D>();
+			
+			HideItem(NetworkManager.ServerClientId);
 
+			NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;
 			NetworkManager.NetworkTickSystem.Tick += HandleBiomeVisibility;
 		}
 		
@@ -149,13 +152,12 @@ public class Item : NetworkBehaviour
 		if(clientId == NetworkManager.ServerClientId)
 		{
 			_itemGameObject.SetActive(true);
-			if(_itemCollider != null)
-			{
-				_itemCollider.enabled = true;
-			}
+			_itemCollider.enabled = true;
 		}
-				
-		NetworkObject.NetworkShow(clientId);
+		else
+		{
+			NetworkObject.NetworkShow(clientId);
+		}
 	}
 
 	private void HideItem(ulong clientId)
@@ -165,8 +167,10 @@ public class Item : NetworkBehaviour
 			_itemGameObject.SetActive(false);
 			_itemCollider.enabled = false;
 		}
-				
-		NetworkObject.NetworkHide(clientId);
+		else
+		{
+			NetworkObject.NetworkHide(clientId);
+		}
 	}
 
 	private void UpdateItemDataAndVisuals()
@@ -187,6 +191,7 @@ public class Item : NetworkBehaviour
 	{
 		if (IsServer)
 		{
+			NetworkObject.CheckObjectVisibility -= CheckIfInSameEnvironment;
 			NetworkManager.NetworkTickSystem.Tick -= HandleBiomeVisibility;
 		}
 

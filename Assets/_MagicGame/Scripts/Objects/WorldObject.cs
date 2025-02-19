@@ -22,7 +22,7 @@ public class WorldObject : MonoBehaviour // Base class for every "physical" asse
 	
 	public void DestroyObject(Vector2Int objectPosition, BiomeType biome)
 	{
-		LootTable.SpawnLoot(Table, (Vector2)objectPosition + (Vector2.one * 0.5f), Player.LocalClientInstance.CurrentBiome.Value);
+		LootTable.SpawnLoot(Table, (Vector2)objectPosition + (Vector2.one * 0.5f), biome);
 		SoundManager.Instance.PlayOneShot(ResourceDestroyed, transform.position);
 		ChunkManager.Instance.RemoveObjectDataFromChunk(objectPosition, biome);
 		

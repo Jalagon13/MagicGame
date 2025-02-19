@@ -18,32 +18,36 @@ public class ManaBolt : Spell
 		_rigidbody2D = GetComponent<Rigidbody2D>();
 		_wallDetectorCollider.OnWallCollide += OnWallCollide;
 		_trailParticles.gameObject.transform.parent = null;
+		
+		Initialize();
 	}
+
+	public override void OnNetworkSpawn()
+	{
+		if(IsServer)
+		{
+			_trailParticles.gameObject.SetActive(false);
+		}
 	
+		base.OnNetworkSpawn();
+	}
+
 	private void FixedUpdate()
 	{
-		_velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
-		_rigidbody2D.MovePosition(_rigidbody2D.position + _velocity * Time.fixedDeltaTime);
+		if(IsServer || _isLocalProjectile)
+		{
+			_velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
+			_rigidbody2D.MovePosition(_rigidbody2D.position + _velocity * Time.fixedDeltaTime);
+		}
+		
+		_trailParticles.gameObject.SetActive(_spellGameObject.activeInHierarchy);
 		_trailParticles.transform.SetPositionAndRotation(_rigidbody2D.position, Quaternion.identity);
 	}
 
 	private void OnWallCollide(object sender, WallDetectorCollider.WallCollisionEventArgs e)
 	{
+		PlayHitParticles();
 		_spellNetworkComponent.StopProjectile();
-	}
-
-	void OnTriggerEnter2D(Collider2D collider)
-	{
-		if (ColliderIsSourcePlayer(collider)) return;
-		
-		if (collider.TryGetComponent(out IHasHealth npcToDamage))
-		{
-			if(IsServer)
-			{
-				npcToDamage.ApplyDamage(_damage, _projSpawnPoint, _knockback);
-				_spellNetworkComponent.StopProjectile();
-			}
-		}
 	}
 	
 	protected override void CastSpell()
@@ -52,13 +56,39 @@ public class ManaBolt : Spell
 		_velocity = _directionNormalized * _speed;
 	}
 
+	void OnTriggerEnter2D(Collider2D collider)
+	{
+		if (ColliderIsSourcePlayer(collider)) return;
+		
+		if (collider.TryGetComponent(out IHasHealth npcToDamage))
+		{
+			PlayHitParticles();
+		
+			if(_spawnPlayerId == Player.LocalClientInstance.OwnerClientId)
+			{
+				npcToDamage.ApplyDamage(_damage, _projSpawnPoint, _knockback);
+			}
+			
+			if(IsServer)
+			{
+				_spellNetworkComponent.StopProjectile();
+			}
+		}
+	}
+	
+	private void PlayHitParticles()
+	{
+		if(_spellGameObject.activeInHierarchy)
+		{
+			var go = Instantiate(_hitParticles.gameObject, transform.position, Quaternion.identity);
+			go.GetComponent<ParticleSystem>().Play();
+		}
+	}
+	
 	public override void OnDestroy()
 	{
 		_wallDetectorCollider.OnWallCollide -= OnWallCollide;
-	
-		var go = Instantiate(_hitParticles.gameObject, transform.position, Quaternion.identity);
-		go.GetComponent<ParticleSystem>().Play();
-		
+
 		var main = _trailParticles.main;
 		main.loop = false;
 		main.stopAction = ParticleSystemStopAction.Destroy;

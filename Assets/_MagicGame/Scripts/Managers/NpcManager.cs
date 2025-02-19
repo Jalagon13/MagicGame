@@ -51,9 +51,7 @@ public class NpcManager : NetworkBehaviour
 		GameObject npcPrefab = Instantiate(TestDummyPrefab.gameObject, ActionManager.MouseWorldPosition, Quaternion.identity);
 		
 		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
-		npcNetworkComponent.SetEnvironment(Player.LocalClientInstance.CurrentBiome.Value);
-		npcNetworkComponent.SetSpawningClientId(0);
-		npcNetworkComponent.SetNpcId(-1);
+		npcNetworkComponent.InitialieNpcNetwork(0, -1, Player.LocalClientInstance.CurrentBiome.Value);
 		
 		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
 		npcPrefabNetworkObject.Spawn(true);
@@ -99,8 +97,9 @@ public class NpcManager : NetworkBehaviour
 					
 					if(npcToSpawn.SlotAmount <= remainingNpcSlotSpace)
 					{
-						SpawnNpc(potentialSpawnPoint, npcToSpawn);
-						
+						_activeNpcSlotAmount += npcToSpawn.SlotAmount;
+						int npcId = GameManager.Instance.GetNpcIdFromNpcSpawnData(Player.LocalClientInstance.CurrentBiome.Value, npcToSpawn);
+						SpawnNpcServerRpc(Player.LocalClientInstance.CurrentBiome.Value, npcId, NetworkManager.LocalClientId, potentialSpawnPoint);
 						break;
 					}
 				}
@@ -110,18 +109,8 @@ public class NpcManager : NetworkBehaviour
 		}
 	}
 	
-	private void SpawnNpc(Vector2 spawnPosition, NpcSpawnData npcSpawnData)
-	{
-		// Npc to spawn can fit in the remaining npc slot space
-		_activeNpcSlotAmount += npcSpawnData.SlotAmount;
-			
-		int npcId = GameManager.Instance.GetNpcIdFromNpcSpawnData(Player.LocalClientInstance.CurrentBiome.Value, npcSpawnData);
-
-		SpawnNpcServerRpc(Player.LocalClientInstance.CurrentBiome.Value, npcId, NetworkManager.LocalClientId, spawnPosition);
-	}
-	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnNpcServerRpc(BiomeType spawnBiome, int npcId, ulong spawningClientId, Vector2 position)
+	private void SpawnNpcServerRpc(BiomeType spawnBiome, int npcId, ulong spawnPlayerId, Vector2 position)
 	{
 		NpcSpawnData npcSpawnData = GameManager.Instance.GetNpcSpawnData(spawnBiome, npcId);
 		
@@ -129,11 +118,10 @@ public class NpcManager : NetworkBehaviour
 		GameObject npcPrefab = Instantiate(npcSpawnData.Prefab, spawnPosition, Quaternion.identity);
 		
 		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
-		npcNetworkComponent.SetEnvironment(spawnBiome);
-		npcNetworkComponent.SetSpawningClientId(spawningClientId);
-		npcNetworkComponent.SetNpcId(npcId);
+		npcNetworkComponent.InitialieNpcNetwork(spawnPlayerId, npcId, spawnBiome);
 		
 		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
+		npcPrefabNetworkObject.SpawnWithObservers = false;
 		npcPrefabNetworkObject.Spawn(true);
 		
 		// replace this with dimension specific entity list that contains mobs and projectiles for entities

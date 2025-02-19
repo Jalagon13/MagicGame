@@ -22,7 +22,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 			
 			HideSpell(NetworkManager.ServerClientId);
 			
-			NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;
+			NetworkObject.CheckObjectVisibility += CheckIfInSameBiome;
 			NetworkManager.NetworkTickSystem.Tick += SpellNetworkTick;
 		}
 		
@@ -71,21 +71,21 @@ public class SpellNetworkComponent : NetworkBehaviour
 	{
 		foreach (var clientId in NetworkManager.ConnectedClientsIds)
 		{
-			var isInSameEnvironment = CheckIfInSameEnvironment(clientId);
+			var isInSameBiome = CheckIfInSameBiome(clientId);
 			var isVisibile = NetworkObjectVisibleTo(clientId);
 			
-			if(isInSameEnvironment && !isVisibile)
+			if(isInSameBiome && !isVisibile)
 			{
 				ShowSpell(clientId);
 			}
-			else if(!isInSameEnvironment && isVisibile)
+			else if(!isInSameBiome && isVisibile)
 			{
 				HideSpell(clientId);
 			}
 		}
 	}
 	
-	private bool CheckIfInSameEnvironment(ulong clientId)
+	private bool CheckIfInSameBiome(ulong clientId)
 	{
 		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value == SpellBiomeType;
 	}
@@ -129,7 +129,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 	{
 		if (IsServer)
 		{
-			NetworkObject.CheckObjectVisibility -= CheckIfInSameEnvironment;
+			NetworkObject.CheckObjectVisibility -= CheckIfInSameBiome;
 			NetworkManager.NetworkTickSystem.Tick -= SpellNetworkTick;
 		}
 

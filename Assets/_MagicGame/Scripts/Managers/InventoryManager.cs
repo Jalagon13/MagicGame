@@ -52,11 +52,6 @@ public class InventoryManager : MonoBehaviour
 		_inventoryModel.OnInventoryUpdate += InventoryModel_OnInventoryUpdate;
 	}
 	
-	private void Start()
-	{
-		// GameInput.Instance.OnSwapHands += GameInput_OnSwapHands;
-	}
-
 	private void Update()
 	{
 		MouseItemInput();
@@ -83,18 +78,6 @@ public class InventoryManager : MonoBehaviour
 		}
 	}
 	
-	// private void GameInput_OnSwapHands(object sender, EventArgs e)
-	// {
-	// 	var mainHandInventoryItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
-		
-	// 	_inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()] = _inventoryModel.InventoryItems[_inventoryModel.InventoryItems.Count - 1];
-	// 	_inventoryModel.InventoryItems[_inventoryModel.InventoryItems.Count - 1] = mainHandInventoryItem;;
-		
-	// 	SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.LocalClientInstance.transform.position);
-		
-	// 	_inventoryModel.UpdateInventory();
-	// }
-	
 	public bool MainHandItemExists(out InventoryItem mainHandInventoryItem)
 	{
 		if(_mouseItemModel.MouseInventoryItem.HasItem)
@@ -107,12 +90,6 @@ public class InventoryManager : MonoBehaviour
 			mainHandInventoryItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
 			return _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Item != null;
 		}
-	}
-	
-	public bool OffHandItemExists(out InventoryItem offHandInventoryItem)
-	{
-		offHandInventoryItem = _inventoryModel.InventoryItems.Last();
-		return _inventoryModel.InventoryItems.Last().Item != null;
 	}
 	
 	private void OnProjectileShot_UpdateInventory(object sender, EventArgs e)

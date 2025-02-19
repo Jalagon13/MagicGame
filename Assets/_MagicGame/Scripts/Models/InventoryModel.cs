@@ -93,6 +93,7 @@ public class InventoryModel
 								WandInvItem = wandInvItem
 							});
 						}
+						UpdateInventory();
 						return;
 					}
 				}
