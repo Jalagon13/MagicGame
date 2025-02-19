@@ -47,6 +47,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	[field: SerializeField] public float IFrameLength { get; private set; } = 0.67f;
 	[Range(0, 100), SerializeField] private float _knockbackResist;
 	[SerializeField] private List<InventoryItem> _startingItems = new();
+	[SerializeField] private List<WandInventoryItem> _startingWandItems = new();
 
 	public NetworkVariable<int> HealthNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	public NetworkVariable<bool> ExecutingIFrames { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -81,8 +82,6 @@ public class Player : NetworkBehaviour, IHasHealth
 			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnMainHandSlotUpdated;
 			InventoryManager.Instance.OnOffHandItemUpdated += InventoryManager_OnOffHandItemUpdated;
 			GameInput.Instance.OnSpaceStarted += DashTest;
-			
-			StartCoroutine(SpawnStartingItems());
 		}
 		
 		OnAnyPlayerSpawned?.Invoke(this, new PlayerIdEventArgs
@@ -97,6 +96,48 @@ public class Player : NetworkBehaviour, IHasHealth
 		}
 	}
 
+	protected override void OnNetworkPostSpawn()
+	{
+		if(IsOwner)
+		{
+			foreach (InventoryItem item in _startingItems)
+			{
+				InventoryManager.Instance.AddItem(item);
+			}
+			
+			foreach (WandInventoryItem wandInvItem in _startingWandItems)
+			{
+				if(wandInvItem.Item is not WandItemSO)
+				{
+					Debug.LogWarning($"{wandInvItem.Item} is not a wand. skipping it");
+					continue;
+				}
+
+				WandItemSO wandItemSO = wandInvItem.Item as WandItemSO;
+				WandInventoryItem wandItemToAdd = (WandInventoryItem)wandItemSO.CreateInventoryItem(1);
+				
+				for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
+				{
+					if (wandInvItem.MagicArray[i] is MagicItemSO)
+					{
+						if(i < wandItemSO.Capacity)
+						{
+							wandItemToAdd.MagicArray[i] = wandInvItem.MagicArray[i];
+						}
+						else
+						{
+							Debug.LogWarning($"{wandInvItem.MagicArray[i].Name} being skipped because it is out of the index of {wandItemSO.Name}'s Capacity ({wandItemSO.Capacity})");
+						}
+					}
+				}
+				
+				InventoryManager.Instance.AddItem(wandItemToAdd);
+			}
+		}
+	
+		base.OnNetworkPostSpawn();
+	}
+
 	private void DashTest(object sender, EventArgs e)
 	{
 		if(Pointer.IsOverUI() || ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo)) return;
@@ -108,17 +149,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		if(IsDead() && NetworkManager.LocalClientId == OwnerClientId)
 		{
 			_respawnTimer.Tick(Time.deltaTime);
-		}
-	}
-	
-	private IEnumerator SpawnStartingItems()
-	{
-		yield return null;
-		
-		foreach (InventoryItem item in _startingItems)
-		{
-			InventoryManager.Instance.AddItem(item.Item, item.Quantity);
-			yield return null;
 		}
 	}
 	

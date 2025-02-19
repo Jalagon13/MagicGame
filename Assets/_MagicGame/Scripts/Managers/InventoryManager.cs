@@ -158,38 +158,34 @@ public class InventoryManager : MonoBehaviour
 				SoundManager.Instance.PlayOneShot(FMODEvents.Instance.ItemPickup, Player.LocalClientInstance.transform.position);
 			}
 		
-			InventoryItem item = _itemQueue.Dequeue();
-			ItemCollectHandle(item);
+			InventoryItem itemToCollect = _itemQueue.Dequeue();
+			
+			_inventoryModel.AddItem(itemToCollect);
+		
+			string itemName = itemToCollect.Item.Name;
+		
+			// If there exists an item collect plate as the item being collected, delete it and spawn a new one
+			if(_itemPlates.ContainsKey(itemName))
+			{
+				// Create refreshed item with updated quantities
+				int currentQuantity = _itemPlates[itemName].DisplayAmount;
+				int additionalQuantity = itemToCollect.Quantity;
+			
+				itemToCollect.Quantity = currentQuantity + additionalQuantity;
+			
+				// Delete the currently spawned item,
+				Destroy(_itemPlates[itemName].gameObject);
+			
+				// Remove it from the dictionary
+				_itemPlates.Remove(itemName);
+			}
+		
+			SpawnItemCollectPlate(itemToCollect);
+			
 			yield return new WaitForSeconds(0.15f);
 		}
 		
 		_isCollecting = false;
-	}
-	
-	// Add item to inventory model and spawn collect plate
-	private void ItemCollectHandle(InventoryItem itemToCollect)
-	{
-		_inventoryModel.AddItem(itemToCollect);
-		
-		string itemName = itemToCollect.Item.Name;
-		
-		// If there exists an item collect plate as the item being collected, delete it and spawn a new one
-		if(_itemPlates.ContainsKey(itemName))
-		{
-			// Create refreshed item with updated quantities
-			int currentQuantity = _itemPlates[itemName].DisplayAmount;
-			int additionalQuantity = itemToCollect.Quantity;
-			
-			itemToCollect.Quantity = currentQuantity + additionalQuantity;
-			
-			// Delete the currently spawned item,
-			Destroy(_itemPlates[itemName].gameObject);
-			
-			// Remove it from the dictionary
-			_itemPlates.Remove(itemName);
-		}
-		
-		SpawnItemCollectPlate(itemToCollect);
 	}
 	
 	private void SpawnItemCollectPlate(InventoryItem itemToCollect)

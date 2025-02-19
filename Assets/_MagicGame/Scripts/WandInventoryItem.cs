@@ -1,11 +1,12 @@
 using System;
 using UnityEngine;
 
+[Serializable]
 public class WandInventoryItem : InventoryItem
 {
 	public event EventHandler OnWandContentsUpdated;
-
-	public MagicItemSO[] MagicArray { get; private set; }
+	
+	[field: SerializeField] public MagicItemSO[] MagicArray { get; private set; }
 
 	public WandInventoryItem(ItemSO itemSO, int quantity, int capacity) : base(itemSO, quantity)
 	{
