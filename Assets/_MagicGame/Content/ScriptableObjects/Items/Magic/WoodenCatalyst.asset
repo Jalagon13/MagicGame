@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c44f7061e9fcf4168be8456ccf98d2ff, type: 3}
+  m_Name: WoodenCatalyst
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Wooden Catalyst
+  <UiDisplay>k__BackingField: {fileID: -686089455, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <ItemActionCooldown>k__BackingField: 0.375
+  <Stackable>k__BackingField: 0
+  <Description>k__BackingField: 
+  <MiningVisualPrefab>k__BackingField: {fileID: 312987487640026157, guid: 1f41c9fd0b67b4deabf38d42320fb4e8, type: 3}
+  <MiningPower>k__BackingField: 35
+  <MiningRange>k__BackingField: 4
+  <CastDelay>k__BackingField: 0.12
+  <ManaCost>k__BackingField: 6

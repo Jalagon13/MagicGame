@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: item_wood_wand
+      name: item_wood_staff
       rect:
         serializedVersion: 2
         x: 0
@@ -704,10 +704,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_cinder_bolt
+      name: item_wood_wand
       rect:
         serializedVersion: 2
-        x: 48
+        x: 80
         y: 64
         width: 16
         height: 16
@@ -726,7 +726,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_twin_burst
+      name: item_wooden_catalyst
       rect:
         serializedVersion: 2
         x: 64
@@ -751,7 +751,7 @@ TextureImporter:
       name: item_multi_cast
       rect:
         serializedVersion: 2
-        x: 80
+        x: 48
         y: 64
         width: 16
         height: 16
@@ -790,7 +790,6 @@ TextureImporter:
       item_campfire: -925800054
       item_chest: -1010797688
       item_chicken: 1104096443
-      item_cinder_bolt: 16873710
       item_coal: -1541828095
       item_destruction_tome: -1033124662
       item_door: 730009004
@@ -824,7 +823,6 @@ TextureImporter:
       item_stone_sword: 212289767
       item_sword: -1843546812
       item_torch: -1599595118
-      item_twin_burst: -686089455
       item_wizard_grieves: 1068366592
       item_wizard_hat: -554541973
       item_wizard_robe: 1972111916
@@ -833,7 +831,9 @@ TextureImporter:
       item_wood_hammer: 1076022954
       item_wood_pickaxe: 161528276
       item_wood_shovel: 959550348
-      item_wood_wand: -1593785014
+      item_wood_staff: -1593785014
+      item_wood_wand: 16873710
+      item_wooden_catalyst: -686089455
       item_work_bench: 1337721260
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

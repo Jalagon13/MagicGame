@@ -15056,8 +15056,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b24c715a97e745b0a16c5426725f5f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  _entityTest: {fileID: 0}
 --- !u!1 &2131152287
 GameObject:
   m_ObjectHideFlags: 0

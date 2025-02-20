@@ -12,17 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7444942030d94c08a92835895e63bb2, type: 3}
   m_Name: WoodWand
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Wood Wand
-  <UiDisplay>k__BackingField: {fileID: -1593785014, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <Name>k__BackingField: Wooden Wand
+  <UiDisplay>k__BackingField: {fileID: 16873710, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <MeleeDamage>k__BackingField: 6
-  <MeleeKnockback>k__BackingField: 3
-  <SpellsCast>k__BackingField: 1
-  <BaseCastDelay>k__BackingField: 0.15
-  <MaxRechargeDuration>k__BackingField: 0.33
-  <MaxMana>k__BackingField: 75
-  <ManaChargeSpeed>k__BackingField: 17
-  <Capacity>k__BackingField: 2
-  <Spread>k__BackingField: 2
+  <BaseCastDelay>k__BackingField: 0.085
+  <BaseDamage>k__BackingField: 1
+  <BaseManaCost>k__BackingField: 1
+  <MaxMana>k__BackingField: 50
+  <ManaChargeSpeed>k__BackingField: 15
+  <ReloadDuration>k__BackingField: 0.2
+  <AccuracyAngle>k__BackingField: 0
+  <Capacity>k__BackingField: 1

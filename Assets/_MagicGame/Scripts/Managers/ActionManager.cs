@@ -117,8 +117,8 @@ public class ActionManager : MonoBehaviour
 				});
 			}
 			
-			float currentRecharge = WandDict[wandInvItem.Id].CurrentRecharge;
-			float MaxRecharge = WandDict[wandInvItem.Id].TotalRechargeDuration;
+			float currentRecharge = WandDict[wandInvItem.Id].CurrentReload;
+			float MaxRecharge = WandDict[wandInvItem.Id].TotalReloadDuration;
 			
 			if(currentRecharge <= MaxRecharge)
 			{

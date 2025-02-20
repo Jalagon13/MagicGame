@@ -18,13 +18,13 @@ MonoBehaviour:
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <SpellProjectilePrefab>k__BackingField: {fileID: 6035814809352226819, guid: b690059f7ea154d8bb5b67392ed3195f, type: 3}
-  <ManaCost>k__BackingField: 8
+  <CastDelay>k__BackingField: 0.15
   <Damage>k__BackingField: 6
+  <ManaCost>k__BackingField: 9
   <Knockback>k__BackingField: 5
-  <Spread>k__BackingField: 3
+  <AccuracyAngle>k__BackingField: 1
   <Lifetime>k__BackingField: 1.5
   <Speed>k__BackingField: 15
-  <CastDelay>k__BackingField: 0.15
   <SpellCast>k__BackingField:
     Guid:
       Data1: -2115950531

@@ -94,19 +94,21 @@ public class Player : NetworkBehaviour, IHasHealth
 		}
 	}
 
-	protected override void OnNetworkPostSpawn()
+	private IEnumerator Start()
 	{
-		if(IsOwner)
+		yield return new WaitForEndOfFrame();
+	
+		if (IsOwner)
 		{
 			foreach (InventoryItem item in _startingItems)
 			{
 				InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
 				InventoryManager.Instance.AddItem(itemToAdd);
 			}
-			
+
 			foreach (WandInventoryItem wandInvItem in _startingWandItems)
 			{
-				if(wandInvItem.Item is not WandItemSO)
+				if (wandInvItem.Item is not WandItemSO)
 				{
 					Debug.LogWarning($"{wandInvItem.Item} is not a wand. skipping it");
 					continue;
@@ -114,12 +116,12 @@ public class Player : NetworkBehaviour, IHasHealth
 
 				WandItemSO wandItemSO = wandInvItem.Item as WandItemSO;
 				WandInventoryItem wandItemToAdd = (WandInventoryItem)wandItemSO.CreateInventoryItem(1);
-				
+
 				for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
 				{
 					if (wandInvItem.MagicArray[i] is MagicItemSO)
 					{
-						if(i < wandItemSO.Capacity)
+						if (i < wandItemSO.Capacity)
 						{
 							wandItemToAdd.MagicArray[i] = wandInvItem.MagicArray[i];
 						}
@@ -129,12 +131,10 @@ public class Player : NetworkBehaviour, IHasHealth
 						}
 					}
 				}
-				
+
 				InventoryManager.Instance.AddItem(wandItemToAdd);
 			}
 		}
-	
-		base.OnNetworkPostSpawn();
 	}
 
 	private void DashTest(object sender, EventArgs e)
