@@ -118,13 +118,19 @@ public class Wand
 		}
 		else if(magic is SpellItemSO spellToCast)
 		{
+			if(spellToCast.ManaCost > CurrentMana) return;
+		
 			_validMagicIndexes.Dequeue(); 
 			_castTimer = WandSO.BaseCastDelay + spellToCast.CastDelay;
 			CurrentMana -= spellToCast.ManaCost;
 			spellToCast.CastSpell(WandSO);
+			
+			if(_validMagicIndexes.Count <= 0)
+			{
+				CurrentRecharge = 0;
+				TotalRechargeDuration = WandSO.MaxRechargeDuration + WandSO.BaseCastDelay + spellToCast.CastDelay;
+			}
 		}
-		
-		
 	}
 	
 	private void ResetValidMagicIndexes()

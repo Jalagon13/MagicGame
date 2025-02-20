@@ -20,7 +20,6 @@ public class InventoryManager : MonoBehaviour
 		public int SlotIndex;
 	}
 	
-	public event EventHandler<InventoryItemEventArgs> OnOffHandItemUpdated;
 	public event EventHandler<InventoryItemEventArgs> OnMouseItemUpdated;
 	public class InventoryItemEventArgs : EventArgs
 	{
@@ -252,11 +251,6 @@ public class InventoryManager : MonoBehaviour
 		OnInventoryUpdated?.Invoke(this, new OnInventoryUpdatedEventArgs
 		{
 			InventoryItems = items
-		});
-		
-		OnOffHandItemUpdated?.Invoke(this, new InventoryItemEventArgs
-		{
-			InventoryItem = items.Last()
 		});
 	}
 	

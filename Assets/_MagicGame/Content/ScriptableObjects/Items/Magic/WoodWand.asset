@@ -22,7 +22,7 @@ MonoBehaviour:
   <SpellsCast>k__BackingField: 1
   <BaseCastDelay>k__BackingField: 0.15
   <MaxRechargeDuration>k__BackingField: 0.33
-  <MaxMana>k__BackingField: 200
-  <ManaChargeSpeed>k__BackingField: 20
-  <Capacity>k__BackingField: 4
-  <Spread>k__BackingField: 1
+  <MaxMana>k__BackingField: 75
+  <ManaChargeSpeed>k__BackingField: 17
+  <Capacity>k__BackingField: 2
+  <Spread>k__BackingField: 2

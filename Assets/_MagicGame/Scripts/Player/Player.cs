@@ -37,7 +37,6 @@ public class Player : NetworkBehaviour, IHasHealth
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
 	public PlayerStats PlayerStats { get; private set; }
 	public NetworkVariable<int> MainHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	public NetworkVariable<int> OffHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<BiomeType> CurrentBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public BiomeType Biome { get { return CurrentBiome.Value; } }
 	public Collider2D HitCollider { get; private set; }
@@ -80,7 +79,6 @@ public class Player : NetworkBehaviour, IHasHealth
 			_spawnPoint = transform.position;
 			
 			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnMainHandSlotUpdated;
-			InventoryManager.Instance.OnOffHandItemUpdated += InventoryManager_OnOffHandItemUpdated;
 			GameInput.Instance.OnSpaceStarted += DashTest;
 		}
 		
@@ -291,24 +289,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		}
 	}
 	
-	 private void InventoryManager_OnOffHandItemUpdated(object sender, InventoryManager.InventoryItemEventArgs e)
-	{
-		if(IsOwner)
-		{
-			// NTFS: network variables onvaluechanged is only executed if the value is different
-			var offHandItemIndex = GameManager.Instance.GetItemIdFromItemSO(e.InventoryItem.Item);
-			
-			if(offHandItemIndex == -1)
-			{
-				OffHandItemIndexNetworkVariable.Value = -1;
-			}
-			else
-			{
-				OffHandItemIndexNetworkVariable.Value = offHandItemIndex;
-			}
-		}
-	}
-	
 	public bool IsDead()
 	{
 		return HealthNetworkVariable.Value <= 0;
@@ -317,12 +297,8 @@ public class Player : NetworkBehaviour, IHasHealth
 	public bool IsHoldingAWand()
 	{
 		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromItemId(MainHandItemIndexNetworkVariable.Value);
-		bool mainHandHoldingWand = mainHandItem != null && mainHandItem is SpellBookItemSO;
 		
-		ItemSO offHandItem = GameManager.Instance.GetItemSOFromItemId(OffHandItemIndexNetworkVariable.Value);
-		bool offHandHoldingWand = offHandItem != null && offHandItem is SpellBookItemSO;
-		
-		return mainHandHoldingWand || offHandHoldingWand;
+		return mainHandItem != null && mainHandItem is SpellBookItemSO;
 	}
 	
 	public override void OnDestroy()
@@ -334,7 +310,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		if(IsOwner)
 		{
 			HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnMainHandSlotUpdated;
-			InventoryManager.Instance.OnOffHandItemUpdated -= InventoryManager_OnOffHandItemUpdated;
 		}
 	}
 }

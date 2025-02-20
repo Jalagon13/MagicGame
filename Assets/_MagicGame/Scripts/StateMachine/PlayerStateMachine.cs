@@ -96,7 +96,7 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		}
 		
 		// Check if IsMoving has changed this frame
-		if (IsMoving != _previousIsMoving)
+		if (IsMoving != _previousIsMoving && !isHoldingWand)
 		{
 			// Call a method or handle logic when the state changes
 			PlayAnimationBasedOnDirection(_currentDirection);

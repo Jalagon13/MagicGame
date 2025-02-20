@@ -19,7 +19,6 @@ public class PlayerHand : NetworkBehaviour
 		public CardinalDirection Direction;
 	}
 
-	[SerializeField] private bool _isMainHand;
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _northPivot;
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _southPivot;
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _eastPivot;
@@ -42,11 +41,6 @@ public class PlayerHand : NetworkBehaviour
 		NetworkVariableReadPermission.Everyone,
 		NetworkVariableWritePermission.Owner
 	);
-	private NetworkVariable<bool> _swungThisFrameNetworkVariable = new(
-		default,
-		NetworkVariableReadPermission.Everyone,
-		NetworkVariableWritePermission.Owner
-	);
 
 	public CardinalDirection ArmCardinalDirection { get; private set; }
 
@@ -57,23 +51,14 @@ public class PlayerHand : NetworkBehaviour
 		if(_thisPlayer == null)
 		{
 			_thisPlayer = transform.root.GetComponent<Player>();
-			
-			if (_isMainHand)
-			{
-				_thisPlayer.MainHandItemIndexNetworkVariable.OnValueChanged += HandleItemIndexChanged;
-			}
-			else
-			{
-				_thisPlayer.OffHandItemIndexNetworkVariable.OnValueChanged += HandleItemIndexChanged;
-			}
+
+			_thisPlayer.MainHandItemIndexNetworkVariable.OnValueChanged += HandleItemIndexChanged;
 		}
 	}
 
 	public override void OnNetworkSpawn()
 	{
-		int heldItemValue = _isMainHand ? _thisPlayer.MainHandItemIndexNetworkVariable.Value : _thisPlayer.OffHandItemIndexNetworkVariable.Value;
-		
-		UpdateArmFromItemIndex(heldItemValue);
+		UpdateArmFromItemIndex(_thisPlayer.MainHandItemIndexNetworkVariable.Value);
 		
 		base.OnNetworkSpawn();
 	}
@@ -145,14 +130,7 @@ public class PlayerHand : NetworkBehaviour
 
 	public override void OnDestroy()
 	{
-		if (_isMainHand)
-		{
-			_thisPlayer.MainHandItemIndexNetworkVariable.OnValueChanged -= HandleItemIndexChanged;
-		}
-		else
-		{
-			_thisPlayer.OffHandItemIndexNetworkVariable.OnValueChanged -= HandleItemIndexChanged;
-		}
+		_thisPlayer.MainHandItemIndexNetworkVariable.OnValueChanged -= HandleItemIndexChanged;
 
 		base.OnDestroy();
 	}
