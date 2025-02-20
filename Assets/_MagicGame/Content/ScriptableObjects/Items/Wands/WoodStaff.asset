@@ -17,9 +17,8 @@ MonoBehaviour:
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <BaseCastDelay>k__BackingField: 0.185
+  <BaseCastDelay>k__BackingField: 0.2
   <BaseDamage>k__BackingField: 5
-  <BaseManaCost>k__BackingField: 4
   <MaxMana>k__BackingField: 90
   <ManaChargeSpeed>k__BackingField: 20
   <ReloadDuration>k__BackingField: 0.375

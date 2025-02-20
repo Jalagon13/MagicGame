@@ -24,7 +24,7 @@ MonoBehaviour:
   <Knockback>k__BackingField: 5
   <AccuracyAngle>k__BackingField: 1
   <Lifetime>k__BackingField: 1.5
-  <Speed>k__BackingField: 15
+  <Speed>k__BackingField: 14
   <SpellCast>k__BackingField:
     Guid:
       Data1: -2115950531

@@ -98,11 +98,9 @@ public class Wand
 			{
 				if (spellsShot.Contains(validMagicIndex)) continue; // If spell has been shot already, skip it
 
-				int totalMana = potentialSpellToShoot.ManaCost + WandSO.BaseManaCost;
-
-				if (totalMana <= CurrentMana)
+				if (potentialSpellToShoot.ManaCost <= CurrentMana)
 				{
-					CurrentMana -= totalMana;
+					CurrentMana -= potentialSpellToShoot.ManaCost;
 
 					potentialSpellToShoot.CastSpell(WandSO);
 					numOfSpellsCast++;
@@ -132,13 +130,11 @@ public class Wand
 
 	private void HandleSingleSpellCast(SpellItemSO spellToCast)
 	{
-		int totalMana = spellToCast.ManaCost + WandSO.BaseManaCost;
-
-		if (totalMana > CurrentMana) return;
+		if (spellToCast.ManaCost > CurrentMana) return;
 
 		_validMagicIndexes.Dequeue();
 		_castTimer = WandSO.BaseCastDelay + spellToCast.CastDelay;
-		CurrentMana -= totalMana;
+		CurrentMana -= spellToCast.ManaCost;
 		spellToCast.CastSpell(WandSO);
 
 		if (_validMagicIndexes.Count <= 0)
@@ -150,10 +146,7 @@ public class Wand
 	
 	private void HandleMiningCast(DestructionCataylstItemSO miningSpell)
 	{
-		int totalMana = miningSpell.ManaCost + WandSO.BaseManaCost;
-
-
-		if (totalMana > CurrentMana || !miningSpell.PlayerInRangeOfMouse()) return;
+		if (miningSpell.ManaCost > CurrentMana || !miningSpell.PlayerInRangeOfMouse()) return;
 
 		if (Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition)))
 		{
@@ -162,7 +155,7 @@ public class Wand
 
 			miningSpell.SpawnMiningVisuals();
 
-			MiningCastCleanUp(miningSpell.CastDelay, totalMana);
+			MiningCastCleanUp(miningSpell.CastDelay, miningSpell.ManaCost);
 		}
 		else if (ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo))
 		{
@@ -170,7 +163,7 @@ public class Wand
 
 			miningSpell.SpawnMiningVisuals();
 
-			MiningCastCleanUp(miningSpell.CastDelay, totalMana);
+			MiningCastCleanUp(miningSpell.CastDelay, miningSpell.ManaCost);
 		}
 	}
 	
