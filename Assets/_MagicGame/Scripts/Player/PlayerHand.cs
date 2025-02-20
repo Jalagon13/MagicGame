@@ -162,7 +162,14 @@ public class PlayerHand : NetworkBehaviour
 		if (HeldItem is SpellBookItemSO || HeldItem is WandItemSO)
 		{
 			ShowArm();
-			ApplyPreset(_holdingWandPreset);
+			if(HeldItem is SpellBookItemSO)
+			{
+				ApplyPreset(_armItemAnglePreset);
+			}
+			else if(HeldItem is WandItemSO)
+			{
+				ApplyPreset(_holdingWandPreset);
+			}
 			
 			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 		}

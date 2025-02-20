@@ -100,7 +100,8 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			foreach (InventoryItem item in _startingItems)
 			{
-				InventoryManager.Instance.AddItem(item);
+				InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
+				InventoryManager.Instance.AddItem(itemToAdd);
 			}
 			
 			foreach (WandInventoryItem wandInvItem in _startingWandItems)
@@ -298,7 +299,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromItemId(MainHandItemIndexNetworkVariable.Value);
 		
-		return mainHandItem != null && mainHandItem is SpellBookItemSO;
+		return mainHandItem != null && (mainHandItem is SpellBookItemSO || mainHandItem is WandItemSO);
 	}
 	
 	public override void OnDestroy()

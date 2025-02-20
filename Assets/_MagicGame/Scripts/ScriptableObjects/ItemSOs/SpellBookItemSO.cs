@@ -40,22 +40,25 @@ public class SpellBookItemSO : ItemSO
 	
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
-		if(inventoryItem is not SpellBookInventoryItem || !Player.LocalClientInstance.gameObject.GetComponent<Player>().IsHoldingAWand() || !PlayerInRangeOfMouse()) return _baseActionCooldown;
-		
-		_wandInventoryItem = inventoryItem as SpellBookInventoryItem;
-		AttributeData hitData = _wandInventoryItem.GetAttributeData(WandAttribute.Mining);
-		
-		if(Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition)))
+		if(inventoryItem is SpellBookInventoryItem && PlayerInRangeOfMouse())
 		{
-			Environment.Instance.HitWallTile(Player.LocalClientInstance.CurrentBiome.Value, Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), hitData.MiningPower);
-			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.transform.position);
+			_wandInventoryItem = inventoryItem as SpellBookInventoryItem;
+			AttributeData hitData = _wandInventoryItem.GetAttributeData(WandAttribute.Mining);
+
+			if (Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition)))
+			{
+				Environment.Instance.HitWallTile(Player.LocalClientInstance.CurrentBiome.Value, Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), hitData.MiningPower);
+				SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.transform.position);
+			}
+			else if (ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo))
+			{
+				ObjectManager.Instance.HitObject(Player.LocalClientInstance.CurrentBiome.Value, wo, hitData.MiningPower);
+			}
+
+			return CalcMiningSpeed(WandAttribute.Mining);
 		}
-		else if(ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo))
-		{
-			ObjectManager.Instance.HitObject(Player.LocalClientInstance.CurrentBiome.Value, wo, hitData.MiningPower);
-		}
-			
-		return CalcMiningSpeed(WandAttribute.Mining);
+		
+		return _baseActionCooldown;
 	}
 	
 	private bool PlayerInRangeOfMouse()
