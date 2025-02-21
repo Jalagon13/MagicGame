@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using AdvancedTooltips.Core;
 using MoreMountains.Feedbacks;
 using MoreMountains.Tools;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class InventoryManager : MonoBehaviour
 {
 	public static InventoryManager Instance { get; private set; }
 	public static int HOTBAR_SLOTS_AMOUNT = 9;
+	public static bool MOUSE_HAS_ITEM { get; private set; }
 	
 	public event EventHandler<ShortCutInventoryItemEventArgs> OnInventorySlotShiftLeftClicked;
 	public event EventHandler<ShortCutInventoryItemEventArgs> OnInventorySlotShiftRightClicked;
@@ -67,6 +69,9 @@ public class InventoryManager : MonoBehaviour
 			
 			_gotItemThisFrame = true;
 			_gaveItemThisFrame = false;
+			
+			MOUSE_HAS_ITEM = true;
+			Tooltip.HideUI();
 		}
 		else if (!_gaveItemThisFrame)
 		{
@@ -74,6 +79,8 @@ public class InventoryManager : MonoBehaviour
 			
 			_gaveItemThisFrame = true;
 			_gotItemThisFrame = false;
+			
+			MOUSE_HAS_ITEM = false;
 		}
 	}
 	
@@ -308,7 +315,7 @@ public class InventoryManager : MonoBehaviour
 					_inventoryModel.InventoryItems[clickedInventorySlotIndex].Item = null;
 				}
 				
-				// TooltipManager.Instance.Hide();
+				Tooltip.HideUI();
 			}
 		}
 		else
@@ -323,6 +330,7 @@ public class InventoryManager : MonoBehaviour
 				{
 					_mouseItemModel = new();
 					// TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
+					
 				}
 			}
 		}
@@ -386,6 +394,36 @@ public class InventoryManager : MonoBehaviour
 		// Update views and play click feedbacks
 		_inventoryModel.UpdateInventory();
 		PlayClickFeedbacks();
+	}
+	
+	public void ShowInventoryItemTooltip(InventoryItem inventoryItem)
+	{
+		if(!inventoryItem.HasItem)
+		{
+			Debug.LogError($"Trying to display an inventory item that does not exists for {inventoryItem}");
+			return;
+		}
+	
+		Tooltip.ShowNew();
+
+		switch (inventoryItem)
+		{
+			case WandInventoryItem wandInventoryItem:
+				MagicItemSO[] magicArray = wandInventoryItem.MagicArray;
+				Tooltip.WandDisplay(wandInventoryItem.Item as WandItemSO, magicArray, fontSize: 12f);
+				break;
+			default:
+				string quantityString = inventoryItem.Quantity > 1 ? $"[{inventoryItem.Quantity}]" : string.Empty;
+				string itemText = $"{inventoryItem.Item.Name} {quantityString}<br>{inventoryItem.Item.GetDescription()}";
+
+				Tooltip.JustText(itemText, Color.white, fontSize: 12f);
+				break;
+		}
+	}
+	
+	public void ShowItemTooltip(ItemSO item)
+	{
+		
 	}
 	
 	private void PlayClickFeedbacks()

@@ -22,5 +22,5 @@ MonoBehaviour:
   <MaxMana>k__BackingField: 90
   <ManaRegenSpeed>k__BackingField: 50
   <ReloadDuration>k__BackingField: 0.375
-  <Accuracy>k__BackingField: 8
+  <Accuracy>k__BackingField: 6.5
   <Capacity>k__BackingField: 3

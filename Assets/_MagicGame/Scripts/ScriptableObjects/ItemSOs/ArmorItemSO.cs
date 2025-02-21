@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 
 public enum ArmorType { Head, Chest, Legs }
@@ -15,7 +16,12 @@ public class ArmorItemSO : ItemSO
 
 	public override string GetDescription()
 	{
-		return string.Empty;
+		StringBuilder description = new();
+		description.Append($"Can be placed in equipment slot<br>");
+		description.Append($"Defense: {DefenseAmount}<br>");
+		description.Append($"{GetDescriptionBreak()}");
+
+		return description.ToString();
 	}
 	
 	public override InventoryItem CreateInventoryItem(int quantity)

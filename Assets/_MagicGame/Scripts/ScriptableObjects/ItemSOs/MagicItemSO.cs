@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 
 
@@ -15,6 +16,10 @@ public class MagicItemSO : ItemSO
 
 	public override string GetDescription()
 	{
-		return string.Empty;
+		StringBuilder description = new();
+		description.Append($"Can be placed in a wand slot<br>");
+		description.Append($"{GetDescriptionBreak()}");
+
+		return description.ToString();
 	}
 }

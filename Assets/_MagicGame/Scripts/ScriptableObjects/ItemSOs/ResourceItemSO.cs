@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Resource Item", menuName = "Create Item/New Resource Item")]
@@ -15,6 +16,10 @@ public class ResourceItemSO : ItemSO
 
     public override string GetDescription()
     {
-        return string.Empty;
+        StringBuilder description = new();
+        description.Append($"Crafting Material<br>");
+        description.Append($"{GetDescriptionBreak()}");
+
+        return description.ToString();
     }
 }

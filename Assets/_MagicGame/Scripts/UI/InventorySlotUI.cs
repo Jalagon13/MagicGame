@@ -58,28 +58,21 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		_hovered = true;
-		if(_item.HasItem)
+		if(_item.HasItem && !InventoryManager.MOUSE_HAS_ITEM)
 		{
-			Tooltip.ShowNew();
-
-			switch (_item.Item)
-			{
-				case WandItemSO wandItemSO:
-					MagicItemSO[] magicArray = (InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex] as WandInventoryItem).MagicArray;
-					Tooltip.WandDisplay(wandItemSO, magicArray, iconScale: 0.75f, fontSize: 12f);
-					break;
-				default:
-					Tooltip.JustText(_item.Item.UiDisplay, Color.white, _item.Item.Name.ToString(), Color.white);
-					break;
-			}
+			_hovered = true;
+			InventoryItem inventoryItem = InventoryManager
+			InventoryManager.Instance.ShowItemTooltip()
 		}
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		_hovered = false;
-		Tooltip.HideUI();
+		if(_hovered)
+		{
+			_hovered = false;
+			Tooltip.HideUI();
+		}
 	}
 
 	public void ChangeColor(Color color)
