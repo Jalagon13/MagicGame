@@ -18,7 +18,7 @@ public class CraftNodeUI : MonoBehaviour
     {
         if(_hovered)
         {
-            TooltipManager.Instance.Hide();
+            // TooltipManager.Instance.Hide();
         }
     }
 	
@@ -49,14 +49,14 @@ public class CraftNodeUI : MonoBehaviour
             description.Append(GetIndredientText(ingredient));
         }
 		
-        TooltipManager.Instance.Show(description.ToString(), $"{_recipeSO.OutputItem.Name}");
+        // TooltipManager.Instance.Show(description.ToString(), $"{_recipeSO.OutputItem.Name}");
         _hovered = true;
     }
 	
     // Connected to Event Trigger component on _outputImage
     public void OnPointerExit()
     {
-        TooltipManager.Instance.Hide();
+        // TooltipManager.Instance.Hide();
         _hovered = false;
     }
 	

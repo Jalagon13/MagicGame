@@ -61,7 +61,7 @@ public class WandSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 	public void OnPointerExit(PointerEventData eventData)
 	{
 		_hovered = false;
-		TooltipManager.Instance.Hide();
+		// TooltipManager.Instance.Hide();
 	}
 	
 	public void UpdateSlotUI()

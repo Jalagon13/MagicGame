@@ -28,7 +28,7 @@ public class Tab : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IP
     {
         if(_hovered)
         {
-            TooltipManager.Instance.Hide();
+            // TooltipManager.Instance.Hide();
         }
     }
 	
@@ -40,14 +40,14 @@ public class Tab : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IP
     public void OnPointerEnter(PointerEventData eventData)
     {
         _tabGroup.OnTabEnter(this);
-        TooltipManager.Instance.Show(string.Empty, _tabDisplayName);
+        // TooltipManager.Instance.Show(string.Empty, _tabDisplayName);
         _hovered = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         _tabGroup.OnTabExit(this);
-        TooltipManager.Instance.Hide();
+        // TooltipManager.Instance.Hide();
         _hovered = false;
     }
 	

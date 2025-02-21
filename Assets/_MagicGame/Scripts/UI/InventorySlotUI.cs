@@ -16,7 +16,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 	{
 		if(_hovered)
 		{
-			TooltipManager.Instance.Hide();
+			// TooltipManager.Instance.Hide();
 		}
 	}
 	
@@ -60,14 +60,14 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 		_hovered = true;
 		if(_item.HasItem)
 		{
-			TooltipManager.Instance.Show(_item is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : _item.Item.GetDescription(), _item.Item.Name);
+			// TooltipManager.Instance.Show(_item is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : _item.Item.GetDescription(), _item.Item.Name);
 		}
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
 		_hovered = false;
-		TooltipManager.Instance.Hide();
+		// TooltipManager.Instance.Hide();
 	}
 
 	public void ChangeColor(Color color)

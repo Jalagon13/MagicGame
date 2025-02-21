@@ -308,7 +308,7 @@ public class InventoryManager : MonoBehaviour
 					_inventoryModel.InventoryItems[clickedInventorySlotIndex].Item = null;
 				}
 				
-				TooltipManager.Instance.Hide();
+				// TooltipManager.Instance.Hide();
 			}
 		}
 		else
@@ -322,7 +322,7 @@ public class InventoryManager : MonoBehaviour
 				if(_mouseItemModel.MouseInventoryItem.Quantity <= 0)
 				{
 					_mouseItemModel = new();
-					TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
+					// TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
 				}
 			}
 		}
@@ -355,7 +355,7 @@ public class InventoryManager : MonoBehaviour
 				{
 					_inventoryModel.InventoryItems[clickedInventorySlotIndex].Quantity += mouseItem.Quantity;
 					_mouseItemModel.MouseInventoryItem = new();
-					TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
+					// TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
 				}
 				else
 				{
@@ -370,7 +370,7 @@ public class InventoryManager : MonoBehaviour
 			{
 				_mouseItemModel.MouseInventoryItem = inventoryItem;
 				_inventoryModel.InventoryItems[clickedInventorySlotIndex] = new();
-				TooltipManager.Instance.Hide();
+				// TooltipManager.Instance.Hide();
 			}
 		}
 		else
@@ -379,7 +379,7 @@ public class InventoryManager : MonoBehaviour
 			{
 				_inventoryModel.InventoryItems[clickedInventorySlotIndex] = mouseItem;
 				_mouseItemModel.MouseInventoryItem = new();
-				TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
+				// TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
 			}
 		}
 		
