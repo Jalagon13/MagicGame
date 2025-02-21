@@ -19,9 +19,6 @@ namespace AdvancedTooltips.Core
 			Tooltip._instantiateHandler = this;
 		}
 
-
-
-
 		public JustTextHandler InstantiateJustText(Transform customLayout = null)
 		{
 			var gameObject = Instantiate(referenceHolder.JustTextPrefab, customLayout == null ? referenceHolder.Layout.transform : customLayout);

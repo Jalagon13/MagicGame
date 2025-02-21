@@ -119,7 +119,7 @@ namespace AdvancedTooltips.Core
 			}
 		}
 		
-		public static void WandDisplay(WandItemSO wand, MagicItemSO[] magicArray, Transform customLayout = null, TMP_FontAsset font = null, float nameSize = 20, float fontSize = 10, float iconScale = 1f)
+		public static void WandDisplay(WandItemSO wand, MagicItemSO[] magicArray, Transform customLayout = null, float fontSize = 10)
 		{
 			WandTooltipDisplayHandlerUI script = _instantiateHandler.InstantiateWandTooltipDisplay(customLayout);
 			script.WandName.text = wand.Name;
