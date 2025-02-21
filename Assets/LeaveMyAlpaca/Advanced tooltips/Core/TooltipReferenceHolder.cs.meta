@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 4341fec4b3225a54da515544c330ee5d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {fileID: 2800000, guid: dfeeb9ff5af0d5649bb4a363daf4265b, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 304011
+  packageName: Advanced tool tips
+  packageVersion: 1.0
+  assetPath: Assets/LeaveMyAlpaca/Advanced tooltips/Core/TooltipReferenceHolder.cs
+  uploadId: 717034

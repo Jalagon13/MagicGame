@@ -1,0 +1,255 @@
+fileFormatVersion: 2
+guid: ed5ca0da953ceb143a6080abe9a30f7c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3528325550272637377
+    second: Gold bar material icon_0
+  - first:
+      213: 6767715648142245835
+    second: Gold bar material icon_1
+  - first:
+      213: 8757032679263299696
+    second: Gold bar material icon_2
+  - first:
+      213: -6351333193877584712
+    second: Gold bar material icon_3
+  - first:
+      213: -6156992409560438930
+    second: Gold bar material icon_4
+  - first:
+      213: -1763693982288059860
+    second: Gold bar material icon_5
+  - first:
+      213: -2190679518905869147
+    second: Gold bar material icon_6
+  - first:
+      213: -1398104819716048747
+    second: Gold bar material icon_7
+  - first:
+      213: 1523567214414293559
+    second: Gold bar material icon_8
+  - first:
+      213: 4788414999724954888
+    second: Gold bar material icon_9
+  - first:
+      213: 8007210214736123141
+    second: Gold bar material icon_10
+  - first:
+      213: 8334731926815251226
+    second: Gold bar material icon_11
+  - first:
+      213: 7652060846669312437
+    second: Gold bar material icon_12
+  - first:
+      213: -8946487419548957280
+    second: Gold bar material icon_13
+  - first:
+      213: 8553063951205592691
+    second: Gold bar material icon_14
+  - first:
+      213: 5607098516279610625
+    second: Gold bar material icon_15
+  - first:
+      213: -5795087294229851667
+    second: Gold bar material icon_16
+  - first:
+      213: 7578517128762228640
+    second: Gold bar material icon_17
+  - first:
+      213: -2587566200485225801
+    second: Gold bar material icon_18
+  - first:
+      213: -8493788591324390711
+    second: Gold bar material icon_19
+  - first:
+      213: 2023448937633706898
+    second: Gold bar material icon_20
+  - first:
+      213: -5243922794533861625
+    second: Gold bar material icon_21
+  - first:
+      213: 2264220715439007670
+    second: Gold bar material icon_22
+  - first:
+      213: -5133630792800896793
+    second: Gold bar material icon_23
+  - first:
+      213: -4072857242415683446
+    second: Gold bar material icon_24
+  - first:
+      213: -8724991968178961008
+    second: Gold bar material icon_25
+  - first:
+      213: -6083300318069251882
+    second: Gold bar material icon_26
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Gold bar material icon_22
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 334
+        width: 577
+        height: 483
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b7a2dc8eb02c6f10800000000000000
+      internalID: 2264220715439007670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: f0f491f7a196716418362675c85b24d4
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Gold bar material icon_0: 3528325550272637377
+      Gold bar material icon_1: 6767715648142245835
+      Gold bar material icon_10: 8007210214736123141
+      Gold bar material icon_11: 8334731926815251226
+      Gold bar material icon_12: 7652060846669312437
+      Gold bar material icon_13: -8946487419548957280
+      Gold bar material icon_14: 8553063951205592691
+      Gold bar material icon_15: 5607098516279610625
+      Gold bar material icon_16: -5795087294229851667
+      Gold bar material icon_17: 7578517128762228640
+      Gold bar material icon_18: -2587566200485225801
+      Gold bar material icon_19: -8493788591324390711
+      Gold bar material icon_2: 8757032679263299696
+      Gold bar material icon_20: 2023448937633706898
+      Gold bar material icon_21: -5243922794533861625
+      Gold bar material icon_22: 2264220715439007670
+      Gold bar material icon_23: -5133630792800896793
+      Gold bar material icon_24: -4072857242415683446
+      Gold bar material icon_25: -8724991968178961008
+      Gold bar material icon_26: -6083300318069251882
+      Gold bar material icon_3: -6351333193877584712
+      Gold bar material icon_4: -6156992409560438930
+      Gold bar material icon_5: -1763693982288059860
+      Gold bar material icon_6: -2190679518905869147
+      Gold bar material icon_7: -1398104819716048747
+      Gold bar material icon_8: 1523567214414293559
+      Gold bar material icon_9: 4788414999724954888
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 304011
+  packageName: Advanced tool tips
+  packageVersion: 1.0
+  assetPath: Assets/LeaveMyAlpaca/Advanced tooltips/Samples/Sprites/Gold bar material
+    icon.png
+  uploadId: 717034

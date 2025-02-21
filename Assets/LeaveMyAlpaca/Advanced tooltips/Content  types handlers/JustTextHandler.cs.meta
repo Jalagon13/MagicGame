@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e1e9d3cae7e99774ab4a8f159abef668
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {fileID: 2800000, guid: e6b27819a07c3504190b563d7eede5ba, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 304011
+  packageName: Advanced tool tips
+  packageVersion: 1.0
+  assetPath: Assets/LeaveMyAlpaca/Advanced tooltips/Content  types handlers/JustTextHandler.cs
+  uploadId: 717034

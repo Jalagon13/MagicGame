@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cafdef8f24c36746a1ca0318a27268a, type: 3}
+  m_Name: Mining facility
+  m_EditorClassIdentifier: 
+  icon: {fileID: 6671654302704230080, guid: f42c4af25f3812949abca19b86aca0f7, type: 3}
+  production:
+  - name: Iron
+    amount: 20
+    icon: {fileID: -1837168352368488796, guid: 151dcf66ec44ac5479ca50df2204c814, type: 3}
+  constructionCosts:
+  - name: Iron
+    amount: -1000
+    icon: {fileID: -1837168352368488796, guid: 151dcf66ec44ac5479ca50df2204c814, type: 3}
