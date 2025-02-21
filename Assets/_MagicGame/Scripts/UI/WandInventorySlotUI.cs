@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-	[SerializeField] private Image _spellIcon;
+	public Image SpellIcon;
 
 	private WandInventoryItem _wandInvItem;
 	private int _spellIndex;
@@ -75,13 +75,13 @@ public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointer
 	{
 		if(WandInventorySlotIsOccupied())
 		{
-			_spellIcon.sprite = _wandInvItem.MagicArray[_spellIndex].UiDisplay;
-			_spellIcon.color = new(1,1,1,1);
+			SpellIcon.sprite = _wandInvItem.MagicArray[_spellIndex].UiDisplay;
+			SpellIcon.color = new(1,1,1,1);
 		}
 		else
 		{
-			_spellIcon.sprite = null;
-			_spellIcon.color = new(1,1,1,0);
+			SpellIcon.sprite = null;
+			SpellIcon.color = new(1,1,1,0);
 		}
 	}
 }

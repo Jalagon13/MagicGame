@@ -7,7 +7,7 @@ namespace AdvancedTooltips
     public class Building : ScriptableObject
     {
         public Sprite icon;
-        public List<AdvancedTooltips.Core.TooltipsStatic.MaterialsDisplay> production;
-        public List<AdvancedTooltips.Core.TooltipsStatic.MaterialsDisplay> constructionCosts;
+        public List<AdvancedTooltips.Core.Tooltip.MaterialsDisplay> production;
+        public List<AdvancedTooltips.Core.Tooltip.MaterialsDisplay> constructionCosts;
     }
 }

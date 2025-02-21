@@ -1,3 +1,4 @@
+using AdvancedTooltips.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -60,14 +61,25 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 		_hovered = true;
 		if(_item.HasItem)
 		{
-			// TooltipManager.Instance.Show(_item is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : _item.Item.GetDescription(), _item.Item.Name);
+			Tooltip.ShowNew();
+
+			switch (_item.Item)
+			{
+				case WandItemSO wandItemSO:
+					MagicItemSO[] magicArray = (InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex] as WandInventoryItem).MagicArray;
+					Tooltip.WandDisplay(wandItemSO, magicArray, iconScale: 0.75f, fontSize: 12f);
+					break;
+				default:
+					Tooltip.JustText(_item.Item.UiDisplay, Color.white, _item.Item.Name.ToString(), Color.white);
+					break;
+			}
 		}
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
 		_hovered = false;
-		// TooltipManager.Instance.Hide();
+		Tooltip.HideUI();
 	}
 
 	public void ChangeColor(Color color)

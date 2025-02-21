@@ -18,23 +18,23 @@ namespace AdvancedTooltips.Samples
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            TooltipsStatic.ShowNew();
-            TooltipsStatic.CustomizeBackground(backgroundSprite, backgroundColor);
+            Tooltip.ShowNew();
+            Tooltip.CustomizeBackground(backgroundSprite, backgroundColor);
 
 
-            TooltipsStatic.JustText(materialType.name, Color.white, font, nameSize);
+            Tooltip.JustText(materialType.name, Color.white, font, nameSize);
 
-            TooltipsStatic.JustText($"{TooltipsStatic.ExponentialNotation(materialType.amountInStorage)} in storage", Color.white, font, sizeOfRestOfTheText);
+            Tooltip.JustText($"{Tooltip.ExponentialNotation(materialType.amountInStorage)} in storage", Color.white, font, sizeOfRestOfTheText);
 
             Color colorOfTheIncome = materialType.income <= 0 ? Color.red : Color.green;
             string incomeSign = materialType.income > 0 ? "+" : "";
-            string incomeText = $"{incomeSign}{TooltipsStatic.ExponentialNotation(materialType.income)} income";
-            TooltipsStatic.JustText(incomeText, colorOfTheIncome, font, sizeOfRestOfTheText);
+            string incomeText = $"{incomeSign}{Tooltip.ExponentialNotation(materialType.income)} income";
+            Tooltip.JustText(incomeText, colorOfTheIncome, font, sizeOfRestOfTheText);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            TooltipsStatic.HideUI();
+            Tooltip.HideUI();
         }
     }
 }

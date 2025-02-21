@@ -1,81 +1,81 @@
 namespace AdvancedTooltips.Core
 {
-    using System.Collections.Generic;
-    using TMPro;
-    using UnityEngine;
-    using UnityEngine.UI;
+	using System.Collections.Generic;
+	using TMPro;
+	using UnityEngine;
+	using UnityEngine.UI;
 
-    /// <summary>
-    /// There should be only one of this script on scene
-    /// </summary>
-    [RequireComponent(typeof(TooltipsInstantiateHandler)), RequireComponent(typeof(TooltipsPositionHandler), typeof(TooltipAnimations))]
-    public class TooltipReferenceHolder : MonoBehaviour
-    {
+	/// <summary>
+	/// There should be only one of this script on scene
+	/// </summary>
+	[RequireComponent(typeof(TooltipsInstantiateHandler)), RequireComponent(typeof(TooltipsPositionHandler))]
+	public class TooltipReferenceHolder : MonoBehaviour
+	{
 
-        private void Start()
-        {
-            gameObject.SetActive(false);
-        }
+		private void Start()
+		{
+			gameObject.SetActive(false);
+		}
 
-        private void Awake()
-        {
-            TooltipsStatic.referenceHolder = this;
-            animations = GetComponent<TooltipAnimations>();
-        }
-
-
-        private TooltipAnimations animations;
-        [SerializeField] private float tooltipDelay = .3f;
-        /// <summary>
-        /// this is where you instantiate all of the prefabs
-        /// </summary>
-        public VerticalLayoutGroup layout;
-        [HideInInspector] public List<GameObject> oldPrefabs = new();
-        /// <summary>
-        ///  has just text and image
-        /// </summary>
-        public GameObject JustTextPrefab;
-        public TMP_FontAsset defaultFont;
-
-        public GameObject buildingPrefab;
-
-        [Header("Background")]
-        public Image background;
-        public Sprite defaultBackgroundSprite;
-        public Color defaultBackgroundColor;
-        public RectOffset defaultPadding;
+		private void Awake()
+		{
+			Tooltip._referenceHolder = this;
+		}
 
 
+		[SerializeField] private float tooltipDelay = .3f;
+		/// <summary>
+		/// this is where you instantiate all of the prefabs
+		/// </summary>
+		public VerticalLayoutGroup Layout;
+		[HideInInspector] public List<GameObject> oldPrefabs = new();
+		/// <summary>
+		///  has just text and image
+		/// </summary>
+		public GameObject JustTextPrefab;
+		public TMP_FontAsset DefaultFont;
 
-        bool turnOn = true;
-        public void ShowUI()
-        {
-            Invoke(nameof(TurnOn), tooltipDelay);
-            turnOn = true;
-        }
-        public void HideUI()
-        {
-            animations.HideAnimation();
-            turnOn = false;
-        }
+		public GameObject BuildingPrefab;
+		public GameObject WandPrefab;
+		public GameObject WandInvSlotPrefab;
 
-        // its used to delay showing up of tooltip
-        private void TurnOn()
-        {
-            if (!turnOn)
-                return;
+		[Header("Background")]
+		public Image background;
+		public Sprite defaultBackgroundSprite;
+		public Color defaultBackgroundColor;
+		public RectOffset defaultPadding;
 
-            animations.ShowUpAnimation();
 
-        }
-        public void ClearOldPrefabs()
-        {
-            for (int i = 0; i < oldPrefabs.Count; i++)
-            {
-                Destroy(oldPrefabs[i]);
-            }
-            oldPrefabs.Clear();
-        }
 
-    }
+		bool turnOn = true;
+		public void ShowUI()
+		{
+			Invoke(nameof(TurnOn), tooltipDelay);
+			turnOn = true;
+		}
+		public void HideUI()
+		{
+			gameObject.SetActive(false);
+			turnOn = false;
+		}
+
+		// its used to delay showing up of tooltip
+		private void TurnOn()
+		{
+			if (!turnOn)
+				return;
+
+			gameObject.SetActive(true);
+
+		}
+		public void ClearOldPrefabs()
+		{
+			for (int i = 0; i < oldPrefabs.Count; i++)
+			{
+				Destroy(oldPrefabs[i]);
+			}
+			oldPrefabs.Clear();
+		}
+
+	}
 }

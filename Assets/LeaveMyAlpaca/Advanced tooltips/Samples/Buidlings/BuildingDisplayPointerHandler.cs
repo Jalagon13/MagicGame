@@ -16,15 +16,15 @@ namespace AdvancedTooltips.Samples
         {
             if (building == null)
                 return;
-            TooltipsStatic.ShowNew();
+            Tooltip.ShowNew();
 
 
-            TooltipsStatic.BuildingDisplay(building, customLayout: /* use default one */ null, font, fontSize: fontSize, nameSize: fontSize + 5);
+            Tooltip.BuildingDisplay(building, customLayout: /* use default one */ null, font, fontSize: fontSize, nameSize: fontSize + 5);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            TooltipsStatic.HideUI();
+            Tooltip.HideUI();
         }
     }
 }

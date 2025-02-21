@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6338317493030167923}
   - component: {fileID: 7420903362143452278}
   m_Layer: 5
-  m_Name: Tooltips prefab
+  m_Name: Tooltip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -146,10 +146,10 @@ MonoBehaviour:
   m_Padding:
     m_Left: 6
     m_Right: 6
-    m_Top: 6
-    m_Bottom: 6
+    m_Top: 0
+    m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 3
+  m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
@@ -273,7 +273,6 @@ GameObject:
   - component: {fileID: 6113323952920210461}
   - component: {fileID: 1456497781731199897}
   - component: {fileID: 7139141315513702792}
-  - component: {fileID: 17159226976096996}
   m_Layer: 0
   m_Name: Advanced tooltips
   m_TagString: Untagged
@@ -326,14 +325,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipDelay: 0
-  layout: {fileID: 2411311111833025073}
+  Layout: {fileID: 2411311111833025073}
   oldPrefabs: []
   JustTextPrefab: {fileID: 7984777672620914767, guid: 52a9648b70a20bb49bf2585c564ad505, type: 3}
-  defaultFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  buildingPrefab: {fileID: 7984777672620914767, guid: e93040ad89ec9474197f992936c9c492, type: 3}
+  DefaultFont: {fileID: 11400000, guid: 991e4a19b6ad446d2bb9eda4e4a749ae, type: 2}
+  BuildingPrefab: {fileID: 7984777672620914767, guid: e93040ad89ec9474197f992936c9c492, type: 3}
+  WandPrefab: {fileID: 7984777672620914767, guid: 17816d447dfac4acf8fdfe3c33f8b30f, type: 3}
+  WandInvSlotPrefab: {fileID: 4061196340009929271, guid: e5737df30478e4b98a5cddba7f4a0a0c, type: 3}
   background: {fileID: 2673615184131704098}
-  defaultBackgroundSprite: {fileID: 0}
-  defaultBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+  defaultBackgroundSprite: {fileID: 1282028943509491997, guid: 72f7a32ac9c7676409eb438757bc6b4a, type: 3}
+  defaultBackgroundColor: {r: 0.02745098, g: 0.047058824, b: 0.16078432, a: 0.9843137}
   defaultPadding:
     m_Left: 6
     m_Right: 6
@@ -353,99 +354,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Canvas: {fileID: 6274787354005272579}
   Layout: {fileID: 8134198314058942031}
---- !u!114 &17159226976096996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6134960350998222622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 221304e69f88aba44b7d7fdbee8a5e55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showUpAnimation:
-    mustBeAtFullScale: 0
-    scaleChangeCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 2.5824506
-        outSlope: 2.5824506
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.051339123
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0.27654186
-        outSlope: 0.27654186
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.12969387
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    speedModifier: 4
-    animationLength: 1
-    onAnimationBeginning:
-      m_PersistentCalls:
-        m_Calls: []
-    onAnimationEnd:
-      m_PersistentCalls:
-        m_Calls: []
-  hideAnimation:
-    mustBeAtFullScale: 1
-    scaleChangeCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: -0.43991315
-        outSlope: -0.43991315
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.07505774
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: -0.710418
-        outSlope: -0.710418
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.05311781
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    speedModifier: 4
-    animationLength: 1
-    onAnimationBeginning:
-      m_PersistentCalls:
-        m_Calls: []
-    onAnimationEnd:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 6134960350998222622}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  fullScaleMargin: 0.8
 --- !u!1 &6260095860128333595
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,7 +367,7 @@ GameObject:
   - component: {fileID: 2673615184131704098}
   - component: {fileID: 5778287981598118298}
   m_Layer: 0
-  m_Name: Bacground
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -513,7 +421,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 5de39c26ccf457b47b1e44f3f3101187, type: 3}
-  m_Type: 1
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

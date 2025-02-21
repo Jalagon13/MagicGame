@@ -23,17 +23,17 @@ namespace AdvancedTooltips.Samples
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            TooltipsStatic.ShowNew();
+            Tooltip.ShowNew();
 
-            TooltipsStatic.JustText(icon, colorOfIcon, text, colorOfTheText, iconScale: iconScale, customLayout: /* use default one */ null, font, fontSize);
-            TooltipsStatic.CustomizeBackground(backgroundSprite, backgroundColor);
+            Tooltip.JustText(icon, colorOfIcon, text, colorOfTheText, iconScale: iconScale, customLayout: /* use default one */ null, font, fontSize);
+            Tooltip.CustomizeBackground(backgroundSprite, backgroundColor);
         }
 
 
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            TooltipsStatic.HideUI();
+            Tooltip.HideUI();
         }
     }
 }

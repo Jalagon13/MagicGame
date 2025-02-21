@@ -40,7 +40,7 @@ public class Wand
 		CurrentReload += deltaTime; // Regen recharge over time
 		CurrentReload = Mathf.Min(CurrentReload, TotalReloadDuration); // Clamp to prevent overfilling
 		
-		CurrentMana += WandSO.ManaChargeSpeed * deltaTime; // Regenerate mana over time
+		CurrentMana += WandSO.ManaRegenSpeed * deltaTime; // Regenerate mana over time
 		CurrentMana = Mathf.Min(CurrentMana, WandSO.MaxMana); // Clamp to prevent overfilling
 	}
 	
