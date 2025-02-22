@@ -1,3 +1,4 @@
+using System.Collections;
 using AdvancedTooltips.Core;
 using TMPro;
 using UnityEngine;
@@ -48,10 +49,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 			_itemImage.color = new Vector4(1, 1, 1, 1);
 			_itemImage.sprite = item.Item.UiDisplay;
 
-			Debug.Log($"UpdateView inv item {item.Item.Name} qnty: {item.Quantity}");
-			Debug.Log($"actual amounts: {InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex].Item.Name} quantity {InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex].Quantity}");
 			_itemQuantityText.text = item.Quantity > 1 ? item.Quantity.ToString() : string.Empty;
-			Debug.Log(_itemQuantityText.text);
 		}
 		else
 		{
@@ -60,7 +58,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 			_itemQuantityText.text = string.Empty;
 		}
 	}
-
+	
 	public void OnPointerEnter(PointerEventData eventData)
 	{
 		if(_item.HasItem && !InventoryManager.MOUSE_HAS_ITEM)
@@ -75,10 +73,11 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 					MagicItemSO[] magicArray = (InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex] as WandInventoryItem).MagicArray;
 					Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);
 					break;
+				case SpellItemSO spellItemSO:
+					Tooltip.SpellDisplay(spellItemSO, fontSize: 12f);
+					break;
 				default:
-					Debug.Log($"asdfasdf");
 					int quantity = InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex].Quantity;
-					
 					string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
 					string itemText = $"{_item.Item.Name} {quantityString}<br>{_item.Item.GetDescription()}";
 					

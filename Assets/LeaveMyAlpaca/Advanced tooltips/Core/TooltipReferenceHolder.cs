@@ -38,6 +38,7 @@ namespace AdvancedTooltips.Core
 		public GameObject BuildingPrefab;
 		public GameObject WandPrefab;
 		public GameObject WandInvSlotPrefab;
+		public GameObject IngredientPrefab;
 
 		[Header("Background")]
 		public Image background;

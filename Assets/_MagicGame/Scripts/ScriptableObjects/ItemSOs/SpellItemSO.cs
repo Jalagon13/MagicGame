@@ -20,7 +20,7 @@ public class SpellItemSO : MagicItemSO
 	[field: SerializeField] public int Knockback { get; private set; } = 3;
 
 	[field: Tooltip("The amount of randomness in the projectile's trajectory (in degrees). A higher value means more spread.")]
-	[field: SerializeField] public float AccuracyAngle { get; private set; } = 1f;
+	[field: SerializeField] public float Accuracy { get; private set; } = 1f;
 	
 	[field: Tooltip("The lifetime in seconds of the projectile.")]
 	[field: SerializeField] public float Lifetime { get; private set; } = 2f;
@@ -33,7 +33,7 @@ public class SpellItemSO : MagicItemSO
 
 	public void CastSpell(WandItemSO wandSO)
 	{
-		GameManager.Instance.SpawnSpellProjectile(this, Player.LocalClientInstance.CurrentBiome.Value, ActionManager.MouseWorldPosition, Speed, Damage + wandSO.BaseDamage, Lifetime, Knockback, Mathf.Max(0, AccuracyAngle + wandSO.Accuracy));
+		GameManager.Instance.SpawnSpellProjectile(this, Player.LocalClientInstance.CurrentBiome.Value, ActionManager.MouseWorldPosition, Speed, Damage + wandSO.BaseDamage, Lifetime, Knockback, Mathf.Max(0, Accuracy + wandSO.Accuracy));
 		SoundManager.Instance.PlayOneShot(SpellCast, Player.LocalClientInstance.ProjectileSpawnPointTf.position);
 	}
 }

@@ -17,7 +17,7 @@ public class InventoryModel
 	private List<InventoryItem> _inventoryItems = new();
 	private int _slotAmount;
 
-	public List<InventoryItem> InventoryItems => _inventoryItems;
+	public List<InventoryItem> InventoryItems { get { return _inventoryItems; } } 
 
 	public InventoryModel(int slotAmount)
 	{
@@ -31,12 +31,20 @@ public class InventoryModel
 	
 	public void UpdateInventory()
 	{
+		foreach (var item in _inventoryItems)
+		{
+			if(item.HasItem)
+			{
+				Debug.Log($"Inside UpdateInventory() {item.Item.Name}, qnt: {item.Quantity}");
+			}
+		}
+	
 		OnInventoryUpdate?.Invoke(_inventoryItems);
 	}
 
 	public void AddItem(InventoryItem itemToAdd)
 	{
-		Debug.Log($"Adding {itemToAdd.Item.Name} qnty: {itemToAdd.Quantity}, stackable {itemToAdd.Item.Stackable}");
+		Debug.Log($"Start of AddItem {itemToAdd.Item.Name} qnty: {itemToAdd.Quantity}, stackable {itemToAdd.Item.Stackable}");
 	
 		// If item I want to add is stackable
 		if(itemToAdd.Item.Stackable)
@@ -63,6 +71,12 @@ public class InventoryModel
 				{
 					// Override this slot with itemToAdd
 					_inventoryItems[j] = itemToAdd;
+					
+					if(!_inventoryItems[j].Item.Stackable)
+					{
+						_inventoryItems[j].Quantity = 1;
+					}
+					
 					UpdateInventory();
 					return;
 				}
@@ -81,8 +95,13 @@ public class InventoryModel
 				{
 					// Override this spot with itemToAdd
 					_inventoryItems[j] = itemToAdd;
-					_inventoryItems[j].Quantity = 1;
-					Debug.Log($"index {j} {_inventoryItems[j].Item.Name} qnty {_inventoryItems[j].Quantity}");
+
+					if (!_inventoryItems[j].Item.Stackable)
+					{
+						_inventoryItems[j].Quantity = 1;
+					}
+
+					Debug.Log($"Adding to inv model index {j} {_inventoryItems[j].Item.Name} qnty {_inventoryItems[j].Quantity}");
 					// If item being added was a wand, send this event
 					if (_inventoryItems[j] is WandInventoryItem wandInvItem)
 					{

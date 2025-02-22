@@ -3,6 +3,7 @@
 namespace AdvancedTooltips.Core
 {
 	using System;
+	using System.Text;
 	using AdvancedTooltips.ContentTypesHandlers;
 	using TMPro;
 	using UnityEngine;
@@ -149,7 +150,38 @@ namespace AdvancedTooltips.Core
 			}
 		}
 		
+		public static void SpellDisplay(SpellItemSO spell, Transform customLayout = null, float fontSize = 10)
+		{
+			WandTooltipDisplayHandlerUI script = _instantiateHandler.InstantiateWandTooltipDisplay(customLayout);
+			script.WandName.text = spell.Name;
+			script.WandIcon.sprite = spell.UiDisplay;
+
+			JustText(spell.GetDescription(), Color.white, fontSize: fontSize, customLayout: script.StatLayout);
+			JustText($"{spell.CastDelay} s   cast delay"
+			+ $"<br>{spell.Damage}   damage"
+			+ $"<br>{spell.ManaCost}   cost to cast"
+			+ $"<br>{spell.Knockback}   knockback"
+			+ $"<br>{spell.Accuracy} deg.   accuracy"
+			+ $"<br>{spell.Speed}   speed", Color.white, fontSize: fontSize, customLayout: script.StatLayout);
+		}
 		
+		public static void CraftingRecipeDisplay(RecipeSO recipeSO, Transform customLayout = null, float fontSize = 10, float iconScale = 1)
+		{
+			JustText($"{recipeSO.OutputItem.Name} Recipe for ({recipeSO.OutputAmount}):<br>", Color.white, fontSize: fontSize);
+
+			//for each ingredient in the recipe resource list
+			foreach (InventoryItem ingredient in recipeSO.ResourceList)
+			{
+				JustTextHandler script = _instantiateHandler.InstantiateIngredientUI(customLayout);
+				script.icon.sprite = ingredient.Item.UiDisplay;
+				script.icon.transform.localScale = Vector3.one * iconScale;
+
+				script.text.fontSize = fontSize;
+				script.text.text = InventoryManager.Instance.GetInventoryModel().GetAmount(ingredient.Item) >= ingredient.Quantity ?
+				$"{ingredient.Item.Name} ({ingredient.Quantity})<br>" :
+				$"<color=red>{ingredient.Item.Name} ({ingredient.Quantity})</color><br>";
+			}
+		}
 
 		public static string ExponentialNotation(float amount)
 		{

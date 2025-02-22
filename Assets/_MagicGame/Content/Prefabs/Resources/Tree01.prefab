@@ -105,11 +105,59 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[1].Max
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[1].Min
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[2].Max
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[2].Min
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[3].Max
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[3].Min
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[0].Item
       value: 
       objectReference: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[1].Item
+      value: 
+      objectReference: {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[2].Item
+      value: 
+      objectReference: {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[3].Item
+      value: 
+      objectReference: {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[0].Chance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[1].Chance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[2].Chance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: <Table>k__BackingField.Array.data[3].Chance
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}

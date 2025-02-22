@@ -20,7 +20,7 @@ MonoBehaviour:
   <BaseCastDelay>k__BackingField: 0.085
   <BaseDamage>k__BackingField: 1
   <MaxMana>k__BackingField: 50
-  <ManaRegenSpeed>k__BackingField: 50
+  <ManaRegenSpeed>k__BackingField: 20
   <ReloadDuration>k__BackingField: 0.2
   <Accuracy>k__BackingField: -3
   <Capacity>k__BackingField: 1

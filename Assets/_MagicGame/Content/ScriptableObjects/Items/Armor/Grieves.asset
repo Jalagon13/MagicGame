@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 005376f4cf790463789cef1fed8b875c, type: 3}
   m_Name: Grieves
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Grieves
+  <Name>k__BackingField: Bottoms
   <UiDisplay>k__BackingField: {fileID: 1068366592, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  <DefaultParameterList>k__BackingField: []
   <ArmorType>k__BackingField: 2
   <DefenseAmount>k__BackingField: 3

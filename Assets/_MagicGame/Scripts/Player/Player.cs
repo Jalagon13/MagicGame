@@ -46,6 +46,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	[field: SerializeField] public float IFrameLength { get; private set; } = 0.67f;
 	[Range(0, 100), SerializeField] private float _knockbackResist;
 	[SerializeField] private List<InventoryItem> _startingItems = new();
+	[SerializeField] private bool _spawnWandItems;
 	[SerializeField] private List<WandInventoryItem> _startingWandItems = new();
 
 	public NetworkVariable<int> HealthNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -100,39 +101,42 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 		if (IsOwner)
 		{
-			foreach (WandInventoryItem wandInvItem in _startingWandItems)
+			if(_spawnWandItems)
 			{
-				if (wandInvItem.Item is not WandItemSO)
+				foreach (WandInventoryItem wandInvItem in _startingWandItems)
 				{
-					Debug.LogWarning($"{wandInvItem.Item} is not a wand. skipping it");
-					continue;
-				}
-
-				WandItemSO wandItemSO = wandInvItem.Item as WandItemSO;
-				WandInventoryItem wandItemToAdd = (WandInventoryItem)wandItemSO.CreateInventoryItem(1);
-
-				for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
-				{
-					if (wandInvItem.MagicArray[i] is MagicItemSO)
+					if (wandInvItem.Item is not WandItemSO)
 					{
-						if (i < wandItemSO.Capacity)
+						Debug.LogWarning($"{wandInvItem.Item} is not a wand. skipping it");
+						continue;
+					}
+
+					WandItemSO wandItemSO = wandInvItem.Item as WandItemSO;
+					WandInventoryItem wandItemToAdd = (WandInventoryItem)wandItemSO.CreateInventoryItem(1);
+
+					for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
+					{
+						if (wandInvItem.MagicArray[i] is MagicItemSO)
 						{
-							wandItemToAdd.MagicArray[i] = wandInvItem.MagicArray[i];
-						}
-						else
-						{
-							Debug.LogWarning($"{wandInvItem.MagicArray[i].Name} being skipped because it is out of the index of {wandItemSO.Name}'s Capacity ({wandItemSO.Capacity})");
+							if (i < wandItemSO.Capacity)
+							{
+								wandItemToAdd.MagicArray[i] = wandInvItem.MagicArray[i];
+							}
+							else
+							{
+								Debug.LogWarning($"{wandInvItem.MagicArray[i].Name} being skipped because it is out of the index of {wandItemSO.Name}'s Capacity ({wandItemSO.Capacity})");
+							}
 						}
 					}
-				}
 
-				InventoryManager.Instance.AddItem(wandItemToAdd);
-				yield return new WaitForEndOfFrame();
+					InventoryManager.Instance.AddItem(wandItemToAdd);
+					yield return new WaitForEndOfFrame();
+				}
 			}
+			
 
 			foreach (InventoryItem item in _startingItems)
 			{
-				Debug.Log($"{item.Item.Name} qnty: {item.Quantity}");
 				InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
 				InventoryManager.Instance.AddItem(itemToAdd);
 				yield return new WaitForEndOfFrame();

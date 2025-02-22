@@ -1,4 +1,5 @@
 using System;
+using AdvancedTooltips.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -18,11 +19,14 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 		if (ArmorEquipped())
 		{
 			// If there's already armor equipped in this slot
-			if (mouseItem.HasItem && mouseItem.Item is ArmorItemSO mouseArmorItem)
+			if (mouseItem.HasItem)
 			{
-				// Swap the equipped armor with the armor held by the mouse
-				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = SwapArmor(mouseArmorItem);
-				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = 1;
+				if(mouseItem.Item is ArmorItemSO mouseArmorItem && mouseArmorItem.ArmorType == _armorType)
+				{
+					// Swap the equipped armor with the armor held by the mouse
+					InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = SwapArmor(mouseArmorItem);
+					InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = 1;
+				}
 			}
 			else
 			{
@@ -37,6 +41,8 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 					// Otherwise, place the unequipped armor on the mouse
 					InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = UnequipArmor();
 				}
+
+				Tooltip.HideUI();
 			}
 		}
 		else if (mouseItem.HasItem && mouseItem.Item is ArmorItemSO mouseArmorItem && mouseArmorItem.ArmorType == _armorType)
@@ -44,6 +50,7 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 			// If no armor is equipped and the mouse is holding armor, equip it
 			EquipArmor(mouseArmorItem);
 			InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
+			InventoryManager.Instance.ShowInventoryItemTooltip(new InventoryItem(_armorEquipped, 1));
 		}
 		
 		UpdateSlotUI();
@@ -103,13 +110,19 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 		// Show a tooltip if armor is equipped
 		if (ArmorEquipped())
 		{
-			
+			Tooltip.ShowNew();
+			InventoryManager.Instance.ShowInventoryItemTooltip(new(_armorEquipped, 1));
+		}
+		else
+		{
+			Tooltip.HideUI();
 		}
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
 		// Hide the tooltip
+		Tooltip.HideUI();
 	}
 
 	public bool ArmorEquipped()

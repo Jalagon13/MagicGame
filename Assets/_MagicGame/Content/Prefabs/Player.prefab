@@ -475,16 +475,15 @@ MonoBehaviour:
   <IFrameLength>k__BackingField: 0.67
   _knockbackResist: 0
   _startingItems:
-  - Item: {fileID: 11400000, guid: b3fe2d16a64484c06943064d240713aa, type: 2}
+  - Item: {fileID: 11400000, guid: aa0e76fcdcf124101898bc97c089b57c, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: bf1d2a5b5f1334f7f9a6d0aa32605231, type: 2}
+  - Item: {fileID: 11400000, guid: a446ad3687760455aabee48fe233433e, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
+  - Item: {fileID: 11400000, guid: ec4a6fa66410745918edadb13423b3ee, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
-    Quantity: 1
-  - Item: {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
-    Quantity: 1
+  - Item: {fileID: 11400000, guid: d42e1f6278c094b24b5037d421650f40, type: 2}
+    Quantity: 5
+  _spawnWandItems: 1
   _startingWandItems:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1

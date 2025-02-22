@@ -1863,6 +1863,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1456497781731199897, guid: cf4ea186d6b188b4f917afa3e084053c, type: 3}
+      propertyPath: IngredientPrefab
+      value: 
+      objectReference: {fileID: 7984777672620914767, guid: f62f3333949d64f7c8572891e4b6b406, type: 3}
     - target: {fileID: 2181046411215254580, guid: cf4ea186d6b188b4f917afa3e084053c, type: 3}
       propertyPath: m_Name
       value: Tooltip
@@ -5209,7 +5213,6 @@ MonoBehaviour:
   _inventorySlotUIPrefab: {fileID: 5538325063544413884, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
   _hotbarSlotsUITransform: {fileID: 268711191}
   _inventorySlotsUITransform: {fileID: 1469998708}
-  _offHandSlotUITransform: {fileID: 72251037}
   _chestSlotsUITransform: {fileID: 1375505237}
 --- !u!1 &701855250
 GameObject:

@@ -32,7 +32,6 @@ public class HotbarManager : MonoBehaviour
 	private void InventoryManager_OnInventoryUpdated(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
 	{
 		bool mouseHasItem = InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item != null;
-		Debug.Log($"asdfasdf");
 		
 		_focusInventoryItem = mouseHasItem ? InventoryManager.Instance.GetMouseItem().MouseInventoryItem : InventoryManager.Instance.GetInventoryModel().InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
 		if(mouseHasItem)
@@ -42,13 +41,6 @@ public class HotbarManager : MonoBehaviour
 		else
 		{
 			InvokeOnFocusItemSetEvent(GameManager.Instance.GetItemIdFromItemSO(_focusInventoryItem.Item), GameInput.Instance.GetSelectedSlotIndex());
-		}
-		for (int i = 0; i < InventoryManager.Instance.GetInventoryModel().InventoryItems.Count; i++)
-		{
-			if (InventoryManager.Instance.GetInventoryModel().InventoryItems[i].HasItem)
-			{
-				Debug.Log($"{InventoryManager.Instance.GetInventoryModel().InventoryItems[i].Item.Name} {InventoryManager.Instance.GetInventoryModel().InventoryItems[i].Quantity}");
-			}
 		}
 	}
 
@@ -61,22 +53,13 @@ public class HotbarManager : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log($"asdfasdf");
-			for (int i = 0; i < InventoryManager.Instance.GetInventoryModel().InventoryItems.Count; i++)
-			{
-				if (InventoryManager.Instance.GetInventoryModel().InventoryItems[i].HasItem)
-				{
-					Debug.Log($"{InventoryManager.Instance.GetInventoryModel().InventoryItems[i].Item.Name} {InventoryManager.Instance.GetInventoryModel().InventoryItems[i].Quantity}");
-				}
-			}
-			_focusInventoryItem = InventoryManager.Instance.GetInventoryModel().InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
+			_focusInventoryItem = InventoryManager.Instance.GetInventoryModel().InventoryItems[GameInput.Instance.GetSelectedSlotIndex()]; 
 			InvokeOnFocusItemSetEvent(GameManager.Instance.GetItemIdFromItemSO(_focusInventoryItem.Item), GameInput.Instance.GetSelectedSlotIndex());
 		}
 	}
 
 	private void GameInput_OnSlotSelected(object sender, GameInput.SlotSelectedEventArgs e)
 	{
-		Debug.Log($"asdfasdf");
 		_focusInventoryItem = InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SelectedSlotIndex];
 		
 		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.LocalClientInstance.transform.position);
@@ -93,7 +76,6 @@ public class HotbarManager : MonoBehaviour
 
 	private void GameInput_OnScroll(object sender, GameInput.SlotSelectedEventArgs e)
 	{
-		Debug.Log($"asdfasdf");
 		_focusInventoryItem = InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SelectedSlotIndex];
 		
 		if(_focusInventoryItem == null)

@@ -1,4 +1,5 @@
 using System;
+using AdvancedTooltips.Core;
 using UnityEngine;
 
 public class PlayerMenuUI : MonoBehaviour
@@ -43,16 +44,16 @@ public class PlayerMenuUI : MonoBehaviour
 		if (armorSlotUI.ArmorEquipped())
 		{
 			// If armor is already equipped, swap it with the new armor
-			Debug.Log($"asdfasdf");
 			InventoryManager.Instance.GetInventoryModel().InventoryItems[slotIndex].Item = armorSlotUI.SwapArmor(armorItemSO);
 			InventoryManager.Instance.GetInventoryModel().InventoryItems[slotIndex].Quantity = 1;
+			InventoryManager.Instance.ShowInventoryItemTooltip(InventoryManager.Instance.GetInventoryModel().InventoryItems[slotIndex]);
 		}
 		else
 		{
 			// If no armor is equipped, equip the new armor
 			armorSlotUI.EquipArmor(armorItemSO);
-			Debug.Log($"asdfasdf");
 			InventoryManager.Instance.GetInventoryModel().InventoryItems[slotIndex] = new();
+			Tooltip.HideUI();
 		}
 		
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
