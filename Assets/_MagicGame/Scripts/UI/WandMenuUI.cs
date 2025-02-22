@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AdvancedTooltips.Core;
 using UnityEngine;
 
 public class WandMenuUI : MonoBehaviour
@@ -36,12 +37,16 @@ public class WandMenuUI : MonoBehaviour
 		{
 			if(HasWand())
 			{
+				Debug.Log($"asdfasdf");
 				InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = SwapWands(wandInInv);
+				InventoryManager.Instance.ShowInventoryItemTooltip(InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex]);
 			}
 			else
 			{
 				PlaceSelectedWand(wandInInv);
+				Debug.Log($"asdfasdf");
 				InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
+				Tooltip.HideUI();
 			}
 			
 			_spellBookSlotUI.UpdateSlotUI();
@@ -65,7 +70,9 @@ public class WandMenuUI : MonoBehaviour
 				{
 					// Found an empty spot
 					firstEmptySpellBookInventorySlotUI.SetMagic(magicItemSO);
+					Debug.Log($"asdfasdf");
 					InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
+					Tooltip.HideUI();
 				}
 			}
 		}

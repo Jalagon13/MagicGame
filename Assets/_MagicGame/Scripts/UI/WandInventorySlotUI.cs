@@ -1,4 +1,5 @@
 using System;
+using AdvancedTooltips.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -38,11 +39,15 @@ public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointer
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _wandInvItem.RemoveMagic(_spellIndex);
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = 1;
 			}
+
+			Tooltip.HideUI();
 		}
 		else if(mouseItem.HasItem && mouseItem.Item is MagicItemSO mouseMagicItemSO)
 		{
 			_wandInvItem.SetMagic(mouseMagicItemSO, _spellIndex);
 			InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
+			Tooltip.ShowNew();
+			InventoryManager.Instance.ShowInventoryItemTooltip(_wandInvItem);
 		}
 		
 		UpdateSlotUI();
@@ -58,12 +63,20 @@ public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointer
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		
+		if(_wandInvItem.MagicArray[_spellIndex] != null)
+		{
+			Tooltip.ShowNew();
+			InventoryManager.Instance.ShowInventoryItemTooltip(_wandInvItem.MagicArray[_spellIndex].CreateInventoryItem(1));
+		}
+		else
+		{
+			Tooltip.HideUI();
+		}
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		
+		Tooltip.HideUI();
 	}
 	
 	public bool WandInventorySlotIsOccupied()

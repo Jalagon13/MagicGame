@@ -100,12 +100,6 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 		if (IsOwner)
 		{
-			foreach (InventoryItem item in _startingItems)
-			{
-				InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
-				InventoryManager.Instance.AddItem(itemToAdd);
-			}
-
 			foreach (WandInventoryItem wandInvItem in _startingWandItems)
 			{
 				if (wandInvItem.Item is not WandItemSO)
@@ -133,6 +127,15 @@ public class Player : NetworkBehaviour, IHasHealth
 				}
 
 				InventoryManager.Instance.AddItem(wandItemToAdd);
+				yield return new WaitForEndOfFrame();
+			}
+
+			foreach (InventoryItem item in _startingItems)
+			{
+				Debug.Log($"{item.Item.Name} qnty: {item.Quantity}");
+				InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
+				InventoryManager.Instance.AddItem(itemToAdd);
+				yield return new WaitForEndOfFrame();
 			}
 		}
 	}

@@ -265,6 +265,7 @@ public class InventoryManager : MonoBehaviour
 	{
 		if(GameInput.Instance.GetShiftHeldDown())
 		{
+			Debug.Log($"asdfasdf");
 			OnInventorySlotShiftRightClicked?.Invoke(this, new ShortCutInventoryItemEventArgs
 			{
 				InventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex],
@@ -272,7 +273,7 @@ public class InventoryManager : MonoBehaviour
 			});
 			return;
 		}
-	
+		Debug.Log($"asdfasdf");
 		InventoryItem inventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex];
 		InventoryItem mouseItem = _mouseItemModel.MouseInventoryItem;
 		
@@ -282,6 +283,7 @@ public class InventoryManager : MonoBehaviour
 			{
 				if(inventoryItem.Item.Name == mouseItem.Item.Name)
 				{
+					Debug.Log($"asdfasdf");
 					_inventoryModel.InventoryItems[clickedInventorySlotIndex].Quantity += 1;
 					_mouseItemModel.MouseInventoryItem.Quantity -= 1;
 					
@@ -294,7 +296,7 @@ public class InventoryManager : MonoBehaviour
 				{
 					// Swap the two items
 					InventoryItem tempItem = inventoryItem;
-					
+					Debug.Log($"asdfasdf");
 					_inventoryModel.InventoryItems[clickedInventorySlotIndex] = mouseItem;
 					_mouseItemModel.MouseInventoryItem = tempItem;
 				}
@@ -304,7 +306,7 @@ public class InventoryManager : MonoBehaviour
 				int inventoryItemQuantity = inventoryItem.Quantity;
 				int newInventoryItemQuantity = inventoryItemQuantity / 2;
 				int newMouseItemQuantity = inventoryItemQuantity - newInventoryItemQuantity;
-				
+				Debug.Log($"asdfasdf");
 				_inventoryModel.InventoryItems[clickedInventorySlotIndex].Quantity = newInventoryItemQuantity;
 				
 				_mouseItemModel.MouseInventoryItem.Item = inventoryItem.Item;
@@ -312,6 +314,7 @@ public class InventoryManager : MonoBehaviour
 				
 				if(inventoryItem.Quantity == 0)
 				{
+					Debug.Log($"asdfasdf");
 					_inventoryModel.InventoryItems[clickedInventorySlotIndex].Item = null;
 				}
 				
@@ -322,6 +325,7 @@ public class InventoryManager : MonoBehaviour
 		{
 			if(mouseItem.HasItem)
 			{
+				Debug.Log($"asdfasdf");
 				_inventoryModel.InventoryItems[clickedInventorySlotIndex].Item = mouseItem.Item;
 				_inventoryModel.InventoryItems[clickedInventorySlotIndex].Quantity = 1;
 				
@@ -329,8 +333,8 @@ public class InventoryManager : MonoBehaviour
 				if(_mouseItemModel.MouseInventoryItem.Quantity <= 0)
 				{
 					_mouseItemModel = new();
-					// TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
-					
+
+					ShowInventoryItemTooltip(_mouseItemModel.MouseInventoryItem);
 				}
 			}
 		}
@@ -344,6 +348,7 @@ public class InventoryManager : MonoBehaviour
 	{
 		if(GameInput.Instance.GetShiftHeldDown())
 		{
+			Debug.Log($"asdfasdf");
 			OnInventorySlotShiftLeftClicked?.Invoke(this, new ShortCutInventoryItemEventArgs
 			{
 				InventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex],
@@ -351,7 +356,7 @@ public class InventoryManager : MonoBehaviour
 			});
 			return;
 		}
-	
+		Debug.Log($"asdfasdf");
 		InventoryItem inventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex];
 		InventoryItem mouseItem = _mouseItemModel.MouseInventoryItem;
 		
@@ -361,33 +366,39 @@ public class InventoryManager : MonoBehaviour
 			{
 				if(inventoryItem.Item.Name == mouseItem.Item.Name && mouseItem.Item.Stackable)
 				{
+					Debug.Log($"asdfasdf");
 					_inventoryModel.InventoryItems[clickedInventorySlotIndex].Quantity += mouseItem.Quantity;
 					_mouseItemModel.MouseInventoryItem = new();
-					// TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
+					
+					ShowInventoryItemTooltip(_mouseItemModel.MouseInventoryItem);
 				}
 				else
 				{
 					// Swap the two items
 					InventoryItem tempItem = inventoryItem;
-					
+					Debug.Log($"asdfasdf");
 					_inventoryModel.InventoryItems[clickedInventorySlotIndex] = mouseItem;
 					_mouseItemModel.MouseInventoryItem = tempItem;
 				}
 			}
 			else
 			{
+				Debug.Log($"asdfasdf");
 				_mouseItemModel.MouseInventoryItem = inventoryItem;
 				_inventoryModel.InventoryItems[clickedInventorySlotIndex] = new();
-				// TooltipManager.Instance.Hide();
+				
+				Tooltip.HideUI();
 			}
 		}
 		else
 		{
 			if(mouseItem.HasItem)
 			{
+				Debug.Log($"asdfasdf");
 				_inventoryModel.InventoryItems[clickedInventorySlotIndex] = mouseItem;
 				_mouseItemModel.MouseInventoryItem = new();
-				// TooltipManager.Instance.Show(mouseItem is SpellBookInventoryItem wandItem ? wandItem.GetDescription() : mouseItem.Item.GetDescription(), mouseItem.Item.Name);
+				
+				ShowInventoryItemTooltip(_inventoryModel.InventoryItems[clickedInventorySlotIndex]);
 			}
 		}
 		
@@ -400,7 +411,7 @@ public class InventoryManager : MonoBehaviour
 	{
 		if(!inventoryItem.HasItem)
 		{
-			Debug.LogError($"Trying to display an inventory item that does not exists for {inventoryItem}");
+			Debug.LogWarning($"Trying to display an inventory item that does not exists for {inventoryItem}");
 			return;
 		}
 	
@@ -419,11 +430,6 @@ public class InventoryManager : MonoBehaviour
 				Tooltip.JustText(itemText, Color.white, fontSize: 12f);
 				break;
 		}
-	}
-	
-	public void ShowItemTooltip(ItemSO item)
-	{
-		
 	}
 	
 	private void PlayClickFeedbacks()

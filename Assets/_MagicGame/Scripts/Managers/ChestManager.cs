@@ -208,15 +208,18 @@ public class ChestManager : NetworkBehaviour
 						{
 							// Add it to chest slot and break
 							GetChestItemEntry(i).Quantity += e.InventoryItem.Quantity;
+							Debug.Log($"asdfasdf");
 							InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new(); // NTFS: No max stack wrap around functionality built in yet
 							break;
 						}
 					}
 					else
 					{
+						Debug.Log($"asdfasdf");
 						int quantity = InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex].Quantity;
 						int id = GameManager.Instance.GetItemIdFromItemSO(e.InventoryItem.Item);
 						AddChestItemEntry(i, id, quantity);
+						Debug.Log($"asdfasdf");
 						InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
 						break;
 					}
@@ -235,6 +238,7 @@ public class ChestManager : NetworkBehaviour
 					{
 						// Move the item to this chest slot and stop
 						AddChestItemEntry(i, GameManager.Instance.GetItemIdFromItemSO(e.InventoryItem.Item), 1);
+						Debug.Log($"asdfasdf");
 						InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
 						break;
 					}

@@ -22,7 +22,7 @@ public class SlotHolderUI : MonoBehaviour
 		ChestManager.Instance.OnChestOpen += ChestManager_OnChestOpen;
 		ChestManager.Instance.OnChestClose += ChestManager_OnChestClose;
 		ChestManager.Instance.OnChestUpdated += ChestManager_OnChestUpdated;
-		
+		Debug.Log($"asdfasdf");
 		Initialize(InventoryManager.Instance.GetInventoryModel().InventoryItems);
 		
 		HideInventorySlots();
@@ -130,6 +130,13 @@ public class SlotHolderUI : MonoBehaviour
 		{
 			InventorySlotUI isv = _inventorySlotUIList[i];
 			InventoryItem inventoryItem = updatedInventory[i];
+			if(inventoryItem.Item != null)
+			{
+				if(!inventoryItem.Item.Stackable)
+				{
+					inventoryItem.Quantity = 1;
+				}
+			}
 			
 			isv.UpdateView(inventoryItem);
 		}

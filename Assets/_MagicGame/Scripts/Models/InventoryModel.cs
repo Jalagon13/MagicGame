@@ -36,6 +36,8 @@ public class InventoryModel
 
 	public void AddItem(InventoryItem itemToAdd)
 	{
+		Debug.Log($"Adding {itemToAdd.Item.Name} qnty: {itemToAdd.Quantity}, stackable {itemToAdd.Item.Stackable}");
+	
 		// If item I want to add is stackable
 		if(itemToAdd.Item.Stackable)
 		{
@@ -47,6 +49,7 @@ public class InventoryModel
 				if (_inventoryItems[i].Item.Name == itemToAdd.Item.Name)
 				{
 					_inventoryItems[i].Quantity += itemToAdd.Quantity;
+					Debug.Log($"THis shit NOT be playing");
 					UpdateInventory();
 					return;
 				}
@@ -67,38 +70,32 @@ public class InventoryModel
 		}
 		else // If item is not stackable
 		{
-			// Grab quantity of item before I set it to 1
-			int amountToIterate = itemToAdd.Quantity;
-			
-			// Set itemToAdd quantity to 1 for calculation
+			// Set itemToAdd quantity to 1 since all non-stackable items must be 1
 			itemToAdd.Quantity = 1;
-			
-			// For each iteration of the quantity of this unstackable item,
-			for (int i = 0; i < amountToIterate; i++)
+
+			// Loop through all slots
+			for (int j = 0; j < _inventoryItems.Count; j++)
 			{
-				// Loop through all slots
-				for(int j = 0; j < _inventoryItems.Count; j++)
+				// If the slot is empty, override this spot
+				if (!_inventoryItems[j].HasItem)
 				{
-					// If the slot is empty, override this spot
-					if(!_inventoryItems[j].HasItem)
+					// Override this spot with itemToAdd
+					_inventoryItems[j] = itemToAdd;
+					_inventoryItems[j].Quantity = 1;
+					Debug.Log($"index {j} {_inventoryItems[j].Item.Name} qnty {_inventoryItems[j].Quantity}");
+					// If item being added was a wand, send this event
+					if (_inventoryItems[j] is WandInventoryItem wandInvItem)
 					{
-						// Override this spot with itemToAdd
-						_inventoryItems[j] = itemToAdd;
-						
-						// If item being added was a wand, send this event
-						if(_inventoryItems[j] is WandInventoryItem wandInvItem)
+						OnWandCollected?.Invoke(this, new WandEventArgs
 						{
-							OnWandCollected?.Invoke(this, new WandEventArgs
-							{
-								WandInvItem = wandInvItem
-							});
-						}
-						UpdateInventory();
-						return;
+							WandInvItem = wandInvItem
+						});
 					}
+					
+					UpdateInventory();
+					return;
 				}
 			}
-			
 		}
 
 		// Inventory is full functionality (implement this later) 

@@ -17,7 +17,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 	{
 		if(_hovered)
 		{
-			// TooltipManager.Instance.Hide();
+			Tooltip.HideUI();
 		}
 	}
 	
@@ -25,6 +25,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 	{
 		if(eventData.button == PointerEventData.InputButton.Left)
 		{
+			Debug.Log($"{_inventoryIndex}");
 			InventoryManager.Instance.InventorySlotLeftClicked(_inventoryIndex);
 		}
 		else if(eventData.button == PointerEventData.InputButton.Right)
@@ -46,14 +47,18 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 		{
 			_itemImage.color = new Vector4(1, 1, 1, 1);
 			_itemImage.sprite = item.Item.UiDisplay;
+
+			Debug.Log($"UpdateView inv item {item.Item.Name} qnty: {item.Quantity}");
+			Debug.Log($"actual amounts: {InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex].Item.Name} quantity {InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex].Quantity}");
+			_itemQuantityText.text = item.Quantity > 1 ? item.Quantity.ToString() : string.Empty;
+			Debug.Log(_itemQuantityText.text);
 		}
 		else
 		{
 			_itemImage.color = new Vector4(1, 1, 1, 0);
 			_itemImage.sprite = null;
+			_itemQuantityText.text = string.Empty;
 		}
-		
-		_itemQuantityText.text = item.Item != null ? item.Quantity > 1 ? item.Quantity.ToString() : string.Empty : string.Empty;
 	}
 
 	public void OnPointerEnter(PointerEventData eventData)
@@ -61,18 +66,31 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 		if(_item.HasItem && !InventoryManager.MOUSE_HAS_ITEM)
 		{
 			_hovered = true;
-			InventoryItem inventoryItem = InventoryManager
-			InventoryManager.Instance.ShowItemTooltip()
+
+			Tooltip.ShowNew();
+
+			switch (_item.Item)
+			{
+				case WandItemSO wandItemSO:
+					MagicItemSO[] magicArray = (InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex] as WandInventoryItem).MagicArray;
+					Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);
+					break;
+				default:
+					Debug.Log($"asdfasdf");
+					int quantity = InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex].Quantity;
+					
+					string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
+					string itemText = $"{_item.Item.Name} {quantityString}<br>{_item.Item.GetDescription()}";
+					
+					Tooltip.JustText(itemText, Color.white, fontSize: 12f);
+					break;
+			}
 		}
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		if(_hovered)
-		{
-			_hovered = false;
-			Tooltip.HideUI();
-		}
+		Tooltip.HideUI();
 	}
 
 	public void ChangeColor(Color color)

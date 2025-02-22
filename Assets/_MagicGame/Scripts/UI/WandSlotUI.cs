@@ -1,3 +1,4 @@
+using AdvancedTooltips.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -36,11 +37,14 @@ public class WandSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 					InventoryManager.Instance.GetMouseItem().MouseInventoryItem = _wandMenuUI.RemoveSelectedWand();
 				}
 			}
+
+			Tooltip.HideUI();
 		}
 		else if(mouseItem.HasItem && mouseItem is WandInventoryItem mouseWandInventoryItem)
 		{
 			_wandMenuUI.PlaceSelectedWand(mouseWandInventoryItem);
 			InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
+			InventoryManager.Instance.ShowInventoryItemTooltip(_wandMenuUI.SelectedWand);
 		}
 		
 		UpdateSlotUI();
@@ -54,14 +58,16 @@ public class WandSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 		
 		if(_wandMenuUI.HasWand())
 		{
-			// TooltipManager.Instance.Show(_wandItem.GetDescription(), _wandItem.Item.Name);
+			Tooltip.ShowNew();
+			InventoryManager.Instance.ShowInventoryItemTooltip(_wandMenuUI.SelectedWand);
 		}
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
 		_hovered = false;
-		// TooltipManager.Instance.Hide();
+		
+		Tooltip.HideUI();
 	}
 	
 	public void UpdateSlotUI()
@@ -74,8 +80,9 @@ public class WandSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 			_wandIcon.sprite = _wandMenuUI.SelectedWand.Item.UiDisplay;
 			
 			if(_hovered)
-			{
-				// TooltipManager.Instance.Show(wandItem.GetDescription(), wandItem.Item.Name);
+			{	
+				Tooltip.ShowNew();
+				InventoryManager.Instance.ShowInventoryItemTooltip(_wandMenuUI.SelectedWand);
 			}
 		}
 	}

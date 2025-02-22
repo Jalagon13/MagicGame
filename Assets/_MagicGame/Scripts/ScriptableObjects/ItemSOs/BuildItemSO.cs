@@ -39,7 +39,7 @@ public class BuildItemSO : ItemSO
 		StringBuilder description = new();
 		description.Append($"Building Material<br>");
 		description.Append($"Left Click to place wall<br>");
-		description.Append($"Right Click to place floor<br>");
+		// description.Append($"Right Click to place floor<br>");
 		description.Append($"{GetDescriptionBreak()}");
 		
 		return description.ToString();
