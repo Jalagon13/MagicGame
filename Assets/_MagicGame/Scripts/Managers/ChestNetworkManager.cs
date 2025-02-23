@@ -5,20 +5,58 @@ using UnityEngine;
 
 public struct ChestSyncItemData : IEquatable<ChestSyncItemData>, INetworkSerializable
 {
-	public int SlotIndex;
 	public int ItemId;
 	public int Quantity;
+	public List<int> MagicArray;
 
 	public bool Equals(ChestSyncItemData other)
 	{
-		return SlotIndex == other.SlotIndex && ItemId == other.ItemId && Quantity == other.Quantity;
+		// Check if basic properties are equal
+		if (ItemId != other.ItemId || Quantity != other.Quantity)
+			return false;
+
+		// Check if both MagicArrays are either null or have the same count
+		if (MagicArray == null && other.MagicArray == null)
+			return true;
+		if (MagicArray == null || other.MagicArray == null || MagicArray.Count != other.MagicArray.Count)
+			return false;
+
+		// Compare each element in the lists
+		for (int i = 0; i < MagicArray.Count; i++)
+		{
+			if (MagicArray[i] != other.MagicArray[i])
+				return false;
+		}
+
+		return true;
 	}
 
 	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
 	{
-		serializer.SerializeValue(ref SlotIndex);
 		serializer.SerializeValue(ref ItemId);
 		serializer.SerializeValue(ref Quantity);
+
+		// Serialize the count of the list first
+		int magicArrayCount = MagicArray != null ? MagicArray.Count : 0;
+		serializer.SerializeValue(ref magicArrayCount);
+
+		// Initialize the list if deserializing
+		if (serializer.IsReader && MagicArray == null)
+		{
+			MagicArray = new List<int>(magicArrayCount);
+		}
+
+		// Serialize each item in the list
+		for (int i = 0; i < magicArrayCount; i++)
+		{
+			int value = serializer.IsReader ? 0 : MagicArray[i];
+			serializer.SerializeValue(ref value);
+
+			if (serializer.IsReader)
+			{
+				MagicArray.Add(value);
+			}
+		}
 	}
 }
 
@@ -90,26 +128,27 @@ public struct ChestSyncData : IEquatable<ChestSyncData>, INetworkSerializable
 
 public class ChestNetworkManager : NetworkBehaviour
 {
-	public void OpenChestClient(Vector2Int chestPosition, BiomeType playerEnvironment)
+	public void OpenChestClient(Vector2Int chestPosition, BiomeType playerBiome)
 	{
-		RequestChestDataServerRpc(chestPosition, playerEnvironment);
+		RequestChestDataServerRpc(chestPosition, playerBiome);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RequestChestDataServerRpc(Vector2Int chestPosition, BiomeType environment, RpcParams rpcParams = default)
+	private void RequestChestDataServerRpc(Vector2Int chestPosition, BiomeType biome, RpcParams rpcParams = default)
 	{
-		var chestData = ChestManager.Instance.GetChestDataFromEnvironment(environment);
+		var biomeChestData = ChestManager.Instance.GetChestDataFromBiome(biome);
 
-		if (chestData.ContainsKey(chestPosition))
+		if (biomeChestData.ContainsKey(chestPosition))
 		{
-			string chestId = $"{chestPosition}{environment}";
+			string chestId = $"{chestPosition}{biome}";
+			
 			if(!ChestManager.Instance.OpenedChestIds.Contains(chestId))
 			{
 				ChestManager.Instance.OpenedChestIds.Add(chestId);
 			
 				var syncData = new ChestSyncData
 				{
-					ChestItemData = ConvertToSyncChestData(chestData[chestPosition]),
+					ChestItemData = ConvertToSyncChestData(biomeChestData[chestPosition]),
 					ChestPosition = chestPosition
 				};
 			
@@ -126,44 +165,72 @@ public class ChestNetworkManager : NetworkBehaviour
 	private void SendChestDataClientRpc(ChestSyncData syncData, RpcParams rpcParams)
 	{
 		// Convert the sync data back to game data and pass it to the ChestManager
-		List<ChestItemData> chestItemData = ConvertToGameChestData(syncData.ChestItemData);
+		List<InventoryItem> chestItemData = ConvertToGameChestData(syncData.ChestItemData);
 		ChestManager.Instance.OpenChest(syncData.ChestPosition, chestItemData);
 	}
 
-	private List<ChestSyncItemData> ConvertToSyncChestData(List<ChestItemData> chestItemDataToConvert)
+	private List<ChestSyncItemData> ConvertToSyncChestData(List<InventoryItem> chestItemDataToConvert)
 	{
 		List<ChestSyncItemData> syncChestData = new List<ChestSyncItemData>();
 
-		if(chestItemDataToConvert != null && chestItemDataToConvert.Count > 0)
+		Debug.Log(chestItemDataToConvert == null);
+		foreach (InventoryItem invItem in chestItemDataToConvert)
 		{
-			foreach (var chestItem in chestItemDataToConvert)
+			List<int> magicArray = new();
+
+			if (invItem is WandInventoryItem wandInventoryItem)
 			{
-				syncChestData.Add(new ChestSyncItemData
+				Debug.Log($"Found a wand to convert {wandInventoryItem.Item.Name}");
+			
+				for (int i = 0; i < wandInventoryItem.MagicArray.Length; i++)
 				{
-					SlotIndex = chestItem.SlotIndex,
-					ItemId = chestItem.ItemId,
-					Quantity = chestItem.Quantity
-				});
+					magicArray.Add(wandInventoryItem.MagicArray[i] != null ? GameManager.Instance.GetItemIdFromItemSO(wandInventoryItem.MagicArray[i]) : -1);
+				}
 			}
+			
+			if(magicArray.Count > 0)
+			{
+				Debug.Log("Sending a magic array with something in it");
+			}
+
+			syncChestData.Add(new ChestSyncItemData
+			{
+				ItemId = GameManager.Instance.GetItemIdFromItemSO(invItem.Item),
+				Quantity = invItem.Quantity,
+				MagicArray = magicArray
+			});
 		}
 
 		return syncChestData;
 	}
 
-	private List<ChestItemData> ConvertToGameChestData(List<ChestSyncItemData> syncChestData)
+	private List<InventoryItem> ConvertToGameChestData(List<ChestSyncItemData> syncChestData)
 	{
-		List<ChestItemData> chestItemData = new List<ChestItemData>();
+		List<InventoryItem> chestItemData = new List<InventoryItem>();
 
-		if(syncChestData != null && syncChestData.Count > 0)
+		foreach (ChestSyncItemData syncItem in syncChestData)
 		{
-			foreach (var syncItem in syncChestData)
+			InventoryItem invItem = new(GameManager.Instance.GetItemSOFromItemId(syncItem.ItemId), syncItem.Quantity);
+			
+			if(invItem.Item is WandItemSO wandItemSO)
 			{
-				chestItemData.Add(new ChestItemData
+				var wandInventoryItem = new WandInventoryItem(GameManager.Instance.GetItemSOFromItemId(syncItem.ItemId), syncItem.Quantity, wandItemSO.Capacity);
+			
+				Debug.Log($"Found a wand to turn to game data {invItem.Item.Name}");
+			
+				for (int i = 0; i < syncItem.MagicArray.Count; i++)
 				{
-					SlotIndex = syncItem.SlotIndex,
-					ItemId = syncItem.ItemId,
-					Quantity = syncItem.Quantity
-				});
+					if(syncItem.MagicArray[i] > -1)
+					{
+						wandInventoryItem.SetMagic(GameManager.Instance.GetItemSOFromItemId(syncItem.MagicArray[i]) as MagicItemSO, i);
+					}
+				}
+
+				chestItemData.Add(wandInventoryItem);
+			}
+			else
+			{
+				chestItemData.Add(invItem);
 			}
 		}
 
@@ -182,24 +249,23 @@ public class ChestNetworkManager : NetworkBehaviour
 		ChestManager.Instance.OpenedChestIds.Remove($"{openChestPosition}{value}");
 	}
 
-	public void UpdateChestContents(Vector2Int openChestPosition, BiomeType playerEnvironment, List<ChestItemData> localChestItemData)
+	public void UpdateChestContents(Vector2Int openChestPosition, BiomeType playerBiome, List<InventoryItem> localChestItemData)
 	{
+		Debug.Log(localChestItemData == null);
 		var chestSyncData = new ChestSyncData
 		{
 			ChestItemData = ConvertToSyncChestData(localChestItemData),
 			ChestPosition = openChestPosition
 		};
 	
-		UpdateChestContentsServerRpc(openChestPosition, playerEnvironment, chestSyncData);
+		UpdateChestContentsServerRpc(openChestPosition, playerBiome, chestSyncData);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void UpdateChestContentsServerRpc(Vector2Int openChestPosition, BiomeType playerEnvironment, ChestSyncData syncChestItemData)
+	private void UpdateChestContentsServerRpc(Vector2Int openChestPosition, BiomeType playerBiome, ChestSyncData syncChestItemData)
 	{
-		var chestGameData = ConvertToGameChestData(syncChestItemData.ChestItemData);
-		
-		var chestData = ChestManager.Instance.GetChestDataFromEnvironment(playerEnvironment);
+		var chestData = ChestManager.Instance.GetChestDataFromBiome(playerBiome);
+		chestData[openChestPosition] = ConvertToGameChestData(syncChestItemData.ChestItemData);
 		Debug.Log($"Dat shit updated from client");
-		chestData[openChestPosition] = chestGameData;
 	}
 }

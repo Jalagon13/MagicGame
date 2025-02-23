@@ -24,6 +24,7 @@ public struct ItemFileData
 	public int SlotIndex;
 	public int ItemId; // Unique ID of the item
 	public int Quantity; // Quantity of the item
+	public List<int> MagicArray;
 }
 
 [Serializable]

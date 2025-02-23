@@ -167,22 +167,36 @@ public class SaveSystem : MonoBehaviour
 		Debug.Log($"<color=orange>Chunk Data of </color>{biomeToSave}<color=orange> Serialized</color>");
 	}
 
-	private void SerializeChestDataOfCurrentEnvironment(BiomeType environmentToSerialize)
+	private void SerializeChestDataOfCurrentEnvironment(BiomeType biomeToSave)
 	{
 		_biomeFileDataForSaving.ChestList.Clear();
 		
-		foreach (var chestData in ChestManager.Instance.GetChestDataFromEnvironment(environmentToSerialize))
+		foreach (var chestData in ChestManager.Instance.GetChestDataFromBiome(biomeToSave))
 		{
 			List<ItemFileData> chestItemsToSerialize = new();
 		
-			foreach (ChestItemData chestItemData in chestData.Value)
+			for (int i = 0; i < chestData.Value.Count; i++)
 			{
-				chestItemsToSerialize.Add(new ItemFileData
+				if(chestData.Value[i] != null)
 				{
-					SlotIndex = chestItemData.SlotIndex,
-					ItemId = chestItemData.ItemId,
-					Quantity = chestItemData.Quantity
-				});
+					List<int> magicArray = new();
+					
+					if(chestData.Value[i] is WandInventoryItem wandInventoryItem)
+					{
+						for (int j = 0; j < wandInventoryItem.MagicArray.Length; j++)
+						{
+							magicArray.Add(wandInventoryItem.MagicArray[j] != null ? GameManager.Instance.GetItemIdFromItemSO(wandInventoryItem.MagicArray[j]) : -1);
+						}
+					}
+				
+					chestItemsToSerialize.Add(new ItemFileData
+					{
+						SlotIndex = i,
+						ItemId = GameManager.Instance.GetItemIdFromItemSO(chestData.Value[i].Item),
+						Quantity = chestData.Value[i].Quantity,
+						MagicArray = magicArray
+					});
+				}
 			}
 		
 			_biomeFileDataForSaving.ChestList.Add(new ChestFileData
@@ -308,27 +322,46 @@ public class SaveSystem : MonoBehaviour
 		Debug.Log($"<color=orange>Asset Data of: </color>{biomeToDeserialize}<color=orange> Deserialized</color>");
 	}
 	
-	private void DeserializeChestData(BiomeType environmentToDeserialize)
+	private void DeserializeChestData(BiomeType biomeToLoad)
 	{
 		List<ChestFileData> chestDataList = new(_biomeFileDataForLoading.ChestList);
-		ChestManager.Instance.GetChestDataFromEnvironment(environmentToDeserialize).Clear();
-		
+		ChestManager.Instance.GetChestDataFromBiome(biomeToLoad).Clear();
 		
 		foreach (ChestFileData chestData in chestDataList)
 		{
 			// Convert file data to game data
-			List<ChestItemData> chestItemsGameData = new();
-			foreach (ItemFileData item in chestData.ChestItems)
+			List<InventoryItem> chestItemsGameData = new();
+			
+			for (int i = 0; i < ChestManager.CHEST_CAPACITY; i++)
 			{
-				chestItemsGameData.Add(new ChestItemData()
-				{
-					SlotIndex = item.SlotIndex,
-					ItemId = item.ItemId,
-					Quantity = item.Quantity
-				});
+				chestItemsGameData.Add(new InventoryItem() { Item = null, Quantity = 0 });
 			}
 			
-			ChestManager.Instance.AddChestEntry(chestData.ChestPosition, chestItemsGameData, environmentToDeserialize);
+			foreach (ItemFileData item in chestData.ChestItems)
+			{
+				ItemSO itemToAdd = GameManager.Instance.GetItemSOFromItemId(item.ItemId);
+				
+				if(itemToAdd is WandItemSO wandItemSO)
+				{
+					WandInventoryItem wandInventoryItem = new WandInventoryItem(itemToAdd, item.Quantity, wandItemSO.Capacity);
+
+					for (int i = 0; i < item.MagicArray.Count; i++)
+					{
+						if(item.MagicArray[i] > -1)
+						{
+							wandInventoryItem.SetMagic(GameManager.Instance.GetItemSOFromItemId(item.MagicArray[i]) as MagicItemSO, i);
+						}
+					}
+
+					chestItemsGameData[item.SlotIndex] = wandInventoryItem;
+				}
+				else
+				{
+					chestItemsGameData[item.SlotIndex] = new InventoryItem(itemToAdd, item.Quantity);
+				}
+			}
+			
+			ChestManager.Instance.AddChestEntry(chestData.ChestPosition, chestItemsGameData, biomeToLoad);
 		}
 		
 	}

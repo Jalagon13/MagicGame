@@ -14,6 +14,7 @@ public class InventoryManager : MonoBehaviour
 	public static int HOTBAR_SLOTS_AMOUNT = 9;
 	public static bool MOUSE_HAS_ITEM { get; private set; }
 	
+	public event EventHandler OnInventorySlotClicked;
 	public event EventHandler<ShortCutInventoryItemEventArgs> OnInventorySlotShiftLeftClicked;
 	public event EventHandler<ShortCutInventoryItemEventArgs> OnInventorySlotShiftRightClicked;
 	public class ShortCutInventoryItemEventArgs : EventArgs
@@ -262,19 +263,19 @@ public class InventoryManager : MonoBehaviour
 		});
 	}
 	
-	public void InventorySlotRightClicked(int clickedInventorySlotIndex)
+	public void InventorySlotRightClicked(int clickedInventorySlotIndex, List<InventoryItem> inventory)
 	{
 		if(GameInput.Instance.GetShiftHeldDown())
 		{
 			OnInventorySlotShiftRightClicked?.Invoke(this, new ShortCutInventoryItemEventArgs
 			{
-				InventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex],
+				InventoryItem = inventory[clickedInventorySlotIndex],
 				SlotIndex = clickedInventorySlotIndex
 			});
 			return;
 		}
 		
-		InventoryItem inventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex];
+		InventoryItem inventoryItem = inventory[clickedInventorySlotIndex];
 		InventoryItem mouseItem = _mouseItemModel.MouseInventoryItem;
 		
 		if(inventoryItem.HasItem)
@@ -283,7 +284,7 @@ public class InventoryManager : MonoBehaviour
 			{
 				if(inventoryItem.Item.Name == mouseItem.Item.Name)
 				{
-					_inventoryModel.InventoryItems[clickedInventorySlotIndex].Quantity += 1;
+					inventory[clickedInventorySlotIndex].Quantity += 1;
 					_mouseItemModel.MouseInventoryItem.Quantity -= 1;
 					
 					if(_mouseItemModel.MouseInventoryItem.Quantity <= 0)
@@ -295,8 +296,8 @@ public class InventoryManager : MonoBehaviour
 				{
 					// Swap the two items
 					InventoryItem tempItem = inventoryItem;
-					
-					_inventoryModel.InventoryItems[clickedInventorySlotIndex] = mouseItem;
+
+					inventory[clickedInventorySlotIndex] = mouseItem;
 					_mouseItemModel.MouseInventoryItem = tempItem;
 				}
 			}
@@ -305,16 +306,16 @@ public class InventoryManager : MonoBehaviour
 				int inventoryItemQuantity = inventoryItem.Quantity;
 				int newInventoryItemQuantity = inventoryItemQuantity / 2;
 				int newMouseItemQuantity = inventoryItemQuantity - newInventoryItemQuantity;
-				
-				_inventoryModel.InventoryItems[clickedInventorySlotIndex].Quantity = newInventoryItemQuantity;
+
+				inventory[clickedInventorySlotIndex].Quantity = newInventoryItemQuantity;
 				
 				_mouseItemModel.MouseInventoryItem.Item = inventoryItem.Item;
 				_mouseItemModel.MouseInventoryItem.Quantity = newMouseItemQuantity;
 				
 				if(inventoryItem.Quantity == 0)
 				{
-					
-					_inventoryModel.InventoryItems[clickedInventorySlotIndex].Item = null;
+
+					inventory[clickedInventorySlotIndex].Item = null;
 				}
 				
 				Tooltip.HideUI();
@@ -324,9 +325,9 @@ public class InventoryManager : MonoBehaviour
 		{
 			if(mouseItem.HasItem)
 			{
-				
-				_inventoryModel.InventoryItems[clickedInventorySlotIndex].Item = mouseItem.Item;
-				_inventoryModel.InventoryItems[clickedInventorySlotIndex].Quantity = 1;
+
+				inventory[clickedInventorySlotIndex].Item = mouseItem.Item;
+				inventory[clickedInventorySlotIndex].Quantity = 1;
 				
 				_mouseItemModel.MouseInventoryItem.Quantity -= 1;
 				if(_mouseItemModel.MouseInventoryItem.Quantity <= 0)
@@ -340,22 +341,23 @@ public class InventoryManager : MonoBehaviour
 		
 		// Play click feedbacks and update Inventory
 		_inventoryModel.UpdateInventory();
+		OnInventorySlotClicked?.Invoke(this, EventArgs.Empty);
 		PlayClickFeedbacks();
 	}
 	
-	public void InventorySlotLeftClicked(int clickedInventorySlotIndex)
+	public void InventorySlotLeftClicked(int clickedInventorySlotIndex, List<InventoryItem> inventory)
 	{
 		if(GameInput.Instance.GetShiftHeldDown())
 		{
 			OnInventorySlotShiftLeftClicked?.Invoke(this, new ShortCutInventoryItemEventArgs
 			{
-				InventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex],
+				InventoryItem = inventory[clickedInventorySlotIndex],
 				SlotIndex = clickedInventorySlotIndex
 			});
 			return;
 		}
 		
-		InventoryItem inventoryItem = _inventoryModel.InventoryItems[clickedInventorySlotIndex];
+		InventoryItem inventoryItem = inventory[clickedInventorySlotIndex];
 		InventoryItem mouseItem = _mouseItemModel.MouseInventoryItem;
 		
 		if(inventoryItem.HasItem)
@@ -364,7 +366,7 @@ public class InventoryManager : MonoBehaviour
 			{
 				if(inventoryItem.Item.Name == mouseItem.Item.Name && mouseItem.Item.Stackable)
 				{
-					_inventoryModel.InventoryItems[clickedInventorySlotIndex].Quantity += mouseItem.Quantity;
+					inventory[clickedInventorySlotIndex].Quantity += mouseItem.Quantity;
 					_mouseItemModel.MouseInventoryItem = new();
 					
 					ShowInventoryItemTooltip(_mouseItemModel.MouseInventoryItem);
@@ -373,15 +375,15 @@ public class InventoryManager : MonoBehaviour
 				{
 					// Swap the two items
 					InventoryItem tempItem = inventoryItem;
-					
-					_inventoryModel.InventoryItems[clickedInventorySlotIndex] = mouseItem;
+
+					inventory[clickedInventorySlotIndex] = mouseItem;
 					_mouseItemModel.MouseInventoryItem = tempItem;
 				}
 			}
 			else
 			{
 				_mouseItemModel.MouseInventoryItem = inventoryItem;
-				_inventoryModel.InventoryItems[clickedInventorySlotIndex] = new();
+				inventory[clickedInventorySlotIndex] = new();
 				
 				Tooltip.HideUI();
 			}
@@ -390,16 +392,17 @@ public class InventoryManager : MonoBehaviour
 		{
 			if(mouseItem.HasItem)
 			{
-				_inventoryModel.InventoryItems[clickedInventorySlotIndex] = mouseItem;
+				inventory[clickedInventorySlotIndex] = mouseItem;
 				_mouseItemModel.MouseInventoryItem = new();
 				
-				ShowInventoryItemTooltip(_inventoryModel.InventoryItems[clickedInventorySlotIndex]);
+				ShowInventoryItemTooltip(inventory[clickedInventorySlotIndex]);
 			}
 		}
 		
 		// Update views and play click feedbacks
 		_inventoryModel.UpdateInventory();
 		PlayClickFeedbacks();
+		OnInventorySlotClicked?.Invoke(this, EventArgs.Empty);
 	}
 	
 	public void ShowInventoryItemTooltip(InventoryItem inventoryItem)

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using AdvancedTooltips.Core;
 using TMPro;
 using UnityEngine;
@@ -13,7 +14,9 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 	private InventoryItem _item;
 	private int _inventoryIndex;
 	private bool _hovered;
-	
+	private List<InventoryItem> _inventoryAssociatedWith;
+
+
 	private void OnDisable()
 	{
 		if(_hovered)
@@ -26,22 +29,22 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 	{
 		if(eventData.button == PointerEventData.InputButton.Left)
 		{
-			Debug.Log($"{_inventoryIndex}");
-			InventoryManager.Instance.InventorySlotLeftClicked(_inventoryIndex);
+			InventoryManager.Instance.InventorySlotLeftClicked(_inventoryIndex, _inventoryAssociatedWith);
 		}
 		else if(eventData.button == PointerEventData.InputButton.Right)
 		{
-			InventoryManager.Instance.InventorySlotRightClicked(_inventoryIndex);
+			InventoryManager.Instance.InventorySlotRightClicked(_inventoryIndex, _inventoryAssociatedWith);
 		}
 	}
 	
-	public void SetInventoryIndex(int inventoryIndex)
+	public void InitializeInvSlotUI(int inventoryIndex, List<InventoryItem> inventoryAssociatedWith)
 	{
+		_inventoryAssociatedWith = inventoryAssociatedWith;
 		_inventoryIndex = inventoryIndex;
 		GetComponent<RectTransform>().localScale = Vector3.one;
 	}
 
-	public void UpdateView(InventoryItem item)
+	public void UpdateDisplayUI(InventoryItem item)
 	{
 		_item = item;
 		if(item.Item != null)
@@ -70,14 +73,15 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 			switch (_item.Item)
 			{
 				case WandItemSO wandItemSO:
-					MagicItemSO[] magicArray = (InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex] as WandInventoryItem).MagicArray;
+					Debug.Log(_inventoryAssociatedWith[_inventoryIndex] is WandInventoryItem);
+					MagicItemSO[] magicArray = (_inventoryAssociatedWith[_inventoryIndex] as WandInventoryItem).MagicArray;
 					Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);
 					break;
 				case SpellItemSO spellItemSO:
 					Tooltip.SpellDisplay(spellItemSO, fontSize: 12f);
 					break;
 				default:
-					int quantity = InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex].Quantity;
+					int quantity = _inventoryAssociatedWith[_inventoryIndex].Quantity;
 					string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
 					string itemText = $"{_item.Item.Name} {quantityString}<br>{_item.Item.GetDescription()}";
 					

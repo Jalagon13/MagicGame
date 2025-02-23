@@ -31,14 +31,6 @@ public class InventoryModel
 	
 	public void UpdateInventory()
 	{
-		foreach (var item in _inventoryItems)
-		{
-			if(item.HasItem)
-			{
-				Debug.Log($"Inside UpdateInventory() {item.Item.Name}, qnt: {item.Quantity}");
-			}
-		}
-	
 		OnInventoryUpdate?.Invoke(_inventoryItems);
 	}
 

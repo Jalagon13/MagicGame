@@ -43,34 +43,14 @@ public class SlotHolderUI : MonoBehaviour
 		UpdateChestSlotDisplay(e.ChestItemData);
 	}
 
-	private void UpdateChestSlotDisplay(List<ChestItemData> chestItemData)
+	private void UpdateChestSlotDisplay(List<InventoryItem> chestItemData)
 	{
 		foreach (Transform child in _chestSlotsUITransform)
 		{
 			int chestSlotIndex = child.GetSiblingIndex();
-			bool foundItemForThisSlot = false;
-			
-			if(chestItemData != null && chestItemData.Count > 0)
-			{
-				foreach (ChestItemData itemData in chestItemData)
-				{
-					if(itemData.SlotIndex == chestSlotIndex)
-					{
-						// Found a chest item that should occupy this chest slot
-						child.GetComponent<ChestSlotUI>().UpdateChestSlot(itemData, chestSlotIndex);
-						foundItemForThisSlot = true;
-						break;
-					}
-				}
-				
-				if(foundItemForThisSlot)
-				{
-					continue;
-				}
-			}
-			
-			// If could not find a chestItemData for this slot, initialize it as empty and continue
-			child.GetComponent<ChestSlotUI>().UpdateChestSlot(null, chestSlotIndex);
+
+			child.GetComponent<InventorySlotUI>().InitializeInvSlotUI(chestSlotIndex, ChestManager.Instance.GetOpenChestInventoryItems());
+			child.GetComponent<InventorySlotUI>().UpdateDisplayUI(chestItemData[chestSlotIndex]);
 		}
 	}
 
@@ -113,7 +93,7 @@ public class SlotHolderUI : MonoBehaviour
 	{
 		InventorySlotUI invSlotUI = Instantiate(_inventorySlotUIPrefab, default, Quaternion.identity);
 		invSlotUI.transform.SetParent(slotHolder);
-		invSlotUI.SetInventoryIndex(inventoryIndex);
+		invSlotUI.InitializeInvSlotUI(inventoryIndex, InventoryManager.Instance.GetInventoryModel().InventoryItems);
 		
 		_inventorySlotUIList.Add(invSlotUI);
 	}
@@ -125,7 +105,7 @@ public class SlotHolderUI : MonoBehaviour
 			InventorySlotUI isv = _inventorySlotUIList[i];
 			InventoryItem inventoryItem = updatedInventory[i];
 			
-			isv.UpdateView(inventoryItem);
+			isv.UpdateDisplayUI(inventoryItem);
 		}
 	}
 	

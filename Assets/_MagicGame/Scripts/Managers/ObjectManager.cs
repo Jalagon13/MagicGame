@@ -68,12 +68,20 @@ public class ObjectManager : NetworkBehaviour
 	private void HitObjectServerRpc(BiomeType biome, Vector2Int objectPos, int amount, int id)
 	{
 		var chunkGameData = ChunkManager.Instance.GetChunkFromAnyWorldPos(objectPos, biome);
+		
 		foreach (WorldObjectGameData woGameData in chunkGameData.WorldObjectGameDataList)
 		{
 			if(woGameData.Position == objectPos)
 			{
+				string chestId = $"{objectPos}{biome}";
+				if (ChestManager.Instance.OpenedChestIds.Contains(chestId))
+				{
+					Debug.LogWarning("Trying to damage a chest that is open is not allowed");
+					return;
+				}
+
 				// Found object to hit
-				if(_biomeObjectHpDict.ContainsKey(biome))
+				if (_biomeObjectHpDict.ContainsKey(biome))
 				{
 					// Try to find tile to damage
 					foreach (ObjectHpData objectHpData in _biomeObjectHpDict[biome])

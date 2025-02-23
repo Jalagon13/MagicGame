@@ -37,9 +37,14 @@ public class ActionManager : MonoBehaviour
 
 	private void OnWandCollected(object sender, InventoryModel.WandEventArgs e)
 	{
-		if(!WandDict.ContainsKey(e.WandInvItem.Id))
+		AddWandToDict(e.WandInvItem);
+	}
+	
+	private void AddWandToDict(WandInventoryItem wandInventoryItem)
+	{
+		if (!WandDict.ContainsKey(wandInventoryItem.Id))
 		{
-			WandDict.Add(e.WandInvItem.Id, new Wand(e.WandInvItem));
+			WandDict.Add(wandInventoryItem.Id, new Wand(wandInventoryItem));
 		}
 	}
 
@@ -74,8 +79,8 @@ public class ActionManager : MonoBehaviour
 			{
 				_primaryActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.LocalClientInstance.MainHand);
 			}
-				
-			if(WandDict.ContainsKey(selectedInventoryItem.Id) && !Player.LocalClientInstance.MainHand.IsSwinging && !GameInput.Instance.GetSecondaryHeldDown())
+
+			if (WandDict.ContainsKey(selectedInventoryItem.Id) && !Player.LocalClientInstance.MainHand.IsSwinging && !GameInput.Instance.GetSecondaryHeldDown())
 			{
 				// Player is holding down primary on a wand, try to shoot wand
 				WandDict[selectedInventoryItem.Id].CastSpell();
@@ -105,6 +110,8 @@ public class ActionManager : MonoBehaviour
 		if(InventoryManager.Instance.MainHandItemExists(out InventoryItem selectedInventoryItem) && selectedInventoryItem is WandInventoryItem wandInvItem)
 		{
 			// Update the UI stats for this wand
+			AddWandToDict(wandInvItem);
+
 			float currentMana = WandDict[wandInvItem.Id].CurrentMana;
 			int maxMana = WandDict[wandInvItem.Id].WandSO.MaxMana;
 			
