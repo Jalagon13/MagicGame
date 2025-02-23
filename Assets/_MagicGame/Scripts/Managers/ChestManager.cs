@@ -176,61 +176,67 @@ public class ChestManager : NetworkBehaviour
 	
 	private void EnableChestShortcuts(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
 	{
-		// // NTFS: Shift Click chest functionality to be added here
+		// NTFS below is super buggy. Need to figure out how to distinguish chests from inventory slots. because this code will run on both inventory and chest slots
+		return;
+	
+		// NTFS: Shift Click chest functionality to be added here
 		// if(e.InventoryItem.HasItem)
 		// {
-		// 	// If it is stackable
-		// 	if(e.InventoryItem.Item.Stackable)
+		// 	// If item I want to add is stackable
+		// 	if (e.InventoryItem.Item.Stackable)
 		// 	{
-		// 		int chestCapacity = 18;
-		// 		for (int i = 0; i < chestCapacity; i++)
+		// 		// Check if the item already exists in the inventory
+		// 		for (int i = 0; i < _localChestItemData.Count; i++)
 		// 		{
-		// 			var chestItemData = GetChestItemEntry(i);
-		// 			bool isOccupied = chestItemData != null;
-					
-		// 			if(isOccupied)
+		// 			if (!_localChestItemData[i].HasItem) continue; // If slot is empty, move on to the next slot to check
+
+		// 			if (_localChestItemData[i].Item.Name == e.InventoryItem.Item.Name)
 		// 			{
-		// 				// Is it the same item?
-		// 				if(e.InventoryItem.Item.Name == GameManager.Instance.GetItemSOFromItemId(chestItemData.ItemId).Name)
+		// 				_localChestItemData[i].Quantity += e.InventoryItem.Quantity;
+		// 				return;
+		// 			}
+		// 		}
+
+		// 		// If Item cannot be found in inventory, check for first empty slot
+		// 		for (int j = 0; j < _localChestItemData.Count; j++)
+		// 		{
+		// 			// If empty spot found, override this spot
+		// 			if (!_localChestItemData[j].HasItem)
+		// 			{
+		// 				// Override this slot with itemToAdd
+		// 				_localChestItemData[j] = e.InventoryItem;
+
+		// 				if (!_localChestItemData[j].Item.Stackable)
 		// 				{
-		// 					// Add it to chest slot and break
-		// 					GetChestItemEntry(i).Quantity += e.InventoryItem.Quantity;
-		// 					InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new(); // NTFS: No max stack wrap around functionality built in yet
-		// 					break;
+		// 					_localChestItemData[j].Quantity = 1;
 		// 				}
-		// 			}
-		// 			else
-		// 			{
-		// 				int quantity = InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex].Quantity;
-		// 				int id = GameManager.Instance.GetItemIdFromItemSO(e.InventoryItem.Item);
-		// 				AddChestItemEntry(i, id, quantity);
-		// 				InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
-		// 				break;
+		// 				return;
 		// 			}
 		// 		}
 		// 	}
-		// 	else // Not stackable
+		// 	else // If item is not stackable
 		// 	{
-		// 		// Loop through all the chests to find an empty spot and place it there
-		// 		int chestCapacity = 18;
-		// 		for (int i = 0; i < chestCapacity; i++)
+		// 		// Loop through all slots
+		// 		for (int j = 0; j < _localChestItemData.Count; j++)
 		// 		{
-		// 			var chestItemData = GetChestItemEntry(i);
-		// 			bool isOccupied = chestItemData != null;
-				
-		// 			if(!isOccupied)
+		// 			// If the slot is empty, override this spot
+		// 			if (!_localChestItemData[j].HasItem)
 		// 			{
-		// 				// Move the item to this chest slot and stop
-		// 				AddChestItemEntry(i, GameManager.Instance.GetItemIdFromItemSO(e.InventoryItem.Item), 1);
-		// 				Debug.Log($"asdfasdf");
-		// 				InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
-		// 				break;
+		// 				// Override this spot with itemToAdd
+		// 				_localChestItemData[j] = e.InventoryItem;
+
+		// 				if (!_localChestItemData[j].Item.Stackable)
+		// 				{
+		// 					_localChestItemData[j].Quantity = 1;
+		// 				}
+		// 				return;
 		// 			}
 		// 		}
 		// 	}
-			
-		// 	InventoryManager.Instance.GetInventoryModel().UpdateInventory();
-		// 	UpdateChestSlots();
+
+		// 	// Inventory is full functionality (implement this later) 
+		// 	// (implement logic for adding unstackable items when inventory is full as well)
+		// 	// (Also impelement logic for wand functionality in this regard as well)
 		// }
 	}
 	

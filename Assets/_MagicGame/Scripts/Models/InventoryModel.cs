@@ -36,8 +36,6 @@ public class InventoryModel
 
 	public void AddItem(InventoryItem itemToAdd)
 	{
-		Debug.Log($"Start of AddItem {itemToAdd.Item.Name} qnty: {itemToAdd.Quantity}, stackable {itemToAdd.Item.Stackable}");
-	
 		// If item I want to add is stackable
 		if(itemToAdd.Item.Stackable)
 		{
@@ -49,7 +47,7 @@ public class InventoryModel
 				if (_inventoryItems[i].Item.Name == itemToAdd.Item.Name)
 				{
 					_inventoryItems[i].Quantity += itemToAdd.Quantity;
-					Debug.Log($"THis shit NOT be playing");
+					
 					UpdateInventory();
 					return;
 				}
@@ -93,7 +91,6 @@ public class InventoryModel
 						_inventoryItems[j].Quantity = 1;
 					}
 
-					Debug.Log($"Adding to inv model index {j} {_inventoryItems[j].Item.Name} qnty {_inventoryItems[j].Quantity}");
 					// If item being added was a wand, send this event
 					if (_inventoryItems[j] is WandInventoryItem wandInvItem)
 					{

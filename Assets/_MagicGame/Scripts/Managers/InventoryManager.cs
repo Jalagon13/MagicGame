@@ -354,6 +354,10 @@ public class InventoryManager : MonoBehaviour
 				InventoryItem = inventory[clickedInventorySlotIndex],
 				SlotIndex = clickedInventorySlotIndex
 			});
+
+			PlayClickFeedbacks();
+			_inventoryModel.UpdateInventory();
+			OnInventorySlotClicked?.Invoke(this, EventArgs.Empty);
 			return;
 		}
 		
@@ -400,8 +404,8 @@ public class InventoryManager : MonoBehaviour
 		}
 		
 		// Update views and play click feedbacks
-		_inventoryModel.UpdateInventory();
 		PlayClickFeedbacks();
+		_inventoryModel.UpdateInventory();
 		OnInventorySlotClicked?.Invoke(this, EventArgs.Empty);
 	}
 	
