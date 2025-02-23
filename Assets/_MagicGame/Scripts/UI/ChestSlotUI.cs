@@ -1,4 +1,5 @@
 using System;
+using AdvancedTooltips.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -50,12 +51,35 @@ public class ChestSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		
+		if (_chestSlotItemData != null && !InventoryManager.MOUSE_HAS_ITEM)
+		{
+			ItemSO item = GameManager.Instance.GetItemSOFromItemId(_chestSlotItemData.ItemId);
+
+			Tooltip.ShowNew();
+
+			switch (item)
+			{
+				case WandItemSO wandItemSO:
+					// MagicItemSO[] magicArray = (InventoryManager.Instance.GetInventoryModel().InventoryItems[_inventoryIndex] as WandInventoryItem).MagicArray;
+					// Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);
+					break;
+				case SpellItemSO spellItemSO:
+					Tooltip.SpellDisplay(spellItemSO, fontSize: 12f);
+					break;
+				default:
+					int quantity = _chestSlotItemData.Quantity;
+					string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
+					string itemText = $"{item.Name} {quantityString}<br>{item.GetDescription()}";
+
+					Tooltip.JustText(itemText, Color.white, fontSize: 12f);
+					break;
+			}
+		}
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		
+		Tooltip.HideUI();
 	}
 
 	public void UpdateChestSlot(ChestItemData itemData, int slotIndex)
