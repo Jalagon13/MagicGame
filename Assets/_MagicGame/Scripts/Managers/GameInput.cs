@@ -166,7 +166,9 @@ public class GameInput : MonoBehaviour
 	private void PlayerInput_SlotSelected(InputAction.CallbackContext context)
 	{
 		_selectedSlotIndex = Int32.Parse(context.action.name) - 1;
-	
+
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.LocalClientInstance.transform.position);
+
 		OnSlotSelected?.Invoke(this, new SlotSelectedEventArgs
 		{
 			SelectedSlotIndex = _selectedSlotIndex,
@@ -198,6 +200,8 @@ public class GameInput : MonoBehaviour
 			SelectedSlotIndex = _selectedSlotIndex,
 			Context = context
 		});
+
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.LocalClientInstance.transform.position);
 	}
 	
 	private void PlayerInput_OnToggleInventory(InputAction.CallbackContext context)

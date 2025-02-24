@@ -33,11 +33,6 @@ public class HotbarSlotsUI : MonoBehaviour
 	{
 		InventorySlotUI invSlotUI = transform.GetComponent<InventorySlotUI>();
 		invSlotUI.ChangeColor(_highlightedColor);
-		
-		if(Player.LocalClientInstance != null)
-		{
-			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.LocalClientInstance.transform.position);
-		}
 	}
 	
 	private void UnHighlighSlot(Transform transform)

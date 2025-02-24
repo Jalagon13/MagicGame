@@ -38,7 +38,6 @@ public class ChestManager : NetworkBehaviour
 	private void Start()
 	{
 		GameInput.Instance.OnInventoryToggle += CloseChestOnInventoryClose;
-		InventoryManager.Instance.OnInventorySlotClicked += UpdateSlots;
 	}
 
 	private void Update()
@@ -99,7 +98,9 @@ public class ChestManager : NetworkBehaviour
 		{
 			InventoryManager.Instance.OnInventorySlotShiftLeftClicked += EnableChestShortcuts;
 		}
-		
+
+		InventoryManager.Instance.OnInventorySlotClicked += UpdateSlots;
+
 		OpenChestPosition = chestPosition;
 		IsChestOpen = true;
 
@@ -118,15 +119,8 @@ public class ChestManager : NetworkBehaviour
 			_chestNetworkManager.RemoveChestId(OpenChestPosition, Player.LocalClientInstance.CurrentBiome.Value);
 		
 			InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= EnableChestShortcuts;
+			InventoryManager.Instance.OnInventorySlotClicked -= UpdateSlots;
 			IsChestOpen = false;
-			
-			foreach (var item in _localChestItemData)
-			{
-				if(item.HasItem)
-				{
-					InventoryManager.Instance.RemoveItem(item.Item, item.Quantity);
-				}
-			}
 			
 			_chestNetworkManager.UpdateChestContents(OpenChestPosition, Player.LocalClientInstance.CurrentBiome.Value, _localChestItemData);
 
@@ -243,6 +237,5 @@ public class ChestManager : NetworkBehaviour
 	public override void OnDestroy()
 	{
 		GameInput.Instance.OnInventoryToggle -= CloseChestOnInventoryClose;
-		InventoryManager.Instance.OnInventorySlotClicked -= UpdateSlots;
 	}
 }

@@ -30,10 +30,17 @@ public class PlayerNetworkComponent : NetworkBehaviour
 		if(clientId == OwnerClientId) return true;
 		
 		var nonClientIdPlayerObject = NetworkManager.ConnectedClients[clientId].PlayerObject;
-		var nonClientIdPlayerEnvironment = nonClientIdPlayerObject.GetComponent<Player>().CurrentBiome.Value;
-		var ownerClientEnvironment = NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value;
+		var nonClientIdPlayerBiome = nonClientIdPlayerObject.GetComponent<Player>().CurrentBiome.Value;
+		var ownerClientBiome = NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value;
+
+		if(NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().IsDead())
+		{
+			return false;
+		}
+
+		Debug.Log($"ownerClientBiome {ownerClientBiome}. nonClientIdPlayerBiome {nonClientIdPlayerBiome}");
 		
-		return ownerClientEnvironment == nonClientIdPlayerEnvironment;
+		return ownerClientBiome == nonClientIdPlayerBiome;
 	}
 
 	private void HandleOtherPlayerVisibility()
@@ -45,7 +52,7 @@ public class PlayerNetworkComponent : NetworkBehaviour
 			// Now testing non owner client's ids
 			var shouldBeVisible = CheckVisibility(clientId);
 			var isVisibile = NetworkObjectVisibleTo(clientId);
-			
+			Debug.Log($"player id {clientId} should be vis: {shouldBeVisible}, isvis: {isVisibile}");
 			if(shouldBeVisible && !isVisibile)
 			{
 				ShowPlayer(clientId);

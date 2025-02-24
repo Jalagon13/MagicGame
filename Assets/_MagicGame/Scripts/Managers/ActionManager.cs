@@ -33,6 +33,35 @@ public class ActionManager : MonoBehaviour
 	{
 		InventoryManager.Instance.GetInventoryModel().OnWandCollected += OnWandCollected;
 		InventoryManager.Instance.GetInventoryModel().OnWandRemoved += OnWandRemoved;
+		InventoryManager.Instance.OnInventoryUpdated += UpdateWandDict;
+	}
+
+	private void UpdateWandDict(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
+	{
+		HashSet<ulong> currentWandIds = new HashSet<ulong>();
+
+		// Add missing wands from inventory to WandDict
+		foreach (InventoryItem item in e.InventoryItems)
+		{
+			if (item is WandInventoryItem wandInventoryItem)
+			{
+				ulong wandId = wandInventoryItem.Id;
+				currentWandIds.Add(wandId);
+
+				if (!WandDict.ContainsKey(wandId))
+				{
+					AddWandToDict(wandInventoryItem);
+				}
+			}
+		}
+
+		// Remove wands from WandDict that are no longer in inventory
+		var wandsToRemove = WandDict.Keys.Where(id => !currentWandIds.Contains(id)).ToList();
+		foreach (var id in wandsToRemove)
+		{
+			WandDict[id].WandInvItem.ClearWandContentsUpdatedListeners();
+			WandDict.Remove(id);
+		}
 	}
 
 	private void OnWandCollected(object sender, InventoryModel.WandEventArgs e)
@@ -142,5 +171,6 @@ public class ActionManager : MonoBehaviour
 	{
 		InventoryManager.Instance.GetInventoryModel().OnWandCollected -= OnWandCollected;
 		InventoryManager.Instance.GetInventoryModel().OnWandRemoved -= OnWandRemoved;
+		InventoryManager.Instance.OnInventoryUpdated -= UpdateWandDict;
 	}
 }

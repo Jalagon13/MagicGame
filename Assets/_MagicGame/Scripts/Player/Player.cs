@@ -204,18 +204,13 @@ public class Player : NetworkBehaviour, IHasHealth
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void OnPlayerHealthChangedClientRpc(int finalDamage, bool isKilled, Vector2 damagerPosition, float knockbackForce, RpcParams rpcParams = default)
 	{
-		Debug.Log($"[Client {NetworkManager.LocalClientId}] {gameObject.name} health changed");
-		
 		if(isKilled)
 		{
 			Debug.Log($"[Client {NetworkManager.LocalClientId}] {gameObject.name} is dead!");
-		
-			if(NetworkManager.LocalClientId == OwnerClientId)
-			{
-				_respawnTimer.Reset();
-				_respawnTimer.OnTimerEnd += RespawnPlayer;
-			}
-		
+
+			_respawnTimer.Reset();
+			_respawnTimer.OnTimerEnd += RespawnPlayer;
+
 			OnDeath?.Invoke(this, new PlayerIdEventArgs
 			{
 				PlayerId = OwnerClientId
@@ -240,27 +235,24 @@ public class Player : NetworkBehaviour, IHasHealth
 	private void RespawnPlayer(object sender, EventArgs e)
 	{
 		_respawnTimer.OnTimerEnd -= RespawnPlayer;
-		
+		Debug.Log($"Respawning player");
 		RespawnPlayerServerRpc(OwnerClientId, PlayerStats.StartingPlayerHealth);
 	}
-	
+
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void RespawnPlayerServerRpc(ulong respawnerId, int healthToRespawnWith)
 	{
 		HealthNetworkVariable.Value = healthToRespawnWith;
-		
+
 		RespawnPlayerClientRpc(RpcTarget.Single(respawnerId, RpcTargetUse.Persistent));
 	}
-	
+
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void RespawnPlayerClientRpc(RpcParams rpcParams = default)
 	{
-		if(NetworkManager.LocalClientId == rpcParams.Receive.SenderClientId)
-		{
-			transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
-		}
-		
-		if(LocalClientInstance.CurrentBiome.Value != _spawnBiome)
+		transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
+
+		if (CurrentBiome.Value != _spawnBiome)
 		{
 			WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint, false);
 		}

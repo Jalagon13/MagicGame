@@ -355,7 +355,6 @@ public class InventoryManager : MonoBehaviour
 				SlotIndex = clickedInventorySlotIndex
 			});
 
-			PlayClickFeedbacks();
 			_inventoryModel.UpdateInventory();
 			OnInventorySlotClicked?.Invoke(this, EventArgs.Empty);
 			return;
