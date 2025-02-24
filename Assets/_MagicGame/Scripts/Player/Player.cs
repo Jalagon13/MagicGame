@@ -51,6 +51,7 @@ public class Player : NetworkBehaviour, IHasHealth
 
 	public NetworkVariable<int> HealthNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	public NetworkVariable<bool> ExecutingIFrames { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	public NetworkVariable<bool> PvpEnabled { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	
 	public Knockback _playerKnockback { get; private set; }
 	private Timer _respawnTimer;
@@ -144,12 +145,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		}
 	}
 
-	private void DashTest(object sender, EventArgs e)
-	{
-		if(Pointer.IsOverUI() || ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo)) return;
-		_playerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, _knockbackResist, 30, true); 
-	}
-
 	private void Update()
 	{
 		if(IsDead() && NetworkManager.LocalClientId == OwnerClientId)
@@ -158,12 +153,26 @@ public class Player : NetworkBehaviour, IHasHealth
 		}
 	}
 	
+	public void TogglePvp(bool pvpEnabled)
+	{
+		PvpEnabled.Value = pvpEnabled;
+		Debug.Log($"Pvp enabled: {PvpEnabled.Value}");
+	}
+
+	private void DashTest(object sender, EventArgs e)
+	{
+		if (Pointer.IsOverUI() || ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo)) return;
+		_playerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, _knockbackResist, 30, true);
+	}
+
 	#region Damage Functions
-	
+
 	public void ApplyDamage(int damage, Vector2 damagerPosition, int knockbackForce)
 	{
 		if (IsDead()) return;
-		Debug.Log($"Damaging {gameObject.name} from damager pos {damagerPosition}, with knockback {knockbackForce}");
+
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerDamaged, transform.position);
+
 		ApplyPlayerDamageServerRpc(OwnerClientId, damage, damagerPosition, knockbackForce);
 	}
 	

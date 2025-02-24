@@ -69,7 +69,7 @@ public class Pathfinding : NetworkBehaviour
 			// Loop through all chunks this player has loaded and try to remove them from the pathfinding tilemap
 			foreach (Vector2Int chunkPos in _playerToChunks[clientId])
 			{
-				if(!IsChunkInUse(chunkPos, _currentPlayerBiome))
+				if(!IsChunkInUse(chunkPos, _currentPlayerBiome, clientId))
 				{
 					BiomeToLoadedPathfindingChunks[_currentPlayerBiome].Chunks.Remove(chunkPos);
 					
@@ -184,7 +184,7 @@ public class Pathfinding : NetworkBehaviour
 	{
 		_playerToChunks[clientId].Remove(chunkPos);
 
-		if(!IsChunkInUse(chunkPos, biome))
+		if(!IsChunkInUse(chunkPos, biome, clientId))
 		{
 			if(!BiomeToLoadedPathfindingChunks.ContainsKey(biome)) return;
 		
@@ -223,11 +223,13 @@ public class Pathfinding : NetworkBehaviour
 	}
 
 	// Checks if another player needs the pathfinding for this chunk
-	private bool IsChunkInUse(Vector2Int chunkPos, BiomeType biome)
+	private bool IsChunkInUse(Vector2Int chunkPos, BiomeType biome, ulong clientId)
 	{
 		// If a player still has chunk active
 		foreach (var kvp in _playerToChunks)
 		{
+			if(kvp.Key == clientId) continue; // Only process other players need the chunk in use
+
 			// Loop through only players in the same environment being tested
 			if(NetworkManager.ConnectedClients[kvp.Key].PlayerObject.GetComponent<Player>().CurrentBiome.Value != biome) continue;
 		

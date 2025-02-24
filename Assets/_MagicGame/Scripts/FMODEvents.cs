@@ -13,6 +13,7 @@ public class FMODEvents : MonoBehaviour
 	[field: SerializeField] public EventReference FocusSlotChanged { get; private set; }
 	[field: SerializeField] public EventReference InventoryOpen { get; private set; }
 	[field: SerializeField] public EventReference InventoryClose { get; private set; }
+	[field: SerializeField] public EventReference PlayerDamaged { get; private set; }
 	
 	[field: Header("Tool SFX")]
 	[field: SerializeField] public EventReference WandCast { get; private set; }

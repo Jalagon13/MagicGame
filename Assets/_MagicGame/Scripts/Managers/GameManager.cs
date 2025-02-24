@@ -315,4 +315,13 @@ public class GameManager : NetworkBehaviour
 	
 	#endregion
 	
+	public void TogglePvp(bool pvpEnabled)
+	{
+		if(Player.LocalClientInstance != null)
+		{
+			Debug.Log($"Pvp enabled: {pvpEnabled}");
+			Player.LocalClientInstance.TogglePvp(pvpEnabled);
+		}
+	}
+	
 }

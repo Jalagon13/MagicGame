@@ -38,8 +38,6 @@ public class PlayerNetworkComponent : NetworkBehaviour
 			return false;
 		}
 
-		Debug.Log($"ownerClientBiome {ownerClientBiome}. nonClientIdPlayerBiome {nonClientIdPlayerBiome}");
-		
 		return ownerClientBiome == nonClientIdPlayerBiome;
 	}
 
@@ -52,7 +50,7 @@ public class PlayerNetworkComponent : NetworkBehaviour
 			// Now testing non owner client's ids
 			var shouldBeVisible = CheckVisibility(clientId);
 			var isVisibile = NetworkObjectVisibleTo(clientId);
-			Debug.Log($"player id {clientId} should be vis: {shouldBeVisible}, isvis: {isVisibile}");
+
 			if(shouldBeVisible && !isVisibile)
 			{
 				ShowPlayer(clientId);

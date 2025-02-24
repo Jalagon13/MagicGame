@@ -62,6 +62,8 @@ public class ManaBolt : Spell
 		
 		if (collider.TryGetComponent(out IHasHealth npcToDamage))
 		{
+			if(collider.TryGetComponent(out Player player) && !player.PvpEnabled.Value) return;
+		
 			PlayHitParticles();
 		
 			if(_spawnPlayerId == Player.LocalClientInstance.OwnerClientId)

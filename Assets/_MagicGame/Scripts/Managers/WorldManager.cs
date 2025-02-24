@@ -287,7 +287,10 @@ public class WorldManager : NetworkBehaviour
 	{
 		if(IsServer)
 		{
-			NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected_SyncTime;
+			if(NetworkManager.Singleton != null)
+			{
+				NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected_SyncTime;
+			}
 		}
 		
 		base.OnDestroy();
