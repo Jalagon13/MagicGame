@@ -51,7 +51,7 @@ public class CinderBolt : Spell
 	protected override void CastSpell()
 	{
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-		_rigidbody2D.AddForce(_directionNormalized * _speed, ForceMode2D.Impulse);
+		_rigidbody2D.linearVelocity = _directionNormalized * _speed;
 	}
 
 	private void UpdateTimers()

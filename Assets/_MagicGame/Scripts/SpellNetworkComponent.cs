@@ -41,7 +41,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 		}
 		
 		// Find walldetectorcollider and populate it
-		var wallDetectorCollider = GetComponentInChildren<WallDetectorCollider>();
+		var wallDetectorCollider = GetComponentInChildren<WallColliderDetector>();
 		if(wallDetectorCollider != null)
 		{
 			wallDetectorCollider.SetEnvironment(biome, Pathfinding.Instance.GetExistingPathfindingBiomes());

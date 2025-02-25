@@ -171,8 +171,6 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		if (IsDead()) return;
 
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerDamaged, transform.position);
-
 		ApplyPlayerDamageServerRpc(OwnerClientId, damage, damagerPosition, knockbackForce);
 	}
 	
@@ -228,7 +226,8 @@ public class Player : NetworkBehaviour, IHasHealth
 		else
 		{
 			Debug.Log($"[Client {NetworkManager.LocalClientId}] Applied {finalDamage} Damage to {gameObject.name}!");
-			
+
+			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerDamaged, transform.position);
 			_playerKnockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce); 
 			
 			OnDamaged?.Invoke(this, new OnDamagedEventArgs
@@ -244,7 +243,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	private void RespawnPlayer(object sender, EventArgs e)
 	{
 		_respawnTimer.OnTimerEnd -= RespawnPlayer;
-		Debug.Log($"Respawning player");
+		
 		RespawnPlayerServerRpc(OwnerClientId, PlayerStats.StartingPlayerHealth);
 	}
 

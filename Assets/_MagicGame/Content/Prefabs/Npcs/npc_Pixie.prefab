@@ -22,7 +22,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _maxHealth
-      value: 80
+      value: 140
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _invincible
@@ -35,6 +35,26 @@ PrefabInstance:
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _knockbackResist
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _damageSound.Path
+      value: event:/PixieDamaged
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _damageSound.Guid.Data1
+      value: 3190678
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _damageSound.Guid.Data2
+      value: 1255253222
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _damageSound.Guid.Data3
+      value: 756817558
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _damageSound.Guid.Data4
+      value: 811093164
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <IFrameLength>k__BackingField
@@ -59,6 +79,10 @@ PrefabInstance:
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[0].Chance
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405255178129098330, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_Name
+      value: WallColliderDetector
       objectReference: {fileID: 0}
     - target: {fileID: 3885697903487451157, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Radius
@@ -111,7 +135,7 @@ PrefabInstance:
     - target: {fileID: 4388047220858872420, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 6200000, guid: 2a93957d1b6314d99a78e3a3f64ea335, type: 2}
     - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Size.x
       value: 0.875
@@ -136,6 +160,14 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6259124446735330549, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_LinearDamping
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259124446735330549, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6511669604684677142, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -157,7 +189,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4077060664882696098}
+      addedObject: {fileID: 1128419025561723060}
   m_SourcePrefab: {fileID: 100100000, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
 --- !u!4 &329499382101062068 stripped
 Transform:
@@ -185,7 +217,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
   m_PrefabInstance: {fileID: 1559072833224275270}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4077060664882696098
+--- !u!114 &1128419025561723060
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -194,54 +226,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6633633827701661900}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
+  m_Script: {fileID: 11500000, guid: f774010abe4144a1da135dd683304a26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  m_Graph: {fileID: 5221345960659253865, guid: 5ac255e98b59d4eef88e14ffbc2d66f8, type: 2}
-  m_BlackboardVariableOverridesList:
-  - rid: 7040998723637215922
-  - rid: 7040998723637216048
-  - rid: 7040998723637216116
-  - rid: 7040998905553617105
-  m_IsInitialised: 0
-  m_IsStarted: 0
-  NetcodeRunOnlyOnOwner: 1
-  references:
-    version: 2
-    RefIds:
-    - rid: 7040998723637215922
-      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1
-          m_Value1: 0
-        Name: Self
-        m_Value: {fileID: 6633633827701661900}
-    - rid: 7040998723637216048
-      type: {class: 'BlackboardVariable`1[[WallDetectorCollider, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 18446096413786956287
-          m_Value1: 12344455218077470767
-        Name: New Wall Detector Collider
-        m_Value: {fileID: 2548604085223437188}
-    - rid: 7040998723637216116
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 12356672323633413662
-          m_Value1: 15247479222851115125
-        Name: Speed
-        m_Value: 4
-    - rid: 7040998905553617105
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 11509616444726985924
-          m_Value1: 2096565425505052268
-        Name: TurnSharpness
-        m_Value: 10
+  _speed: 6
+  _turnSharpness: 3
+  _moveDirectionBias: 0.75
+  _bounceStrength: 5
+  _wallDetectorCollider: {fileID: 2548604085223437188}
 --- !u!1001 &5801241907322578021
 PrefabInstance:
   m_ObjectHideFlags: 0

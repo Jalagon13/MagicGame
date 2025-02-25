@@ -21,7 +21,7 @@ MonoBehaviour:
   <CastDelay>k__BackingField: 0.15
   <Damage>k__BackingField: 6
   <ManaCost>k__BackingField: 9
-  <Knockback>k__BackingField: 5
+  <Knockback>k__BackingField: 12
   <Accuracy>k__BackingField: 1
   <Lifetime>k__BackingField: 1.5
   <Speed>k__BackingField: 14

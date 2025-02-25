@@ -475,14 +475,14 @@ MonoBehaviour:
   <IFrameLength>k__BackingField: 0.67
   _knockbackResist: 0
   _startingItems:
-  - Item: {fileID: 11400000, guid: d4e4d8d6ce2d3416b87474a4415b1967, type: 2}
-    Quantity: 5
+  - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
+    Quantity: 55
   _spawnWandItems: 1
   _startingWandItems:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
+    - {fileID: 11400000, guid: a5216a2d1badc487fb81cd1a19d7a28a, type: 2}
   - Item: {fileID: 11400000, guid: 1cf699ca803ee4a948f9d763ddf2409d, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
@@ -503,7 +503,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _mainHand: {fileID: 4604921083407888490}
   _knockbackResist: 20
-  _speed: 4
+  _speed: 5
   _spriteAnimationHandlerList:
   - {fileID: 5137825302037799411}
   - {fileID: 7721777825053776820}

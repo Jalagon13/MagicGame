@@ -9,6 +9,6 @@ PhysicsMaterial2D:
   m_Name: SpellBounce
   serializedVersion: 2
   friction: 0
-  bounciness: 0.75
-  m_FrictionCombine: 0
+  bounciness: 1
+  m_FrictionCombine: 2
   m_BounceCombine: 1

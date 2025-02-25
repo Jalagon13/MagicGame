@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TwinBurst : Spell
 {
-	[SerializeField] private WallDetectorCollider _wallDetectorCollider;
+	[SerializeField] private WallColliderDetector _wallDetectorCollider;
 	[SerializeField] private ParticleSystem _hitParticles;
 
 	private Rigidbody2D _rigidbody2D;
@@ -17,7 +17,7 @@ public class TwinBurst : Spell
 
     void Start()
     {
-		_wallDetectorCollider.OnWallCollide += OnWallCollide;
+		_wallDetectorCollider.OnTouchingWall += OnWallCollide;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -73,14 +73,14 @@ public class TwinBurst : Spell
 			_spellNetworkComponent = GetComponent<SpellNetworkComponent>();
 	}
 
-	private void OnWallCollide(object sender, WallDetectorCollider.WallCollisionEventArgs e)
+	private void OnWallCollide(object sender, WallColliderDetector.WallCollisionEventArgs e)
 	{
 		_spellNetworkComponent.StopProjectile();
 	}
 	
 	public override void OnDestroy()
 	{
-		_wallDetectorCollider.OnWallCollide -= OnWallCollide;
+		_wallDetectorCollider.OnTouchingWall -= OnWallCollide;
 	
 		var go = Instantiate(_hitParticles.gameObject, transform.position, Quaternion.identity);
 		go.GetComponent<ParticleSystem>().Play();

@@ -64,7 +64,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 		_npcId = npcId;
 		
 		// Find walldetectorcollider and populate it
-		var wallDetectorCollider = GetComponentInChildren<WallDetectorCollider>();
+		var wallDetectorCollider = GetComponentInChildren<WallColliderDetector>();
 		if(wallDetectorCollider != null)
 		{
 			wallDetectorCollider.SetEnvironment(biome, Pathfinding.Instance.GetExistingPathfindingBiomes());

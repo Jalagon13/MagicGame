@@ -4,18 +4,18 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class WallDetectorCollider : MonoBehaviour
+public class WallColliderDetector : MonoBehaviour
 {
 	// Define the event
-	public event EventHandler<WallCollisionEventArgs> OnWallCollide;
+	public event EventHandler<WallCollisionEventArgs> OnTouchingWall;
 	public class WallCollisionEventArgs : EventArgs
 	{
-		public Vector2 ContactNormal;
+		public ContactPoint2D[] ContactPoints;
 	} 
 	
 	private BiomeType _colliderBiome;
 	private Collider2D _wallDetectorCollider;
-	
+
 	private void Awake()
 	{
 		_wallDetectorCollider = GetComponent<Collider2D>();
@@ -47,21 +47,21 @@ public class WallDetectorCollider : MonoBehaviour
 			}
 		}
 	}
-
-	private void OnCollisionStay2D(Collision2D collision)
+	
+	private void OnCollisionEnter2D(Collision2D other)
 	{
-		if(Player.LocalClientInstance.OwnerClientId == NetworkManager.ServerClientId)
+		if (Player.LocalClientInstance.OwnerClientId == NetworkManager.ServerClientId)
 		{
-			if(collision.gameObject.layer == 9) return; // If is server, do not collide with local walls
+			if (other.gameObject.layer == 9) return; // Ignore local walls for the server
 		}
-		
-		// Pass the point of contact to the event
-		OnWallCollide?.Invoke(this, new WallCollisionEventArgs()
+
+		// Trigger the bounce/knockback effect immediately
+		OnTouchingWall?.Invoke(this, new WallCollisionEventArgs()
 		{
-			ContactNormal = collision.contacts[0].normal
+			ContactPoints = other.contacts
 		});
 	}
-	
+
 	private void OnDestroy()
 	{
 		Pathfinding.Instance.OnPathfindingTilemapCreated -= UpdateCollisions;

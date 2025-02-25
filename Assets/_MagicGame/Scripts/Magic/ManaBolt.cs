@@ -7,7 +7,7 @@ public class ManaBolt : Spell
 {
 	[SerializeField] private ParticleSystem _hitParticles;
 	[SerializeField] private ParticleSystem _trailParticles;
-	[SerializeField] private WallDetectorCollider _wallDetectorCollider;
+	[SerializeField] private WallColliderDetector _wallDetectorCollider;
 	[SerializeField] private float _velocityDecay = 5f; 
 	
 	private Rigidbody2D _rigidbody2D;
@@ -16,7 +16,7 @@ public class ManaBolt : Spell
 	private void Awake()
 	{
 		_rigidbody2D = GetComponent<Rigidbody2D>();
-		_wallDetectorCollider.OnWallCollide += OnWallCollide;
+		_wallDetectorCollider.OnTouchingWall += OnWallCollide;
 		_trailParticles.gameObject.transform.parent = null;
 		
 		Initialize();
@@ -44,7 +44,7 @@ public class ManaBolt : Spell
 		_trailParticles.transform.SetPositionAndRotation(_rigidbody2D.position, Quaternion.identity);
 	}
 
-	private void OnWallCollide(object sender, WallDetectorCollider.WallCollisionEventArgs e)
+	private void OnWallCollide(object sender, WallColliderDetector.WallCollisionEventArgs e)
 	{
 		PlayHitParticles();
 		_spellNetworkComponent.StopProjectile();
@@ -89,7 +89,7 @@ public class ManaBolt : Spell
 	
 	public override void OnDestroy()
 	{
-		_wallDetectorCollider.OnWallCollide -= OnWallCollide;
+		_wallDetectorCollider.OnTouchingWall -= OnWallCollide;
 
 		var main = _trailParticles.main;
 		main.loop = false;

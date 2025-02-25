@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FMODUnity;
 using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using Unity.Behavior;
@@ -9,7 +10,7 @@ using UnityEngine;
 [RequireComponent(typeof(NpcNetworkComponent))]
 public class Npc : NetworkBehaviour, IHasHealth
 {	
-	public event EventHandler OnNpcKilled;
+	public event System.EventHandler OnNpcKilled;
 	public event EventHandler<OnNpcDamagedEventArgs> OnNpcDamged;
 	public class OnNpcDamagedEventArgs : EventArgs
 	{
@@ -23,21 +24,19 @@ public class Npc : NetworkBehaviour, IHasHealth
 	[field: SerializeField] public float IFrameLength { get; private set; } = 0.166f;
 	[SerializeField] private int _damage;
 	[SerializeField] private DamageCollider _damageCollider;
-	[SerializeField] private MMF_Player _damageNumberFeedbacks;
 	[field: SerializeField] public List<Loot> Table { get; private set; }
 	
 	private NetworkVariable<int> _npcHealthPointNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private Vector2 _damageSourcePosition;
 	private Knockback _knockback;
 	private Timer _iFrameTimer;
-	[SerializeField] private BehaviorGraphAgent _behaviorGraph;
+	[SerializeField] private EventReference _damageSound;
 	private Rigidbody2D _rb2d;
 	public BiomeType Biome { get { return GetComponent<NpcNetworkComponent>().NpcBiomeType; } }
 	
 	private void Awake()
 	{
 		_knockback = GetComponent<Knockback>();
-		_behaviorGraph = GetComponent<BehaviorGraphAgent>();
 		_rb2d = GetComponent<Rigidbody2D>();
 		
 		if(_damageCollider != null)
@@ -68,10 +67,10 @@ public class Npc : NetworkBehaviour, IHasHealth
 			_iFrameTimer.Tick(Time.deltaTime);
 		}
 		
-		if(_knockback != null && _rb2d != null && _behaviorGraph == null) // If has knockback but no behavior, handle knockback here
-		{
-			_rb2d.MovePosition(_rb2d.position + _knockback.Velocity * Time.fixedDeltaTime);
-		}
+		// if(_knockback != null && _rb2d != null) // If has knockback but no behavior, handle knockback here
+		// {
+		// 	_rb2d.MovePosition(_rb2d.position + _knockback.Velocity * Time.fixedDeltaTime);
+		// }
 	}
 
 	private void OnDamged(int previousValue, int newValue)
@@ -88,6 +87,8 @@ public class Npc : NetworkBehaviour, IHasHealth
 
 	public void ApplyDamage(int damage, Vector2 damagerPosition, int knockbackForce)
 	{
+		SoundManager.Instance.PlayOneShot(_damageSound, transform.position);
+	
 		DamageNpcServerRpc(damage, damagerPosition, knockbackForce);
 	}
 	

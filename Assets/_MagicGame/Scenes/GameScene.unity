@@ -1373,7 +1373,7 @@ Camera:
   far clip plane: 5000
   field of view: 9.75
   orthographic: 1
-  orthographic size: 9.75
+  orthographic size: 10
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -7012,7 +7012,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 20.900024, y: 138.58997}
+  m_AnchoredPosition: {x: 20.899902, y: 138.58997}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1233773355
@@ -8733,7 +8733,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <TestDummyPrefab>k__BackingField: {fileID: 7196159128457008191, guid: c87107d07ca65446598c8fdd66eaeab4, type: 3}
+  <TestDummyPrefab>k__BackingField: {fileID: 4084959978081132949, guid: 2ea8fc6c5eed84386a995f5f8f46a35f, type: 3}
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
   _enableSpawning: 0
   _enableTestSpawning: 1
@@ -10124,7 +10124,7 @@ MonoBehaviour:
     CustomLookAtTarget: 0
   Lens:
     FieldOfView: 9.75
-    OrthographicSize: 9.75
+    OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
     Dutch: 0
