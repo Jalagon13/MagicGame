@@ -22,7 +22,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _maxHealth
-      value: 140
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _invincible
@@ -135,7 +135,7 @@ PrefabInstance:
     - target: {fileID: 4388047220858872420, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 6200000, guid: 2a93957d1b6314d99a78e3a3f64ea335, type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Size.x
       value: 0.875
@@ -201,17 +201,6 @@ CircleCollider2D:
   m_CorrespondingSourceObject: {fileID: 3885697903487451157, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
   m_PrefabInstance: {fileID: 1559072833224275270}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2548604085223437188 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3962188637907535554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
-  m_PrefabInstance: {fileID: 1559072833224275270}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3b15608eccbc4cabbae559c4ceab4b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6633633827701661900 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
@@ -229,11 +218,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f774010abe4144a1da135dd683304a26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 6
+  _speed: 4
   _turnSharpness: 3
-  _moveDirectionBias: 0.75
-  _bounceStrength: 5
-  _wallDetectorCollider: {fileID: 2548604085223437188}
+  _moveDirectionBias: 0.35
+  _distanceThreshold: 0.5
+  _timeThreshold: 0.5
+  _fleeTime: 0.75
 --- !u!1001 &5801241907322578021
 PrefabInstance:
   m_ObjectHideFlags: 0
