@@ -9,8 +9,8 @@ public class BreadCrumb : MonoBehaviour
     private BiomeType _biome;
     private float _expirationTime;
 
-    // Public property to access the biome
     public BiomeType Biome => _biome;
+    public float RemainingLifeTime => Mathf.Max(_expirationTime - Time.time, 0f);
 
     public void InitializeBreadCrumb(BiomeType biome)
     {
@@ -26,7 +26,7 @@ public class BreadCrumb : MonoBehaviour
             if (collider != _breadCrumbCollider) // Ignore self
             {
                 BreadCrumb existingBreadCrumb = collider.GetComponent<BreadCrumb>();
-                
+
                 if (existingBreadCrumb != null && existingBreadCrumb.Biome == _biome) // Use property here
                 {
                     existingBreadCrumb.Refresh(); // Refresh existing breadcrumb

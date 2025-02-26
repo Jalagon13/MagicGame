@@ -21,8 +21,13 @@ MonoBehaviour:
     - Prefab: {fileID: 6633633827701661900, guid: 2ea8fc6c5eed84386a995f5f8f46a35f, type: 3}
       SlotAmount: 1
       RelativeSpawnWeight: 100
-      SpawnCondition: 0
-    - Prefab: {fileID: 3583022790027280923, guid: 76e6b789865fd4c36b4f8a08b98df0ac, type: 3}
-      SlotAmount: 0.5
-      RelativeSpawnWeight: 0.01
       SpawnCondition: 1
+  - Biome: 1
+    SpawnRateDenominator: 500
+    MaxNpcSlotAmount: 6
+    HasDayNightCycle: 0
+    NpcSpawnTable:
+    - Prefab: {fileID: 6633633827701661900, guid: 8400ae4f3ed2f487fb0bbb1a07a80f0f, type: 3}
+      SlotAmount: 1
+      RelativeSpawnWeight: 100
+      SpawnCondition: 0

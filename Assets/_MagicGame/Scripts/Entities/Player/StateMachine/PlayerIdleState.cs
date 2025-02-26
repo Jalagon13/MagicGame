@@ -20,7 +20,7 @@ public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override void ExitState()
 	{
-		// Animation cleanup
+		
 	}
 
 	public override PlayerStateMachine.PlayerState GetNextState()
@@ -42,7 +42,6 @@ public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 			_ctx.Velocity = Vector2.zero;
 		}
 		
-		// _ctx.RigidBody2D.MovePosition(_ctx.RigidBody2D.position + _ctx.Velocity * Time.fixedDeltaTime);
 		_ctx.RigidBody2D.linearVelocity = _ctx.Velocity;
 	}
 }

@@ -16,8 +16,8 @@ TagManager:
   - WallDetectorCollider
   - PlayerFeetCollider
   - LocalWall
-  - 
-  - 
+  - Breadcrumb
+  - Player
   - 
   - 
   - 

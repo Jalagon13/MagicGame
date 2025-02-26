@@ -170,7 +170,6 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		GameObject breadCrumb = Instantiate(_breadCrumbPrefab, new Vector2(spawnPos.x + 0.5f, spawnPos.y + 0.5f), Quaternion.identity);
 		breadCrumb.GetComponent<BreadCrumb>().InitializeBreadCrumb(CurrentPlayerBiome.Value);
-		Debug.Log($"player {rpcParams.Receive.SenderClientId} spawning breadcrumb. sender pos: {transform.position}, tilePos: {spawnPos}");
 		GameManager.Instance.InvokeSpawnBreadCrumbEvent(breadCrumb);
 	}
 

@@ -3,7 +3,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PixieAI : MonoBehaviour
+public class PixieAI : NetworkBehaviour
 {
 	[SerializeField] private float _speed;
 	[SerializeField] private float _turnSharpness;
@@ -39,7 +39,7 @@ public class PixieAI : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (_isFleeing) return; // Don't update movement if fleeing
+		if (_isFleeing || !IsServer) return; 
 
 		_closestPlayer = GetClosestPlayer();
 		if (_closestPlayer == null || !_closestPlayer.gameObject.activeInHierarchy)

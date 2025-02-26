@@ -55,7 +55,6 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 			_ctx.Velocity = Vector2.Lerp(_ctx.Velocity, desiredDirection * _ctx.Speed, _ctx.TurnSharpness * Time.fixedDeltaTime);
 		}
 		
-		// _ctx.RigidBody2D.MovePosition(_ctx.RigidBody2D.position + _ctx.Velocity * Time.fixedDeltaTime);
 		_ctx.RigidBody2D.linearVelocity = _ctx.Velocity;
 	}
 	

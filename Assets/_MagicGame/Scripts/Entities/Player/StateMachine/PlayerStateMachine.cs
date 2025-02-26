@@ -87,6 +87,8 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 
 	protected override void FixedUpdate()
 	{
+		base.FixedUpdate();
+
 		var isHoldingWand = _thisPlayer.IsHoldingAWand();
 		var isSwingOnGoing = _thisPlayer.IsPerformingSwing;
 		
@@ -104,8 +106,6 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 
 		// Update _previousIsMoving to the current IsMoving value
 		_previousIsMoving = IsMoving;
-		
-		base.FixedUpdate();
 	}
 	
 	private void WorldManager_AllowMovement(object sender, EventArgs e)
