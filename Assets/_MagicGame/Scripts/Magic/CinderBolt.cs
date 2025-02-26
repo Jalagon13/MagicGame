@@ -77,22 +77,22 @@ public class CinderBolt : Spell
 	{
 		Debug.Log($"{name}");
 	
-		var go = Instantiate(_detonateParticles.gameObject, transform.position, Quaternion.identity);
-		go.GetComponent<ParticleSystem>().Play();
+		// var go = Instantiate(_detonateParticles.gameObject, transform.position, Quaternion.identity);
+		// go.GetComponent<ParticleSystem>().Play();
 
-		if (IsServer)
-		{
-			Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _explosionRadius);
-			foreach (var collider in hitColliders)
-			{
-				if(ColliderIsSourcePlayer(collider)) continue;
+		// if (IsServer)
+		// {
+		// 	Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _explosionRadius);
+		// 	foreach (var collider in hitColliders)
+		// 	{
+		// 		if(ColliderIsSourcePlayer(collider)) continue;
 			
-				if (collider.TryGetComponent(out IHasHealth npcToDamage2))
-				{
-					npcToDamage2.ApplyDamage(_damage, transform.position, _knockback);
-				}
-			}
-		}
+		// 		if (collider.TryGetComponent(out IHasHealth npcToDamage2))
+		// 		{
+		// 			npcToDamage2.ApplyDamage(_damage, transform.position, _knockback);
+		// 		}
+		// 	}
+		// }
 
 		base.OnDestroy();
 	}

@@ -91,7 +91,7 @@ public class PixieAI : MonoBehaviour
 
 	private IEnumerator TryToFindDifferentPathToPlayer()
 	{
-		Debug.Log("Pixie is stuck! Fleeing...");
+		// Debug.Log("Pixie is stuck! Fleeing...");
 		_isFleeing = true;
 
 		// Get direction AWAY from the player
@@ -107,7 +107,7 @@ public class PixieAI : MonoBehaviour
 
 		_isFleeing = false;
 		_clockwise = !_clockwise;
-		Debug.Log("Pixie is returning to the player.");
+		// Debug.Log("Pixie is returning to the player.");
 
 		// Smoothly transition _moveDirectionBias from 1 to 0.5 over 1.5 seconds
 		float transitionTime = 1.5f;

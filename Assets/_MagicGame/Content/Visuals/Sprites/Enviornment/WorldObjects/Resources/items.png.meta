@@ -528,28 +528,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_destruction_tome
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 80
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b1132c58aabc74f0ab35b8f15078367a
-      internalID: -1033124662
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: item_portal
       rect:
         serializedVersion: 2
@@ -769,6 +747,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: item_bouncy_battle_ball
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e972f482dfa9d4651b61c888dd2df98a
+      internalID: 1567280107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -787,6 +787,7 @@ TextureImporter:
       item_axe: -1431561084
       item_blacksmith: -89414543
       item_blue_bell: -1747701128
+      item_bouncy_battle_ball: 1567280107
       item_campfire: -925800054
       item_chest: -1010797688
       item_chicken: 1104096443
