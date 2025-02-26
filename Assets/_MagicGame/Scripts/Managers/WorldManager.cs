@@ -138,7 +138,7 @@ public class WorldManager : NetworkBehaviour
 		ChunkManager.Instance.UnloadAllChunks();
 		ObjectManager.Instance.ClearAllEnvironmentObjectVisuals();
 		
-		LoadEnvironmentServerRpc(searchForPortal, portalPosition, Player.LocalClientInstance.CurrentBiome.Value, targetBiome);
+		LoadEnvironmentServerRpc(searchForPortal, portalPosition, Player.LocalClientInstance.CurrentPlayerBiome.Value, targetBiome);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
@@ -195,7 +195,7 @@ public class WorldManager : NetworkBehaviour
 	private void LoadChunksClientRpc(BiomeType toBiome, bool searchForPortal, Vector2 portalPosition, RpcParams rpcParams)
 	{
 		Debug.Log($"Player biome: {toBiome} Allowing client to load chunks");
-		Player.LocalClientInstance.CurrentBiome.Value = toBiome;
+		Player.LocalClientInstance.CurrentPlayerBiome.Value = toBiome;
 		
 		// Invoke it first to prep the last chunk position to garentee a new set of chunks to generate, then set loadingbiome to true to resume the update method
 		Environment.Instance.TileVisibilityDict.Clear();
@@ -255,7 +255,7 @@ public class WorldManager : NetworkBehaviour
 	{
 		Debug.Log("Portal NOT found. Placing player at new portal that is spawned");
 		Vector2Int v2IntPos = new(Mathf.RoundToInt(portalPosition.x), Mathf.RoundToInt(portalPosition.y));
-		ObjectManager.Instance.PlaceObject(v2IntPos, _portalObjectPrefab, Player.LocalClientInstance.CurrentBiome.Value);
+		ObjectManager.Instance.PlaceObject(v2IntPos, _portalObjectPrefab, Player.LocalClientInstance.CurrentPlayerBiome.Value);
 	}
 	
 	private void PlacePlayerAt(Vector2 portalPosition)

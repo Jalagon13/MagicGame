@@ -35,10 +35,11 @@ public class Player : NetworkBehaviour, IHasHealth
 	[field: SerializeField] public Transform ProjectileSpawnPointTf { get; private set; }
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
+	[SerializeField] private GameObject _breadCrumbPrefab;
 	public PlayerStats PlayerStats { get; private set; }
 	public NetworkVariable<int> MainHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	public NetworkVariable<BiomeType> CurrentBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	public BiomeType Biome { get { return CurrentBiome.Value; } }
+	public NetworkVariable<BiomeType> CurrentPlayerBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public BiomeType Biome { get { return CurrentPlayerBiome.Value; } }
 	public Collider2D HitCollider { get; private set; }
 	public bool IsPerformingSwing { get; set; }
 	
@@ -57,6 +58,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	private Timer _respawnTimer;
 	private Vector2 _spawnPoint;
 	private BiomeType _spawnBiome;
+	private Vector2Int _lastTilePosition;
 	
 	private void Awake()
 	{
@@ -76,7 +78,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			LocalClientInstance = this;
 			
-			CurrentBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
+			CurrentPlayerBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
 			_spawnBiome = BiomeType.Forest;
 			_spawnPoint = transform.position;
 			
@@ -151,21 +153,34 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			_respawnTimer.Tick(Time.deltaTime);
 		}
+
+		if(IsOwner)
+		{
+		    Vector2Int newTilePosition = new(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
+			if(newTilePosition != _lastTilePosition)
+			{
+				_lastTilePosition = newTilePosition;
+				SpawnBreadCrumbServerRpc(_lastTilePosition);
+			}
+		}
 	}
-	
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void SpawnBreadCrumbServerRpc(Vector2Int spawnPos, RpcParams rpcParams = default)
+	{
+		GameObject breadCrumb = Instantiate(_breadCrumbPrefab, new Vector2(spawnPos.x + 0.5f, spawnPos.y + 0.5f), Quaternion.identity);
+		breadCrumb.GetComponent<BreadCrumb>().InitializeBreadCrumb(CurrentPlayerBiome.Value);
+		Debug.Log($"player {rpcParams.Receive.SenderClientId} spawning breadcrumb. sender pos: {transform.position}, tilePos: {spawnPos}");
+		GameManager.Instance.InvokeSpawnBreadCrumbEvent(breadCrumb);
+	}
+
+	#region Life Cycle Functions
+
 	public void TogglePvp(bool pvpEnabled)
 	{
 		PvpEnabled.Value = pvpEnabled;
 		Debug.Log($"Pvp enabled: {PvpEnabled.Value}");
 	}
-
-	private void DashTest(object sender, EventArgs e)
-	{
-		if (Pointer.IsOverUI() || ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo)) return;
-		_playerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, _knockbackResist, 30, true);
-	}
-
-	#region Damage Functions
 
 	public void ApplyDamage(int damage, Vector2 damagerPosition, int knockbackForce)
 	{
@@ -190,7 +205,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		playerNetworkObject.GetComponent<Player>().HealthNetworkVariable.Value = Mathf.Max(0, HealthNetworkVariable.Value - finalDamage);
 		playerNetworkObject.GetComponent<Player>().ExecuteIFrames();
 		
-		GameManager.Instance.PlayDamageNumbers(damageAmount, transform.position, CurrentBiome.Value);
+		GameManager.Instance.PlayDamageNumbers(damageAmount, transform.position, CurrentPlayerBiome.Value);
 		
 		bool isPlayerDead = HealthNetworkVariable.Value <= 0;
 		
@@ -237,13 +252,11 @@ public class Player : NetworkBehaviour, IHasHealth
 			});
 		}
 	}
-	
-	#endregion
-	
+
 	private void RespawnPlayer(object sender, EventArgs e)
 	{
 		_respawnTimer.OnTimerEnd -= RespawnPlayer;
-		
+
 		RespawnPlayerServerRpc(OwnerClientId, PlayerStats.StartingPlayerHealth);
 	}
 
@@ -260,7 +273,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
 
-		if (CurrentBiome.Value != _spawnBiome)
+		if (CurrentPlayerBiome.Value != _spawnBiome)
 		{
 			WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint, false);
 		}
@@ -269,6 +282,14 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			PlayerId = OwnerClientId
 		});
+	}
+
+	#endregion
+
+	private void DashTest(object sender, EventArgs e)
+	{
+		if (Pointer.IsOverUI() || ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo)) return;
+		_playerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, _knockbackResist, 30, true);
 	}
 
 	private void HealthNetworkVariable_OnValueChanged(int previousValue, int newValue)

@@ -159,7 +159,7 @@ public class ObjectManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void HandleDoorVisualsClientRpc(Vector2Int doorPos, bool isOpen, BiomeType biome)
 	{
-		if(biome == Player.LocalClientInstance.CurrentBiome.Value)
+		if(biome == Player.LocalClientInstance.CurrentPlayerBiome.Value)
 		{
 			// If there exists a door in this position, set its open value to isOpen
 			var colliders = Physics2D.OverlapPointAll(doorPos + new Vector2(0.5f, 0.5f));
@@ -201,7 +201,7 @@ public class ObjectManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void HandleObjectVisualsClientRpc(Vector2Int position, int assetID, BiomeType objectBiome)
 	{
-		if(objectBiome == Player.LocalClientInstance.CurrentBiome.Value && ChunkManager.Instance.ObjectPositionInLoadedChunks(position))
+		if(objectBiome == Player.LocalClientInstance.CurrentPlayerBiome.Value && ChunkManager.Instance.ObjectPositionInLoadedChunks(position))
 		{
 			// Visually place it down for everyone
 			WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);
@@ -235,7 +235,7 @@ public class ObjectManager : NetworkBehaviour
 			
 			if(!objectData.WO.PassThrough)
 			{
-				Pathfinding.Instance.AddPfWallTile(objectData.Position, Player.LocalClientInstance.CurrentBiome.Value);
+				Pathfinding.Instance.AddPfWallTile(objectData.Position, Player.LocalClientInstance.CurrentPlayerBiome.Value);
 				Environment.Instance.AddTileVisData((Vector3Int)objectData.Position, new TileVisibility() { Visibility = 1 });
 			}
 			

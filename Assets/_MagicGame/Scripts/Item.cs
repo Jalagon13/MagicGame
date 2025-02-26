@@ -67,7 +67,7 @@ public class Item : NetworkBehaviour
 			Player player = NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>();
 			float dist = Vector2.Distance(transform.position, player.CollectTag.transform.position);
 		
-			if(dist < closestDist && dist < _attractRange && player.CurrentBiome.Value == _itemBiome)
+			if(dist < closestDist && dist < _attractRange && player.CurrentPlayerBiome.Value == _itemBiome)
 			{
 				closestPlayerCollectTag = player.CollectTag;
 				closestDist = dist;
@@ -139,7 +139,7 @@ public class Item : NetworkBehaviour
 
 	private bool CheckIfInSameEnvironment(ulong clientId)
 	{
-		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value == _itemBiome;
+		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value == _itemBiome;
 	}
 
 	private bool NetworkObjectVisibleTo(ulong clientId)

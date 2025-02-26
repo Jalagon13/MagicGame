@@ -153,7 +153,7 @@ public class ChunkManager : NetworkBehaviour
 
 	private void LoadChunk(Vector2Int chunkPos)
 	{
-		_chunkNetworkManager.RequestChunkData(Player.LocalClientInstance.CurrentBiome.Value, chunkPos);
+		_chunkNetworkManager.RequestChunkData(Player.LocalClientInstance.CurrentPlayerBiome.Value, chunkPos);
 	}
 
 	private void UnloadChunk(Vector2Int chunkPos)
@@ -302,7 +302,7 @@ public class ChunkManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void TryToRemoveObjectClientRpc(Vector2Int position, BiomeType biomeToRemoveObjData)
 	{
-		if(Player.LocalClientInstance.CurrentBiome.Value != biomeToRemoveObjData || !ObjectPositionInLoadedChunks(position)) return;
+		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != biomeToRemoveObjData || !ObjectPositionInLoadedChunks(position)) return;
 		
 		if(ObjectManager.Instance.TryToFindWorldObject(position, out WorldObject wo))
 		{
@@ -322,7 +322,7 @@ public class ChunkManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void HandleTileVisualClientRpc(Vector3Int pos, int syncTileId, TileType syncTileType, BiomeType biome)
 	{
-		if(Player.LocalClientInstance.CurrentBiome.Value != biome || !ObjectPositionInLoadedChunks((Vector2Int)pos)) return;
+		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != biome || !ObjectPositionInLoadedChunks((Vector2Int)pos)) return;
 		
 		TileSO tileToPlace = GameManager.Instance.GetTileSOFromID(syncTileId);
 
@@ -353,7 +353,7 @@ public class ChunkManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void TryToRemoveWallTileClientRpc(Vector2Int position, BiomeType biomeToRemoveTileData)
 	{
-		if(Player.LocalClientInstance.CurrentBiome.Value != biomeToRemoveTileData || !ObjectPositionInLoadedChunks(position)) return;
+		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != biomeToRemoveTileData || !ObjectPositionInLoadedChunks(position)) return;
 		
 		Environment.Instance.WallTm.SetTile((Vector3Int)position, null);
 		Environment.Instance.RemoveTileVisData((Vector3Int)position);

@@ -30,8 +30,8 @@ public class PlayerNetworkComponent : NetworkBehaviour
 		if(clientId == OwnerClientId) return true;
 		
 		var nonClientIdPlayerObject = NetworkManager.ConnectedClients[clientId].PlayerObject;
-		var nonClientIdPlayerBiome = nonClientIdPlayerObject.GetComponent<Player>().CurrentBiome.Value;
-		var ownerClientBiome = NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value;
+		var nonClientIdPlayerBiome = nonClientIdPlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value;
+		var ownerClientBiome = NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value;
 
 		if(NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().IsDead())
 		{

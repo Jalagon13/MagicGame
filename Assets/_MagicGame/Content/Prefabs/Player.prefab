@@ -471,11 +471,12 @@ MonoBehaviour:
   <ProjectileSpawnPointTf>k__BackingField: {fileID: 7466024424086630460}
   <MainHand>k__BackingField: {fileID: 4604921083407888490}
   <CollectTag>k__BackingField: {fileID: 6231199994205774343}
+  _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
   _respawnTimerDuration: 2
   <IFrameLength>k__BackingField: 0.67
   _knockbackResist: 0
   _startingItems:
-  - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
+  - Item: {fileID: 11400000, guid: d4e4d8d6ce2d3416b87474a4415b1967, type: 2}
     Quantity: 55
   _spawnWandItems: 1
   _startingWandItems:
@@ -488,7 +489,6 @@ MonoBehaviour:
     <MagicArray>k__BackingField:
     - {fileID: 11400000, guid: bf1d2a5b5f1334f7f9a6d0aa32605231, type: 2}
     - {fileID: 11400000, guid: bf1d2a5b5f1334f7f9a6d0aa32605231, type: 2}
-    - {fileID: 11400000, guid: a5216a2d1badc487fb81cd1a19d7a28a, type: 2}
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1065,7 +1065,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &4484193850435151299
@@ -3239,7 +3239,7 @@ Transform:
   m_GameObject: {fileID: 8309369520875900938}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.106, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

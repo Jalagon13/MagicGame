@@ -116,13 +116,13 @@ public class ChestManager : NetworkBehaviour
 	{
 		if (IsChestOpen)
 		{
-			_chestNetworkManager.RemoveChestId(OpenChestPosition, Player.LocalClientInstance.CurrentBiome.Value);
+			_chestNetworkManager.RemoveChestId(OpenChestPosition, Player.LocalClientInstance.CurrentPlayerBiome.Value);
 		
 			InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= EnableChestShortcuts;
 			InventoryManager.Instance.OnInventorySlotClicked -= UpdateSlots;
 			IsChestOpen = false;
 			
-			_chestNetworkManager.UpdateChestContents(OpenChestPosition, Player.LocalClientInstance.CurrentBiome.Value, _localChestItemData);
+			_chestNetworkManager.UpdateChestContents(OpenChestPosition, Player.LocalClientInstance.CurrentPlayerBiome.Value, _localChestItemData);
 
 			OnChestClose?.Invoke(this, EventArgs.Empty);
 		}

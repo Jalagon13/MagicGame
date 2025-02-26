@@ -2120,6 +2120,40 @@ MonoBehaviour:
   m_Spacing: {x: 5, y: 5}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!1 &359721943
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 359721944}
+  m_Layer: 0
+  m_Name: Tilemaps
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &359721944
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359721943}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 793914365}
+  - {fileID: 1170602978}
+  - {fileID: 285752937211302053}
+  m_Father: {fileID: 429902436}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &366871599
 GameObject:
   m_ObjectHideFlags: 0
@@ -2490,12 +2524,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 793914365}
-  - {fileID: 1170602978}
-  - {fileID: 285752937211302053}
-  - {fileID: 438106778}
+  - {fileID: 359721944}
   - {fileID: 652259849}
+  - {fileID: 438106778}
   - {fileID: 1630212177}
+  - {fileID: 1414248200}
   - {fileID: 632392012}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4141,7 +4174,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 429902436}
+  m_Father: {fileID: 359721944}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &793914366
 TilemapRenderer:
@@ -6644,7 +6677,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 429902436}
+  m_Father: {fileID: 359721944}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &1170602980
 TilemapRenderer:
@@ -7520,6 +7553,50 @@ MonoBehaviour:
   m_Spacing: {x: 3, y: 5}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!1 &1414248199
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1414248200}
+  - component: {fileID: 1414248201}
+  m_Layer: 0
+  m_Name: BreadCrumbs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1414248200
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414248199}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 429902436}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1414248201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414248199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c85aa977297c943f799e423fd8082249, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1439409846
 GameObject:
   m_ObjectHideFlags: 0
@@ -8735,7 +8812,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   <TestDummyPrefab>k__BackingField: {fileID: 4084959978081132949, guid: 2ea8fc6c5eed84386a995f5f8f46a35f, type: 3}
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
-  _enableSpawning: 1
+  _enableSpawning: 0
   _enableTestSpawning: 0
   _startSpawnDelay: 1
 --- !u!1 &1616919198
@@ -8825,7 +8902,7 @@ GameObject:
   - component: {fileID: 1630212177}
   - component: {fileID: 1630212178}
   m_Layer: 0
-  m_Name: WorldObjectHolder
+  m_Name: WorldObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11110,7 +11187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _dayDurationInSeconds: 300
+  _dayDurationInSeconds: 3009
   _startingTime: 1
   _isTicking: 1
   _randomSeed: 0
@@ -11828,7 +11905,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 429902436}
+  m_Father: {fileID: 359721944}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2779383315934130894
 GameObject:
@@ -12237,17 +12314,17 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 704164455}
-  - {fileID: 333420534}
   - {fileID: 1937202726}
   - {fileID: 2018757677}
   - {fileID: 876396786}
+  - {fileID: 1655249452}
+  - {fileID: 1616656745}
+  - {fileID: 333420534}
   - {fileID: 225251197}
   - {fileID: 1883046596}
   - {fileID: 832159822}
   - {fileID: 1917302445}
-  - {fileID: 1655249452}
   - {fileID: 462286018}
-  - {fileID: 1616656745}
   - {fileID: 2131152289}
   - {fileID: 1007229085}
   - {fileID: 242063068}

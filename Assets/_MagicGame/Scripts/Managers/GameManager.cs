@@ -13,7 +13,13 @@ using UnityEngine.Tilemaps;
 public class GameManager : NetworkBehaviour
 {
 	public static GameManager Instance { get; private set; }
-	
+
+	public event EventHandler<BreadCrumbEventArgs> OnSpawnBreadCrumbPrefab;
+	public class BreadCrumbEventArgs : EventArgs
+	{
+		public GameObject SpawnedBreadCrumbPrefab;
+	}
+
 	[SerializeField] private BiomeType _startingBiome;
 	
 	[Title("Item Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
@@ -302,7 +308,7 @@ public class GameManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void PlayDamageNumbersClibentRpc(int damageAmount, Vector2 position, BiomeType biome)
 	{
-		if(biome == Player.LocalClientInstance.CurrentBiome.Value && ChunkManager.Instance.ObjectPositionInLoadedChunks(position))
+		if(biome == Player.LocalClientInstance.CurrentPlayerBiome.Value && ChunkManager.Instance.ObjectPositionInLoadedChunks(position))
 		{
 			MMF_Player damageNumberFeedbacks = transform.GetChild(0).GetComponent<MMF_Player>();
 			MMF_FloatingText floatingText = damageNumberFeedbacks.GetFeedbackOfType<MMF_FloatingText>();
@@ -315,6 +321,14 @@ public class GameManager : NetworkBehaviour
 	
 	#endregion
 	
+	public void InvokeSpawnBreadCrumbEvent(GameObject breadCrumb)
+	{
+		OnSpawnBreadCrumbPrefab?.Invoke(this, new BreadCrumbEventArgs
+		{
+		   SpawnedBreadCrumbPrefab = breadCrumb 
+		});
+	}
+
 	public void TogglePvp(bool pvpEnabled)
 	{
 		if(Player.LocalClientInstance != null)

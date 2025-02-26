@@ -33,7 +33,7 @@ public class SpellItemSO : MagicItemSO
 
 	public void CastSpell(WandItemSO wandSO)
 	{
-		GameManager.Instance.SpawnSpellProjectile(this, Player.LocalClientInstance.CurrentBiome.Value, ActionManager.MouseWorldPosition, Speed, Damage + wandSO.BaseDamage, Lifetime, Knockback, Mathf.Max(0, Accuracy + wandSO.Accuracy));
+		GameManager.Instance.SpawnSpellProjectile(this, Player.LocalClientInstance.CurrentPlayerBiome.Value, ActionManager.MouseWorldPosition, Speed, Damage + wandSO.BaseDamage, Lifetime, Knockback, Mathf.Max(0, Accuracy + wandSO.Accuracy));
 		SoundManager.Instance.PlayOneShot(SpellCast, Player.LocalClientInstance.ProjectileSpawnPointTf.position);
 	}
 }

@@ -242,7 +242,7 @@ public class Environment : NetworkBehaviour
 			RemoveTileVisData(tilePosV3Int);
 		}
 		
-		Pathfinding.Instance.RequestUnloadChunk(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentBiome.Value);
+		Pathfinding.Instance.RequestUnloadChunk(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value);
 	}
 	
 	public override void OnDestroy()

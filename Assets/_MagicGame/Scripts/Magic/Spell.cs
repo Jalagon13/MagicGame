@@ -33,7 +33,7 @@ public abstract class Spell : NetworkBehaviour
 		if(!_isLocalProjectile) return;
 		
 		// Local projectile visibility code here
-		if(Player.LocalClientInstance.CurrentBiome.Value == _biome)
+		if(Player.LocalClientInstance.CurrentPlayerBiome.Value == _biome)
 		{
 			_spellGameObject.SetActive(true);
 			_spellCollider.enabled = true;

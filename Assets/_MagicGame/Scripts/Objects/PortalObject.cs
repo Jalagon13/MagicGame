@@ -17,7 +17,7 @@ public class PortalObject : WorldObject
 		if(!_worldInput.IsMouseOverIndputDetector()) return;
 		Debug.Log($"Portal Right clicked");
 		// Just hard code it like this for now will change once more environments are added
-		BiomeType destination = Player.LocalClientInstance.CurrentBiome.Value == BiomeType.Cave ? BiomeType.Forest : BiomeType.Cave;
+		BiomeType destination = Player.LocalClientInstance.CurrentPlayerBiome.Value == BiomeType.Cave ? BiomeType.Forest : BiomeType.Cave;
 		WorldManager.Instance.LoadBiome(destination, transform.position);
 	}
 	

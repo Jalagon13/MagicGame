@@ -150,7 +150,7 @@ public class Wand
 
 		if (Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition)))
 		{
-			Environment.Instance.HitWallTile(Player.LocalClientInstance.CurrentBiome.Value, Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), miningSpell.MiningPower);
+			Environment.Instance.HitWallTile(Player.LocalClientInstance.CurrentPlayerBiome.Value, Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), miningSpell.MiningPower);
 			// SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.transform.position);
 
 			miningSpell.SpawnMiningVisuals();
@@ -159,7 +159,7 @@ public class Wand
 		}
 		else if (ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo))
 		{
-			ObjectManager.Instance.HitObject(Player.LocalClientInstance.CurrentBiome.Value, wo, miningSpell.MiningPower);
+			ObjectManager.Instance.HitObject(Player.LocalClientInstance.CurrentPlayerBiome.Value, wo, miningSpell.MiningPower);
 
 			miningSpell.SpawnMiningVisuals();
 

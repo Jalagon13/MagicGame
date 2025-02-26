@@ -169,7 +169,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 
 	private bool CheckIfInSameEnvironment(ulong clientId)
 	{
-		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value == NpcBiomeType;
+		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value == NpcBiomeType;
 	}
 
 	private void UpdateDespawnTimer()

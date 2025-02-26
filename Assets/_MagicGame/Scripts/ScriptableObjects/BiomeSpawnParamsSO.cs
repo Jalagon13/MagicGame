@@ -12,13 +12,13 @@ public class BiomeSpawnParamsSO : ScriptableObject
 	
 		foreach (BiomeSpawnRule biomeSpawnRule in AllBiomeSpawnRules)
 		{
-			if (biomeSpawnRule.Biome == Player.LocalClientInstance.CurrentBiome.Value)
+			if (biomeSpawnRule.Biome == Player.LocalClientInstance.CurrentPlayerBiome.Value)
 			{
 				return biomeSpawnRule;
 			}
 		}
 
-		Debug.LogError($"{Player.LocalClientInstance.CurrentBiome.Value} has not been found.");
+		Debug.LogError($"{Player.LocalClientInstance.CurrentPlayerBiome.Value} has not been found.");
 		return default;
 	}
 	

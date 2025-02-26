@@ -46,7 +46,7 @@ public class Pathfinding : NetworkBehaviour
 
 	private void CacheCurrentPlayerBiome(object sender, EventArgs e)
 	{
-		_currentPlayerBiome = Player.LocalClientInstance.CurrentBiome.Value;
+		_currentPlayerBiome = Player.LocalClientInstance.CurrentPlayerBiome.Value;
 	}
 
 	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
@@ -231,7 +231,7 @@ public class Pathfinding : NetworkBehaviour
 			if(kvp.Key == clientId) continue; // Only process other players need the chunk in use
 
 			// Loop through only players in the same environment being tested
-			if(NetworkManager.ConnectedClients[kvp.Key].PlayerObject.GetComponent<Player>().CurrentBiome.Value != biome) continue;
+			if(NetworkManager.ConnectedClients[kvp.Key].PlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value != biome) continue;
 		
 			var chunksLoaded = kvp.Value;
 			

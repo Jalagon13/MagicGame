@@ -28,7 +28,7 @@ public class DoorObject : WorldObject
 		
 		if(_worldInput.IsMouseOverIndputDetector() && playerInRange)
 		{
-			ObjectManager.Instance.ToggleDoor(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
+			ObjectManager.Instance.ToggleDoor(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value);
 		}
 	}
 	
@@ -51,7 +51,7 @@ public class DoorObject : WorldObject
 		_doorSr.sprite = _openSprite;
 		_localWallCollider.gameObject.SetActive(false);
 		
-		Pathfinding.Instance.RemovePfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
+		Pathfinding.Instance.RemovePfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value);
 		Environment.Instance.RemoveTileVisData(Vector3Int.FloorToInt(transform.position));
 		Lightmap.Instance.UpdateLightMap();
 	}
@@ -61,14 +61,14 @@ public class DoorObject : WorldObject
 		_doorSr.sprite = _closeSprite;
 		_localWallCollider.gameObject.SetActive(true);
 		
-		Pathfinding.Instance.AddPfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
+		Pathfinding.Instance.AddPfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value);
 		Environment.Instance.AddTileVisData(Vector3Int.FloorToInt(transform.position), new TileVisibility{ Visibility = 1 });
 		Lightmap.Instance.UpdateLightMap();
 	}
 	
 	private void OnDestroy()
 	{
-		Pathfinding.Instance.RemovePfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
+		Pathfinding.Instance.RemovePfWallTile(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value);
 	
 		GameInput.Instance.OnSecondaryActionStarted -= GameInput_OnSecondaryActionStarted;
 	}
