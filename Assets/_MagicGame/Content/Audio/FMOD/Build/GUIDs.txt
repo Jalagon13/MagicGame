@@ -5,6 +5,7 @@
 {0ad9c126-9702-463d-b5c6-565332557634} bank:/UI
 {fe1d45b1-470a-4b0e-ae5f-64aa0e6f1445} bus:/
 {115820a4-924b-4311-a929-7a6896d07534} bus:/Reverb
+{5b26c5f7-0f82-4437-98e6-caa3d475829a} event:/BugDamaged
 {c370b08f-1a93-4bb3-8fa6-72074c22db89} event:/DeerDamaged
 {055d1386-650b-445e-b82a-a550931d286b} event:/DeerDeath
 {0030af96-a4e6-4ad1-961e-1c2dac4c5830} event:/PixieDamaged

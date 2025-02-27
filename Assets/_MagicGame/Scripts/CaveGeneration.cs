@@ -1,57 +1,56 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class CaveGeneration : MonoBehaviour
 {
-	[SerializeField] private BiomeType _environment;
-	
 	[FoldoutGroup("Cave Generation")]
 	[SerializeField] private NoiseMapSO _spaghettiCaveNM;
 	
 	[FoldoutGroup("Cave Generation")]
 	[SerializeField] private NoiseMapSO _cheeseCaveNM;
+
+	[FoldoutGroup("Cave Generation")]
+	[SerializeField] private NoiseMapSO _oreGenNM;
 	
 	[FoldoutGroup("Cave Generation")]
 	[SerializeField] private TileSO _stoneWallTile;
 	
 	[FoldoutGroup("Cave Generation")]
 	[SerializeField] private TileSO _stoneFloorTile;
-	
-	
+
+	[FoldoutGroup("Cave Generation")]
+	[SerializeField] private TileSO _cobaltOreTile;
+
 	private string _seed;
 
 	public void GenerateCave()
 	{
 		Debug.Log("Generating Cave...");
 		ChunkManager.IS_GENERATING_BIOME = true;
-		
-		// Generate World Data
-		GenerateNoiseMapsBasedOnSeed();
+
+		// Generate noise textures using game manager seed
+		_seed = WorldManager.Instance.Seed;
+		_spaghettiCaveNM.GenerateNoiseTexture(_seed);
+		_cheeseCaveNM.GenerateNoiseTexture(_seed);
+		_oreGenNM.GenerateNoiseTexture(_seed);
+
 		GenerateCaveChunkData();
-		
+
 		SaveSystem.Instance.AddBiomeToMemorySessionTracker(BiomeType.Cave);
 		ChunkManager.IS_GENERATING_BIOME = false;
 		
 		Debug.Log("Cave Generation Complete!");
 	}
-	
-	private void GenerateNoiseMapsBasedOnSeed()
-	{
-		_seed = WorldManager.Instance.Seed;
-		
-		// Generate noise textures using game manager seed
-		_spaghettiCaveNM.GenerateNoiseTexture(_seed);
-		_cheeseCaveNM.GenerateNoiseTexture(_seed);
-	}
-	
+
 	private void GenerateCaveChunkData()
 	{
 		ChunkManager.Instance.GetChunksFromBiome(BiomeType.Cave).Clear();
 		
-		int chunkSideAmount = ChunkManager.BIOME_SICE_LENGTH / ChunkManager.CHUNK_SIZE;
+		int chunkSideAmount = ChunkManager.BIOME_SIDE_LENGTH / ChunkManager.CHUNK_SIZE;
 		for (int chunkX = 0; chunkX < chunkSideAmount; chunkX++)
 		{
 			for (int chunkY = 0; chunkY < chunkSideAmount; chunkY++)
@@ -72,14 +71,21 @@ public class CaveGeneration : MonoBehaviour
 						
 						float cheeseCaveValue = GetNoiseMapPointValueAtCoords(_cheeseCaveNM, tilePosX, tilePosY);
 						float spaghettiCaveValue = GetNoiseMapPointValueAtCoords(_spaghettiCaveNM, tilePosX, tilePosY);
-						
-						if((spaghettiCaveValue >= 0.45f && spaghettiCaveValue <= 0.6f) || cheeseCaveValue >= 0.375f)
+						float oreGenValue = GetNoiseMapPointValueAtCoords(_oreGenNM, tilePosX, tilePosY);
+
+						TryToAddTileToChunk(_stoneFloorTile, tileWorldPosition, chunkGameData.GroundTileGameDataList);
+
+						if (spaghettiCaveValue < 0.45f || spaghettiCaveValue > 0.6f && cheeseCaveValue < 0.375f)
 						{
-							TryToAddTileToChunk(_stoneFloorTile, tileWorldPosition, chunkGameData.GroundTileGameDataList);
-						}
-						else
-						{
-							TryToAddTileToChunk(_stoneWallTile, tileWorldPosition, chunkGameData.WallTileGameDataList);
+							// Adding a cave wall
+							if(oreGenValue > 0.05f)
+							{
+								TryToAddTileToChunk(_cobaltOreTile, tileWorldPosition, chunkGameData.WallTileGameDataList);
+							}
+							else
+							{
+								TryToAddTileToChunk(_stoneWallTile, tileWorldPosition, chunkGameData.WallTileGameDataList);
+							}
 						}
 					}
 				}
@@ -89,7 +95,7 @@ public class CaveGeneration : MonoBehaviour
 			}
 		}
 	}
-	
+
 	private void TryToAddTileToChunk(TileSO tileSO, Vector2Int position, List<TileGameData> chunkDataTileList)
 	{
 		if(tileSO != null)

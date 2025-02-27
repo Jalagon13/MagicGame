@@ -20,7 +20,10 @@ public class NoiseMapDataEditor : Editor
 
         if (noiseData.NoiseTexture != null)
         {
-            GUILayout.Label(noiseData.NoiseTexture, GUILayout.Width(256), GUILayout.Height(256));
+            // Use EditorGUI.DrawPreviewTexture for better scaling
+            GUILayout.Label("Noise Map", EditorStyles.boldLabel);
+            Rect rect = GUILayoutUtility.GetRect(512, 512, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            EditorGUI.DrawPreviewTexture(rect, noiseData.NoiseTexture, null, ScaleMode.ScaleToFit, 0);
         }
     }
 }

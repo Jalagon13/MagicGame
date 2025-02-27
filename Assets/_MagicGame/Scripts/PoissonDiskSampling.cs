@@ -3,8 +3,10 @@ using UnityEngine;
 
 public static class PoissonDiskSampling
 {
-    public static List<Vector2> GeneratePoints(NoiseMapSO noiseMapSO, float minRadius, float maxRadius, Vector2 sampleRegionSize, string seedString, int numSamplesBeforeRejection = 30)
+    public static List<Vector2> GeneratePoints(NoiseMapSO noiseMapSO, float minRadius, float maxRadius, string seedString, int numSamplesBeforeRejection = 30)
     {
+        Vector2Int sampleRegionSize = new Vector2Int(ChunkManager.BIOME_SIDE_LENGTH, ChunkManager.BIOME_SIDE_LENGTH);
+
         // Use the seed string to create a reproducible seed value
         int seed = seedString.GetHashCode();
         Random.InitState(seed);

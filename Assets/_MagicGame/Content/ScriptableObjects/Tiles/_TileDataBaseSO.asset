@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: _TileDataBaseSO
   m_EditorClassIdentifier: 
   TileObjectSOList:
+  - {fileID: 11400000, guid: 4f8bf3351009c45c4a6ad868dd7eccbd, type: 2}
   - {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
   - {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
   - {fileID: 11400000, guid: d2ceefd9a0a224533922e3657ca61e16, type: 2}

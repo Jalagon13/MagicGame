@@ -24,13 +24,13 @@ public class Npc : NetworkBehaviour, IHasHealth
 	[field: SerializeField] public float IFrameLength { get; private set; } = 0.166f;
 	[SerializeField] private int _damage;
 	[SerializeField] private DamageCollider _damageCollider;
+	[SerializeField] private EventReference _damageSound;
 	[field: SerializeField] public List<Loot> Table { get; private set; }
 	
 	private NetworkVariable<int> _npcHealthPointNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private Vector2 _damageSourcePosition;
 	private Knockback _knockback;
 	private Timer _iFrameTimer;
-	[SerializeField] private EventReference _damageSound;
 	private Rigidbody2D _rb2d;
 	public BiomeType Biome { get { return GetComponent<NpcNetworkComponent>().NpcBiomeType; } }
 	

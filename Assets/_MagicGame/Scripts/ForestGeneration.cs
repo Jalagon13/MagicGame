@@ -7,8 +7,6 @@ using UnityEngine.Tilemaps;
 
 public class ForestGeneration : MonoBehaviour
 {
-	[SerializeField] private BiomeType _environment;
-
 	[FoldoutGroup("Overworld Generation")]
 	[SerializeField] private NoiseMapSO _forestGroundNM;
 	
@@ -65,7 +63,7 @@ public class ForestGeneration : MonoBehaviour
 		ChunkManager.Instance.GetChunksFromBiome(BiomeType.Forest).Clear();
 		
 		// Loop through all chunks
-		int chunkSideAmount = ChunkManager.BIOME_SICE_LENGTH / ChunkManager.CHUNK_SIZE;
+		int chunkSideAmount = ChunkManager.BIOME_SIDE_LENGTH / ChunkManager.CHUNK_SIZE;
 		for (int chunkX = 0; chunkX < chunkSideAmount; chunkX++)
 		{
 			for (int chunkY = 0; chunkY < chunkSideAmount; chunkY++)
@@ -112,12 +110,10 @@ public class ForestGeneration : MonoBehaviour
 	private void GenerateTrees()
 	{
 		// Generate Tree placements
-		Vector2Int surfaceBounds = new Vector2Int(ChunkManager.BIOME_SICE_LENGTH, ChunkManager.BIOME_SICE_LENGTH);
-		
 		float minTreeDistance = 3f;
 		float maxTreeDistance = 10f;
 		
-		List<Vector2> treePoints = PoissonDiskSampling.GeneratePoints(_forestStoneNM, minTreeDistance, maxTreeDistance, surfaceBounds, _seed);
+		List<Vector2> treePoints = PoissonDiskSampling.GeneratePoints(_forestStoneNM, minTreeDistance, maxTreeDistance, _seed);
 		
 		foreach (Vector2 point in treePoints)
 		{

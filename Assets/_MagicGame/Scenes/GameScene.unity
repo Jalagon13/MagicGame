@@ -8812,8 +8812,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   <TestDummyPrefab>k__BackingField: {fileID: 4084959978081132949, guid: 8400ae4f3ed2f487fb0bbb1a07a80f0f, type: 3}
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
-  _enableSpawning: 0
-  _enableTestSpawning: 1
+  _enableSpawning: 1
+  _enableTestSpawning: 0
   _startSpawnDelay: 1
 --- !u!1 &1616919198
 GameObject:
@@ -9575,7 +9575,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1686029313}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
@@ -11148,11 +11148,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dd7e771787c540f18102d9a87e1fe76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _environment: 1
   _spaghettiCaveNM: {fileID: 11400000, guid: c621735f7aae34658a8101ebe324437c, type: 2}
   _cheeseCaveNM: {fileID: 11400000, guid: fb24aaaf205ca41ac928db4d742f1f5c, type: 2}
+  _oreGenNM: {fileID: 11400000, guid: e05079a8f761b4e5e8f0f7f3c492221d, type: 2}
   _stoneWallTile: {fileID: 11400000, guid: c5388903dacbb4c4db84b0b22dae9c49, type: 2}
   _stoneFloorTile: {fileID: 11400000, guid: d2ceefd9a0a224533922e3657ca61e16, type: 2}
+  _cobaltOreTile: {fileID: 11400000, guid: 4f8bf3351009c45c4a6ad868dd7eccbd, type: 2}
 --- !u!114 &1937202729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11165,7 +11166,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5801a5dccb01e4120aa90f5162553eae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _environment: 0
   _forestGroundNM: {fileID: 11400000, guid: 8dae2400c78244ccb8115cb58db0043a, type: 2}
   _forestStoneNM: {fileID: 11400000, guid: 10d54a956e86d4aa8bc8927008e59238, type: 2}
   _grassTile: {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}

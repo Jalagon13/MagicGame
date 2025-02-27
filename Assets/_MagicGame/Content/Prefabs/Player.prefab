@@ -476,8 +476,10 @@ MonoBehaviour:
   <IFrameLength>k__BackingField: 0.67
   _knockbackResist: 0
   _startingItems:
-  - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
-    Quantity: 55
+  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
+    Quantity: 99
+  - Item: {fileID: 11400000, guid: d4e4d8d6ce2d3416b87474a4415b1967, type: 2}
+    Quantity: 5
   _spawnWandItems: 1
   _startingWandItems:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}

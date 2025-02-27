@@ -11,7 +11,7 @@ using Random = UnityEngine.Random;
 public class ChunkManager : NetworkBehaviour
 {
 	public static bool IS_GENERATING_BIOME;
-	public static int BIOME_SICE_LENGTH = 256;
+	public static int BIOME_SIDE_LENGTH = 256;
 	public static int CHUNK_SIZE = 4;
 
 	public class OnActiveChunksUpdatedEventArgs : EventArgs

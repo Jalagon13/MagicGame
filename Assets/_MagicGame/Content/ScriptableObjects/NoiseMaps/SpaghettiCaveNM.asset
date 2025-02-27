@@ -23,4 +23,5 @@ MonoBehaviour:
   UseFallOffFunction: 0
   Mix: 1
   UseBillowed: 0
+  UseSmoothStep: 1
   NoiseTexture: {fileID: 0}

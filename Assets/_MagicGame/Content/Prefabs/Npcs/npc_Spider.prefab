@@ -38,23 +38,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Path
-      value: event:/PixieDamaged
+      value: event:/BugDamaged
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Guid.Data1
-      value: 3190678
+      value: 1529267703
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Guid.Data2
-      value: 1255253222
+      value: 1144459138
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Guid.Data3
-      value: 756817558
+      value: -1546983784
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Guid.Data4
-      value: 811093164
+      value: -1702726188
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <IFrameLength>k__BackingField
@@ -75,7 +75,7 @@ PrefabInstance:
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[0].Item
       value: 
-      objectReference: {fileID: 11400000, guid: d562dae53acb04aa48034eb14ee90338, type: 2}
+      objectReference: {fileID: 11400000, guid: 2b1a63af7d46946fc92b75c764d94358, type: 2}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[0].Chance
       value: 100
@@ -86,7 +86,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3885697903487451157, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Radius
-      value: 0.5
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 3885697903487451157, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Enabled
@@ -155,7 +155,7 @@ PrefabInstance:
     - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -3168733581550749585, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
+      objectReference: {fileID: 518175295372279904, guid: ea56ac133374041179bb9ce8b8e4507f, type: 3}
     - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
@@ -249,7 +249,7 @@ MonoBehaviour:
   <MaxIdleDuration>k__BackingField: 2
   <DetectionRadius>k__BackingField: 25
   <DetectionIntervalDuration>k__BackingField: 0.25
-  <ObstrcutionCheckLineThickness>k__BackingField: 0.25
+  <ObstrcutionCheckLineThickness>k__BackingField: 0.225
   <WanderRadius>k__BackingField: 10
   <StoppingDistance>k__BackingField: 0.25
 --- !u!1001 &5801241907322578021

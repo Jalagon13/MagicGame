@@ -22,6 +22,10 @@ MonoBehaviour:
       SlotAmount: 1
       RelativeSpawnWeight: 100
       SpawnCondition: 1
+    - Prefab: {fileID: 6633633827701661900, guid: 8400ae4f3ed2f487fb0bbb1a07a80f0f, type: 3}
+      SlotAmount: 1
+      RelativeSpawnWeight: 100
+      SpawnCondition: 2
   - Biome: 1
     SpawnRateDenominator: 500
     MaxNpcSlotAmount: 6

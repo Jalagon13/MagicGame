@@ -286,15 +286,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rsc_torch
+      name: rsc_candle
       rect:
         serializedVersion: 2
-        x: 96
-        y: 112
+        x: 112
+        y: 81
         width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        height: 18
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08294477}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -389,6 +389,7 @@ TextureImporter:
     nameFileIdTable:
       rsc_alchemy_table: -443529757
       rsc_campfire: 1706644685
+      rsc_candle: -597264530
       rsc_chest: 1565617341
       rsc_craft_table: 1014094090
       rsc_door_closed: -691286103
@@ -398,7 +399,6 @@ TextureImporter:
       rsc_portal: -1882313086
       rsc_spindle: 250863300
       rsc_stone: -153397541
-      rsc_torch: -597264530
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -3,7 +3,7 @@ namespace AdvancedTooltips
     using System.Collections.Generic;
     using UnityEngine;
 
-    [CreateAssetMenu(fileName = "Building")]
+    // [CreateAssetMenu(fileName = "Building")]
     public class Building : ScriptableObject
     {
         public Sprite icon;

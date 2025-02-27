@@ -440,7 +440,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_torch
+      name: item_candle
       rect:
         serializedVersion: 2
         x: 96
@@ -769,6 +769,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: item_web
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 80
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4654d96a195b4676941ea2d7b3c0409
+      internalID: 995874337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_silk
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7927aae0d38d4417a8ae886e0df56e5
+      internalID: 1716809911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -789,6 +833,7 @@ TextureImporter:
       item_blue_bell: -1747701128
       item_bouncy_battle_ball: 1567280107
       item_campfire: -925800054
+      item_candle: -1599595118
       item_chest: -1010797688
       item_chicken: 1104096443
       item_coal: -1541828095
@@ -815,6 +860,7 @@ TextureImporter:
       item_plywood: -328401396
       item_portal: 547736231
       item_sand: 67440230
+      item_silk: 1716809911
       item_simple_wand: 1591310652
       item_spindle: 1551977814
       item_stone: -1096778836
@@ -823,7 +869,7 @@ TextureImporter:
       item_stone_shovel: 1850669481
       item_stone_sword: 212289767
       item_sword: -1843546812
-      item_torch: -1599595118
+      item_web: 995874337
       item_wizard_grieves: 1068366592
       item_wizard_hat: -554541973
       item_wizard_robe: 1972111916

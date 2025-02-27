@@ -383,7 +383,7 @@ MonoBehaviour:
   sourceProjectPath: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/MagicGame.fspro
   sourceBankPath: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build
   sourceBankPathUnformatted: 
-  BankRefreshCooldown: 5
+  BankRefreshCooldown: 1
   ShowBankRefreshWindow: 1
   AutomaticEventLoading: 1
   BankLoadType: 0
