@@ -476,7 +476,7 @@ MonoBehaviour:
   <IFrameLength>k__BackingField: 0.67
   _knockbackResist: 0
   _startingItems:
-  - Item: {fileID: 11400000, guid: d4e4d8d6ce2d3416b87474a4415b1967, type: 2}
+  - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
     Quantity: 55
   _spawnWandItems: 1
   _startingWandItems:

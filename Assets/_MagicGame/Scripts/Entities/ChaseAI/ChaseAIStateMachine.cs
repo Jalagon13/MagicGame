@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 // Wanders until it finds a player or breadcrumb to move to
 public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState>
@@ -20,13 +21,20 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     [Tooltip("Detection radius for breadcrumbs and players")]
     [field: SerializeField] public float DetectionRadius { get; private set; } = 15f;
     [field: SerializeField] public float DetectionIntervalDuration { get; private set; } = 0.5f;
+    [Tooltip("Thickness of the raycast used to check for obstructions when navigating to a player or breadcrumb. Adjust approximately to the radius of the AI's collider")]
+    [field: SerializeField] public float ObstrcutionCheckLineThickness { get; private set; } = 0.25f;
+    [field: SerializeField] public float WanderRadius { get; private set; } = 10f;
+    [Tooltip("How close the AI will get to a WanderDestination before stopping")]
+    [field: SerializeField] public float StoppingDistance { get; private set; } = 0.25f;
 
     public Knockback Knockback { get; private set; }
     public Vector2 Velocity { get; set; }
     public Rigidbody2D RigidBody2D { get; private set; }
-    public Vector2 DesiredDirection { get; private set; }
+    public Vector2 DesiredDirection { get; set; }
     public bool PlayerPositionFound { get; private set; }
     public bool BreadCrumbPositionFound { get; private set; }
+    public bool IsChasing { get; set; }
+    public Vector2 WanderDestination { get; set; }
 
     private NpcNetworkComponent _npc;
     private Vector2 _freshestBreadCrumbPosition = Vector2.zero;
@@ -62,8 +70,6 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
 
 
     }
-
-    // NTFS: Next do if stuck, move a random direction and try again
 
     private void TryToFindBreadcrumb()
     {
@@ -117,26 +123,41 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
 
         if (PlayerPositionFound)
         {
-            Debug.Log("Found closest player! moving towards player");
+            // Debug.Log("Found closest player! moving towards player");
             DesiredDirection = (_closestPlayerPosition - (Vector2)transform.position).normalized;
+            IsChasing = true;
         }
         else if(BreadCrumbPositionFound)
         {
-            Debug.Log("Found closest breadcrumb! moving towards breadcrumb");
+            // Debug.Log("Found closest breadcrumb! moving towards breadcrumb");
             DesiredDirection = (_freshestBreadCrumbPosition - (Vector2)transform.position).normalized;
+            IsChasing = true;
+        }
+        else
+        {
+            IsChasing = false;
         }
     }
 
-    private bool IsPathUnObstructed(Vector2 desiredEndpoint)
+    public bool IsPathUnObstructed(Vector2 desiredEndpoint)
     {
-        // Direction and distance for the raycast
         Vector2 direction = desiredEndpoint - (Vector2)transform.position;
         float distance = direction.magnitude;
 
-        // Perform the raycast
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction.normalized, distance, LayerMask.GetMask("LocalWall"));
+        TilemapCollider2D localBiomePfWallCollider = Pathfinding.Instance.GetPathfindingWallCollider(_npc.NpcBiomeType);
 
-        // Return false if something was hit, otherwise true
-        return hit.collider == null;
+        if(localBiomePfWallCollider == null) return false;
+
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, ObstrcutionCheckLineThickness, direction.normalized, distance, LayerMask.GetMask("PathfindingWall"));
+
+        foreach (var hit in hits)
+        {
+            if (hit.collider == localBiomePfWallCollider)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

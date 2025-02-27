@@ -5,6 +5,7 @@ using UnityEngine;
 // Holds logic for dynamic client visibility
 public class NpcNetworkComponent : NetworkBehaviour
 {
+	[SerializeField] private WallColliderDetector _wallColliderDetector;
 	[SerializeField] private bool _continuallyCheckVisibility = true;
 
 	private const int DESPAWN_TIMER_DURATION = 3;
@@ -63,11 +64,10 @@ public class NpcNetworkComponent : NetworkBehaviour
 		_spawningClientId = sourceClientId;
 		_npcId = npcId;
 		
-		// Find walldetectorcollider and populate it
-		var wallDetectorCollider = GetComponentInChildren<WallColliderDetector>();
-		if(wallDetectorCollider != null)
+		if(_wallColliderDetector != null)
 		{
-			wallDetectorCollider.SetEnvironment(biome, Pathfinding.Instance.GetExistingPathfindingBiomes());
+			Debug.Log($"Found wallcolliderdetector for biome {NpcBiomeType}");
+			_wallColliderDetector.SetEnvironment(NpcBiomeType, Pathfinding.Instance.GetExistingPathfindingBiomes());
 		}
 	}
 

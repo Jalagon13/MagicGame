@@ -50,11 +50,12 @@ public class NpcManager : NetworkBehaviour
 	{
 		GameObject npcPrefab = Instantiate(TestDummyPrefab.gameObject, ActionManager.MouseWorldPosition, Quaternion.identity);
 		
+		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
+		npcPrefabNetworkObject.SpawnWithObservers = false;
+		npcPrefabNetworkObject.Spawn(true);
+
 		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
 		npcNetworkComponent.InitialieNpcNetwork(0, -1, Player.LocalClientInstance.CurrentPlayerBiome.Value);
-		
-		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
-		npcPrefabNetworkObject.Spawn(true);
 	}
 
 	private void NetworkManager_OnClientConnectedCallback(ulong clientId)
@@ -117,12 +118,12 @@ public class NpcManager : NetworkBehaviour
 		var spawnPosition = new Vector2(Mathf.FloorToInt(position.x) + 0.5f, Mathf.FloorToInt(position.y) + 0.5f);
 		GameObject npcPrefab = Instantiate(npcSpawnData.Prefab, spawnPosition, Quaternion.identity);
 		
-		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
-		npcNetworkComponent.InitialieNpcNetwork(spawnPlayerId, npcId, spawnBiome);
-		
 		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
 		npcPrefabNetworkObject.SpawnWithObservers = false;
 		npcPrefabNetworkObject.Spawn(true);
+
+		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
+		npcNetworkComponent.InitialieNpcNetwork(spawnPlayerId, npcId, spawnBiome);
 		
 		// replace this with dimension specific entity list that contains mobs and projectiles for entities
 		_activeNpcNetworkList.Add(npcPrefabNetworkObject);

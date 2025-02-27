@@ -56,7 +56,7 @@ public class ManaBolt : Spell
 		_velocity = _directionNormalized * _speed;
 	}
 
-	void OnTriggerEnter2D(Collider2D collider)
+	private void OnTriggerEnter2D(Collider2D collider)
 	{
 		if (ColliderIsSourcePlayer(collider)) return;
 		

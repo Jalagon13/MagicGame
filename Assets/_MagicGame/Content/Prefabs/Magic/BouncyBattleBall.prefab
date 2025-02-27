@@ -228,6 +228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _wallDetectorCollider: {fileID: 8477178979991276337}
 --- !u!114 &28230442587347567
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -28,26 +28,26 @@ public class WallColliderDetector : MonoBehaviour
 
 	private void UpdateCollisions(object sender, Pathfinding.PathfindingTilemapEventArgs e)
 	{
-		if(e.Environment != _colliderBiome)
+		if(e.Biome != _colliderBiome)
 		{
 			Debug.Log(transform.root.name + " Ignoring detection of " + e.TilemapCollider.name);
 			Physics2D.IgnoreCollision(_wallDetectorCollider, e.TilemapCollider);
 		}
 	}
 
-	public void SetEnvironment(BiomeType spawnBiome, Dictionary<BiomeType, TilemapCollider2D> registeredPfBiomes) // Sets the environment whose walls this collider will detect
+	public void SetEnvironment(BiomeType spawnBiome, Dictionary<BiomeType, TilemapCollider2D> registeredPfBiomes)
 	{
 		_colliderBiome = spawnBiome;
-		
+		Debug.Log($"Setting environment to {_colliderBiome}");
+
 		foreach (var biome in registeredPfBiomes)
 		{
-			if(biome.Key != _colliderBiome)
-			{
-				Physics2D.IgnoreCollision(_wallDetectorCollider, biome.Value);
-			}
+			bool ignore = biome.Key != _colliderBiome;
+			Physics2D.IgnoreCollision(_wallDetectorCollider, biome.Value, ignore);
+			Debug.Log($"Biome: {biome.Key}, Ignoring: {ignore}");
 		}
 	}
-	
+
 	private void OnCollisionEnter2D(Collision2D other)
 	{
 		if (Player.LocalClientInstance.OwnerClientId == NetworkManager.ServerClientId)

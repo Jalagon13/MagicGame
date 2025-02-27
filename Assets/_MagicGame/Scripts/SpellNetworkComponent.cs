@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class SpellNetworkComponent : NetworkBehaviour
 {
+	[SerializeField] private WallColliderDetector _wallDetectorCollider;
 	public BiomeType SpellBiomeType { get; private set; }
 
 	private GameObject _spellGameObject;
@@ -41,10 +42,10 @@ public class SpellNetworkComponent : NetworkBehaviour
 		}
 		
 		// Find walldetectorcollider and populate it
-		var wallDetectorCollider = GetComponentInChildren<WallColliderDetector>();
-		if(wallDetectorCollider != null)
+		if(_wallDetectorCollider != null)
 		{
-			wallDetectorCollider.SetEnvironment(biome, Pathfinding.Instance.GetExistingPathfindingBiomes());
+			Debug.Log($"Found wallcolliderdetector");
+			_wallDetectorCollider.SetEnvironment(biome, Pathfinding.Instance.GetExistingPathfindingBiomes());
 		}
 		
 		Invoke(nameof(StopProjectile), lifetime);

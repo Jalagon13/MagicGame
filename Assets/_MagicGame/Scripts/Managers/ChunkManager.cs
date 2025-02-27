@@ -347,18 +347,9 @@ public class ChunkManager : NetworkBehaviour
 		if(!IsServer) return;
 	
 		GetChunkFromAnyWorldPos(position, biomeToRemoveTileData).RemoveTileData(position, tileSO.TileType);
-		TryToRemoveWallTileClientRpc(position, biomeToRemoveTileData);
+		Environment.Instance.TryToRemoveWallTile(position, biomeToRemoveTileData);
 	}
 	
-	[Rpc(SendTo.ClientsAndHost)]
-	private void TryToRemoveWallTileClientRpc(Vector2Int position, BiomeType biomeToRemoveTileData)
-	{
-		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != biomeToRemoveTileData || !ObjectPositionInLoadedChunks(position)) return;
-		
-		Environment.Instance.WallTm.SetTile((Vector3Int)position, null);
-		Environment.Instance.RemoveTileVisData((Vector3Int)position);
-		Lightmap.Instance.UpdateLightMap();
-	}
 	
 	public bool ObjectPositionInLoadedChunks(Vector2 position) // Check if the position is within the bounds
 	{

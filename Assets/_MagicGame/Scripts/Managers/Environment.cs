@@ -139,8 +139,24 @@ public class Environment : NetworkBehaviour
 		}
 	
 		Debug.LogWarning($"Did not find wall tile to hit at {tilePos} in biome {biome}");
+		TryToRemoveWallTileClientRpc(tilePos, biome);
 	}
-	
+
+	public void TryToRemoveWallTile(Vector2Int position, BiomeType biomeToRemoveTileData)
+	{
+		TryToRemoveWallTileClientRpc(position, biomeToRemoveTileData);
+	}
+
+	[Rpc(SendTo.ClientsAndHost)]
+	private void TryToRemoveWallTileClientRpc(Vector2Int position, BiomeType biomeToRemoveTileData)
+	{
+		if (Player.LocalClientInstance.CurrentPlayerBiome.Value != biomeToRemoveTileData || !ChunkManager.Instance.ObjectPositionInLoadedChunks(position)) return;
+
+		WallTm.SetTile((Vector3Int)position, null);
+		RemoveTileVisData((Vector3Int)position);
+		Lightmap.Instance.UpdateLightMap();
+	}
+
 	private void HitTile(Dictionary<BiomeType, HashSet<TileHpData>> tileHpDict, BiomeType biome, Vector2Int tilePos, int amount, TileSO tileSO)
 	{
 		if(tileHpDict.ContainsKey(biome))

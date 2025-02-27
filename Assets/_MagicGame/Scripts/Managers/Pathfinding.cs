@@ -23,7 +23,7 @@ public class Pathfinding : NetworkBehaviour
 	public class PathfindingTilemapEventArgs : EventArgs
 	{
 		public Collider2D TilemapCollider;
-		public BiomeType Environment;
+		public BiomeType Biome;
 	}
 	
 	[SerializeField] private TileBase _wallTile;
@@ -42,6 +42,18 @@ public class Pathfinding : NetworkBehaviour
 	{
 		GameInput.Instance.OnResearchMenuButton += GameInput_OnResearchMenuButton;
 		WorldManager.Instance.OnBiomeDataLoaded += CacheCurrentPlayerBiome;
+	}
+
+	public TilemapCollider2D GetPathfindingWallCollider(BiomeType biome)
+	{
+		if(BiomeToLoadedPathfindingChunks.ContainsKey(biome))
+		{
+			return BiomeToLoadedPathfindingChunks[biome].WallColliderTm.GetComponent<TilemapCollider2D>();
+		}
+		else
+		{
+		    return null;
+		}
 	}
 
 	private void CacheCurrentPlayerBiome(object sender, EventArgs e)
@@ -168,7 +180,7 @@ public class Pathfinding : NetworkBehaviour
 		OnPathfindingTilemapCreated?.Invoke(this, new PathfindingTilemapEventArgs
 		{
 			TilemapCollider = wallColliderTm.GetComponent<TilemapCollider2D>(),
-			Environment = environment
+			Biome = environment
 		});
 		
 		return wallColliderTm;

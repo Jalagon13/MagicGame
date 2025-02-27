@@ -13,7 +13,10 @@ public abstract class StateMachine<EState> : NetworkBehaviour where EState : Enu
 	
     protected virtual void Start()
     {
-        _currentState.EnterState();
+        if(_currentState != null)
+        {
+            _currentState.EnterState();
+        }
     }
 	
     protected virtual void FixedUpdate()
