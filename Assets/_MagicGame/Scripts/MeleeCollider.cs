@@ -78,7 +78,7 @@ public class MeleeCollider : NetworkBehaviour
 				if (_entitiesHitThisSwing.Contains(entityToDamage)) continue;
 				
 				// NTFS: No dedicated knockback yet
-				entityToDamage.ApplyDamage((_playerHand.HeldItem as WandItemSO).BaseDamage, transform.root.position, (_playerHand.HeldItem as WandItemSO).BaseDamage);
+				entityToDamage.ApplyDamage(5, transform.root.position, 5);
 				
 				_entitiesFoundThisSwing.Remove(entityToDamage);
 				

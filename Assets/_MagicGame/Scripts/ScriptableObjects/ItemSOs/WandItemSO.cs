@@ -5,9 +5,6 @@ public class WandItemSO : ItemSO
 {
 	[field: Tooltip("The delay (in seconds) between individual casts of the spell book.")]
 	[field: SerializeField] public float BaseCastDelay { get; private set; } = 0.2f;
-	
-	[field: Tooltip("The Damage dealt when swung")]
-	[field: SerializeField] public int BaseDamage { get; private set; } = 1;
 
 	[field: Tooltip("The maximum amount of mana the spell book can hold.")]
 	[field: SerializeField] public int MaxMana { get; private set; } = 150;

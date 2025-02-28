@@ -22,7 +22,7 @@ MonoBehaviour:
   <Damage>k__BackingField: 3
   <ManaCost>k__BackingField: 6
   <Knockback>k__BackingField: 2
-  <Accuracy>k__BackingField: 0
+  <Accuracy>k__BackingField: 10
   <Lifetime>k__BackingField: 2.25
   <Speed>k__BackingField: 17
   <SpellCast>k__BackingField:

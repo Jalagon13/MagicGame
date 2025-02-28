@@ -127,7 +127,6 @@ namespace AdvancedTooltips.Core
 			script.WandIcon.sprite = wand.UiDisplay;
 			
 			JustText($"{wand.BaseCastDelay} s   cast delay" 
-			+ $"<br>{wand.BaseDamage}   base damage"
 			+ $"<br>{wand.MaxMana}   max. mana"
 			+ $"<br>{wand.ManaRegenSpeed}   mana regen."
 			+ $"<br>{wand.ReloadDuration} s   reload dur."
