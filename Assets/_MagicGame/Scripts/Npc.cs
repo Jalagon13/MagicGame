@@ -20,7 +20,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 
 	[SerializeField] private bool _invincible = false;
 	[SerializeField] private int _maxHealth;
-	[Range(0, 100), SerializeField] private float _knockbackResist;
+	[SerializeField] private float _knockbackResist;
 	[field: SerializeField] public float IFrameLength { get; private set; } = 0.166f;
 	[SerializeField] private int _damage;
 	[SerializeField] private DamageCollider _damageCollider;

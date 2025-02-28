@@ -1373,7 +1373,7 @@ Camera:
   far clip plane: 5000
   field of view: 9.75
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 11
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -4743,8 +4743,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _chunkLoadCooldown: 0.01
-  _chunkLoadRadiusX: 6
-  _chunkLoadRadiusY: 4
+  _chunkLoadRadiusX: 8
+  _chunkLoadRadiusY: 6
 --- !u!114 &876396789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8813,7 +8813,7 @@ MonoBehaviour:
   <TestDummyPrefab>k__BackingField: {fileID: 4084959978081132949, guid: 8400ae4f3ed2f487fb0bbb1a07a80f0f, type: 3}
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
   _enableSpawning: 1
-  _enableTestSpawning: 0
+  _enableTestSpawning: 1
   _startSpawnDelay: 1
 --- !u!1 &1616919198
 GameObject:
@@ -10201,7 +10201,7 @@ MonoBehaviour:
     CustomLookAtTarget: 0
   Lens:
     FieldOfView: 9.75
-    OrthographicSize: 10
+    OrthographicSize: 11
     NearClipPlane: 0.1
     FarClipPlane: 5000
     Dutch: 0

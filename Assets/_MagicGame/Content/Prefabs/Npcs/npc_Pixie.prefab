@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _speed: 4
+  _speed: 4.5
   _turnSharpness: 3
   _moveDirectionBias: 0.35
   _distanceThreshold: 0.5

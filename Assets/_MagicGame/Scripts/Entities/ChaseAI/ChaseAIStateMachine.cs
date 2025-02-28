@@ -2,6 +2,8 @@ using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
+using System;
+using System.Collections;
 
 // Wanders until it finds a player or breadcrumb to move to
 public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState>
@@ -26,6 +28,8 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     [field: SerializeField] public float WanderRadius { get; private set; } = 10f;
     [Tooltip("How close the AI will get to a WanderDestination before stopping")]
     [field: SerializeField] public float StoppingDistance { get; private set; } = 0.25f;
+    [field: SerializeField] public float StrafingDuration { get; private set; } = 0.25f;
+    [field: SerializeField] public float StrafeIntensity { get; private set; } = 0.5f;
 
     public Knockback Knockback { get; private set; }
     public Vector2 Velocity { get; set; }
@@ -34,9 +38,12 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     public bool PlayerPositionFound { get; private set; }
     public bool BreadCrumbPositionFound { get; private set; }
     public bool IsChasing { get; set; }
+    public bool IsStrafing { get; private set; }
     public Vector2 WanderDestination { get; set; }
+    public int StrafingDirection { get; private set; } = 1;
 
-    private NpcNetworkComponent _npc;
+    private Npc _npc;
+    private NpcNetworkComponent _npcNetwork;
     private Vector2 _freshestBreadCrumbPosition = Vector2.zero;
     private Vector2 _closestPlayerPosition = Vector2.zero;
 
@@ -46,7 +53,9 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
 
         if (IsServer)
         {
-            _npc = GetComponent<NpcNetworkComponent>();
+            _npcNetwork = GetComponent<NpcNetworkComponent>();
+            _npc = GetComponent<Npc>();
+            _npc.OnNpcDamged += OnNpcDamged;
 
             _states[ChaseAIState.Idle] = new ChaseAIIdleState(ChaseAIState.Idle, this);
             _states[ChaseAIState.Moving] = new ChaseAIMoveState(ChaseAIState.Moving, this);
@@ -60,15 +69,23 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
             InvokeRepeating(nameof(TryToFindBreadcrumb), DetectionIntervalDuration, DetectionIntervalDuration);
         }
     }
-    
 
-    protected override void FixedUpdate()
+    private void OnNpcDamged(object sender, Npc.OnNpcDamagedEventArgs e)
     {
-        if (!IsServer) return;
+        // Try to strafe behavior
+        if(!IsStrafing)
+        {
+            StartCoroutine(Strafing());
+        }
+    }
 
-        base.FixedUpdate();
+    private IEnumerator Strafing()
+    {
+        IsStrafing = true;
+        StrafingDirection = UnityEngine.Random.value > 0.5f ? 1 : -1;
 
-
+        yield return new WaitForSeconds(StrafingDuration);
+        IsStrafing = false;
     }
 
     private void TryToFindBreadcrumb()
@@ -95,7 +112,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
         {
             if (unObstructedCollider.transform.root.TryGetComponent(out Player player))
             {
-                if(player.CurrentPlayerBiome.Value == _npc.NpcBiomeType)
+                if(player.CurrentPlayerBiome.Value == _npcNetwork.NpcBiomeType)
                 {
                     float distance = Vector2.Distance(transform.position, player.transform.position);
 
@@ -109,7 +126,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
             }
             else if (unObstructedCollider.TryGetComponent(out BreadCrumb breadCrumb))
             {
-                if(breadCrumb.Biome == _npc.NpcBiomeType)
+                if(breadCrumb.Biome == _npcNetwork.NpcBiomeType)
                 {
                     if(breadCrumb.RemainingLifeTime > highestLifetime)
                     {
@@ -144,7 +161,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
         Vector2 direction = desiredEndpoint - (Vector2)transform.position;
         float distance = direction.magnitude;
 
-        TilemapCollider2D localBiomePfWallCollider = Pathfinding.Instance.GetPathfindingWallCollider(_npc.NpcBiomeType);
+        TilemapCollider2D localBiomePfWallCollider = Pathfinding.Instance.GetPathfindingWallCollider(_npcNetwork.NpcBiomeType);
 
         if(localBiomePfWallCollider == null) return false;
 

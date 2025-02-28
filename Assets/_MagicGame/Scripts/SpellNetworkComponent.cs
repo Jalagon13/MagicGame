@@ -44,7 +44,6 @@ public class SpellNetworkComponent : NetworkBehaviour
 		// Find walldetectorcollider and populate it
 		if(_wallDetectorCollider != null)
 		{
-			Debug.Log($"Found wallcolliderdetector");
 			_wallDetectorCollider.SetEnvironment(biome, Pathfinding.Instance.GetExistingPathfindingBiomes());
 		}
 		

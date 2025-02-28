@@ -30,7 +30,6 @@ public class WallColliderDetector : MonoBehaviour
 	{
 		if(e.Biome != _colliderBiome)
 		{
-			Debug.Log(transform.root.name + " Ignoring detection of " + e.TilemapCollider.name);
 			Physics2D.IgnoreCollision(_wallDetectorCollider, e.TilemapCollider);
 		}
 	}
@@ -38,13 +37,11 @@ public class WallColliderDetector : MonoBehaviour
 	public void SetEnvironment(BiomeType spawnBiome, Dictionary<BiomeType, TilemapCollider2D> registeredPfBiomes)
 	{
 		_colliderBiome = spawnBiome;
-		Debug.Log($"Setting environment to {_colliderBiome}");
 
 		foreach (var biome in registeredPfBiomes)
 		{
 			bool ignore = biome.Key != _colliderBiome;
 			Physics2D.IgnoreCollision(_wallDetectorCollider, biome.Value, ignore);
-			Debug.Log($"Biome: {biome.Key}, Ignoring: {ignore}");
 		}
 	}
 

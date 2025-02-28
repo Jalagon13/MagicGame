@@ -14,7 +14,7 @@ public class Knockback : MonoBehaviour
 	[SerializeField] private bool _knockbackEnabled = true;
 	[SerializeField] private float _decayMult = 5f; // Higher = knockback fades out faster
 	
-	private float _minKnockback = 5;
+	private float _minKnockback = 1;
 	private float _maxKnockback = 100;
 	private float _finalKnockback;
 

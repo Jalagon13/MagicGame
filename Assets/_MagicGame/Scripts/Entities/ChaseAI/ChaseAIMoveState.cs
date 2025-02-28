@@ -54,6 +54,17 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
         Vector2 desiredDirection = _ctx.DesiredDirection.normalized;
 
+        // Strafe while chasing
+        if (_ctx.IsChasing && _ctx.IsStrafing)
+        {
+            // Get a perpendicular vector (left or right)
+            Vector2 perpendicular = new Vector2(-desiredDirection.y, desiredDirection.x) * _ctx.StrafingDirection;
+
+            // Apply strafing effect by blending it into the desired direction
+            desiredDirection += perpendicular * _ctx.StrafeIntensity;
+            desiredDirection = desiredDirection.normalized; // Normalize to maintain consistent speed
+        }
+
         if (_ctx.Knockback.Velocity.magnitude > 0)
         {
             _ctx.Velocity = desiredDirection + _ctx.Knockback.Velocity;
