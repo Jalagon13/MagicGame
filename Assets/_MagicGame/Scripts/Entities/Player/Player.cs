@@ -32,7 +32,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		public int MaxValue;
 	}
 	
-	[field: SerializeField] public Transform ProjectileSpawnPointTf { get; private set; }
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
 	[SerializeField] private GameObject _breadCrumbPrefab;

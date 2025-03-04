@@ -198,7 +198,7 @@ public class GameManager : NetworkBehaviour
 		ulong projectileId = IdGenerator.GenerateRandomId();
 		ulong sourcePlayerId = Player.LocalClientInstance.OwnerClientId;
 		
-		Vector2 projSpawnPos = NetworkManager.ConnectedClients[sourcePlayerId].PlayerObject.GetComponent<Player>().ProjectileSpawnPointTf.position;
+		Vector2 projSpawnPos = NetworkManager.ConnectedClients[sourcePlayerId].PlayerObject.GetComponent<Player>().MainHand.ProjectileSpawnTransform.position;
 		Vector2 baseDirection = (mouseWorldPos - projSpawnPos).normalized;
 		float randomAngle = UnityEngine.Random.Range(-totalSpread, totalSpread); 
 		Vector2 finalDirection = Quaternion.Euler(0, 0, randomAngle) * baseDirection; 

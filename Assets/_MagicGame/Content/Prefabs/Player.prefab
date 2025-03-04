@@ -468,7 +468,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <ProjectileSpawnPointTf>k__BackingField: {fileID: 7466024424086630460}
   <MainHand>k__BackingField: {fileID: 4604921083407888490}
   <CollectTag>k__BackingField: {fileID: 6231199994205774343}
   _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
@@ -480,7 +479,7 @@ MonoBehaviour:
     Quantity: 99
   - Item: {fileID: 11400000, guid: d4e4d8d6ce2d3416b87474a4415b1967, type: 2}
     Quantity: 5
-  - Item: {fileID: 11400000, guid: a5216a2d1badc487fb81cd1a19d7a28a, type: 2}
+  - Item: {fileID: 11400000, guid: e9ee0b8df2d3e45aab12f04ecc4446a0, type: 2}
     Quantity: 1
   _spawnWandItems: 1
   _startingWandItems:
@@ -1873,7 +1872,7 @@ SpriteRenderer:
   m_SortingLayerID: -1478012363
   m_SortingLayer: 2
   m_SortingOrder: 98
-  m_Sprite: {fileID: -1843546812, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  m_Sprite: {fileID: 16873710, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -2436,7 +2435,7 @@ Transform:
   m_GameObject: {fileID: 6264988711422842496}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.191, y: 0.498, z: 0}
+  m_LocalPosition: {x: -0.191, y: -0.125, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

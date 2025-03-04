@@ -46,36 +46,45 @@ public class Wand
 	
 	public void CastSpell()
 	{
-		if(_castTimer > 0 || CurrentReload < TotalReloadDuration) return; // Cast Delay or recharge ongoing return
+		if (_castTimer > 0 || CurrentReload < TotalReloadDuration) return; // Cast Delay or recharge ongoing return
 
-		if(_validMagicIndexes.Count == 0) // If validspells is empty, try to fill it up
+		if (_validMagicIndexes.Count == 0) // If validspells is empty, try to fill it up
 		{
 			TryToRefillValidMagicIndexes();
 		}
-		
-		if(_validMagicIndexes.Count == 0) return; // If still empty after fill, return
+
+		if (_validMagicIndexes.Count == 0) return; // If still empty after fill, return
 
 		MagicItemSO magic = WandInvItem.MagicArray[_validMagicIndexes.Peek()];
-		
-		if(magic is MultiCastItemSO multiCast)
+
+		switch (magic)
 		{
-			HandleMultiCast(multiCast);
-		}
-		else if(magic is SpellItemSO spellToCast)
-		{
-			HandleSingleSpellCast(spellToCast);
-		}
-		else if(magic is DestructionCataylstItemSO miningSpell)
-		{
-			HandleMiningCast(miningSpell);
+			case MultiCastItemSO multiCast:
+				HandleMultiCast(multiCast);
+				break;
+			case SpellItemSO spellToCast:
+				HandleSingleSpellCast(spellToCast);
+				break;
+			case DestructionCataylstItemSO miningSpell:
+				HandleMiningCast(miningSpell);
+				break;
+			case SpellModItemSO spellMod:
+				HandleSpellModCast(spellMod);
+				break;
 		}
 	}
-	
-	private void HandleMultiCast(MultiCastItemSO multiCast)
+
+    private void HandleSpellModCast(SpellModItemSO spellMod)
+    {
+		// Keep looking for valid spell and keep track of any spell mods you come across to also apply it to the spell
+		
+		
+    }
+
+    private void HandleMultiCast(MultiCastItemSO multiCast)
 	{
 		List<int> spellsShot = new();
 
-		Debug.Log($"Found Multicast");
 		_validMagicIndexes.Dequeue();
 
 		if (_validMagicIndexes.Count == 0)

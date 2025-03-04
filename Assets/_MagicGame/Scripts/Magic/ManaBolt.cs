@@ -37,7 +37,7 @@ public class ManaBolt : Spell
 		if(IsServer || _isLocalProjectile)
 		{
 			_velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
-			_rigidbody2D.MovePosition(_rigidbody2D.position + _velocity * Time.fixedDeltaTime);
+			_rigidbody2D.linearVelocity = _velocity;
 		}
 		
 		_trailParticles.gameObject.SetActive(_spellGameObject.activeInHierarchy);
@@ -46,8 +46,8 @@ public class ManaBolt : Spell
 
 	private void OnWallCollide(object sender, WallColliderDetector.WallCollisionEventArgs e)
 	{
-		PlayHitParticles();
-		_spellNetworkComponent.StopProjectile();
+		// PlayHitParticles();
+		// _spellNetworkComponent.StopProjectile();
 	}
 	
 	protected override void CastSpell()

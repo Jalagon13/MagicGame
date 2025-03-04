@@ -243,7 +243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   <TurnSharpness>k__BackingField: 6
-  <Speed>k__BackingField: 4.25
+  <Speed>k__BackingField: 3.75
   <KnockbackResist>k__BackingField: 5
   <MinIdleDuration>k__BackingField: 1
   <MaxIdleDuration>k__BackingField: 2

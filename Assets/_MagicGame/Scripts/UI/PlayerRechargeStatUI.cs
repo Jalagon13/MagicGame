@@ -46,7 +46,7 @@ public class PlayerRechargeStatUI : MonoBehaviour
 		float curr = (currentAmount / maxAmount) * _manaStatUI.MaxMana;
 		
 		_rechargeBar.UpdateBar(curr, 0, _manaStatUI.MaxMana);
-		_border.sizeDelta = new Vector2(_manaStatUI.MaxMana, _border.sizeDelta.y);
+		_border.sizeDelta = new Vector2(_manaStatUI.MaxMana * 2, _border.sizeDelta.y);
 		_amountText.text = $"{curr}/{_manaStatUI.MaxMana}";
 	}
 	
