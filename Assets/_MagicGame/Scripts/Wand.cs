@@ -77,9 +77,26 @@ public class Wand
     private void HandleSpellModCast(SpellModItemSO spellMod)
     {
 		// Keep looking for valid spell and keep track of any spell mods you come across to also apply it to the spell
-		
-		
-    }
+		List<int> spellModsFound = new()
+        {
+            GameManager.Instance.GetItemIdFromItemSO(WandInvItem.MagicArray[_validMagicIndexes.Dequeue()])
+        };
+
+		while (_validMagicIndexes.Count > 0)
+		{
+			MagicItemSO nextMagic = WandInvItem.MagicArray[_validMagicIndexes.Peek()];
+			
+			if(nextMagic is SpellItemSO spellToCast)
+			{
+				// Found spell to apply mods to
+				HandleSingleSpellCast(spellToCast, spellModsFound);
+			}
+			else if(nextMagic is SpellModItemSO)
+			{
+			    spellModsFound.Add(GameManager.Instance.GetItemIdFromItemSO(WandInvItem.MagicArray[_validMagicIndexes.Dequeue()]));
+			}
+		}
+	}
 
     private void HandleMultiCast(MultiCastItemSO multiCast)
 	{
@@ -111,7 +128,7 @@ public class Wand
 				{
 					CurrentMana -= potentialSpellToShoot.ManaCost;
 
-					potentialSpellToShoot.CastSpell(WandSO);
+					potentialSpellToShoot.CastSpell(WandSO, null);
 					numOfSpellsCast++;
 					cumulativeCastDelay += potentialSpellToShoot.CastDelay;
 					spellsShot.Add(validMagicIndex);
@@ -121,7 +138,6 @@ public class Wand
 			// If the queue is empty but we still need more spells, try refilling it
 			if (_validMagicIndexes.Count == 0 && numOfSpellsCast < multiCast.MultiCastAmount)
 			{
-				Debug.Log("Queue is empty but I still need more spells, refilling...");
 				TryToRefillValidMagicIndexes();
 			}
 		}
@@ -137,14 +153,14 @@ public class Wand
 		}
 	}
 
-	private void HandleSingleSpellCast(SpellItemSO spellToCast)
+	private void HandleSingleSpellCast(SpellItemSO spellToCast, List<int> spellModsFound = null)
 	{
 		if (spellToCast.ManaCost > CurrentMana) return;
 
 		_validMagicIndexes.Dequeue();
 		_castTimer = WandSO.BaseCastDelay + spellToCast.CastDelay;
 		CurrentMana -= spellToCast.ManaCost;
-		spellToCast.CastSpell(WandSO);
+		spellToCast.CastSpell(WandSO, spellModsFound);
 
 		if (_validMagicIndexes.Count <= 0)
 		{

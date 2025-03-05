@@ -38,7 +38,7 @@ public class CinderBolt : Spell
 				}
 				else
 				{
-					npcToDamage.ApplyDamage(_damage, _projSpawnPoint);
+					// npcToDamage.ApplyDamage(_spellDataNetworkVariable.Value.Damage, _spellDataNetworkVariable.Value.SpawnPoint);
 				
 					_npcsFound.Add(npcToDamage);
 					_pierceCount++;
@@ -48,10 +48,10 @@ public class CinderBolt : Spell
 	}
 	
 	
-	protected override void CastSpell()
+	public override void CastSpell()
 	{
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-		_rigidbody2D.linearVelocity = _directionNormalized * _speed;
+		// _rigidbody2D.linearVelocity = _spellDataNetworkVariable.Value.Direction * _spellDataNetworkVariable.Value.Speed;
 	}
 
 	private void UpdateTimers()

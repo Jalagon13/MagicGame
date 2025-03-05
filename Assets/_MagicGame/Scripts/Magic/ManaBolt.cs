@@ -17,43 +17,41 @@ public class ManaBolt : Spell
 	{
 		_rigidbody2D = GetComponent<Rigidbody2D>();
 		_wallDetectorCollider.OnTouchingWall += OnWallCollide;
-		_trailParticles.gameObject.transform.parent = null;
 		
-		Initialize();
 	}
 
 	public override void OnNetworkSpawn()
 	{
-		if(IsServer)
-		{
-			_trailParticles.gameObject.SetActive(false);
-		}
+		// if(IsServer)
+		// {
+		// 	_trailParticles.gameObject.SetActive(false);
+		// }
 	
 		base.OnNetworkSpawn();
 	}
 
 	private void FixedUpdate()
 	{
-		if(IsServer || _isLocalProjectile)
+		if(IsServer /* || _isLocalProjectile */)
 		{
-			_velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
-			_rigidbody2D.linearVelocity = _velocity;
+			
 		}
-		
-		_trailParticles.gameObject.SetActive(_spellGameObject.activeInHierarchy);
-		_trailParticles.transform.SetPositionAndRotation(_rigidbody2D.position, Quaternion.identity);
+
+		_velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
+		_rigidbody2D.linearVelocity = _velocity;
 	}
 
 	private void OnWallCollide(object sender, WallColliderDetector.WallCollisionEventArgs e)
 	{
-		// PlayHitParticles();
-		// _spellNetworkComponent.StopProjectile();
+		PlayHitParticles();
+		_spellNetworkComponent.StopProjectile();
 	}
 	
-	protected override void CastSpell()
+	public override void CastSpell()
 	{
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-		_velocity = _directionNormalized * _speed;
+		_velocity = _spellData.Direction * _spellData.Speed;
+		Debug.Log($"Velocity: {_velocity}, Direction : {_spellData.Direction}, Speed : {_spellData.Speed}");
 	}
 
 	private void OnTriggerEnter2D(Collider2D collider)
@@ -66,9 +64,9 @@ public class ManaBolt : Spell
 		
 			PlayHitParticles();
 		
-			if(_spawnPlayerId == Player.LocalClientInstance.OwnerClientId)
+			if(_spellData.SpawnPlayerId == Player.LocalClientInstance.OwnerClientId)
 			{
-				npcToDamage.ApplyDamage(_damage, _projSpawnPoint, _knockback);
+				npcToDamage.ApplyDamage(_spellData.Damage, _spellData.SpawnPoint, _spellData.Knockback);
 			}
 			
 			if(IsServer)
@@ -91,6 +89,7 @@ public class ManaBolt : Spell
 	{
 		_wallDetectorCollider.OnTouchingWall -= OnWallCollide;
 
+		_trailParticles.gameObject.transform.parent = null;
 		var main = _trailParticles.main;
 		main.loop = false;
 		main.stopAction = ParticleSystemStopAction.Destroy;

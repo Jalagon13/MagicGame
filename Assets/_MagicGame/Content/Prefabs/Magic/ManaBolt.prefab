@@ -29,10 +29,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2559750635527272206}
   - {fileID: 7553143308594350012}
   - {fileID: 6827312968662340627}
   - {fileID: 4136675497014814371}
-  - {fileID: 2559750635527272206}
   m_Father: {fileID: 1664726614770931062}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4073794546301986675
@@ -210,8 +210,8 @@ MonoBehaviour:
   AuthorityMode: 0
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
+  SyncPositionX: 0
+  SyncPositionY: 0
   SyncPositionZ: 0
   SyncRotAngleX: 0
   SyncRotAngleY: 0

@@ -7,11 +7,9 @@ using UnityEngine.Tilemaps;
 public class SpellNetworkComponent : NetworkBehaviour
 {
 	[SerializeField] private WallColliderDetector _wallDetectorCollider;
-	public BiomeType SpellBiomeType { get; private set; }
 
+	private SyncSpellData _spellData;
 	private GameObject _spellGameObject;
-	private ulong _spawnPlayerId;
-	private ulong _projectileId;
 	private Collider2D _spellCollider;
 
 	public override void OnNetworkSpawn()
@@ -30,29 +28,27 @@ public class SpellNetworkComponent : NetworkBehaviour
 		base.OnNetworkSpawn();
 	}
 	
-	public void InitializeSpellNetwork(BiomeType biome, ulong spawnPlayerId, float lifetime, ulong projectileId)
+	public void InitializeSpellNetwork(SyncSpellData syncSpellData)
 	{
-		SpellBiomeType = biome;
-		_spawnPlayerId = spawnPlayerId;
-		_projectileId = projectileId;
+		_spellData = syncSpellData;
 		
-		if(_spawnPlayerId != NetworkManager.ServerClientId)
+		if(_spellData.SpawnPlayerId != NetworkManager.ServerClientId)
 		{
-			NetworkObject.NetworkHide(_spawnPlayerId);
+			NetworkObject.NetworkHide(_spellData.SpawnPlayerId);
 		}
 		
 		// Find walldetectorcollider and populate it
 		if(_wallDetectorCollider != null)
 		{
-			_wallDetectorCollider.SetEnvironment(biome, Pathfinding.Instance.GetExistingPathfindingBiomes());
+			_wallDetectorCollider.SetEnvironment(_spellData.SpawnBiome, Pathfinding.Instance.GetExistingPathfindingBiomes());
 		}
 		
-		Invoke(nameof(StopProjectile), lifetime);
+		Invoke(nameof(StopProjectile), _spellData.Lifetime);
 	}
 	
 	public void StopProjectile()
 	{
-		GameManager.Instance.DestroyLocalProjectile(_spawnPlayerId, _projectileId);
+		GameManager.Instance.DestroyLocalProjectile(_spellData.SpawnPlayerId, _spellData.SpellId);
 		
 		if(NetworkObject.IsSpawned)
 		{
@@ -87,7 +83,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 	
 	private bool CheckIfInSameBiome(ulong clientId)
 	{
-		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value == SpellBiomeType;
+		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value == _spellData.SpawnBiome;
 	}
 	
 	private bool NetworkObjectVisibleTo(ulong clientId)
@@ -105,7 +101,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 		}
 		else
 		{
-			if(clientId == _spawnPlayerId) return; // Do this because source player should only see the fake projectile
+			if(clientId == _spellData.SpawnPlayerId) return; // Do this because source player should only see the fake projectile
 		
 			NetworkObject.NetworkShow(clientId);
 		}

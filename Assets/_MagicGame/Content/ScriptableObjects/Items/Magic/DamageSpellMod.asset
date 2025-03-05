@@ -17,4 +17,4 @@ MonoBehaviour:
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  _spellModifierPrefab: {fileID: 3706073078954932296, guid: 101515e28dc6241a78d21f6022e9caa9, type: 3}
+  <SpellModifierPrefab>k__BackingField: {fileID: 3706073078954932296, guid: 101515e28dc6241a78d21f6022e9caa9, type: 3}
