@@ -70,7 +70,7 @@ public class Spell : NetworkBehaviour
 			SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
 			Instantiate(modifier.SpellModifierPrefab.gameObject, _spellModifierTf);
 		}
-
+		Debug.Log($"HEYYYY");
 		Debug.Log($"NetworkSpawn() ID: {NetworkObjectId}");
 
 		SpellSetUp();
