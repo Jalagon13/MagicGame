@@ -188,8 +188,11 @@ namespace MoreMountains.Feedbacks
 				yield break;
 			}
 
-			if (FeedbackDuration == 0f)
+			if (AnimateScaleDuration == 0f)
 			{
+				AnimateScaleTarget.localScale = NormalPlayDirection ? DestinationScale : _initialScale;
+				_coroutine = null;
+				IsPlaying = false;
 				yield break;
 			}
 

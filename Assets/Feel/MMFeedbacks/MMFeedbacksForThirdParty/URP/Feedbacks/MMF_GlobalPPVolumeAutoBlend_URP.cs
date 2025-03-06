@@ -87,6 +87,10 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// the weight to blend to
 		[MMFEnumCondition("Mode", (int)Modes.Override)]
 		public float FinalWeight = 1f;        
+		/// whether or not to reset to the initial value at the end of the shake
+		[Tooltip("whether or not to reset to the initial value at the end of the shake")]
+		[MMFEnumCondition("Mode", (int)Modes.Override)]
+		public bool ResetToInitialValueOnEnd = true;
 
 		/// <summary>
 		/// On custom play, triggers a blend on the target blender, overriding its settings if needed
@@ -101,7 +105,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 			}
             
 			MMGlobalPostProcessingVolumeAutoBlend_URP.TimeScales timeScale = (ComputedTimescaleMode == TimescaleModes.Scaled) ? MMGlobalPostProcessingVolumeAutoBlend_URP.TimeScales.Scaled : MMGlobalPostProcessingVolumeAutoBlend_URP.TimeScales.Unscaled;
-            MMPostProcessingVolumeAutoBlendURPShakeEvent.Trigger(ChannelData, TargetAutoBlend, Mode, BlendAction, ApplyTimeMultiplier(BlendDuration), BlendCurve, InitialWeight, FinalWeight, NormalPlayDirection, timeScale);
+            MMPostProcessingVolumeAutoBlendURPShakeEvent.Trigger(ChannelData, TargetAutoBlend, Mode, BlendAction, ApplyTimeMultiplier(BlendDuration), BlendCurve, InitialWeight, FinalWeight, ResetToInitialValueOnEnd, NormalPlayDirection, timeScale);
 		}
         
 		/// <summary>

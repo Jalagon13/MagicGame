@@ -54,10 +54,12 @@ namespace MoreMountains.Feedbacks
 		public Sprite SetupRequiredIcon;
 		public Sprite EmptyListImage;
 		public Sprite ScriptIcon;
+		public Sprite SearchFieldCloseIcon;
 
 		// Properties
 		public MMF_Player TargetMmfPlayer;
 		public static List<string> _typeDisplays;
+		public static List<string> _typeNamesDisplays;
 		public static List<FeedbackTypePair> _typesAndNames = new List<FeedbackTypePair>();
 
 		// Protected
@@ -79,6 +81,7 @@ namespace MoreMountains.Feedbacks
 		protected VisualElement _emptyFeedbackListContainer;
 		protected VisualElement _automaticShakerSetupButtonContainer;
 		protected StyleBackground _styleBackgroundGearIcon;
+		protected StyleColor _transparentColor = new StyleColor(new Color(0, 0, 0, 0));
 
 		protected Dictionary<MMF_Feedback, FeedbackHeaderContainersData> FeedbackHeaderContainersDictionary;
 		protected Dictionary<MMFInspectorGroupData, MMFFeedbackGroupExtrasContainerData> FeedbackGroupsDictionary;
@@ -122,6 +125,7 @@ namespace MoreMountains.Feedbacks
 		protected const string _restoreText = "RestoreInitialValues";
 		protected const string _keepPlaymodeChangesText = "Keep Play Mode Changes";
 		protected const string _scriptEditLabelText = "Script";
+		protected const string _searchFeedbackPlaceholderText = "Search...";
 
 		protected const string _scriptDrivenInProgressText =
 			"Script driven pause in progress, call ResumeFeedbacks() or press the button below to exit pause";
@@ -202,7 +206,11 @@ namespace MoreMountains.Feedbacks
 		protected const string _feedbackFoldoutClassName = "mm-feedback-foldout";
 		protected const string _bottomBarClassName = "mm-bottom-bar";
 		protected const string _controlsClassName = "mm-controls";
+		protected const string _searchFieldClassName = "mm-add-feedback-search-field";
+		protected const string _searchFieldPlaceholderClassName = "mm-add-feedback-search-field-placeholder";
 		protected const string _playModeButtonActiveClassName = "mm-playmode-button-active";
+		protected const string _searchResultsRowClassName = "mm-search-results-row";
+		protected const string _searchAddFeedbackButtonClassName = "mm-search-add-feedback-button";
 		protected const string _scriptDrivenPauseLabelClassName = "mm-script-driven-pause-label";
 		protected const string _scriptDrivenPauseLabelBlinkClassName = "mm-script-driven-pause-label-blink";
 		protected const string _feedbackControlButtonsClassName = "mm-feedback-control-buttons";
@@ -364,6 +372,16 @@ namespace MoreMountains.Feedbacks
 
 		protected virtual void OnUndoRedo()
 		{
+			if (serializedObject == null)
+			{
+				return;
+			}
+
+			if (serializedObject.targetObject == null)
+			{
+				return;
+			}
+
 			serializedObject.Update();
 			CacheFeedbacksListProperty();
 			RedrawFeedbacksList();
@@ -440,6 +458,11 @@ namespace MoreMountains.Feedbacks
 			{
 				_typeDisplays = new List<string>();
 			}
+			
+			if (_typeNamesDisplays == null)
+			{
+				_typeNamesDisplays = new List<string>();
+			}
 
 			if (_typeDisplays.Count > 0)
 			{
@@ -454,6 +477,7 @@ namespace MoreMountains.Feedbacks
 
 			// Create display list from types
 			_typeDisplays.Clear();
+			_typeNamesDisplays.Clear();
 			for (int i = 0; i < types.Count; i++)
 			{
 				FeedbackTypePair _newType = new FeedbackTypePair();
@@ -473,6 +497,7 @@ namespace MoreMountains.Feedbacks
 			for (int i = 0; i < _typesAndNames.Count; i++)
 			{
 				_typeDisplays.Add(_typesAndNames[i].FeedbackName);
+				_typeNamesDisplays.Add(_typesAndNames[i].FeedbackName.Split('/').Last());
 			}
 		}
 
@@ -493,7 +518,7 @@ namespace MoreMountains.Feedbacks
 			DrawDurationAndDirectionContents();
 		}
 
-		protected virtual void DrawDurationAndDirectionContents()
+		public virtual void DrawDurationAndDirectionContents()
 		{
 			_settingsInfo.Clear();
 			VisualElement foldoutLabel = _settingsFoldout.Q<VisualElement>(className: _unityFoldoutTextClassName);
@@ -809,6 +834,10 @@ namespace MoreMountains.Feedbacks
 
 		protected virtual void DrawEmptyListState()
 		{
+			if (_emptyFeedbackListContainer == null)
+			{
+				return;
+			}
 			_emptyFeedbackListContainer.Clear();
 			if ((TargetMmfPlayer.FeedbacksList == null) || (TargetMmfPlayer.FeedbacksList.Count == 0))
 			{
@@ -922,9 +951,12 @@ namespace MoreMountains.Feedbacks
 				// feedback inspector
 				SerializedProperty feedbackProperty = _mmfeedbacksList.GetArrayElementAtIndex(index);
 				MMFInspectorDrawData drawData = new MMFInspectorDrawData();
+				drawData.Index = index;
+				drawData.FeedbackFoldout = foldout;
 				drawData.CurrentProperty = feedbackProperty;
 				drawData.Feedback = TargetMmfPlayer.FeedbacksList[index];
 				drawData.OnAnyValueChanged = OnAnyValueChanged;
+				drawData.PlayerEditor = this;
 				drawData.OnFeedbackFieldValueChanged = OnFeedbackFieldValueChanged;
 				drawData.FeedbackGroupsDictionary = FeedbackGroupsDictionary;
 				drawData.SetupRequiredIcon = SetupRequiredIcon;
@@ -1080,7 +1112,7 @@ namespace MoreMountains.Feedbacks
 			FeedbackGroupsDictionary?.Clear();
 		}
 
-		protected virtual void RedrawAllFeedbackHeaders()
+		public virtual void RedrawAllFeedbackHeaders()
 		{
 			foreach (var feedback in FeedbackHeaderContainersDictionary.Keys)
 			{
@@ -1206,7 +1238,7 @@ namespace MoreMountains.Feedbacks
 			return null;
 		}
 
-		protected virtual string DetermineFeedbackLabel(int index, Type feedbackType)
+		public virtual string DetermineFeedbackLabel(int index, Type feedbackType)
 		{
 			_feedbackLabel = TargetMmfPlayer.FeedbacksList[index].GetLabel();
 			if (TargetMmfPlayer.FeedbacksList[index].Label != TargetMmfPlayer.FeedbacksList[index].OriginalLabel)
@@ -1264,6 +1296,10 @@ namespace MoreMountains.Feedbacks
 
 		protected virtual void RedrawFeedbacksList() 
 		{
+			if (serializedObject == null)
+			{
+				return;
+			}
 			serializedObject.Update();
 			ClearDictionaries();
 			DrawEmptyListState();
@@ -1289,47 +1325,45 @@ namespace MoreMountains.Feedbacks
 
 		protected virtual VisualElement DrawBottomBarContents()
 		{
-			// first row
-			VisualElement firstRow = new VisualElement();
-			firstRow.style.flexDirection = FlexDirection.Row;
-
+			VisualElement bottomBarContents = new VisualElement();
+			bottomBarContents.style.flexDirection = FlexDirection.Column;
+			
+			// setup bar row and results row
+			VisualElement controlsRow = new VisualElement();
+			VisualElement searchResultsRow = new VisualElement();
+			controlsRow.style.flexDirection = FlexDirection.Row;
+			searchResultsRow.AddToClassList(_searchResultsRowClassName);
+			
 			// add new feedback popup
 			PopupField<string> addNewFeedbackPopupField =
 				new PopupField<string>(_addNewFeedbackPopupFieldLabel, _typeDisplays, 0);
 			addNewFeedbackPopupField.Q<Label>().style.display = DisplayStyle.None;
 			addNewFeedbackPopupField.style.flexGrow = 1;
-			firstRow.Add(addNewFeedbackPopupField);
+			controlsRow.Add(addNewFeedbackPopupField);
 			addNewFeedbackPopupField.RegisterValueChangedCallback(evt =>
 			{
 				int newItem = _typeDisplays.IndexOf(evt.newValue);
 				if (newItem >= 0)
 				{
-					serializedObject.Update();
-					Undo.RecordObject(target, _addUndoText);
-					int newFeedbackIndex = newItem - 1;
-					AddFeedback(_typesAndNames[newFeedbackIndex].FeedbackType);
-					serializedObject.ApplyModifiedProperties();
-					PrefabUtility.RecordPrefabInstancePropertyModifications(TargetMmfPlayer);
-					addNewFeedbackPopupField.SetValueWithoutNotify(_typeDisplays[0]);
-					serializedObject.Update();
-					CacheFeedbacksListProperty();
-					BindListViewToData();
-					RedrawFeedbacksList();
+					AddFeedback(newItem, addNewFeedbackPopupField);
 				}
 			});
+			
+			// Search Field
+			BuildSearchField(controlsRow, searchResultsRow);
 
 			// copy all button
 			if (!MMF_PlayerCopy.HasMultipleCopies())
 			{
 				Button copyAllButton = new Button(CopyAll) { text = _copyAllText };
-				firstRow.Add(copyAllButton);
+				controlsRow.Add(copyAllButton);
 			}
 
 			// paste as new button
 			if (MMF_PlayerCopy.HasCopy())
 			{
 				Button pasteAsNewButton = new Button(PasteAsNew) { text = _pasteAsNewText };
-				firstRow.Add(pasteAsNewButton);
+				controlsRow.Add(pasteAsNewButton);
 			}
 
 			// replace all button
@@ -1338,13 +1372,183 @@ namespace MoreMountains.Feedbacks
 				Button replaceAllButton = new Button(ReplaceAll) { text = _replaceAllText };
 				Button pasteAllAsNewButton = new Button(PasteAllAsNew) { text = _pasteAllAsNewText };
 
-				firstRow.Add(replaceAllButton);
-				firstRow.Add(pasteAllAsNewButton);
+				controlsRow.Add(replaceAllButton);
+				controlsRow.Add(pasteAllAsNewButton);
 			}
 
-			return firstRow;
+			bottomBarContents.Add(controlsRow);
+			bottomBarContents.Add(searchResultsRow);
+			
+			return bottomBarContents;
 		}
 
+		protected virtual void AddFeedback(int feedbackIndex, PopupField<string> addNewFeedbackPopupField)
+		{
+			serializedObject.Update();
+			Undo.RecordObject(target, _addUndoText);
+			int newFeedbackIndex = feedbackIndex - 1;
+			AddFeedback(_typesAndNames[newFeedbackIndex].FeedbackType);
+			serializedObject.ApplyModifiedProperties();
+			PrefabUtility.RecordPrefabInstancePropertyModifications(TargetMmfPlayer);
+			if (addNewFeedbackPopupField != null)
+			{
+				addNewFeedbackPopupField.SetValueWithoutNotify(_typeDisplays[0]);
+			}
+			serializedObject.Update();
+			CacheFeedbacksListProperty();
+			BindListViewToData();
+			RedrawFeedbacksList();
+		}
+
+		protected virtual void BuildSearchField(VisualElement anchor, VisualElement resultsVisualElement)
+		{
+			TextField searchField = new TextField("");
+			searchField.AddToClassList(_searchFieldClassName);
+			anchor.Add(searchField);
+
+			// callbacks
+			searchField.RegisterCallback<FocusInEvent>(OnSearchFieldFocusIn);
+			searchField.RegisterCallback<FocusOutEvent>(OnSearchFieldFocusOut);
+			searchField.RegisterValueChangedCallback<string>(OnSearchFieldValueChanged);
+			SetSearchFieldToPlaceholderMode();
+			
+			searchField.RegisterCallback<KeyDownEvent>(evt =>
+			{
+				if (evt.keyCode == KeyCode.UpArrow || evt.keyCode == KeyCode.DownArrow)
+				{
+					int selectionIndex = (evt.keyCode == KeyCode.DownArrow) ? -1 : 0;
+					Navigate(selectionIndex, evt.keyCode);
+				}
+			}, TrickleDown.TrickleDown);
+			
+			// clear button
+			Button clearSearchFieldButton = new Button(ClearSearchField);
+			clearSearchFieldButton.AddToClassList(_iconClassName);
+			clearSearchFieldButton.style.backgroundImage = new StyleBackground(SearchFieldCloseIcon);
+			clearSearchFieldButton.style.backgroundColor = _transparentColor;
+			searchField.Q("unity-text-input").Add(clearSearchFieldButton);
+			
+			void Navigate(int currentIndex, KeyCode directionKey)
+			{
+				if (directionKey == KeyCode.Escape)
+				{
+					ClearSearchField();
+					return;
+				}
+				
+				if (directionKey != KeyCode.UpArrow && directionKey != KeyCode.DownArrow)
+				{
+					return;
+				}
+
+				if (resultsVisualElement.childCount == 0)
+				{
+					return;
+				}
+
+				int direction = (directionKey == KeyCode.DownArrow) ? 1 : -1;
+				
+				int newIndex = currentIndex + direction;
+				if (newIndex < 0)
+				{
+					newIndex = resultsVisualElement.childCount - 1;
+				}
+				else if (newIndex >= resultsVisualElement.childCount)
+				{
+					newIndex = 0;
+				}
+				if (resultsVisualElement.ElementAt(newIndex) != null)
+				{
+					resultsVisualElement.ElementAt(newIndex).Focus();
+				}
+			}
+
+			void ClearSearchField()
+			{
+				anchor.Focus();
+				SetSearchFieldToPlaceholderMode();
+			}
+
+			void OnSearchFieldFocusIn(FocusInEvent evt)
+			{
+				if (searchField.value == _searchFeedbackPlaceholderText)
+				{
+					SetSearchFieldToNonPlaceholderMode();
+				}
+			}
+
+			void OnSearchFieldFocusOut(FocusOutEvent evt)
+			{
+				bool buttonClicked = false;
+				Focusable focusedElement = evt.relatedTarget;
+				if (focusedElement is VisualElement && (focusedElement as VisualElement).ClassListContains(_searchAddFeedbackButtonClassName))
+				{
+					buttonClicked = true;
+				}
+				
+				if (string.IsNullOrEmpty(searchField.value))
+				{
+					SetSearchFieldToPlaceholderMode();
+				}
+
+				if (!buttonClicked)
+				{
+					SetSearchFieldToPlaceholderMode();
+				}
+			}
+
+			void SetSearchFieldToPlaceholderMode()
+			{
+				searchField.value = _searchFeedbackPlaceholderText;
+				searchField.AddToClassList(_searchFieldPlaceholderClassName);
+			}
+			void SetSearchFieldToNonPlaceholderMode()
+			{
+				searchField.value = "";
+				searchField.RemoveFromClassList(_searchFieldPlaceholderClassName);
+			}
+
+			void OnSearchFieldValueChanged(ChangeEvent<string> evt)
+			{
+				string searchedText = evt.newValue.ToLower();
+
+				resultsVisualElement.Clear();
+				
+				if (searchedText.Length == 0)
+				{
+					return;
+				}
+				
+				List<string> filteredFeedbackNames = new List<string>(_typeNamesDisplays);
+				filteredFeedbackNames.Clear();
+				filteredFeedbackNames.AddRange(_typeNamesDisplays.Where(option => option.ToLower().Contains(searchedText)));
+
+				foreach (string feedbackName in filteredFeedbackNames)
+				{
+					Button addFeedbackButton = new Button(() => AddFeedbackByName(feedbackName, searchField)) { text = feedbackName };
+					addFeedbackButton.AddToClassList(_searchAddFeedbackButtonClassName);
+					addFeedbackButton.RegisterCallback<KeyDownEvent>(keyEvt =>
+					{
+						Navigate(resultsVisualElement.IndexOf(addFeedbackButton), keyEvt.keyCode);
+					}, TrickleDown.TrickleDown);
+					resultsVisualElement.Add(addFeedbackButton);
+				}
+			}
+		}
+		
+		protected virtual void AddFeedbackByName(string name, TextField searchField)
+		{
+			for (int i=0; i<_typeNamesDisplays.Count; i++)
+			{
+				if (_typeNamesDisplays[i] == name)
+				{
+					AddFeedback(i+1, null);
+					searchField.Focus();
+					return;
+				}
+			}
+		}
+		
 		protected virtual void BindListViewToData()
 		{
 			_feedbacksListView.itemsSource = TargetMmfPlayer.FeedbacksList;
@@ -1355,10 +1559,6 @@ namespace MoreMountains.Feedbacks
 			VisualElement controlsContainer = new VisualElement();
 			controlsContainer.AddToClassList(_controlsClassName);
 			root.Add(controlsContainer);
-
-			/*Label controlsLabel = new Label(_debugControlsText);
-			controlsLabel.AddToClassList("mm-controls-label");
-			controlsContainer.Add(controlsLabel);*/
 
 			// first row
 			VisualElement firstRow = new VisualElement();

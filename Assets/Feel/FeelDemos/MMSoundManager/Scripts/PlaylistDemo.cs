@@ -1,6 +1,6 @@
 using MoreMountains.Tools;
 using UnityEngine;
-#if (MM_TEXTMESHPRO || MM_UGUI2)
+#if MM_UGUI2
 using TMPro;
 #endif
 #if MM_UI
@@ -16,7 +16,7 @@ namespace MoreMountains.Feel
 		public MMSMPlaylistManager PlaylistManager;
 		/// a progress bar meant to display the progress of the song currently playing 
 		public MMProgressBar ProgressBar;
-		#if (MM_TEXTMESHPRO || MM_UGUI2)
+		#if MM_UGUI2
 		/// the name of the song currently playing
 		public TMP_Text SongName;
 		/// a text displaying the current progress of the song in minutes/seconds 
@@ -35,7 +35,7 @@ namespace MoreMountains.Feel
 			else
 			{
 				ProgressBar.SetBar(PlaylistManager.CurrentTime, 0f, PlaylistManager.CurrentClipDuration);
-				#if (MM_TEXTMESHPRO || MM_UGUI2)
+				#if MM_UGUI2
 				SongDuration.text = MMTime.FloatToTimeString(PlaylistManager.CurrentTime, false, true, true, false)
 				                    + " / "
 				                    + MMTime.FloatToTimeString(PlaylistManager.CurrentClipDuration, false, true, true, false);
@@ -49,7 +49,7 @@ namespace MoreMountains.Feel
 		protected virtual void UpdateSongName()
 		{
 			int displayIndex = PlaylistManager.CurrentSongIndex + 1;
-			#if (MM_TEXTMESHPRO || MM_UGUI2)
+			#if MM_UGUI2
 			SongName.text = displayIndex + ". " + PlaylistManager.CurrentSongName;
 			#endif
 		}

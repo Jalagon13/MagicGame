@@ -88,10 +88,18 @@ namespace MoreMountains.Tools
 		{
 			_visionMesh = new Mesh();
 			Direction = Vector3.right;
+			EulerAngles = Vector3.zero;
 			if (ShouldDrawMesh)
 			{
 				VisionMeshFilter.mesh = _visionMesh;  
 			}
+			SetDirectionAndAngles(Direction, EulerAngles);
+		}
+
+		protected void OnValidate()
+		{
+			EulerAngles = Vector3.zero;
+			SetDirectionAndAngles(Direction, EulerAngles);
 		}
 
 		protected virtual void LateUpdate()

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using MoreMountains.Tools;
-#if (MM_TEXTMESHPRO || MM_UGUI2)
+#if MM_UGUI2
 using TMPro;
 #endif
 
@@ -11,10 +11,10 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	public class MMFloatingTextMeshPro : MMFloatingText
 	{
-		#if (MM_TEXTMESHPRO || MM_UGUI2)
+		#if MM_UGUI2
 		[Header("TextMeshPro")]
 		/// the TextMeshPro object to use to display values
-		public TextMeshProUGUI TargetTextMeshPro;
+		public TextMeshPro TargetTextMeshPro;
         
 		/// <summary>
 		/// On init we grab our TMP's color

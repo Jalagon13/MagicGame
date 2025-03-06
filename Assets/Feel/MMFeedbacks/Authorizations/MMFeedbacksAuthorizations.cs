@@ -194,7 +194,7 @@ namespace MoreMountains.Feedbacks
 		[MMInspectorGroup("TextMesh Pro", true, 30)] [MMInspectorButton("ToggleTextMeshPro")]
 		public bool ToggleTextMeshProButton;
 
-		#if (MM_TEXTMESHPRO || MM_UGUI2)
+		#if MM_UGUI2
 		public bool TMPAlpha = true;
 		public bool TMPCharacterSpacing = true;
 		public bool TMPColor = true;
@@ -397,7 +397,7 @@ namespace MoreMountains.Feedbacks
 			VideoPlayer = !VideoPlayer;
 		}
 		
-		#if (MM_TEXTMESHPRO || MM_UGUI2)
+		#if MM_UGUI2
 		private void ToggleTextMeshPro()
 		{
 			TMPAlpha = !TMPAlpha;
@@ -565,7 +565,7 @@ namespace MoreMountains.Feedbacks
 			MMF_Vignette_URP.FeedbackTypeAuthorized = Vignette;
 			#endif
 			
-			#if (MM_TEXTMESHPRO || MM_UGUI2)
+			#if MM_UGUI2
 			MMF_TMPAlpha.FeedbackTypeAuthorized = TMPAlpha;
 			MMF_TMPCharacterSpacing.FeedbackTypeAuthorized = TMPCharacterSpacing;
 			MMF_TMPColor.FeedbackTypeAuthorized = TMPColor;

@@ -1,4 +1,4 @@
-#if MM_TEXTMESHPRO
+#if MM_UGUI2
 using TMPro;
 #endif
 using UnityEngine;
@@ -15,7 +15,7 @@ namespace MoreMountains.Feel
 		[Header("Bindings")]
 		public Slider TargetSlider;
 		#endif
-		#if MM_TEXTMESHPRO
+		#if MM_UGUI2
 		public TMP_Text ValueText;
 		#endif
 		#if MM_UI
@@ -26,7 +26,7 @@ namespace MoreMountains.Feel
 		
 		public void UpdateText()
 		{
-			#if MM_TEXTMESHPRO
+			#if MM_UGUI2
 			ValueText.text = TargetSlider.value.ToString("F2");
 			#endif
 		}

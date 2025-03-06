@@ -88,6 +88,9 @@ namespace MoreMountains.Feedbacks
 		/// the direction to apply to the new floating text (leave it to 0 to let the Spawner decide based on its settings)
 		[Tooltip("the direction to apply to the new floating text (leave it to 0 to let the Spawner decide based on its settings)")]
 		public Vector3 Direction = Vector3.zero;
+		/// a transform to attach the floating text to for the duration of its lifetime. it will then move relative to it
+		[Tooltip("a transform to attach the floating text to for the duration of its lifetime. it will then move relative to it")]
+		public Transform AttachmentTransform;
 
 		protected Vector3 _playPosition;
 		protected string _value;
@@ -133,7 +136,8 @@ namespace MoreMountains.Feedbacks
 			
 			_value = UseIntensityAsValue ? feedbacksIntensity.ToString() : Value;
 			
-			MMFloatingTextSpawnEvent.Trigger(ChannelData, _playPosition, _value, Direction, Intensity * intensityMultiplier, ForceLifetime, Lifetime, ForceColor, AnimateColorGradient, ComputedTimescaleMode == TimescaleModes.Unscaled);
+			MMFloatingTextSpawnEvent.Trigger(ChannelData, _playPosition, _value, Direction, Intensity * intensityMultiplier, ForceLifetime, Lifetime, ForceColor, AnimateColorGradient, 
+				ComputedTimescaleMode == TimescaleModes.Unscaled, AttachmentTransform);
 		}
 
 		protected virtual float ApplyRounding(float value)

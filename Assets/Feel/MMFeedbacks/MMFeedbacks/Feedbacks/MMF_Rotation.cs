@@ -80,8 +80,6 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("how the z part of the rotation should animate over time, in degrees")]
 		public MMTweenType AnimateRotationTweenZ = new MMTweenType( new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0)), "AnimateZ");
 		
-		
-		
 		/// if this is true, calling that feedback will trigger it, even if it's in progress. If it's false, it'll prevent any new Play until the current one is over
 		[Tooltip("if this is true, calling that feedback will trigger it, even if it's in progress. If it's false, it'll prevent any new Play until the current one is over")] 
 		public bool AllowAdditivePlays = false;
@@ -98,6 +96,10 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("the angles to match when in ToDestination mode")]
 		[MMFEnumCondition("Mode", (int)Modes.ToDestination)]
 		public Vector3 DestinationAngles = new Vector3(0f, 180f, 0f);
+		/// an optional transform we want to match the rotation of. if one is set, DestinationAngles will be ignored 
+		[Tooltip("an optional transform we want to match the rotation of. if one is set, DestinationAngles will be ignored")]
+		[MMFEnumCondition("Mode", (int)Modes.ToDestination)]
+		public Transform ToDestinationTransform;
 		/// how the x part of the rotation should animate over time, in degrees
 		[Tooltip("how the x part of the rotation should animate over time, in degrees")]
 		public MMTweenType ToDestinationTween = new MMTweenType(MMTween.MMTweenCurve.EaseInQuintic, "", "Mode", (int)Modes.ToDestination);
@@ -210,7 +212,13 @@ namespace MoreMountains.Feedbacks
 				yield break;
 			}
 
-			Vector3 destinationAngles = NormalPlayDirection ? DestinationAngles : _initialToDestinationAngles;
+			Vector3 tempAngles = DestinationAngles;
+			if (ToDestinationTransform != null)
+			{
+				tempAngles = ToDestinationTransform.eulerAngles;
+			}
+			
+			Vector3 destinationAngles = NormalPlayDirection ? tempAngles : _initialToDestinationAngles;
 			float journey = NormalPlayDirection ? 0f : FeedbackDuration;
 
 			_initialRotation = AnimateRotationTarget.transform.rotation;

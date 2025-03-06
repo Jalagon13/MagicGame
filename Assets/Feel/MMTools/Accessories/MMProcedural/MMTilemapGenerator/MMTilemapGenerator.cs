@@ -154,7 +154,7 @@ namespace MoreMountains.Tools
 					layer.Grid = _grid;
 					break;
 				case GenerateMethods.RandomWalk:
-					_grid = MMGridGeneratorRandomWalk.Generate(width, height, seed, layer.RandomWalkPercent, layer.RandomWalkStartingPoint, layer.RandomWalkMaxIterations);
+					_grid = MMGridGeneratorRandomWalk.Generate(width, height, seed, layer.RandomWalkPercent, layer.RandomWalkStartingPoint, layer.RandomWalkMaxIterations, layer.BoundsTop, layer.BoundsBottom, layer.BoundsLeft, layer.BoundsRight);
 					layer.Grid = _grid;
 					break;
 				case GenerateMethods.RandomWalkAvoider:
