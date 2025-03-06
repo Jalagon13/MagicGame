@@ -32,8 +32,6 @@ public class GameManager : NetworkBehaviour
 	[SerializeField] private TileDataBaseSO _tileDataBaseSO;
 	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
 	
-	public Dictionary<ulong, GameObject> LocalProjectilesDict { get; private set; } = new Dictionary<ulong, GameObject>();
-	
 	private void Awake()
 	{
 		Instance = this;
@@ -194,14 +192,12 @@ public class GameManager : NetworkBehaviour
 	#region Spell Projectile Functions
 	public void SpawnSpellProjectile(SyncSpellData spellData)
 	{
-		if(spellData.SpawnPlayerId != NetworkManager.ServerClientId)
-		{
-			SpellItemSO currentSpellItemSO = GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO;
-			Spell localSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, spellData.SpawnPoint, Quaternion.identity);
-			localSpell.InitializeSpell(spellData);
-			
-			LocalProjectilesDict.Add(spellData.SpellId, localSpell.gameObject);
-		}
+		// if(spellData.SpawnPlayerId != NetworkManager.ServerClientId)
+		// {
+		// 	SpellItemSO currentSpellItemSO = GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO;
+		// 	Spell localSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, spellData.SpawnPoint, Quaternion.identity);
+		// 	localSpell.InitializeLocalSpell(spellData);
+		// }
 		
 		SpawnSpellProjectileServerRpc(spellData);
 	}
@@ -210,32 +206,12 @@ public class GameManager : NetworkBehaviour
 	private void SpawnSpellProjectileServerRpc(SyncSpellData spellData)
 	{
 		Spell realSpell = Instantiate((GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO).SpellProjectilePrefab, spellData.SpawnPoint, Quaternion.identity);
+		realSpell.InitializeServerSpell(spellData);
+		realSpell.GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);
 		
-		NetworkObject spellNetworkObject = realSpell.GetComponent<NetworkObject>();
-		spellNetworkObject.SpawnWithObservers = false;
-		spellNetworkObject.Spawn(true);
-		
-		realSpell.InitializeSpell(spellData);
-	}
-	
-	public void DestroyLocalProjectile(ulong sourcePlayerId, ulong projectileId)
-	{
-		DestroyFakeProjectileClientRpc(projectileId, RpcTarget.Single(sourcePlayerId, RpcTargetUse.Persistent));
-	}
-	
-	[Rpc(SendTo.SpecifiedInParams)]
-	private void DestroyFakeProjectileClientRpc(ulong projectileId, RpcParams rpcParams = default)
-	{
-		RemoveLocalProjectile(projectileId);
-	}
-	
-	private void RemoveLocalProjectile(ulong projectileId)
-	{
-		if (LocalProjectilesDict.TryGetValue(projectileId, out GameObject localProjectile))
-		{
-			Destroy(localProjectile);
-			LocalProjectilesDict.Remove(projectileId);
-		}
+		NetworkObject no = realSpell.GetComponent<NetworkObject>();
+		no.SpawnWithObservers = false;
+		no.Spawn(true);
 	}
 	
 	#endregion

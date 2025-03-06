@@ -13,10 +13,10 @@ public class CinderBolt : Spell
 	private int _pierceCount;
 	private Dictionary<IHasHealth, float> _hitNpcList = new();
 
-	private void Awake()
-	{
-		_rigidbody2D = GetComponent<Rigidbody2D>();
-	}
+	// private void Awake()
+	// {
+	// 	_rigidbody2D = GetComponent<Rigidbody2D>();
+	// }
 
 	// private void OnWallCollide(object sender, WallDetectorCollider.WallCollisionEventArgs e)
 	// {
@@ -24,35 +24,35 @@ public class CinderBolt : Spell
 	// 	_velocity = direction * _velocity.magnitude;
 	// }
 
-	private void OnTriggerEnter2D(Collider2D other)
-	{
-		if (!PlayerOwnerClientIdEqualsServerId() || ColliderIsSourcePlayer(other)) return;
+	// private void OnTriggerEnter2D(Collider2D other)
+	// {
+	// 	if (!PlayerOwnerClientIdEqualsServerId() || ColliderIsSourcePlayer(other)) return;
 		
-		if (other.TryGetComponent(out IHasHealth npcToDamage))
-		{
-			if(!_npcsFound.Contains(npcToDamage))
-			{
-				if(_pierceCount >= _pierceMax)
-				{
-					_spellNetworkComponent.StopProjectile(); // -> Triggers detonation
-				}
-				else
-				{
-					// npcToDamage.ApplyDamage(_spellDataNetworkVariable.Value.Damage, _spellDataNetworkVariable.Value.SpawnPoint);
+	// 	if (other.TryGetComponent(out IHasHealth npcToDamage))
+	// 	{
+	// 		if(!_npcsFound.Contains(npcToDamage))
+	// 		{
+	// 			if(_pierceCount >= _pierceMax)
+	// 			{
+	// 				// _spellNetworkComponent.StopProjectile(); // -> Triggers detonation
+	// 			}
+	// 			else
+	// 			{
+	// 				// npcToDamage.ApplyDamage(_spellDataNetworkVariable.Value.Damage, _spellDataNetworkVariable.Value.SpawnPoint);
 				
-					_npcsFound.Add(npcToDamage);
-					_pierceCount++;
-				}
-			}
-		}
-	}
+	// 				_npcsFound.Add(npcToDamage);
+	// 				_pierceCount++;
+	// 			}
+	// 		}
+	// 	}
+	// }
 	
 	
-	public override void CastSpell()
-	{
-		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-		// _rigidbody2D.linearVelocity = _spellDataNetworkVariable.Value.Direction * _spellDataNetworkVariable.Value.Speed;
-	}
+	// public override void CastSpell()
+	// {
+	// 	_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
+	// 	// _rigidbody2D.linearVelocity = _spellDataNetworkVariable.Value.Direction * _spellDataNetworkVariable.Value.Speed;
+	// }
 
 	private void UpdateTimers()
 	{

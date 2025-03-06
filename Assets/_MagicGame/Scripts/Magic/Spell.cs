@@ -5,61 +5,96 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 
-public abstract class Spell : NetworkBehaviour
+public class Spell : NetworkBehaviour
 {
 	protected SyncSpellData _spellData;
-	protected SpellNetworkComponent _spellNetworkComponent;
 	protected GameObject _spellGameObject;
 	protected Collider2D _spellCollider;
+	protected bool _started;
+	protected bool _isDead;
+	protected bool _isLocalSpell;
 	
+	private NetworkVariable<SyncSpellData> _serverSpellData = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private Transform _spellModifierTf;
+	private Timer _spellTimer;
 
-    private void Awake()
+    protected virtual void Awake()
     {
+		Debug.Log($"Spell Awake");
 		_spellGameObject = transform.GetChild(0).gameObject;
 		_spellCollider = GetComponent<Collider2D>();
-		_spellNetworkComponent = GetComponent<SpellNetworkComponent>();
-	}
-	
-	public override void OnNetworkSpawn()
-	{
-		Debug.Log($"Test");
-		base.OnNetworkSpawn();
-	}
-	
-	public abstract void CastSpell();
-	
-	public void InitializeSpell(SyncSpellData spellData)
-	{
-		_spellGameObject = transform.GetChild(0).gameObject;
-		_spellCollider = GetComponent<Collider2D>();
-		_spellNetworkComponent = GetComponent<SpellNetworkComponent>();
-		_spellData = spellData;
-
-		if (IsServer)
-		{
-			_spellNetworkComponent.InitializeSpellNetwork(_spellData);
-		}
-		
 		_spellModifierTf = transform.GetChild(0).GetChild(0);
+	}
+	
+	public void InitializeLocalSpell(SyncSpellData spellData)
+	{
+		_spellData = spellData;
+		_isLocalSpell = true;
+		_started = true;
+
+		_spellTimer = new Timer(_spellData.Lifetime);
+		_spellTimer.OnTimerEnd += DestroySpell;
 
 		foreach (int modifierIndex in _spellData.ModifierArray)
 		{
 			SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
 			Instantiate(modifier.SpellModifierPrefab.gameObject, _spellModifierTf);
 		}
-		
-		CastSpell();
+		Debug.Log($"Local Spell Initialized");
+
+		SpellSetUp();
 	}
 	
-	protected bool PlayerOwnerClientIdEqualsServerId()
+	public void InitializeServerSpell(SyncSpellData spellData)
 	{
-		return Player.LocalClientInstance.OwnerClientId == NetworkManager.ServerClientId;
+		_spellData = spellData;
+
+		Debug.Log($"Server Spell Initialized");
+	}
+	
+	public override void OnNetworkSpawn()
+	{
+		if (IsServer)
+		{
+			_serverSpellData.Value = _spellData;
+
+			_started = true;
+			_isDead = false;
+
+			_spellTimer = new Timer(_spellData.Lifetime);
+			_spellTimer.OnTimerEnd += DestroySpell;
+		}
+
+		foreach (int modifierIndex in _serverSpellData.Value.ModifierArray)
+		{
+			SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
+			Instantiate(modifier.SpellModifierPrefab.gameObject, _spellModifierTf);
+		}
+
+		Debug.Log($"NetworkSpawn() ID: {NetworkObjectId}");
+
+		SpellSetUp();
+	}
+	
+	protected virtual void SpellSetUp() { }
+
+    private void DestroySpell(object sender, EventArgs e)
+    {
+		_started = false;
+
+		if (IsServer)
+		{
+			NetworkObject.Despawn();
+		}
+		Debug.Log($"DestroySpell()");
+		Destroy(gameObject);
 	}
 
-	
-	protected bool ColliderIsSourcePlayer(Collider2D col)
+	protected virtual void FixedUpdate()
 	{
-		return NetworkManager.ConnectedClients[_spellData.SpawnPlayerId].PlayerObject == null || NetworkManager.ConnectedClients[_spellData.SpawnPlayerId].PlayerObject.GetComponent<Player>().HitCollider == col;
+		if ((IsServer || _isLocalSpell) && _started)
+		{
+			_spellTimer.Tick(Time.fixedDeltaTime);
+		}
 	}
 }
