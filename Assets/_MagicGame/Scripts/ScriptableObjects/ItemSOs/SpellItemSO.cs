@@ -136,7 +136,7 @@ public class SpellItemSO : MagicItemSO
 	{
 		ulong projectileId = IdGenerator.GenerateRandomId();
 		ulong sourcePlayerId = Player.LocalClientInstance.OwnerClientId;
-		
+		Debug.Log($"Casting spell {this}");
 		int spellIndex = GameManager.Instance.GetItemIdFromItemSO(this);
 		Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().MainHand.ProjectileSpawnTransform.position;
 		Vector2 baseDirection = (ActionManager.MouseWorldPosition - spawnPoint).normalized;
