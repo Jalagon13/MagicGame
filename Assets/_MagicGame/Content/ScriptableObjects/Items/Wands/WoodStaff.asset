@@ -18,9 +18,8 @@ MonoBehaviour:
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <BaseCastDelay>k__BackingField: 0.2
-  <BaseDamage>k__BackingField: 5
   <MaxMana>k__BackingField: 90
-  <ManaRegenSpeed>k__BackingField: 50
+  <ManaRegenSpeed>k__BackingField: 15
   <ReloadDuration>k__BackingField: 0.375
   <Accuracy>k__BackingField: 6.5
   <Capacity>k__BackingField: 3

@@ -11,6 +11,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 	private SyncSpellData _spellData;
 	private GameObject _spellGameObject;
 	private Collider2D _spellCollider;
+	private Spell _spell;
 
 	public override void OnNetworkSpawn()
 	{
@@ -21,7 +22,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 
 			HideSpell(NetworkManager.ServerClientId);
 			
-			NetworkObject.CheckObjectVisibility += CheckIfInSameBiome;
+			NetworkObject.CheckObjectVisibility += InitialVisCheck;
 			NetworkManager.NetworkTickSystem.Tick += SpellNetworkTick;
 		}
 		
@@ -30,6 +31,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 	
 	public void InitializeSpellNetwork(SyncSpellData syncSpellData)
 	{
+		_spell = GetComponent<Spell>();
 		_spellData = syncSpellData;
 		
 		// Find walldetectorcollider and populate it
@@ -41,6 +43,8 @@ public class SpellNetworkComponent : NetworkBehaviour
 
 	private void SpellNetworkTick()
 	{
+		if(!_spell.Started) return;
+	
 		HandleBiomeVisibility();
 	}
 
@@ -60,6 +64,13 @@ public class SpellNetworkComponent : NetworkBehaviour
 				HideSpell(clientId);
 			}
 		}
+	}
+	
+	private bool InitialVisCheck(ulong clientId)
+	{
+		if (!_spell.Started) return false;
+		
+		return CheckIfInSameBiome(clientId);
 	}
 	
 	private bool CheckIfInSameBiome(ulong clientId)
@@ -106,7 +117,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 	{
 		if (IsServer)
 		{
-			NetworkObject.CheckObjectVisibility -= CheckIfInSameBiome;
+			NetworkObject.CheckObjectVisibility -= InitialVisCheck;
 			NetworkManager.NetworkTickSystem.Tick -= SpellNetworkTick;
 		}
 

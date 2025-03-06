@@ -32,6 +32,8 @@ public class GameManager : NetworkBehaviour
 	[SerializeField] private TileDataBaseSO _tileDataBaseSO;
 	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
 	
+	private Dictionary<ulong, Spell> _loadedSpells = new Dictionary<ulong, Spell>();
+	
 	private void Awake()
 	{
 		Instance = this;
@@ -190,28 +192,45 @@ public class GameManager : NetworkBehaviour
 	#endregion
 
 	#region Spell Projectile Functions
-	public void SpawnSpellProjectile(SyncSpellData spellData)
-	{
-		// if(spellData.SpawnPlayerId != NetworkManager.ServerClientId)
-		// {
-		// 	SpellItemSO currentSpellItemSO = GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO;
-		// 	Spell localSpell = Instantiate(currentSpellItemSO.SpellProjectilePrefab, spellData.SpawnPoint, Quaternion.identity);
-		// 	localSpell.InitializeLocalSpell(spellData);
-		// }
-		
-		SpawnSpellProjectileServerRpc(spellData);
-	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnSpellProjectileServerRpc(SyncSpellData spellData)
+	public void LoadSpellServerRpc(SyncSpellData spellData)
 	{
-		Spell realSpell = Instantiate((GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO).SpellProjectilePrefab, spellData.SpawnPoint, Quaternion.identity);
-		realSpell.InitializeServerSpell(spellData);
-		realSpell.GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);
+		Spell spell = Instantiate((GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO).SpellProjectilePrefab, default, Quaternion.identity);
+		spell.SetSpellData(spellData);
 		
-		NetworkObject no = realSpell.GetComponent<NetworkObject>();
+		_loadedSpells[spellData.SpellId] = spell;
+		
+		NetworkObject no = spell.GetComponent<NetworkObject>();
 		no.SpawnWithObservers = false;
 		no.Spawn(true);
+	}
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void ExecuteSpellServerRpc(ulong spellId, Vector2 finalDirection, Vector2 spawnPoint)
+	{
+	    if(_loadedSpells.ContainsKey(spellId))
+	    {
+			_loadedSpells[spellId].ExecuteSpellStart(finalDirection, spawnPoint);
+		}
+		else
+		{
+		    Debug.LogWarning($"Spell with id {spellId} not found. Can't Execute");
+		}
+	}
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void CancelSpellServerRpc(ulong spellId)
+	{
+		if(_loadedSpells.ContainsKey(spellId))
+		{
+			_loadedSpells[spellId].CancelSpell();
+			Debug.Log($"Spell Canceled");
+		}
+		else
+		{
+			Debug.LogWarning($"Spell with id {spellId} not found. Can't Cancel");
+		}
 	}
 	
 	#endregion

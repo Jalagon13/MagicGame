@@ -7,12 +7,13 @@ using UnityEngine;
 
 public class Spell : NetworkBehaviour
 {
+	public bool Started { get; private set; }
+	
 	protected SyncSpellData _spellData;
 	protected GameObject _spellGameObject;
 	protected Collider2D _spellCollider;
-	protected bool _started;
 	protected bool _isDead;
-	protected bool _isLocalSpell;
+	protected Vector2 _finalDirection;
 	
 	private NetworkVariable<SyncSpellData> _serverSpellData = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private Transform _spellModifierTf;
@@ -26,30 +27,38 @@ public class Spell : NetworkBehaviour
 		_spellModifierTf = transform.GetChild(0).GetChild(0);
 	}
 	
-	public void InitializeLocalSpell(SyncSpellData spellData)
+	public virtual void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
 	{
-		_spellData = spellData;
-		_isLocalSpell = true;
-		_started = true;
-
-		_spellTimer = new Timer(_spellData.Lifetime);
-		_spellTimer.OnTimerEnd += DestroySpell;
-
-		foreach (int modifierIndex in _spellData.ModifierArray)
+		Debug.Log($"Spell Executed in Spell Script");
+		if(IsServer)
 		{
-			SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
-			Instantiate(modifier.SpellModifierPrefab.gameObject, _spellModifierTf);
-		}
-		Debug.Log($"Local Spell Initialized");
+			transform.position = spawnPoint;
+			_finalDirection = finalDirection;
+			Started = true;
+			_isDead = false;
 
-		SpellSetUp();
+			_spellTimer = new Timer(_spellData.Lifetime);
+			_spellTimer.OnTimerEnd += DestroySpell;
+		}
 	}
 	
-	public void InitializeServerSpell(SyncSpellData spellData)
+	public void CancelSpell()
+	{
+		Debug.Log($"Spell Canceled");
+		
+		if (IsServer)
+		{
+			NetworkObject.Despawn();
+		}
+		
+		Destroy(gameObject);
+	}
+	
+	public void SetSpellData(SyncSpellData spellData)
 	{
 		_spellData = spellData;
-
-		Debug.Log($"Server Spell Initialized");
+		GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);
+		Debug.Log($"SpellData Set");
 	}
 	
 	public override void OnNetworkSpawn()
@@ -57,12 +66,6 @@ public class Spell : NetworkBehaviour
 		if (IsServer)
 		{
 			_serverSpellData.Value = _spellData;
-
-			_started = true;
-			_isDead = false;
-
-			_spellTimer = new Timer(_spellData.Lifetime);
-			_spellTimer.OnTimerEnd += DestroySpell;
 		}
 
 		foreach (int modifierIndex in _serverSpellData.Value.ModifierArray)
@@ -70,17 +73,13 @@ public class Spell : NetworkBehaviour
 			SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
 			Instantiate(modifier.SpellModifierPrefab.gameObject, _spellModifierTf);
 		}
-		Debug.Log($"HEYYYY");
+		
 		Debug.Log($"NetworkSpawn() ID: {NetworkObjectId}");
-
-		SpellSetUp();
 	}
 	
-	protected virtual void SpellSetUp() { }
-
     private void DestroySpell(object sender, EventArgs e)
     {
-		_started = false;
+		Started = false;
 
 		if (IsServer)
 		{
@@ -92,7 +91,7 @@ public class Spell : NetworkBehaviour
 
 	protected virtual void FixedUpdate()
 	{
-		if ((IsServer || _isLocalSpell) && _started)
+		if ((IsServer /* || _isLocalSpell */) && Started)
 		{
 			_spellTimer.Tick(Time.fixedDeltaTime);
 		}

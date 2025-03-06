@@ -34,7 +34,7 @@ public class PlayerRechargeStatUI : MonoBehaviour
 	private void OnPlayerManaRechargeUpdated(object sender, ActionManager.OnStatUpdatedEventArgs e)
 	{
 		ShowBar();
-		_border.sizeDelta = new Vector2(_manaStatUI.MaxMana, _border.sizeDelta.y);
+		_border.sizeDelta = new Vector2(_manaStatUI.MaxMana * 2, _border.sizeDelta.y);
 	
 		UpdateBarFill(e.CurrentAmount, e.MaxAmount);
 	}

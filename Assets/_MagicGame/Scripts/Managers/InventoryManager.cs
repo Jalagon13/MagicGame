@@ -85,7 +85,7 @@ public class InventoryManager : MonoBehaviour
 		}
 	}
 	
-	public bool MainHandItemExists(out InventoryItem mainHandInventoryItem)
+	public bool SelectedItemExists(out InventoryItem mainHandInventoryItem)
 	{
 		if(_mouseItemModel.MouseInventoryItem.HasItem)
 		{
