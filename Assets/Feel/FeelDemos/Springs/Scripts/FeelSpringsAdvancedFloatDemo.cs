@@ -1,5 +1,5 @@
 using MoreMountains.Feedbacks;
-#if MM_TEXTMESHPRO
+#if MM_UGUI2
 using TMPro;
 #endif
 using UnityEngine;

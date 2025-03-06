@@ -385,6 +385,10 @@ namespace MoreMountains.Tools
 				{
 					if (FadeIn && FadeOut && (CurrentTimeLeft < FadeDuration))
 					{
+						if (FadeOut)
+						{
+							Stop();	
+						}
 						HandleNextSong(1, false);
 					}
 					return;
