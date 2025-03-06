@@ -20,36 +20,30 @@ public class ManaBolt : Spell
 		_rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
-    protected override void SpellSetUp()
+    public override void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
     {
-        base.SpellSetUp();
+        base.ExecuteSpellStart(finalDirection, spawnPoint);
 
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 		
-		if(IsServer || _isLocalSpell)
+		if(IsServer)
 		{
-			_velocity = _spellData.Direction * _spellData.Speed;
+			_velocity = _finalDirection * _spellData.Speed;
 		}
-		Debug.Log($"Mana Bolt Set up");
+		
+		Debug.Log($"Mana Bolt Executed up");
 	}
 
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
 
-		if ((IsServer || _isLocalSpell) && _started)
+		if (IsServer && Started)
 		{
 			_velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
 			_rigidbody2D.linearVelocity = _velocity;
 		}
 	}
-
-    // private void Awake()
-    // {
-    // 	_rigidbody2D = GetComponent<Rigidbody2D>();
-    // 	_wallDetectorCollider.OnTouchingWall += OnWallCollide;
-
-    // }
 
     // private void FixedUpdate()
     // {

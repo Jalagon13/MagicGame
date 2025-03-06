@@ -34,9 +34,20 @@ public class ActionManager : MonoBehaviour
 		InventoryManager.Instance.GetInventoryModel().OnWandCollected += OnWandCollected;
 		InventoryManager.Instance.GetInventoryModel().OnWandRemoved += OnWandRemoved;
 		InventoryManager.Instance.OnInventoryUpdated += UpdateWandDict;
+		HotbarManager.Instance.OnFocusSlotUpdated += UpdateSelectedWand;
 	}
 
-	private void UpdateWandDict(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
+    private void UpdateSelectedWand(object sender, HotbarManager.OnFocusItemSetEventArgs e)
+    {
+		InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
+		
+        foreach (ulong wandId in WandDict.Keys)
+		{
+			WandDict[wandId].SetSelected(wandId == selectedInventoryItem.Id);
+		}
+    }
+
+    private void UpdateWandDict(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
 	{
 		HashSet<ulong> currentWandIds = new HashSet<ulong>();
 
@@ -102,13 +113,13 @@ public class ActionManager : MonoBehaviour
 	{
 		if(Player.LocalClientInstance.IsDead() || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled()) return;
 
-		if (GameInput.Instance.GetPrimaryHeldDown() && InventoryManager.Instance.MainHandItemExists(out InventoryItem selectedInventoryItem))
+		if (GameInput.Instance.GetPrimaryHeldDown() && InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem))
 		{
 			if(_primaryActionTimer.RemainingSeconds <= 0)
 			{
 				_primaryActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.LocalClientInstance.MainHand);
 			}
-
+			
 			if (WandDict.ContainsKey(selectedInventoryItem.Id) && !Player.LocalClientInstance.MainHand.IsSwinging && !GameInput.Instance.GetSecondaryHeldDown())
 			{
 				// Player is holding down primary on a wand, try to shoot wand
@@ -136,7 +147,7 @@ public class ActionManager : MonoBehaviour
 	
 	private void HandleWandUI()
 	{
-		if(InventoryManager.Instance.MainHandItemExists(out InventoryItem selectedInventoryItem) && selectedInventoryItem is WandInventoryItem wandInvItem)
+		if(InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem) && selectedInventoryItem is WandInventoryItem wandInvItem)
 		{
 			// Update the UI stats for this wand
 			AddWandToDict(wandInvItem);
@@ -172,5 +183,6 @@ public class ActionManager : MonoBehaviour
 		InventoryManager.Instance.GetInventoryModel().OnWandCollected -= OnWandCollected;
 		InventoryManager.Instance.GetInventoryModel().OnWandRemoved -= OnWandRemoved;
 		InventoryManager.Instance.OnInventoryUpdated -= UpdateWandDict;
+		HotbarManager.Instance.OnFocusSlotUpdated -= UpdateSelectedWand;
 	}
 }

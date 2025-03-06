@@ -9,9 +9,14 @@ public class Wand
 	public float CurrentReload { get; private set; }
 	public float TotalReloadDuration { get; private set; }
 	public WandItemSO WandSO { get; private set; }
+	public bool IsSelected { get; private set; }
 	
 	private Queue<int> _validMagicIndexes = new();
-	private float _castTimer;
+	private float _castDelayTimer;
+	private Timer _castTimeTimer;
+	private ulong _spellToCastId; // Reference to the spell that is currently being cast
+	private SpellItemSO _spellToCast;
+
 
 	public Wand(WandInventoryItem wandInventoryItem)
 	{
@@ -19,7 +24,9 @@ public class Wand
 		WandSO = WandInvItem.Item as WandItemSO;
 		CurrentMana = WandSO.MaxMana;
 		WandInvItem.OnWandContentsUpdated += OnWandContentsUpdated;
-		
+
+		_castTimeTimer = new Timer(0);
+
 		ResetValidMagicIndexes();
 	}
 
@@ -32,21 +39,32 @@ public class Wand
 
 	public void Tick(float deltaTime)
 	{
-		if(_castTimer > 0)
+		_castTimeTimer.Tick(deltaTime);
+		
+		if(_castTimeTimer.RemainingSeconds > 0 && !IsSelected)
 		{
-			_castTimer -= deltaTime;
+			// Cast was interrupted
+			CancelSpellCharge();
 		}
-		
-		CurrentReload += deltaTime; // Regen recharge over time
-		CurrentReload = Mathf.Min(CurrentReload, TotalReloadDuration); // Clamp to prevent overfilling
-		
-		CurrentMana += WandSO.ManaRegenSpeed * deltaTime; // Regenerate mana over time
-		CurrentMana = Mathf.Min(CurrentMana, WandSO.MaxMana); // Clamp to prevent overfilling
+
+		if(_castTimeTimer.RemainingSeconds <= 0)
+		{
+			if (_castDelayTimer > 0)
+			{
+				_castDelayTimer -= deltaTime;
+			}
+
+			CurrentReload += deltaTime; // Regen recharge over time
+			CurrentReload = Mathf.Min(CurrentReload, TotalReloadDuration); // Clamp to prevent overfilling
+
+			CurrentMana += WandSO.ManaRegenSpeed * deltaTime; // Regenerate mana over time
+			CurrentMana = Mathf.Min(CurrentMana, WandSO.MaxMana); // Clamp to prevent overfilling
+		}
 	}
 	
 	public void CastSpell()
 	{
-		if (_castTimer > 0 || CurrentReload < TotalReloadDuration) return; // Cast Delay or recharge ongoing return
+		if (_castDelayTimer > 0 || CurrentReload < TotalReloadDuration) return; // Cast Delay or recharge ongoing return
 
 		if (_validMagicIndexes.Count == 0) // If validspells is empty, try to fill it up
 		{
@@ -128,7 +146,7 @@ public class Wand
 				{
 					CurrentMana -= potentialSpellToShoot.ManaCost;
 
-					potentialSpellToShoot.CastSpell(WandSO, null);
+					StartSpellCharge(potentialSpellToShoot, null);
 					numOfSpellsCast++;
 					cumulativeCastDelay += potentialSpellToShoot.CastDelay;
 					spellsShot.Add(validMagicIndex);
@@ -144,7 +162,7 @@ public class Wand
 
 		if (_validMagicIndexes.Count > 0)
 		{
-			_castTimer = WandSO.BaseCastDelay + cumulativeCastDelay;
+			_castDelayTimer = WandSO.BaseCastDelay + cumulativeCastDelay;
 		}
 		else
 		{
@@ -158,15 +176,16 @@ public class Wand
 		if (spellToCast.ManaCost > CurrentMana) return;
 
 		_validMagicIndexes.Dequeue();
-		_castTimer = WandSO.BaseCastDelay + spellToCast.CastDelay;
+		_castDelayTimer = WandSO.BaseCastDelay + spellToCast.CastDelay;
 		CurrentMana -= spellToCast.ManaCost;
-		spellToCast.CastSpell(WandSO, spellModsFound);
 
 		if (_validMagicIndexes.Count <= 0)
 		{
 			CurrentReload = 0;
-			TotalReloadDuration = WandSO.ReloadDuration + _castTimer;
+			TotalReloadDuration = WandSO.ReloadDuration + _castDelayTimer;
 		}
+
+		StartSpellCharge(spellToCast, spellModsFound);
 	}
 	
 	private void HandleMiningCast(DestructionCataylstItemSO miningSpell)
@@ -195,17 +214,50 @@ public class Wand
 	private void MiningCastCleanUp(float castDelay, int manaCost)
 	{
 		_validMagicIndexes.Dequeue();
-		_castTimer = WandSO.BaseCastDelay + castDelay;
+		_castDelayTimer = WandSO.BaseCastDelay + castDelay;
 		CurrentMana -= manaCost;
 
 		if (_validMagicIndexes.Count <= 0)
 		{
 			CurrentReload = 0;
-			TotalReloadDuration = WandSO.ReloadDuration + _castTimer;
+			TotalReloadDuration = WandSO.ReloadDuration + _castDelayTimer;
 		}
 	}
 	
-	private void ResetValidMagicIndexes()
+	private void StartSpellCharge(SpellItemSO spellToCast, List<int> spellModsFound = null)
+	{
+		// Spawn the spell on the server
+		_spellToCastId = IdGenerator.GenerateRandomId();
+		_spellToCast = spellToCast;
+		_spellToCast.LoadSpell(WandSO, spellModsFound, _spellToCastId);
+		
+		_castTimeTimer = new(_spellToCast.CastTime);
+		_castTimeTimer.OnTimerEnd += ExecuteSpell;
+
+		Debug.Log($"Charging Spell...");
+	}
+
+    private void ExecuteSpell(object sender, EventArgs e)
+    {
+		_spellToCast.ExecuteSpell(WandSO, _spellToCastId);
+
+		_castTimeTimer.OnTimerEnd -= ExecuteSpell;
+		Debug.Log($"Spell Executed");
+	}
+	
+	private void CancelSpellCharge()
+	{
+		_spellToCast.CancelSpell(_spellToCastId);
+
+		_spellToCastId = default;
+		_spellToCast = null;
+
+		_castTimeTimer.OnTimerEnd -= ExecuteSpell;
+		_castTimeTimer = new Timer(0);
+		Debug.Log($"Cast was interrupted. Reseting spellToCast values");
+	}
+
+    private void ResetValidMagicIndexes()
 	{
 		_validMagicIndexes.Clear();
 	}
@@ -218,6 +270,16 @@ public class Wand
 			{
 				_validMagicIndexes.Enqueue(i);
 			}
+		}
+	}
+	
+	public void SetSelected(bool value)
+	{
+	    IsSelected = value;
+
+		if (_castTimeTimer.RemainingSeconds > 0 && IsSelected)
+		{
+			CancelSpellCharge();
 		}
 	}
 }

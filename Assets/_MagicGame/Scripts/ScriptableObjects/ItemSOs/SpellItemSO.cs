@@ -13,12 +13,10 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public float Lifetime;
 	public ulong SpellId;
 	public ulong SpawnPlayerId;
-	public Vector2 Direction;
-	public Vector2 SpawnPoint;
 	public BiomeType SpawnBiome;
 	public List<int> ModifierArray;
 
-	public SyncSpellData(int spellIndex, int damage, int knockback, float speed, float lifetime, ulong spellId, ulong spawnPlayerId, Vector2 direction, Vector2 spawnPoint, BiomeType spawnBiome, List<int> modifierArray)
+	public SyncSpellData(int spellIndex, int damage, int knockback, float speed, float lifetime, ulong spellId, ulong spawnPlayerId, BiomeType spawnBiome, List<int> modifierArray)
 	{
 		SpellIndex = spellIndex;
 		Damage = damage;
@@ -27,8 +25,6 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		Lifetime = lifetime;
 		SpellId = spellId;
 		SpawnPlayerId = spawnPlayerId;
-		Direction = direction;
-		SpawnPoint = spawnPoint;
 		SpawnBiome = spawnBiome;
 		ModifierArray = modifierArray ?? new List<int>(); // Ensure no null lists
 	}
@@ -43,8 +39,6 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 			Lifetime != other.Lifetime ||
 			SpellId != other.SpellId ||
 			SpawnPlayerId != other.SpawnPlayerId ||
-			Direction != other.Direction ||
-			SpawnPoint != other.SpawnPoint ||
 			SpawnBiome != other.SpawnBiome)
 		{
 			return false;
@@ -75,8 +69,6 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		serializer.SerializeValue(ref Lifetime);
 		serializer.SerializeValue(ref SpellId);
 		serializer.SerializeValue(ref SpawnPlayerId);
-		serializer.SerializeValue(ref Direction);
-		serializer.SerializeValue(ref SpawnPoint);
 		serializer.SerializeValue(ref SpawnBiome);
 
 		// Serialize the list count first
@@ -107,7 +99,9 @@ public class SpellItemSO : MagicItemSO
 {
 	[field: Tooltip("Actual Prefab for the projectile.")]
 	[field: SerializeField] public Spell SpellProjectilePrefab { get; private set; }
-	
+	[field: Tooltip("Time it takes to cast this projectile (in seconds).")]
+	[field: SerializeField] public float CastTime { get; private set; } = 0.2f;
+
 	[field: Tooltip("The additional delay (in seconds) added to the casting time of this projectile. Negative values reduce the delay.")]
 	[field: SerializeField] public float CastDelay { get; private set; } = 0.1f;
 	
@@ -132,21 +126,33 @@ public class SpellItemSO : MagicItemSO
 	
 	[field: SerializeField] public EventReference SpellCast { get; private set; }
 
-	public void CastSpell(WandItemSO wandSO, List<int> modifierArray)
+	public void LoadSpell(WandItemSO wandSO, List<int> modifierArray, ulong spellId)
 	{
-		ulong projectileId = IdGenerator.GenerateRandomId();
-		ulong sourcePlayerId = Player.LocalClientInstance.OwnerClientId;
-		Debug.Log($"Casting spell {this}");
-		int spellIndex = GameManager.Instance.GetItemIdFromItemSO(this);
+		GameManager.Instance.LoadSpellServerRpc(new SyncSpellData(
+			GameManager.Instance.GetItemIdFromItemSO(this),
+			Damage, Knockback, Speed, Lifetime, spellId,
+			Player.LocalClientInstance.OwnerClientId,
+			Player.LocalClientInstance.CurrentPlayerBiome.Value, modifierArray));
+			
+		Debug.Log($"Spell Loaded");
+	}
+	
+	public void ExecuteSpell(WandItemSO wandSO, ulong spellId)
+	{
 		Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().MainHand.ProjectileSpawnTransform.position;
 		Vector2 baseDirection = (ActionManager.MouseWorldPosition - spawnPoint).normalized;
 		float totalSpread = Mathf.Max(0, Accuracy + wandSO.Accuracy);
 		float randomAngle = UnityEngine.Random.Range(-totalSpread, totalSpread);
 		Vector2 finalDirection = Quaternion.Euler(0, 0, randomAngle) * baseDirection;
-
-		var spellData = new SyncSpellData(spellIndex, Damage, Knockback, Speed, Lifetime, projectileId, sourcePlayerId, finalDirection, spawnPoint, Player.LocalClientInstance.CurrentPlayerBiome.Value, modifierArray);
-
-		GameManager.Instance.SpawnSpellProjectile(spellData);
+		
+		GameManager.Instance.ExecuteSpellServerRpc(spellId, finalDirection, spawnPoint);
 		SoundManager.Instance.PlayOneShot(SpellCast, Player.LocalClientInstance.MainHand.ProjectileSpawnTransform.position);
+		
+		Debug.Log($"Spell Executed");
+	}
+	
+	public void CancelSpell(ulong spellId)
+	{
+	    GameManager.Instance.CancelSpellServerRpc(spellId);
 	}
 }
