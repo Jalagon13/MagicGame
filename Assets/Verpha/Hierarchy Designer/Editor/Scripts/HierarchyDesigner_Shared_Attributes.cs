@@ -14,16 +14,16 @@ namespace Verpha.HierarchyDesigner
         }
     }
 
-    internal enum HierarchyDesigner_Attribute_Tools
-    {
-        Activate,
-        Deactivate,
-        Count,
-        Lock,
-        Unlock,
-        Rename,
-        Select,
-        Sort
-    }
+    // internal enum HierarchyDesigner_Attribute_Tools
+    // {
+    //     Activate,
+    //     Deactivate,
+    //     Count,
+    //     Lock,
+    //     Unlock,
+    //     Rename,
+    //     Select,
+    //     Sort
+    // }
 }
 #endif

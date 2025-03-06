@@ -1,3 +1,58 @@
+| Version 1.7.0
+• (New) Added a new design settings feature: Hierarchy Button Color.
+• (Improvement) Improved the Hierarchy Buttons' GUI.
+• (Other) Included Hierarchy Button Color in the Presets feature.
+• (Other) Tweaked all Hierarchy Button resource images.
+• (Other) Tweaked all presets.
+• (Other) Changed the default values of the following design settings: HD Buttons.
+
+| Version 1.6.0
+• (New) Added a new feature: Component "Mini-map" (To use: Click Mouse 0 on any component icon).
+• (New) Introduced a new folder series: Classic (e.g., Classic I-II and Classic Outline).
+• (Improvement) Simplified the 'Quick Set Tag Layer' feature and UI.
+• (Removed) Deleted 'HD_Window_TagLayer.cs' (redundant).
+• (Other) Created a new class: 'HD_Window_Component.cs'.
+• (Other) Major and minor refactoring to a few classes.
+• (Other) Cleaned up unused logic.
+
+Credits: Special thanks to Lotus (L.Q.) for implementing the Component Mini-map feature and sending it to me. I refactored and integrated it into HD.
+
+| Version 1.5.0
+• (New) Added a new General Settings filtering feature: "Excluded Components Icons".
+• (Improvement) Applying a preset now updates the Default Folder and Separator design values upon saving.
+• (Bug Fix) Removed an invalid entry for the Folder Image Type "Neo III" in Design Settings' default folder image type.
+• (Removed) Removed the Exclude Transform and Canvas Renderer Component Icons from General Filtering Settings (redundant due to the Excluded Components feature; Transform and Canvas Renderer are now default values in the Excluded Components list).
+• (Other) Minor refactoring in a few classes.
+
+| Version 1.4.0
+• (New) Added a new folder series: Neo (i.e., Neo I-II and Neo Outline).
+• (New) Added a new advanced folder setting: "Enable Custom Inspector UI."
+• (New) Added a new bool toggle, "Display Parents Only," to the HD Folder Editor–only operations.
+• (New) Added four new minor shortcuts: transform a GameObject into a folder or separator, and vice versa. 
+• (New) Added tooltips to all minor shortcuts.
+• (New) Added Light Mode icons for the Hierarchy buttons (Lock, Unlock, Visibility On, and Visibility Off) and for HD's UI (Reset and Tooltip icons).
+• (Improvement) Default Folder and Separator changes in the design settings now take effect upon saving.
+• (Improvement) Made minor performance improvements.
+• (Others) Added six new resource icons for Light Mode.
+• (Others) Made small tweaks to some presets.
+• (Others) Renamed all scripts.
+• (Others) Renamed "Hierarchy Designer Folder Icon Inspector" to "Hierarchy Designer Folder Icon Scene."
+• (Others) Made other small changes and refactors in a few classes.
+
+| Version 1.3.0
+• (New) Added two new context menus: Expand All and Collapse All.
+• (New) Added two new shortcuts: Expand All GameObjects (Shift + Alt + E) and Collapse All GameObjects (Shift + Alt + C).
+• (Bug Fix) Fixed a NullReferenceException bug related to the main icon of UI GameObjects.
+• (Other) Performed minor refactoring in several classes.
+
+| Version 1.2.0
+• (New): Created a new feature, 'Preset Creator,' located under Utilities.
+• (New): Added a new minor shortcut, 'Open Preset Creator Panel.'
+• (New): Added a 'Saved Data' section to the Features Breakdown in the About menu.
+• (New): Added a new Separator Background Type: 'Postmodern I' and 'Postmodern II.'
+• (Improvement): Made minor GUI and other changes.
+• (Other): Performed major and minor refactors across a few classes.
+
 | Version 1.1.9.1
 • (New) Added the following presets: 'Ho Ho Ho' and 'Snow'.
 • (New) Created a new design setting: Separator Center Text Anchor Offset.

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: bf6b17f89be3948b9b49d001a7deeee2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 273928
+  packageName: Hierarchy Designer
+  packageVersion: 1.7.0
+  assetPath: Assets/Verpha/Hierarchy Designer/Editor/Scripts/HD_Manager_Initializer.cs
+  uploadId: 732888

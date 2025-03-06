@@ -39,7 +39,7 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 0
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -129,7 +129,7 @@ AssetOrigin:
   serializedVersion: 1
   productId: 273928
   packageName: Hierarchy Designer
-  packageVersion: 1.1.9.1
+  packageVersion: 1.7.0
   assetPath: Assets/Verpha/Hierarchy Designer/Editor/Resources/Hierarchy Designer
     Separator Background Image Next-Gen II.png
-  uploadId: 719316
+  uploadId: 732888

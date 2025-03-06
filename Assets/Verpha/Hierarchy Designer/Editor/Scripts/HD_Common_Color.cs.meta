@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 9b15c5c4eaed7476f9217d53d32c2ca5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 273928
+  packageName: Hierarchy Designer
+  packageVersion: 1.7.0
+  assetPath: Assets/Verpha/Hierarchy Designer/Editor/Scripts/HD_Common_Color.cs
+  uploadId: 732888
