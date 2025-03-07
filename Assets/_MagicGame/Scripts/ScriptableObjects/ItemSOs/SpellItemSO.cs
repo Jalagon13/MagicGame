@@ -99,6 +99,8 @@ public class SpellItemSO : MagicItemSO
 {
 	[field: Tooltip("Actual Prefab for the projectile.")]
 	[field: SerializeField] public Spell SpellProjectilePrefab { get; private set; }
+	[field: Tooltip("Spell charging animation.")]
+	[field: SerializeField] public GameObject ChargeVFX { get; private set; }
 	[field: Tooltip("Time it takes to cast this projectile (in seconds).")]
 	[field: SerializeField] public float CastTime { get; private set; } = 0.2f;
 
@@ -122,12 +124,16 @@ public class SpellItemSO : MagicItemSO
 
 	[field: Tooltip("The speed at which the projectile travels.")]
 	[field: SerializeField] public int Speed { get; private set; } = 100;
+	[field: Tooltip("How much knockback applied to player when this spell recoils")]
+	[field: SerializeField] public float Recoil { get; private set; } = 2f;
 
-	
+
 	[field: SerializeField] public EventReference SpellCast { get; private set; }
 
 	public void LoadSpell(WandItemSO wandSO, List<int> modifierArray, ulong spellId)
 	{
+		Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(this));
+		
 		GameManager.Instance.LoadSpellServerRpc(new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
 			Damage, Knockback, Speed, Lifetime, spellId,
@@ -139,12 +145,15 @@ public class SpellItemSO : MagicItemSO
 	
 	public void ExecuteSpell(WandItemSO wandSO, ulong spellId)
 	{
+		Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
+
 		Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().MainHand.ProjectileSpawnTransform.position;
 		Vector2 baseDirection = (ActionManager.MouseWorldPosition - spawnPoint).normalized;
 		float totalSpread = Mathf.Max(0, Accuracy + wandSO.Accuracy);
 		float randomAngle = UnityEngine.Random.Range(-totalSpread, totalSpread);
 		Vector2 finalDirection = Quaternion.Euler(0, 0, randomAngle) * baseDirection;
 		
+		Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, Recoil);
 		GameManager.Instance.ExecuteSpellServerRpc(spellId, finalDirection, spawnPoint);
 		SoundManager.Instance.PlayOneShot(SpellCast, Player.LocalClientInstance.MainHand.ProjectileSpawnTransform.position);
 		
@@ -153,6 +162,8 @@ public class SpellItemSO : MagicItemSO
 	
 	public void CancelSpell(ulong spellId)
 	{
-	    GameManager.Instance.CancelSpellServerRpc(spellId);
+		Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
+
+		GameManager.Instance.CancelSpellServerRpc(spellId);
 	}
 }

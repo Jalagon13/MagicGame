@@ -26,9 +26,6 @@ public class PlayerHand : NetworkBehaviour
 	[SerializeField] private SpriteRenderer _itemHeldSR;
 	[SerializeField] private GameObject _armPivotGO;
 	[SerializeField] private GameObject _armGO;
-	[SerializeField] private PlayerArmVisualPreset _meleeSwingPreset;
-	[SerializeField] private PlayerArmVisualPreset _holdingWandPreset;
-	[SerializeField] private PlayerArmVisualPreset _armItemAnglePreset;
 	[field: SerializeField] public Transform ProjectileSpawnTransform;
 	public bool IsSwinging { get; private set; }
 	public ItemSO HeldItem { get; private set; }
@@ -162,14 +159,6 @@ public class PlayerHand : NetworkBehaviour
 		if (HeldItem is SpellBookItemSO || HeldItem is WandItemSO)
 		{
 			ShowArm();
-			if(HeldItem is SpellBookItemSO)
-			{
-				ApplyPreset(_armItemAnglePreset);
-			}
-			else if(HeldItem is WandItemSO)
-			{
-				ApplyPreset(_holdingWandPreset);
-			}
 			
 			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 		}
@@ -209,8 +198,6 @@ public class PlayerHand : NetworkBehaviour
 		}
 		
 		SetPivotPosition(direction);
-		// ApplyPreset(_meleeSwingPreset);
-		ApplyPreset(_holdingWandPreset);
 		
 		StartCoroutine(SwingCoroutine(startAngle, endAngle, duration, clockwise, direction));
 	}
@@ -272,8 +259,6 @@ public class PlayerHand : NetworkBehaviour
 	{
 		yield return new WaitForSeconds(duration * 0.3f);
 		
-		ApplyPreset(_holdingWandPreset);
-		
 		_armPivotGO.transform.rotation = endRotation;
 		IsSwinging = false;
 		_thisPlayer.IsPerformingSwing = false;
@@ -291,12 +276,6 @@ public class PlayerHand : NetworkBehaviour
 		return direction.normalized;
 	}
 
-	private void ApplyPreset(PlayerArmVisualPreset preset)
-	{
-		CopyTransformValues(preset.GetArmTransform(), _armGO.transform);
-		CopyTransformValues(preset.GetItemInHandTransform(), _itemHeldSR.gameObject.transform);
-	}
-	
 	private void CopyTransformValues(Transform source, Transform target)
 	{
 		if (source == null || target == null)

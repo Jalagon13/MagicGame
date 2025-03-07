@@ -23,10 +23,6 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	}
 	
 	[SerializeField] private PlayerHand _mainHand;
-	[Range(1f, 100f)]
-	[Tooltip("(Linear drag), higher this value, the more drag (knock back resistant) this entity experiences")]
-	[SerializeField] private int _knockbackResist = 20; 
-	[SerializeField] private float _speed;
 	[SerializeField] private List<SpriteAnimationHandler> _spriteAnimationHandlerList = new();
 	
 	private NetworkVariable<Vector2> _moveVectorNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -35,6 +31,7 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	private bool _previousIsMoving; // Tracks the previous frame's IsMoving value
 	private Player _thisPlayer;
 	
+	[field: SerializeField] public float Speed { get; private set; }
 	[field: SerializeField] public float TurnSharpness { get; private set; }
 	public Knockback Knockback { get; private set; }
 	public Vector2 MoveVector { get { return _moveVectorNetworkVariable.Value; } set { if(IsOwner) {_moveVectorNetworkVariable.Value = value; } } }
@@ -42,7 +39,6 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	public PlayerIdleState PlayerIdleState { get; private set; }
 	public PlayerMoveState PlayerMoveState { get; private set; }
 	public CardinalDirection MovingDirection { get {return _currentDirection; } set {_currentDirection = value; } }
-	public float Speed => _speed;
 	public bool IsMoving { get; set; }
 	public bool IsDead { get { return _thisPlayer.IsDead(); } }
 	public bool CanMove { get; private set; } = true;
@@ -58,7 +54,6 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		PlayerMoveState = _states[PlayerState.Moving] as PlayerMoveState;
 		
 		RigidBody2D = GetComponent<Rigidbody2D>();
-		RigidBody2D.linearDamping = _knockbackResist;
 		
 		Knockback = GetComponent<Knockback>();
 		

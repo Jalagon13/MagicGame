@@ -33,6 +33,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	}
 	
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
+	[field: SerializeField] public PlayerVisuals PlayerVisuals { get; private set; }
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
 	[SerializeField] private GameObject _breadCrumbPrefab;
 	public PlayerStats PlayerStats { get; private set; }
@@ -52,8 +53,8 @@ public class Player : NetworkBehaviour, IHasHealth
 	public NetworkVariable<int> HealthNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	public NetworkVariable<bool> ExecutingIFrames { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	public NetworkVariable<bool> PvpEnabled { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public Knockback PlayerKnockback { get; private set; }
 	
-	public Knockback _playerKnockback { get; private set; }
 	private Timer _respawnTimer;
 	private Vector2 _spawnPoint;
 	private BiomeType _spawnBiome;
@@ -63,9 +64,9 @@ public class Player : NetworkBehaviour, IHasHealth
 	{
 		PlayerStats = GetComponent<PlayerStats>();
 		HitCollider = GetComponent<Collider2D>();
+		PlayerKnockback = GetComponent<Knockback>();
 		HealthNetworkVariable.OnValueChanged += HealthNetworkVariable_OnValueChanged;
 		
-		_playerKnockback = GetComponent<Knockback>();
 		_respawnTimer = new(_respawnTimerDuration);
 	}
 
@@ -241,7 +242,7 @@ public class Player : NetworkBehaviour, IHasHealth
 			Debug.Log($"[Client {NetworkManager.LocalClientId}] Applied {finalDamage} Damage to {gameObject.name}!");
 
 			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerDamaged, transform.position);
-			_playerKnockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce); 
+			PlayerKnockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce); 
 			
 			OnDamaged?.Invoke(this, new OnDamagedEventArgs
 			{
@@ -287,7 +288,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	private void DashTest(object sender, EventArgs e)
 	{
 		if (Pointer.IsOverUI() || ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo)) return;
-		_playerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, _knockbackResist, 30, true);
+		PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, 30, true);
 	}
 
 	private void HealthNetworkVariable_OnValueChanged(int previousValue, int newValue)
