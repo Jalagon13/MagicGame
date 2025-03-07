@@ -12671,6 +12671,9 @@ MonoBehaviour:
     OnPause:
       m_PersistentCalls:
         m_Calls: []
+    OnStop:
+      m_PersistentCalls:
+        m_Calls: []
     OnResume:
       m_PersistentCalls:
         m_Calls: []
@@ -12821,6 +12824,7 @@ MonoBehaviour:
         PositionMode: 1
         TargetTransform: {fileID: 0}
         Direction: {x: 0, y: 0, z: 0}
+        AttachmentTransform: {fileID: 0}
 --- !u!483693784 &8595758921929250133
 TilemapRenderer:
   m_ObjectHideFlags: 0
