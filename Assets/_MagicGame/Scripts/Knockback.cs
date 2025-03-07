@@ -12,9 +12,9 @@ public class Knockback : MonoBehaviour
 	public Vector2 Velocity { get; private set; }
 
 	[SerializeField] private bool _knockbackEnabled = true;
-	[SerializeField] private float _decayMult = 5f; // Higher = knockback fades out faster
 	
-	private float _minKnockback = 1;
+	private float _decayMult = 5f; // Higher = knockback fades out faster
+	private float _minKnockback = 0;
 	private float _maxKnockback = 100;
 	private float _finalKnockback;
 
@@ -56,6 +56,7 @@ public class Knockback : MonoBehaviour
 		// Calculate knockback with resistance
 		float finalKnockback = knockbackForce * (1 - knockbackResist);
 		_finalKnockback = Mathf.Clamp(finalKnockback, _minKnockback, _maxKnockback);
+		_decayMult = Mathf.Lerp(10, 1, _finalKnockback / _maxKnockback);
 
 		Velocity = direction * _finalKnockback;
 	}

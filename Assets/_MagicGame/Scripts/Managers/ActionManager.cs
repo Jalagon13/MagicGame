@@ -9,7 +9,9 @@ using UnityEngine.Tilemaps;
 public class ActionManager : MonoBehaviour
 {
 	public static ActionManager Instance { get; private set; }
-	public static Vector2 MouseWorldPosition;
+	public static Vector2 MouseWorldPosition { get; private set; }
+	public static bool IsChargingSpell { get; private set; }
+	
 	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerManaUpdated;
 	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerSpellChargeUpdated;
 	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerManaRechargeUpdated;
@@ -177,17 +179,19 @@ public class ActionManager : MonoBehaviour
 				});
 			}
 
-			float maxSpellCharge = WandDict[wandInvItem.Id].CastTimeTimer.Duration;
-			float currentSpellCharge = maxSpellCharge - WandDict[wandInvItem.Id].CastTimeTimer.RemainingSeconds;
+			float totalCastTimeDuration = WandDict[wandInvItem.Id].CastTimeTimer.Duration;
+			float currentCastTime = totalCastTimeDuration - WandDict[wandInvItem.Id].CastTimeTimer.RemainingSeconds;
 
-			if (currentSpellCharge <= maxSpellCharge)
+			if (currentCastTime <= totalCastTimeDuration)
 			{
 				OnPlayerSpellChargeUpdated?.Invoke(this, new OnStatUpdatedEventArgs
 				{
-					MaxAmount = maxSpellCharge,
-					CurrentAmount = currentSpellCharge
+					MaxAmount = totalCastTimeDuration,
+					CurrentAmount = currentCastTime
 				});
 			}
+			
+			IsChargingSpell = currentCastTime < totalCastTimeDuration;
 		}
 	}
 	
