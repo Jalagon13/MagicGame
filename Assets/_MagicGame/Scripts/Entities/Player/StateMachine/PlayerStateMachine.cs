@@ -31,8 +31,7 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	private bool _previousIsMoving; // Tracks the previous frame's IsMoving value
 	private Player _thisPlayer;
 	
-	[field: SerializeField] public float Speed { get; private set; }
-	[field: SerializeField] public float TurnSharpness { get; private set; }
+	public PlayerStats PlayerStats { get; private set; }
 	public Knockback Knockback { get; private set; }
 	public Vector2 MoveVector { get { return _moveVectorNetworkVariable.Value; } set { if(IsOwner) {_moveVectorNetworkVariable.Value = value; } } }
 	public Rigidbody2D RigidBody2D { get; private set; }
@@ -54,9 +53,9 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		PlayerMoveState = _states[PlayerState.Moving] as PlayerMoveState;
 		
 		RigidBody2D = GetComponent<Rigidbody2D>();
-		
 		Knockback = GetComponent<Knockback>();
-		
+		PlayerStats = GetComponent<PlayerStats>();
+
 		_thisPlayer = GetComponent<Player>();
 		_thisPlayer.OnDeath += Player_OnKilled;
 		_thisPlayer.OnRespawn += Player_OnRespawn;

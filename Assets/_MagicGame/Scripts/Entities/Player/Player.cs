@@ -288,7 +288,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	private void DashTest(object sender, EventArgs e)
 	{
 		if (Pointer.IsOverUI() || ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo)) return;
-		PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, 30, true);
+		PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, 45, true);
 	}
 
 	private void HealthNetworkVariable_OnValueChanged(int previousValue, int newValue)

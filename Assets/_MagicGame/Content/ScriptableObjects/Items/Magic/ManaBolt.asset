@@ -27,7 +27,7 @@ MonoBehaviour:
   <Accuracy>k__BackingField: 2
   <Lifetime>k__BackingField: 1.5
   <Speed>k__BackingField: 14
-  <Recoil>k__BackingField: 8
+  <Recoil>k__BackingField: 15
   <SpellCast>k__BackingField:
     Guid:
       Data1: -2115950531

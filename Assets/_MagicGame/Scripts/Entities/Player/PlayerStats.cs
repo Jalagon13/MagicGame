@@ -5,9 +5,24 @@ using UnityEngine;
 public class PlayerStats : MonoBehaviour
 {
 	[field: SerializeField] public int StartingPlayerHealth { get; private set; } = 100;
+	[field: SerializeField] public float BaseSpeed { get; private set; }
+	[field: SerializeField] public float TurnSharpness { get; private set; }
+	
 	public int PlayerDefense { get; private set; }
+	public float CurrentSpeed { get; private set; }
 	
 	private List<int> _equippedArmorItemIdList = new();
+	private float _chargingPlayerSpeedMult = 0.5f;
+
+	private void Start()
+    {
+		CurrentSpeed = BaseSpeed;
+	}
+
+    private void Update()
+	{
+		CurrentSpeed = ActionManager.IsChargingSpell ? BaseSpeed * _chargingPlayerSpeedMult : BaseSpeed;
+	}
 	
 	public void EquipArmor(ArmorItemSO armor)
 	{
