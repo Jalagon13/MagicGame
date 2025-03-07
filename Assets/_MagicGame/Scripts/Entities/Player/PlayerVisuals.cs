@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerVisuals : NetworkBehaviour
 {
     private Player _thisPlayer;
+    private GameObject _chargeVfx;
+    
 
     private void Awake()
     {
@@ -32,6 +34,22 @@ public class PlayerVisuals : NetworkBehaviour
     private void Hide()
     {
         gameObject.SetActive(false);
+    }
+    
+    [Rpc(SendTo.ClientsAndHost)]
+    public void PlayChargeVFXClientRpc(int spellIndex)
+    {
+        GameObject chargeVfx = (GameManager.Instance.GetItemSOFromItemId(spellIndex) as SpellItemSO).ChargeVFX;
+        _chargeVfx = Instantiate(chargeVfx, _thisPlayer.MainHand.ProjectileSpawnTransform);
+        _chargeVfx.transform.localPosition = Vector3.zero;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void StopChargeVfxClientRpc()
+    {
+        var main = _chargeVfx.GetComponent<ParticleSystem>().main;
+        main.loop = false;
+        main.stopAction = ParticleSystemStopAction.Destroy;
     }
 	
     public override void OnDestroy()

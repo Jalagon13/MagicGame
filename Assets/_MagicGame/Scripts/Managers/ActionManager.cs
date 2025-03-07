@@ -11,6 +11,7 @@ public class ActionManager : MonoBehaviour
 	public static ActionManager Instance { get; private set; }
 	public static Vector2 MouseWorldPosition;
 	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerManaUpdated;
+	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerSpellChargeUpdated;
 	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerManaRechargeUpdated;
 	public class OnStatUpdatedEventArgs : EventArgs
 	{
@@ -173,6 +174,18 @@ public class ActionManager : MonoBehaviour
 				{
 					MaxAmount = MaxRecharge,
 					CurrentAmount = currentRecharge
+				});
+			}
+
+			float maxSpellCharge = WandDict[wandInvItem.Id].CastTimeTimer.Duration;
+			float currentSpellCharge = maxSpellCharge - WandDict[wandInvItem.Id].CastTimeTimer.RemainingSeconds;
+
+			if (currentSpellCharge <= maxSpellCharge)
+			{
+				OnPlayerSpellChargeUpdated?.Invoke(this, new OnStatUpdatedEventArgs
+				{
+					MaxAmount = maxSpellCharge,
+					CurrentAmount = currentSpellCharge
 				});
 			}
 		}

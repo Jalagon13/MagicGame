@@ -10,10 +10,10 @@ public class Wand
 	public float TotalReloadDuration { get; private set; }
 	public WandItemSO WandSO { get; private set; }
 	public bool IsSelected { get; private set; }
+	public Timer CastTimeTimer { get; private set; }
 	
 	private Queue<int> _validMagicIndexes = new();
 	private float _castDelayTimer;
-	private Timer _castTimeTimer;
 	private ulong _spellToCastId; // Reference to the spell that is currently being cast
 	private SpellItemSO _spellToCast;
 
@@ -25,7 +25,7 @@ public class Wand
 		CurrentMana = WandSO.MaxMana;
 		WandInvItem.OnWandContentsUpdated += OnWandContentsUpdated;
 
-		_castTimeTimer = new Timer(0);
+		CastTimeTimer = new Timer(0);
 
 		ResetValidMagicIndexes();
 	}
@@ -39,15 +39,15 @@ public class Wand
 
 	public void Tick(float deltaTime)
 	{
-		_castTimeTimer.Tick(deltaTime);
+		CastTimeTimer.Tick(deltaTime);
 		
-		if(_castTimeTimer.RemainingSeconds > 0 && !IsSelected)
+		if(CastTimeTimer.RemainingSeconds > 0 && !IsSelected)
 		{
 			// Cast was interrupted
 			CancelSpellCharge();
 		}
 
-		if(_castTimeTimer.RemainingSeconds <= 0)
+		if(CastTimeTimer.RemainingSeconds <= 0)
 		{
 			if (_castDelayTimer > 0)
 			{
@@ -231,8 +231,8 @@ public class Wand
 		_spellToCast = spellToCast;
 		_spellToCast.LoadSpell(WandSO, spellModsFound, _spellToCastId);
 		
-		_castTimeTimer = new(_spellToCast.CastTime);
-		_castTimeTimer.OnTimerEnd += ExecuteSpell;
+		CastTimeTimer = new(_spellToCast.CastTime);
+		CastTimeTimer.OnTimerEnd += ExecuteSpell;
 
 		Debug.Log($"Charging Spell...");
 	}
@@ -241,7 +241,7 @@ public class Wand
     {
 		_spellToCast.ExecuteSpell(WandSO, _spellToCastId);
 
-		_castTimeTimer.OnTimerEnd -= ExecuteSpell;
+		CastTimeTimer.OnTimerEnd -= ExecuteSpell;
 		Debug.Log($"Spell Executed");
 	}
 	
@@ -252,8 +252,8 @@ public class Wand
 		_spellToCastId = default;
 		_spellToCast = null;
 
-		_castTimeTimer.OnTimerEnd -= ExecuteSpell;
-		_castTimeTimer = new Timer(0);
+		CastTimeTimer.OnTimerEnd -= ExecuteSpell;
+		CastTimeTimer = new Timer(0);
 		Debug.Log($"Cast was interrupted. Reseting spellToCast values");
 	}
 
@@ -277,7 +277,7 @@ public class Wand
 	{
 	    IsSelected = value;
 
-		if (_castTimeTimer.RemainingSeconds > 0 && IsSelected)
+		if (CastTimeTimer.RemainingSeconds > 0 && IsSelected)
 		{
 			CancelSpellCharge();
 		}

@@ -25,6 +25,11 @@ using UnityEngine;
     {
         get { return _duration - _remainingSeconds; }
     }
+    
+    public float Duration
+    {
+        get { return _duration; }
+    }
 	
     public void Reset()
     {

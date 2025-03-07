@@ -8,7 +8,6 @@ public class PlayerRechargeStatUI : MonoBehaviour
 	[SerializeField] private PlayerManaStatUI _manaStatUI;
 	[SerializeField] private MMProgressBar _rechargeBar;
 	[SerializeField] private RectTransform _border; // Set width to max mana dynamically
-	[SerializeField] private TextMeshProUGUI _amountText;
 
 	private int _maxValue;
 	private int _newValue;
@@ -47,7 +46,6 @@ public class PlayerRechargeStatUI : MonoBehaviour
 		
 		_rechargeBar.UpdateBar(curr, 0, _manaStatUI.MaxMana);
 		_border.sizeDelta = new Vector2(_manaStatUI.MaxMana * 2, _border.sizeDelta.y);
-		_amountText.text = $"{curr}/{_manaStatUI.MaxMana}";
 	}
 	
 	private void ShowBar()
