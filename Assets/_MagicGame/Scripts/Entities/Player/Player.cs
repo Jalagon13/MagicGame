@@ -37,7 +37,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
 	[SerializeField] private GameObject _breadCrumbPrefab;
 	public PlayerStats PlayerStats { get; private set; }
-	public NetworkVariable<int> MainHandItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public NetworkVariable<int> SelectedItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<BiomeType> CurrentPlayerBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public BiomeType Biome { get { return CurrentPlayerBiome.Value; } }
 	public Collider2D HitCollider { get; private set; }
@@ -82,7 +82,7 @@ public class Player : NetworkBehaviour, IHasHealth
 			_spawnBiome = BiomeType.Forest;
 			_spawnPoint = transform.position;
 			
-			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnMainHandSlotUpdated;
+			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnSelectedItemUpdated;
 			GameInput.Instance.OnSpaceStarted += DashTest;
 		}
 		
@@ -301,18 +301,18 @@ public class Player : NetworkBehaviour, IHasHealth
 		});
 	}
 
-	private void HotbarManager_OnMainHandSlotUpdated(object sender, HotbarManager.OnFocusItemSetEventArgs e)
+	private void HotbarManager_OnSelectedItemUpdated(object sender, HotbarManager.OnFocusItemSetEventArgs e)
 	{
 		if(IsOwner)
 		{
 			// NTFS: network variables onvaluechanged is only executed if the value is different
-			if(e.MainHandItemIndex == -1)
+			if(e.SelectedItemIndex == -1)
 			{
-				MainHandItemIndexNetworkVariable.Value = -1;
+				SelectedItemIndexNetworkVariable.Value = -1;
 			}
 			else
 			{
-				MainHandItemIndexNetworkVariable.Value = e.MainHandItemIndex;
+				SelectedItemIndexNetworkVariable.Value = e.SelectedItemIndex;
 			}
 		}
 	}
@@ -324,7 +324,7 @@ public class Player : NetworkBehaviour, IHasHealth
 	
 	public bool IsHoldingAWand()
 	{
-		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromItemId(MainHandItemIndexNetworkVariable.Value);
+		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromItemId(SelectedItemIndexNetworkVariable.Value);
 		
 		return mainHandItem != null && (mainHandItem is SpellBookItemSO || mainHandItem is WandItemSO);
 	}
@@ -337,7 +337,7 @@ public class Player : NetworkBehaviour, IHasHealth
 		
 		if(IsOwner)
 		{
-			HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnMainHandSlotUpdated;
+			HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnSelectedItemUpdated;
 		}
 	}
 }

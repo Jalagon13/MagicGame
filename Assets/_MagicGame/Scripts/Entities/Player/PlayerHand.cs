@@ -49,13 +49,13 @@ public class PlayerHand : NetworkBehaviour
 		{
 			_thisPlayer = transform.root.GetComponent<Player>();
 
-			_thisPlayer.MainHandItemIndexNetworkVariable.OnValueChanged += HandleItemIndexChanged;
+			_thisPlayer.SelectedItemIndexNetworkVariable.OnValueChanged += HandleItemIndexChanged;
 		}
 	}
 
 	public override void OnNetworkSpawn()
 	{
-		UpdateArmFromItemIndex(_thisPlayer.MainHandItemIndexNetworkVariable.Value);
+		UpdateArmFromItemIndex(_thisPlayer.SelectedItemIndexNetworkVariable.Value);
 		
 		base.OnNetworkSpawn();
 	}
@@ -127,7 +127,7 @@ public class PlayerHand : NetworkBehaviour
 
 	public override void OnDestroy()
 	{
-		_thisPlayer.MainHandItemIndexNetworkVariable.OnValueChanged -= HandleItemIndexChanged;
+		_thisPlayer.SelectedItemIndexNetworkVariable.OnValueChanged -= HandleItemIndexChanged;
 
 		base.OnDestroy();
 	}

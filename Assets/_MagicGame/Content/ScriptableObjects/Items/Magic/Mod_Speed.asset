@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf4ebd5afe98b45b6b32627425c553af, type: 3}
+  m_Name: Mod_Speed
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Speed Modifier
+  <UiDisplay>k__BackingField: {fileID: 21300002, guid: 358b5d9f23bc9413e87c9948acc67ee1, type: 3}
+  <ItemActionCooldown>k__BackingField: 0.375
+  <Stackable>k__BackingField: 1
+  <Description>k__BackingField: 
+  <SpellModifierPrefab>k__BackingField: {fileID: 3706073078954932296, guid: 66ba25c5a7d0e4c92b93583839c1de70, type: 3}

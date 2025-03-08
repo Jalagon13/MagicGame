@@ -132,8 +132,6 @@ public class SpellItemSO : MagicItemSO
 
 	public void LoadSpell(WandItemSO wandSO, List<int> modifierArray, ulong spellId)
 	{
-		Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(this));
-		
 		GameManager.Instance.LoadSpellServerRpc(new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
 			Damage, Knockback, Speed, Lifetime, spellId,
@@ -145,8 +143,6 @@ public class SpellItemSO : MagicItemSO
 	
 	public void ExecuteSpell(WandItemSO wandSO, ulong spellId)
 	{
-		Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
-
 		Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().MainHand.ProjectileSpawnTransform.position;
 		Vector2 baseDirection = (ActionManager.MouseWorldPosition - spawnPoint).normalized;
 		float totalSpread = Mathf.Max(0, Accuracy + wandSO.Accuracy);

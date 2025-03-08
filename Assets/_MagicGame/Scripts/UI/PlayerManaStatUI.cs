@@ -18,7 +18,7 @@ public class PlayerManaStatUI : MonoBehaviour
 
 	private void CheckForWand(object sender, HotbarManager.OnFocusItemSetEventArgs e)
 	{
-		var mainHandItemSO = GameManager.Instance.GetItemSOFromItemId(e.MainHandItemIndex);
+		var mainHandItemSO = GameManager.Instance.GetItemSOFromItemId(e.SelectedItemIndex);
 		
 		if(mainHandItemSO is WandItemSO)
 		{

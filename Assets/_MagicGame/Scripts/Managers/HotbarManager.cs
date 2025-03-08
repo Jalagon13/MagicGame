@@ -8,7 +8,7 @@ public class HotbarManager : MonoBehaviour
 	public class OnFocusItemSetEventArgs : EventArgs
 	{
 		// public InventoryItem FocusItem;
-		public int MainHandItemIndex;
+		public int SelectedItemIndex;
 		public int FocusItemSlotIndex;
 	}
 
@@ -90,7 +90,7 @@ public class HotbarManager : MonoBehaviour
 	{
 		OnFocusSlotUpdated?.Invoke(this, new OnFocusItemSetEventArgs
 		{
-			MainHandItemIndex = focusItemIndex,
+			SelectedItemIndex = focusItemIndex,
 			FocusItemSlotIndex = selectedSlotIndex
 		});
 	}

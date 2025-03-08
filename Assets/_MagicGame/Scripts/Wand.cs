@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Wand
@@ -12,10 +13,22 @@ public class Wand
 	public bool IsSelected { get; private set; }
 	public Timer CastTimeTimer { get; private set; }
 	
-	private Queue<int> _validMagicIndexes = new();
+	private Queue<int> _validMagicArrayIndexes = new();
 	private float _castDelayTimer;
-	private ulong _spellToCastId; // Reference to the spell that is currently being cast
-	private SpellItemSO _spellToCast;
+	private List<LoadedSpell> _loadedSpells = new();
+	private struct LoadedSpell
+	{
+		public SpellItemSO SpellToCast;
+		public ulong SpellToCastId;
+		public List<int> SpellModsFound;
+		
+		public LoadedSpell(SpellItemSO spellToCast, ulong spellToCastId, List<int> spellModsFound)
+		{
+			SpellToCast = spellToCast;
+			SpellToCastId = spellToCastId;
+			SpellModsFound = spellModsFound;
+		}
+	}
 
 
 	public Wand(WandInventoryItem wandInventoryItem)
@@ -66,16 +79,11 @@ public class Wand
 	{
 		if (_castDelayTimer > 0 || CurrentReload < TotalReloadDuration) return; // Cast Delay or recharge ongoing return
 
-		if (_validMagicIndexes.Count == 0) // If validspells is empty, try to fill it up
-		{
-			TryToRefillValidMagicIndexes();
-		}
+		TryToRefillValidMagicArrayIndexes();
 
-		if (_validMagicIndexes.Count == 0) return; // If still empty after fill, return
+		if (_validMagicArrayIndexes.Count == 0) return; // If still empty after fill, return
 
-		MagicItemSO magic = WandInvItem.MagicArray[_validMagicIndexes.Peek()];
-
-		switch (magic)
+		switch (WandInvItem.MagicArray[_validMagicArrayIndexes.Peek()])
 		{
 			case MultiCastItemSO multiCast:
 				HandleMultiCast(multiCast);
@@ -91,103 +99,76 @@ public class Wand
 				break;
 		}
 	}
+	
+	private void HandleSingleSpellCast(SpellItemSO spellToCast, List<int> spellModsFound = null)
+	{
+	    if(spellToCast.ManaCost > CurrentMana) return;
+	    
+		_validMagicArrayIndexes.Dequeue();
+	    
+		StartSpellCharges(new List<KeyValuePair<SpellItemSO, List<int>>> { new KeyValuePair<SpellItemSO, List<int>>(spellToCast, spellModsFound) });
+	}
 
     private void HandleSpellModCast(SpellModItemSO spellMod)
     {
-		// Keep looking for valid spell and keep track of any spell mods you come across to also apply it to the spell
+		if(!RemainingSpellExists()) return;
+		
 		List<int> spellModsFound = new()
         {
-            GameManager.Instance.GetItemIdFromItemSO(WandInvItem.MagicArray[_validMagicIndexes.Dequeue()])
+            GameManager.Instance.GetItemIdFromItemSO(WandInvItem.MagicArray[_validMagicArrayIndexes.Dequeue()])
         };
 
-		while (_validMagicIndexes.Count > 0)
-		{
-			MagicItemSO nextMagic = WandInvItem.MagicArray[_validMagicIndexes.Peek()];
+		while (RemainingSpellExists()) // Keep looking for valid spell and keep track of any spell mods you come across to also apply it to the spell
+		{ 
+			MagicItemSO nextMagic = WandInvItem.MagicArray[_validMagicArrayIndexes.Peek()];
 			
 			if(nextMagic is SpellItemSO spellToCast)
 			{
 				// Found spell to apply mods to
 				HandleSingleSpellCast(spellToCast, spellModsFound);
+				return;
 			}
-			else if(nextMagic is SpellModItemSO)
+			else if(nextMagic is SpellModItemSO spellModItemSO)
 			{
-			    spellModsFound.Add(GameManager.Instance.GetItemIdFromItemSO(WandInvItem.MagicArray[_validMagicIndexes.Dequeue()]));
+			    spellModsFound.Add(GameManager.Instance.GetItemIdFromItemSO(spellModItemSO));
+			    _validMagicArrayIndexes.Dequeue();
 			}
 		}
 	}
 
     private void HandleMultiCast(MultiCastItemSO multiCast)
 	{
-		List<int> spellsShot = new();
+		_validMagicArrayIndexes.Dequeue();
 
-		_validMagicIndexes.Dequeue();
+		if (!RemainingSpellExists()) return;
 
-		if (_validMagicIndexes.Count == 0)
+		List<KeyValuePair<SpellItemSO, List<int>>> spellsAndModsFound = new();
+		List<int> modIndexHolder = new();
+		int totalManaCost = 0;
+
+		while (RemainingSpellExists())
 		{
-			TryToRefillValidMagicIndexes();
-		}
+			if(totalManaCost >= CurrentMana || spellsAndModsFound.Count == multiCast.MultiCastAmount) break;
+			
+			MagicItemSO nextMagic = WandInvItem.MagicArray[_validMagicArrayIndexes.Peek()];
 
-		int numOfSpellsCast = 0;
-		float cumulativeCastDelay = 0;
-
-		while (_validMagicIndexes.Count > 0)
-		{
-			if (numOfSpellsCast == multiCast.MultiCastAmount)
-				break;
-
-			// Dequeue the next valid index to process it
-			int validMagicIndex = _validMagicIndexes.Dequeue();
-
-			if (WandInvItem.MagicArray[validMagicIndex] is SpellItemSO potentialSpellToShoot)
+			if (nextMagic is SpellItemSO spell)
 			{
-				if (spellsShot.Contains(validMagicIndex)) continue; // If spell has been shot already, skip it
-
-				if (potentialSpellToShoot.ManaCost <= CurrentMana)
-				{
-					CurrentMana -= potentialSpellToShoot.ManaCost;
-
-					StartSpellCharge(potentialSpellToShoot, null);
-					numOfSpellsCast++;
-					cumulativeCastDelay += potentialSpellToShoot.CastDelay;
-					spellsShot.Add(validMagicIndex);
-				}
+				spellsAndModsFound.Add(new(spell, modIndexHolder));
+				modIndexHolder = new();
+				totalManaCost += spell.ManaCost;
+				_validMagicArrayIndexes.Dequeue();
 			}
-
-			// If the queue is empty but we still need more spells, try refilling it
-			if (_validMagicIndexes.Count == 0 && numOfSpellsCast < multiCast.MultiCastAmount)
+			else if (nextMagic is SpellModItemSO spellMod)
 			{
-				TryToRefillValidMagicIndexes();
+				modIndexHolder.Add(GameManager.Instance.GetItemIdFromItemSO(spellMod));
+				_validMagicArrayIndexes.Dequeue();
 			}
 		}
 
-		if (_validMagicIndexes.Count > 0)
-		{
-			_castDelayTimer = WandSO.BaseCastDelay + cumulativeCastDelay;
-		}
-		else
-		{
-			CurrentReload = 0;
-			TotalReloadDuration = WandSO.ReloadDuration + cumulativeCastDelay;
-		}
+		StartSpellCharges(spellsAndModsFound);
 	}
 
-	private void HandleSingleSpellCast(SpellItemSO spellToCast, List<int> spellModsFound = null)
-	{
-		if (spellToCast.ManaCost > CurrentMana) return;
-
-		_validMagicIndexes.Dequeue();
-		_castDelayTimer = WandSO.BaseCastDelay + spellToCast.CastDelay;
-		CurrentMana -= spellToCast.ManaCost;
-
-		if (_validMagicIndexes.Count <= 0)
-		{
-			CurrentReload = 0;
-			TotalReloadDuration = WandSO.ReloadDuration + _castDelayTimer;
-		}
-
-		StartSpellCharge(spellToCast, spellModsFound);
-	}
-	
 	private void HandleMiningCast(DestructionCataylstItemSO miningSpell)
 	{
 		if (miningSpell.ManaCost > CurrentMana || !miningSpell.PlayerInRangeOfMouse()) return;
@@ -213,62 +194,118 @@ public class Wand
 	
 	private void MiningCastCleanUp(float castDelay, int manaCost)
 	{
-		_validMagicIndexes.Dequeue();
+		_validMagicArrayIndexes.Dequeue();
 		_castDelayTimer = WandSO.BaseCastDelay + castDelay;
 		CurrentMana -= manaCost;
 
-		if (_validMagicIndexes.Count <= 0)
+		if (!RemainingSpellExists())
 		{
 			CurrentReload = 0;
 			TotalReloadDuration = WandSO.ReloadDuration + _castDelayTimer;
 		}
 	}
 	
-	private void StartSpellCharge(SpellItemSO spellToCast, List<int> spellModsFound = null)
+	private void StartSpellCharges(List<KeyValuePair<SpellItemSO, List<int>>> spellsAndMods)
 	{
-		// Spawn the spell on the server
-		_spellToCastId = IdGenerator.GenerateRandomId();
-		_spellToCast = spellToCast;
-		_spellToCast.LoadSpell(WandSO, spellModsFound, _spellToCastId);
+		_loadedSpells = new();
 		
-		CastTimeTimer = new(_spellToCast.CastTime);
-		CastTimeTimer.OnTimerEnd += ExecuteSpell;
+		float longestCastTime = 0;
+		int totalManaCost = 0;
+		float totalCastDelay = 0;
+	
+	    foreach (var spellAndMod in spellsAndMods)
+		{
+			ulong spellId = IdGenerator.GenerateRandomId();
+			
+			spellAndMod.Key.LoadSpell(WandSO, spellAndMod.Value, spellId);
+			_loadedSpells.Add(new(spellAndMod.Key, spellId, spellAndMod.Value));
+			totalManaCost += spellAndMod.Key.ManaCost;
+			totalCastDelay += spellAndMod.Key.CastDelay;
 
-		Debug.Log($"Charging Spell...");
+			if (spellAndMod.Key.CastTime > longestCastTime)
+			{
+				longestCastTime = spellAndMod.Key.CastTime;
+			}
+		}
+
+		Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(_loadedSpells[0].SpellToCast));
+
+		CurrentMana -= totalManaCost;
+
+		if(RemainingSpellExists())
+		{
+			_castDelayTimer = WandSO.BaseCastDelay + totalCastDelay;
+		}
+		else
+		{
+			CurrentReload = 0;
+			TotalReloadDuration = WandSO.ReloadDuration + totalCastDelay;
+		}
+
+		CastTimeTimer = new(longestCastTime);
+		CastTimeTimer.OnTimerEnd += ExecuteSpells;
+		Debug.Log($"Charging Spells...");
 	}
-
-    private void ExecuteSpell(object sender, EventArgs e)
+	
+	private bool RemainingSpellExists()
+	{
+	    if(_validMagicArrayIndexes.Count <= 0) return false;
+	    
+	    foreach (int validMagicIndex in _validMagicArrayIndexes)
+		{
+			if(WandInvItem.MagicArray[validMagicIndex] is SpellItemSO) 
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+    private void ExecuteSpells(object sender, EventArgs e)
     {
-		_spellToCast.ExecuteSpell(WandSO, _spellToCastId);
+		Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
 
-		CastTimeTimer.OnTimerEnd -= ExecuteSpell;
-		Debug.Log($"Spell Executed");
+		foreach (LoadedSpell loadedSpell in _loadedSpells)
+		{
+			loadedSpell.SpellToCast.ExecuteSpell(WandSO, loadedSpell.SpellToCastId);
+		}
+    
+		CastTimeTimer.OnTimerEnd -= ExecuteSpells;
+		Debug.Log($"Executing Spells");
 	}
 	
 	private void CancelSpellCharge()
 	{
-		_spellToCast.CancelSpell(_spellToCastId);
+		foreach (LoadedSpell loadedSpell in _loadedSpells)
+		{
+			loadedSpell.SpellToCast.CancelSpell(loadedSpell.SpellToCastId);
+		}
+	
+		_loadedSpells.Clear();
 
-		_spellToCastId = default;
-		_spellToCast = null;
-
-		CastTimeTimer.OnTimerEnd -= ExecuteSpell;
+		CastTimeTimer.OnTimerEnd -= ExecuteSpells;
 		CastTimeTimer = new Timer(0);
 		Debug.Log($"Cast was interrupted. Reseting spellToCast values");
 	}
 
     private void ResetValidMagicIndexes()
 	{
-		_validMagicIndexes.Clear();
+		_validMagicArrayIndexes.Clear();
 	}
 
-	private void TryToRefillValidMagicIndexes()
+	private void TryToRefillValidMagicArrayIndexes()
 	{
-		for (int i = 0; i < WandInvItem.MagicArray.Length; i++)
+		if(!RemainingSpellExists() || _validMagicArrayIndexes.Count == 0)
 		{
-			if(WandInvItem.MagicArray[i] != null)
+			ResetValidMagicIndexes();
+
+			for (int i = 0; i < WandInvItem.MagicArray.Length; i++)
 			{
-				_validMagicIndexes.Enqueue(i);
+				if (WandInvItem.MagicArray[i] != null)
+				{
+					_validMagicArrayIndexes.Enqueue(i);
+				}
 			}
 		}
 	}
