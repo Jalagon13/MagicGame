@@ -170,10 +170,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638762250258541728
+  lastModified: 638770302243719166
   FileSizes:
   - Name: Desktop
-    Value: 3058976
+    Value: 3059392
   Exists: 1
 --- !u!114 &-4024909556737517532
 MonoBehaviour:
@@ -352,7 +352,7 @@ MonoBehaviour:
   - {fileID: 6702288669578411488}
   StringsBanks:
   - {fileID: 5574528013551363316}
-  cacheTime: 638762250258541728
+  cacheTime: 638770302243719166
   cacheVersion: 131623
 --- !u!114 &2498366552593082144
 MonoBehaviour:

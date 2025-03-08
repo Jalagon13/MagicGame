@@ -171,16 +171,17 @@ public class Pathfinding : NetworkBehaviour
 		}
 	}
 
-	private Tilemap CreateWallColliderTilemap(BiomeType environment)
+	private Tilemap CreateWallColliderTilemap(BiomeType biome)
 	{
 		var wallColliderTm = Instantiate(_wallColliderTmPrefab);
+		wallColliderTm.GetComponent<PathfindingWallTm>().SetBiome(biome);
 		wallColliderTm.transform.SetParent(transform);
-		wallColliderTm.gameObject.name = $"{environment}{_wallColliderTmPrefab.name}";
+		wallColliderTm.gameObject.name = $"{biome}{_wallColliderTmPrefab.name}";
 		
 		OnPathfindingTilemapCreated?.Invoke(this, new PathfindingTilemapEventArgs
 		{
 			TilemapCollider = wallColliderTm.GetComponent<TilemapCollider2D>(),
-			Biome = environment
+			Biome = biome
 		});
 		
 		return wallColliderTm;

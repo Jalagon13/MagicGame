@@ -102,7 +102,17 @@ public class Wand
 	
 	private void HandleSingleSpellCast(SpellItemSO spellToCast, List<int> spellModsFound = null)
 	{
-	    if(spellToCast.ManaCost > CurrentMana) return;
+		int totalManaCost = spellToCast.ManaCost;
+		
+		if (spellModsFound != null)
+		{
+			foreach (int spellModIndex in spellModsFound)
+			{
+				totalManaCost += (GameManager.Instance.GetItemSOFromItemId(spellModIndex) as SpellModItemSO).ManaCost;
+			}
+		}
+	
+	    if(totalManaCost > CurrentMana) return;
 	    
 		_validMagicArrayIndexes.Dequeue();
 	    
@@ -112,26 +122,34 @@ public class Wand
     private void HandleSpellModCast(SpellModItemSO spellMod)
     {
 		if(!RemainingSpellExists()) return;
-		
-		List<int> spellModsFound = new()
-        {
-            GameManager.Instance.GetItemIdFromItemSO(WandInvItem.MagicArray[_validMagicArrayIndexes.Dequeue()])
-        };
 
-		while (RemainingSpellExists()) // Keep looking for valid spell and keep track of any spell mods you come across to also apply it to the spell
-		{ 
-			MagicItemSO nextMagic = WandInvItem.MagicArray[_validMagicArrayIndexes.Peek()];
-			
-			if(nextMagic is SpellItemSO spellToCast)
+		List<int> spellModsFound = new();
+		int totalManaCost = 0;
+		
+		foreach (int validMagicIndex in _validMagicArrayIndexes)
+		{
+			MagicItemSO magic = WandInvItem.MagicArray[validMagicIndex];
+		
+			if(magic is SpellModItemSO spellModItemSO) 
 			{
-				// Found spell to apply mods to
-				HandleSingleSpellCast(spellToCast, spellModsFound);
-				return;
+				spellModsFound.Add(GameManager.Instance.GetItemIdFromItemSO(spellModItemSO));
+				totalManaCost += spellModItemSO.ManaCost;
 			}
-			else if(nextMagic is SpellModItemSO spellModItemSO)
+			else if(magic is SpellItemSO spellToCast)
 			{
-			    spellModsFound.Add(GameManager.Instance.GetItemIdFromItemSO(spellModItemSO));
-			    _validMagicArrayIndexes.Dequeue();
+				totalManaCost += spellToCast.ManaCost;
+				
+				if(totalManaCost <= CurrentMana)
+				{
+				    for (int i = 0; i < spellModsFound.Count; i++)
+					{
+						_validMagicArrayIndexes.Dequeue();
+					}
+
+					HandleSingleSpellCast(spellToCast, spellModsFound);
+				}
+				
+				return;
 			}
 		}
 	}
@@ -162,6 +180,7 @@ public class Wand
 			else if (nextMagic is SpellModItemSO spellMod)
 			{
 				modIndexHolder.Add(GameManager.Instance.GetItemIdFromItemSO(spellMod));
+				totalManaCost += spellMod.ManaCost;
 				_validMagicArrayIndexes.Dequeue();
 			}
 		}

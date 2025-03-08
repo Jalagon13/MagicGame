@@ -9,6 +9,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public int SpellIndex;
 	public int Damage;
 	public int Knockback;
+	public int MaxVictims;
 	public float Speed;
 	public float Lifetime;
 	public ulong SpellId;
@@ -16,11 +17,12 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public BiomeType SpawnBiome;
 	public List<int> ModifierArray;
 
-	public SyncSpellData(int spellIndex, int damage, int knockback, float speed, float lifetime, ulong spellId, ulong spawnPlayerId, BiomeType spawnBiome, List<int> modifierArray)
+	public SyncSpellData(int spellIndex, int damage, int knockback, int maxVictims, float speed, float lifetime, ulong spellId, ulong spawnPlayerId, BiomeType spawnBiome, List<int> modifierArray)
 	{
 		SpellIndex = spellIndex;
 		Damage = damage;
 		Knockback = knockback;
+		MaxVictims = maxVictims;
 		Speed = speed;
 		Lifetime = lifetime;
 		SpellId = spellId;
@@ -35,6 +37,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		if (SpellIndex != other.SpellIndex ||
 			Damage != other.Damage ||
 			Knockback != other.Knockback ||
+			MaxVictims != other.MaxVictims ||
 			Speed != other.Speed ||
 			Lifetime != other.Lifetime ||
 			SpellId != other.SpellId ||
@@ -65,6 +68,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		serializer.SerializeValue(ref SpellIndex);
 		serializer.SerializeValue(ref Damage);
 		serializer.SerializeValue(ref Knockback);
+		serializer.SerializeValue(ref MaxVictims);
 		serializer.SerializeValue(ref Speed);
 		serializer.SerializeValue(ref Lifetime);
 		serializer.SerializeValue(ref SpellId);
@@ -99,8 +103,10 @@ public class SpellItemSO : MagicItemSO
 {
 	[field: Tooltip("Actual Prefab for the projectile.")]
 	[field: SerializeField] public Spell SpellProjectilePrefab { get; private set; }
+	
 	[field: Tooltip("Spell charging animation.")]
 	[field: SerializeField] public GameObject ChargeVFX { get; private set; }
+	
 	[field: Tooltip("Time it takes to cast this projectile (in seconds).")]
 	[field: SerializeField] public float CastTime { get; private set; } = 0.2f;
 
@@ -124,9 +130,12 @@ public class SpellItemSO : MagicItemSO
 
 	[field: Tooltip("The speed at which the projectile travels.")]
 	[field: SerializeField] public int Speed { get; private set; } = 100;
+	
 	[field: Tooltip("How much knockback applied to player when this spell recoils")]
 	[field: SerializeField] public float Recoil { get; private set; } = 2f;
 
+	[field: Tooltip("How many victims to damage before it stops")]
+	[field: SerializeField] public int MaxVictims { get; private set; } = 1;
 
 	[field: SerializeField] public EventReference SpellCast { get; private set; }
 
@@ -134,7 +143,7 @@ public class SpellItemSO : MagicItemSO
 	{
 		GameManager.Instance.LoadSpellServerRpc(new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			Damage, Knockback, Speed, Lifetime, spellId,
+			Damage, Knockback, MaxVictims, Speed, Lifetime, spellId,
 			Player.LocalClientInstance.OwnerClientId,
 			Player.LocalClientInstance.CurrentPlayerBiome.Value, modifierArray));
 			

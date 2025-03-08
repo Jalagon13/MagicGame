@@ -14,7 +14,7 @@ namespace MoreMountains.Feedbacks
 		#if MM_UGUI2
 		[Header("TextMeshPro")]
 		/// the TextMeshPro object to use to display values
-		public TextMeshPro TargetTextMeshPro;
+		public TextMeshProUGUI TargetTextMeshPro;
         
 		/// <summary>
 		/// On init we grab our TMP's color

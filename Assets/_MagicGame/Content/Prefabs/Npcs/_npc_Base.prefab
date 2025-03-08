@@ -232,7 +232,7 @@ GameObject:
   - component: {fileID: 4852144824365540908}
   - component: {fileID: 6692481928224885727}
   - component: {fileID: 3247729817130226899}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: _npc_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -424,7 +424,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _knockbackEnabled: 1
-  _decayMult: 5
 --- !u!114 &3247729817130226899
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -444,7 +443,6 @@ MonoBehaviour:
   <IFrameLength>k__BackingField: 0.166
   _damage: 0
   _damageCollider: {fileID: 0}
-  <Table>k__BackingField: []
   _damageSound:
     Guid:
       Data1: 0
@@ -452,6 +450,7 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
+  <Table>k__BackingField: []
 --- !u!1 &6641498890121537817
 GameObject:
   m_ObjectHideFlags: 0

@@ -342,7 +342,7 @@ MonoBehaviour:
   TargetTextMesh: {fileID: 0}
   FollowTarget: {fileID: 0}
   Direction: {x: 0, y: 1, z: 0}
-  TargetTextMeshPro: {fileID: 0}
+  TargetTextMeshPro: {fileID: 5775065454244089607}
 --- !u!1 &8494741392771170296
 GameObject:
   m_ObjectHideFlags: 0

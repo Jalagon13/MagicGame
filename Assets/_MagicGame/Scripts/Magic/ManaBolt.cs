@@ -28,7 +28,7 @@ public class ManaBolt : Spell
 		
 		if(IsServer)
 		{
-			_velocity = _finalDirection * _spellData.Speed;
+			_velocity = _finalDirection * SpellDataNV.Value.Speed;
 		}
 		
 		Debug.Log($"Mana Bolt Executed up");
@@ -38,12 +38,11 @@ public class ManaBolt : Spell
     {
         base.FixedUpdate();
 
-		if (IsServer && Started)
-		{
-			_velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
-			_rigidbody2D.linearVelocity = _velocity;
-		}
-	}
+        if(_isDead) return;
+        
+        _velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
+        _rigidbody2D.linearVelocity = _velocity;
+    }
 
     // private void FixedUpdate()
     // {
