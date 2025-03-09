@@ -24,11 +24,12 @@ MonoBehaviour:
   <Damage>k__BackingField: 6
   <ManaCost>k__BackingField: 8
   <Knockback>k__BackingField: 3
-  <Accuracy>k__BackingField: 2
+  <Accuracy>k__BackingField: 0
   <Lifetime>k__BackingField: 1.5
   <Speed>k__BackingField: 14
   <Recoil>k__BackingField: 2
-  <MaxVictims>k__BackingField: 2
+  <MaxVictims>k__BackingField: 0
+  <Bounces>k__BackingField: 0
   <SpellCast>k__BackingField:
     Guid:
       Data1: -2115950531

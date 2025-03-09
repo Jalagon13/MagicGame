@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class DamageSpellMod : MonoBehaviour, ISpellModifier
+public class PierceSpellMod : MonoBehaviour, ISpellModifier
 {
-    [SerializeField] private int _damage;
+    [SerializeField] private int _pierceAmount = 2;
 
     public void ApplyModifier(Spell spell)
     {
         var temp = spell.SpellDataNV.Value;
-        temp.Damage += _damage;
+        temp.MaxVictims += _pierceAmount;
         spell.SpellDataNV.Value = temp;
     }
 }

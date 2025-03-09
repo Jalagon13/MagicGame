@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class DamageSpellMod : MonoBehaviour, ISpellModifier
+public class SpeedSpellMod : MonoBehaviour, ISpellModifier
 {
-    [SerializeField] private int _damage;
+    [SerializeField] private int _speedAmount;
 
     public void ApplyModifier(Spell spell)
     {
         var temp = spell.SpellDataNV.Value;
-        temp.Damage += _damage;
+        temp.Speed += _speedAmount;
         spell.SpellDataNV.Value = temp;
     }
 }

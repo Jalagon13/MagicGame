@@ -11,7 +11,7 @@ public class ManaBolt : Spell
 	[SerializeField] private float _velocityDecay = 5f; 
 	
 	private Rigidbody2D _rigidbody2D;
-	private Vector2 _velocity;
+	
 
     protected override void Awake()
     {
@@ -39,7 +39,7 @@ public class ManaBolt : Spell
         base.FixedUpdate();
 
         if(_isDead) return;
-        
+
         _velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
         _rigidbody2D.linearVelocity = _velocity;
     }

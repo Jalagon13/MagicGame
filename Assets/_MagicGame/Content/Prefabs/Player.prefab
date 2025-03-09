@@ -301,11 +301,9 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 1cf699ca803ee4a948f9d763ddf2409d, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: 24e09bdc93f06403bbc64317a192c595, type: 2}
+    - {fileID: 11400000, guid: 0c65381494fab43889cd8e41500fcd8b, type: 2}
     - {fileID: 11400000, guid: bf1d2a5b5f1334f7f9a6d0aa32605231, type: 2}
-    - {fileID: 11400000, guid: e9ee0b8df2d3e45aab12f04ecc4446a0, type: 2}
     - {fileID: 11400000, guid: bf1d2a5b5f1334f7f9a6d0aa32605231, type: 2}
-    - {fileID: 11400000, guid: b3fe2d16a64484c06943064d240713aa, type: 2}
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0

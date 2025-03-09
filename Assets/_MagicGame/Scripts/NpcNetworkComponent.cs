@@ -66,7 +66,6 @@ public class NpcNetworkComponent : NetworkBehaviour
 		
 		if(_wallColliderDetector != null)
 		{
-			Debug.Log($"Found wallcolliderdetector for biome {NpcBiomeType}");
 			_wallColliderDetector.SetEnvironment(NpcBiomeType, Pathfinding.Instance.GetExistingPathfindingBiomes());
 		}
 	}

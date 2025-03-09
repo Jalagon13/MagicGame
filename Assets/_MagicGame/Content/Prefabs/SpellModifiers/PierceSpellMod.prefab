@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7177606197157325724}
   - component: {fileID: 3132877353657004643}
-  - component: {fileID: 8423670907472326703}
+  - component: {fileID: 3892981074652021409}
   m_Layer: 0
-  m_Name: SpeedSpellMod
+  m_Name: PierceSpellMod
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: -1478012363
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2125737359283935466, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
+  m_Sprite: {fileID: 5524590292671962877, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.3764706}
   m_FlipX: 0
   m_FlipY: 0
@@ -88,7 +88,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8423670907472326703
+--- !u!114 &3892981074652021409
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4407107511287191510}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38e2c8efbd57045a6b0a435594c13f50, type: 3}
+  m_Script: {fileID: 11500000, guid: 21e62aa9a80b3438bbbc6c21e64a871b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speedAmount: 10
+  _pierceAmount: 4

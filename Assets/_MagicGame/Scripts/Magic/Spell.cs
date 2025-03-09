@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MoreMountains.Tools;
 using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -14,14 +15,13 @@ public class Spell : NetworkBehaviour
 	protected CircleCollider2D _spellCollider;
 	protected bool _isDead;
 	protected Vector2 _finalDirection;
+	protected Vector2 _velocity;
 	
 	private SyncSpellData _spellData;
 	private Transform _spellModifierTf;
 	private Timer _spellLifeTimer;
-	private int _npcLayer;
-	private int _collisionMask;
-	private int _wallMask;
 	private List<GameObject> _hitTargets = new List<GameObject>();
+	private int _npcLayer, _collisionMask, _wallMask, _bounces;
 
 	protected virtual void Awake()
     {
@@ -106,7 +106,7 @@ public class Spell : NetworkBehaviour
 		}
 	}
 
-    private void DetectCollisions()
+	private void DetectCollisions()
     {
 		Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _spellCollider.radius, _collisionMask);
 		for (int i = 0; i < collisions.Length; i++)
@@ -121,9 +121,28 @@ public class Spell : NetworkBehaviour
 						if (pfWall.BiomeSameAs(SpellDataNV.Value.SpawnBiome))
 						{
 							// Overlapping with a wall tile
-							_isDead = true;
-							_spellLifeTimer.Tick(Mathf.Infinity);
-							return;
+							if (_bounces > SpellDataNV.Value.Bounces)
+							{
+								_isDead = true;
+								_spellLifeTimer.Tick(Mathf.Infinity);
+								return;
+							}
+							else
+							{
+								// Bounce if not at max bounces
+								RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, _velocity.normalized, _spellCollider.radius, _collisionMask);
+								foreach (var hit in hits)
+								{
+									if (hit.collider == collisions[i])
+									{
+										Vector2 hitNormal = hit.normal;
+										float speed = _velocity.magnitude;
+										_velocity = Vector2.Reflect(_velocity.normalized, hitNormal) * speed;
+										_bounces++;
+										break;
+									}
+								}
+							}
 						}
 					}
 			    }

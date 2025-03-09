@@ -10,6 +10,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public int Damage;
 	public int Knockback;
 	public int MaxVictims;
+	public int Bounces;
 	public float Speed;
 	public float Lifetime;
 	public ulong SpellId;
@@ -17,12 +18,13 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public BiomeType SpawnBiome;
 	public List<int> ModifierArray;
 
-	public SyncSpellData(int spellIndex, int damage, int knockback, int maxVictims, float speed, float lifetime, ulong spellId, ulong spawnPlayerId, BiomeType spawnBiome, List<int> modifierArray)
+	public SyncSpellData(int spellIndex, int damage, int knockback, int maxVictims, int bounces, float speed, float lifetime, ulong spellId, ulong spawnPlayerId, BiomeType spawnBiome, List<int> modifierArray)
 	{
 		SpellIndex = spellIndex;
 		Damage = damage;
 		Knockback = knockback;
 		MaxVictims = maxVictims;
+		Bounces = bounces;
 		Speed = speed;
 		Lifetime = lifetime;
 		SpellId = spellId;
@@ -38,6 +40,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 			Damage != other.Damage ||
 			Knockback != other.Knockback ||
 			MaxVictims != other.MaxVictims ||
+			Bounces != other.Bounces ||
 			Speed != other.Speed ||
 			Lifetime != other.Lifetime ||
 			SpellId != other.SpellId ||
@@ -69,6 +72,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		serializer.SerializeValue(ref Damage);
 		serializer.SerializeValue(ref Knockback);
 		serializer.SerializeValue(ref MaxVictims);
+		serializer.SerializeValue(ref Bounces);
 		serializer.SerializeValue(ref Speed);
 		serializer.SerializeValue(ref Lifetime);
 		serializer.SerializeValue(ref SpellId);
@@ -137,13 +141,16 @@ public class SpellItemSO : MagicItemSO
 	[field: Tooltip("How many victims to damage before it stops")]
 	[field: SerializeField] public int MaxVictims { get; private set; } = 1;
 
+	[field: Tooltip("How many times it bounces before it stops")]
+	[field: SerializeField] public int Bounces { get; private set; } = 1;
+
 	[field: SerializeField] public EventReference SpellCast { get; private set; }
 
 	public void LoadSpell(WandItemSO wandSO, List<int> modifierArray, ulong spellId)
 	{
 		GameManager.Instance.LoadSpellServerRpc(new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			Damage, Knockback, MaxVictims, Speed, Lifetime, spellId,
+			Damage, Knockback, MaxVictims, Bounces, Speed, Lifetime, spellId,
 			Player.LocalClientInstance.OwnerClientId,
 			Player.LocalClientInstance.CurrentPlayerBiome.Value, modifierArray));
 			
