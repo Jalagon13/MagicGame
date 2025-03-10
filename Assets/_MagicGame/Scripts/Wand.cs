@@ -19,14 +19,12 @@ public class Wand
 	private struct LoadedSpell
 	{
 		public SpellItemSO SpellToCast;
-		public ulong SpellToCastId;
-		public List<int> SpellModsFound;
+		public SyncSpellData SpellData;
 		
-		public LoadedSpell(SpellItemSO spellToCast, ulong spellToCastId, List<int> spellModsFound)
+		public LoadedSpell(SpellItemSO spellToCast, SyncSpellData spellData)
 		{
 			SpellToCast = spellToCast;
-			SpellToCastId = spellToCastId;
-			SpellModsFound = spellModsFound;
+			SpellData = spellData;
 		}
 	}
 
@@ -229,15 +227,21 @@ public class Wand
 		_loadedSpells = new();
 		
 		float longestCastTime = 0;
+		float highestHasteMult = 0;
 		int totalManaCost = 0;
 		float totalCastDelay = 0;
 	
 	    foreach (var spellAndMod in spellsAndMods)
 		{
-			ulong spellId = IdGenerator.GenerateRandomId();
+			LoadedSpell loadedSpell = new(spellAndMod.Key, spellAndMod.Key.LoadSpell(WandSO, spellAndMod.Value));
+			foreach (int modifierIndex in spellAndMod.Value)
+			{
+				SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
+				loadedSpell.SpellData = modifier.SpellModifierPrefab.GetComponent<ISpellModifier>().ModifiySpellData(loadedSpell.SpellData);
+			}
+
+			_loadedSpells.Add(loadedSpell);
 			
-			spellAndMod.Key.LoadSpell(WandSO, spellAndMod.Value, spellId);
-			_loadedSpells.Add(new(spellAndMod.Key, spellId, spellAndMod.Value));
 			totalManaCost += spellAndMod.Key.ManaCost;
 			totalCastDelay += spellAndMod.Key.CastDelay;
 
@@ -245,9 +249,12 @@ public class Wand
 			{
 				longestCastTime = spellAndMod.Key.CastTime;
 			}
+			
+			if(loadedSpell.SpellData.HasteMultiplier > highestHasteMult)
+			{
+			    highestHasteMult = loadedSpell.SpellData.HasteMultiplier;
+			}
 		}
-
-		Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(_loadedSpells[0].SpellToCast));
 
 		CurrentMana -= totalManaCost;
 
@@ -260,25 +267,13 @@ public class Wand
 			CurrentReload = 0;
 			TotalReloadDuration = WandSO.ReloadDuration + totalCastDelay;
 		}
+		
+		Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(highestHasteMult);
+		Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(_loadedSpells[0].SpellToCast));
 
 		CastTimeTimer = new(longestCastTime);
 		CastTimeTimer.OnTimerEnd += ExecuteSpells;
 		Debug.Log($"Charging Spells...");
-	}
-	
-	private bool RemainingSpellExists()
-	{
-	    if(_validMagicArrayIndexes.Count <= 0) return false;
-	    
-	    foreach (int validMagicIndex in _validMagicArrayIndexes)
-		{
-			if(WandInvItem.MagicArray[validMagicIndex] is SpellItemSO) 
-			{
-				return true;
-			}
-		}
-		
-		return false;
 	}
 	
     private void ExecuteSpells(object sender, EventArgs e)
@@ -288,7 +283,7 @@ public class Wand
 
 		foreach (LoadedSpell loadedSpell in _loadedSpells)
 		{
-			loadedSpell.SpellToCast.ExecuteSpell(WandSO, loadedSpell.SpellToCastId);
+			loadedSpell.SpellToCast.ExecuteSpell(WandSO, loadedSpell.SpellData.SpellId);
 		}
     
 		CastTimeTimer.OnTimerEnd -= ExecuteSpells;
@@ -299,7 +294,7 @@ public class Wand
 	{
 		foreach (LoadedSpell loadedSpell in _loadedSpells)
 		{
-			loadedSpell.SpellToCast.CancelSpell(loadedSpell.SpellToCastId);
+			loadedSpell.SpellToCast.CancelSpell(loadedSpell.SpellData.SpellId);
 		}
 	
 		_loadedSpells.Clear();
@@ -307,6 +302,21 @@ public class Wand
 		CastTimeTimer.OnTimerEnd -= ExecuteSpells;
 		CastTimeTimer = new Timer(0);
 		Debug.Log($"Cast was interrupted. Reseting spellToCast values");
+	}
+	
+	private bool RemainingSpellExists()
+	{
+		if(_validMagicArrayIndexes.Count <= 0) return false;
+	    
+		foreach (int validMagicIndex in _validMagicArrayIndexes)
+		{
+			if(WandInvItem.MagicArray[validMagicIndex] is SpellItemSO) 
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
     private void ResetValidMagicIndexes()

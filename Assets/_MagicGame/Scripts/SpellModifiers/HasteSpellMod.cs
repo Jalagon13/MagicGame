@@ -6,7 +6,7 @@ public class HasteSpellMod : MonoBehaviour, ISpellModifier
 
     public SyncSpellData ModifiySpellData(SyncSpellData spellData, Spell spell = null)
     {
-        spellData.HasteMultiplier += _hasteAmount;
+        spellData.HasteMultiplier = _hasteAmount;
         return spellData;
     }
 }

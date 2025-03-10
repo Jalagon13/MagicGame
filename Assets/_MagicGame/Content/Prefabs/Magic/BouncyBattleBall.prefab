@@ -242,6 +242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  Velocity: {x: 0, y: 0}
   _pierceMax: 3
   _explosionRadius: 2
   _detonateParticles: {fileID: 5806733700640005283, guid: 01615c6d7f11f4d55a9c48e0a4cde630, type: 3}

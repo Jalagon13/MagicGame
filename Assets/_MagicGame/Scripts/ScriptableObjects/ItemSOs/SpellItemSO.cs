@@ -160,15 +160,19 @@ public class SpellItemSO : MagicItemSO
 
 	[field: SerializeField] public EventReference SpellCast { get; private set; }
 
-	public void LoadSpell(WandItemSO wandSO, List<int> modifierArray, ulong spellId)
+	public SyncSpellData LoadSpell(WandItemSO wandSO, List<int> modifierArray)
 	{
-		GameManager.Instance.LoadSpellServerRpc(new SyncSpellData(
+		SyncSpellData syncSpellData = new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			Damage, Knockback, Pierces, Bounces, Speed, Lifetime, GhostDistance, HasteMultiplier, spellId,
+			Damage, Knockback, Pierces, Bounces, Speed, Lifetime, GhostDistance, HasteMultiplier, 
+			IdGenerator.GenerateRandomId(),
 			Player.LocalClientInstance.OwnerClientId,
-			Player.LocalClientInstance.CurrentPlayerBiome.Value, modifierArray));
-			
+			Player.LocalClientInstance.CurrentPlayerBiome.Value, modifierArray);
+		
+		GameManager.Instance.LoadSpellServerRpc(syncSpellData);
 		Debug.Log($"Spell Loaded");
+			
+		return syncSpellData;
 	}
 	
 	public void ExecuteSpell(WandItemSO wandSO, ulong spellId)
