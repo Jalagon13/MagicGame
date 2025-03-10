@@ -4,10 +4,9 @@ public class SpeedSpellMod : MonoBehaviour, ISpellModifier
 {
     [SerializeField] private int _speedAmount;
 
-    public void ApplyModifier(Spell spell)
+    public SyncSpellData ModifiySpellData(SyncSpellData spellData, Spell spell = null)
     {
-        var temp = spell.SpellDataNV.Value;
-        temp.Speed += _speedAmount;
-        spell.SpellDataNV.Value = temp;
+       spellData.Speed += _speedAmount;
+       return spellData;
     }
 }

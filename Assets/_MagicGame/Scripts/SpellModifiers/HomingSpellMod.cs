@@ -11,6 +11,16 @@ public class HomingSpellMod : MonoBehaviour, ISpellModifier
     private Spell _spell;
     private List<GameObject> _potentialTargetsToHomeTo = new(MAX_TARGETS);
 
+    public SyncSpellData ModifiySpellData(SyncSpellData spellData, Spell spell = null)
+    {
+       if(spell != null)
+       {
+           _spell = spell;
+       }
+       
+        return spellData;
+    }
+
     public void ApplyModifier(Spell spell)
     {
         _spell = spell;

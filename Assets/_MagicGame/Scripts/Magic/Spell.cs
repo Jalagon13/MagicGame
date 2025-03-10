@@ -10,7 +10,12 @@ public class Spell : NetworkBehaviour
 {
 	public NetworkVariable<SyncSpellData> SpellDataNV = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	public Vector2 Velocity;
-	
+	public bool Started { get; private set; }
+	public int CollisionMask { get; private set; }
+	public int NpcLayer { get; private set; }
+	public int WallMask { get; private set; }
+	public List<GameObject> HitTargets { get; private set; } = new();
+
 	protected GameObject _spellGameObject;
 	protected CircleCollider2D _spellCollider;
 	protected bool _isDead;
@@ -19,15 +24,10 @@ public class Spell : NetworkBehaviour
 	private SyncSpellData _spellData;
 	private Transform _spellModifierTf;
 	private Timer _spellLifeTimer;
-	private int _wallMask, _bounces;
+	private int _bounces;
 	private float _totalPassThroughDistance;
 	private bool _passingThroughWall;
 	private Vector2 _lastPosition;
-
-	public bool Started { get; private set; }
-	public int CollisionMask { get; private set; }
-	public int NpcLayer { get; private set; }
-	public List<GameObject> HitTargets { get; private set; } = new();
 
 	protected virtual void Awake()
     {
@@ -73,7 +73,7 @@ public class Spell : NetworkBehaviour
 		{
 			SpellDataNV.Value = _spellData;
 			CollisionMask = LayerMask.GetMask(new[] { "PathfindingWall", "Npc" });
-			_wallMask = LayerMask.NameToLayer("PathfindingWall");
+			WallMask = LayerMask.NameToLayer("PathfindingWall");
 			NpcLayer = LayerMask.NameToLayer("Npc");
 		}
 
@@ -84,7 +84,7 @@ public class Spell : NetworkBehaviour
 			
 			if(IsServer)
 			{
-				go.GetComponent<ISpellModifier>().ApplyModifier(this);
+				SpellDataNV.Value = go.GetComponent<ISpellModifier>().ModifiySpellData(SpellDataNV.Value, this);
 			}
 		}
 	}
@@ -139,7 +139,7 @@ public class Spell : NetworkBehaviour
 			int layerTest = 1 << collisions[i].gameObject.layer;
 			if((layerTest & CollisionMask) != 0)
 			{
-			    if(collisions[i].gameObject.layer == _wallMask)
+			    if(collisions[i].gameObject.layer == WallMask)
 			    {
 					if (collisions[i].TryGetComponent(out PathfindingWallTm pfWall))
 			        {

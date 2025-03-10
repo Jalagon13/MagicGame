@@ -12,7 +12,7 @@ public class PlayerStats : MonoBehaviour
 	public float CurrentSpeed { get; private set; }
 	
 	private List<int> _equippedArmorItemIdList = new();
-	private float _chargingPlayerSpeedMult = 0.5f;
+	private float _speedModifier = 1f;
 
 	private void Start()
     {
@@ -21,7 +21,12 @@ public class PlayerStats : MonoBehaviour
 
     private void Update()
 	{
-		CurrentSpeed = ActionManager.IsChargingSpell ? BaseSpeed * _chargingPlayerSpeedMult : BaseSpeed;
+		CurrentSpeed = BaseSpeed * _speedModifier;
+	}
+	
+	public void ApplySpeedModifier(float modifier)
+	{
+		_speedModifier = modifier;
 	}
 	
 	public void EquipArmor(ArmorItemSO armor)

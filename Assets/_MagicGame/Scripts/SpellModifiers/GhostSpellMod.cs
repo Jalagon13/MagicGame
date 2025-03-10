@@ -5,10 +5,9 @@ public class GhostSpellMod : MonoBehaviour, ISpellModifier
 {
     [SerializeField] private float _ghostDistance = 2;
 
-    public void ApplyModifier(Spell spell)
+    public SyncSpellData ModifiySpellData(SyncSpellData spellData, Spell spell = null)
     {
-        var temp = spell.SpellDataNV.Value;
-        temp.GhostDistance += _ghostDistance;
-        spell.SpellDataNV.Value = temp;
+        spellData.GhostDistance += _ghostDistance;
+        return spellData;
     }
 }

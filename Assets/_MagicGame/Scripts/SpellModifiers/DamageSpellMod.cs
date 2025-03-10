@@ -4,10 +4,9 @@ public class DamageSpellMod : MonoBehaviour, ISpellModifier
 {
     [SerializeField] private int _damage;
 
-    public void ApplyModifier(Spell spell)
+    public SyncSpellData ModifiySpellData(SyncSpellData spellData, Spell spell = null)
     {
-        var temp = spell.SpellDataNV.Value;
-        temp.Damage += _damage;
-        spell.SpellDataNV.Value = temp;
+        spellData.Damage += _damage;
+        return spellData;
     }
 }

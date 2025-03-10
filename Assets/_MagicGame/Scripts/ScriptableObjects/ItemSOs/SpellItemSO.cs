@@ -14,12 +14,13 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public float Speed;
 	public float Lifetime;
 	public float GhostDistance;
+	public float HasteMultiplier;
 	public ulong SpellId;
 	public ulong SpawnPlayerId;
 	public BiomeType SpawnBiome;
 	public List<int> ModifierArray;
 
-	public SyncSpellData(int spellIndex, int damage, int knockback, int pierces, int bounces, float speed, float lifetime, float ghostDistance, ulong spellId, ulong spawnPlayerId, BiomeType spawnBiome, List<int> modifierArray)
+	public SyncSpellData(int spellIndex, int damage, int knockback, int pierces, int bounces, float speed, float lifetime, float ghostDistance, float hasteMultiplier, ulong spellId, ulong spawnPlayerId, BiomeType spawnBiome, List<int> modifierArray)
 	{
 		SpellIndex = spellIndex;
 		Damage = damage;
@@ -29,6 +30,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		Speed = speed;
 		Lifetime = lifetime;
 		GhostDistance = ghostDistance;
+		HasteMultiplier = hasteMultiplier;
 		SpellId = spellId;
 		SpawnPlayerId = spawnPlayerId;
 		SpawnBiome = spawnBiome;
@@ -46,6 +48,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 			Speed != other.Speed ||
 			Lifetime != other.Lifetime ||
 			GhostDistance != other.GhostDistance ||
+			HasteMultiplier != other.HasteMultiplier ||
 			SpellId != other.SpellId ||
 			SpawnPlayerId != other.SpawnPlayerId ||
 			SpawnBiome != other.SpawnBiome)
@@ -79,6 +82,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		serializer.SerializeValue(ref Speed);
 		serializer.SerializeValue(ref Lifetime);
 		serializer.SerializeValue(ref GhostDistance);
+		serializer.SerializeValue(ref HasteMultiplier);
 		serializer.SerializeValue(ref SpellId);
 		serializer.SerializeValue(ref SpawnPlayerId);
 		serializer.SerializeValue(ref SpawnBiome);
@@ -151,13 +155,16 @@ public class SpellItemSO : MagicItemSO
 	[field: Tooltip("How far it can passthrough wall tiles")]
 	[field: SerializeField] public float GhostDistance { get; private set; } = 0f;
 
+	[field: Tooltip("Multiplier on fast the player moves when casting this spell")]
+	[field: SerializeField] public float HasteMultiplier { get; private set; } = 0.5f;
+
 	[field: SerializeField] public EventReference SpellCast { get; private set; }
 
 	public void LoadSpell(WandItemSO wandSO, List<int> modifierArray, ulong spellId)
 	{
 		GameManager.Instance.LoadSpellServerRpc(new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			Damage, Knockback, Pierces, Bounces, Speed, Lifetime, GhostDistance, spellId,
+			Damage, Knockback, Pierces, Bounces, Speed, Lifetime, GhostDistance, HasteMultiplier, spellId,
 			Player.LocalClientInstance.OwnerClientId,
 			Player.LocalClientInstance.CurrentPlayerBiome.Value, modifierArray));
 			

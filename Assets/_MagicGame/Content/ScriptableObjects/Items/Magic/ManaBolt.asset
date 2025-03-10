@@ -29,8 +29,9 @@ MonoBehaviour:
   <Speed>k__BackingField: 14
   <Recoil>k__BackingField: 2
   <Pierces>k__BackingField: 1
-  <Bounces>k__BackingField: 2
+  <Bounces>k__BackingField: 0
   <GhostDistance>k__BackingField: 0
+  <HasteMultiplier>k__BackingField: 0.5
   <SpellCast>k__BackingField:
     Guid:
       Data1: -2115950531

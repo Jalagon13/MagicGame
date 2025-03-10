@@ -10,4 +10,10 @@ public class PierceSpellMod : MonoBehaviour, ISpellModifier
         temp.Pierces += _pierceAmount;
         spell.SpellDataNV.Value = temp;
     }
+
+    public SyncSpellData ModifiySpellData(SyncSpellData spellData, Spell spell = null)
+    {
+        spellData.Pierces += _pierceAmount;
+        return spellData;
+    }
 }

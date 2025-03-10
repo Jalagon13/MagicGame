@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface ISpellModifier
 {
-    public void ApplyModifier(Spell spell);
+    public SyncSpellData ModifiySpellData(SyncSpellData spellData, Spell spell = null);
 }

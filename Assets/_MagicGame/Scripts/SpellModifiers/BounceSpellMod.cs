@@ -5,10 +5,9 @@ public class BounceSpellMod : MonoBehaviour, ISpellModifier
 {
     [SerializeField] private int _bounceAmount = 2;
     
-    public void ApplyModifier(Spell spell)
+    public SyncSpellData ModifiySpellData(SyncSpellData spellData, Spell spell = null)
     {
-        var temp = spell.SpellDataNV.Value;
-        temp.Bounces += _bounceAmount;
-        spell.SpellDataNV.Value = temp;
+        spellData.Bounces += _bounceAmount;
+        return spellData;
     }
 }

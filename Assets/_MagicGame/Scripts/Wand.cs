@@ -283,6 +283,7 @@ public class Wand
 	
     private void ExecuteSpells(object sender, EventArgs e)
     {
+		Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(1f);
 		Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
 
 		foreach (LoadedSpell loadedSpell in _loadedSpells)
