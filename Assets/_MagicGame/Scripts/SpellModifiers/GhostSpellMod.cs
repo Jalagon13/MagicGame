@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class BounceSpellMod : MonoBehaviour, ISpellModifier
+public class GhostSpellMod : MonoBehaviour, ISpellModifier
 {
-    [SerializeField] private int _bounceAmount = 2;
-    
+    [SerializeField] private float _ghostDistance = 2;
+
     public void ApplyModifier(Spell spell)
     {
         var temp = spell.SpellDataNV.Value;
-        temp.Bounces += _bounceAmount;
+        temp.GhostDistance += _ghostDistance;
         spell.SpellDataNV.Value = temp;
     }
 }

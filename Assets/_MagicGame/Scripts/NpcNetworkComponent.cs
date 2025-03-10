@@ -43,7 +43,10 @@ public class NpcNetworkComponent : NetworkBehaviour
 		base.OnNetworkSpawn();
 	}
 	
-	
+	public bool SameBiomeAs(BiomeType biome)
+	{
+	    return NpcBiomeType == biome;
+	}
 
 	private void Npc_OnNpcKilled(object sender, EventArgs e)
 	{

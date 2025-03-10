@@ -8,20 +8,26 @@ using UnityEngine;
 
 public class Spell : NetworkBehaviour
 {
-	public bool Started { get; private set; }
-	
 	public NetworkVariable<SyncSpellData> SpellDataNV = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	public Vector2 Velocity;
+	
 	protected GameObject _spellGameObject;
 	protected CircleCollider2D _spellCollider;
 	protected bool _isDead;
 	protected Vector2 _finalDirection;
-	protected Vector2 _velocity;
 	
 	private SyncSpellData _spellData;
 	private Transform _spellModifierTf;
 	private Timer _spellLifeTimer;
-	private List<GameObject> _hitTargets = new List<GameObject>();
-	private int _npcLayer, _collisionMask, _wallMask, _bounces;
+	private int _wallMask, _bounces;
+	private float _totalPassThroughDistance;
+	private bool _passingThroughWall;
+	private Vector2 _lastPosition;
+
+	public bool Started { get; private set; }
+	public int CollisionMask { get; private set; }
+	public int NpcLayer { get; private set; }
+	public List<GameObject> HitTargets { get; private set; } = new();
 
 	protected virtual void Awake()
     {
@@ -36,6 +42,7 @@ public class Spell : NetworkBehaviour
 		{
 			Started = true;
 			transform.position = spawnPoint;
+			_lastPosition = spawnPoint;
 			_finalDirection = finalDirection;
 			_isDead = false;
 
@@ -65,9 +72,9 @@ public class Spell : NetworkBehaviour
 		if (IsServer)
 		{
 			SpellDataNV.Value = _spellData;
-			_collisionMask = LayerMask.GetMask(new[] { "PathfindingWall", "Npc" });
+			CollisionMask = LayerMask.GetMask(new[] { "PathfindingWall", "Npc" });
 			_wallMask = LayerMask.NameToLayer("PathfindingWall");
-			_npcLayer = LayerMask.NameToLayer("Npc");
+			NpcLayer = LayerMask.NameToLayer("Npc");
 		}
 
 		foreach (int modifierIndex in SpellDataNV.Value.ModifierArray)
@@ -99,47 +106,71 @@ public class Spell : NetworkBehaviour
 		if(!Started || !IsServer) return; //don't do anything before OnNetworkSpawn has run.
 
 		_spellLifeTimer.Tick(Time.fixedDeltaTime);
-		
-		if(!_isDead)
+
+		if (!_isDead)
 		{
+			PassThroughWall();
 			DetectCollisions();
 		}
+	}
+	
+	private void PassThroughWall()
+	{
+		float distanceThisFrame = Vector2.Distance(transform.position, _lastPosition);
+		if (_passingThroughWall)
+		{
+			_totalPassThroughDistance += distanceThisFrame;
+			if (_totalPassThroughDistance >= SpellDataNV.Value.GhostDistance)
+			{
+				TerminateSpell();
+				return;
+			}
+		}
+
+		_passingThroughWall = false;
+		_lastPosition = transform.position;
 	}
 
 	private void DetectCollisions()
     {
-		Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _spellCollider.radius, _collisionMask);
+		Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _spellCollider.radius, CollisionMask);
 		for (int i = 0; i < collisions.Length; i++)
 		{
 			int layerTest = 1 << collisions[i].gameObject.layer;
-			if((layerTest & _collisionMask) != 0)
+			if((layerTest & CollisionMask) != 0)
 			{
 			    if(collisions[i].gameObject.layer == _wallMask)
 			    {
-			        if(collisions[i].TryGetComponent(out PathfindingWallTm pfWall))
+					if (collisions[i].TryGetComponent(out PathfindingWallTm pfWall))
 			        {
 						if (pfWall.BiomeSameAs(SpellDataNV.Value.SpawnBiome))
 						{
-							// Overlapping with a wall tile
-							if (_bounces > SpellDataNV.Value.Bounces)
+							if(SpellDataNV.Value.GhostDistance > 0)
 							{
-								_isDead = true;
-								_spellLifeTimer.Tick(Mathf.Infinity);
-								return;
+							    _passingThroughWall = true;
 							}
 							else
 							{
-								// Bounce if not at max bounces
-								RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, _velocity.normalized, _spellCollider.radius, _collisionMask);
-								foreach (var hit in hits)
+								// Overlapping with a wall tile
+								if (_bounces > SpellDataNV.Value.Bounces)
 								{
-									if (hit.collider == collisions[i])
+									TerminateSpell();
+									return;
+								}
+								else
+								{
+									// Bounce if not at max bounces
+									RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Velocity.normalized, _spellCollider.radius, CollisionMask);
+									foreach (var hit in hits)
 									{
-										Vector2 hitNormal = hit.normal;
-										float speed = _velocity.magnitude;
-										_velocity = Vector2.Reflect(_velocity.normalized, hitNormal) * speed;
-										_bounces++;
-										break;
+										if (hit.collider == collisions[i])
+										{
+											Vector2 hitNormal = hit.normal;
+											float speed = Velocity.magnitude;
+											Velocity = Vector2.Reflect(Velocity.normalized, hitNormal) * speed;
+											_bounces++;
+											break;
+										}
 									}
 								}
 							}
@@ -147,22 +178,21 @@ public class Spell : NetworkBehaviour
 					}
 			    }
 			    
-			    if(collisions[i].gameObject.layer == _npcLayer)
+			    if(collisions[i].gameObject.layer == NpcLayer)
 			    {
-			    	if(collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.NpcBiomeType == SpellDataNV.Value.SpawnBiome)
+			    	if(collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellDataNV.Value.SpawnBiome))
 			    	{
 						// Overlapping with an NPC in the same biome
-						if (!_hitTargets.Contains(collisions[i].gameObject))
+						if (!HitTargets.Contains(collisions[i].gameObject))
 			    		{
-							_hitTargets.Add(collisions[i].gameObject);
+							HitTargets.Add(collisions[i].gameObject);
 							
 							Npc npc = npcNet.gameObject.GetComponent<Npc>();
 							npc.ApplyDamage(SpellDataNV.Value.Damage, NetworkManager.ConnectedClients[SpellDataNV.Value.SpawnPlayerId].PlayerObject.transform.position, SpellDataNV.Value.Knockback);
 							
-							if(_hitTargets.Count >= SpellDataNV.Value.MaxVictims)
+							if(HitTargets.Count >= SpellDataNV.Value.Pierces)
 							{
-								_isDead = true;
-								_spellLifeTimer.Tick(Mathf.Infinity);
+								TerminateSpell();
 								return;
 							}
 						}
@@ -170,5 +200,11 @@ public class Spell : NetworkBehaviour
 			    }
 			}
 		}
+	}
+	
+	private void TerminateSpell()
+	{
+		_isDead = true;
+		_spellLifeTimer.Tick(Mathf.Infinity);
 	}
 }

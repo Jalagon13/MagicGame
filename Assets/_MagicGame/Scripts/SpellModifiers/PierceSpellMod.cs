@@ -7,7 +7,7 @@ public class PierceSpellMod : MonoBehaviour, ISpellModifier
     public void ApplyModifier(Spell spell)
     {
         var temp = spell.SpellDataNV.Value;
-        temp.MaxVictims += _pierceAmount;
+        temp.Pierces += _pierceAmount;
         spell.SpellDataNV.Value = temp;
     }
 }

@@ -9,24 +9,26 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public int SpellIndex;
 	public int Damage;
 	public int Knockback;
-	public int MaxVictims;
+	public int Pierces;
 	public int Bounces;
 	public float Speed;
 	public float Lifetime;
+	public float GhostDistance;
 	public ulong SpellId;
 	public ulong SpawnPlayerId;
 	public BiomeType SpawnBiome;
 	public List<int> ModifierArray;
 
-	public SyncSpellData(int spellIndex, int damage, int knockback, int maxVictims, int bounces, float speed, float lifetime, ulong spellId, ulong spawnPlayerId, BiomeType spawnBiome, List<int> modifierArray)
+	public SyncSpellData(int spellIndex, int damage, int knockback, int pierces, int bounces, float speed, float lifetime, float ghostDistance, ulong spellId, ulong spawnPlayerId, BiomeType spawnBiome, List<int> modifierArray)
 	{
 		SpellIndex = spellIndex;
 		Damage = damage;
 		Knockback = knockback;
-		MaxVictims = maxVictims;
+		Pierces = pierces;
 		Bounces = bounces;
 		Speed = speed;
 		Lifetime = lifetime;
+		GhostDistance = ghostDistance;
 		SpellId = spellId;
 		SpawnPlayerId = spawnPlayerId;
 		SpawnBiome = spawnBiome;
@@ -39,10 +41,11 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		if (SpellIndex != other.SpellIndex ||
 			Damage != other.Damage ||
 			Knockback != other.Knockback ||
-			MaxVictims != other.MaxVictims ||
+			Pierces != other.Pierces ||
 			Bounces != other.Bounces ||
 			Speed != other.Speed ||
 			Lifetime != other.Lifetime ||
+			GhostDistance != other.GhostDistance ||
 			SpellId != other.SpellId ||
 			SpawnPlayerId != other.SpawnPlayerId ||
 			SpawnBiome != other.SpawnBiome)
@@ -71,10 +74,11 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		serializer.SerializeValue(ref SpellIndex);
 		serializer.SerializeValue(ref Damage);
 		serializer.SerializeValue(ref Knockback);
-		serializer.SerializeValue(ref MaxVictims);
+		serializer.SerializeValue(ref Pierces);
 		serializer.SerializeValue(ref Bounces);
 		serializer.SerializeValue(ref Speed);
 		serializer.SerializeValue(ref Lifetime);
+		serializer.SerializeValue(ref GhostDistance);
 		serializer.SerializeValue(ref SpellId);
 		serializer.SerializeValue(ref SpawnPlayerId);
 		serializer.SerializeValue(ref SpawnBiome);
@@ -139,10 +143,13 @@ public class SpellItemSO : MagicItemSO
 	[field: SerializeField] public float Recoil { get; private set; } = 2f;
 
 	[field: Tooltip("How many victims to damage before it stops")]
-	[field: SerializeField] public int MaxVictims { get; private set; } = 1;
+	[field: SerializeField] public int Pierces { get; private set; } = 1;
 
 	[field: Tooltip("How many times it bounces before it stops")]
 	[field: SerializeField] public int Bounces { get; private set; } = 1;
+	
+	[field: Tooltip("How far it can passthrough wall tiles")]
+	[field: SerializeField] public float GhostDistance { get; private set; } = 0f;
 
 	[field: SerializeField] public EventReference SpellCast { get; private set; }
 
@@ -150,7 +157,7 @@ public class SpellItemSO : MagicItemSO
 	{
 		GameManager.Instance.LoadSpellServerRpc(new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			Damage, Knockback, MaxVictims, Bounces, Speed, Lifetime, spellId,
+			Damage, Knockback, Pierces, Bounces, Speed, Lifetime, GhostDistance, spellId,
 			Player.LocalClientInstance.OwnerClientId,
 			Player.LocalClientInstance.CurrentPlayerBiome.Value, modifierArray));
 			

@@ -28,7 +28,7 @@ public class ManaBolt : Spell
 		
 		if(IsServer)
 		{
-			_velocity = _finalDirection * SpellDataNV.Value.Speed;
+			Velocity = _finalDirection * SpellDataNV.Value.Speed;
 		}
 		
 		Debug.Log($"Mana Bolt Executed up");
@@ -40,55 +40,9 @@ public class ManaBolt : Spell
 
         if(_isDead) return;
 
-        _velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
-        _rigidbody2D.linearVelocity = _velocity;
+        Velocity = Vector2.Lerp(Velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
+        _rigidbody2D.linearVelocity = Velocity;
     }
-
-    // private void FixedUpdate()
-    // {
-    // 	if(!IsServer || !_started)
-    // 	{
-    // 		return;
-    // 	}
-
-    // 	_velocity = Vector2.Lerp(_velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
-    // 	_rigidbody2D.linearVelocity = _velocity;
-    // }
-
-    // private void OnWallCollide(object sender, WallColliderDetector.WallCollisionEventArgs e)
-    // {
-    // 	PlayHitParticles();
-    // 	// _spellNetworkComponent.StopProjectile();
-    // }
-
-    // public override void CastSpell()
-    // {
-    // 	// _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-    // 	// _velocity = _serverSpellData.Direction * _serverSpellData.Speed;
-    // 	// Debug.Log($"Velocity: {_velocity}, Direction : {_serverSpellData.Direction}, Speed : {_serverSpellData.Speed}");
-    // }
-
-    // private void OnTriggerEnter2D(Collider2D collider)
-    // {
-    // 	if (ColliderIsSourcePlayer(collider)) return;
-
-    // 	// if (collider.TryGetComponent(out IHasHealth npcToDamage))
-    // 	// {
-    // 	// 	if(collider.TryGetComponent(out Player player) && !player.PvpEnabled.Value) return;
-
-    // 	// 	PlayHitParticles();
-
-    // 	// 	if(_serverSpellData.SpawnPlayerId == Player.LocalClientInstance.OwnerClientId)
-    // 	// 	{
-    // 	// 		npcToDamage.ApplyDamage(_serverSpellData.Damage, _serverSpellData.SpawnPoint, _serverSpellData.Knockback);
-    // 	// 	}
-
-    // 	// 	if(IsServer)
-    // 	// 	{
-    // 	// 		_spellNetworkComponent.StopProjectile();
-    // 	// 	}
-    // 	// }
-    // }
 
     // private void PlayHitParticles()
     // {
