@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3832006997020268615}
   - component: {fileID: 5806733700640005283}
   m_Layer: 0
-  m_Name: vfx_CinderBolt_Detonate
+  m_Name: vfx_SparkBlast_Detonate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -118,7 +118,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3235512204744374167}
   serializedVersion: 8
-  lengthInSec: 0.3
+  lengthInSec: 0.4
   simulationSpeed: 1
   stopAction: 2
   cullingMode: 0
@@ -828,7 +828,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 2
+      value: 1.75
       mode: 0
       spread: 0
       speed:

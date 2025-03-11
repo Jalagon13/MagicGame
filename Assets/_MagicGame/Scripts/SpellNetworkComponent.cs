@@ -6,8 +6,6 @@ using UnityEngine.Tilemaps;
 
 public class SpellNetworkComponent : NetworkBehaviour
 {
-	[SerializeField] private WallColliderDetector _wallDetectorCollider;
-
 	private SyncSpellData _spellData;
 	private GameObject _spellGameObject;
 	private Collider2D _spellCollider;
@@ -33,12 +31,6 @@ public class SpellNetworkComponent : NetworkBehaviour
 	{
 		_spell = GetComponent<Spell>();
 		_spellData = syncSpellData;
-		
-		// Find walldetectorcollider and populate it
-		if(_wallDetectorCollider != null)
-		{
-			_wallDetectorCollider.SetEnvironment(_spellData.SpawnBiome, Pathfinding.Instance.GetExistingPathfindingBiomes());
-		}
 	}
 
 	private void SpellNetworkTick()

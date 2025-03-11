@@ -7,7 +7,6 @@ public class ManaBolt : Spell
 {
 	[SerializeField] private ParticleSystem _hitParticles;
 	[SerializeField] private ParticleSystem _trailParticles;
-	// [SerializeField] private WallColliderDetector _wallDetectorCollider;
 	[SerializeField] private float _velocityDecay = 5f; 
 	
 	private Rigidbody2D _rigidbody2D;
@@ -30,8 +29,6 @@ public class ManaBolt : Spell
 		{
 			Velocity = _finalDirection * SpellDataNV.Value.Speed;
 		}
-		
-		Debug.Log($"Mana Bolt Executed up");
 	}
 
     protected override void FixedUpdate()

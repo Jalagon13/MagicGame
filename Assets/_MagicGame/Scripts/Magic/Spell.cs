@@ -9,6 +9,7 @@ using UnityEngine;
 public class Spell : NetworkBehaviour
 {
 	public NetworkVariable<SyncSpellData> SpellDataNV = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	[HideInInspector]
 	public Vector2 Velocity;
 	public bool Started { get; private set; }
 	public int CollisionMask { get; private set; }
@@ -202,7 +203,7 @@ public class Spell : NetworkBehaviour
 		}
 	}
 	
-	private void TerminateSpell()
+	protected void TerminateSpell()
 	{
 		_isDead = true;
 		_spellLifeTimer.Tick(Mathf.Infinity);

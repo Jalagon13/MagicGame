@@ -31,13 +31,11 @@ public class Npc : NetworkBehaviour, IHasHealth
 	private Vector2 _damageSourcePosition;
 	private Knockback _knockback;
 	private Timer _iFrameTimer;
-	private Rigidbody2D _rb2d;
 	public BiomeType Biome { get { return GetComponent<NpcNetworkComponent>().NpcBiomeType; } }
 	
 	private void Awake()
 	{
 		_knockback = GetComponent<Knockback>();
-		_rb2d = GetComponent<Rigidbody2D>();
 		
 		if(_damageCollider != null)
 		{
@@ -66,11 +64,6 @@ public class Npc : NetworkBehaviour, IHasHealth
 		{
 			_iFrameTimer.Tick(Time.deltaTime);
 		}
-		
-		// if(_knockback != null && _rb2d != null) // If has knockback but no behavior, handle knockback here
-		// {
-		// 	_rb2d.MovePosition(_rb2d.position + _knockback.Velocity * Time.fixedDeltaTime);
-		// }
 	}
 
 	private void OnDamged(int previousValue, int newValue)

@@ -234,10 +234,13 @@ public class Wand
 	    foreach (var spellAndMod in spellsAndMods)
 		{
 			LoadedSpell loadedSpell = new(spellAndMod.Key, spellAndMod.Key.LoadSpell(WandSO, spellAndMod.Value));
-			foreach (int modifierIndex in spellAndMod.Value)
+			if(spellAndMod.Value != null)
 			{
-				SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
-				loadedSpell.SpellData = modifier.SpellModifierPrefab.GetComponent<ISpellModifier>().ModifiySpellData(loadedSpell.SpellData);
+				foreach (int modifierIndex in spellAndMod.Value)
+				{
+					SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
+					loadedSpell.SpellData = modifier.SpellModifierPrefab.GetComponent<ISpellModifier>().ModifiySpellData(loadedSpell.SpellData);
+				}
 			}
 
 			_loadedSpells.Add(loadedSpell);
