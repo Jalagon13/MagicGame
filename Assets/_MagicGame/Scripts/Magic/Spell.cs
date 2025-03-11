@@ -21,6 +21,7 @@ public class Spell : NetworkBehaviour
 	protected CircleCollider2D _spellCollider;
 	protected bool _isDead;
 	protected Vector2 _finalDirection;
+	protected MiningSpellMod _miningSpellMod;
 	
 	private SyncSpellData _spellData;
 	private Transform _spellModifierTf;
@@ -86,6 +87,12 @@ public class Spell : NetworkBehaviour
 			if(IsServer)
 			{
 				SpellDataNV.Value = go.GetComponent<ISpellModifier>().ModifiySpellData(SpellDataNV.Value, this);
+				
+				if(modifier is MiningFocusItemSO)
+				{
+				    _miningSpellMod = go.GetComponent<MiningSpellMod>();
+				    Debug.Log($"Found mining spell modifier");
+				}
 			}
 		}
 	}
@@ -134,6 +141,8 @@ public class Spell : NetworkBehaviour
 
 	private void DetectCollisions()
     {
+		if(_spellCollider == null) return;
+    
 		Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _spellCollider.radius, CollisionMask);
 		for (int i = 0; i < collisions.Length; i++)
 		{
@@ -152,8 +161,7 @@ public class Spell : NetworkBehaviour
 							}
 							else
 							{
-								// Overlapping with a wall tile
-								if (_bounces > SpellDataNV.Value.Bounces)
+								if (_bounces >= SpellDataNV.Value.Bounces)
 								{
 									TerminateSpell();
 									return;

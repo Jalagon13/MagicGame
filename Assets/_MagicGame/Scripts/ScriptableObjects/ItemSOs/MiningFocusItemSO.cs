@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Mining Item", menuName = "Create Item/New Mining Item")]
-public class DestructionCataylstItemSO : MagicItemSO
+public class MiningFocusItemSO : SpellModItemSO
 {
 	[field: Tooltip("Actual Prefab for the mining visual.")]
 	[field: SerializeField] public GameObject MiningVisualPrefab { get; private set; }
@@ -14,17 +14,14 @@ public class DestructionCataylstItemSO : MagicItemSO
 
 	[field: Tooltip("Delay after casting the spell.")]
 	[field: SerializeField] public float CastDelay { get; private set; } = 4;
-	
-	[field: Tooltip("The mana cost required to mine.")]
-	[field: SerializeField] public int ManaCost { get; private set; } = 5;
 
 	public bool PlayerInRangeOfMouse()
 	{
 		return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= MiningRange;
 	}
 	
-	public void SpawnMiningVisuals()
+	public void SpawnMiningVisuals(Vector2 pos)
 	{
-		Instantiate(MiningVisualPrefab, ActionManager.MouseWorldPosition, Quaternion.identity);
+		Instantiate(MiningVisualPrefab, pos, Quaternion.identity);
 	}
 }

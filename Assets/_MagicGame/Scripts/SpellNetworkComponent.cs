@@ -80,8 +80,11 @@ public class SpellNetworkComponent : NetworkBehaviour
 		if(clientId == NetworkManager.ServerClientId)
 		{
 			_spellGameObject.SetActive(true);
-			_spellCollider.enabled = true;
-			_spellCollider.isTrigger = true;
+			if(_spellCollider != null)
+			{
+				_spellCollider.enabled = true;
+				_spellCollider.isTrigger = true;
+			}
 		}
 		else
 		{
@@ -96,8 +99,11 @@ public class SpellNetworkComponent : NetworkBehaviour
 		if(clientId == NetworkManager.ServerClientId)
 		{
 			_spellGameObject.SetActive(false);
-			_spellCollider.enabled = false;		
-			_spellCollider.isTrigger = false;
+			if(_spellCollider != null)
+			{
+				_spellCollider.enabled = false;
+				_spellCollider.isTrigger = false;
+			}
 		}
 		else
 		{

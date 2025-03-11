@@ -19,7 +19,7 @@ public class MiningVisuals : MonoBehaviour
 	{
 		_miningVisualRenderer.positionCount = 2;
 		_miningVisualRenderer.SetPosition(0, Player.LocalClientInstance.MainHand.ProjectileSpawnTransform.position);
-		_miningVisualRenderer.SetPosition(1, ActionManager.MouseWorldPosition);
+		_miningVisualRenderer.SetPosition(1, transform.position);
 
 		_startColor = _miningVisualRenderer.startColor;
 

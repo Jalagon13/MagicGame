@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class SnapBlast : Spell
+public class SparkBlast : Spell
 {
     [SerializeField] private float _blastRadius = 1.25f;
     [SerializeField] private ParticleSystem _detonateParticles;
@@ -32,11 +32,16 @@ public class SnapBlast : Spell
                 }
             }
         }
+        
+        if(_miningSpellMod != null)
+        {
+            _miningSpellMod.TryToHitTiles(_blastRadius);
+        }
 
-        StartCoroutine(StopSnapBlast());
+        StartCoroutine(StopSparkBlast());
     }
     
-    private IEnumerator StopSnapBlast()
+    private IEnumerator StopSparkBlast()
     {
         _isDead = true;
         Debug.Log($"Stopping SnapBlast after {_detonateParticles.main.duration} seconds");

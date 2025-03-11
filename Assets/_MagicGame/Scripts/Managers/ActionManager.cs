@@ -23,6 +23,7 @@ public class ActionManager : MonoBehaviour
 	public Dictionary<ulong, Wand> WandDict { get; private set; } = new(); // Holds all wand data in your inventory
 
 	private Timer _primaryActionTimer, _secondaryActionTimer;
+	private InventoryItem _selectedInvItem;
 
 	private void Awake()
 	{
@@ -44,11 +45,17 @@ public class ActionManager : MonoBehaviour
     {
 		InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
 		
-        foreach (ulong wandId in WandDict.Keys)
+		if(_selectedInvItem != selectedInventoryItem)
 		{
-			WandDict[wandId].SetSelected(wandId == selectedInventoryItem.Id);
+			foreach (ulong wandId in WandDict.Keys)
+			{
+				WandDict[wandId].SetSelected(wandId == selectedInventoryItem.Id);
+			}
 		}
-    }
+
+		_selectedInvItem = selectedInventoryItem;
+
+	}
 
     private void UpdateWandDict(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
 	{
