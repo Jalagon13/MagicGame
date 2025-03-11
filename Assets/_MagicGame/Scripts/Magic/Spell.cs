@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class Spell : NetworkBehaviour
 {
+	public event EventHandler OnSpellEnd;
 	public NetworkVariable<SyncSpellData> SpellDataNV = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	[HideInInspector]
 	public Vector2 Velocity;
@@ -40,7 +41,7 @@ public class Spell : NetworkBehaviour
 	
 	public virtual void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
 	{
-		if(IsServer)
+		if(IsOwner)
 		{
 			Started = true;
 			transform.position = spawnPoint;
@@ -55,7 +56,9 @@ public class Spell : NetworkBehaviour
 	
 	public void CancelSpell()
 	{
-		if (IsServer)
+		OnSpellEnd?.Invoke(this, EventArgs.Empty);
+
+		if (IsOwner)
 		{
 			NetworkObject.Despawn();
 		}
@@ -71,7 +74,7 @@ public class Spell : NetworkBehaviour
 	
 	public override void OnNetworkSpawn()
 	{
-		if (IsServer)
+		if (IsOwner)
 		{
 			SpellDataNV.Value = _spellData;
 			CollisionMask = LayerMask.GetMask(new[] { "PathfindingWall", "Npc" });
@@ -84,7 +87,7 @@ public class Spell : NetworkBehaviour
 			SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
 			var go = Instantiate(modifier.SpellModifierPrefab, _spellModifierTf);
 			
-			if(IsServer)
+			if(IsOwner)
 			{
 				SpellDataNV.Value = go.GetComponent<ISpellModifier>().ModifiySpellData(SpellDataNV.Value, this);
 				
@@ -100,8 +103,9 @@ public class Spell : NetworkBehaviour
     private void DestroySpell(object sender, EventArgs e)
     {
 		Started = false;
+		OnSpellEnd?.Invoke(this, EventArgs.Empty);
 
-		if (IsServer)
+		if (IsOwner)
 		{
 			NetworkObject.Despawn();
 		}
@@ -111,7 +115,7 @@ public class Spell : NetworkBehaviour
 
 	protected virtual void FixedUpdate()
 	{
-		if(!Started || !IsServer) return; //don't do anything before OnNetworkSpawn has run.
+		if(!Started || !IsOwner) return; //don't do anything before OnNetworkSpawn has run.
 
 		_spellLifeTimer.Tick(Time.fixedDeltaTime);
 
@@ -137,6 +141,12 @@ public class Spell : NetworkBehaviour
 
 		_passingThroughWall = false;
 		_lastPosition = transform.position;
+	}
+
+	protected void TerminateSpell()
+	{
+		_isDead = true;
+		_spellLifeTimer.Tick(Mathf.Infinity);
 	}
 
 	private void DetectCollisions()
@@ -197,7 +207,7 @@ public class Spell : NetworkBehaviour
 							HitTargets.Add(collisions[i].gameObject);
 							
 							Npc npc = npcNet.gameObject.GetComponent<Npc>();
-							npc.ApplyDamage(SpellDataNV.Value.Damage, NetworkManager.ConnectedClients[SpellDataNV.Value.SpawnPlayerId].PlayerObject.transform.position, SpellDataNV.Value.Knockback);
+							npc.ApplyDamage(SpellDataNV.Value.Damage, NetworkManager.ConnectedClients[SpellDataNV.Value.OwnerPlayerId].PlayerObject.transform.position, SpellDataNV.Value.Knockback);
 							
 							if(HitTargets.Count >= SpellDataNV.Value.Pierces)
 							{
@@ -209,11 +219,5 @@ public class Spell : NetworkBehaviour
 			    }
 			}
 		}
-	}
-	
-	protected void TerminateSpell()
-	{
-		_isDead = true;
-		_spellLifeTimer.Tick(Mathf.Infinity);
 	}
 }

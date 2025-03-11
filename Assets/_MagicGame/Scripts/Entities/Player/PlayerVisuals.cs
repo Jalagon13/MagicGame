@@ -40,7 +40,7 @@ public class PlayerVisuals : NetworkBehaviour
     public void PlayChargeVFXClientRpc(int spellIndex)
     {
         GameObject chargeVfx = (GameManager.Instance.GetItemSOFromItemId(spellIndex) as SpellItemSO).ChargeVFX;
-        _chargeVfx = Instantiate(chargeVfx, _thisPlayer.MainHand.ProjectileSpawnTransform);
+        _chargeVfx = Instantiate(chargeVfx, _thisPlayer.MainHand.SpellSpawnTransform);
         _chargeVfx.transform.localPosition = Vector3.zero;
     }
 

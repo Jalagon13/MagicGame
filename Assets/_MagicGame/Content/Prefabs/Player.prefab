@@ -301,6 +301,7 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 1cf699ca803ee4a948f9d763ddf2409d, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
+    - {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
     - {fileID: 11400000, guid: d1b863f7d9dab46bda1edea0bffe44fe, type: 2}
 --- !u!114 &6270092794415709611
 MonoBehaviour:
@@ -1442,7 +1443,7 @@ MonoBehaviour:
   _itemHeldSR: {fileID: 2336160045276987048}
   _armPivotGO: {fileID: 6010529099300971215}
   _armGO: {fileID: 6449608859788415041}
-  ProjectileSpawnTransform: {fileID: 4196058989623954390}
+  SpellSpawnTransform: {fileID: 4196058989623954390}
 --- !u!114 &7552163614298674993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1921,7 +1922,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4196058989623954390}
   m_Layer: 0
-  m_Name: ProjectileSpawnPoint
+  m_Name: SpellSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -25,7 +25,7 @@ public class ManaBolt : Spell
 
 		_rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 		
-		if(IsServer)
+		if(IsOwner)
 		{
 			Velocity = _finalDirection * SpellDataNV.Value.Speed;
 		}
@@ -51,7 +51,7 @@ public class ManaBolt : Spell
                 {
                     if (pfWall.BiomeSameAs(SpellDataNV.Value.SpawnBiome))
                     {
-                        _miningSpellMod.TryToHitTiles(_spellCollider.radius);
+                        _miningSpellMod.TryToHitTiles(_spellCollider.radius, transform.position);
                     }
                 }
             }

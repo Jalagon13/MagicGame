@@ -72,7 +72,6 @@ public class HomingSpellMod : MonoBehaviour, ISpellModifier
             _spell.Velocity = Vector2.Lerp(_spell.Velocity, (closestTarget.transform.position - transform.position).normalized, Mathf.Clamp01(_rotateSharpness * Time.fixedDeltaTime));
             _spell.Velocity.Normalize();
             _spell.Velocity *= currentSpeed;
-            Debug.Log($"Rotating towards: {closestTarget.name} at position: {closestTarget.transform.position}");
         }
     }
 }

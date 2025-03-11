@@ -26,7 +26,7 @@ public class PlayerHand : NetworkBehaviour
 	[SerializeField] private SpriteRenderer _itemHeldSR;
 	[SerializeField] private GameObject _armPivotGO;
 	[SerializeField] private GameObject _armGO;
-	[field: SerializeField] public Transform ProjectileSpawnTransform;
+	[field: SerializeField] public Transform SpellSpawnTransform;
 	public bool IsSwinging { get; private set; }
 	public ItemSO HeldItem { get; private set; }
 
@@ -272,7 +272,7 @@ public class PlayerHand : NetworkBehaviour
 	public Vector3 GetDirectionNormalized()
 	{
 		// Ensure ActionManager.MouseWorldPosition is defined and accessible
-		Vector3 direction = (Vector3)ActionManager.MouseWorldPosition - ProjectileSpawnTransform.position;
+		Vector3 direction = (Vector3)ActionManager.MouseWorldPosition - SpellSpawnTransform.position;
 		return direction.normalized;
 	}
 

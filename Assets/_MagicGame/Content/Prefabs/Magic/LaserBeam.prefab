@@ -189,6 +189,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   Velocity: {x: 0, y: 0}
+  _beamLength: 5
+  _damageTimerDuration: 0.2
+  _movementSpeedModifier: 0.625
   _beamLine: {fileID: 2378437019941341086}
 --- !u!1001 &3404457874550790833
 PrefabInstance:

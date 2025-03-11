@@ -13,10 +13,9 @@ public class MiningSpellMod : MonoBehaviour, ISpellModifier
         return spellData;
     }
 
-    public void TryToHitTiles(float radius)
+    public void TryToHitTiles(float radius, Vector2 point, bool keepTrackOfTiles = true)
     {
-        Vector2 worldPos = transform.position;
-        Vector2Int centerTile = new Vector2Int(Mathf.FloorToInt(worldPos.x), Mathf.FloorToInt(worldPos.y));
+        Vector2Int centerTile = new Vector2Int(Mathf.FloorToInt(point.x), Mathf.FloorToInt(point.y));
 
         int tileRadius = Mathf.CeilToInt(radius);
 
@@ -27,7 +26,7 @@ public class MiningSpellMod : MonoBehaviour, ISpellModifier
                 Vector2Int tilePos = new Vector2Int(centerTile.x + x, centerTile.y + y);
                 Vector2 tileCenter = new Vector2(tilePos.x + 0.5f, tilePos.y + 0.5f);
 
-                if(_tilesHit.Contains(tileCenter))
+                if(keepTrackOfTiles && _tilesHit.Contains(tileCenter))
                 {
                     continue;
                 }

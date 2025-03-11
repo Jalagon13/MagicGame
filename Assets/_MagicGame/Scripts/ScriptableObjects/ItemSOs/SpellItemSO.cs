@@ -16,11 +16,11 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public float GhostDistance;
 	public float HasteMultiplier;
 	public ulong SpellId;
-	public ulong SpawnPlayerId;
+	public ulong OwnerPlayerId;
 	public BiomeType SpawnBiome;
 	public List<int> ModifierArray;
 
-	public SyncSpellData(int spellIndex, int damage, int knockback, int pierces, int bounces, float speed, float lifetime, float ghostDistance, float hasteMultiplier, ulong spellId, ulong spawnPlayerId, BiomeType spawnBiome, List<int> modifierArray)
+	public SyncSpellData(int spellIndex, int damage, int knockback, int pierces, int bounces, float speed, float lifetime, float ghostDistance, float hasteMultiplier, ulong spellId, ulong ownerPlayerId, BiomeType spawnBiome, List<int> modifierArray)
 	{
 		SpellIndex = spellIndex;
 		Damage = damage;
@@ -32,7 +32,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		GhostDistance = ghostDistance;
 		HasteMultiplier = hasteMultiplier;
 		SpellId = spellId;
-		SpawnPlayerId = spawnPlayerId;
+		OwnerPlayerId = ownerPlayerId;
 		SpawnBiome = spawnBiome;
 		ModifierArray = modifierArray ?? new List<int>(); // Ensure no null lists
 	}
@@ -50,7 +50,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 			GhostDistance != other.GhostDistance ||
 			HasteMultiplier != other.HasteMultiplier ||
 			SpellId != other.SpellId ||
-			SpawnPlayerId != other.SpawnPlayerId ||
+			OwnerPlayerId != other.OwnerPlayerId ||
 			SpawnBiome != other.SpawnBiome)
 		{
 			return false;
@@ -84,7 +84,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		serializer.SerializeValue(ref GhostDistance);
 		serializer.SerializeValue(ref HasteMultiplier);
 		serializer.SerializeValue(ref SpellId);
-		serializer.SerializeValue(ref SpawnPlayerId);
+		serializer.SerializeValue(ref OwnerPlayerId);
 		serializer.SerializeValue(ref SpawnBiome);
 
 		// Serialize the list count first
@@ -177,7 +177,7 @@ public class SpellItemSO : MagicItemSO
 	
 	public void ExecuteSpell(WandItemSO wandSO, ulong spellId)
 	{
-		Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().MainHand.ProjectileSpawnTransform.position;
+		Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
 		Vector2 baseDirection = (ActionManager.MouseWorldPosition - spawnPoint).normalized;
 		float totalSpread = Mathf.Max(0, Accuracy + wandSO.Accuracy);
 		float randomAngle = UnityEngine.Random.Range(-totalSpread, totalSpread);
@@ -185,7 +185,7 @@ public class SpellItemSO : MagicItemSO
 		
 		Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, Recoil);
 		GameManager.Instance.ExecuteSpellServerRpc(spellId, finalDirection, spawnPoint);
-		SoundManager.Instance.PlayOneShot(SpellCast, Player.LocalClientInstance.MainHand.ProjectileSpawnTransform.position);
+		SoundManager.Instance.PlayOneShot(SpellCast, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
 		
 		Debug.Log($"Spell Executed");
 	}
