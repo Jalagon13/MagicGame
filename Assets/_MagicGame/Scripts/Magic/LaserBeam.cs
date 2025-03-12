@@ -10,8 +10,6 @@ public class LaserBeam : Spell
     [SerializeField] private float _laserTickDuration = 0.2f;
     [SerializeField] private float _movementSpeedModifier = 0.75f;
     [SerializeField] private float _reflectionMinimumLength = 0.25f;
-    [SerializeField] private float _directionChangness = 4.5f;
-    [SerializeField] private float _lengthChangness = 6f;
     [SerializeField] private LineRenderer _beamLine;
     
     private Vector2 _desiredDirection;
