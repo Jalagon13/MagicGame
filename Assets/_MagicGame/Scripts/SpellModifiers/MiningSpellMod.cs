@@ -9,7 +9,6 @@ public class MiningSpellMod : MonoBehaviour, ISpellModifier
 
     public SyncSpellData ModifiySpellData(SyncSpellData spellData, Spell spell = null)
     {
-        Debug.Log($"Mining Spell Mod");
         return spellData;
     }
 

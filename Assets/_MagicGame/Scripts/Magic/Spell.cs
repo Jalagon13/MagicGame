@@ -16,21 +16,21 @@ public class Spell : NetworkBehaviour
 	public int CollisionMask { get; private set; }
 	public int NpcLayer { get; private set; }
 	public int WallMask { get; private set; }
-	public List<GameObject> HitTargets { get; private set; } = new();
+	public List<Npc> HitTargets { get; private set; } = new();
 
 	protected GameObject _spellGameObject;
 	protected CircleCollider2D _spellCollider;
 	protected bool _isDead;
 	protected Vector2 _finalDirection;
 	protected MiningSpellMod _miningSpellMod;
+	protected int _bounces;
+	protected bool _passingThroughWall;
+	protected Vector2 _lastPosition;
+	protected float _totalPassThroughDistance;
 	
 	private SyncSpellData _spellData;
 	private Transform _spellModifierTf;
 	private Timer _spellLifeTimer;
-	private int _bounces;
-	private float _totalPassThroughDistance;
-	private bool _passingThroughWall;
-	private Vector2 _lastPosition;
 
 	protected virtual void Awake()
     {
@@ -201,12 +201,12 @@ public class Spell : NetworkBehaviour
 			    {
 			    	if(collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellDataNV.Value.SpawnBiome))
 			    	{
+						Npc npc = npcNet.gameObject.GetComponent<Npc>();
+
 						// Overlapping with an NPC in the same biome
-						if (!HitTargets.Contains(collisions[i].gameObject))
+						if (!HitTargets.Contains(npc))
 			    		{
-							HitTargets.Add(collisions[i].gameObject);
-							
-							Npc npc = npcNet.gameObject.GetComponent<Npc>();
+							HitTargets.Add(npc);
 							npc.ApplyDamage(SpellDataNV.Value.Damage, NetworkManager.ConnectedClients[SpellDataNV.Value.OwnerPlayerId].PlayerObject.transform.position, SpellDataNV.Value.Knockback);
 							
 							if(HitTargets.Count >= SpellDataNV.Value.Pierces)
