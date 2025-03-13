@@ -1,4 +1,6 @@
 using System.Collections;
+using NUnit.Framework.Internal;
+using Unity.Netcode;
 using UnityEngine;
 
 public class SparkBlast : Spell
@@ -6,12 +8,20 @@ public class SparkBlast : Spell
     [SerializeField] private float _blastRadius = 1.25f;
     [SerializeField] private ParticleSystem _detonateParticles;
 
+    private GameObject _vfx;
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        
+        _vfx = Instantiate(_detonateParticles.gameObject, _spellGameObject.transform);
+        _vfx.transform.localPosition = Vector3.zero;
+    }
+
     public override void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
     {
         base.ExecuteSpellStart(finalDirection, spawnPoint);
-
-        var go = Instantiate(_detonateParticles.gameObject, transform.position, Quaternion.identity);
-        go.GetComponent<ParticleSystem>().Play();
+        SpawnBlastParticlesClientRpc(spawnPoint);
 
         Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _blastRadius, CollisionMask);
         for (int i = 0; i < collisions.Length; i++)
@@ -39,6 +49,13 @@ public class SparkBlast : Spell
         }
 
         StartCoroutine(StopSparkBlast());
+    }
+    
+    [Rpc(SendTo.ClientsAndHost)]
+    private void SpawnBlastParticlesClientRpc(Vector2 spawnPoint)
+    {
+        _vfx.transform.position = spawnPoint;
+        _vfx.GetComponent<ParticleSystem>().Play();
     }
     
     private IEnumerator StopSparkBlast()

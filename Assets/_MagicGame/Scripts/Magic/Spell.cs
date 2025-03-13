@@ -53,8 +53,8 @@ public class Spell : NetworkBehaviour
 			_spellLifeTimer.OnTimerEnd += DestroySpell;
 		}
 	}
-	
-	public void CancelSpell()
+
+    public void CancelSpell()
 	{
 		OnSpellEnd?.Invoke(this, EventArgs.Empty);
 
@@ -69,7 +69,6 @@ public class Spell : NetworkBehaviour
 	public void SetSpellData(SyncSpellData spellData)
 	{
 		_spellData = spellData;
-		GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);
 	}
 	
 	public override void OnNetworkSpawn()

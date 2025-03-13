@@ -198,6 +198,7 @@ public class GameManager : NetworkBehaviour
 	{
 		Spell spell = Instantiate((GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO).SpellProjectilePrefab, default, Quaternion.identity);
 		spell.SetSpellData(spellData);
+		spell.GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);
 		
 		_loadedSpells[spellData.SpellId] = spell;
 		

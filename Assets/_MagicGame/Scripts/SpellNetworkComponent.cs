@@ -35,7 +35,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 
 	private void SpellNetworkTick()
 	{
-		if(!_spell.Started) return;
+		// if(!_spell.Started) return;
 	
 		HandleBiomeVisibility();
 	}
@@ -60,7 +60,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 	
 	private bool InitialVisCheck(ulong clientId)
 	{
-		if (!_spell.Started) return false;
+		// if (!_spell.Started) return false;
 		
 		return CheckIfInSameBiome(clientId);
 	}

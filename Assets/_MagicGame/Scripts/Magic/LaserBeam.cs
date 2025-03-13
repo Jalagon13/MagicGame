@@ -25,12 +25,11 @@ public class LaserBeam : Spell
         
         NetworkObject.ChangeOwnership(SpellDataNV.Value.OwnerPlayerId);
         NetworkObject.DontDestroyWithOwner = true;
-        
         OnSpellEnd += LaserBeamEndHandle;
-        
+
         _laserPoints = new(SpellDataNV.Value.Bounces + 2);
         _contactPoints = new(SpellDataNV.Value.Bounces);
-        
+
         _laserTickTimer = new Timer(_laserTickDuration);
         _laserTickTimer.OnTimerEnd += LaserTick;
     }
