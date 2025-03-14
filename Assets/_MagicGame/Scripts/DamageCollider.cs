@@ -22,9 +22,9 @@ public class DamageCollider : MonoBehaviour
 			return;
 		}
 	
-		if(!other.TryGetComponent(out IHasHealth iHasHealth) || ColliderAnException(other)) return; 
+		if(!other.TryGetComponent(out NetworkHealthState iHasHealth) || ColliderAnException(other)) return; 
 	
-		iHasHealth.ApplyDamage(DamageAmount, transform.parent.position, KnockbackForce);
+		iHasHealth.TakeDamageRpc(DamageAmount, transform.parent.position, KnockbackForce);
 		OnDamage?.Invoke(this, new OnDamageEventArgs
 		{
 			ColliderDamaged = other

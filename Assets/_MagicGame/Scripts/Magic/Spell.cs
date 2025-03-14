@@ -22,14 +22,15 @@ public class Spell : NetworkBehaviour
 	protected CircleCollider2D _spellCollider;
 	protected bool _isDead;
 	protected Vector2 _finalDirection;
-	protected MiningSpellMod _miningSpellMod;
 	protected int _bounces;
 	protected bool _passingThroughWall;
 	protected Vector2 _lastPosition;
 	protected float _totalPassThroughDistance;
-	
+
+	private const float LERP_TIME = 0.1f;
 	private SyncSpellData _spellData;
 	private Transform _spellModifierTf;
+	private Transform _visualizationTf;
 	private Timer _spellLifeTimer;
 
 	protected virtual void Awake()
@@ -37,6 +38,7 @@ public class Spell : NetworkBehaviour
 		_spellGameObject = transform.GetChild(0).gameObject;
 		_spellCollider = GetComponent<CircleCollider2D>();
 		_spellModifierTf = transform.GetChild(0).GetChild(0);
+		_visualizationTf = transform.GetChild(0).GetChild(1);
 	}
 	
 	public virtual void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
@@ -89,12 +91,6 @@ public class Spell : NetworkBehaviour
 			if(IsOwner)
 			{
 				SpellDataNV.Value = go.GetComponent<ISpellModifier>().ModifiySpellData(SpellDataNV.Value, this);
-				
-				if(modifier is MiningFocusItemSO)
-				{
-				    _miningSpellMod = go.GetComponent<MiningSpellMod>();
-				    Debug.Log($"Found mining spell modifier");
-				}
 			}
 		}
 	}
@@ -111,7 +107,7 @@ public class Spell : NetworkBehaviour
 		Debug.Log($"Spell Destroyed");
 		Destroy(gameObject);
 	}
-
+	
 	protected virtual void FixedUpdate()
 	{
 		if(!Started || !IsOwner) return; //don't do anything before OnNetworkSpawn has run.

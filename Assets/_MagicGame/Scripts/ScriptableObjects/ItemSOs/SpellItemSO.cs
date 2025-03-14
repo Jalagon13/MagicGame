@@ -169,7 +169,7 @@ public class SpellItemSO : MagicItemSO
 			Player.LocalClientInstance.OwnerClientId,
 			Player.LocalClientInstance.CurrentPlayerBiome.Value, modifierArray);
 		
-		GameManager.Instance.LoadSpellServerRpc(syncSpellData);
+		GameManager.Instance.LoadSpellServerRpc(syncSpellData, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
 		Debug.Log($"Spell Loaded");
 			
 		return syncSpellData;

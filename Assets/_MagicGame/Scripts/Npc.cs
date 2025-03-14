@@ -8,7 +8,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 [RequireComponent(typeof(NpcNetworkComponent))]
-public class Npc : NetworkBehaviour, IHasHealth
+public class Npc : NetworkBehaviour
 {	
 	public event System.EventHandler OnNpcKilled;
 	public event EventHandler<OnNpcDamagedEventArgs> OnNpcDamged;
@@ -16,7 +16,7 @@ public class Npc : NetworkBehaviour, IHasHealth
 	{
 		public Vector2 DamageSourcePosition;
 	}
-	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnHealthUpdated;
+	// public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnHealthUpdated;
 
 	[SerializeField] private bool _invincible = false;
 	[SerializeField] private int _maxHealth;
@@ -119,12 +119,12 @@ public class Npc : NetworkBehaviour, IHasHealth
 	
 	private void UpdateHealthUI(int previousValue, int newValue)
 	{
-		OnHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
-		{
-			PreviousValue = previousValue,
-			NewValue = newValue,
-			MaxValue = _maxHealth
-		});
+		// OnHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
+		// {
+		// 	PreviousValue = previousValue,
+		// 	NewValue = newValue,
+		// 	MaxValue = _maxHealth
+		// });
 	}
 	
 	public void DropLoot()

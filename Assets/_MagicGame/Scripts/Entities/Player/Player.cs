@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Player : NetworkBehaviour, IHasHealth
+public class Player : NetworkBehaviour
 {	
 	public static event EventHandler<PlayerIdEventArgs> OnAnyPlayerSpawned;
 	public class PlayerIdEventArgs : EventArgs
@@ -24,37 +24,27 @@ public class Player : NetworkBehaviour, IHasHealth
 		public Vector2 DamagerPosition;
 	}
 	
-	public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnHealthUpdated;
-	public class OnStatUpdatedEventArgs : EventArgs
-	{
-		public int PreviousValue;
-		public int NewValue;
-		public int MaxValue;
-	}
-	
+	public NetworkVariable<int> SelectedItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public NetworkVariable<BiomeType> CurrentPlayerBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
 	[field: SerializeField] public PlayerVisuals PlayerVisuals { get; private set; }
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
 	[SerializeField] private GameObject _breadCrumbPrefab;
 	public PlayerStats PlayerStats { get; private set; }
-	public NetworkVariable<int> SelectedItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	public NetworkVariable<BiomeType> CurrentPlayerBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public BiomeType Biome { get { return CurrentPlayerBiome.Value; } }
 	public Collider2D HitCollider { get; private set; }
 	public bool IsPerformingSwing { get; set; }
 	
 	[SerializeField] private float _respawnTimerDuration;
-	[field: SerializeField] public float IFrameLength { get; private set; } = 0.67f;
 	[Range(0, 100), SerializeField] private float _knockbackResist;
 	[SerializeField] private List<InventoryItem> _startingItems = new();
 	[SerializeField] private bool _spawnWandItems;
 	[SerializeField] private List<WandInventoryItem> _startingWandItems = new();
 
-	public NetworkVariable<int> HealthNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	public NetworkVariable<bool> ExecutingIFrames { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	public NetworkVariable<bool> PvpEnabled { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public Knockback PlayerKnockback { get; private set; }
-	
+	public NetworkHealthState HealthState { get; private set; }
+
 	private Timer _respawnTimer;
 	private Vector2 _spawnPoint;
 	private BiomeType _spawnBiome;
@@ -65,8 +55,8 @@ public class Player : NetworkBehaviour, IHasHealth
 		PlayerStats = GetComponent<PlayerStats>();
 		HitCollider = GetComponent<Collider2D>();
 		PlayerKnockback = GetComponent<Knockback>();
-		HealthNetworkVariable.OnValueChanged += HealthNetworkVariable_OnValueChanged;
-		
+		HealthState = GetComponent<NetworkHealthState>();
+
 		_respawnTimer = new(_respawnTimerDuration);
 	}
 
@@ -90,16 +80,14 @@ public class Player : NetworkBehaviour, IHasHealth
 		{
 			PlayerId = OwnerClientId
 		});
-		
-		if(IsServer)
-		{
-			HealthNetworkVariable.Value = PlayerStats.StartingPlayerHealth;
-			ExecutingIFrames.Value = false;
-		}
 	}
 
 	private IEnumerator Start()
 	{
+		HealthState.HitPointsDamaged += OnPlayerDamaged;
+		HealthState.HitPointsDepleted += OnPlayerDeath;
+		HealthState.HitPointsReplenished += OnPlayerRecovery;
+
 		yield return new WaitForEndOfFrame();
 	
 		if (IsOwner)
@@ -149,15 +137,15 @@ public class Player : NetworkBehaviour, IHasHealth
 
 	private void Update()
 	{
-		if(IsDead() && NetworkManager.LocalClientId == OwnerClientId)
+		if (HealthState.IsDead && NetworkManager.LocalClientId == OwnerClientId)
 		{
 			_respawnTimer.Tick(Time.deltaTime);
 		}
 
-		if(IsOwner)
+		if (IsOwner)
 		{
-		    Vector2Int newTilePosition = new(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
-			if(newTilePosition != _lastTilePosition)
+			Vector2Int newTilePosition = new(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
+			if (newTilePosition != _lastTilePosition)
 			{
 				_lastTilePosition = newTilePosition;
 				SpawnBreadCrumbServerRpc(_lastTilePosition);
@@ -173,98 +161,59 @@ public class Player : NetworkBehaviour, IHasHealth
 		GameManager.Instance.InvokeSpawnBreadCrumbEvent(breadCrumb);
 	}
 
-	#region Life Cycle Functions
+	private void OnPlayerDamaged(object sender, NetworkHealthState.HitPointsDamagedEventArgs e)
+	{
+		Debug.Log($"Damaging player {OwnerClientId}");
+		GameManager.Instance.PlayDamageNumbers(e.DamageTaken, transform.position, CurrentPlayerBiome.Value);
 
-	public void TogglePvp(bool pvpEnabled)
-	{
-		PvpEnabled.Value = pvpEnabled;
-		Debug.Log($"Pvp enabled: {PvpEnabled.Value}");
+		OnPlayerDamagedClientRpc(e.DamageTaken, e.SourcePosition, e.KnockbackForce, RpcTarget.Single(OwnerClientId, RpcTargetUse.Persistent));
 	}
 
-	public void ApplyDamage(int damage, Vector2 damagerPosition, int knockbackForce)
-	{
-		if (IsDead()) return;
-
-		ApplyPlayerDamageServerRpc(OwnerClientId, damage, damagerPosition, knockbackForce);
-	}
-	
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void ApplyPlayerDamageServerRpc(ulong damagePlayerId, int damageAmount, Vector2 damagerPosition, int knockbackForce)
-	{
-		if (!NetworkManager.ConnectedClients.ContainsKey(damagePlayerId)) return;
-	
-		NetworkObject playerNetworkObject = NetworkManager.ConnectedClients[damagePlayerId].PlayerObject;
-		
-		if(playerNetworkObject.GetComponent<Player>().ExecutingIFrames.Value) return;
-		
-		int defense = playerNetworkObject.GetComponent<Player>().PlayerStats.PlayerDefense;
-		int damageReduction = defense / 2;
-		int finalDamage = Mathf.Max(1, damageAmount - damageReduction); 
-		
-		playerNetworkObject.GetComponent<Player>().HealthNetworkVariable.Value = Mathf.Max(0, HealthNetworkVariable.Value - finalDamage);
-		playerNetworkObject.GetComponent<Player>().ExecuteIFrames();
-		
-		GameManager.Instance.PlayDamageNumbers(damageAmount, transform.position, CurrentPlayerBiome.Value);
-		
-		bool isPlayerDead = HealthNetworkVariable.Value <= 0;
-		
-		OnPlayerHealthChangedClientRpc(finalDamage, isPlayerDead, damagerPosition, knockbackForce, RpcTarget.Single(damagePlayerId, RpcTargetUse.Persistent));
-	}
-	
-	public void ExecuteIFrames() => StartCoroutine(IframeRoutine());
-	
-	private IEnumerator IframeRoutine()
-	{
-		ExecutingIFrames.Value = true;
-		
-		yield return new WaitForSeconds(IFrameLength);
-		
-		ExecutingIFrames.Value = false;
-	}
-	
 	[Rpc(SendTo.SpecifiedInParams)]
-	private void OnPlayerHealthChangedClientRpc(int finalDamage, bool isKilled, Vector2 damagerPosition, float knockbackForce, RpcParams rpcParams = default)
+	private void OnPlayerDamagedClientRpc(int damageTaken, Vector3 sourcePosition, float knockbackForce, RpcParams rpcParams = default)
 	{
-		if(isKilled)
+		Debug.Log($"[Client {NetworkManager.LocalClientId}] Applied {damageTaken} Damage to {gameObject.name}!");
+
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerDamaged, transform.position);
+		PlayerKnockback.ApplyKnockback(sourcePosition, _knockbackResist, knockbackForce);
+
+		OnDamaged?.Invoke(this, new OnDamagedEventArgs
 		{
-			Debug.Log($"[Client {NetworkManager.LocalClientId}] {gameObject.name} is dead!");
+			DamagerPosition = sourcePosition,
+			DamageAmount = damageTaken
+		});
+	}
 
-			_respawnTimer.Reset();
-			_respawnTimer.OnTimerEnd += RespawnPlayer;
+	private void OnPlayerDeath(object sender, EventArgs e)
+	{
+		Debug.Log($"Player {OwnerClientId} is dead!");
+		OnPlayerDeathClientRpc(RpcTarget.Single(OwnerClientId, RpcTargetUse.Persistent));
+	}
 
-			OnDeath?.Invoke(this, new PlayerIdEventArgs
-			{
-				PlayerId = OwnerClientId
-			});
-		}
-		else
+	[Rpc(SendTo.SpecifiedInParams)]
+	private void OnPlayerDeathClientRpc(RpcParams rpcParams = default)
+	{
+		Debug.Log($"[Client {NetworkManager.LocalClientId}] {gameObject.name} is dead!");
+
+		_respawnTimer.Reset();
+		_respawnTimer.OnTimerEnd += RespawnPlayer;
+
+		OnDeath?.Invoke(this, new PlayerIdEventArgs
 		{
-			Debug.Log($"[Client {NetworkManager.LocalClientId}] Applied {finalDamage} Damage to {gameObject.name}!");
-
-			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerDamaged, transform.position);
-			PlayerKnockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce); 
-			
-			OnDamaged?.Invoke(this, new OnDamagedEventArgs
-			{
-				DamagerPosition = damagerPosition,
-				DamageAmount = finalDamage
-			});
-		}
+			PlayerId = OwnerClientId
+		});
 	}
 
 	private void RespawnPlayer(object sender, EventArgs e)
 	{
 		_respawnTimer.OnTimerEnd -= RespawnPlayer;
 
-		RespawnPlayerServerRpc(OwnerClientId, PlayerStats.StartingPlayerHealth);
+		HealthState.HealToFullRpc();
 	}
 
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RespawnPlayerServerRpc(ulong respawnerId, int healthToRespawnWith)
+	private void OnPlayerRecovery(object sender, EventArgs e)
 	{
-		HealthNetworkVariable.Value = healthToRespawnWith;
-
-		RespawnPlayerClientRpc(RpcTarget.Single(respawnerId, RpcTargetUse.Persistent));
+		RespawnPlayerClientRpc(RpcTarget.Single(OwnerClientId, RpcTargetUse.Persistent));
 	}
 
 	[Rpc(SendTo.SpecifiedInParams)]
@@ -283,22 +232,16 @@ public class Player : NetworkBehaviour, IHasHealth
 		});
 	}
 
-	#endregion
+	public void TogglePvp(bool pvpEnabled)
+	{
+		PvpEnabled.Value = pvpEnabled;
+		Debug.Log($"Pvp enabled: {PvpEnabled.Value}");
+	}
 
 	private void DashTest(object sender, EventArgs e)
 	{
 		if (Pointer.IsOverUI() || ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo)) return;
 		PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, 45, true);
-	}
-
-	private void HealthNetworkVariable_OnValueChanged(int previousValue, int newValue)
-	{
-		OnHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
-		{
-			PreviousValue = previousValue,
-			NewValue = newValue,
-			MaxValue = PlayerStats.StartingPlayerHealth
-		});
 	}
 
 	private void HotbarManager_OnSelectedItemUpdated(object sender, HotbarManager.OnFocusItemSetEventArgs e)
@@ -317,11 +260,6 @@ public class Player : NetworkBehaviour, IHasHealth
 		}
 	}
 	
-	public bool IsDead()
-	{
-		return HealthNetworkVariable.Value <= 0;
-	}
-	
 	public bool IsHoldingAWand()
 	{
 		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromItemId(SelectedItemIndexNetworkVariable.Value);
@@ -332,10 +270,12 @@ public class Player : NetworkBehaviour, IHasHealth
 	public override void OnDestroy()
 	{
 		base.OnDestroy();
-		
-		HealthNetworkVariable.OnValueChanged -= HealthNetworkVariable_OnValueChanged;
-		
-		if(IsOwner)
+
+		HealthState.HitPointsDamaged -= OnPlayerDamaged;
+		HealthState.HitPointsDepleted -= OnPlayerDeath;
+		HealthState.HitPointsReplenished -= OnPlayerRecovery;
+
+		if (IsOwner)
 		{
 			HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnSelectedItemUpdated;
 		}

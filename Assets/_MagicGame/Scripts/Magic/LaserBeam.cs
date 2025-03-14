@@ -36,14 +36,6 @@ public class LaserBeam : Spell
 
     private void LaserTick(object sender, EventArgs e)
     {
-        if (_miningSpellMod != null)
-        {
-            foreach (Vector2 contactPoint in _contactPoints)
-            {
-                _miningSpellMod.TryToHitTiles(_beamWidth, contactPoint, false);
-            }
-        }
-    
         foreach (Npc npc in HitTargets)
         {
             npc.ApplyDamage(SpellDataNV.Value.Damage, NetworkManager.ConnectedClients[SpellDataNV.Value.OwnerPlayerId].PlayerObject.transform.position, SpellDataNV.Value.Knockback);
@@ -62,6 +54,7 @@ public class LaserBeam : Spell
 
     protected override void FixedUpdate()
     {
+        Debug.Log($"");
         base.FixedUpdate();
         
         if(!Started) return;

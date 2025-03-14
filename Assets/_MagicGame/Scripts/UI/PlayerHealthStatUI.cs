@@ -22,15 +22,14 @@ public class PlayerHealthStatUI : MonoBehaviour
 	{
 		if(Player.LocalClientInstance != null)
 		{
-			Player.LocalClientInstance.OnHealthUpdated += Player_OnPlayerHealthUpdated;
+			Player.LocalClientInstance.HealthState.HitPoints.OnValueChanged += Player_OnPlayerHealthUpdated;
 		}
 	}
 
-	private void Player_OnPlayerHealthUpdated(object sender, IHasHealth.OnHealthUpdatedEventArgs e)
-	{
-		UpdateView(e.NewValue, e.MaxValue);
+    private void Player_OnPlayerHealthUpdated(int previousValue, int newValue)
+    {
+		UpdateView(newValue, Player.LocalClientInstance.HealthState.BaseHealth);
 	}
-
 
 	private void UpdateView(int currentAmount, int maxAmount)
 	{
@@ -45,7 +44,7 @@ public class PlayerHealthStatUI : MonoBehaviour
 		
 		if(Player.LocalClientInstance != null)
 		{
-			Player.LocalClientInstance.OnHealthUpdated -= Player_OnPlayerHealthUpdated;
+			Player.LocalClientInstance.HealthState.HitPoints.OnValueChanged -= Player_OnPlayerHealthUpdated;
 		}
 	}
 }

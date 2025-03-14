@@ -10,7 +10,7 @@ public class ManaBolt : Spell
 	[SerializeField] private float _velocityDecay = 5f; 
 	
 	private Rigidbody2D _rigidbody2D;
-	
+
 
     protected override void Awake()
     {
@@ -39,23 +39,6 @@ public class ManaBolt : Spell
 
         Velocity = Vector2.Lerp(Velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
         _rigidbody2D.linearVelocity = Velocity;
-
-        if(_miningSpellMod == null) return;
-        
-        Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _spellCollider.radius, CollisionMask);
-        for (int i = 0; i < collisions.Length; i++)
-        {
-            if(collisions[i].gameObject.layer == WallMask)
-            {
-                if (collisions[i].TryGetComponent(out PathfindingWallTm pfWall))
-                {
-                    if (pfWall.BiomeSameAs(SpellDataNV.Value.SpawnBiome))
-                    {
-                        _miningSpellMod.TryToHitTiles(_spellCollider.radius, transform.position);
-                    }
-                }
-            }
-        }
     }
 
     // private void PlayHitParticles()

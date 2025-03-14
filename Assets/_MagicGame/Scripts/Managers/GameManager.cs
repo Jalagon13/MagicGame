@@ -194,9 +194,9 @@ public class GameManager : NetworkBehaviour
 	#region Spell Projectile Functions
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void LoadSpellServerRpc(SyncSpellData spellData)
+	public void LoadSpellServerRpc(SyncSpellData spellData, Vector2 loadPoint)
 	{
-		Spell spell = Instantiate((GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO).SpellProjectilePrefab, default, Quaternion.identity);
+		Spell spell = Instantiate((GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO).SpellProjectilePrefab, loadPoint, Quaternion.identity);
 		spell.SetSpellData(spellData);
 		spell.GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);
 		

@@ -39,7 +39,7 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	public PlayerMoveState PlayerMoveState { get; private set; }
 	public CardinalDirection MovingDirection { get {return _currentDirection; } set {_currentDirection = value; } }
 	public bool IsMoving { get; set; }
-	public bool IsDead { get { return _thisPlayer.IsDead(); } }
+	public bool IsDead { get { return _thisPlayer.HealthState.IsDead; } }
 	public bool CanMove { get; private set; } = true;
 	public Vector2 Velocity { get; set; }
 	

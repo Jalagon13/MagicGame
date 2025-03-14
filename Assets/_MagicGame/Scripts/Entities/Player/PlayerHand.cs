@@ -62,7 +62,7 @@ public class PlayerHand : NetworkBehaviour
 
 	private void Update()
 	{
-		if (_thisPlayer.IsDead()) return;
+		if (_thisPlayer.HealthState.IsDead) return;
 
 		if (IsOwner)
 		{

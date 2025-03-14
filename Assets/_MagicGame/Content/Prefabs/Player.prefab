@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 1645875197371293612}
   - component: {fileID: 6270092794415709611}
   - component: {fileID: 5536299572111678412}
+  - component: {fileID: 3515157567628285232}
   - component: {fileID: 7910427268955246096}
   m_Layer: 11
   m_Name: Player
@@ -283,7 +284,6 @@ MonoBehaviour:
   <CollectTag>k__BackingField: {fileID: 6231199994205774343}
   _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
   _respawnTimerDuration: 2
-  <IFrameLength>k__BackingField: 0.67
   _knockbackResist: 0
   _startingItems:
   - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
@@ -301,7 +301,7 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 1cf699ca803ee4a948f9d763ddf2409d, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: d1b863f7d9dab46bda1edea0bffe44fe, type: 2}
+    - {fileID: 11400000, guid: bf1d2a5b5f1334f7f9a6d0aa32605231, type: 2}
     - {fileID: 11400000, guid: 0c65381494fab43889cd8e41500fcd8b, type: 2}
     - {fileID: 11400000, guid: e9ee0b8df2d3e45aab12f04ecc4446a0, type: 2}
     - {fileID: 11400000, guid: 7517b7388627b4ed4ad25d99686ef113, type: 2}
@@ -340,9 +340,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4b9d159c987f4dbb80b04062b6745d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <StartingPlayerHealth>k__BackingField: 100
+  ShowTopMostFoldoutHeaderGroup: 1
+  <BaseMana>k__BackingField: 50
   <BaseSpeed>k__BackingField: 5
   <TurnSharpness>k__BackingField: 7.5
+--- !u!114 &3515157567628285232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815970926421098775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c5580f2a973948778c2f8d6b6a5f0c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  <BaseHealth>k__BackingField: 100
+  <BaseDefense>k__BackingField: 0
+  <IFrameDuration>k__BackingField: 0.67
 --- !u!114 &7910427268955246096
 MonoBehaviour:
   m_ObjectHideFlags: 0

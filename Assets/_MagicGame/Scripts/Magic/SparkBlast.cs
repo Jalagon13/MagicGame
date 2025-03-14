@@ -43,11 +43,6 @@ public class SparkBlast : Spell
             }
         }
         
-        if(_miningSpellMod != null)
-        {
-            _miningSpellMod.TryToHitTiles(_blastRadius, transform.position);
-        }
-
         StartCoroutine(StopSparkBlast());
     }
     

@@ -11,8 +11,8 @@ public class MeleeCollider : NetworkBehaviour
 	[SerializeField] private PlayerHand _playerHand;
 
 	private MeleeItemSO _meleeItemSO;
-	private List<IHasHealth> _entitiesFoundThisSwing;
-	private List<IHasHealth> _entitiesHitThisSwing;
+	private List<NetworkHealthState> _entitiesFoundThisSwing;
+	private List<NetworkHealthState> _entitiesHitThisSwing;
 	private int _damage;
 	private Player _thisPlayer;
 	private bool _wandOut;
@@ -52,7 +52,7 @@ public class MeleeCollider : NetworkBehaviour
 	{
 		if(!IsOwner) return;
 	
-		if(collision.TryGetComponent(out IHasHealth iHasHealth))
+		if(collision.TryGetComponent(out NetworkHealthState iHasHealth))
 		{
 			// If this collider, is it's own, skip it
 			if(collision == _thisPlayer.GetComponent<Collider2D>()) return;
@@ -73,12 +73,12 @@ public class MeleeCollider : NetworkBehaviour
 	{
 		if(_entitiesFoundThisSwing.Count > 0)
 		{
-			foreach (IHasHealth entityToDamage in _entitiesFoundThisSwing.ToArray())
+			foreach (NetworkHealthState entityToDamage in _entitiesFoundThisSwing.ToArray())
 			{
 				if (_entitiesHitThisSwing.Contains(entityToDamage)) continue;
 				
 				// NTFS: No dedicated knockback yet
-				entityToDamage.ApplyDamage(5, transform.root.position, 5);
+				entityToDamage.TakeDamageRpc(5, transform.root.position, 5);
 				
 				_entitiesFoundThisSwing.Remove(entityToDamage);
 				

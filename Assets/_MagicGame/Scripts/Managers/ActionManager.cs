@@ -121,7 +121,7 @@ public class ActionManager : MonoBehaviour
 	
 	private void HandleItemActionExecutions()
 	{
-		if(Player.LocalClientInstance.IsDead() || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled()) return;
+		if(Player.LocalClientInstance.HealthState.IsDead || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled()) return;
 
 		if (GameInput.Instance.GetPrimaryHeldDown() && InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem))
 		{

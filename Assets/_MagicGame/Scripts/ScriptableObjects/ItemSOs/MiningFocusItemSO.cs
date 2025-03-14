@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Mining Item", menuName = "Create Item/New Mining Item")]
-public class MiningFocusItemSO : SpellModItemSO
+public class MiningFocusItemSO : MagicItemSO
 {
 	[field: Tooltip("Actual Prefab for the mining visual.")]
 	[field: SerializeField] public GameObject MiningVisualPrefab { get; private set; }
