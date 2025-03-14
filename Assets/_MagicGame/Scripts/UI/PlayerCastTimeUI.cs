@@ -52,6 +52,6 @@ public class PlayerCastTimeUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        ActionManager.Instance.OnPlayerManaUpdated -= OnPlayerSpellChargeUpdated;
+        ActionManager.Instance.OnPlayerSpellChargeUpdated -= OnPlayerSpellChargeUpdated;
     }
 }

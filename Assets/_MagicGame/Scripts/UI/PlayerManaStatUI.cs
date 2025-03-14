@@ -10,39 +10,26 @@ public class PlayerManaStatUI : MonoBehaviour
 	[SerializeField] private RectTransform _border; // Set width to max mana dynamically
 	[SerializeField] private TextMeshProUGUI _amountText;
 
-	private void Start()
-	{
-		ActionManager.Instance.OnPlayerManaUpdated += OnPlayerManaUpdated;
-		HotbarManager.Instance.OnFocusSlotUpdated += CheckForWand;
+    private void Update()
+    {
+		if(PlayerStats.Instance == null) return;
+    
+		_border.sizeDelta = new Vector2(PlayerStats.Instance.BaseMana, _border.sizeDelta.y);
+		_manaBar.UpdateBar(PlayerStats.Instance.CurrentMana, 0, PlayerStats.Instance.BaseMana);
+		_border.sizeDelta = new Vector2(PlayerStats.Instance.BaseMana * 2, _border.sizeDelta.y);
+		_amountText.text = $"{Mathf.RoundToInt(PlayerStats.Instance.CurrentMana)}/{PlayerStats.Instance.BaseMana}";
+
+		MaxMana = PlayerStats.Instance.BaseMana;
 	}
 
-	private void CheckForWand(object sender, HotbarManager.OnFocusItemSetEventArgs e)
+    private void OnPlayerManaUpdated(object sender, ActionManager.OnStatUpdatedEventArgs e)
 	{
-		var mainHandItemSO = GameManager.Instance.GetItemSOFromItemId(e.SelectedItemIndex);
 		
-		if(mainHandItemSO is WandItemSO)
-		{
-			ShowBar();
-		}
-		else
-		{
-			HideBar();
-		}
-	}
-
-	private void OnPlayerManaUpdated(object sender, ActionManager.OnStatUpdatedEventArgs e)
-	{
-		_border.sizeDelta = new Vector2(e.MaxAmount, _border.sizeDelta.y);
-		UpdateBarFill(e.CurrentAmount, e.MaxAmount);
 	}
 
 	public void UpdateBarFill(float currentAmount, float maxAmount)
 	{
-		_manaBar.UpdateBar(currentAmount, 0, maxAmount);
-		_border.sizeDelta = new Vector2(maxAmount * 2, _border.sizeDelta.y);
-		_amountText.text = $"{Mathf.RoundToInt(currentAmount)}/{maxAmount}";
 		
-		MaxMana = maxAmount;
 	}
 	
 	private void ShowBar()
@@ -53,11 +40,5 @@ public class PlayerManaStatUI : MonoBehaviour
 	private void HideBar()
 	{
 		gameObject.SetActive(false);
-	}
-	
-	private void OnDestroy()
-	{
-		ActionManager.Instance.OnPlayerManaUpdated -= OnPlayerManaUpdated;
-		HotbarManager.Instance.OnFocusSlotUpdated -= CheckForWand;
 	}
 }

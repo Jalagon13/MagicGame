@@ -12,7 +12,6 @@ public class ActionManager : MonoBehaviour
 	public static Vector2 MouseWorldPosition { get; private set; }
 	public static bool IsChargingSpell { get; private set; }
 	
-	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerManaUpdated;
 	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerSpellChargeUpdated;
 	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerManaRechargeUpdated;
 	public class OnStatUpdatedEventArgs : EventArgs
@@ -162,18 +161,6 @@ public class ActionManager : MonoBehaviour
 			// Update the UI stats for this wand
 			AddWandToDict(wandInvItem);
 
-			float currentMana = WandDict[wandInvItem.Id].CurrentMana;
-			int maxMana = WandDict[wandInvItem.Id].WandSO.MaxMana;
-			
-			if(currentMana <= maxMana)
-			{
-				OnPlayerManaUpdated?.Invoke(this, new OnStatUpdatedEventArgs
-				{
-					MaxAmount = maxMana,
-					CurrentAmount = currentMana
-				});
-			}
-			
 			float currentRecharge = WandDict[wandInvItem.Id].CurrentReload;
 			float MaxRecharge = WandDict[wandInvItem.Id].TotalReloadDuration;
 			

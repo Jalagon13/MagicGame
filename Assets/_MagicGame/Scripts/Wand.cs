@@ -6,15 +6,14 @@ using UnityEngine;
 public class Wand
 {
 	public WandInventoryItem WandInvItem { get; private set; }
-	public float CurrentMana { get; private set; }
+	public WandItemSO WandSO { get; private set; }
+	public Timer CastTimeTimer { get; private set; }
 	public float CurrentReload { get; private set; }
 	public float TotalReloadDuration { get; private set; }
-	public WandItemSO WandSO { get; private set; }
 	public bool IsSelected { get; private set; }
-	public Timer CastTimeTimer { get; private set; }
 	
-	private Queue<int> _validMagicArrayIndexes = new();
 	private float _castDelayTimer;
+	private Queue<int> _validMagicArrayIndexes = new();
 	private List<LoadedSpell> _loadedSpells = new();
 	private struct LoadedSpell
 	{
@@ -33,7 +32,6 @@ public class Wand
 	{
 		WandInvItem = wandInventoryItem;
 		WandSO = WandInvItem.Item as WandItemSO;
-		CurrentMana = WandSO.MaxMana;
 		WandInvItem.OnWandContentsUpdated += OnWandContentsUpdated;
 
 		CastTimeTimer = new Timer(0);
@@ -67,9 +65,6 @@ public class Wand
 
 			CurrentReload += deltaTime; // Regen recharge over time
 			CurrentReload = Mathf.Min(CurrentReload, TotalReloadDuration); // Clamp to prevent overfilling
-
-			CurrentMana += WandSO.ManaRegenSpeed * deltaTime; // Regenerate mana over time
-			CurrentMana = Mathf.Min(CurrentMana, WandSO.MaxMana); // Clamp to prevent overfilling
 		}
 	}
 	
@@ -150,7 +145,7 @@ public class Wand
 			}
 		}
 	
-	    if(totalManaCost > CurrentMana) return;
+	    if(totalManaCost > PlayerStats.Instance.CurrentMana) return;
 	    
 		_validMagicArrayIndexes.Dequeue();
 	    
@@ -177,7 +172,7 @@ public class Wand
 				{
 					totalManaCost += spellToCast.ManaCost;
 
-					if (totalManaCost <= CurrentMana)
+					if (totalManaCost <= PlayerStats.Instance.CurrentMana)
 					{
 						for (int i = 0; i < spellModsFound.Count; i++)
 						{
@@ -205,7 +200,7 @@ public class Wand
 
 		while (RemainingSpellExists())
 		{
-			if(totalManaCost >= CurrentMana || spellsAndModsFound.Count == multiCast.MultiCastAmount) break;
+			if(totalManaCost >= PlayerStats.Instance.CurrentMana || spellsAndModsFound.Count == multiCast.MultiCastAmount) break;
 			
 			MagicItemSO nextMagic = WandInvItem.MagicArray[_validMagicArrayIndexes.Peek()];
 
@@ -264,9 +259,9 @@ public class Wand
 			}
 		}
 
-		CurrentMana -= totalManaCost;
+		PlayerStats.Instance.SubtractMana(totalManaCost);
 
-		if(RemainingSpellExists())
+		if (RemainingSpellExists())
 		{
 			_castDelayTimer = WandSO.BaseCastDelay + totalCastDelay;
 		}

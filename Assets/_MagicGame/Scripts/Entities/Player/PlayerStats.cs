@@ -7,19 +7,23 @@ public class PlayerStats : NetworkBehaviour
 {
 	public static PlayerStats Instance { get; private set; }
 
-	[field: SerializeField] public float BaseMana { get; private set; } = 50f;
+	[field: SerializeField] public int BaseMana { get; private set; } = 50;
+	[field: SerializeField] public int ManaRegenPerSecond { get; private set; } = 10;
 	[field: SerializeField] public float BaseSpeed { get; private set; }
 	[field: SerializeField] public float TurnSharpness { get; private set; }
 	
 	public float CurrentSpeed { get; private set; }
+	public int CurrentMana { get; private set; }
 	
+	private NetworkHealthState _healthState;
 	private List<int> _equippedArmorItemIdList = new();
 	private float _speedModifier = 1f;
-	private NetworkHealthState _healthState;
+	private float _manaRegenAccumulator = 0f;
 	
 	private void Awake()
 	{
 		_healthState = GetComponent<NetworkHealthState>();
+		CurrentMana = BaseMana;
 	}
 
     public override void OnNetworkSpawn()
@@ -38,8 +42,35 @@ public class PlayerStats : NetworkBehaviour
     private void Update()
 	{
 		CurrentSpeed = BaseSpeed * _speedModifier;
+
+		RegenerateMana();
 	}
-	
+
+	private void RegenerateMana()
+	{
+		if (CurrentMana < BaseMana)
+		{
+			_manaRegenAccumulator += ManaRegenPerSecond * Time.deltaTime;
+
+			int manaToRegen = Mathf.FloorToInt(_manaRegenAccumulator);
+
+			if (manaToRegen > 0)
+			{
+				_manaRegenAccumulator -= manaToRegen;
+
+				CurrentMana = Mathf.Min(CurrentMana + manaToRegen, BaseMana);
+			}
+		}
+	}
+
+	public void SubtractMana(int amount)
+	{
+		if (amount > 0) 
+		{
+			CurrentMana = Mathf.Max(CurrentMana - amount, 0);
+		}
+	}
+
 	public void ApplySpeedModifier(float modifier)
 	{
 		_speedModifier = modifier;
@@ -52,7 +83,6 @@ public class PlayerStats : NetworkBehaviour
 		if(!_equippedArmorItemIdList.Contains(itemId))
 		{
 			_equippedArmorItemIdList.Add(itemId);
-			Debug.Log($"Armor Equipped: {armor.Name}");
 		}
 		
 		UpdatePlayerStats();
@@ -62,7 +92,6 @@ public class PlayerStats : NetworkBehaviour
 	{
 		if (armor == null)
 		{
-			Debug.LogWarning("Attempted to unequip null armor.");
 			return;
 		}
 
@@ -71,11 +100,6 @@ public class PlayerStats : NetworkBehaviour
 		if (_equippedArmorItemIdList.Contains(itemId))
 		{
 			_equippedArmorItemIdList.Remove(itemId);
-			Debug.Log($"Armor Unequipped: {armor.Name}");
-		}
-		else
-		{
-			Debug.LogWarning($"Armor not found in equipped list: {armor.Name}");
 		}
 
 		UpdatePlayerStats();

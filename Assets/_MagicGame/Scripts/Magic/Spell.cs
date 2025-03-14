@@ -9,9 +9,9 @@ using UnityEngine;
 public class Spell : NetworkBehaviour
 {
 	public event EventHandler OnSpellEnd;
+	[HideInInspector] public Vector2 Velocity;
 	public NetworkVariable<SyncSpellData> SpellDataNV = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	[HideInInspector]
-	public Vector2 Velocity;
+	public NetworkVariable<bool> ShowVisuals = new NetworkVariable<bool>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	public bool Started { get; private set; }
 	public int CollisionMask { get; private set; }
 	public int NpcLayer { get; private set; }
@@ -20,11 +20,11 @@ public class Spell : NetworkBehaviour
 
 	protected GameObject _spellGameObject;
 	protected CircleCollider2D _spellCollider;
-	protected bool _isDead;
 	protected Vector2 _finalDirection;
+	protected Vector2 _lastPosition;
+	protected bool _isDead;
 	protected int _bounces;
 	protected bool _passingThroughWall;
-	protected Vector2 _lastPosition;
 	protected float _totalPassThroughDistance;
 
 	private const float LERP_TIME = 0.1f;
@@ -39,13 +39,54 @@ public class Spell : NetworkBehaviour
 		_spellCollider = GetComponent<CircleCollider2D>();
 		_spellModifierTf = transform.GetChild(0).GetChild(0);
 		_visualizationTf = transform.GetChild(0).GetChild(1);
+		
+		Hide();
 	}
-	
+
+	public override void OnNetworkSpawn()
+	{
+		if (IsOwner)
+		{
+			SpellDataNV.Value = _spellData;
+			CollisionMask = LayerMask.GetMask(new[] { "PathfindingWall", "Npc" });
+			WallMask = LayerMask.NameToLayer("PathfindingWall");
+			NpcLayer = LayerMask.NameToLayer("Npc");
+		}
+
+		ShowVisuals.OnValueChanged += HandleVisuals;
+		ShowVisuals.Value = false;
+
+		foreach (int modifierIndex in SpellDataNV.Value.ModifierArray)
+		{
+			SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
+			var go = Instantiate(modifier.SpellModifierPrefab, _spellModifierTf);
+
+			if (IsOwner)
+			{
+				SpellDataNV.Value = go.GetComponent<ISpellModifier>().ModifiySpellData(SpellDataNV.Value, this);
+			}
+		}
+	}
+
+	protected virtual void FixedUpdate()
+	{
+		if (!Started || !IsOwner) return; //don't do anything before OnNetworkSpawn has run.
+
+		_spellLifeTimer.Tick(Time.fixedDeltaTime);
+
+		if (!_isDead)
+		{
+			PassThroughWall();
+			DetectCollisions();
+		}
+	}
+
 	public virtual void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
 	{
 		if(IsOwner)
 		{
 			Started = true;
+			ShowVisuals.Value = true;
 			transform.position = spawnPoint;
 			_lastPosition = spawnPoint;
 			_finalDirection = finalDirection;
@@ -73,29 +114,29 @@ public class Spell : NetworkBehaviour
 		_spellData = spellData;
 	}
 	
-	public override void OnNetworkSpawn()
-	{
-		if (IsOwner)
-		{
-			SpellDataNV.Value = _spellData;
-			CollisionMask = LayerMask.GetMask(new[] { "PathfindingWall", "Npc" });
-			WallMask = LayerMask.NameToLayer("PathfindingWall");
-			NpcLayer = LayerMask.NameToLayer("Npc");
-		}
+    private void HandleVisuals(bool previousValue, bool newValue)
+    {
+        if(newValue)
+        {
+            Show();
+        }
+        else
+        {
+            Hide();
+        }
+    }
 
-		foreach (int modifierIndex in SpellDataNV.Value.ModifierArray)
-		{
-			SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
-			var go = Instantiate(modifier.SpellModifierPrefab, _spellModifierTf);
-			
-			if(IsOwner)
-			{
-				SpellDataNV.Value = go.GetComponent<ISpellModifier>().ModifiySpellData(SpellDataNV.Value, this);
-			}
-		}
+	private void Show()
+	{
+		_visualizationTf.gameObject.SetActive(true);
 	}
-	
-    private void DestroySpell(object sender, EventArgs e)
+
+	private void Hide()
+	{
+		_visualizationTf.gameObject.SetActive(false);
+	}
+
+	private void DestroySpell(object sender, EventArgs e)
     {
 		Started = false;
 		OnSpellEnd?.Invoke(this, EventArgs.Empty);
@@ -106,19 +147,6 @@ public class Spell : NetworkBehaviour
 		}
 		Debug.Log($"Spell Destroyed");
 		Destroy(gameObject);
-	}
-	
-	protected virtual void FixedUpdate()
-	{
-		if(!Started || !IsOwner) return; //don't do anything before OnNetworkSpawn has run.
-
-		_spellLifeTimer.Tick(Time.fixedDeltaTime);
-
-		if (!_isDead)
-		{
-			PassThroughWall();
-			DetectCollisions();
-		}
 	}
 	
 	private void PassThroughWall()

@@ -60,7 +60,7 @@ public class PlayerRechargeStatUI : MonoBehaviour
 	
 	private void OnDestroy()
 	{
-		ActionManager.Instance.OnPlayerManaUpdated -= OnPlayerManaRechargeUpdated;
+		ActionManager.Instance.OnPlayerManaRechargeUpdated -= OnPlayerManaRechargeUpdated;
 		HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSpellBook;
 	}
 }
