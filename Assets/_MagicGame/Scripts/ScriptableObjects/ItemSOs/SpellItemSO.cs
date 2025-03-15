@@ -170,7 +170,6 @@ public class SpellItemSO : MagicItemSO
 			Player.LocalClientInstance.CurrentPlayerBiome.Value, modifierArray);
 		
 		GameManager.Instance.LoadSpellServerRpc(syncSpellData, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
-		Debug.Log($"Spell Loaded");
 			
 		return syncSpellData;
 	}
@@ -186,8 +185,6 @@ public class SpellItemSO : MagicItemSO
 		Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, Recoil);
 		GameManager.Instance.ExecuteSpellServerRpc(spellId, finalDirection, spawnPoint);
 		SoundManager.Instance.PlayOneShot(SpellCast, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
-		
-		Debug.Log($"Spell Executed");
 	}
 	
 	public void CancelSpell(ulong spellId)

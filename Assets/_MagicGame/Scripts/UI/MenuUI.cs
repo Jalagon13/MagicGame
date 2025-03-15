@@ -1,4 +1,5 @@
 using System;
+using AdvancedTooltips.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -32,6 +33,7 @@ public class MenuUI : MonoBehaviour
 	
 	private void Hide()
 	{
+		Tooltip.HideUI();
 		gameObject.SetActive(false);
 		
 		if(Player.LocalClientInstance != null)

@@ -9,4 +9,19 @@ public class HasteSpellMod : MonoBehaviour, ISpellModifier
         spellData.HasteMultiplier = _hasteAmount;
         return spellData;
     }
+
+    public void SelfCastStart(Spell spell = null)
+    {
+
+    }
+
+    public void SelfCastUpdate(Spell spell = null)
+    {
+
+    }
+
+    public void SelfCastEnd(Spell spell = null)
+    {
+
+    }
 }

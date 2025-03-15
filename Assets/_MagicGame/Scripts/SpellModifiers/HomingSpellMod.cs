@@ -28,7 +28,7 @@ public class HomingSpellMod : MonoBehaviour, ISpellModifier
     
     private void FixedUpdate()
     {
-        if(_spell == null || !_spell.Started || !_spell.IsServer) return;
+        if(_spell == null || !_spell.Started.Value || !_spell.IsServer) return;
 
         _potentialTargetsToHomeTo.Clear();
 
@@ -40,7 +40,7 @@ public class HomingSpellMod : MonoBehaviour, ISpellModifier
             {
                 if (collisions[i].gameObject.layer == _spell.NpcLayer)
                 {
-                    if (collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(_spell.SpellDataNV.Value.SpawnBiome))
+                    if (collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(_spell.SpellData.Value.SpawnBiome))
                     {
                         Npc npc = npcNet.GetComponent<Npc>();
                         if (!_spell.HitTargets.Contains(npc))
@@ -74,5 +74,20 @@ public class HomingSpellMod : MonoBehaviour, ISpellModifier
             _spell.Velocity.Normalize();
             _spell.Velocity *= currentSpeed;
         }
+    }
+
+    public void SelfCastStart(Spell spell = null)
+    {
+
+    }
+
+    public void SelfCastUpdate(Spell spell = null)
+    {
+
+    }
+
+    public void SelfCastEnd(Spell spell = null)
+    {
+
     }
 }

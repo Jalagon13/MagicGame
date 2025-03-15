@@ -301,14 +301,14 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 1cf699ca803ee4a948f9d763ddf2409d, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: bf1d2a5b5f1334f7f9a6d0aa32605231, type: 2}
+    - {fileID: 11400000, guid: 3c1c4a0de463546f3b029eedab8067ed, type: 2}
+    - {fileID: 11400000, guid: fa6f83b6b6e5a407ea84c8aad9df12d0, type: 2}
     - {fileID: 11400000, guid: 0c65381494fab43889cd8e41500fcd8b, type: 2}
     - {fileID: 11400000, guid: e9ee0b8df2d3e45aab12f04ecc4446a0, type: 2}
     - {fileID: 11400000, guid: 7517b7388627b4ed4ad25d99686ef113, type: 2}
     - {fileID: 11400000, guid: 4467be188224f4589ab5395856f34019, type: 2}
     - {fileID: 11400000, guid: eca205e96bba64a42b80798ace7f58b0, type: 2}
     - {fileID: 11400000, guid: 1164142a845a148a8ae0d7f0a04f74ca, type: 2}
-    - {fileID: 11400000, guid: 24e09bdc93f06403bbc64317a192c595, type: 2}
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,6 +342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   <BaseMana>k__BackingField: 50
+  <ManaRegenPerSecond>k__BackingField: 10
   <BaseSpeed>k__BackingField: 5
   <TurnSharpness>k__BackingField: 7.5
 --- !u!114 &3515157567628285232

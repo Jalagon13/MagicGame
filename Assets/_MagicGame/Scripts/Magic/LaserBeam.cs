@@ -23,12 +23,12 @@ public class LaserBeam : Spell
     {
         base.ExecuteSpellStart(finalDirection, spawnPoint);
         
-        NetworkObject.ChangeOwnership(SpellDataNV.Value.OwnerPlayerId);
+        NetworkObject.ChangeOwnership(SpellData.Value.OwnerPlayerId);
         NetworkObject.DontDestroyWithOwner = true;
         OnSpellEnd += LaserBeamEndHandle;
 
-        _laserPoints = new(SpellDataNV.Value.Bounces + 2);
-        _contactPoints = new(SpellDataNV.Value.Bounces);
+        _laserPoints = new(SpellData.Value.Bounces + 2);
+        _contactPoints = new(SpellData.Value.Bounces);
 
         _laserTickTimer = new Timer(_laserTickDuration);
         _laserTickTimer.OnTimerEnd += LaserTick;
@@ -38,7 +38,7 @@ public class LaserBeam : Spell
     {
         foreach (Npc npc in HitTargets)
         {
-            npc.ApplyDamage(SpellDataNV.Value.Damage, NetworkManager.ConnectedClients[SpellDataNV.Value.OwnerPlayerId].PlayerObject.transform.position, SpellDataNV.Value.Knockback);
+            npc.ApplyDamage(SpellData.Value.Damage, NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, SpellData.Value.Knockback);
         }
         
         _laserTickTimer.RemainingSeconds = _laserTickDuration;
@@ -57,7 +57,7 @@ public class LaserBeam : Spell
         Debug.Log($"");
         base.FixedUpdate();
         
-        if(!Started) return;
+        if(!Started.Value) return;
         
         Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(_movementSpeedModifier);
         
@@ -87,14 +87,14 @@ public class LaserBeam : Spell
             {
                 if (hit.collider.gameObject.layer == NpcLayer)
                 {
-                    if (hit.collider.TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellDataNV.Value.SpawnBiome))
+                    if (hit.collider.TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
                     {
                         if (!HitTargets.Contains(npcNet.GetComponent<Npc>()))
                         {
                             HitTargets.Add(npcNet.GetComponent<Npc>());
                         }
 
-                        if (HitTargets.Count == SpellDataNV.Value.Pierces + 1)
+                        if (HitTargets.Count == SpellData.Value.Pierces + 1)
                         {
                             _laserPoints.Add(hit.point);
                             ConstructLaser();
@@ -114,11 +114,11 @@ public class LaserBeam : Spell
                 {
                     if (hit.collider.gameObject.TryGetComponent(out PathfindingWallTm pfWall))
                     {
-                        if (pfWall.BiomeSameAs(SpellDataNV.Value.SpawnBiome))
+                        if (pfWall.BiomeSameAs(SpellData.Value.SpawnBiome))
                         {
                             _bounces++;
                             _distanceTraveled += Vector2.Distance(_spellSpawnPosition, hit.point);
-                            if (_bounces >= SpellDataNV.Value.Bounces + 1)
+                            if (_bounces >= SpellData.Value.Bounces + 1)
                             {
                                 _laserPoints.Add(hit.point);
                                 _contactPoints.Add(hit.point);
@@ -164,14 +164,14 @@ public class LaserBeam : Spell
             {
                 if (hit.collider.gameObject.layer == NpcLayer)
                 {
-                    if (hit.collider.TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellDataNV.Value.SpawnBiome))
+                    if (hit.collider.TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
                     {
                         if (!HitTargets.Contains(npcNet.GetComponent<Npc>()))
                         {
                             HitTargets.Add(npcNet.GetComponent<Npc>());
                         }
 
-                        if (HitTargets.Count == SpellDataNV.Value.Pierces + 1)
+                        if (HitTargets.Count == SpellData.Value.Pierces + 1)
                         {
                             _laserPoints.Add(hit.point);
                             ConstructLaser();
@@ -191,14 +191,14 @@ public class LaserBeam : Spell
                 {
                     if (hit.collider.gameObject.TryGetComponent(out PathfindingWallTm pfWall))
                     {
-                        if (pfWall.BiomeSameAs(SpellDataNV.Value.SpawnBiome))
+                        if (pfWall.BiomeSameAs(SpellData.Value.SpawnBiome))
                         {
                             if(_contactPoints.Contains(hit.point)) continue; // If processing the incomingHit, continue
 
                             _bounces++;
                             _distanceTraveled += Vector2.Distance(rayOffset, hit.point);
 
-                            if (_bounces >= SpellDataNV.Value.Bounces + 1)
+                            if (_bounces >= SpellData.Value.Bounces + 1)
                             {
                                 _laserPoints.Add(hit.point);
                                 ConstructLaser();

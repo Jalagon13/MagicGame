@@ -6,14 +6,29 @@ public class PierceSpellMod : MonoBehaviour, ISpellModifier
 
     public void ApplyModifier(Spell spell)
     {
-        var temp = spell.SpellDataNV.Value;
+        var temp = spell.SpellData.Value;
         temp.Pierces += _pierceAmount;
-        spell.SpellDataNV.Value = temp;
+        spell.SpellData.Value = temp;
     }
 
     public SyncSpellData ModifiySpellData(SyncSpellData spellData, Spell spell = null)
     {
         spellData.Pierces += _pierceAmount;
         return spellData;
+    }
+
+    public void SelfCastStart(Spell spell = null)
+    {
+
+    }
+
+    public void SelfCastUpdate(Spell spell = null)
+    {
+
+    }
+    
+    public void SelfCastEnd(Spell spell = null)
+    {
+
     }
 }

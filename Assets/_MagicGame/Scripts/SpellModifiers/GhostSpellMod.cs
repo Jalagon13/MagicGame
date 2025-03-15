@@ -10,4 +10,19 @@ public class GhostSpellMod : MonoBehaviour, ISpellModifier
         spellData.GhostDistance += _ghostDistance;
         return spellData;
     }
+
+    public void SelfCastStart(Spell spell = null)
+    {
+
+    }
+
+    public void SelfCastUpdate(Spell spell = null)
+    {
+
+    }
+
+    public void SelfCastEnd(Spell spell = null)
+    {
+
+    }
 }

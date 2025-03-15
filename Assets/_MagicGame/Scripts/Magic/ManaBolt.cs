@@ -27,7 +27,7 @@ public class ManaBolt : Spell
 		
 		if(IsOwner)
 		{
-			Velocity = _finalDirection * SpellDataNV.Value.Speed;
+			Velocity = _finalDirection * SpellData.Value.Speed;
 		}
 	}
 

@@ -11,6 +11,8 @@ using UnityEngine;
     private float _remainingSeconds;
     private readonly float _duration;
 
+    public float PercentRemaining => _duration > 0 ? 1 - (_remainingSeconds / _duration) : 0;
+
     public float RemainingSeconds
     {
         get { return _remainingSeconds; }

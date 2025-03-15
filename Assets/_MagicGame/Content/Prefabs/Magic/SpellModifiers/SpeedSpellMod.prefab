@@ -101,3 +101,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speedAmount: 10
+  _playerSpeedDecayMult: 1.85

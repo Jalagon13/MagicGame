@@ -10,28 +10,27 @@ public class Spell : NetworkBehaviour
 {
 	public event EventHandler OnSpellEnd;
 	[HideInInspector] public Vector2 Velocity;
-	public NetworkVariable<SyncSpellData> SpellDataNV = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	public NetworkVariable<bool> ShowVisuals = new NetworkVariable<bool>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	public bool Started { get; private set; }
+	[HideInInspector] public NetworkVariable<SyncSpellData> SpellData = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	[HideInInspector] public NetworkVariable<bool> ShowVisuals = new NetworkVariable<bool>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	[HideInInspector] public NetworkVariable<bool> Started = new NetworkVariable<bool>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	public int CollisionMask { get; private set; }
 	public int NpcLayer { get; private set; }
 	public int WallMask { get; private set; }
 	public List<Npc> HitTargets { get; private set; } = new();
+	public Timer SpellLifeTimer { get; private set; }
 
 	protected GameObject _spellGameObject;
 	protected CircleCollider2D _spellCollider;
 	protected Vector2 _finalDirection;
 	protected Vector2 _lastPosition;
+	protected Transform _spellModifierTf;
 	protected bool _isDead;
 	protected int _bounces;
 	protected bool _passingThroughWall;
 	protected float _totalPassThroughDistance;
 
-	private const float LERP_TIME = 0.1f;
 	private SyncSpellData _spellData;
-	private Transform _spellModifierTf;
 	private Transform _visualizationTf;
-	private Timer _spellLifeTimer;
 
 	protected virtual void Awake()
     {
@@ -45,34 +44,34 @@ public class Spell : NetworkBehaviour
 
 	public override void OnNetworkSpawn()
 	{
+		ShowVisuals.OnValueChanged += HandleVisuals;
+		
 		if (IsOwner)
 		{
-			SpellDataNV.Value = _spellData;
+			SpellData.Value = _spellData;
 			CollisionMask = LayerMask.GetMask(new[] { "PathfindingWall", "Npc" });
 			WallMask = LayerMask.NameToLayer("PathfindingWall");
 			NpcLayer = LayerMask.NameToLayer("Npc");
+			ShowVisuals.Value = false;
 		}
 
-		ShowVisuals.OnValueChanged += HandleVisuals;
-		ShowVisuals.Value = false;
-
-		foreach (int modifierIndex in SpellDataNV.Value.ModifierArray)
+		foreach (int modifierIndex in SpellData.Value.ModifierArray)
 		{
 			SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
 			var go = Instantiate(modifier.SpellModifierPrefab, _spellModifierTf);
 
 			if (IsOwner)
 			{
-				SpellDataNV.Value = go.GetComponent<ISpellModifier>().ModifiySpellData(SpellDataNV.Value, this);
+				SpellData.Value = go.GetComponent<ISpellModifier>().ModifiySpellData(SpellData.Value, this);
 			}
 		}
 	}
 
 	protected virtual void FixedUpdate()
 	{
-		if (!Started || !IsOwner) return; //don't do anything before OnNetworkSpawn has run.
+		if (!Started.Value || !IsOwner) return; //don't do anything before OnNetworkSpawn has run.
 
-		_spellLifeTimer.Tick(Time.fixedDeltaTime);
+		SpellLifeTimer.Tick(Time.fixedDeltaTime);
 
 		if (!_isDead)
 		{
@@ -85,15 +84,15 @@ public class Spell : NetworkBehaviour
 	{
 		if(IsOwner)
 		{
-			Started = true;
+			Started.Value = true;
 			ShowVisuals.Value = true;
 			transform.position = spawnPoint;
 			_lastPosition = spawnPoint;
 			_finalDirection = finalDirection;
 			_isDead = false;
-
-			_spellLifeTimer = new Timer(_spellData.Lifetime);
-			_spellLifeTimer.OnTimerEnd += DestroySpell;
+			
+			SpellLifeTimer = new Timer(SpellData.Value.Lifetime);
+			SpellLifeTimer.OnTimerEnd += DestroySpell;
 		}
 	}
 
@@ -138,7 +137,7 @@ public class Spell : NetworkBehaviour
 
 	private void DestroySpell(object sender, EventArgs e)
     {
-		Started = false;
+		Started.Value = false;
 		OnSpellEnd?.Invoke(this, EventArgs.Empty);
 
 		if (IsOwner)
@@ -155,7 +154,7 @@ public class Spell : NetworkBehaviour
 		if (_passingThroughWall)
 		{
 			_totalPassThroughDistance += distanceThisFrame;
-			if (_totalPassThroughDistance >= SpellDataNV.Value.GhostDistance)
+			if (_totalPassThroughDistance >= SpellData.Value.GhostDistance)
 			{
 				TerminateSpell();
 				return;
@@ -169,7 +168,7 @@ public class Spell : NetworkBehaviour
 	protected void TerminateSpell()
 	{
 		_isDead = true;
-		_spellLifeTimer.Tick(Mathf.Infinity);
+		SpellLifeTimer.Tick(Mathf.Infinity);
 	}
 
 	private void DetectCollisions()
@@ -186,15 +185,15 @@ public class Spell : NetworkBehaviour
 			    {
 					if (collisions[i].TryGetComponent(out PathfindingWallTm pfWall))
 			        {
-						if (pfWall.BiomeSameAs(SpellDataNV.Value.SpawnBiome))
+						if (pfWall.BiomeSameAs(SpellData.Value.SpawnBiome))
 						{
-							if(SpellDataNV.Value.GhostDistance > 0)
+							if(SpellData.Value.GhostDistance > 0)
 							{
 							    _passingThroughWall = true;
 							}
 							else
 							{
-								if (_bounces >= SpellDataNV.Value.Bounces)
+								if (_bounces >= SpellData.Value.Bounces)
 								{
 									TerminateSpell();
 									return;
@@ -222,7 +221,7 @@ public class Spell : NetworkBehaviour
 			    
 			    if(collisions[i].gameObject.layer == NpcLayer)
 			    {
-			    	if(collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellDataNV.Value.SpawnBiome))
+			    	if(collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
 			    	{
 						Npc npc = npcNet.gameObject.GetComponent<Npc>();
 
@@ -230,9 +229,9 @@ public class Spell : NetworkBehaviour
 						if (!HitTargets.Contains(npc))
 			    		{
 							HitTargets.Add(npc);
-							npc.ApplyDamage(SpellDataNV.Value.Damage, NetworkManager.ConnectedClients[SpellDataNV.Value.OwnerPlayerId].PlayerObject.transform.position, SpellDataNV.Value.Knockback);
+							npc.ApplyDamage(SpellData.Value.Damage, NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, SpellData.Value.Knockback);
 							
-							if(HitTargets.Count >= SpellDataNV.Value.Pierces)
+							if(HitTargets.Count >= SpellData.Value.Pierces)
 							{
 								TerminateSpell();
 								return;

@@ -26,6 +26,8 @@ public class Player : NetworkBehaviour
 	
 	public NetworkVariable<int> SelectedItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<BiomeType> CurrentPlayerBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public NetworkVariable<bool> PvpEnabled { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
 	[field: SerializeField] public PlayerVisuals PlayerVisuals { get; private set; }
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
@@ -41,9 +43,9 @@ public class Player : NetworkBehaviour
 	[SerializeField] private bool _spawnWandItems;
 	[SerializeField] private List<WandInventoryItem> _startingWandItems = new();
 
-	public NetworkVariable<bool> PvpEnabled { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public Knockback PlayerKnockback { get; private set; }
 	public NetworkHealthState HealthState { get; private set; }
+	public PlayerStateMachine StateMachine { get; private set; }
 
 	private Timer _respawnTimer;
 	private Vector2 _spawnPoint;
@@ -56,6 +58,7 @@ public class Player : NetworkBehaviour
 		HitCollider = GetComponent<Collider2D>();
 		PlayerKnockback = GetComponent<Knockback>();
 		HealthState = GetComponent<NetworkHealthState>();
+		StateMachine = GetComponent<PlayerStateMachine>();
 
 		_respawnTimer = new(_respawnTimerDuration);
 	}

@@ -21,6 +21,7 @@ public class SparkBlast : Spell
     public override void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
     {
         base.ExecuteSpellStart(finalDirection, spawnPoint);
+        
         SpawnBlastParticlesClientRpc(spawnPoint);
 
         Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _blastRadius, CollisionMask);
@@ -31,12 +32,12 @@ public class SparkBlast : Spell
             {
                 if (collisions[i].gameObject.layer == NpcLayer)
                 {
-                    if (collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellDataNV.Value.SpawnBiome))
+                    if (collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
                     {
                         Npc npc = npcNet.gameObject.GetComponent<Npc>();
                         if (!HitTargets.Contains(npc))
                         {
-                            npc.ApplyDamage(SpellDataNV.Value.Damage, transform.position, SpellDataNV.Value.Knockback);
+                            npc.ApplyDamage(SpellData.Value.Damage, transform.position, SpellData.Value.Knockback);
                         }
                     }
                 }
