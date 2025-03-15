@@ -19,7 +19,7 @@ public class TabGroup : MonoBehaviour
 	private void Start()
 	{
 		// Select first tab on start of the game (might delete later)
-		OnTabSelected(_tabButtons[2]);
+		OnTabSelected(_tabButtons[1]);
 	}
 
 	// Subscribe a tab button to this tab group.

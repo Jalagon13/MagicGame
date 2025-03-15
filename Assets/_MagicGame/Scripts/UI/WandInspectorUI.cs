@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AdvancedTooltips.Core;
 using UnityEngine;
 
-public class WandMenuUI : MonoBehaviour
+public class WandInspectorUI : MonoBehaviour
 {
 	public WandInventoryItem SelectedWand { get; private set; } 
 	
