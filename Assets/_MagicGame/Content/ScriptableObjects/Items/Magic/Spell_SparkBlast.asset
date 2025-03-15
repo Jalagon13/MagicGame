@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
-  m_Name: LaserBeam
+  m_Name: Spell_SparkBlast
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Laser Beam
-  <UiDisplay>k__BackingField: {fileID: 21300000, guid: 4ca9e709a65faf543a1b376009b64e12, type: 3}
+  <Name>k__BackingField: SparkBlast
+  <UiDisplay>k__BackingField: {fileID: 1348140596, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Shoots a single bolt of mana.
-  <SpellProjectilePrefab>k__BackingField: {fileID: 2570443936740275607, guid: 4621b9892db014957bc48c82394bfe22, type: 3}
+  <SpellProjectilePrefab>k__BackingField: {fileID: 7666750109937317245, guid: 01b5ea73343a54096bcd9bb319490d98, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 3235512204744374167, guid: 966ce96a46a0346519d0f2a96c141a22, type: 3}
-  <CastTime>k__BackingField: 0.8
-  <CastDelay>k__BackingField: 0.8
-  <Damage>k__BackingField: 5
-  <ManaCost>k__BackingField: 18
-  <Knockback>k__BackingField: 1
+  <CastTime>k__BackingField: 0.35
+  <CastDelay>k__BackingField: 0.15
+  <Damage>k__BackingField: 8
+  <ManaCost>k__BackingField: 10
+  <Knockback>k__BackingField: 6
   <Accuracy>k__BackingField: 0
-  <Lifetime>k__BackingField: 1.6
-  <Speed>k__BackingField: 3
-  <Recoil>k__BackingField: 2
+  <Lifetime>k__BackingField: 1.5
+  <Speed>k__BackingField: 0
+  <Recoil>k__BackingField: 8
   <Pierces>k__BackingField: 0
   <Bounces>k__BackingField: 0
   <GhostDistance>k__BackingField: 0

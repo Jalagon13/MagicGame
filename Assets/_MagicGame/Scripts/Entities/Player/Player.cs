@@ -39,9 +39,9 @@ public class Player : NetworkBehaviour
 	
 	[SerializeField] private float _respawnTimerDuration;
 	[Range(0, 100), SerializeField] private float _knockbackResist;
-	[SerializeField] private List<InventoryItem> _startingItems = new();
 	[SerializeField] private bool _spawnWandItems;
 	[SerializeField] private List<WandInventoryItem> _startingWandItems = new();
+	[SerializeField] private List<InventoryItem> _startingItems = new();
 
 	public Knockback PlayerKnockback { get; private set; }
 	public NetworkHealthState HealthState { get; private set; }

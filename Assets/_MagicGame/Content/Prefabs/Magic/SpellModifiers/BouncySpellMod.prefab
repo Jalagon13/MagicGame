@@ -101,4 +101,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bounceAmount: 2
-  _bouncePower: 30

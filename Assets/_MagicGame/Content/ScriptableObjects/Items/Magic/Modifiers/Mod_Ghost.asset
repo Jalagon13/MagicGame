@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Mod_Ghost
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Ghost Modifier
-  <UiDisplay>k__BackingField: {fileID: 21300008, guid: 358b5d9f23bc9413e87c9948acc67ee1, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -108336584, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 

@@ -10,28 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
-  m_Name: SelfCastDash
+  m_Name: Spell_LaserBeam
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Self Cast Dash
-  <UiDisplay>k__BackingField: {fileID: -2027504960, guid: 6582f34ddd5f686408c019550cd94c9d, type: 3}
+  <Name>k__BackingField: Laser Beam
+  <UiDisplay>k__BackingField: {fileID: 21300000, guid: 4ca9e709a65faf543a1b376009b64e12, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Shoots a single bolt of mana.
-  <SpellProjectilePrefab>k__BackingField: {fileID: 328760061712302374, guid: 621ecfce8088a4bbd936f81d32ea71b3, type: 3}
+  <SpellProjectilePrefab>k__BackingField: {fileID: 2570443936740275607, guid: 4621b9892db014957bc48c82394bfe22, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 3235512204744374167, guid: 966ce96a46a0346519d0f2a96c141a22, type: 3}
-  <CastTime>k__BackingField: 0.35
-  <CastDelay>k__BackingField: 0.15
-  <Damage>k__BackingField: 6
-  <ManaCost>k__BackingField: 8
-  <Knockback>k__BackingField: 3
-  <Accuracy>k__BackingField: 2
-  <Lifetime>k__BackingField: 1.5
-  <Speed>k__BackingField: 14
-  <Recoil>k__BackingField: 0
+  <CastTime>k__BackingField: 0.8
+  <CastDelay>k__BackingField: 0.8
+  <Damage>k__BackingField: 5
+  <ManaCost>k__BackingField: 18
+  <Knockback>k__BackingField: 1
+  <Accuracy>k__BackingField: 0
+  <Lifetime>k__BackingField: 1.6
+  <Speed>k__BackingField: 3
+  <Recoil>k__BackingField: 2
   <Pierces>k__BackingField: 0
   <Bounces>k__BackingField: 0
   <GhostDistance>k__BackingField: 0
-  <HasteMultiplier>k__BackingField: 1
+  <HasteMultiplier>k__BackingField: 0.75
   <SpellCast>k__BackingField:
     Guid:
       Data1: -2115950531

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Mod_Haste
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Haste Modifier
-  <UiDisplay>k__BackingField: {fileID: 2944418307562626867, guid: 8abf819f3a6a89c4886727ac90410fe8, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -1641477573, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 

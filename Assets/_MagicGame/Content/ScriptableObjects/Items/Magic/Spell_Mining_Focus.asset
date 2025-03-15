@@ -10,15 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c44f7061e9fcf4168be8456ccf98d2ff, type: 3}
-  m_Name: WoodenMiningFocus
+  m_Name: Spell_Mining_Focus
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Wooden Mining Focus
-  <UiDisplay>k__BackingField: {fileID: -686089455, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -571513728, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Left click resources to mine.
-  <SpellModifierPrefab>k__BackingField: {fileID: 4407107511287191510, guid: 16b3a2d10fb1c4ab7a1d1f236fb48a46, type: 3}
-  <ManaCost>k__BackingField: 6
   <MiningVisualPrefab>k__BackingField: {fileID: 312987487640026157, guid: 1f41c9fd0b67b4deabf38d42320fb4e8, type: 3}
   <MiningPower>k__BackingField: 35
   <MiningRange>k__BackingField: 4

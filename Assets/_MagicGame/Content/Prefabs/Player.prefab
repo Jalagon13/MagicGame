@@ -285,13 +285,6 @@ MonoBehaviour:
   _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
   _respawnTimerDuration: 2
   _knockbackResist: 0
-  _startingItems:
-  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
-    Quantity: 99
-  - Item: {fileID: 11400000, guid: d4e4d8d6ce2d3416b87474a4415b1967, type: 2}
-    Quantity: 5
-  - Item: {fileID: 11400000, guid: e9ee0b8df2d3e45aab12f04ecc4446a0, type: 2}
-    Quantity: 1
   _spawnWandItems: 1
   _startingWandItems:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
@@ -300,15 +293,34 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
   - Item: {fileID: 11400000, guid: 1cf699ca803ee4a948f9d763ddf2409d, type: 2}
     Quantity: 1
-    <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: 3c1c4a0de463546f3b029eedab8067ed, type: 2}
-    - {fileID: 11400000, guid: fa6f83b6b6e5a407ea84c8aad9df12d0, type: 2}
-    - {fileID: 11400000, guid: 0c65381494fab43889cd8e41500fcd8b, type: 2}
-    - {fileID: 11400000, guid: e9ee0b8df2d3e45aab12f04ecc4446a0, type: 2}
-    - {fileID: 11400000, guid: 7517b7388627b4ed4ad25d99686ef113, type: 2}
-    - {fileID: 11400000, guid: 4467be188224f4589ab5395856f34019, type: 2}
-    - {fileID: 11400000, guid: eca205e96bba64a42b80798ace7f58b0, type: 2}
-    - {fileID: 11400000, guid: 1164142a845a148a8ae0d7f0a04f74ca, type: 2}
+    <MagicArray>k__BackingField: []
+  _startingItems:
+  - Item: {fileID: 11400000, guid: bf1d2a5b5f1334f7f9a6d0aa32605231, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 64010a88c2f754b6ea0ad2a653f40669, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 8565452f84d47428ca82aed67cb5ca9e, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: fa6f83b6b6e5a407ea84c8aad9df12d0, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: b3fe2d16a64484c06943064d240713aa, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 0c65381494fab43889cd8e41500fcd8b, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: e9ee0b8df2d3e45aab12f04ecc4446a0, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 7517b7388627b4ed4ad25d99686ef113, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 4467be188224f4589ab5395856f34019, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: eca205e96bba64a42b80798ace7f58b0, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 3c1c4a0de463546f3b029eedab8067ed, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 1164142a845a148a8ae0d7f0a04f74ca, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 24e09bdc93f06403bbc64317a192c595, type: 2}
+    Quantity: 1
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0

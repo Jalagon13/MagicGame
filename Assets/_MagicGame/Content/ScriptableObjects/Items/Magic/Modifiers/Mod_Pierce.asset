@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Mod_Pierce
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Pierce Modifier
-  <UiDisplay>k__BackingField: {fileID: 5524590292671962877, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -1082386244, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
