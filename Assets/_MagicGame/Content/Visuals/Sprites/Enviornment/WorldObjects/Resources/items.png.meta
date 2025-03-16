@@ -725,6 +725,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: item_target_dummy
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a742865a163134659a04feca9939d658
+      internalID: 784093983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -781,6 +803,7 @@ TextureImporter:
       item_stone_shovel: 1850669481
       item_stone_sword: 212289767
       item_sword: -1843546812
+      item_target_dummy: 784093983
       item_web: 995874337
       item_wizard_grieves: 1068366592
       item_wizard_hat: -554541973

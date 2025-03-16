@@ -321,6 +321,8 @@ MonoBehaviour:
     Quantity: 1
   - Item: {fileID: 11400000, guid: 24e09bdc93f06403bbc64317a192c595, type: 2}
     Quantity: 1
+  - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
+    Quantity: 5
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,6 +375,7 @@ MonoBehaviour:
   <BaseHealth>k__BackingField: 100
   <BaseDefense>k__BackingField: 0
   <IFrameDuration>k__BackingField: 0.67
+  <Invincible>k__BackingField: 0
 --- !u!114 &7910427268955246096
 MonoBehaviour:
   m_ObjectHideFlags: 0

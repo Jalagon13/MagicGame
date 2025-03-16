@@ -29,8 +29,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Path
       value: event:/Player/PlayerHurt
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.data[0].Max
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.data[0].Min
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Guid.Data1
@@ -47,6 +59,14 @@ PrefabInstance:
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Guid.Data4
       value: 2092223634
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.data[0].Item
+      value: 
+      objectReference: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.data[0].Chance
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3885697903487451157, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Offset.y
@@ -103,7 +123,7 @@ PrefabInstance:
     - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 8791090488303533599, guid: d981cc3dbff7e45c4bdcc37a786c2e83, type: 3}
+      objectReference: {fileID: 1783913889, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
     - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
@@ -111,6 +131,10 @@ PrefabInstance:
     - target: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Name
       value: npc_TargetDummy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_TagString
+      value: TargetDummy
       objectReference: {fileID: 0}
     - target: {fileID: 5534304216892901271, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -127,6 +151,10 @@ PrefabInstance:
     - target: {fileID: 6692481928224885727, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _knockbackEnabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7163113064248389596, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7196426771198909061, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _iHasHealthGameObject

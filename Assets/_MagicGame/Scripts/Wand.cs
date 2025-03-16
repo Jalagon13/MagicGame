@@ -100,7 +100,12 @@ public class Wand
 		bool hitSomething = false;
 		float castDelay = 0;
 
-		if (Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition)))
+		if (OverTargetDummy(out Npc targetDummy))
+		{
+			Debug.Log("Hit Target Dummy");
+			targetDummy.KillNpc();
+		}
+		else if (Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition)))
 		{
 			Environment.Instance.HitWallTile(Player.LocalClientInstance.CurrentPlayerBiome.Value, Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), miningSpell.MiningPower);
 			// SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.transform.position);
@@ -131,6 +136,23 @@ public class Wand
 				TotalReloadDuration = WandSO.ReloadDuration + _castDelayTimer;
 			}
 		}
+	}
+	
+	private bool OverTargetDummy(out Npc targetDummy)
+	{
+		var colliders = Physics2D.OverlapPointAll(ActionManager.MouseWorldPosition);
+		foreach (var collider in colliders)
+		{
+			if (collider.CompareTag("TargetDummy"))
+			{
+				Debug.Log("Found target dummy");
+				targetDummy = collider.GetComponent<Npc>();
+				return true;
+			}
+		}
+		Debug.Log("Did not find target dummy");
+		targetDummy = null;
+		return false;
 	}
 
     private void HandleSingleSpellCast(SpellItemSO spellToCast, List<int> spellModsFound = null)

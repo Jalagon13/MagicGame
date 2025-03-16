@@ -67,12 +67,17 @@ public class Npc : NetworkBehaviour
 
 	private void OnNpcDeath(object sender, EventArgs e)
 	{
-		OnNpcKilled?.Invoke(this, EventArgs.Empty);
+		KillNpc();
 	}
 
 	private void OnNpcHealed(object sender, EventArgs e)
 	{
 		
+	}
+	
+	public void KillNpc()
+	{
+		OnNpcKilled?.Invoke(this, EventArgs.Empty);
 	}
 	
 	public void DropLoot()

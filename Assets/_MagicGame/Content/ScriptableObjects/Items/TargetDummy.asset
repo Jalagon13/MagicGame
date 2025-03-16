@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a7aded7ceac2467a95225af72ed6b1a, type: 3}
+  m_Script: {fileID: 11500000, guid: 774130f330eb2403bb786b6d66d390b1, type: 3}
   m_Name: TargetDummy
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Target Dummy
-  <UiDisplay>k__BackingField: {fileID: -607652506, guid: 6582f34ddd5f686408c019550cd94c9d, type: 3}
+  <UiDisplay>k__BackingField: {fileID: 784093983, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <ItemActionCooldown>k__BackingField: 0.375
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  _deployObjectPrefab: {fileID: 590160871130149661, guid: c971db339f3074561aae8abe3ce5e3ad, type: 3}
-  _deploySound: {fileID: 0}

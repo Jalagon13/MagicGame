@@ -35,7 +35,7 @@ public class PlaceDownUI : MonoBehaviour
 		
 		if(_focusItemSO == null) return;
 		
-		if((_focusItemSO is DeployItemSO || _focusItemSO is BuildItemSO) && IsClear(transform.position) && IsInRange())
+		if((_focusItemSO is DeployItemSO || _focusItemSO is BuildItemSO || _focusItemSO is NpcItemSO) && IsClear(transform.position) && IsInRange())
 		{
 			ShowIndicator();
 		}

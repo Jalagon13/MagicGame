@@ -33,22 +33,10 @@ public class NpcManager : NetworkBehaviour
 		}
 	}
 
-	private void Start()
-	{
-		GameInput.Instance.OnResearchMenuButton += GameInput_OnResearchMenuButton;
-	}
-
-	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
-	{
-		if(!IsServer || !_enableTestSpawning) return;
-		
-		SpawnTestDummyServerRpc();
-	}
-	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnTestDummyServerRpc()
+	public void SpawnTargetDummyServerRpc(Vector2 point)
 	{
-		GameObject npcPrefab = Instantiate(TestDummyPrefab.gameObject, ActionManager.MouseWorldPosition, Quaternion.identity);
+		GameObject npcPrefab = Instantiate(TestDummyPrefab.gameObject, point, Quaternion.identity);
 		
 		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
 		npcPrefabNetworkObject.SpawnWithObservers = false;
@@ -264,8 +252,6 @@ public class NpcManager : NetworkBehaviour
 		{
 			NetworkManager.OnClientConnectedCallback -= NetworkManager_OnClientConnectedCallback;
 		}
-		
-		GameInput.Instance.OnResearchMenuButton -= GameInput_OnResearchMenuButton;
 		
 		base.OnDestroy();
 	}

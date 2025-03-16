@@ -290,9 +290,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 112
-        y: 81
+        y: 80
         width: 16
-        height: 18
+        height: 19
       alignment: 9
       pivot: {x: 0.5, y: 0.08294477}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -373,6 +373,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: rsc_target_dummy
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 80
+        width: 16
+        height: 26
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17e4c99e40093454da0b3181986c4408
+      internalID: 1783913889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -399,6 +421,7 @@ TextureImporter:
       rsc_portal: -1882313086
       rsc_spindle: 250863300
       rsc_stone: -153397541
+      rsc_target_dummy: 1783913889
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
