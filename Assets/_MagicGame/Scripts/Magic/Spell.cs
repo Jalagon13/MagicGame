@@ -16,7 +16,7 @@ public class Spell : NetworkBehaviour
 	public int CollisionMask { get; private set; }
 	public int NpcLayer { get; private set; }
 	public int WallMask { get; private set; }
-	public List<Npc> HitTargets { get; private set; } = new();
+	public List<NetworkHealthState> HitTargets { get; private set; } = new();
 	public Timer SpellLifeTimer { get; private set; }
 
 	protected GameObject _spellGameObject;
@@ -223,13 +223,13 @@ public class Spell : NetworkBehaviour
 			    {
 			    	if(collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
 			    	{
-						Npc npc = npcNet.gameObject.GetComponent<Npc>();
+						NetworkHealthState npcHealth = npcNet.gameObject.GetComponent<NetworkHealthState>();
 
 						// Overlapping with an NPC in the same biome
-						if (!HitTargets.Contains(npc))
+						if (!HitTargets.Contains(npcHealth))
 			    		{
-							HitTargets.Add(npc);
-							npc.ApplyDamage(SpellData.Value.Damage, NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, SpellData.Value.Knockback);
+							HitTargets.Add(npcHealth);
+							npcHealth.TakeDamageRpc(SpellData.Value.Damage, NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, SpellData.Value.Knockback);
 							
 							if(HitTargets.Count >= SpellData.Value.Pierces)
 							{

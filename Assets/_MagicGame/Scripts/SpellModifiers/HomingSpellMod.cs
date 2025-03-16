@@ -42,7 +42,7 @@ public class HomingSpellMod : MonoBehaviour, ISpellModifier
                 {
                     if (collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(_spell.SpellData.Value.SpawnBiome))
                     {
-                        Npc npc = npcNet.GetComponent<Npc>();
+                        NetworkHealthState npc = npcNet.GetComponent<NetworkHealthState>();
                         if (!_spell.HitTargets.Contains(npc))
                         {
                             // Found an npc in range, in same biome, and not already hit

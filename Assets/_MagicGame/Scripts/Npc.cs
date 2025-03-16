@@ -16,28 +16,24 @@ public class Npc : NetworkBehaviour
 	{
 		public Vector2 DamageSourcePosition;
 	}
-	// public event EventHandler<IHasHealth.OnHealthUpdatedEventArgs> OnHealthUpdated;
 
-	[SerializeField] private bool _invincible = false;
-	[SerializeField] private int _maxHealth;
 	[SerializeField] private float _knockbackResist;
-	[field: SerializeField] public float IFrameLength { get; private set; } = 0.166f;
 	[SerializeField] private int _damage;
 	[SerializeField] private DamageCollider _damageCollider;
 	[SerializeField] private EventReference _damageSound;
-	[field: SerializeField] public List<Loot> Table { get; private set; }
+	[SerializeField] private List<Loot> Table = new();
 	
-	private NetworkVariable<int> _npcHealthPointNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	private Vector2 _damageSourcePosition;
 	private Knockback _knockback;
-	private Timer _iFrameTimer;
+	private NetworkHealthState _healthState;
+	
 	public BiomeType Biome { get { return GetComponent<NpcNetworkComponent>().NpcBiomeType; } }
 	
 	private void Awake()
 	{
 		_knockback = GetComponent<Knockback>();
-		
-		if(_damageCollider != null)
+		_healthState = GetComponent<NetworkHealthState>();
+
+		if (_damageCollider != null)
 		{
 			_damageCollider.AddDamageExceptionCollider(GetComponent<Collider2D>());
 			_damageCollider.DamageAmount = _damage;
@@ -48,83 +44,35 @@ public class Npc : NetworkBehaviour
 	{
 		if(IsServer)
 		{
-			_npcHealthPointNetworkVariable.Value = _maxHealth;
-			_iFrameTimer = new(IFrameLength);
+			_healthState.OnHitPointsDamaged += OnNpcDamaged;
+			_healthState.OnHitPointsDepleted += OnNpcDeath;
+			_healthState.OnHitPointsReplenished += OnNpcHealed;
 		}
-		
-		_npcHealthPointNetworkVariable.OnValueChanged += UpdateHealthUI;
-		_npcHealthPointNetworkVariable.OnValueChanged += OnDamged;
 		
 		base.OnNetworkSpawn();
 	}
-	
-	private void Update()
-	{
-		if(IsServer)
-		{
-			_iFrameTimer.Tick(Time.deltaTime);
-		}
-	}
 
-	private void OnDamged(int previousValue, int newValue)
-	{
-		// If the new value is less than the previous value than this npc has been damaged
-		if(newValue < previousValue)
-		{
-			OnNpcDamged?.Invoke(this, new OnNpcDamagedEventArgs
-			{
-				DamageSourcePosition = _damageSourcePosition
-			});
-		}
-	}
-
-	public void ApplyDamage(int damage, Vector2 damagerPosition, int knockbackForce)
+	private void OnNpcDamaged(object sender, NetworkHealthState.HitPointsDamagedEventArgs e)
 	{
 		SoundManager.Instance.PlayOneShot(_damageSound, transform.position);
-	
-		DamageNpcServerRpc(damage, damagerPosition, knockbackForce);
+		GameManager.Instance.PlayDamageNumbers(e.DamageTaken, transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
+
+		_knockback.ApplyKnockback(e.SourcePosition, _knockbackResist, e.KnockbackForce);
+
+		OnNpcDamged?.Invoke(this, new OnNpcDamagedEventArgs
+		{
+			DamageSourcePosition = e.SourcePosition
+		});
 	}
-	
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void DamageNpcServerRpc(int damageAmount, Vector2 damagerPosition, int knockbackForce)
+
+	private void OnNpcDeath(object sender, EventArgs e)
 	{
-		if (_iFrameTimer.RemainingSeconds > 0)
-		{
-			return;
-		}
-	
-		_damageSourcePosition = damagerPosition;
-		
-		if(!_invincible)
-		{
-			_npcHealthPointNetworkVariable.Value -= damageAmount;
-		}
-		
-		if(_npcHealthPointNetworkVariable.Value <= 0)
-		{
-			OnNpcKilled?.Invoke(this, EventArgs.Empty);
-		}
-		else
-		{
-			if(_knockback != null)
-			{
-				_knockback.ApplyKnockback(damagerPosition, _knockbackResist, knockbackForce);
-			}
-			
-			_iFrameTimer.RemainingSeconds = IFrameLength;
-		}
-		
-		GameManager.Instance.PlayDamageNumbers(damageAmount, transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
+		OnNpcKilled?.Invoke(this, EventArgs.Empty);
 	}
-	
-	private void UpdateHealthUI(int previousValue, int newValue)
+
+	private void OnNpcHealed(object sender, EventArgs e)
 	{
-		// OnHealthUpdated?.Invoke(this, new IHasHealth.OnHealthUpdatedEventArgs
-		// {
-		// 	PreviousValue = previousValue,
-		// 	NewValue = newValue,
-		// 	MaxValue = _maxHealth
-		// });
+		
 	}
 	
 	public void DropLoot()
@@ -138,16 +86,15 @@ public class Npc : NetworkBehaviour
 		Destroy(gameObject);
 	}
 	
-	public bool IsDead()
-	{
-		return _npcHealthPointNetworkVariable.Value <= 0;
-	}
-
 	public override void OnNetworkDespawn()
 	{
-		_npcHealthPointNetworkVariable.OnValueChanged -= UpdateHealthUI;
-		_npcHealthPointNetworkVariable.OnValueChanged -= OnDamged;
-	
+		if (IsServer)
+		{
+			_healthState.OnHitPointsDamaged -= OnNpcDamaged;
+			_healthState.OnHitPointsDepleted -= OnNpcDeath;
+			_healthState.OnHitPointsReplenished -= OnNpcHealed;
+		}
+
 		base.OnNetworkDespawn();
 	}
 }

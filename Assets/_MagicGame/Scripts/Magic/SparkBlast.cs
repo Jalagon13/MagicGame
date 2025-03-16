@@ -34,10 +34,10 @@ public class SparkBlast : Spell
                 {
                     if (collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
                     {
-                        Npc npc = npcNet.gameObject.GetComponent<Npc>();
+                        NetworkHealthState npc = npcNet.gameObject.GetComponent<NetworkHealthState>();
                         if (!HitTargets.Contains(npc))
                         {
-                            npc.ApplyDamage(SpellData.Value.Damage, transform.position, SpellData.Value.Knockback);
+                            npc.TakeDamageRpc(SpellData.Value.Damage, transform.position, SpellData.Value.Knockback);
                         }
                     }
                 }

@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -1268719207
       objectReference: {fileID: 0}
+    - target: {fileID: 3165997416469630793, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <Invincible>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _maxHealth
       value: 100
@@ -106,7 +110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Name
-      value: npc_TestDummy
+      value: npc_TargetDummy
       objectReference: {fileID: 0}
     - target: {fileID: 5534304216892901271, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -126,6 +130,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7196426771198909061, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _iHasHealthGameObject
+      value: 
+      objectReference: {fileID: 532044041320650086}
+    - target: {fileID: 7196426771198909061, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _networkHealthStateGO
       value: 
       objectReference: {fileID: 532044041320650086}
     - target: {fileID: 8184671317715962605, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
@@ -157,4 +165,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98a383b5a5be74d17b82e10b832373e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enableKnockback: 1
+  _enableKnockback: 0

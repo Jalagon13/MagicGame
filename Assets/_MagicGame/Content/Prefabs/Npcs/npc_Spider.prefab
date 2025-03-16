@@ -184,6 +184,10 @@ PrefabInstance:
       propertyPath: _iHasHealthGameObject
       value: 
       objectReference: {fileID: 6633633827701661900}
+    - target: {fileID: 7196426771198909061, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _networkHealthStateGO
+      value: 
+      objectReference: {fileID: 6633633827701661900}
     - target: {fileID: 7484194678343393079, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0.72

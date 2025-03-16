@@ -7,25 +7,27 @@ using UnityEngine;
 /// </summary>
 public class NetworkHealthState : NetworkBehaviour
 {
-    [field: SerializeField] public int BaseHealth { get; private set; } = 100;
-    [field: SerializeField] public int BaseDefense { get; private set; } = 0;
-    [field: SerializeField] public float IFrameDuration { get; private set; } = 0.67f;
-
-    public NetworkVariable<int> HitPoints { get; set; } = new NetworkVariable<int>();
-    public NetworkVariable<int> CurrentDefense { get; set; } = new NetworkVariable<int>();
-    public bool Invulnerable => _iFrameTimer.RemainingSeconds > 0;
-    public bool IsDead => HitPoints.Value <= 0;
-
-    public event EventHandler HitPointsDepleted;
-    public event EventHandler HitPointsReplenished;
-    public event EventHandler<HitPointsDamagedEventArgs> HitPointsDamaged;
+    public event EventHandler OnHitPointsDepleted; // Called on server side
+    public event EventHandler OnHitPointsReplenished; // Called on server side
+    public event EventHandler<HitPointsDamagedEventArgs> OnHitPointsDamaged; // Called on server side
     public class HitPointsDamagedEventArgs : EventArgs
     {
         public int DamageTaken;
         public Vector2 SourcePosition;
         public int KnockbackForce;
     }
-    
+
+    [field: SerializeField] public int BaseHealth { get; private set; } = 100;
+    [field: SerializeField] public int BaseDefense { get; private set; } = 0;
+    [field: SerializeField] public float IFrameDuration { get; private set; } = 0.67f;
+    [field: SerializeField] public bool Invincible { get; private set; }
+
+    public NetworkVariable<int> HitPoints { get; set; } = new NetworkVariable<int>();
+    public NetworkVariable<int> CurrentDefense { get; private set; } = new NetworkVariable<int>();
+    public bool Invulnerable => _iFrameTimer.RemainingSeconds > 0;
+    public bool IsDead => HitPoints.Value <= 0;
+    public int MaxHealth { get; private set; }
+
     private Timer _iFrameTimer;
     private Vector2 _damagerPosition;
     private int _knockbackForce;
@@ -43,7 +45,9 @@ public class NetworkHealthState : NetworkBehaviour
     {
         if(IsServer)
         {
+            CurrentDefense.Value = BaseDefense;
             HitPoints.Value = BaseHealth;
+            MaxHealth = BaseHealth;
             _iFrameTimer = new Timer(IFrameDuration);
         }
     }
@@ -57,23 +61,23 @@ public class NetworkHealthState : NetworkBehaviour
 
     private void HitPointsChanged(int previousValue, int newValue)
     {
-        if (previousValue > 0 && newValue <= 0)
-        {
-            HitPointsDepleted?.Invoke(this, EventArgs.Empty);
-        }
-        else if (previousValue <= 0 && newValue > 0)
-        {
-            HitPointsReplenished?.Invoke(this, EventArgs.Empty);
-        }
-        else if (newValue < previousValue)
+        if (newValue < previousValue)
         {
             int damageTaken = previousValue - newValue;
-            HitPointsDamaged?.Invoke(this, new HitPointsDamagedEventArgs
+            OnHitPointsDamaged?.Invoke(this, new HitPointsDamagedEventArgs
             {
                 DamageTaken = damageTaken,
                 SourcePosition = _damagerPosition,
                 KnockbackForce = _knockbackForce
             });
+        }
+        else if (newValue <= 0)
+        {
+            OnHitPointsDepleted?.Invoke(this, EventArgs.Empty);
+        }
+        else if (previousValue <= 0 && newValue > 0)
+        {
+            OnHitPointsReplenished?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -88,7 +92,16 @@ public class NetworkHealthState : NetworkBehaviour
         int damageReduction = CurrentDefense.Value / 2;
         int finalDamage = Mathf.Max(1, amount - damageReduction);
 
-        if (HitPoints.Value > 0)
+        if (Invincible)
+        {
+            OnHitPointsDamaged?.Invoke(this, new HitPointsDamagedEventArgs
+            {
+                DamageTaken = finalDamage,
+                SourcePosition = _damagerPosition,
+                KnockbackForce = _knockbackForce
+            });
+        }
+        else if (HitPoints.Value > 0)
         {
             HitPoints.Value = Math.Max(0, HitPoints.Value - finalDamage);
         }

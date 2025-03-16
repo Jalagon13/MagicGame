@@ -36,9 +36,9 @@ public class LaserBeam : Spell
 
     private void LaserTick(object sender, EventArgs e)
     {
-        foreach (Npc npc in HitTargets)
+        foreach (NetworkHealthState npc in HitTargets)
         {
-            npc.ApplyDamage(SpellData.Value.Damage, NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, SpellData.Value.Knockback);
+            npc.TakeDamageRpc(SpellData.Value.Damage, NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, SpellData.Value.Knockback);
         }
         
         _laserTickTimer.RemainingSeconds = _laserTickDuration;
@@ -89,9 +89,9 @@ public class LaserBeam : Spell
                 {
                     if (hit.collider.TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
                     {
-                        if (!HitTargets.Contains(npcNet.GetComponent<Npc>()))
+                        if (!HitTargets.Contains(npcNet.GetComponent<NetworkHealthState>()))
                         {
-                            HitTargets.Add(npcNet.GetComponent<Npc>());
+                            HitTargets.Add(npcNet.GetComponent<NetworkHealthState>());
                         }
 
                         if (HitTargets.Count == SpellData.Value.Pierces + 1)
@@ -166,9 +166,9 @@ public class LaserBeam : Spell
                 {
                     if (hit.collider.TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
                     {
-                        if (!HitTargets.Contains(npcNet.GetComponent<Npc>()))
+                        if (!HitTargets.Contains(npcNet.GetComponent<NetworkHealthState>()))
                         {
-                            HitTargets.Add(npcNet.GetComponent<Npc>());
+                            HitTargets.Add(npcNet.GetComponent<NetworkHealthState>());
                         }
 
                         if (HitTargets.Count == SpellData.Value.Pierces + 1)

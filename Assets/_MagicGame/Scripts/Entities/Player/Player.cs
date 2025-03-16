@@ -87,9 +87,9 @@ public class Player : NetworkBehaviour
 
 	private IEnumerator Start()
 	{
-		HealthState.HitPointsDamaged += OnPlayerDamaged;
-		HealthState.HitPointsDepleted += OnPlayerDeath;
-		HealthState.HitPointsReplenished += OnPlayerRecovery;
+		HealthState.OnHitPointsDamaged += OnPlayerDamaged;
+		HealthState.OnHitPointsDepleted += OnPlayerDeath;
+		HealthState.OnHitPointsReplenished += OnPlayerRecovery;
 
 		yield return new WaitForEndOfFrame();
 	
@@ -274,9 +274,9 @@ public class Player : NetworkBehaviour
 	{
 		base.OnDestroy();
 
-		HealthState.HitPointsDamaged -= OnPlayerDamaged;
-		HealthState.HitPointsDepleted -= OnPlayerDeath;
-		HealthState.HitPointsReplenished -= OnPlayerRecovery;
+		HealthState.OnHitPointsDamaged -= OnPlayerDamaged;
+		HealthState.OnHitPointsDepleted -= OnPlayerDeath;
+		HealthState.OnHitPointsReplenished -= OnPlayerRecovery;
 
 		if (IsOwner)
 		{

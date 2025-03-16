@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 4852144824365540908}
   - component: {fileID: 6692481928224885727}
   - component: {fileID: 3247729817130226899}
+  - component: {fileID: 3165997416469630793}
   m_Layer: 12
   m_Name: _npc_Base
   m_TagString: Untagged
@@ -437,10 +438,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _invincible: 0
-  _maxHealth: 0
   _knockbackResist: 0
-  <IFrameLength>k__BackingField: 0.166
   _damage: 0
   _damageCollider: {fileID: 0}
   _damageSound:
@@ -450,7 +448,23 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  <Table>k__BackingField: []
+  Table: []
+--- !u!114 &3165997416469630793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5309065195269084554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c5580f2a973948778c2f8d6b6a5f0c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  <BaseHealth>k__BackingField: 100
+  <BaseDefense>k__BackingField: 0
+  <IFrameDuration>k__BackingField: 0.67
 --- !u!1 &6641498890121537817
 GameObject:
   m_ObjectHideFlags: 0
