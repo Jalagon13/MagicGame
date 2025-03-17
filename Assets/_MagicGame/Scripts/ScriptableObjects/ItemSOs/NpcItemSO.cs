@@ -1,6 +1,7 @@
 using System.Text;
 using MoreMountains.Tools;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 [CreateAssetMenu(fileName = "New Npc Item", menuName = "Create Item/New NPC Item")]
 public class NpcItemSO : ItemSO

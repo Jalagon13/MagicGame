@@ -14,7 +14,7 @@ public class NpcManager : NetworkBehaviour
 	
 	[field: SerializeField] public Npc TestDummyPrefab { get; private set; }
 	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
-	[SerializeField] private bool _enableSpawning = true, _enableTestSpawning = false;
+	[SerializeField] private bool _enableSpawning = true;
 	[SerializeField] private float _startSpawnDelay;
 	
 	private readonly NetworkList<NetworkObjectReference> _activeNpcNetworkList = new();

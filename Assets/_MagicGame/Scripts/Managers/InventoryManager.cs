@@ -35,8 +35,9 @@ public class InventoryManager : MonoBehaviour
 		public List<InventoryItem> InventoryItems;
 	}
 
-	
 	[SerializeField] private int _slotAmount;
+	[SerializeField] private float _timeBetweenCollections = 0.1f;
+	[SerializeField] private ItemSO _currencyItem;
 	[SerializeField] private ItemCollectWorldUI _itemCollectPlatePrefab;
 	
 	private InventoryModel _inventoryModel;
@@ -167,8 +168,15 @@ public class InventoryManager : MonoBehaviour
 		
 			InventoryItem itemToCollect = _itemQueue.Dequeue();
 			
-			_inventoryModel.AddItem(itemToCollect);
-		
+			if (itemToCollect.Item == _currencyItem)
+			{
+				
+			}
+			else
+			{
+				_inventoryModel.AddItem(itemToCollect);
+			}
+			
 			string itemName = itemToCollect.Item.Name;
 			InventoryItem invItemToDisplay = new(itemToCollect.Item, itemToCollect.Quantity);
 
@@ -190,7 +198,7 @@ public class InventoryManager : MonoBehaviour
 
 			SpawnItemCollectPlate(invItemToDisplay);
 			
-			yield return new WaitForSeconds(0.15f);
+			yield return new WaitForSeconds(_timeBetweenCollections);
 		}
 		
 		_isCollecting = false;
