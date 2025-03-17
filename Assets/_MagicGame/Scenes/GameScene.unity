@@ -4279,6 +4279,7 @@ GameObject:
   m_Component:
   - component: {fileID: 832159822}
   - component: {fileID: 832159823}
+  - component: {fileID: 832159824}
   m_Layer: 0
   m_Name: InventoryManager
   m_TagString: Untagged
@@ -4314,7 +4315,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _slotAmount: 37
+  _timeBetweenCollections: 0.1
+  _currencyItem: {fileID: 0}
   _itemCollectPlatePrefab: {fileID: 2893883857882228170, guid: 97583e12174a6488193592c120954140, type: 3}
+--- !u!114 &832159824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832159821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2279c96a66b54346b9e39dc26ba21c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <StartingGold>k__BackingField: 0
 --- !u!1 &870508366
 GameObject:
   m_ObjectHideFlags: 0
@@ -8736,7 +8752,6 @@ MonoBehaviour:
   <TestDummyPrefab>k__BackingField: {fileID: 7196159128457008191, guid: c87107d07ca65446598c8fdd66eaeab4, type: 3}
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
   _enableSpawning: 0
-  _enableTestSpawning: 1
   _startSpawnDelay: 1
 --- !u!1 &1616919198
 GameObject:
