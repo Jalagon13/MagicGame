@@ -7,12 +7,7 @@ public class GoldManager : MonoBehaviour
     public event EventHandler<GoldEventArgs> OnGoldChanged;
     public class GoldEventArgs : EventArgs
     {
-        public int CurrentGold { get; }
-
-        public GoldEventArgs(int currentGold)
-        {
-            CurrentGold = currentGold;
-        }
+        public int CurrentGold;
     }
     
     [field: SerializeField] public int StartingGold { get; private set; } = 0;
@@ -28,14 +23,21 @@ public class GoldManager : MonoBehaviour
     
     public void AddGold(int amount)
     {
+        Debug.Log($"Adding gold: {amount}");
         _currentGold += amount;
-        OnGoldChanged?.Invoke(this, new GoldEventArgs(_currentGold));
+        OnGoldChanged?.Invoke(this, new GoldEventArgs()
+        {
+            CurrentGold = _currentGold
+        });
     }
     
     public void RemoveGold(int amount)
     {
         _currentGold -= amount;
         _currentGold = Mathf.Max(0, _currentGold);
-        OnGoldChanged?.Invoke(this, new GoldEventArgs(_currentGold));
+        OnGoldChanged?.Invoke(this, new GoldEventArgs()
+        {
+            CurrentGold = _currentGold
+        });
     }
 }

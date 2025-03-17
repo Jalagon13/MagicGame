@@ -28,7 +28,7 @@ public static class LootTable
 				// Spawn Loot here.
 				ItemSO itemToSpawn = itemsToSpawnKVP.Key;
 				int amountToSpawn = itemsToSpawnKVP.Value;	
-				Debug.Log($"Spawning itme");
+				
 				GameManager.Instance.SpawnItem(itemToSpawn, amountToSpawn, spawnPos, biome);
 			}
 		}

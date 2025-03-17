@@ -9,6 +9,7 @@ public class FMODEvents : MonoBehaviour
 	[field: SerializeField] public EventReference PlayerFootsteps { get; private set; }
 	[field: SerializeField] public EventReference PlayerMeleeSwing { get; private set; }
 	[field: SerializeField] public EventReference ItemPickup { get; private set; }
+	[field: SerializeField] public EventReference GoldPickup { get; private set; }
 	[field: SerializeField] public EventReference InventorySlotClicked { get; private set; }
 	[field: SerializeField] public EventReference FocusSlotChanged { get; private set; }
 	[field: SerializeField] public EventReference InventoryOpen { get; private set; }

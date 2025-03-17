@@ -76,7 +76,6 @@ public class Player : NetworkBehaviour
 			_spawnPoint = transform.position;
 			
 			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnSelectedItemUpdated;
-			GameInput.Instance.OnSpaceStarted += DashTest;
 		}
 		
 		OnAnyPlayerSpawned?.Invoke(this, new PlayerIdEventArgs
@@ -239,12 +238,6 @@ public class Player : NetworkBehaviour
 	{
 		PvpEnabled.Value = pvpEnabled;
 		Debug.Log($"Pvp enabled: {PvpEnabled.Value}");
-	}
-
-	private void DashTest(object sender, EventArgs e)
-	{
-		if (Pointer.IsOverUI() || ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo)) return;
-		PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, 45, true);
 	}
 
 	private void HotbarManager_OnSelectedItemUpdated(object sender, HotbarManager.OnFocusItemSetEventArgs e)

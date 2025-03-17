@@ -35,9 +35,9 @@ public class InventoryManager : MonoBehaviour
 		public List<InventoryItem> InventoryItems;
 	}
 
+	[field: SerializeField] public ItemSO CurrencyItem { get; private set; }
 	[SerializeField] private int _slotAmount;
 	[SerializeField] private float _timeBetweenCollections = 0.1f;
-	[SerializeField] private ItemSO _currencyItem;
 	[SerializeField] private ItemCollectWorldUI _itemCollectPlatePrefab;
 	
 	private InventoryModel _inventoryModel;
@@ -161,20 +161,23 @@ public class InventoryManager : MonoBehaviour
 		
 		while(_itemQueue.Count > 0)
 		{
-			if(playCollectSound)
-			{
-				SoundManager.Instance.PlayOneShot(FMODEvents.Instance.ItemPickup, Player.LocalClientInstance.transform.position);
-			}
-		
 			InventoryItem itemToCollect = _itemQueue.Dequeue();
 			
-			if (itemToCollect.Item == _currencyItem)
+			if (itemToCollect.Item == CurrencyItem)
 			{
-				
+				GoldManager.Instance.AddGold(itemToCollect.Quantity);
+				if (playCollectSound)
+				{
+					SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.LocalClientInstance.transform.position);
+				}
 			}
 			else
-			{
+			{ 
 				_inventoryModel.AddItem(itemToCollect);
+				if (playCollectSound)
+				{
+					SoundManager.Instance.PlayOneShot(FMODEvents.Instance.ItemPickup, Player.LocalClientInstance.transform.position);
+				}
 			}
 			
 			string itemName = itemToCollect.Item.Name;

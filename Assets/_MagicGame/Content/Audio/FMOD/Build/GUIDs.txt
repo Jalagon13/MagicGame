@@ -9,6 +9,7 @@
 {c370b08f-1a93-4bb3-8fa6-72074c22db89} event:/DeerDamaged
 {055d1386-650b-445e-b82a-a550931d286b} event:/DeerDeath
 {0030af96-a4e6-4ad1-961e-1c2dac4c5830} event:/PixieDamaged
+{fda3288e-4260-4d5f-bc9e-4c28914bf5c9} event:/Player/CoinPickup
 {4c353b86-15f0-45ee-bdaf-b3382ff209c6} event:/Player/ItemPickup
 {ecdabb3b-1316-42c1-801d-c50b6671a568} event:/Player/MeleeHit
 {64b34dd9-fc47-4708-b71d-390f7180f9f4} event:/Player/PlayerFootsteps

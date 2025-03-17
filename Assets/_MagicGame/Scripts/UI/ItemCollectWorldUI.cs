@@ -26,16 +26,20 @@ public class ItemCollectWorldUI : MonoBehaviour
 	
     // NOTE: I need this so that frustrating count bug doesn't happen again, for some reason this works
     public int DisplayAmount { get => _displayAmount; set => _displayAmount = value; }
-	
-    public InventoryItem DisplayedItem { get => _displayedItem; 
-        set 
+
+    public InventoryItem DisplayedItem
+    {
+        get => _displayedItem;
+        set
         {
             _displayedItem = value;
             _displayAmount = value.Quantity;
-            _itemText.text = $"{_displayedItem.Item.Name} x{DisplayAmount}";
-        }  
+
+            _itemText.text = $"+{DisplayAmount} {_displayedItem.Item.Name}";
+            _itemText.color = value.Item == InventoryManager.Instance.CurrencyItem ? Color.yellow : _itemText.color;
+        }
     }
-	
+
     private void Awake()
     {
         _plateCollider = transform.GetChild(1).GetComponent<Collider2D>();

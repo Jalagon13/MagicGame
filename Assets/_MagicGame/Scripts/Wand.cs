@@ -145,12 +145,10 @@ public class Wand
 		{
 			if (collider.CompareTag("TargetDummy"))
 			{
-				Debug.Log("Found target dummy");
 				targetDummy = collider.GetComponent<Npc>();
 				return true;
 			}
 		}
-		Debug.Log("Did not find target dummy");
 		targetDummy = null;
 		return false;
 	}
