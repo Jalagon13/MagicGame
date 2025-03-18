@@ -6,12 +6,13 @@ using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InventorySlotsUI : MonoBehaviour
+public class InventoryUI : MonoBehaviour
 {
-	[SerializeField] private Transform _hotbarSlotsUITransform;
-	[SerializeField] private Transform _inventorySlotsUITransform;
-	[SerializeField] private Transform _chestSlotsUITransform;
-	
+	[field: SerializeField] public GameObject ToggleInventorySlotsGO { get; private set; }
+	[field: SerializeField] public Transform HotbarSlotsUITransform { get; private set; }
+	[field: SerializeField] public Transform InventorySlotsUITransform { get; private set; }
+	[field: SerializeField] public Transform ChestSlotsUITransform { get; private set; }
+
 	private List<InventorySlotUI> _inventorySlotUIList = new();
 	
 	private void Start()
@@ -41,7 +42,7 @@ public class InventorySlotsUI : MonoBehaviour
 
 	private void Show()
 	{
-		gameObject.SetActive(true);
+		ToggleInventorySlotsGO.SetActive(true);
 
 		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.InventoryOpen, Player.LocalClientInstance.transform.position);
 	}
@@ -49,7 +50,7 @@ public class InventorySlotsUI : MonoBehaviour
 	private void Hide()
 	{
 		Tooltip.HideUI();
-		gameObject.SetActive(false);
+		ToggleInventorySlotsGO.SetActive(false);
 
 		if (Player.LocalClientInstance != null)
 		{
@@ -75,7 +76,7 @@ public class InventorySlotsUI : MonoBehaviour
 
 	private void UpdateChestSlotDisplay(List<InventoryItem> chestItemData)
 	{
-		foreach (Transform child in _chestSlotsUITransform)
+		foreach (Transform child in ChestSlotsUITransform)
 		{
 			int chestSlotIndex = child.GetSiblingIndex();
 
@@ -94,7 +95,7 @@ public class InventorySlotsUI : MonoBehaviour
 		int indexCounter = 0;
 		
 		// For the first 9 inventory items, generate the slots as hotbar slots
-		foreach (Transform hotbarSlot in _hotbarSlotsUITransform)
+		foreach (Transform hotbarSlot in HotbarSlotsUITransform)
 		{
 			InventorySlotUI hotbarIntSlotUI = hotbarSlot.gameObject.GetComponent<InventorySlotUI>();
 			hotbarIntSlotUI.InitializeInvSlotUI(indexCounter, InventoryManager.Instance.GetInventoryModel().InventoryItems);
@@ -103,7 +104,7 @@ public class InventorySlotsUI : MonoBehaviour
 			_inventorySlotUIList.Add(hotbarIntSlotUI);
 		}
 		
-		foreach (Transform invSlot in _inventorySlotsUITransform)
+		foreach (Transform invSlot in InventorySlotsUITransform)
 		{
 			InventorySlotUI invSlotUI = invSlot.gameObject.GetComponent<InventorySlotUI>();
 			invSlotUI.InitializeInvSlotUI(indexCounter, InventoryManager.Instance.GetInventoryModel().InventoryItems);
@@ -126,12 +127,12 @@ public class InventorySlotsUI : MonoBehaviour
 	
 	private void ShowChestSlots()
 	{
-		_chestSlotsUITransform.gameObject.SetActive(true);
+		ChestSlotsUITransform.gameObject.SetActive(true);
 	}
 	
 	private void HideChestSlots()
 	{
-		_chestSlotsUITransform.gameObject.SetActive(false);
+		ChestSlotsUITransform.gameObject.SetActive(false);
 	}
 	
 	private void OnDestroy()
