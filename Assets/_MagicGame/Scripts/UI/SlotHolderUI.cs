@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 
 public class SlotHolderUI : MonoBehaviour
 {
-	[SerializeField] private InventorySlotUI _inventorySlotUIPrefab;
 	[SerializeField] private Transform _hotbarSlotsUITransform;
 	[SerializeField] private Transform _inventorySlotsUITransform;
 	[SerializeField] private Transform _chestSlotsUITransform;
@@ -21,8 +20,8 @@ public class SlotHolderUI : MonoBehaviour
 		ChestManager.Instance.OnChestOpen += ChestManager_OnChestOpen;
 		ChestManager.Instance.OnChestClose += ChestManager_OnChestClose;
 		ChestManager.Instance.OnChestUpdated += ChestManager_OnChestUpdated;
-		Initialize(InventoryManager.Instance.GetInventoryModel().InventoryItems);
 		
+		InitializeSlots();
 		HideInventorySlots();
 		HideChestSlots();
 	}
@@ -72,30 +71,28 @@ public class SlotHolderUI : MonoBehaviour
 		}
 	}
 
-	public void Initialize(List<InventoryItem> inventoryItems)
+	public void InitializeSlots()
 	{
-		// For the first 9 inventory items, generate the slots as hotbar slots
-		for (int i = 0; i < inventoryItems.Count; i++)
-		{
-			// If one of the first 9 slots, add it to _hotbarSlotHolder, else, add it to _inventorySlotView
-			if(i < 9)
-			{
-				InitializeSlot(_hotbarSlotsUITransform, i);
-			}
-			else if (i < inventoryItems.Count - 1)
-			{
-				InitializeSlot(_inventorySlotsUITransform, i);
-			}
-		}
-	}
-	
-	private void InitializeSlot(Transform slotHolder, int inventoryIndex)
-	{
-		InventorySlotUI invSlotUI = Instantiate(_inventorySlotUIPrefab, default, Quaternion.identity);
-		invSlotUI.transform.SetParent(slotHolder);
-		invSlotUI.InitializeInvSlotUI(inventoryIndex, InventoryManager.Instance.GetInventoryModel().InventoryItems);
+		int indexCounter = 0;
 		
-		_inventorySlotUIList.Add(invSlotUI);
+		// For the first 9 inventory items, generate the slots as hotbar slots
+		foreach (Transform hotbarSlot in _hotbarSlotsUITransform)
+		{
+			InventorySlotUI hotbarIntSlotUI = hotbarSlot.gameObject.GetComponent<InventorySlotUI>();
+			hotbarIntSlotUI.InitializeInvSlotUI(indexCounter, InventoryManager.Instance.GetInventoryModel().InventoryItems);
+			indexCounter++;
+
+			_inventorySlotUIList.Add(hotbarIntSlotUI);
+		}
+		
+		foreach (Transform invSlot in _inventorySlotsUITransform)
+		{
+			InventorySlotUI invSlotUI = invSlot.gameObject.GetComponent<InventorySlotUI>();
+			invSlotUI.InitializeInvSlotUI(indexCounter, InventoryManager.Instance.GetInventoryModel().InventoryItems);
+			indexCounter++;
+
+			_inventorySlotUIList.Add(invSlotUI);
+		}
 	}
 	
 	public void UpdateUI(List<InventoryItem> updatedInventory)

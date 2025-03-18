@@ -245,7 +245,6 @@ public class ChestNetworkManager : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void RemoveChestIdServerRpc(Vector2Int openChestPosition, BiomeType value)
 	{
-		Debug.Log($"Removing {openChestPosition}{value}");
 		ChestManager.Instance.OpenedChestIds.Remove($"{openChestPosition}{value}");
 	}
 
@@ -266,6 +265,5 @@ public class ChestNetworkManager : NetworkBehaviour
 	{
 		var chestData = ChestManager.Instance.GetChestDataFromBiome(playerBiome);
 		chestData[openChestPosition] = ConvertToGameChestData(syncChestItemData.ChestItemData);
-		Debug.Log($"Dat shit updated from client");
 	}
 }
