@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AdvancedTooltips.Core;
 using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SlotHolderUI : MonoBehaviour
+public class InventorySlotsUI : MonoBehaviour
 {
 	[SerializeField] private Transform _hotbarSlotsUITransform;
 	[SerializeField] private Transform _inventorySlotsUITransform;
@@ -22,8 +23,38 @@ public class SlotHolderUI : MonoBehaviour
 		ChestManager.Instance.OnChestUpdated += ChestManager_OnChestUpdated;
 		
 		InitializeSlots();
-		HideInventorySlots();
+		Hide();
 		HideChestSlots();
+	}
+
+	private void GameInput_OnInventoryToggle(object sender, GameInput.OnToggleInventoryEventArgs e)
+	{
+		if (e.InventoryOpen)
+		{
+			Show();
+		}
+		else
+		{
+			Hide();
+		}
+	}
+
+	private void Show()
+	{
+		gameObject.SetActive(true);
+
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.InventoryOpen, Player.LocalClientInstance.transform.position);
+	}
+
+	private void Hide()
+	{
+		Tooltip.HideUI();
+		gameObject.SetActive(false);
+
+		if (Player.LocalClientInstance != null)
+		{
+			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.InventoryClose, Player.LocalClientInstance.transform.position);
+		}
 	}
 
 	private void ChestManager_OnChestUpdated(object sender, ChestManager.ChestEventArgs e)
@@ -56,19 +87,6 @@ public class SlotHolderUI : MonoBehaviour
 	private void InventoryManager_OnInventoryUpdated(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
 	{
 		UpdateUI(e.InventoryItems);
-	}
-
-	private void GameInput_OnInventoryToggle(object sender, GameInput.OnToggleInventoryEventArgs e)
-	{
-		if(e.InventoryOpen)
-		{
-			ShowInventorySlots();
-		}
-		else
-		{
-			HideInventorySlots();
-			HideChestSlots();
-		}
 	}
 
 	public void InitializeSlots()
@@ -104,16 +122,6 @@ public class SlotHolderUI : MonoBehaviour
 			
 			isv.UpdateDisplayUI(inventoryItem);
 		}
-	}
-	
-	private void ShowInventorySlots()
-	{
-		_inventorySlotsUITransform.gameObject.SetActive(true);
-	}
-	
-	private void HideInventorySlots()
-	{
-		_inventorySlotsUITransform.gameObject.SetActive(false);
 	}
 	
 	private void ShowChestSlots()

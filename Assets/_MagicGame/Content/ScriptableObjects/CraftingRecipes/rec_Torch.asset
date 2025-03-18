@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55646a241e94b4a3a9d1cdf6e939102b, type: 3}
-  m_Name: TorchRecipe
+  m_Name: rec_Torch
   m_EditorClassIdentifier: 
   OutputItem: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
   OutputAmount: 4

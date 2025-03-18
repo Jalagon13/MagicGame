@@ -2,7 +2,7 @@ using System;
 using AdvancedTooltips.Core;
 using UnityEngine;
 
-public class PlayerMenuUI : MonoBehaviour
+public class EquipmentMenuUI : MonoBehaviour
 {
 	[SerializeField] private ArmorSlotUI _helmetArmorSlotUI;
 	[SerializeField] private ArmorSlotUI _chestplateArmorSlotUI;
@@ -10,11 +10,15 @@ public class PlayerMenuUI : MonoBehaviour
 
 	private void OnEnable()
 	{
+		if(InventoryManager.Instance == null) return;
+		
 		InventoryManager.Instance.OnInventorySlotShiftLeftClicked += OnInventorySlotShiftLeftClicked_EquipShortcut;
 	}
 
 	private void OnDisable()
 	{
+		if (InventoryManager.Instance == null) return;
+
 		InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= OnInventorySlotShiftLeftClicked_EquipShortcut;
 	}
 

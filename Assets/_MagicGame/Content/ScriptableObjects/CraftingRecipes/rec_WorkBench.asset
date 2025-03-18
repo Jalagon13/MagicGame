@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55646a241e94b4a3a9d1cdf6e939102b, type: 3}
-  m_Name: WoodChestRecipe
+  m_Name: rec_WorkBench
   m_EditorClassIdentifier: 
-  OutputItem: {fileID: 11400000, guid: d42e1f6278c094b24b5037d421650f40, type: 2}
+  OutputItem: {fileID: 11400000, guid: d3be2b9539bc040428db5097cea0bed6, type: 2}
   OutputAmount: 1
   ResourceList:
   - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}

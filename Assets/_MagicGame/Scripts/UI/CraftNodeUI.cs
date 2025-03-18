@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -22,8 +23,23 @@ public class CraftNodeUI : MonoBehaviour
 			Tooltip.HideUI();
 		}
 	}
-	
-	public void Initialize(RecipeSO recipe)
+
+    private void OnEnable()
+    {
+		UpdateCraftStatus();
+	}
+
+    private void Start()
+	{
+		InventoryManager.Instance.OnInventoryUpdated += UpdateCraftStatus;
+	}
+
+    private void UpdateCraftStatus(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
+    {
+		UpdateCraftStatus();
+	}
+
+    public void Initialize(RecipeSO recipe)
 	{
 		_recipeSO = recipe;
 		_outputImage.sprite = _recipeSO.OutputItem.UiDisplay;
@@ -62,5 +78,10 @@ public class CraftNodeUI : MonoBehaviour
 		// Edit CraftNodeView visuals depending on _canCraft
 		_craftButton.interactable = _canCraft;
 		// ...
+	}
+	
+	private void OnDestroy()
+	{
+		InventoryManager.Instance.OnInventoryUpdated -= UpdateCraftStatus;
 	}
 }
