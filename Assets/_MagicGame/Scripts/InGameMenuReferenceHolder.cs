@@ -28,8 +28,8 @@ public class InGameMenuReferenceHolder : MonoBehaviour
 
             if (distanceToPlayer > MenuSourceDistanceCheck)
             {
-                ChestManager.Instance.CloseChest();
-                ClearOldMenu();
+                if (!_hasMenuBeenCleared)
+                    ClearOldMenu();
             }
         }
         else if (!_hasMenuBeenCleared)
@@ -41,18 +41,17 @@ public class InGameMenuReferenceHolder : MonoBehaviour
 
     public void ClearOldMenu()
     {
-        // Ensure _menuGODestroyed is set to true only once
-        if (!_hasMenuBeenCleared)
-        {
-            _hasMenuBeenCleared = true;
-            _currentMenuGO = null;
+        Debug.Log("Clearing Old Menu");
+        _hasMenuBeenCleared = true;
+        _currentMenuGO = null;
 
-            if (transform.childCount > 0)
+        if (transform.childCount > 0)
+        {
+            foreach (Transform child in transform)
             {
-                foreach (Transform child in transform)
-                {
-                    Destroy(child.gameObject);
-                }
+                Debug.Log("Destroying child: " + child.name);
+                child.gameObject.SetActive(false);
+                Destroy(child.gameObject);
             }
         }
     }

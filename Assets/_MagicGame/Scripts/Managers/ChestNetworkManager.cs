@@ -136,20 +136,13 @@ public class ChestNetworkManager : NetworkBehaviour
 		if (biomeChestData.ContainsKey(chestPosition))
 		{
 			string chestId = $"{chestPosition}{biome}";
-			
-			if(!ChestManager.Instance.OpenedChestIds.Contains(chestId))
+			var syncData = new ChestSyncData
 			{
-				Debug.Log($"Adding chest id: {chestId}");
-				ChestManager.Instance.OpenedChestIds.Add(chestId);
-			
-				var syncData = new ChestSyncData
-				{
-					ChestItemData = ConvertToSyncChestData(biomeChestData[chestPosition]),
-					ChestPosition = chestPosition
-				};
-			
-				SendChestDataClientRpc(syncData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
-			}
+				ChestItemData = ConvertToSyncChestData(biomeChestData[chestPosition]),
+				ChestPosition = chestPosition
+			};
+
+			SendChestDataClientRpc(syncData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
 		}
 		else
 		{
@@ -232,14 +225,7 @@ public class ChestNetworkManager : NetworkBehaviour
 
 		return chestItemData;
 	}
-
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void RemoveChestIdServerRpc(Vector2Int openChestPosition, BiomeType value)
-	{
-		Debug.Log($"Removing chest id: {openChestPosition}{value}");
-		ChestManager.Instance.OpenedChestIds.Remove($"{openChestPosition}{value}");
-	}
-
+	
 	public void UpdateChestContents(Vector2Int openChestPosition, BiomeType playerBiome, List<InventoryItem> localChestItemData)
 	{
 		Debug.Log(localChestItemData == null);

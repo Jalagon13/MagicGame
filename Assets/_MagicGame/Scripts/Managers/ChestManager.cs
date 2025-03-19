@@ -9,24 +9,22 @@ public class ChestManager : NetworkBehaviour
 	public static int CHEST_CAPACITY { get; private set; } = 18;
 
 	public static ChestManager Instance { get; private set; }
-	public event EventHandler OnChestClose;
-	public event EventHandler<ChestEventArgs> OnChestOpen;
 	public event EventHandler<ChestEventArgs> OnChestUpdated;
 	public class ChestEventArgs : EventArgs
 	{
 		public List<InventoryItem> ChestItemData;
 	}
 
-	public bool IsChestOpen { get; private set; } = false;
-	public Vector2Int OpenChestPosition { get; private set; }
+	public bool IsChestOpen { get; set; } = false;
+	public Vector2Int? OpenChestPosition { get; set; }
 	public List<string> OpenedChestIds { get; private set; }
+	public List<InventoryItem> LocalChestItemData { get; set; } // Used for clients to be sent to server when done editing it
 	
 	[SerializeField] private float _chestCloseDistance = 3f; 
 	
 	private Dictionary<Vector2Int, List<InventoryItem>> _forestChests = new();
 	private Dictionary<Vector2Int, List<InventoryItem>> _caveChests = new();
 	private ChestNetworkManager _chestNetworkManager;
-	private List<InventoryItem> _localChestItemData; // Used for clients to be sent to server when done editing it
 	private GameObject _chestObject;
 
 	private void Awake()
@@ -34,24 +32,6 @@ public class ChestManager : NetworkBehaviour
 		Instance = this;
 		OpenedChestIds = new();
 		_chestNetworkManager = GetComponent<ChestNetworkManager>();
-	}
-	
-	private void Start()
-	{
-		GameInput.Instance.OnInventoryToggle += GameInput_OnInventoryToggle;
-	}
-
-    private void GameInput_OnInventoryToggle(object sender, GameInput.OnToggleInventoryEventArgs e)
-    {
-        if(!e.InventoryOpen)
-        {
-            CloseChest();
-        }
-    }
-
-    public List<InventoryItem> GetOpenChestInventoryItems()
-	{
-		return _localChestItemData;
 	}
 	
 	public Dictionary<Vector2Int, List<InventoryItem>> GetChestDataFromBiome(BiomeType environment)
@@ -86,46 +66,48 @@ public class ChestManager : NetworkBehaviour
 
 	public void RequestChestData(Vector2Int chestPosition, BiomeType biome, GameObject chestObject)
 	{
-		CloseChest();
-
+		if(OpenChestPosition == chestPosition)
+		{
+			Debug.LogWarning($"Chest already open: {chestPosition}");
+			return;
+		}
+	
 		_chestObject = chestObject;
 		_chestNetworkManager.RequestChestDataServerRpc(chestPosition, biome);
 	}
 	
 	public void OnChestDataRecieved(Vector2Int chestPosition, List<InventoryItem> chestData)
 	{
-		if(IsChestOpen == false)
-		{
-			InventoryManager.Instance.OnInventorySlotShiftLeftClicked += EnableChestShortcuts;
-		}
-
 		InventoryManager.Instance.OnInventorySlotClicked += UpdateSlots;
-
-		OpenChestPosition = chestPosition;
-		IsChestOpen = true;
-
-		_localChestItemData = chestData;
 		
-		InGameMenu.Instance.OpenChestMenu(_localChestItemData, _chestObject);
+		InGameMenu.Instance.OpenChestMenu(chestData, _chestObject, chestPosition);
 	}
 
-	public void CloseChest()
+	public void CloseChest(Vector2Int chestPosition, BiomeType biome, List<InventoryItem> localChestItemData)
 	{
-		if (IsChestOpen)
-		{
-			Debug.Log("Closing Chest");
-			_chestNetworkManager.RemoveChestIdServerRpc(OpenChestPosition, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+		InventoryManager.Instance.OnInventorySlotClicked -= UpdateSlots;
 		
-			InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= EnableChestShortcuts;
-			InventoryManager.Instance.OnInventorySlotClicked -= UpdateSlots;
-			IsChestOpen = false;
-			
-			_chestNetworkManager.UpdateChestContents(OpenChestPosition, Player.LocalClientInstance.CurrentPlayerBiome.Value, _localChestItemData);
+		RemoveChestIdServerRpc(chestPosition, biome);
+		_chestNetworkManager.UpdateChestContents(chestPosition, biome, localChestItemData);
+	}
 
-			OnChestClose?.Invoke(this, EventArgs.Empty);
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void AddChestIdServerRpc(Vector2Int openChestPosition, BiomeType value)
+	{
+		Debug.Log($"Adding chest id: {openChestPosition}{value}");
+		if (!OpenedChestIds.Contains($"{openChestPosition}{value}"))
+		{
+			OpenedChestIds.Add($"{openChestPosition}{value}");
 		}
 	}
-	
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void RemoveChestIdServerRpc(Vector2Int openChestPosition, BiomeType value)
+	{
+		Debug.Log($"Removing chest id: {openChestPosition}{value}");
+		OpenedChestIds.Remove($"{openChestPosition}{value}");
+	}
+
 	public void AddChestEntry(Vector2Int chestPosition, List<InventoryItem> chestItems, BiomeType biome)
 	{
 		GetChestDataFromBiome(biome).Add(chestPosition, chestItems);
@@ -162,7 +144,7 @@ public class ChestManager : NetworkBehaviour
 	{
 		OnChestUpdated?.Invoke(this, new ChestEventArgs
 		{
-			ChestItemData = _localChestItemData
+			ChestItemData = LocalChestItemData
 		});
 	}
 	
@@ -230,11 +212,5 @@ public class ChestManager : NetworkBehaviour
 		// 	// (implement logic for adding unstackable items when inventory is full as well)
 		// 	// (Also impelement logic for wand functionality in this regard as well)
 		// }
-	}
-	
-	public override void OnDestroy()
-	{
-		GameInput.Instance.OnInventoryToggle -= GameInput_OnInventoryToggle;
-		base.OnDestroy();
 	}
 }

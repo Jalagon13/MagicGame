@@ -45,12 +45,13 @@ public class InGameMenu : MonoBehaviour
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }
     
-    public void OpenChestMenu(List<InventoryItem> localChestItemData, GameObject menuSourceGO)
+    public void OpenChestMenu(List<InventoryItem> localChestItemData, GameObject menuSourceGO, Vector2Int chestPosition)
     {
         ClearOldMenu();
+        Debug.Log($"transofmr child count: {transform.childCount}");
         
         ChestMenuUI chestMenuUI = _instantiateHandler.InstantiateChestMenu();
-        chestMenuUI.PopulateChestMenuUI(localChestItemData);
+        chestMenuUI.PopulateChestMenuUI(localChestItemData, chestPosition);
 
         _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
 
@@ -69,7 +70,6 @@ public class InGameMenu : MonoBehaviour
 
     public void ClearOldMenu()
     {
-        Debug.Log("Clearing Old Menu");
         _menuReferenceHolder.ClearOldMenu();
     }
     
