@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using AdvancedTooltips.Core;
+using TMPro;
 using UnityEngine;
 
 public class WandInspectorMenuUI : MonoBehaviour
 {
 	public WandInventoryItem SelectedWand { get; private set; } 
 	
+	[field: SerializeField] public TextMeshProUGUI InspectorTitleText;
 	[SerializeField] private WandInventorySlotUI _wandInvSlotPrefab;
 	[SerializeField] private Transform _spellBookSlotsHolder;
 	[SerializeField] private WandSlotUI _spellBookSlotUI;
@@ -139,6 +141,7 @@ public class WandInspectorMenuUI : MonoBehaviour
 			}
 		}
 
+		InspectorTitleText.text = $"Inspecting {SelectedWand.Item.Name}";
 		_spellBookSlotUI.UpdateSlotUI();
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
@@ -152,5 +155,7 @@ public class WandInspectorMenuUI : MonoBehaviour
 				Destroy(child.gameObject);
 			}	
 		}
+
+		InspectorTitleText.text = $"Wand Inspector";
 	}
 }
