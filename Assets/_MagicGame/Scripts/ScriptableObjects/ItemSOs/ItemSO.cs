@@ -9,7 +9,7 @@ public abstract class ItemSO : ScriptableObject
 {
 	[field: SerializeField] public string Name { get; private set; }
 	[field: SerializeField] public Sprite UiDisplay { get; private set; }
-	[field: SerializeField] public float ItemActionCooldown { get; private set; } = 0.375f; // Cooldown between action executions
+	[field: SerializeField] public int GoldValue { get; private set; }
 	[field: SerializeField] public bool Stackable { get; private set; } = true;
 	[field: TextArea]
 	[field: SerializeField] public string Description { get; private set; }

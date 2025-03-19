@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Wooden Mining Focus
   <UiDisplay>k__BackingField: {fileID: -571513728, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
-  <ItemActionCooldown>k__BackingField: 0.375
+  <GoldValue>k__BackingField: 60
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Left click resources to mine.
   <MiningVisualPrefab>k__BackingField: {fileID: 312987487640026157, guid: 1f41c9fd0b67b4deabf38d42320fb4e8, type: 3}

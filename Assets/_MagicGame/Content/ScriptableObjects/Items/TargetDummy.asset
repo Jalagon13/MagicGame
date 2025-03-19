@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Target Dummy
   <UiDisplay>k__BackingField: {fileID: 784093983, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <ItemActionCooldown>k__BackingField: 0.375
+  <GoldValue>k__BackingField: 10
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 

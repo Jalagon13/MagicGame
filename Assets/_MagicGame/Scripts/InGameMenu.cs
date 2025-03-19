@@ -69,12 +69,14 @@ public class InGameMenu : MonoBehaviour
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }
     
-    public void OpenNpcMenu()
+    public void OpenNpcMenu(List<ItemSO> itemsToSell, GameObject menuSourceGO)
     {
         ClearOldMenu();
         NpcMenuUI npcMenuUI = _instantiateHandler.InstantiateNpcMenu();
+        npcMenuUI.SetItemsToSell(itemsToSell);
+        npcMenuUI.InitializeSellSlots();
 
-        // Npc Menu Set up
+        _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
 
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }

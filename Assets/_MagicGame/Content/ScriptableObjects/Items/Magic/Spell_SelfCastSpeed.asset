@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Self Cast Speed
   <UiDisplay>k__BackingField: {fileID: 2137236163, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
-  <ItemActionCooldown>k__BackingField: 0.375
+  <GoldValue>k__BackingField: 80
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Shoots a single bolt of mana.
   <SpellProjectilePrefab>k__BackingField: {fileID: -6685987286915080922, guid: 59b7222e9d96b49b2bd156f75637d701, type: 3}

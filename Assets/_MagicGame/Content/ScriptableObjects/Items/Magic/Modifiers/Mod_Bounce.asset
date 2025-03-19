@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Bounce Modifier
   <UiDisplay>k__BackingField: {fileID: -1693560910, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
-  <ItemActionCooldown>k__BackingField: 0.375
+  <GoldValue>k__BackingField: 50
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
   <SpellModifierPrefab>k__BackingField: {fileID: 4407107511287191510, guid: a6cc1aa454030488d84bc17c6732ad5f, type: 3}

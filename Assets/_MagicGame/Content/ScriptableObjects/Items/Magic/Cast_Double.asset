@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Double Cast
   <UiDisplay>k__BackingField: {fileID: 2144231542, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
-  <ItemActionCooldown>k__BackingField: 0.375
+  <GoldValue>k__BackingField: 50
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Simultaneously casts 2 spells
   <MultiCastAmount>k__BackingField: 2

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Destruction Tome
   <UiDisplay>k__BackingField: {fileID: -1033124662, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <ItemActionCooldown>k__BackingField: 0.375
+  <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Left-click to harvest wood, stone, and crops<br>Right-click
     to remove floors and ground

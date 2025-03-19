@@ -14,11 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Cave Portal
   <UiDisplay>k__BackingField: {fileID: 547736231, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <ItemActionCooldown>k__BackingField: 0.375
+  <GoldValue>k__BackingField: 8
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  <DefaultParameterList>k__BackingField:
-  - Parameter: {fileID: 11400000, guid: 7d0caf3b965b54f63a502974443886c9, type: 2}
-    Value: 3
   _deployObjectPrefab: {fileID: 5150323723629226184, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
-  _deploySound: {fileID: 0}

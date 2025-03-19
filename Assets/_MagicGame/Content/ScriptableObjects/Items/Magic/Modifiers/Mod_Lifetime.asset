@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Lifetime Modifier
   <UiDisplay>k__BackingField: {fileID: -696574866, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
-  <ItemActionCooldown>k__BackingField: 0.375
+  <GoldValue>k__BackingField: 50
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
   <SpellModifierPrefab>k__BackingField: {fileID: 4407107511287191510, guid: 26b80b09a3a2742399b01b8803bf79ca, type: 3}

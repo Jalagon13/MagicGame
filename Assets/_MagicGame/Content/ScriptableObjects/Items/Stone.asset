@@ -14,11 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Stone
   <UiDisplay>k__BackingField: {fileID: -1096778836, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <ItemActionCooldown>k__BackingField: 0.375
+  <GoldValue>k__BackingField: 3
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  <DefaultParameterList>k__BackingField:
-  - Parameter: {fileID: 11400000, guid: 7d0caf3b965b54f63a502974443886c9, type: 2}
-    Value: 3
   _wallTile: {fileID: 11400000, guid: c5388903dacbb4c4db84b0b22dae9c49, type: 2}
   _floorTile: {fileID: 11400000, guid: d2ceefd9a0a224533922e3657ca61e16, type: 2}

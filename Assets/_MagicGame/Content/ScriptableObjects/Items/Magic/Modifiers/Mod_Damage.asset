@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Damage Modifier
   <UiDisplay>k__BackingField: {fileID: -1368384744, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
-  <ItemActionCooldown>k__BackingField: 0.375
+  <GoldValue>k__BackingField: 50
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
   <SpellModifierPrefab>k__BackingField: {fileID: 4407107511287191510, guid: 101515e28dc6241a78d21f6022e9caa9, type: 3}

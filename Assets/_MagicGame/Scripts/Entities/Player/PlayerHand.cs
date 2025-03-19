@@ -162,10 +162,6 @@ public class PlayerHand : NetworkBehaviour
 			
 			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 		}
-		else if (HeldItem is MeleeItemSO)
-		{
-			HideArm();
-		}
 		else
 		{
 			HeldItem = null;
