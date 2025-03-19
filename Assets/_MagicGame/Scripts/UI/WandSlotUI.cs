@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class WandSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-	[SerializeField] private WandInspectorUI _wandMenuUI;
+	[SerializeField] private WandInspectorMenuUI _wandMenuUI;
 	[SerializeField] private Image _backgroundIcon;
 	[SerializeField] private Image _wandIcon;
 	

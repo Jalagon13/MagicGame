@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AdvancedTooltips.Core;
 using UnityEngine;
 
-public class WandInspectorUI : MonoBehaviour
+public class WandInspectorMenuUI : MonoBehaviour
 {
 	public WandInventoryItem SelectedWand { get; private set; } 
 	
@@ -31,8 +31,6 @@ public class WandInspectorUI : MonoBehaviour
 	
 	private void OnInventorySlotShiftLeftClicked_SpellBookShortCut(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
 	{
-		if(ChestManager.Instance.IsChestOpen) return;
-	
 		if(e.InventoryItem is WandInventoryItem wandInInv)
 		{
 			if(HasWand())
@@ -46,8 +44,6 @@ public class WandInspectorUI : MonoBehaviour
 				InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
 				Tooltip.HideUI();
 			}
-			
-			_spellBookSlotUI.UpdateSlotUI();
 		}
 		else if(e.InventoryItem.Item is MagicItemSO magicItemSO)
 		{
@@ -73,7 +69,8 @@ public class WandInspectorUI : MonoBehaviour
 				}
 			}
 		}
-		
+
+		_spellBookSlotUI.UpdateSlotUI();
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
 	
@@ -93,14 +90,14 @@ public class WandInspectorUI : MonoBehaviour
 		return removedWand;
 	}
 
-	public void PlaceSelectedWand(WandInventoryItem newSpellBook)
+	public void PlaceSelectedWand(WandInventoryItem wandItem)
 	{
-		if (newSpellBook == null)
+		if (wandItem == null)
 		{
-			throw new ArgumentNullException(nameof(newSpellBook), "Cannot place a null spellbook.");
+			throw new ArgumentNullException(nameof(wandItem), "Cannot place a null wand.");
 		}
 
-		SelectedWand = newSpellBook;
+		SelectedWand = wandItem;
 		
 		UpdateWandSlotsUI();
 	}
@@ -141,6 +138,9 @@ public class WandInspectorUI : MonoBehaviour
 				wandInvSlotUI.Initialize(SelectedWand, i);
 			}
 		}
+
+		_spellBookSlotUI.UpdateSlotUI();
+		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
 	
 	private void RemoveUI()

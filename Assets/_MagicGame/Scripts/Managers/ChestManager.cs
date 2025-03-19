@@ -94,7 +94,6 @@ public class ChestManager : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void AddChestIdServerRpc(Vector2Int openChestPosition, BiomeType value)
 	{
-		Debug.Log($"Adding chest id: {openChestPosition}{value}");
 		if (!OpenedChestIds.Contains($"{openChestPosition}{value}"))
 		{
 			OpenedChestIds.Add($"{openChestPosition}{value}");
@@ -104,7 +103,6 @@ public class ChestManager : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void RemoveChestIdServerRpc(Vector2Int openChestPosition, BiomeType value)
 	{
-		Debug.Log($"Removing chest id: {openChestPosition}{value}");
 		OpenedChestIds.Remove($"{openChestPosition}{value}");
 	}
 
@@ -136,7 +134,6 @@ public class ChestManager : NetworkBehaviour
 		if (GetChestDataFromBiome(environment).ContainsKey(chestPosition))
 		{
 			GetChestDataFromBiome(environment).Remove(chestPosition);
-			Debug.Log($"Chest entry removed for position: {chestPosition}");
 		}
 	}
 

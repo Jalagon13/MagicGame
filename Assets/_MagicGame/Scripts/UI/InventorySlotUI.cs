@@ -33,7 +33,16 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 		}
 		else if(eventData.button == PointerEventData.InputButton.Right)
 		{
-			InventoryManager.Instance.InventorySlotRightClicked(_inventoryIndex, _inventoryAssociatedWith);
+			if(_item.HasItem && _item is WandInventoryItem wandInventoryItem)
+			{
+				_inventoryAssociatedWith[_inventoryIndex] = new();
+
+				InGameMenu.Instance.OpenWandInspectorMenu(wandInventoryItem);
+			}
+			else
+			{
+				InventoryManager.Instance.InventorySlotRightClicked(_inventoryIndex, _inventoryAssociatedWith);
+			}
 		}
 	}
 	

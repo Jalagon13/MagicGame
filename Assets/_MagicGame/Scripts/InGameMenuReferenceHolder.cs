@@ -4,6 +4,7 @@ public class InGameMenuReferenceHolder : MonoBehaviour
 {
     [field: SerializeField] public GameObject CraftingMenuPrefab { get; private set; }
     [field: SerializeField] public GameObject ChestMenuPrefab { get; private set; }
+    [field: SerializeField] public GameObject WandInspectorMenuPrefab { get; private set; }
     [field: SerializeField] public GameObject NpcMenuPrefab { get; private set; }
     [Tooltip("The distance at which the menu will be cleared if the player moves away")]
     [field: SerializeField] public float MenuSourceDistanceCheck { get; private set; } = 2.75f;
@@ -41,7 +42,6 @@ public class InGameMenuReferenceHolder : MonoBehaviour
 
     public void ClearOldMenu()
     {
-        Debug.Log("Clearing Old Menu");
         _hasMenuBeenCleared = true;
         _currentMenuGO = null;
 
@@ -49,7 +49,6 @@ public class InGameMenuReferenceHolder : MonoBehaviour
         {
             foreach (Transform child in transform)
             {
-                Debug.Log("Destroying child: " + child.name);
                 child.gameObject.SetActive(false);
                 Destroy(child.gameObject);
             }

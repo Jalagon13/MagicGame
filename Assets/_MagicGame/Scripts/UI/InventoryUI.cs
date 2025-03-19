@@ -17,7 +17,6 @@ public class InventoryUI : MonoBehaviour
 		GameInput.Instance.OnInventoryToggle += GameInput_OnInventoryToggle;
 		InventoryManager.Instance.OnInventoryUpdated += InventoryManager_OnInventoryUpdated;
 		
-		
 		InitializeSlots();
 		Hide();
 	}

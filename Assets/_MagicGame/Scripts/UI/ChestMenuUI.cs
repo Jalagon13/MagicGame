@@ -16,7 +16,6 @@ public class ChestMenuUI : MonoBehaviour
     
     private void OnDisable()
     {
-        Debug.Log("Disabling Chest Menu UI");
         ChestManager.Instance.OpenChestPosition = null;
         ChestManager.Instance.LocalChestItemData = null;
         ChestManager.Instance.IsChestOpen = false;
@@ -26,7 +25,6 @@ public class ChestMenuUI : MonoBehaviour
 
     private void ChestManager_OnChestUpdated(object sender, ChestManager.ChestEventArgs e)
     {
-        Debug.Log("Updating Chest Menu UI");
         PopulateChestMenuUI(e.ChestItemData, _chestPosition);
     }
 
@@ -40,7 +38,6 @@ public class ChestMenuUI : MonoBehaviour
         ChestManager.Instance.OpenChestPosition = chestPosition;
         ChestManager.Instance.AddChestIdServerRpc(chestPosition, Player.LocalClientInstance.CurrentPlayerBiome.Value);
 
-        Debug.Log("Populating Chest Menu UI");
         foreach (Transform child in ChestSlotsUITransform)
         {
             int chestSlotIndex = child.GetSiblingIndex();
