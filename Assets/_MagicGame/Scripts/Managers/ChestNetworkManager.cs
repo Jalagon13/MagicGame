@@ -128,13 +128,8 @@ public struct ChestSyncData : IEquatable<ChestSyncData>, INetworkSerializable
 
 public class ChestNetworkManager : NetworkBehaviour
 {
-	public void OpenChestClient(Vector2Int chestPosition, BiomeType playerBiome)
-	{
-		RequestChestDataServerRpc(chestPosition, playerBiome);
-	}
-
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RequestChestDataServerRpc(Vector2Int chestPosition, BiomeType biome, RpcParams rpcParams = default)
+	public void RequestChestDataServerRpc(Vector2Int chestPosition, BiomeType biome, RpcParams rpcParams = default)
 	{
 		var biomeChestData = ChestManager.Instance.GetChestDataFromBiome(biome);
 
@@ -144,6 +139,7 @@ public class ChestNetworkManager : NetworkBehaviour
 			
 			if(!ChestManager.Instance.OpenedChestIds.Contains(chestId))
 			{
+				Debug.Log($"Adding chest id: {chestId}");
 				ChestManager.Instance.OpenedChestIds.Add(chestId);
 			
 				var syncData = new ChestSyncData
@@ -166,7 +162,7 @@ public class ChestNetworkManager : NetworkBehaviour
 	{
 		// Convert the sync data back to game data and pass it to the ChestManager
 		List<InventoryItem> chestItemData = ConvertToGameChestData(syncData.ChestItemData);
-		ChestManager.Instance.OpenChest(syncData.ChestPosition, chestItemData);
+		ChestManager.Instance.OnChestDataRecieved(syncData.ChestPosition, chestItemData);
 	}
 
 	private List<ChestSyncItemData> ConvertToSyncChestData(List<InventoryItem> chestItemDataToConvert)
@@ -237,14 +233,10 @@ public class ChestNetworkManager : NetworkBehaviour
 		return chestItemData;
 	}
 
-	public void RemoveChestId(Vector2Int openChestPosition, BiomeType value)
-	{
-		RemoveChestIdServerRpc(openChestPosition, value);
-	}
-	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RemoveChestIdServerRpc(Vector2Int openChestPosition, BiomeType value)
+	public void RemoveChestIdServerRpc(Vector2Int openChestPosition, BiomeType value)
 	{
+		Debug.Log($"Removing chest id: {openChestPosition}{value}");
 		ChestManager.Instance.OpenedChestIds.Remove($"{openChestPosition}{value}");
 	}
 

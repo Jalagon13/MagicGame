@@ -2,16 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using AdvancedTooltips.Core;
-using MoreMountains.Tools;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class InventoryUI : MonoBehaviour
 {
 	[field: SerializeField] public GameObject ToggleInventorySlotsGO { get; private set; }
 	[field: SerializeField] public Transform HotbarSlotsUITransform { get; private set; }
 	[field: SerializeField] public Transform InventorySlotsUITransform { get; private set; }
-	[field: SerializeField] public Transform ChestSlotsUITransform { get; private set; }
 
 	private List<InventorySlotUI> _inventorySlotUIList = new();
 	
@@ -19,13 +16,10 @@ public class InventoryUI : MonoBehaviour
 	{
 		GameInput.Instance.OnInventoryToggle += GameInput_OnInventoryToggle;
 		InventoryManager.Instance.OnInventoryUpdated += InventoryManager_OnInventoryUpdated;
-		ChestManager.Instance.OnChestOpen += ChestManager_OnChestOpen;
-		ChestManager.Instance.OnChestClose += ChestManager_OnChestClose;
-		ChestManager.Instance.OnChestUpdated += ChestManager_OnChestUpdated;
+		
 		
 		InitializeSlots();
 		Hide();
-		HideChestSlots();
 	}
 
 	private void GameInput_OnInventoryToggle(object sender, GameInput.OnToggleInventoryEventArgs e)
@@ -55,33 +49,6 @@ public class InventoryUI : MonoBehaviour
 		if (Player.LocalClientInstance != null)
 		{
 			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.InventoryClose, Player.LocalClientInstance.transform.position);
-		}
-	}
-
-	private void ChestManager_OnChestUpdated(object sender, ChestManager.ChestEventArgs e)
-	{
-		UpdateChestSlotDisplay(e.ChestItemData);
-	}
-
-	private void ChestManager_OnChestClose(object sender, EventArgs e)
-	{
-		HideChestSlots();
-	}
-
-	private void ChestManager_OnChestOpen(object sender, ChestManager.ChestEventArgs e)
-	{
-		ShowChestSlots();
-		UpdateChestSlotDisplay(e.ChestItemData);
-	}
-
-	private void UpdateChestSlotDisplay(List<InventoryItem> chestItemData)
-	{
-		foreach (Transform child in ChestSlotsUITransform)
-		{
-			int chestSlotIndex = child.GetSiblingIndex();
-
-			child.GetComponent<InventorySlotUI>().InitializeInvSlotUI(chestSlotIndex, ChestManager.Instance.GetOpenChestInventoryItems());
-			child.GetComponent<InventorySlotUI>().UpdateDisplayUI(chestItemData[chestSlotIndex]);
 		}
 	}
 
@@ -125,22 +92,10 @@ public class InventoryUI : MonoBehaviour
 		}
 	}
 	
-	private void ShowChestSlots()
-	{
-		ChestSlotsUITransform.gameObject.SetActive(true);
-	}
-	
-	private void HideChestSlots()
-	{
-		ChestSlotsUITransform.gameObject.SetActive(false);
-	}
 	
 	private void OnDestroy()
 	{
 		GameInput.Instance.OnInventoryToggle -= GameInput_OnInventoryToggle;
-		ChestManager.Instance.OnChestOpen -= ChestManager_OnChestOpen;
-		ChestManager.Instance.OnChestClose -= ChestManager_OnChestClose;
-		ChestManager.Instance.OnChestUpdated -= ChestManager_OnChestUpdated;
 		InventoryManager.Instance.OnInventoryUpdated -= InventoryManager_OnInventoryUpdated;
 	}
 }

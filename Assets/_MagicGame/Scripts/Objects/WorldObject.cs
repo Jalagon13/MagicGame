@@ -14,7 +14,9 @@ public class WorldObject : MonoBehaviour // Base class for every "physical" asse
 	[field: SerializeField] public List<Loot> Table { get; private set; }
 	[field: SerializeField] public EventReference ResourceHit { get; private set; }
 	[field: SerializeField] public EventReference ResourceDestroyed { get; private set; }
-	
+
+	protected static float _chestOpenDistance = 2.75f;
+
 	private void Awake()
 	{
 		transform.GetChild(0).gameObject.SetActive(!PassThrough); // Disable local collider so player can walk through it

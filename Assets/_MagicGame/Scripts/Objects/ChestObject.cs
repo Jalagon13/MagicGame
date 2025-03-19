@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class ChestObject : WorldObject
 {
-	[SerializeField] private WorldInput _worldInput;
-	[SerializeField] private float _chestOpenDistance = 2.75f; 
+	[field: SerializeField] public WorldInput WorldInput { get; private set; }
 
 	private void Start()
 	{
@@ -22,9 +21,9 @@ public class ChestObject : WorldObject
 		var centerOfChestPosition = new Vector2(transform.position.x + 0.5f, transform.position.y + 0.5f);
 		var playerInRange = Vector2.Distance(Player.LocalClientInstance.transform.position, centerOfChestPosition) <= _chestOpenDistance;
 		
-		if(_worldInput.IsMouseOverIndputDetector() && playerInRange)
+		if(WorldInput.IsMouseOverIndputDetector() && playerInRange)
 		{
-			ChestManager.Instance.OpenChest(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value);
+			ChestManager.Instance.RequestChestData(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value, gameObject);
 		}
 	}
 	

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b31f6fd9b04647aeb0c34eda896b8b1, type: 3}
   m_Name: _WorkBenchCDB
   m_EditorClassIdentifier: 
+  <DatabaseName>k__BackingField: Work Bench
   RecipeDatabase:
   - {fileID: 11400000, guid: 56ef5edf4331b470db9e75fe1b79a79f, type: 2}
   - {fileID: 11400000, guid: 73b37ab4e94054794bcb168d69224be7, type: 2}

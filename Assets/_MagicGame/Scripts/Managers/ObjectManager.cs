@@ -73,13 +73,22 @@ public class ObjectManager : NetworkBehaviour
 		{
 			if(woGameData.Position == objectPos)
 			{
-				string chestId = $"{objectPos}{biome}";
-				if (ChestManager.Instance.OpenedChestIds.Contains(chestId))
+				if(ChestManager.Instance.GetChestDataFromBiome(biome).ContainsKey(objectPos))
 				{
-					Debug.LogWarning("Trying to damage a chest that is open is not allowed");
-					return;
+					string chestId = $"{objectPos}{biome}";
+					if (ChestManager.Instance.OpenedChestIds.Contains(chestId))
+					{
+						Debug.LogWarning("Trying to damage a chest that is open is not allowed");
+						return;
+					}
+					
+					if(ChestManager.Instance.ChestHasItems(objectPos, biome))
+					{
+						Debug.LogWarning("Trying to damage a chest that is not empty is not allowed");
+						return;
+					}
 				}
-
+			
 				// Found object to hit
 				if (_biomeObjectHpDict.ContainsKey(biome))
 				{

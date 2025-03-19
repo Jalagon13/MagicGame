@@ -75,12 +75,22 @@ public class GameInput : MonoBehaviour
 
 	private void Start()
 	{
-		ChestManager.Instance.OnChestOpen += ChestManager_OnChestOpen;
 		WorldManager.Instance.OnStartBiomeTransition += WorldManager_DisableInputs;
 		WorldManager.Instance.OnEndBiomeTransition += WorldManager_EnableInputs;
+		InGameMenu.Instance.OnMenuOpen += InGameMenu_OnMenuOpen;
 	}
-	
-	private void PlayerInput_SpaceStarted(InputAction.CallbackContext context)
+
+    private void InGameMenu_OnMenuOpen(object sender, EventArgs e)
+    {
+		_inventoryOpen = true;
+
+		OnInventoryToggle?.Invoke(this, new OnToggleInventoryEventArgs
+		{
+			InventoryOpen = _inventoryOpen
+		});
+	}
+
+    private void PlayerInput_SpaceStarted(InputAction.CallbackContext context)
 	{
 		OnSpaceStarted?.Invoke(this, EventArgs.Empty);
 	}
@@ -93,16 +103,6 @@ public class GameInput : MonoBehaviour
 	private void WorldManager_DisableInputs(object sender, EventArgs e)
 	{
 		_inputsEnabled = false;
-	}
-
-	private void ChestManager_OnChestOpen(object sender, ChestManager.ChestEventArgs e)
-	{
-		_inventoryOpen = true;
-		
-		OnInventoryToggle?.Invoke(this, new OnToggleInventoryEventArgs
-		{
-			InventoryOpen = _inventoryOpen
-		});
 	}
 
 	private void PlayerInput_ShiftStart(InputAction.CallbackContext context)
@@ -249,8 +249,8 @@ public class GameInput : MonoBehaviour
 		_playerInput.Disable();
 		_playerInput.Dispose();	
 		
-		ChestManager.Instance.OnChestOpen -= ChestManager_OnChestOpen;
 		WorldManager.Instance.OnStartBiomeTransition -= WorldManager_DisableInputs;
 		WorldManager.Instance.OnEndBiomeTransition -= WorldManager_EnableInputs;
+		InGameMenu.Instance.OnMenuOpen -= InGameMenu_OnMenuOpen;
 	}
 }
