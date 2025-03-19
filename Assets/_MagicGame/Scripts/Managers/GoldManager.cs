@@ -21,6 +21,11 @@ public class GoldManager : MonoBehaviour
         _currentGold = StartingGold;
     }
     
+    public bool CanAfford(int cost)
+    {
+        return _currentGold >= cost;
+    }
+    
     public void AddGold(int amount)
     {
         Debug.Log($"Adding gold: {amount}");

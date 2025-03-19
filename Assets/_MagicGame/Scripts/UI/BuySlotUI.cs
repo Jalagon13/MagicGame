@@ -22,7 +22,24 @@ public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            // Money Logic
+            if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.HasItem)
+            {
+                if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item.Name == _itemToBuy.Name)
+                {
+                    InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity++;
+                    SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.LocalClientInstance.transform.position);
+                    GoldManager.Instance.RemoveGold(_itemToBuy.GoldValue);
+                    InventoryManager.Instance.GetInventoryModel().UpdateInventory();
+                }
+            }
+            else if(GoldManager.Instance.CanAfford(_itemToBuy.GoldValue))
+            {
+                InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _itemToBuy;
+                InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity++;
+                SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.LocalClientInstance.transform.position);
+                GoldManager.Instance.RemoveGold(_itemToBuy.GoldValue);
+                InventoryManager.Instance.GetInventoryModel().UpdateInventory();
+            }
         }
     }
 
