@@ -103,8 +103,8 @@ public class BiomeSpawnRule
 [Serializable]
 public class NpcSpawnData
 {
-	public GameObject Prefab;
-	public float SlotAmount;
+	public NpcSO NpcData;
+	
 	[Tooltip("Higher values mean higher spawn chances.")]
 	[Range(0.01f, 100.0f)]
 	public float RelativeSpawnWeight;

@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a5cd929fea549a486309683e761930, type: 3}
+  m_Name: npc_Pixie
+  m_EditorClassIdentifier: 
+  <NpcPrefab>k__BackingField: {fileID: 6633633827701661900, guid: 2ea8fc6c5eed84386a995f5f8f46a35f, type: 3}
+  <SlotAmount>k__BackingField: 0.5

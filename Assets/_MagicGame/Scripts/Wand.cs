@@ -100,9 +100,8 @@ public class Wand
 		bool hitSomething = false;
 		float castDelay = 0;
 
-		if (OverTargetDummy(out Npc targetDummy))
+		if (OverFriendlyNpc(out Npc targetDummy))
 		{
-			Debug.Log("Hit Target Dummy");
 			targetDummy.KillNpc();
 		}
 		else if (Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition)))
@@ -138,18 +137,18 @@ public class Wand
 		}
 	}
 	
-	private bool OverTargetDummy(out Npc targetDummy)
+	private bool OverFriendlyNpc(out Npc friendlyNpc)
 	{
 		var colliders = Physics2D.OverlapPointAll(ActionManager.MouseWorldPosition);
 		foreach (var collider in colliders)
 		{
-			if (collider.CompareTag("TargetDummy"))
+			if (collider.CompareTag("FriendlyNpc"))
 			{
-				targetDummy = collider.GetComponent<Npc>();
+				friendlyNpc = collider.GetComponent<Npc>();
 				return true;
 			}
 		}
-		targetDummy = null;
+		friendlyNpc = null;
 		return false;
 	}
 

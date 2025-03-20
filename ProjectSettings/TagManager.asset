@@ -5,7 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - ItemNamePlate
-  - TargetDummy
+  - FriendlyNpc
   layers:
   - Default
   - TransparentFX

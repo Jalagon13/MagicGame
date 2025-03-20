@@ -20,6 +20,8 @@ public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (!GoldManager.Instance.CanAfford(_itemToBuy.GoldValue)) return;
+
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.HasItem)
@@ -32,7 +34,7 @@ public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
                     InventoryManager.Instance.GetInventoryModel().UpdateInventory();
                 }
             }
-            else if(GoldManager.Instance.CanAfford(_itemToBuy.GoldValue))
+            else 
             {
                 InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _itemToBuy;
                 InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity++;

@@ -769,6 +769,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: item_merchant
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e71f70d9a23241d6b51766454c556be
+      internalID: -1704938593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -809,6 +831,7 @@ TextureImporter:
       item_mana_potion: -854955160
       item_meat_cooked: 1280716566
       item_meat_raw: 1876687506
+      item_merchant: -1704938593
       item_multi_cast: -530616504
       item_mushed_mushroom: 2142706726
       item_mushroom: 99796606

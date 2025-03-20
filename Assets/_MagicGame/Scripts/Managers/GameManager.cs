@@ -30,7 +30,7 @@ public class GameManager : NetworkBehaviour
 	[SerializeField] private ItemDataBaseSO _itemDataBaseSO;
 	[SerializeField] private WorldObjectDataBaseSO _worldObjectDataBaseSO;
 	[SerializeField] private TileDataBaseSO _tileDataBaseSO;
-	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
+	[field: SerializeField] public NpcDataBaseSO NpcDataBaseSO { get; private set; }
 	
 	private Dictionary<ulong, Spell> _loadedSpells = new Dictionary<ulong, Spell>();
 	
@@ -104,15 +104,23 @@ public class GameManager : NetworkBehaviour
 		}
 	}
 	
-	public NpcSpawnData GetNpcSpawnData(BiomeType biome, int id)
+	public NpcSO GetNpcSOFromNpcId(int index)
 	{
-		return _biomeSpawnParamsSO.GetBiomeSpawnRule(biome).NpcSpawnTable[id];
+		if(index >= 0 && index < NpcDataBaseSO.NpcDataBase.Count)
+		{
+			return NpcDataBaseSO.NpcDataBase[index];
+		}
+		else
+		{
+			// Debug.LogWarning($"NpcSO for index: {index} can't be found, returning null");
+			return null;
+		}
 	}
 	
-	public int GetNpcIdFromNpcSpawnData(BiomeType biome, NpcSpawnData npcSpawnData)
+	public int GetNpcIdFromNpcSO(NpcSO npcSO)
 	{
-		return _biomeSpawnParamsSO.GetBiomeSpawnRule(biome).NpcSpawnTable.IndexOf(npcSpawnData);
-	}	
+		return NpcDataBaseSO.NpcDataBase.IndexOf(npcSO);
+	}
 	
 	public byte GetTileIdFromTileSO(TileSO tileSO)
 	{

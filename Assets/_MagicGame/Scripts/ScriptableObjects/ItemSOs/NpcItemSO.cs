@@ -6,6 +6,8 @@ using UnityEngine.Assertions;
 [CreateAssetMenu(fileName = "New Npc Item", menuName = "Create Item/New NPC Item")]
 public class NpcItemSO : ItemSO
 {
+    [field: SerializeField] public NpcSO NpcToSpawn { get; private set; }
+
     // NTFS: Make it so this item can spawn any NPC you choose it to spawn in the inspector
     public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
     {
@@ -14,7 +16,7 @@ public class NpcItemSO : ItemSO
         if (IsClear(pos) && PlayerInRangeOfMouse())
         {
             Vector2 spawnPosition = new(Mathf.FloorToInt(pos.x) + 0.5f, Mathf.FloorToInt(pos.y) + 0.5f);
-            NpcManager.Instance.SpawnTargetDummyServerRpc(spawnPosition);
+            NpcManager.Instance.SpawnNpc(spawnPosition, NpcToSpawn); // NTFS: There is no check for npc slot limit, right now it is assumed this will spawn 0 npc slot NPCs like mercahnts and training dummies
             InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
         }
 

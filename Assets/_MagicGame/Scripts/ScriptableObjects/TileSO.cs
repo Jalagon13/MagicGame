@@ -13,7 +13,7 @@ public enum TileType
 	Floor
 }
 
-[CreateAssetMenu()]
+[CreateAssetMenu(fileName = "New TileSO", menuName = "Tiles/TileSO", order = 1)]
 public class TileSO : RuleTile
 {
 	[Header("Tile Extended Properties")]

@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 774130f330eb2403bb786b6d66d390b1, type: 3}
-  m_Name: TargetDummy
+  m_Name: Merchant
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Target Dummy
-  <UiDisplay>k__BackingField: {fileID: 784093983, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <Name>k__BackingField: Merchant
+  <UiDisplay>k__BackingField: {fileID: -1704938593, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <GoldValue>k__BackingField: 10
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  <NpcToSpawn>k__BackingField: {fileID: 11400000, guid: 4ea6db80a195a4cec94b6afc14cfb095, type: 2}
+  <NpcToSpawn>k__BackingField: {fileID: 11400000, guid: b8ba9fec6b8004261b34568f8e366d25, type: 2}

@@ -20,7 +20,8 @@ public class NetworkHealthState : NetworkBehaviour
     [field: SerializeField] public int BaseHealth { get; private set; } = 100;
     [field: SerializeField] public int BaseDefense { get; private set; } = 0;
     [field: SerializeField] public float IFrameDuration { get; private set; } = 0.67f;
-    [field: SerializeField] public bool Invincible { get; private set; }
+    [field: SerializeField] public bool CanDie { get; private set; } = true;
+    [field: SerializeField] public bool CanTakeDamage { get; private set; } = true;
 
     public NetworkVariable<int> HitPoints { get; set; } = new NetworkVariable<int>();
     public NetworkVariable<int> CurrentDefense { get; private set; } = new NetworkVariable<int>();
@@ -84,7 +85,7 @@ public class NetworkHealthState : NetworkBehaviour
     [Rpc(SendTo.Server, RequireOwnership = false)]
     public void TakeDamageRpc(int amount, Vector2 damagerPosition, int knockbackForce)
     {
-        if(IsDead || Invulnerable) return;
+        if(IsDead || Invulnerable || !CanTakeDamage) return;
     
         _damagerPosition = damagerPosition;
         _knockbackForce = knockbackForce;
@@ -92,7 +93,7 @@ public class NetworkHealthState : NetworkBehaviour
         int damageReduction = CurrentDefense.Value / 2;
         int finalDamage = Mathf.Max(1, amount - damageReduction);
 
-        if (Invincible)
+        if (CanDie)
         {
             OnHitPointsDamaged?.Invoke(this, new HitPointsDamagedEventArgs
             {

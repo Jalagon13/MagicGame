@@ -33,12 +33,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 475529618853946519}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _knockbackResist
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Path
       value: event:/PixieDamaged
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.data[0].Max
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.data[0].Min
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Guid.Data1
@@ -55,6 +67,14 @@ PrefabInstance:
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Guid.Data4
       value: 811093164
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.data[0].Item
+      value: 
+      objectReference: {fileID: 11400000, guid: 8aefdfbeb172142758db0f6cace885e7, type: 2}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.data[0].Chance
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <IFrameLength>k__BackingField

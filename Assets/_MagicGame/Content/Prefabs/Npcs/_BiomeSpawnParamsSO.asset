@@ -18,12 +18,10 @@ MonoBehaviour:
     MaxNpcSlotAmount: 5
     HasDayNightCycle: 1
     NpcSpawnTable:
-    - Prefab: {fileID: 6633633827701661900, guid: 2ea8fc6c5eed84386a995f5f8f46a35f, type: 3}
-      SlotAmount: 1
+    - NpcData: {fileID: 11400000, guid: 864554e8083dc4218ac4ad191a1023a3, type: 2}
       RelativeSpawnWeight: 100
       SpawnCondition: 1
-    - Prefab: {fileID: 6633633827701661900, guid: 8400ae4f3ed2f487fb0bbb1a07a80f0f, type: 3}
-      SlotAmount: 1
+    - NpcData: {fileID: 11400000, guid: 3ceffa112137b4c099e594551fc8d67f, type: 2}
       RelativeSpawnWeight: 100
       SpawnCondition: 2
   - Biome: 1
@@ -31,7 +29,6 @@ MonoBehaviour:
     MaxNpcSlotAmount: 6
     HasDayNightCycle: 0
     NpcSpawnTable:
-    - Prefab: {fileID: 6633633827701661900, guid: 8400ae4f3ed2f487fb0bbb1a07a80f0f, type: 3}
-      SlotAmount: 1
+    - NpcData: {fileID: 11400000, guid: 3ceffa112137b4c099e594551fc8d67f, type: 2}
       RelativeSpawnWeight: 100
       SpawnCondition: 0

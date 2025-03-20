@@ -12,7 +12,6 @@ public class NpcManager : NetworkBehaviour
 	public static int NO_SPAWN_ZONE_WIDTH = 35; // Camera Frustum
 	public static int NO_SPAWN_ZONE_HEIGHT = 20; // Camera Frustum
 	
-	[field: SerializeField] public Npc TestDummyPrefab { get; private set; }
 	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
 	[SerializeField] private bool _enableSpawning = true;
 	[SerializeField] private float _startSpawnDelay;
@@ -31,19 +30,6 @@ public class NpcManager : NetworkBehaviour
 		{
 			NetworkManager.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
 		}
-	}
-
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void SpawnTargetDummyServerRpc(Vector2 point)
-	{
-		GameObject npcPrefab = Instantiate(TestDummyPrefab.gameObject, point, Quaternion.identity);
-		
-		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
-		npcPrefabNetworkObject.SpawnWithObservers = false;
-		npcPrefabNetworkObject.Spawn(true);
-
-		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
-		npcNetworkComponent.InitialieNpcNetwork(0, -1, Player.LocalClientInstance.CurrentPlayerBiome.Value);
 	}
 
 	private void NetworkManager_OnClientConnectedCallback(ulong clientId)
@@ -84,11 +70,9 @@ public class NpcManager : NetworkBehaviour
 					float remainingNpcSlotSpace = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount - _activeNpcSlotAmount;
 					NpcSpawnData npcToSpawn = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().GetRandomNpc();
 					
-					if(npcToSpawn.SlotAmount <= remainingNpcSlotSpace)
+					if(npcToSpawn.NpcData.SlotAmount <= remainingNpcSlotSpace)
 					{
-						_activeNpcSlotAmount += npcToSpawn.SlotAmount;
-						int npcId = GameManager.Instance.GetNpcIdFromNpcSpawnData(Player.LocalClientInstance.CurrentPlayerBiome.Value, npcToSpawn);
-						SpawnNpcServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, npcId, NetworkManager.LocalClientId, potentialSpawnPoint);
+						SpawnNpc(potentialSpawnPoint, npcToSpawn.NpcData);
 						break;
 					}
 				}
@@ -98,13 +82,20 @@ public class NpcManager : NetworkBehaviour
 		}
 	}
 	
+	public void SpawnNpc(Vector2 spawnPosition, NpcSO npcToSpawn)
+	{
+		_activeNpcSlotAmount += npcToSpawn.SlotAmount;
+		int npcId = GameManager.Instance.GetNpcIdFromNpcSO(npcToSpawn);
+		SpawnNpcServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, npcId, NetworkManager.LocalClientId, spawnPosition);
+	}
+	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void SpawnNpcServerRpc(BiomeType spawnBiome, int npcId, ulong spawnPlayerId, Vector2 position)
 	{
-		NpcSpawnData npcSpawnData = GameManager.Instance.GetNpcSpawnData(spawnBiome, npcId);
+		NpcSO npcSO = GameManager.Instance.GetNpcSOFromNpcId(npcId);
 		
 		var spawnPosition = new Vector2(Mathf.FloorToInt(position.x) + 0.5f, Mathf.FloorToInt(position.y) + 0.5f);
-		GameObject npcPrefab = Instantiate(npcSpawnData.Prefab, spawnPosition, Quaternion.identity);
+		GameObject npcPrefab = Instantiate(npcSO.NpcPrefab, spawnPosition, Quaternion.identity);
 		
 		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
 		npcPrefabNetworkObject.SpawnWithObservers = false;
@@ -137,19 +128,6 @@ public class NpcManager : NetworkBehaviour
 		}
 		
 		npc.DestroySelf();
-		
-		UpdateActiveNpcSlotAmountClientRpc(npcNetworkComponent.NpcBiomeType, npcId, RpcTarget.Single(spawningClientId, RpcTargetUse.Persistent));
-	}
-	
-	[Rpc(SendTo.SpecifiedInParams)]
-	private void UpdateActiveNpcSlotAmountClientRpc(BiomeType biome, int npcId, RpcParams rpcParams)
-	{
-		if(npcId != -1) // NTFS: -1 is dummy prefab
-		{
-			NpcSpawnData npc = GameManager.Instance.GetNpcSpawnData(biome, npcId);
-	
-			_activeNpcSlotAmount -= npc.SlotAmount;
-		}
 	}
 	
 	private bool SpawnSpotIsValid(Vector2 potentialSpawnPoint)

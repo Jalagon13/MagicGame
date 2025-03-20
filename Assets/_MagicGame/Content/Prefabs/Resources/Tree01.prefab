@@ -74,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <ResourceDestroyed>k__BackingField.Path
