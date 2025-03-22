@@ -260,7 +260,7 @@ public class Player : NetworkBehaviour
 	{
 		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromItemId(SelectedItemIndexNetworkVariable.Value);
 		
-		return mainHandItem != null && (mainHandItem is SpellBookItemSO || mainHandItem is WandItemSO);
+		return mainHandItem != null && (mainHandItem is StaffItemSO || mainHandItem is WandItemSO);
 	}
 	
 	public override void OnDestroy()

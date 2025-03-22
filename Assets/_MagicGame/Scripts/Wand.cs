@@ -87,53 +87,6 @@ public class Wand
 			case SpellModItemSO spellMod:
 				HandleSpellModCast(spellMod);
 				break;
-			case MiningFocusItemSO miningFocus:
-				HandleMiningFocus(miningFocus);
-				break;
-		}
-	}
-
-    private void HandleMiningFocus(MiningFocusItemSO miningSpell)
-    {
-        if(!miningSpell.PlayerInRangeOfMouse()) return;
-
-		bool hitSomething = false;
-		float castDelay = 0;
-
-		if (OverFriendlyNpc(out Npc targetDummy))
-		{
-			targetDummy.KillNpc();
-		}
-		else if (Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition)))
-		{
-			Environment.Instance.HitWallTile(Player.LocalClientInstance.CurrentPlayerBiome.Value, Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), miningSpell.MiningPower);
-			// SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.transform.position);
-
-			miningSpell.SpawnMiningVisuals(ActionManager.MouseWorldPosition);
-
-			castDelay = miningSpell.CastDelay;
-			hitSomething = true;
-		}
-		else if (ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo))
-		{
-			ObjectManager.Instance.HitObject(Player.LocalClientInstance.CurrentPlayerBiome.Value, wo, miningSpell.MiningPower);
-
-			miningSpell.SpawnMiningVisuals(ActionManager.MouseWorldPosition);
-
-			castDelay = miningSpell.CastDelay;
-			hitSomething = true;
-		}
-
-		if (hitSomething)
-		{
-			_validMagicArrayIndexes.Dequeue();
-			_castDelayTimer = WandSO.BaseCastDelay + castDelay;
-
-			if (!RemainingSpellExists())
-			{
-				CurrentReload = 0;
-				TotalReloadDuration = WandSO.ReloadDuration + _castDelayTimer;
-			}
 		}
 	}
 	
@@ -332,7 +285,7 @@ public class Wand
 	    
 		foreach (int validMagicIndex in _validMagicArrayIndexes)
 		{
-			if(WandInvItem.MagicArray[validMagicIndex] is SpellItemSO || WandInvItem.MagicArray[validMagicIndex] is MiningFocusItemSO) 
+			if(WandInvItem.MagicArray[validMagicIndex] is SpellItemSO) 
 			{
 				return true;
 			}

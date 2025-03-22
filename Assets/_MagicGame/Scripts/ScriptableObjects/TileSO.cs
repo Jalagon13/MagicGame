@@ -18,7 +18,6 @@ public class TileSO : RuleTile
 {
 	[Header("Tile Extended Properties")]
 	public TileType TileType;
-	public WandAttribute HarvestType;
 	public ItemSO DropItem;
 	public int MaxHitPoints;
 	
