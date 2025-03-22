@@ -245,6 +245,10 @@ PrefabInstance:
       value: event:/Player/PlayerHurt
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _playerDetectionRange
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: Table.Array.data[0].Max
       value: 1
       objectReference: {fileID: 0}
@@ -320,6 +324,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4852144824365540908, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <CanDespawn>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Size.x
       value: 0.6875
@@ -358,7 +366,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 7422ea774d457472da719d5895f0e535, type: 2}
     - target: {fileID: 6692481928224885727, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _knockbackEnabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7163113064248389596, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -388,29 +396,16 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -8902913315187277670}
+      addedObject: {fileID: 1928836707584080753}
     - targetCorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1928836707584080753}
+      addedObject: {fileID: 3079678981023877485}
   m_SourcePrefab: {fileID: 100100000, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
 --- !u!1 &532044041320650086 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
   m_PrefabInstance: {fileID: 5678939718979453164}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-8902913315187277670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 532044041320650086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98a383b5a5be74d17b82e10b832373e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _enableKnockback: 0
 --- !u!114 &1928836707584080753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -423,6 +418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb38e40cbfdad48bd9260062c1914224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   <WorldInput>k__BackingField: {fileID: 6271109885635627075}
   <ItemsToSell>k__BackingField:
   - {fileID: 11400000, guid: 0c65381494fab43889cd8e41500fcd8b, type: 2}
@@ -433,6 +429,33 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3c1c4a0de463546f3b029eedab8067ed, type: 2}
   - {fileID: 11400000, guid: 1164142a845a148a8ae0d7f0a04f74ca, type: 2}
   - {fileID: 11400000, guid: 24e09bdc93f06403bbc64317a192c595, type: 2}
+--- !u!114 &3079678981023877485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 532044041320650086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a028b976919a24b57ae17c4445e747e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  <TurnSharpness>k__BackingField: 5
+  <Speed>k__BackingField: 1
+  <KnockbackResist>k__BackingField: 0
+  <MinIdleDuration>k__BackingField: 1
+  <MaxIdleDuration>k__BackingField: 2
+  <DetectionRadius>k__BackingField: 15
+  <DetectionIntervalDuration>k__BackingField: 0.5
+  <ObstrcutionCheckLineThickness>k__BackingField: 0.25
+  <WanderRadius>k__BackingField: 4
+  <StoppingDistance>k__BackingField: 0.25
+  <StrafingDuration>k__BackingField: 0.25
+  <StrafeIntensity>k__BackingField: 0.5
+  <WillChasePlayer>k__BackingField: 0
+  <CanMove>k__BackingField: 1
 --- !u!4 &3224693067931935212 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7066091553908842752, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}

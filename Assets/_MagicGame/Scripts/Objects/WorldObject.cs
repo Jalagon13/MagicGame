@@ -31,7 +31,7 @@ public class WorldObject : MonoBehaviour // Base class for every "physical" asse
 		
 		if(!PassThrough)
 		{
-			Pathfinding.Instance.RemovePfWallTile(objectPosition, biome);
+			Pathfinding.Instance.RemovePfWallTileServerRpc(objectPosition, biome);
 		}
 		
 		Environment.Instance.RemoveTileVisData((Vector3Int)objectPosition);

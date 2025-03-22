@@ -278,6 +278,8 @@ MonoBehaviour:
   <StoppingDistance>k__BackingField: 0.25
   <StrafingDuration>k__BackingField: 1.5
   <StrafeIntensity>k__BackingField: 0.5
+  <IsHostile>k__BackingField: 1
+  <CanMove>k__BackingField: 1
 --- !u!1001 &5801241907322578021
 PrefabInstance:
   m_ObjectHideFlags: 0

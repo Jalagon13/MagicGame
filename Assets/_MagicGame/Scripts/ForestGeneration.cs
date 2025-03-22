@@ -111,7 +111,7 @@ public class ForestGeneration : MonoBehaviour
 	{
 		// Generate Tree placements
 		float minTreeDistance = 3f;
-		float maxTreeDistance = 10f;
+		float maxTreeDistance = 8.5f;
 		
 		List<Vector2> treePoints = PoissonDiskSampling.GeneratePoints(_forestStoneNM, minTreeDistance, maxTreeDistance, _seed);
 		
@@ -123,7 +123,7 @@ public class ForestGeneration : MonoBehaviour
 			float groundTilePointValue = _forestGroundNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
 			float wallTilePointValue = _forestStoneNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
 			
-			if(groundTilePointValue > 0.125f && (wallTilePointValue < 0.6f && wallTilePointValue > 0.35f))
+			if(groundTilePointValue > 0.125f && wallTilePointValue < 0.6f && wallTilePointValue > 0.35f)
 			{
 				// Add world asset data to chunk
 				ChunkManager.Instance.AddObjectDataToChunk(new Vector2Int(pointX, pointY), _treeObject, BiomeType.Forest);

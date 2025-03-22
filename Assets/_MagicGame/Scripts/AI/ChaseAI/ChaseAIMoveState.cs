@@ -41,6 +41,8 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
     public override void FixedUpdate()
     {
+        if(!_ctx.CanMove) return;
+    
         if (!_ctx.IsChasing)
         {
             // Check if the destination has been reached
@@ -95,9 +97,14 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
     public override ChaseAIStateMachine.ChaseAIState GetNextState()
     {
+        if(!_ctx.CanMove)
+        {
+            return ChaseAIStateMachine.ChaseAIState.Idle;
+        }
+    
         if (_isStuck)
         {
-            Debug.Log("Pixie is stuck, going back to idle");
+            Debug.Log("NPC is stuck, going back to idle");
             return ChaseAIStateMachine.ChaseAIState.Idle;
         }
 

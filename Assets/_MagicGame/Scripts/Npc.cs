@@ -17,6 +17,7 @@ public class Npc : NetworkBehaviour
 		public Vector2 DamageSourcePosition;
 	}
 
+	[SerializeField] private float _playerDetectionRange = 10f;
 	[SerializeField] private float _knockbackResist;
 	[SerializeField] private int _damage;
 	[SerializeField] private DamageCollider _damageCollider;
@@ -25,6 +26,8 @@ public class Npc : NetworkBehaviour
 	
 	private Knockback _knockback;
 	private NetworkHealthState _healthState;
+	private ChaseAIStateMachine _stateMachine;
+	private Shop _shop;
 	
 	public BiomeType Biome { get { return GetComponent<NpcNetworkComponent>().NpcBiomeType; } }
 	
@@ -32,6 +35,8 @@ public class Npc : NetworkBehaviour
 	{
 		_knockback = GetComponent<Knockback>();
 		_healthState = GetComponent<NetworkHealthState>();
+		_stateMachine = GetComponent<ChaseAIStateMachine>();
+		_shop = GetComponent<Shop>();
 
 		if (_damageCollider != null)
 		{
@@ -50,6 +55,22 @@ public class Npc : NetworkBehaviour
 		}
 		
 		base.OnNetworkSpawn();
+	}
+	
+	private void Update()
+	{
+		if(!IsServer || _shop.PlayersUsingShop.Count > 0) return;
+		
+		Player closestPlayer = MultiplayerManager.Instance.GetClosestPlayer(transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
+		if (closestPlayer != null)
+		{
+			float distanceToPlayer = Vector3.Distance(transform.position, closestPlayer.transform.position);
+			_stateMachine.CanMove = distanceToPlayer <= _playerDetectionRange;
+		}
+		else
+		{
+			_stateMachine.CanMove = false;
+		}
 	}
 
 	private void OnNpcDamaged(object sender, NetworkHealthState.HitPointsDamagedEventArgs e)

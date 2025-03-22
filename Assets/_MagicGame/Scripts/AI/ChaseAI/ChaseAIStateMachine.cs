@@ -30,6 +30,9 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     [field: SerializeField] public float StoppingDistance { get; private set; } = 0.25f;
     [field: SerializeField] public float StrafingDuration { get; private set; } = 0.25f;
     [field: SerializeField] public float StrafeIntensity { get; private set; } = 0.5f;
+    [field: SerializeField] public bool WillChasePlayer { get; private set; } = true;
+    [Tooltip("If set to false, keep NPC on idle state")]
+    [field: SerializeField] public bool CanMove { get; set; } = true;
 
     public Knockback Knockback { get; private set; }
     public Vector2 Velocity { get; set; }
@@ -66,14 +69,17 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
             RigidBody2D = GetComponent<Rigidbody2D>();
             RigidBody2D.linearDamping = KnockbackResist;
 
-            InvokeRepeating(nameof(TryToFindBreadcrumb), DetectionIntervalDuration, DetectionIntervalDuration);
+            if(WillChasePlayer)
+            {
+                InvokeRepeating(nameof(TryToFindBreadcrumb), DetectionIntervalDuration, DetectionIntervalDuration);
+            }
         }
     }
 
     private void OnNpcDamged(object sender, Npc.OnNpcDamagedEventArgs e)
     {
         // Try to strafe behavior
-        if(!IsStrafing)
+        if(!IsStrafing && WillChasePlayer)
         {
             StartCoroutine(Strafing());
         }

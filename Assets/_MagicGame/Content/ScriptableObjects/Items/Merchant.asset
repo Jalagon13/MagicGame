@@ -18,3 +18,4 @@ MonoBehaviour:
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
   <NpcToSpawn>k__BackingField: {fileID: 11400000, guid: b8ba9fec6b8004261b34568f8e366d25, type: 2}
+  <IgnoreNpcHousingCheck>k__BackingField: 0

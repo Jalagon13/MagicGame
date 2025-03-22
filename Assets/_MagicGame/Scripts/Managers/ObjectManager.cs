@@ -153,15 +153,20 @@ public class ObjectManager : NetworkBehaviour
 		OnClearAllEnvironmentObjects?.Invoke(this, new EventArgs());
 	}
 	
-	public void ToggleDoor(Vector2Int doorPos, BiomeType biome)
-	{
-		ToggleDoorServerRpc(doorPos, biome);
-	}
-
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void ToggleDoorServerRpc(Vector2Int doorPos, BiomeType biome)
+	public void ToggleDoorServerRpc(Vector2Int doorPos, BiomeType biome)
 	{
 		bool newIsOpen = ChunkManager.Instance.ToggleDoor(doorPos, biome);
+		
+		if(newIsOpen)
+		{
+			Pathfinding.Instance.RemovePfWallTileServerRpc(Vector2Int.FloorToInt(doorPos), biome);
+		}
+		else
+		{
+			Pathfinding.Instance.AddPfWallTileServerRpc(Vector2Int.FloorToInt(doorPos), biome);
+		}
+		
 		HandleDoorVisualsClientRpc(doorPos, newIsOpen, biome);
 	}
 
@@ -201,7 +206,7 @@ public class ObjectManager : NetworkBehaviour
 		
 		if(!obj.PassThrough)
 		{
-			Pathfinding.Instance.AddPfWallTile(position, biomeToPlaceIn);
+			Pathfinding.Instance.AddPfWallTileServerRpc(position, biomeToPlaceIn);
 		}
 		
 		HandleObjectVisualsClientRpc(position, id, biomeToPlaceIn);
@@ -244,7 +249,7 @@ public class ObjectManager : NetworkBehaviour
 			
 			if(!objectData.WO.PassThrough)
 			{
-				Pathfinding.Instance.AddPfWallTile(objectData.Position, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+				Pathfinding.Instance.AddPfWallTileServerRpc(objectData.Position, Player.LocalClientInstance.CurrentPlayerBiome.Value);
 				Environment.Instance.AddTileVisData((Vector3Int)objectData.Position, new TileVisibility() { Visibility = 1 });
 			}
 			

@@ -119,26 +119,18 @@ public class Pathfinding : NetworkBehaviour
 		return BiomeToLoadedPathfindingChunks.ContainsKey(environment);
 	}
 	
-	public void AddPfWallTile(Vector2Int position, BiomeType environment)
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void AddPfWallTileServerRpc(Vector2Int position, BiomeType biome)
 	{
-		AddPfWallTileServerRpc(position, environment);
+		BiomeToLoadedPathfindingChunks[biome].WallColliderTm.SetTile((Vector3Int)position, _wallTile);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void AddPfWallTileServerRpc(Vector2Int position, BiomeType environment)
+	public void RemovePfWallTileServerRpc(Vector2Int position, BiomeType biome)
 	{
-		BiomeToLoadedPathfindingChunks[environment].WallColliderTm.SetTile((Vector3Int)position, _wallTile);
-	}
-	
-	public void RemovePfWallTile(Vector2Int position, BiomeType environment)
-	{
-		RemovePfWallTileServerRpc(position, environment);
-	}
-	
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RemovePfWallTileServerRpc(Vector2Int position, BiomeType environment)
-	{
-		BiomeToLoadedPathfindingChunks[environment].WallColliderTm.SetTile((Vector3Int)position, null);
+		if(!BiomeToLoadedPathfindingChunks.ContainsKey(biome)) return;
+		
+		BiomeToLoadedPathfindingChunks[biome].WallColliderTm.SetTile((Vector3Int)position, null);
 	}
 
 	public void UpdateChunkPathfinding(Vector2Int chunkPos, ChunkGameData chunkGameData, BiomeType biome, ulong clientId)

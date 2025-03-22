@@ -47,7 +47,10 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
     public override void FixedUpdate()
     {
-        _idleTimer.Tick(Time.fixedDeltaTime);
+        if(_ctx.CanMove)
+        {
+            _idleTimer.Tick(Time.fixedDeltaTime);
+        }
 
         if (_ctx.Knockback.Velocity.magnitude > 0)
         {
@@ -63,7 +66,7 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
     public override ChaseAIStateMachine.ChaseAIState GetNextState()
     {
-        if(_idleComplete || _ctx.BreadCrumbPositionFound || _ctx.PlayerPositionFound)
+        if((_idleComplete || _ctx.BreadCrumbPositionFound || _ctx.PlayerPositionFound) && _ctx.CanMove)
         {
             return ChaseAIStateMachine.ChaseAIState.Moving;
         }

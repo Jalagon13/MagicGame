@@ -9,6 +9,7 @@ public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
     [field: SerializeField] public Image ItemImage { get; private set; }
 
     private ItemSO _itemToBuy;
+    private bool _hovered;
 
     public void Initialize(ItemSO itemToBuy)
     {
@@ -47,7 +48,30 @@ public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Tooltip stuff
+        if (!InventoryManager.MOUSE_HAS_ITEM)
+        {
+            _hovered = true;
+
+            Tooltip.ShowNew();
+
+            switch (_itemToBuy)
+            {
+                case WandItemSO wandItemSO:
+                    MagicItemSO[] magicArray = new MagicItemSO[0];
+                    Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);
+                    break;
+                case SpellItemSO spellItemSO:
+                    Tooltip.SpellDisplay(spellItemSO, fontSize: 12f);
+                    break;
+                default:
+                    int quantity = 1;
+                    string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
+                    string itemText = $"{_itemToBuy.Name} {quantityString}<br>Cost: {_itemToBuy.GoldValue} Gold<br>{_itemToBuy.GetDescription()}";
+
+                    Tooltip.JustText(itemText, Color.white, fontSize: 12f);
+                    break;
+            }
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)

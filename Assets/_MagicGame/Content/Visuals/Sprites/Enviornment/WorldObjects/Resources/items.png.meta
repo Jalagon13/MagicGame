@@ -352,7 +352,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_glass_bottle
+      name: item_wood_floor
       rect:
         serializedVersion: 2
         x: 96
@@ -374,7 +374,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_sand
+      name: item_wood_wall
       rect:
         serializedVersion: 2
         x: 112
@@ -778,7 +778,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -819,7 +819,6 @@ TextureImporter:
       item_door: 730009004
       item_fiber: 847625231
       item_furnace: -1644608659
-      item_glass_bottle: -427256236
       item_gold: 1322639080
       item_hammer: -670104258
       item_hide: -630612298
@@ -839,7 +838,6 @@ TextureImporter:
       item_pixie_dust: 1964935682
       item_plywood: -328401396
       item_portal: 547736231
-      item_sand: 67440230
       item_silk: 1716809911
       item_simple_wand: 1591310652
       item_spindle: 1551977814
@@ -856,10 +854,12 @@ TextureImporter:
       item_wizard_robe: 1972111916
       item_wood: -395863171
       item_wood_axe: -1861176544
+      item_wood_floor: -427256236
       item_wood_hammer: 1076022954
       item_wood_pickaxe: 161528276
       item_wood_shovel: 959550348
       item_wood_staff: -1593785014
+      item_wood_wall: 67440230
       item_wood_wand: 16873710
       item_wooden_catalyst: -686089455
       item_work_bench: 1337721260

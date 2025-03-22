@@ -53,5 +53,7 @@ public class InGameMenuReferenceHolder : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
+        
+        InGameMenu.Instance.InvokeOnMenuClose();
     }
 }

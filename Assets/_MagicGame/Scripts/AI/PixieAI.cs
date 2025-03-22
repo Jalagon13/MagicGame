@@ -41,7 +41,7 @@ public class PixieAI : NetworkBehaviour
 	{
 		if (_isFleeing || !IsServer) return; 
 
-		_closestPlayer = GetClosestPlayer();
+		_closestPlayer = MultiplayerManager.Instance.GetClosestPlayer(transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
 		if (_closestPlayer == null || !_closestPlayer.gameObject.activeInHierarchy)
 		{
 			return;
@@ -127,29 +127,5 @@ public class PixieAI : NetworkBehaviour
 		_moveDirectionBias = endBias; // Ensure final value is exactly 0.5
 	}
 
-	private Player GetClosestPlayer()
-	{
-		Player closestPlayer = null;
-		float closestDistance = float.MaxValue;
-		Vector3 pixiePosition = transform.position;
-
-		foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
-		{
-			if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
-			{
-				var player = client.PlayerObject?.GetComponent<Player>();
-				if (player != null)
-				{
-					float distance = Vector3.Distance(pixiePosition, player.transform.position);
-					if (distance < closestDistance)
-					{
-						closestDistance = distance;
-						closestPlayer = player;
-					}
-				}
-			}
-		}
-
-		return closestPlayer;
-	}
+	
 }

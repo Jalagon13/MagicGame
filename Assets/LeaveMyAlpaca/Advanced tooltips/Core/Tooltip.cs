@@ -126,7 +126,8 @@ namespace AdvancedTooltips.Core
 			script.WandName.text = wand.Name;
 			script.WandIcon.sprite = wand.UiDisplay;
 			
-			JustText($"{wand.BaseCastDelay} s   cast delay" 
+			JustText($"<br>Value: {wand.GoldValue} Gold"
+			+ $"<br>{wand.BaseCastDelay} s   cast delay" 
 			+ $"<br>{wand.ReloadDuration} s   reload dur."
 			+ $"<br>{wand.Accuracy} deg.   accuracy"
 			+ $"<br>{wand.Capacity}   capacity", Color.white, fontSize: fontSize, customLayout: script.StatLayout);
@@ -153,7 +154,7 @@ namespace AdvancedTooltips.Core
 			script.WandName.text = spell.Name;
 			script.WandIcon.sprite = spell.UiDisplay;
 
-			JustText(spell.GetDescription(), Color.white, fontSize: fontSize, customLayout: script.StatLayout);
+			JustText($"<br>Value: {spell.GoldValue} Gold<br>" + spell.GetDescription(), Color.white, fontSize: fontSize, customLayout: script.StatLayout);
 			JustText($"{spell.CastDelay} s   cast delay"
 			+ $"<br>{spell.Damage}   damage"
 			+ $"<br>{spell.ManaCost}   cost to cast"

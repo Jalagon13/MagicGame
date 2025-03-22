@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 public class MultiplayerManager : MonoBehaviour
@@ -8,6 +9,31 @@ public class MultiplayerManager : MonoBehaviour
 	{
 		Instance = this;
 	}
-	
-	
+
+	public Player GetClosestPlayer(Vector2 position, BiomeType biome)
+	{
+		Player closestPlayer = null;
+		float closestDistance = float.MaxValue;
+
+		foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+		{
+			if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+			{
+				var player = client.PlayerObject?.GetComponent<Player>();
+				if (player != null)
+				{
+					if (player.CurrentPlayerBiome.Value != biome) continue;
+					
+					float distance = Vector3.Distance(position, player.transform.position);
+					if (distance < closestDistance)
+					{
+						closestDistance = distance;
+						closestPlayer = player;
+					}
+				}
+			}
+		}
+
+		return closestPlayer;
+	}
 }

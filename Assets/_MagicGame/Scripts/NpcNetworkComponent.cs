@@ -6,7 +6,8 @@ using UnityEngine;
 public class NpcNetworkComponent : NetworkBehaviour
 {
 	[SerializeField] private WallColliderDetector _wallColliderDetector;
-	[SerializeField] private bool _continuallyCheckVisibility = true;
+	// NTFS: This just makes it so it cannot despawn, it does nothing to alter AI behavior. Can potentially find an NPC in a wall if NPC is allowed to move around while no player (no pathfinding walls available) is around
+	[field: SerializeField] public bool CanDespawn { get; private set; } = true; 
 
 	private const int DESPAWN_TIMER_DURATION = 3;
 	private ulong _spawningClientId;
@@ -34,11 +35,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 			HideNpc(NetworkManager.ServerClientId);
 
 			NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;
-			
-			if (_continuallyCheckVisibility)
-			{
-				NetworkManager.NetworkTickSystem.Tick += NpcNetworkTick;
-			}
+			NetworkManager.NetworkTickSystem.Tick += NpcNetworkTick;
 		}
 		base.OnNetworkSpawn();
 	}
@@ -84,9 +81,13 @@ public class NpcNetworkComponent : NetworkBehaviour
 	private void NpcNetworkTick()
 	{
 		HandleNpcBiomeVisibility();
-		HandleNpcSpawnZoneVisibility();
-		HandlePathfindingVisibility();
-		UpdateDespawnTimer();
+		
+		if(CanDespawn)
+		{
+			HandleNpcSpawnZoneVisibility();
+			HandlePathfindingVisibility();
+			UpdateDespawnTimer();
+		}
 	}
 
 	private void HandlePathfindingVisibility()

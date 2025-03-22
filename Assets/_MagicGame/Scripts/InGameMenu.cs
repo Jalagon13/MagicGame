@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(InGameMenuReferenceHolder))]
 public class InGameMenu : MonoBehaviour
 {
+    public event EventHandler OnMenuClose;
     public static InGameMenu Instance { get; private set; }
     
     public event EventHandler OnMenuOpen;
@@ -79,6 +80,11 @@ public class InGameMenu : MonoBehaviour
         _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
 
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
+    }
+    
+    public void InvokeOnMenuClose()
+    {
+        OnMenuClose?.Invoke(this, EventArgs.Empty);
     }
 
     public void ClearOldMenu()

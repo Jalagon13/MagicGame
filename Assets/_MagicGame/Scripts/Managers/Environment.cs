@@ -82,19 +82,10 @@ public class Environment : NetworkBehaviour
 		}
 	}
 	
-	// Handles placing the visual of the tile, NOT the tile data that is being synced
-	public void PlaceTile(Vector3Int pos, TileSO tileToPlace, BiomeType biome)
-	{
-		int syncTileId = GameManager.Instance.GetIDFromTileObjectSO(tileToPlace);
-		
-		AddTileDataServerRpc(pos, syncTileId, tileToPlace.TileType, biome);
-	}
-
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void AddTileDataServerRpc(Vector3Int syncPos, int syncTileId, TileType syncTileType, BiomeType biome)
+	public void PlaceTileServerRpc(Vector3Int syncPos, int syncTileId, TileType syncTileType, BiomeType biome)
 	{
 		ChunkManager.Instance.AddTileDataToChunk((Vector2Int)syncPos, syncTileId, biome, syncTileType);
-		Pathfinding.Instance.AddPfWallTile((Vector2Int)syncPos, biome);
 	}
 	
 	public void HitFloorTile(BiomeType biome, Vector2Int tilePos, int amount)
@@ -206,7 +197,7 @@ public class Environment : NetworkBehaviour
 				}
 			}
 			
-			Pathfinding.Instance.RemovePfWallTile(tileToDamage.TilePosition, biome);
+			Pathfinding.Instance.RemovePfWallTileServerRpc(tileToDamage.TilePosition, biome);
 		}
 		else
 		{
