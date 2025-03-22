@@ -419,6 +419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  <PlayerDetectionRange>k__BackingField: 10
   <WorldInput>k__BackingField: {fileID: 6271109885635627075}
   <ItemsToSell>k__BackingField:
   - {fileID: 11400000, guid: 0c65381494fab43889cd8e41500fcd8b, type: 2}
@@ -443,7 +444,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   <TurnSharpness>k__BackingField: 5
-  <Speed>k__BackingField: 1
+  <WanderSpeed>k__BackingField: 3
+  <ChaseSpeed>k__BackingField: 4
   <KnockbackResist>k__BackingField: 0
   <MinIdleDuration>k__BackingField: 1
   <MaxIdleDuration>k__BackingField: 2
@@ -455,6 +457,7 @@ MonoBehaviour:
   <StrafingDuration>k__BackingField: 0.25
   <StrafeIntensity>k__BackingField: 0.5
   <WillChasePlayer>k__BackingField: 0
+  <OnlyChaseWhenProvoked>k__BackingField: 1
   <CanMove>k__BackingField: 1
 --- !u!4 &3224693067931935212 stripped
 Transform:

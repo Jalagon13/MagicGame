@@ -7,8 +7,8 @@ using UnityEngine;
 public class NpcManager : NetworkBehaviour
 {
 	public static NpcManager Instance { get; private set; }
-	public static int SPAWN_ZONE_WIDTH = 48; // Outer zone from cam frustum
-	public static int SPAWN_ZONE_HEIGHT = 28; // Outer zone from cam frustum
+	public static int OUTER_SPAWN_ZONE_WIDTH = 48; // Outer zone from cam frustum
+	public static int OUTER_SPAWN_ZONE_HEIGHT = 28; // Outer zone from cam frustum
 	public static int NO_SPAWN_ZONE_WIDTH = 35; // Camera Frustum
 	public static int NO_SPAWN_ZONE_HEIGHT = 20; // Camera Frustum
 	
@@ -180,8 +180,8 @@ public class NpcManager : NetworkBehaviour
 		UnityEngine.Random.InitState(DateTime.Now.Millisecond);
 
 		// Define the spawn bounds around the player
-		float width = SPAWN_ZONE_WIDTH - 1.25f; // Full width of the spawn rectangle minus a little bit so the entity does not spawn out of bounds
-		float height = SPAWN_ZONE_HEIGHT - 1.25f; // Full height of the spawn rectangle minus a little bit so the entity does not spawn out of bounds
+		float width = OUTER_SPAWN_ZONE_WIDTH - 1.25f; // Full width of the spawn rectangle minus a little bit so the entity does not spawn out of bounds
+		float height = OUTER_SPAWN_ZONE_HEIGHT - 1.25f; // Full height of the spawn rectangle minus a little bit so the entity does not spawn out of bounds
 
 		// Calculate the rectangular bounds
 		float minX = _localPlayerTransform.position.x - (width / 2); // Subtract half of the width to center it around the player

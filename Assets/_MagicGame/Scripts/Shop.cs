@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class Shop : NetworkBehaviour
 {
+    [field: SerializeField] public float PlayerDetectionRange { get; private set; } = 10f;
     [field: SerializeField] public WorldInput WorldInput { get; private set; }
     [field: SerializeField] public List<ItemSO> ItemsToSell { get; private set; }
     
     [HideInInspector] public NetworkList<ulong> PlayersUsingShop { get; private set; }= new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private ChaseAIStateMachine _chaseAI;
-    
+
     public override void OnNetworkSpawn()
     {
         if(IsServer)
@@ -38,6 +39,22 @@ public class Shop : NetworkBehaviour
     private void Start()
     {
         GameInput.Instance.OnSecondaryActionStarted += GameInput_OnSecondaryActionStarted;
+    }
+
+    private void Update()
+    {
+        if (!IsServer || _chaseAI == null || PlayersUsingShop.Count > 0) return;
+
+        Player closestPlayer = MultiplayerManager.Instance.GetClosestPlayer(transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
+        if (closestPlayer != null)
+        {
+            float distanceToPlayer = Vector3.Distance(transform.position, closestPlayer.transform.position);
+            _chaseAI.CanMove = distanceToPlayer <= PlayerDetectionRange;
+        }
+        else
+        {
+            _chaseAI.CanMove = false;
+        }
     }
 
     private void GameInput_OnSecondaryActionStarted(object sender, EventArgs e)

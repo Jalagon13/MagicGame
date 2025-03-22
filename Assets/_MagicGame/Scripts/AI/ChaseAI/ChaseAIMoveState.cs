@@ -21,8 +21,6 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
     public override void EnterState()
     {
-        Debug.Log("Move State");
-
         _isStuck = false;
         _timeNotMoved = 0f;
         _lastPosition = _ctx.transform.position;
@@ -42,14 +40,13 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
     public override void FixedUpdate()
     {
         if(!_ctx.CanMove) return;
-    
+
         if (!_ctx.IsChasing)
         {
             // Check if the destination has been reached
             float distanceToDestination = Vector2.Distance(_ctx.transform.position, _ctx.WanderDestination);
             if (distanceToDestination <= _ctx.StoppingDistance)
             {
-                Debug.Log($"Destination reached");
                 _destinationReached = true;
             }
         }
@@ -73,7 +70,8 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
         }
         else
         {
-            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, desiredDirection * _ctx.Speed, _ctx.TurnSharpness * Time.fixedDeltaTime);
+            float speed = _ctx.IsChasing ? _ctx.ChaseSpeed : _ctx.WanderSpeed;
+            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, desiredDirection * speed, _ctx.TurnSharpness * Time.fixedDeltaTime);
         }
 
         _ctx.RigidBody2D.linearVelocity = _ctx.Velocity;

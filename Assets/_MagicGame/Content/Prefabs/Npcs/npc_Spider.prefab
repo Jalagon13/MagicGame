@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -1268719207
       objectReference: {fileID: 0}
+    - target: {fileID: 3165997416469630793, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <BaseHealth>k__BackingField
+      value: 22
+      objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damage
       value: 14
@@ -267,7 +271,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   <TurnSharpness>k__BackingField: 6
-  <Speed>k__BackingField: 3.25
+  <WanderSpeed>k__BackingField: 3
+  <ChaseSpeed>k__BackingField: 4
   <KnockbackResist>k__BackingField: 5
   <MinIdleDuration>k__BackingField: 1
   <MaxIdleDuration>k__BackingField: 2
@@ -278,7 +283,8 @@ MonoBehaviour:
   <StoppingDistance>k__BackingField: 0.25
   <StrafingDuration>k__BackingField: 1.5
   <StrafeIntensity>k__BackingField: 0.5
-  <IsHostile>k__BackingField: 1
+  <WillChasePlayer>k__BackingField: 1
+  <OnlyChaseWhenProvoked>k__BackingField: 1
   <CanMove>k__BackingField: 1
 --- !u!1001 &5801241907322578021
 PrefabInstance:

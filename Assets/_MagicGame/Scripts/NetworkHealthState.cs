@@ -62,7 +62,11 @@ public class NetworkHealthState : NetworkBehaviour
 
     private void HitPointsChanged(int previousValue, int newValue)
     {
-        if (newValue < previousValue)
+        if (newValue <= 0)
+        {
+            OnHitPointsDepleted?.Invoke(this, EventArgs.Empty);
+        }
+        else if (newValue < previousValue)
         {
             int damageTaken = previousValue - newValue;
             OnHitPointsDamaged?.Invoke(this, new HitPointsDamagedEventArgs
@@ -71,10 +75,6 @@ public class NetworkHealthState : NetworkBehaviour
                 SourcePosition = _damagerPosition,
                 KnockbackForce = _knockbackForce
             });
-        }
-        else if (newValue <= 0)
-        {
-            OnHitPointsDepleted?.Invoke(this, EventArgs.Empty);
         }
         else if (previousValue <= 0 && newValue > 0)
         {
@@ -95,16 +95,19 @@ public class NetworkHealthState : NetworkBehaviour
 
         if (CanDie)
         {
+            if (HitPoints.Value > 0)
+            {
+                HitPoints.Value = Math.Max(0, HitPoints.Value - finalDamage);
+            }
+        }
+        else 
+        {
             OnHitPointsDamaged?.Invoke(this, new HitPointsDamagedEventArgs
             {
                 DamageTaken = finalDamage,
                 SourcePosition = _damagerPosition,
                 KnockbackForce = _knockbackForce
             });
-        }
-        else if (HitPoints.Value > 0)
-        {
-            HitPoints.Value = Math.Max(0, HitPoints.Value - finalDamage);
         }
 
         _iFrameTimer.RemainingSeconds = IFrameDuration;

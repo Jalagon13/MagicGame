@@ -18,8 +18,7 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
     public override void EnterState()
     {
         _idleComplete = false;
-        Debug.Log("Idle State");
-        _idleTimer = new(GetRandomeIdleDuration());
+        _idleTimer = new(UnityEngine.Random.Range(_ctx.MinIdleDuration, _ctx.MaxIdleDuration));
         _idleTimer.OnTimerEnd += IdleDone;
     }
 
@@ -29,16 +28,14 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
         {
             // Calculate new wander destination and desired direction for it
             Vector2? wanderDestination = GetRandomWanderDestinationBFS(_ctx.transform.position, _ctx.WanderRadius);
-            Debug.Log($"Idle Complete");
+            
             if(wanderDestination.HasValue)
             {
-                Debug.Log($"Current pos: {_ctx.transform.position} Wander Destination found: {wanderDestination.Value}");
                 _ctx.WanderDestination = wanderDestination.Value;
                 _ctx.DesiredDirection = _ctx.WanderDestination - (Vector2)_ctx.transform.position;
             }
             else
             {
-                Debug.Log($"Wander NOT Destination return current pos: {_ctx.transform.position}");
                 _ctx.WanderDestination = _ctx.transform.position;
                 _ctx.DesiredDirection = _ctx.WanderDestination - (Vector2)_ctx.transform.position;
             }
@@ -127,10 +124,5 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
     {
         _idleTimer.OnTimerEnd -= IdleDone;
         _idleComplete = true;
-    }
-
-    private float GetRandomeIdleDuration()
-    {
-        return UnityEngine.Random.Range(_ctx.MinIdleDuration, _ctx.MaxIdleDuration);
     }
 }

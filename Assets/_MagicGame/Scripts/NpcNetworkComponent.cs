@@ -75,7 +75,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 		if (!IsSpawned) return false;
 
 		Vector2 playerPos = NetworkManager.ConnectedClients[clientId].PlayerObject.transform.position;
-		return IsPointInRectangle(transform.position, playerPos, NpcManager.SPAWN_ZONE_WIDTH, NpcManager.SPAWN_ZONE_HEIGHT);
+		return IsPointInRectangle(transform.position, playerPos, NpcManager.OUTER_SPAWN_ZONE_WIDTH, NpcManager.OUTER_SPAWN_ZONE_HEIGHT);
 	}
 
 	private void NpcNetworkTick()

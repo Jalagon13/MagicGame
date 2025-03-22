@@ -19,15 +19,15 @@ MonoBehaviour:
   <Description>k__BackingField: Shoots a single bolt of mana.
   <SpellProjectilePrefab>k__BackingField: {fileID: 7666750109937317245, guid: 01b5ea73343a54096bcd9bb319490d98, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 3235512204744374167, guid: 966ce96a46a0346519d0f2a96c141a22, type: 3}
-  <CastTime>k__BackingField: 0.35
-  <CastDelay>k__BackingField: 0.15
-  <Damage>k__BackingField: 8
-  <ManaCost>k__BackingField: 10
-  <Knockback>k__BackingField: 6
+  <CastTime>k__BackingField: 0.225
+  <CastDelay>k__BackingField: 0.2
+  <Damage>k__BackingField: 6
+  <ManaCost>k__BackingField: 3
+  <Knockback>k__BackingField: 10
   <Accuracy>k__BackingField: 0
-  <Lifetime>k__BackingField: 1.5
+  <Lifetime>k__BackingField: 1
   <Speed>k__BackingField: 0
-  <Recoil>k__BackingField: 8
+  <Recoil>k__BackingField: 3
   <Pierces>k__BackingField: 0
   <Bounces>k__BackingField: 0
   <GhostDistance>k__BackingField: 0

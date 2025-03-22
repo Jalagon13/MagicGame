@@ -332,7 +332,7 @@ public class Wand
 	    
 		foreach (int validMagicIndex in _validMagicArrayIndexes)
 		{
-			if(WandInvItem.MagicArray[validMagicIndex] is SpellItemSO) 
+			if(WandInvItem.MagicArray[validMagicIndex] is SpellItemSO || WandInvItem.MagicArray[validMagicIndex] is MiningFocusItemSO) 
 			{
 				return true;
 			}

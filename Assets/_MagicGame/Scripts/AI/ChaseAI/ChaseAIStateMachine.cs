@@ -16,7 +16,8 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
 
     [Tooltip("Smaller values = slower transition to desired direction")]
     [field: SerializeField] public float TurnSharpness { get; private set; } = 5f;
-    [field: SerializeField] public float Speed { get; private set; } = 3f;
+    [field: SerializeField] public float WanderSpeed { get; private set; } = 3f;
+    [field: SerializeField] public float ChaseSpeed { get; private set; } = 4f;
     [field: SerializeField] public float KnockbackResist { get; private set; } = 0f;
     [field: SerializeField] public float MinIdleDuration { get; private set; } = 2.5f;
     [field: SerializeField] public float MaxIdleDuration { get; private set; } = 5f;
@@ -31,6 +32,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     [field: SerializeField] public float StrafingDuration { get; private set; } = 0.25f;
     [field: SerializeField] public float StrafeIntensity { get; private set; } = 0.5f;
     [field: SerializeField] public bool WillChasePlayer { get; private set; } = true;
+    [field: SerializeField] public bool OnlyChaseWhenProvoked { get; set; } = true;
     [Tooltip("If set to false, keep NPC on idle state")]
     [field: SerializeField] public bool CanMove { get; set; } = true;
 
@@ -49,6 +51,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     private NpcNetworkComponent _npcNetwork;
     private Vector2 _freshestBreadCrumbPosition = Vector2.zero;
     private Vector2 _closestPlayerPosition = Vector2.zero;
+    private NetworkHealthState _healthState;
 
     public override void OnNetworkSpawn()
     {
@@ -56,6 +59,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
 
         if (IsServer)
         {
+            _healthState = GetComponent<NetworkHealthState>();
             _npcNetwork = GetComponent<NpcNetworkComponent>();
             _npc = GetComponent<Npc>();
             _npc.OnNpcDamged += OnNpcDamged;
@@ -69,10 +73,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
             RigidBody2D = GetComponent<Rigidbody2D>();
             RigidBody2D.linearDamping = KnockbackResist;
 
-            if(WillChasePlayer)
-            {
-                InvokeRepeating(nameof(TryToFindBreadcrumb), DetectionIntervalDuration, DetectionIntervalDuration);
-            }
+            InvokeRepeating(nameof(TryToFindBreadcrumb), DetectionIntervalDuration, DetectionIntervalDuration);
         }
     }
 
@@ -96,6 +97,13 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
 
     private void TryToFindBreadcrumb()
     {
+        if(!WillChasePlayer) return;
+
+        if (OnlyChaseWhenProvoked && _healthState.HitPoints.Value >= _healthState.MaxHealth)
+        {
+            return;
+        }
+
         PlayerPositionFound = false;
         BreadCrumbPositionFound = false;
 

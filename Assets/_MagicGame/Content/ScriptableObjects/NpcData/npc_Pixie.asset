@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: npc_Pixie
   m_EditorClassIdentifier: 
   <NpcPrefab>k__BackingField: {fileID: 6633633827701661900, guid: 2ea8fc6c5eed84386a995f5f8f46a35f, type: 3}
-  <SlotAmount>k__BackingField: 0.5
+  <SlotAmount>k__BackingField: 0.25

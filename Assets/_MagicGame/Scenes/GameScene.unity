@@ -6427,8 +6427,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _chunkLoadCooldown: 0.01
-  _chunkLoadRadiusX: 8
-  _chunkLoadRadiusY: 6
+  _chunkLoadRadiusX: 9
+  _chunkLoadRadiusY: 7
 --- !u!114 &876396789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11146,7 +11146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
-  _enableSpawning: 0
+  _enableSpawning: 1
   _startSpawnDelay: 1
 --- !u!1 &1616919198
 GameObject:
@@ -14607,7 +14607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _dayDurationInSeconds: 300
+  _dayDurationInSeconds: 3000
   _startingTime: 1
   _isTicking: 1
   _randomSeed: 0
