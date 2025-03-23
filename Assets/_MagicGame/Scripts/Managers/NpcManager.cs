@@ -156,7 +156,7 @@ public class NpcManager : NetworkBehaviour
 	{
 		Vector3Int tilePos = new(Mathf.RoundToInt(point.x), Mathf.RoundToInt(point.y));
 		
-		return Environment.Instance.WallTm.HasTile(tilePos);
+		return TileManager.Instance.WallTm.HasTile(tilePos);
 	}
 	
 	private bool PointInRectangle(Vector2 point, Vector2 rectCenter, float rectWidth, float rectHeight)

@@ -10,6 +10,7 @@ public class ActionManager : MonoBehaviour
 {
 	public static ActionManager Instance { get; private set; }
 	public static Vector2 MouseWorldPosition { get; private set; }
+	public static Vector3Int MouseTilePosition { get; private set; }
 	public static bool IsChargingSpell { get; private set; }
 	
 	public event EventHandler<OnStatUpdatedEventArgs> OnPlayerSpellChargeUpdated;
@@ -21,15 +22,14 @@ public class ActionManager : MonoBehaviour
 	
 	public Dictionary<ulong, Wand> WandDict { get; private set; } = new(); // Holds all wand data in your inventory
 
-	private Timer _primaryActionTimer, _secondaryActionTimer;
+	private Timer _itemActionTimer;
 	private InventoryItem _selectedInvItem;
 
 	private void Awake()
 	{
 		Instance = this;
 
-		_primaryActionTimer = new Timer(0.25f);
-		_secondaryActionTimer = new Timer(0.25f);
+		_itemActionTimer = new Timer(0.25f);
 	}
 
 	private void Start()
@@ -111,9 +111,9 @@ public class ActionManager : MonoBehaviour
 		if(Player.LocalClientInstance == null) return;
 		
 		MouseWorldPosition = (Vector2)Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-		
+		MouseTilePosition = Vector3Int.FloorToInt(MouseWorldPosition);
+
 		TickTimers(Time.deltaTime);
-		TickWands(Time.deltaTime);
 		HandleWandUI();
 		HandleItemActionExecutions();
 	}
@@ -124,9 +124,9 @@ public class ActionManager : MonoBehaviour
 
 		if (GameInput.Instance.GetPrimaryHeldDown() && InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem))
 		{
-			if(_primaryActionTimer.RemainingSeconds <= 0)
+			if(_itemActionTimer.RemainingSeconds <= 0)
 			{
-				_primaryActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.LocalClientInstance.MainHand);
+				_itemActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.LocalClientInstance.MainHand);
 			}
 			
 			if (WandDict.ContainsKey(selectedInventoryItem.Id) && !Player.LocalClientInstance.MainHand.IsSwinging && !GameInput.Instance.GetSecondaryHeldDown())
@@ -137,21 +137,17 @@ public class ActionManager : MonoBehaviour
 		}
 	}
 
-	private void TickWands(float deltaTile)
+	private void TickTimers(float deltaTile)
 	{
-		if(WandDict.Count > 0)
+		_itemActionTimer.Tick(deltaTile);
+
+		if (WandDict.Count > 0)
 		{
 			foreach (var wand in WandDict)
 			{
 				wand.Value.Tick(deltaTile);
 			}
 		}
-	}
-
-	private void TickTimers(float deltaTime)
-	{
-		_primaryActionTimer.Tick(deltaTime);
-		_secondaryActionTimer.Tick(deltaTime);
 	}
 	
 	private void HandleWandUI()

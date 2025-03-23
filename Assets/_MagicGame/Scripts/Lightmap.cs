@@ -251,7 +251,7 @@ public class Lightmap : MonoBehaviour
 
 	private void PopulateTileVisibilityArray(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos, int scale, TileVisibility[] tileVisibilityArray, int renderTextureWidth)
 	{
-		foreach (var kvp in Environment.Instance.TileVisibilityDict)
+		foreach (var kvp in TileManager.Instance.TileVisibilityDict)
 		{
 			Vector3Int tilePosition = kvp.Key;
 			TileVisibility visibility = kvp.Value;

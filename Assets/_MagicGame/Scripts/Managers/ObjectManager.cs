@@ -4,37 +4,6 @@ using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ObjectHpData
-{
-	public Vector2Int ObjectPosition { get; private set; }
-	public WorldObject WO { get; private set; }
-	public int CurrentObjectHp { get; private set; }
-	public bool IsDestroyed { get { return CurrentObjectHp <= 0;  } }
-	
-	private BiomeType _biome;
-	
-	public ObjectHpData(int objectId, BiomeType biome, Vector2Int objectPos)
-	{
-		WO = GameManager.Instance.GetWorldObjectFromID(objectId);
-		CurrentObjectHp = WO.MaxHp;
-		ObjectPosition = objectPos;
-		_biome = biome;
-	}
-	
-	public void DamageObject(int amount)
-	{
-		CurrentObjectHp -= amount;
-		
-		var spawnPos = new Vector2(ObjectPosition.x + 0.5f, ObjectPosition.y + 0.5f);
-		SoundManager.Instance.PlayOneShot(WO.ResourceHit, spawnPos);
-	}
-	
-	public void DestroyObject()
-	{
-		WO.DestroyObject(ObjectPosition, _biome);
-	}
-}
-
 public class ObjectManager : NetworkBehaviour
 {
 	public static ObjectManager Instance { get; private set; }
@@ -45,8 +14,6 @@ public class ObjectManager : NetworkBehaviour
 	{
 		public GameObject WorldObjectGameObject;
 	}
-	
-	private Dictionary<BiomeType, HashSet<ObjectHpData>> _biomeObjectHpDict = new();
 	
 	private void Awake()
 	{
@@ -59,92 +26,24 @@ public class ObjectManager : NetworkBehaviour
 		ChunkManager.Instance.OnUnloadChunk += ChunkManager_OnUnloadChunk;
 	}
 	
-	public void HitObject(BiomeType biome, WorldObject wo, int amount)
-	{
-		HitObjectServerRpc(biome, Vector2Int.FloorToInt(wo.transform.position), amount, GameManager.Instance.GetIDFromWorldObject(wo));
-	}
-
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void HitObjectServerRpc(BiomeType biome, Vector2Int objectPos, int amount, int id)
+	public void DestroyObjectServerRpc(BiomeType biome, Vector2Int objectPos, int id)
 	{
-		var chunkGameData = ChunkManager.Instance.GetChunkFromAnyWorldPos(objectPos, biome);
-		
-		foreach (WorldObjectGameData woGameData in chunkGameData.WorldObjectGameDataList)
+		foreach (WorldObjectGameData objectGameData in ChunkManager.Instance.GetChunkFromAnyWorldPos(objectPos, biome).WorldObjectGameDataList)
 		{
-			if(woGameData.Position == objectPos)
-			{
-				if(ChestManager.Instance.GetChestDataFromBiome(biome).ContainsKey(objectPos))
-				{
-					string chestId = $"{objectPos}{biome}";
-					if (ChestManager.Instance.OpenedChestIds.Contains(chestId))
-					{
-						Debug.LogWarning("Trying to damage a chest that is open is not allowed");
-						return;
-					}
-					
-					if(ChestManager.Instance.ChestHasItems(objectPos, biome))
-					{
-						Debug.LogWarning("Trying to damage a chest that is not empty is not allowed");
-						return;
-					}
-				}
-			
-				// Found object to hit
-				if (_biomeObjectHpDict.ContainsKey(biome))
-				{
-					// Try to find tile to damage
-					foreach (ObjectHpData objectHpData in _biomeObjectHpDict[biome])
-					{
-						if(objectHpData.ObjectPosition == objectPos)
-						{
-							// Found tile to damage, so damage it
-							DamageObject(biome, amount, objectHpData);
-							return;
-						}
-					}
-			
-					// Did not find tile to damage, create a new one, damage it
-					DamageObject(biome, amount, new ObjectHpData(id, biome, objectPos));
-				}
-				else
-				{
-					// Biome does not exist, create it and add tile entry
-					_biomeObjectHpDict.Add(biome, new());
-					DamageObject(biome, amount, new ObjectHpData(id, biome, objectPos));
-			
-					if(_biomeObjectHpDict[biome].Count <= 0)
-					{
-						_biomeObjectHpDict.Remove(biome);
-					}
-				}
-				return;
-			}
-		}
-	
-		Debug.LogWarning($"Did not find wall tile to hit at {objectPos} in biome {biome}");
-	}
-	
-	private void DamageObject(BiomeType biome, int amount, ObjectHpData objectToDamage)
-	{
-		objectToDamage.DamageObject(amount);
+			if(objectGameData.Position != objectPos) continue;
 		
-		if(objectToDamage.IsDestroyed)
-		{
-			objectToDamage.DestroyObject();
-			
-			// Check if tile exists in database, if so remove it
-			foreach (ObjectHpData objectHpData in _biomeObjectHpDict[biome].ToList())
+			if (ChestManager.Instance.GetChestDataFromBiome(biome).ContainsKey(objectPos))
 			{
-				if(objectHpData.ObjectPosition == objectToDamage.ObjectPosition)
+				if (ChestManager.Instance.OpenedChestIds.Contains($"{objectPos}{biome}") || ChestManager.Instance.ChestHasItems(objectPos, biome))
 				{
-					// Found tile to destroy, delete it from the database
-					_biomeObjectHpDict[biome].Remove(objectHpData);
+					Debug.LogWarning("Can't destroy a chest that is not empty or open.");
+					return;
 				}
 			}
-		}
-		else
-		{
-			_biomeObjectHpDict[biome].Add(objectToDamage);
+
+			objectGameData.WO.DestroyObject(objectPos, biome);
+			return;
 		}
 	}
 	
@@ -192,13 +91,8 @@ public class ObjectManager : NetworkBehaviour
 		}
 	}
 
-	public void PlaceObject(Vector2Int position, WorldObject worldObject, BiomeType environmentToPlaceIn)
-	{
-		PlaceResourceObjectServerRpc(position, GameManager.Instance.GetIDFromWorldObject(worldObject), environmentToPlaceIn);
-	}
-
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void PlaceResourceObjectServerRpc(Vector2Int position, int id, BiomeType biomeToPlaceIn)
+	public void PlaceResourceObjectServerRpc(Vector2Int position, int id, BiomeType biomeToPlaceIn)
 	{
 		// While on server, add the data to chunks
 		WorldObject obj = GameManager.Instance.GetWorldObjectFromID(id);
@@ -250,7 +144,7 @@ public class ObjectManager : NetworkBehaviour
 			if(!objectData.WO.PassThrough)
 			{
 				Pathfinding.Instance.AddPfWallTileServerRpc(objectData.Position, Player.LocalClientInstance.CurrentPlayerBiome.Value);
-				Environment.Instance.AddTileVisData((Vector3Int)objectData.Position, new TileVisibility() { Visibility = 1 });
+				TileManager.Instance.AddTileVisData((Vector3Int)objectData.Position, new TileVisibility() { Visibility = 1 });
 			}
 			
 			OnWorldObjectSpawned?.Invoke(this, new OnWorldAssetSpawnedEventArgs
@@ -269,7 +163,7 @@ public class ObjectManager : NetworkBehaviour
 			// If asset visually exists, just delete it
 			if(TryToFindWorldObject(assetData.Position, out WorldObject wo))
 			{
-				Environment.Instance.RemoveTileVisData((Vector3Int)assetData.Position);
+				TileManager.Instance.RemoveTileVisData((Vector3Int)assetData.Position);
 				wo.DestroySelf();
 			}
 		}

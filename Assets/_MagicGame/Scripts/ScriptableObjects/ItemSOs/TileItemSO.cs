@@ -16,8 +16,8 @@ public class TileItemSO : ItemSO
 
 		if (!IsClear(new(pos.x, pos.y)) || !PlayerInRangeOfMouse()) return _baseActionCooldown;
 
-		var floorTmHasTile = Environment.Instance.FloorTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition));
-		var wallTmHasTile = Environment.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition));
+		var floorTmHasTile = TileManager.Instance.FloorTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition));
+		var wallTmHasTile = TileManager.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition));
 		int syncTileId = GameManager.Instance.GetIDFromTileObjectSO(TileToPlace);
 
 		switch (TileToPlace.TileType)
@@ -25,7 +25,7 @@ public class TileItemSO : ItemSO
 			case TileType.Floor:
 				if(!floorTmHasTile && !wallTmHasTile)
 				{
-					Environment.Instance.PlaceTileServerRpc(pos, syncTileId, TileToPlace.TileType, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.LocalClientInstance.CurrentPlayerBiome.Value, TileToPlace.TileType);
 					InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 					SoundManager.Instance.PlayOneShot(TileToPlace.HitSound, pos);
 				}
@@ -33,7 +33,7 @@ public class TileItemSO : ItemSO
 			case TileType.Wall:
 				if (!wallTmHasTile)
 				{
-					Environment.Instance.PlaceTileServerRpc(pos, syncTileId, TileToPlace.TileType, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.LocalClientInstance.CurrentPlayerBiome.Value, TileToPlace.TileType);
 					Pathfinding.Instance.AddPfWallTileServerRpc((Vector2Int)pos, Player.LocalClientInstance.CurrentPlayerBiome.Value);
 					InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 					SoundManager.Instance.PlayOneShot(TileToPlace.HitSound, pos);

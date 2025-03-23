@@ -380,7 +380,6 @@ MonoBehaviour:
   <WorldObjectName>k__BackingField: Wood Door
   <MaxHp>k__BackingField: 50
   <PassThrough>k__BackingField: 1
-  <HarvestType>k__BackingField: 1
   <Table>k__BackingField:
   - Item: {fileID: 11400000, guid: 0d0c117ace8794e798947bdfaa1c52ef, type: 2}
     Min: 1

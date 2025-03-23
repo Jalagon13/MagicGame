@@ -127,6 +127,11 @@ public class GameManager : NetworkBehaviour
 		return (byte)_tileDataBaseSO.TileObjectSOList.IndexOf(tileSO);
 	}
 	
+	public int GetTileIdFromTileBase(TileBase tileBase)
+	{
+		return GetTileIdFromTileSO(GetTileSOFromTileBase(tileBase));
+	}
+	
 	public int GetItemIdFromItemSO(ItemSO item)
 	{
 		if(item == null)

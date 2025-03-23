@@ -3266,7 +3266,7 @@ GameObject:
   - component: {fileID: 429902437}
   - component: {fileID: 429902438}
   m_Layer: 0
-  m_Name: Environment
+  m_Name: GameWorld
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3478,6 +3478,7 @@ GameObject:
   m_Component:
   - component: {fileID: 462286018}
   - component: {fileID: 462286017}
+  - component: {fileID: 462286019}
   m_Layer: 0
   m_Name: ActionManager
   m_TagString: Untagged
@@ -3513,6 +3514,18 @@ Transform:
   - {fileID: 1219302777}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &462286019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462286016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c94925e7427004998a47e77a8baaf1e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &467162359 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
@@ -6427,8 +6440,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _chunkLoadCooldown: 0.01
-  _chunkLoadRadiusX: 9
-  _chunkLoadRadiusY: 7
+  _chunkLoadRadiusX: 8
+  _chunkLoadRadiusY: 6
 --- !u!114 &876396789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15837,11 +15850,11 @@ SceneRoots:
   - {fileID: 1655249452}
   - {fileID: 1616656745}
   - {fileID: 832159822}
+  - {fileID: 462286018}
   - {fileID: 333420534}
   - {fileID: 225251197}
   - {fileID: 1883046596}
   - {fileID: 1917302445}
-  - {fileID: 462286018}
   - {fileID: 1007229085}
   - {fileID: 1091366767}
   - {fileID: 242063068}

@@ -1,13 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
-using UnityEngine.Tilemaps;
 using System.Linq;
 
-// Wand upgrades and upgrade data need to live in here and injected into WandInventoryItem somehow
-// Level system must stay in WandInventoryItem and Wand upgrade data in here
 [CreateAssetMenu(fileName = "staff_", menuName = "Create Item/New Staff")]
 public class StaffItemSO : ItemSO
 {
@@ -21,28 +15,29 @@ public class StaffItemSO : ItemSO
 	
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
-		if(! PlayerInRangeOfMouse()) return _baseActionCooldown;
+		// if(!PlayerWithinMiningRangeOfMouse()) return _baseActionCooldown;
 		
-		Vector2Int mousePos = Vector2Int.FloorToInt(ActionManager.MouseWorldPosition);
+		// Vector2Int mousePos = Vector2Int.FloorToInt(ActionManager.MouseWorldPosition);
 
-		if (Environment.Instance.WallTm.HasTile((Vector3Int)mousePos))
-		{
-			Environment.Instance.HitWallTile(Player.LocalClientInstance.CurrentPlayerBiome.Value, mousePos, MiningPower);
-			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.WandCast, Player.LocalClientInstance.transform.position);
+		// if (TileManager.Instance.WallTm.HasTile((Vector3Int)mousePos))
+		// {
+		// 	int tileID = GameManager.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile((Vector3Int)mousePos));
 			
-			return MiningSpeed / 60f;
-		}
-		else if (ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo))
-		{
-			ObjectManager.Instance.HitObject(Player.LocalClientInstance.CurrentPlayerBiome.Value, wo, MiningPower);
+		// 	TileManager.Instance.DestroyTileServerRpc(mousePos, tileID, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+			
+		// 	return MiningSpeed / 60f;
+		// }
+		// else if (ObjectManager.Instance.TryToFindWorldObject(Vector2Int.FloorToInt(ActionManager.MouseWorldPosition), out WorldObject wo))
+		// {
+		// 	ObjectManager.Instance.DestroyObjectServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, mousePos, GameManager.Instance.GetIDFromWorldObject(wo));
 
-			return MiningSpeed / 60f;
-		}
+		// 	return MiningSpeed / 60f;
+		// }
 		
 		return _baseActionCooldown;
 	}
 	
-	private bool PlayerInRangeOfMouse()
+	public bool PlayerWithinMiningRangeOfMouse()
 	{
 		return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= MiningRange;
 	}

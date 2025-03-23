@@ -102,7 +102,6 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
     
         if (_isStuck)
         {
-            Debug.Log("NPC is stuck, going back to idle");
             return ChaseAIStateMachine.ChaseAIState.Idle;
         }
 
@@ -117,7 +116,6 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
         {
             if(_destinationReached)
             {
-                Debug.Log($"Destination reached. going back to idle");
                 return ChaseAIStateMachine.ChaseAIState.Idle;
             }
         }

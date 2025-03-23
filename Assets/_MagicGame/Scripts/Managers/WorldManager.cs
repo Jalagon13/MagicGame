@@ -198,7 +198,7 @@ public class WorldManager : NetworkBehaviour
 		Player.LocalClientInstance.CurrentPlayerBiome.Value = toBiome;
 		
 		// Invoke it first to prep the last chunk position to garentee a new set of chunks to generate, then set loadingbiome to true to resume the update method
-		Environment.Instance.TileVisibilityDict.Clear();
+		TileManager.Instance.TileVisibilityDict.Clear();
 		OnBiomeDataLoaded?.Invoke(this, EventArgs.Empty);
 		IsLoadingBiome = false;
 		
@@ -255,7 +255,7 @@ public class WorldManager : NetworkBehaviour
 	{
 		Debug.Log("Portal NOT found. Placing player at new portal that is spawned");
 		Vector2Int v2IntPos = new(Mathf.RoundToInt(portalPosition.x), Mathf.RoundToInt(portalPosition.y));
-		ObjectManager.Instance.PlaceObject(v2IntPos, _portalObjectPrefab, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+		ObjectManager.Instance.PlaceResourceObjectServerRpc(v2IntPos, GameManager.Instance.GetIDFromWorldObject(_portalObjectPrefab), Player.LocalClientInstance.CurrentPlayerBiome.Value);
 	}
 	
 	private void PlacePlayerAt(Vector2 portalPosition)

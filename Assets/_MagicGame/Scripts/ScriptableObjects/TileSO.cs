@@ -20,6 +20,7 @@ public class TileSO : RuleTile
 	public TileType TileType;
 	public ItemSO DropItem;
 	public int MaxHitPoints;
+	public float Hardness = 1f;
 	
 	[Header("Sounds")]
 	public EventReference HitSound;

@@ -18,7 +18,7 @@ public class DeployItemSO : ItemSO
 		if(IsClear(pos) && PlayerInRangeOfMouse())
 		{
 			Vector2Int spawnPosition = new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
-			ObjectManager.Instance.PlaceObject(spawnPosition, _deployObjectPrefab, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+			ObjectManager.Instance.PlaceResourceObjectServerRpc(spawnPosition, GameManager.Instance.GetIDFromWorldObject(_deployObjectPrefab), Player.LocalClientInstance.CurrentPlayerBiome.Value);
 			InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 		}
 		

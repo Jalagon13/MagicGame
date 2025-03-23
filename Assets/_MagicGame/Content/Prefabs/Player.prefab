@@ -290,16 +290,12 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
-  - Item: {fileID: 11400000, guid: 1cf699ca803ee4a948f9d763ddf2409d, type: 2}
-    Quantity: 1
-    <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
-    - {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
-    - {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
+    - {fileID: 11400000, guid: 64010a88c2f754b6ea0ad2a653f40669, type: 2}
   _startingItems:
-  - Item: {fileID: 11400000, guid: f163862eaf2254f90b02b26267855a9c, type: 2}
+  - Item: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
     Quantity: 1
+  - Item: {fileID: 11400000, guid: 7a301bb37deb44535a75d1fb8c9190c3, type: 2}
+    Quantity: 55
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0

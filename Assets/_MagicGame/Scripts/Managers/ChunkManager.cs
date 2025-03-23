@@ -77,26 +77,7 @@ public class ChunkManager : NetworkBehaviour
 			_currentChunkPosition = newChunkPosition;
 			UpdateChunksAroundPlayer();
 		}
-	
-		if(_chunksToLoad.Count > 0)
-		{
-			LoadChunk(_chunksToLoad.Dequeue());
-		}
-			
-		if(_chunksToUnload.Count > 0)
-		{
-			UnloadChunk(_chunksToUnload.Dequeue());
-		}
-		
-		if(_chunksToLoad.Count <= 0 && _chunksToUnload.Count <= 0 && _updateLightsFlag)
-		{
-			UpdateLightMap();
-			_updateLightsFlag = false;
-		}
-	}
-	
-	public void UpdateLightMap()
-	{
+
 		// Set min and max loaded tile positions by looping through loaded chunks
 		Vector2Int minLoadedTilePos = new(int.MaxValue, int.MaxValue);
 		Vector2Int maxLoadedTilePos = new(int.MinValue, int.MinValue);
@@ -115,7 +96,21 @@ public class ChunkManager : NetworkBehaviour
 		MinLoadedTilePosition = minLoadedTilePos;
 		MaxLoadedTilePosition = maxLoadedTilePos;
 		
-		Lightmap.Instance.UpdateLightMap(minLoadedTilePos, maxLoadedTilePos);
+		if(_chunksToLoad.Count > 0)
+		{
+			LoadChunk(_chunksToLoad.Dequeue());
+		}
+			
+		if(_chunksToUnload.Count > 0)
+		{
+			UnloadChunk(_chunksToUnload.Dequeue());
+		}
+		
+		if(_chunksToLoad.Count <= 0 && _chunksToUnload.Count <= 0 && _updateLightsFlag)
+		{
+			Lightmap.Instance.UpdateLightMap(MinLoadedTilePosition, MaxLoadedTilePosition);
+			_updateLightsFlag = false;
+		}
 	}
 	
 	public void UpdateChunksAroundPlayer()
@@ -291,10 +286,9 @@ public class ChunkManager : NetworkBehaviour
 		chunk.AddObjectData(position, worldObject);
 	}
 	
-	public void RemoveObjectDataFromChunk(Vector2Int position, BiomeType biomeToRemoveFrom)
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void RemoveObjectDataFromChunkServerRpc(Vector2Int position, BiomeType biomeToRemoveFrom)
 	{
-		if(!IsServer) return;
-		
 		GetChunkFromAnyWorldPos(position, biomeToRemoveFrom).RemoveObjectData(position);
 		TryToRemoveObjectClientRpc(position, biomeToRemoveFrom);
 	}
@@ -309,22 +303,49 @@ public class ChunkManager : NetworkBehaviour
 			wo.DestroySelf();
 		}
 	}
-	
-	public void AddTileDataToChunk(Vector2Int position, int tileID, BiomeType biomeToAddTileData, TileType tileType)
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void PlaceTileServerRpc(Vector2Int position, int tileID, BiomeType biomeToAddTileData, TileType tileType)
 	{
-		if(!IsServer) return;
-	
 		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, biomeToAddTileData);
 		chunk.AddTileData(position, GameManager.Instance.GetTileSOFromID(tileID));
+		
+		if(tileType == TileType.Wall)	
+		{
+			Pathfinding.Instance.AddPfWallTileServerRpc(position, biomeToAddTileData);
+		}
+		
 		HandleTileVisualClientRpc((Vector3Int)position, tileID, tileType, biomeToAddTileData);
 	}
-	
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void RemoveTileServerRpc(TileType tileType, Vector2Int position, BiomeType biome)
+	{
+		Debug.Log("RemoveTileServerRpc");
+		GetChunkFromAnyWorldPos(position, biome).RemoveTileData(position, tileType);
+
+		if (tileType == TileType.Wall)
+		{
+			Pathfinding.Instance.RemovePfWallTileServerRpc(position, biome);
+		}
+
+		HandleTileVisualClientRpc((Vector3Int)position, -1, tileType, biome);
+	}
+
 	[Rpc(SendTo.ClientsAndHost)]
 	private void HandleTileVisualClientRpc(Vector3Int pos, int syncTileId, TileType syncTileType, BiomeType biome)
 	{
+		Debug.Log("HandleTileVisualClientRpc 1");
+		Debug.Log($"Position: {pos}, Biome: {biome}");
+		Debug.Log($"MinLoadedTilePosition: {MinLoadedTilePosition}, MaxLoadedTilePosition: {MaxLoadedTilePosition}");
 		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != biome || !ObjectPositionInLoadedChunks((Vector2Int)pos)) return;
+		Debug.Log("HandleTileVisualClientRpc 2");
+		TileSO tileToPlace = null;
 		
-		TileSO tileToPlace = GameManager.Instance.GetTileSOFromID(syncTileId);
+		if(syncTileId >= 0)
+		{
+			tileToPlace = GameManager.Instance.GetTileSOFromID(syncTileId);
+		}
 
 		// Chunk is loaded visually, therefore visually update whatever tile wants to be updated
 		switch(syncTileType)
@@ -332,24 +353,16 @@ public class ChunkManager : NetworkBehaviour
 			case TileType.Ground:
 				break;
 			case TileType.Floor:
-				Environment.Instance.FloorTm.SetTile(pos, tileToPlace);
+				TileManager.Instance.FloorTm.SetTile(pos, tileToPlace == null ? null : tileToPlace);
 				break;
 			case TileType.Wall:
-				Environment.Instance.WallTm.SetTile(pos, tileToPlace);
-				Environment.Instance.AddTileVisData(pos, new TileVisibility {Visibility = 1});
+				Debug.Log("HandleTileVisualClientRpc wall 3");
+				TileManager.Instance.WallTm.SetTile(pos, tileToPlace == null ? null : tileToPlace);
+				TileManager.Instance.AddTileVisData(pos, new TileVisibility {Visibility = tileToPlace == null ? 0 : 1 });
 				Lightmap.Instance.UpdateLightMap();
 				break;
 		}
 	}
-	
-	public void RemoveTileDataFromChunk(TileSO tileSO, Vector2Int position, BiomeType biomeToRemoveTileData)
-	{
-		if(!IsServer) return;
-	
-		GetChunkFromAnyWorldPos(position, biomeToRemoveTileData).RemoveTileData(position, tileSO.TileType);
-		Environment.Instance.TryToRemoveWallTile(position, biomeToRemoveTileData);
-	}
-	
 	
 	public bool ObjectPositionInLoadedChunks(Vector2 position) // Check if the position is within the bounds
 	{

@@ -153,7 +153,6 @@ MonoBehaviour:
   <WorldObjectName>k__BackingField: Torch
   <MaxHp>k__BackingField: 10
   <PassThrough>k__BackingField: 1
-  <HarvestType>k__BackingField: 0
   <Table>k__BackingField:
   - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
     Min: 1
