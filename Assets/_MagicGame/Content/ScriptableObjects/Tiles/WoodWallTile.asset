@@ -1046,10 +1046,10 @@ MonoBehaviour:
     - {x: 1, y: -1, z: 0}
     m_RuleTransform: 0
   TileType: 1
-  HarvestType: 1
   DropItem: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
   MaxHitPoints: 100
-  HitSound:
+  Hardness: 0.65
+  MiningSound:
     Guid:
       Data1: 1812228115
       Data2: 1207244471

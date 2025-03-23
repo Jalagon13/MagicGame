@@ -151,14 +151,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <WorldObjectName>k__BackingField: Torch
-  <MaxHp>k__BackingField: 10
+  <Hardness>k__BackingField: 0
   <PassThrough>k__BackingField: 1
   <Table>k__BackingField:
   - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
     Min: 1
     Max: 1
     Chance: 100
-  <ResourceHit>k__BackingField:
+  <MiningSound>k__BackingField:
     Guid:
       Data1: 1812228115
       Data2: 1207244471

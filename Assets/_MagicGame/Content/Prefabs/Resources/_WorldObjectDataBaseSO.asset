@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: _WorldObjectDataBaseSO
   m_EditorClassIdentifier: 
   WorldObjectList:
-  - {fileID: 8673717607416915134, guid: 97ba852612def4dcc809912019c3fe1e, type: 3}
   - {fileID: -590340910586133321, guid: 3bc37f5a996714e3c93136f78e87bc55, type: 3}
   - {fileID: 590160871130149661, guid: c971db339f3074561aae8abe3ce5e3ad, type: 3}
   - {fileID: 5150323723629226184, guid: d486dbafb74344fbb99c566098694a5f, type: 3}

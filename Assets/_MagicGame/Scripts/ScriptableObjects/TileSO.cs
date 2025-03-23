@@ -23,7 +23,7 @@ public class TileSO : RuleTile
 	public float Hardness = 1f;
 	
 	[Header("Sounds")]
-	public EventReference HitSound;
+	public EventReference MiningSound;
 	public EventReference PlaceSound;
 	public EventReference DestroySound;
 }

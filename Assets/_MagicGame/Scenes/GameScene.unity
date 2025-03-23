@@ -3526,6 +3526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94925e7427004998a47e77a8baaf1e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <TimeBetweenMiningSounds>k__BackingField: 0.3
 --- !u!224 &467162359 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}

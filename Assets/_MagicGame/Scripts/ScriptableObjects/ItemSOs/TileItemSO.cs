@@ -27,7 +27,7 @@ public class TileItemSO : ItemSO
 				{
 					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.LocalClientInstance.CurrentPlayerBiome.Value, TileToPlace.TileType);
 					InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
-					SoundManager.Instance.PlayOneShot(TileToPlace.HitSound, pos);
+					SoundManager.Instance.PlayOneShot(TileToPlace.MiningSound, pos);
 				}
 				break;
 			case TileType.Wall:
@@ -36,7 +36,7 @@ public class TileItemSO : ItemSO
 					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.LocalClientInstance.CurrentPlayerBiome.Value, TileToPlace.TileType);
 					Pathfinding.Instance.AddPfWallTileServerRpc((Vector2Int)pos, Player.LocalClientInstance.CurrentPlayerBiome.Value);
 					InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
-					SoundManager.Instance.PlayOneShot(TileToPlace.HitSound, pos);
+					SoundManager.Instance.PlayOneShot(TileToPlace.MiningSound, pos);
 				}
 				break;
 		}

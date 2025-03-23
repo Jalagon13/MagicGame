@@ -13,7 +13,7 @@ public class WorldObject : MonoBehaviour // Base class for every "physical" asse
 	[field: SerializeField] public float Hardness { get; private set; } = 1f;
 	[field: SerializeField] public bool PassThrough { get; private set; } = false;
 	[field: SerializeField] public List<Loot> Table { get; private set; }
-	[field: SerializeField] public EventReference ResourceHit { get; private set; }
+	[field: SerializeField] public EventReference MiningSound { get; private set; }
 	[field: SerializeField] public EventReference ResourceDestroyed { get; private set; }
 
 

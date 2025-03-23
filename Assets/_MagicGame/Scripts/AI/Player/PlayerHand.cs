@@ -168,7 +168,7 @@ public class PlayerHand : NetworkBehaviour
 			HideArm();
 		}
 
-		_itemHeldSR.flipX = HeldItem is not WandItemSO;
+		_itemHeldSR.flipX = HeldItem is WandItemSO;
 		_itemHeldSR.sprite = HeldItem?.UiDisplay;
 	}
 

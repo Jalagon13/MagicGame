@@ -221,14 +221,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <WorldObjectName>k__BackingField: Work Bench
-  <MaxHp>k__BackingField: 50
+  <Hardness>k__BackingField: 0.65
   <PassThrough>k__BackingField: 0
   <Table>k__BackingField:
   - Item: {fileID: 11400000, guid: d3be2b9539bc040428db5097cea0bed6, type: 2}
     Min: 1
     Max: 1
     Chance: 100
-  <ResourceHit>k__BackingField:
+  <MiningSound>k__BackingField:
     Guid:
       Data1: 1812228115
       Data2: 1207244471

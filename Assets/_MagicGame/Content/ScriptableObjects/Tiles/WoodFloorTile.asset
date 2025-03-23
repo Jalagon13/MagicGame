@@ -17,10 +17,10 @@ MonoBehaviour:
   m_DefaultColliderType: 1
   m_TilingRules: []
   TileType: 2
-  HarvestType: 1
   DropItem: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
   MaxHitPoints: 100
-  HitSound:
+  Hardness: 0.65
+  MiningSound:
     Guid:
       Data1: 1812228115
       Data2: 1207244471

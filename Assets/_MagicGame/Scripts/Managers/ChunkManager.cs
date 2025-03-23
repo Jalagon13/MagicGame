@@ -335,11 +335,8 @@ public class ChunkManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void HandleTileVisualClientRpc(Vector3Int pos, int syncTileId, TileType syncTileType, BiomeType biome)
 	{
-		Debug.Log("HandleTileVisualClientRpc 1");
-		Debug.Log($"Position: {pos}, Biome: {biome}");
-		Debug.Log($"MinLoadedTilePosition: {MinLoadedTilePosition}, MaxLoadedTilePosition: {MaxLoadedTilePosition}");
 		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != biome || !ObjectPositionInLoadedChunks((Vector2Int)pos)) return;
-		Debug.Log("HandleTileVisualClientRpc 2");
+		
 		TileSO tileToPlace = null;
 		
 		if(syncTileId >= 0)
@@ -356,7 +353,6 @@ public class ChunkManager : NetworkBehaviour
 				TileManager.Instance.FloorTm.SetTile(pos, tileToPlace == null ? null : tileToPlace);
 				break;
 			case TileType.Wall:
-				Debug.Log("HandleTileVisualClientRpc wall 3");
 				TileManager.Instance.WallTm.SetTile(pos, tileToPlace == null ? null : tileToPlace);
 				TileManager.Instance.AddTileVisData(pos, new TileVisibility {Visibility = tileToPlace == null ? 0 : 1 });
 				Lightmap.Instance.UpdateLightMap();

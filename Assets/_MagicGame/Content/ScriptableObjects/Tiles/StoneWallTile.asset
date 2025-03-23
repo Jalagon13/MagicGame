@@ -1048,8 +1048,8 @@ MonoBehaviour:
   TileType: 1
   DropItem: {fileID: 11400000, guid: 78d4495e64216404c85d1a0daa71cc1b, type: 2}
   MaxHitPoints: 100
-  Hardness: 1.5
-  HitSound:
+  Hardness: 0.65
+  MiningSound:
     Guid:
       Data1: 249587751
       Data2: 1169178929
