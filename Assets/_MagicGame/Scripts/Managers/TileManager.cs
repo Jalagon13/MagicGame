@@ -29,7 +29,7 @@ public class TileManager : NetworkBehaviour
 	{
 		ChunkManager.Instance.OnLoadChunk += ChunkManager_OnLoadChunk;
 		ChunkManager.Instance.OnUnloadChunk += ChunkManager_OnUnloadChunk;
-		WorldManager.Instance.OnStartBiomeTransition += ClearLocalTilemaps;
+		WorldManager.Instance.OnBiomeTransitionStart += ClearLocalTilemaps;
 	}
 	
 	public void AddTileVisData(Vector3Int pos, TileVisibility tileVisData)
@@ -130,6 +130,6 @@ public class TileManager : NetworkBehaviour
 		base.OnDestroy();
 		ChunkManager.Instance.OnLoadChunk -= ChunkManager_OnLoadChunk;
 		ChunkManager.Instance.OnUnloadChunk -= ChunkManager_OnUnloadChunk;
-		WorldManager.Instance.OnStartBiomeTransition -= ClearLocalTilemaps;
+		WorldManager.Instance.OnBiomeTransitionStart -= ClearLocalTilemaps;
 	}
 }

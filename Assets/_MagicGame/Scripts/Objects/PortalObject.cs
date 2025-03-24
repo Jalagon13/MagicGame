@@ -14,11 +14,14 @@ public class PortalObject : WorldObject
 
 	private void GameInput_OnSecondaryAction(object sender, GameInput.OnPrimaryOrSecondaryActionEventArgs e)
 	{
-		if(!_worldInput.IsMouseOverIndputDetector()) return;
-		Debug.Log($"Portal Right clicked");
-		// Just hard code it like this for now will change once more environments are added
-		BiomeType destination = Player.LocalClientInstance.CurrentPlayerBiome.Value == BiomeType.Cave ? BiomeType.Forest : BiomeType.Cave;
-		WorldManager.Instance.LoadBiome(destination, transform.position);
+		var centerOfChestPosition = new Vector2(transform.position.x + 0.5f, transform.position.y + 0.5f);
+
+		if (_worldInput.IsMouseOverIndputDetector() && PlayerInRangeOfPosition(centerOfChestPosition))
+		{
+			// Just hard code it like this for now will change once more environments are added
+			BiomeType destination = Player.LocalClientInstance.CurrentPlayerBiome.Value == BiomeType.Cave ? BiomeType.Forest : BiomeType.Cave;
+			WorldManager.Instance.LoadBiome(destination, transform.position);
+		}
 	}
 	
 	private void OnDestroy()

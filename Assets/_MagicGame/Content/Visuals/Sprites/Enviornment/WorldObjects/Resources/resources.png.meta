@@ -267,12 +267,12 @@ TextureImporter:
       name: rsc_portal
       rect:
         serializedVersion: 2
-        x: 82
-        y: 0
-        width: 46
-        height: 48
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 32
+        y: 96
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []

@@ -75,8 +75,8 @@ public class GameInput : MonoBehaviour
 
 	private void Start()
 	{
-		WorldManager.Instance.OnStartBiomeTransition += WorldManager_DisableInputs;
-		WorldManager.Instance.OnEndBiomeTransition += WorldManager_EnableInputs;
+		WorldManager.Instance.OnBiomeTransitionStart += WorldManager_DisableInputs;
+		WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_EnableInputs;
 		InGameMenu.Instance.OnMenuOpen += InGameMenu_OnMenuOpen;
 	}
 
@@ -249,8 +249,8 @@ public class GameInput : MonoBehaviour
 		_playerInput.Disable();
 		_playerInput.Dispose();	
 		
-		WorldManager.Instance.OnStartBiomeTransition -= WorldManager_DisableInputs;
-		WorldManager.Instance.OnEndBiomeTransition -= WorldManager_EnableInputs;
+		WorldManager.Instance.OnBiomeTransitionStart -= WorldManager_DisableInputs;
+		WorldManager.Instance.OnBiomeTransitionEnd -= WorldManager_EnableInputs;
 		InGameMenu.Instance.OnMenuOpen -= InGameMenu_OnMenuOpen;
 	}
 }

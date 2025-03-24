@@ -19,9 +19,8 @@ public class ChestObject : WorldObject
 	private void GameInput_OnSecondaryActionStarted(object sender, EventArgs e)
 	{
 		var centerOfChestPosition = new Vector2(transform.position.x + 0.5f, transform.position.y + 0.5f);
-		var playerInRange = Vector2.Distance(Player.LocalClientInstance.transform.position, centerOfChestPosition) <= ChestOpenDistance;
 		
-		if(WorldInput.IsMouseOverIndputDetector() && playerInRange)
+		if(WorldInput.IsMouseOverIndputDetector() && PlayerInRangeOfPosition(centerOfChestPosition))
 		{
 			ChestManager.Instance.RequestChestData(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value, gameObject);
 		}

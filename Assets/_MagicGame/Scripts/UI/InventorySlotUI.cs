@@ -73,7 +73,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 	
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		if(_item.HasItem && !InventoryManager.MOUSE_HAS_ITEM)
+		if (_item.HasItem && !InventoryManager.MOUSE_HAS_ITEM)
 		{
 			_hovered = true;
 

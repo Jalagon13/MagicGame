@@ -17,8 +17,8 @@ public class WorldManager : NetworkBehaviour
 {
 	public static WorldManager Instance { get; private set; }
 	
-	public event EventHandler OnStartBiomeTransition;
-	public event EventHandler OnEndBiomeTransition;
+	public event EventHandler OnBiomeTransitionStart;
+	public event EventHandler OnBiomeTransitionEnd;
 	public event EventHandler OnBiomeDataLoaded;
 	public event EventHandler<OnTickEventArgs> OnTick;
 	public class OnTickEventArgs : EventArgs 
@@ -132,7 +132,7 @@ public class WorldManager : NetworkBehaviour
 	{
 		PlacePlayerAt(portalPosition);
 		
-		OnStartBiomeTransition?.Invoke(this, EventArgs.Empty); 
+		OnBiomeTransitionStart?.Invoke(this, EventArgs.Empty); 
 		
 		IsLoadingBiome = true;
 		ChunkManager.Instance.UnloadAllChunks();
@@ -248,7 +248,7 @@ public class WorldManager : NetworkBehaviour
 		
 		Lightmap.Instance.UpdateLightMap();
 		
-		OnEndBiomeTransition?.Invoke(this, EventArgs.Empty); 
+		OnBiomeTransitionEnd?.Invoke(this, EventArgs.Empty); 
 	}
 
 	private void SpawnPortal(Vector2 portalPosition)
@@ -260,7 +260,7 @@ public class WorldManager : NetworkBehaviour
 	
 	private void PlacePlayerAt(Vector2 portalPosition)
 	{
-		Player.LocalClientInstance.transform.SetPositionAndRotation(new(portalPosition.x + 0.5f, portalPosition.y - 0.5f), Quaternion.identity);
+		Player.LocalClientInstance.transform.SetPositionAndRotation(new(portalPosition.x + 0.5f, portalPosition.y + 0.5f), Quaternion.identity);
 	}
 	
 	private void DeleteNeighborWallsAroundPoint(Vector3 centerPosition)

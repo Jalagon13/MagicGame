@@ -7,7 +7,7 @@ using UnityEngine;
 [SelectionBase]
 public class WorldObject : MonoBehaviour // Base class for every "physical" asset in the world
 {	
-	public static float ChestOpenDistance = 2.75f;
+	public static float InteractDistance = 2.75f;
 	
 	[field: SerializeField] public string WorldObjectName { get; private set; }
 	[field: SerializeField] public float Hardness { get; private set; } = 1f;
@@ -37,6 +37,10 @@ public class WorldObject : MonoBehaviour // Base class for every "physical" asse
 		Lightmap.Instance.UpdateLightMap();
 	}
 	
+	protected bool PlayerInRangeOfPosition(Vector2 position)
+	{
+		return Vector2.Distance(Player.LocalClientInstance.transform.position, position) <= InteractDistance;
+	}
 	public void DestroySelf()
 	{
 		Destroy(gameObject);

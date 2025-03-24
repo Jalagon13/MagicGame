@@ -72,8 +72,8 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		if(IsOwner)
 		{
 			GameInput.Instance.OnMove += GameInput_OnMove;
-			WorldManager.Instance.OnStartBiomeTransition += WorldManager_RestrictMovement;
-			WorldManager.Instance.OnEndBiomeTransition += WorldManager_AllowMovement;
+			WorldManager.Instance.OnBiomeTransitionStart += WorldManager_RestrictMovement;
+			WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_AllowMovement;
 		}
 	
 		base.OnNetworkSpawn();
@@ -229,8 +229,8 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		if(IsOwner)
 		{
 			GameInput.Instance.OnMove -= GameInput_OnMove;
-			WorldManager.Instance.OnStartBiomeTransition -= WorldManager_RestrictMovement;
-			WorldManager.Instance.OnEndBiomeTransition -= WorldManager_AllowMovement;
+			WorldManager.Instance.OnBiomeTransitionStart -= WorldManager_RestrictMovement;
+			WorldManager.Instance.OnBiomeTransitionEnd -= WorldManager_AllowMovement;
 		}
 	}
 }
