@@ -17,8 +17,7 @@ MonoBehaviour:
   m_DefaultColliderType: 1
   m_TilingRules: []
   TileType: 2
-  DropItem: {fileID: 11400000, guid: 78d4495e64216404c85d1a0daa71cc1b, type: 2}
-  MaxHitPoints: 100
+  DropItem: {fileID: 11400000, guid: 80b56846aa37c45a1b11af4d1a1eb5b9, type: 2}
   Hardness: 0.65
   MiningSound:
     Guid:

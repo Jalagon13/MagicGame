@@ -296,11 +296,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   <TurnSharpness>k__BackingField: 6
-  <WanderSpeed>k__BackingField: 2.25
+  <WanderSpeed>k__BackingField: 1.75
   <ChaseSpeed>k__BackingField: 3.25
   <KnockbackResist>k__BackingField: 0
-  <MinIdleDuration>k__BackingField: 0.01
-  <MaxIdleDuration>k__BackingField: 0.01
+  <MinIdleDuration>k__BackingField: 0
+  <MaxIdleDuration>k__BackingField: 0
   <DetectionRadius>k__BackingField: 15
   <DetectionIntervalDuration>k__BackingField: 0.5
   <ObstrcutionCheckLineThickness>k__BackingField: 0.25

@@ -7,6 +7,8 @@ using FMOD.Studio;
 
 public class PlayerCamera : NetworkBehaviour
 {
+	[field: SerializeField] public PolygonCollider2D WorldBoundary { get; private set; }
+
 	private CinemachineConfiner2D _confiner;
 	private BoxCollider2D _cameraFrustumCollider;
 	private Camera _mainCamera;
@@ -57,10 +59,10 @@ public class PlayerCamera : NetworkBehaviour
 		
 		_playerObject = NetworkManager.ConnectedClients[clientId].PlayerObject;
 		_cinemachineCam.Follow = _playerObject.transform;
-		
+		_confiner.BoundingShape2D = WorldBoundary;
+
 		SetListenerToPlayer();
 	}
-	
 	
 	private void SetListenerToPlayer()
 	{

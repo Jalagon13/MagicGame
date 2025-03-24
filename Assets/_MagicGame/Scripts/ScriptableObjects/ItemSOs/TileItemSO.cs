@@ -12,10 +12,9 @@ public class TileItemSO : ItemSO
 	
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
+		if (!PlayerInRangeOfMouse()) return _baseActionCooldown;
+
 		var pos = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
-
-		if (!IsClear(new(pos.x, pos.y)) || !PlayerInRangeOfMouse()) return _baseActionCooldown;
-
 		var floorTmHasTile = TileManager.Instance.FloorTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition));
 		var wallTmHasTile = TileManager.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition));
 		int syncTileId = GameManager.Instance.GetIDFromTileObjectSO(TileToPlace);
@@ -31,7 +30,7 @@ public class TileItemSO : ItemSO
 				}
 				break;
 			case TileType.Wall:
-				if (!wallTmHasTile)
+				if (!wallTmHasTile && IsClear(new(pos.x, pos.y)))
 				{
 					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.LocalClientInstance.CurrentPlayerBiome.Value, TileToPlace.TileType);
 					Pathfinding.Instance.AddPfWallTileServerRpc((Vector2Int)pos, Player.LocalClientInstance.CurrentPlayerBiome.Value);

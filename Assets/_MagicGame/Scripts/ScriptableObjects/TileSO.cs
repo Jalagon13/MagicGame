@@ -19,7 +19,6 @@ public class TileSO : RuleTile
 	[Header("Tile Extended Properties")]
 	public TileType TileType;
 	public ItemSO DropItem;
-	public int MaxHitPoints;
 	public float Hardness = 1f;
 	
 	[Header("Sounds")]

@@ -98,7 +98,7 @@ public class ChunkManager : NetworkBehaviour
 		
 		if(_chunksToLoad.Count > 0)
 		{
-			LoadChunk(_chunksToLoad.Dequeue());
+			_chunkNetworkManager.RequestChunkDataServerRpc(Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value, _chunksToLoad.Dequeue());
 		}
 			
 		if(_chunksToUnload.Count > 0)
@@ -144,11 +144,6 @@ public class ChunkManager : NetworkBehaviour
 		}
 		
 		_updateLightsFlag = true;
-	}
-
-	private void LoadChunk(Vector2Int chunkPos)
-	{
-		_chunkNetworkManager.RequestChunkData(Player.LocalClientInstance.CurrentPlayerBiome.Value, chunkPos);
 	}
 
 	private void UnloadChunk(Vector2Int chunkPos)
@@ -223,6 +218,13 @@ public class ChunkManager : NetworkBehaviour
 			for (int y = -_chunkLoadRadiusY; y <= _chunkLoadRadiusY; y++)
 			{
 				Vector2Int chunkCoord = new Vector2Int(_currentChunkPosition.x + x, _currentChunkPosition.y + y);
+				
+				// If chunkCoord is not within the bounds of the world, skip it
+				if (chunkCoord.x < 0 || chunkCoord.x >= BIOME_SIDE_LENGTH / CHUNK_SIZE || chunkCoord.y < 0 || chunkCoord.y >= BIOME_SIDE_LENGTH / CHUNK_SIZE)
+				{
+					continue;
+				}
+				
 				chunksToLoad.Add(chunkCoord);
 			}
 		}

@@ -4809,8 +4809,7 @@ GameObject:
   - component: {fileID: 652259849}
   - component: {fileID: 652259852}
   - component: {fileID: 652259851}
-  - component: {fileID: 652259850}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Boundary
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4832,18 +4831,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 429902436}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &652259850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 652259848}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8750fff5764f94fd0b32c95adb551b47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!68 &652259851
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -4881,8 +4868,11 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: -0.5, y: 0}
-  - {x: 0.5, y: 0}
+  - {x: 0, y: 0}
+  - {x: 256, y: 0}
+  - {x: 256, y: 256}
+  - {x: 0, y: 256}
+  - {x: 0, y: 0}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
@@ -4933,11 +4923,11 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 1}
-      - {x: -0.95105654, y: 0.30901697}
-      - {x: -0.5877852, y: -0.80901706}
-      - {x: 0.58778536, y: -0.80901694}
-      - {x: 0.9510565, y: 0.30901712}
+    - - {x: 0, y: 0}
+      - {x: 256, y: 0}
+      - {x: 256, y: 256}
+      - {x: 0, y: 256}
+      - {x: 0, y: 0}
   m_UseDelaunayMesh: 0
 --- !u!1001 &664645033
 PrefabInstance:
@@ -12762,11 +12752,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1785759326}
   - component: {fileID: 1785759325}
-  - component: {fileID: 1785759324}
+  - component: {fileID: 1785759329}
   - component: {fileID: 1785759323}
+  - component: {fileID: 1785759327}
   - component: {fileID: 1785759322}
   - component: {fileID: 1785759321}
-  - component: {fileID: 1785759327}
   - component: {fileID: 1785759328}
   m_Layer: 0
   m_Name: CinemachineCamera
@@ -12853,25 +12843,6 @@ MonoBehaviour:
     MaxWindowSize: 0
     Padding: 0
   m_LegacyMaxWindowSize: -2
---- !u!114 &1785759324
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1785759320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b617507da6d07e749b7efdb34e1173e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TrackerSettings:
-    BindingMode: 4
-    PositionDamping: {x: 0, y: 0, z: 1}
-    AngularDampingMode: 0
-    RotationDamping: {x: 1, y: 1, z: 1}
-    QuaternionDamping: 1
-  FollowOffset: {x: 0, y: 0, z: -10}
 --- !u!114 &1785759325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12968,6 +12939,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  <WorldBoundary>k__BackingField: {fileID: 652259852}
+--- !u!114 &1785759329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785759320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b617507da6d07e749b7efdb34e1173e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TrackerSettings:
+    BindingMode: 1
+    PositionDamping: {x: 0, y: 0, z: 0}
+    AngularDampingMode: 0
+    RotationDamping: {x: 0, y: 0, z: 0}
+    QuaternionDamping: 1
+  FollowOffset: {x: 0, y: 0, z: -10}
 --- !u!1 &1805444166
 GameObject:
   m_ObjectHideFlags: 0
@@ -15860,6 +15851,6 @@ SceneRoots:
   - {fileID: 1091366767}
   - {fileID: 242063068}
   - {fileID: 1785759326}
+  - {fileID: 429902436}
   - {fileID: 288463390}
   - {fileID: 597565687}
-  - {fileID: 429902436}
