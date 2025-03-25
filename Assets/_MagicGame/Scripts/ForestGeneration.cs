@@ -29,18 +29,16 @@ public class ForestGeneration : MonoBehaviour
 
     private void Start()
     {
-		// Generate noise textures using game manager seed
-		_seed = WorldManager.Instance.Seed;
-		ForestGroundNM.GenerateNoiseTexture(_seed);
-		ForestStoneNM.GenerateNoiseTexture(_seed);
+		Initialization();
 	}
 
     public void GenerateForest()
 	{
 		Debug.Log("Generating Forest Data...");
 		ChunkManager.IS_GENERATING_BIOME = true;
-		
-		// Generate World Data
+
+		// Generate noise textures using game manager seed
+		Initialization();
 		GenerateOverworldChunkData();
 		GenerateTrees();
 		GenerateStairsToCave();
@@ -48,6 +46,13 @@ public class ForestGeneration : MonoBehaviour
 		SaveSystem.Instance.AddBiomeToMemorySessionTracker(BiomeType.Forest);
 		ChunkManager.IS_GENERATING_BIOME = false;
 		Debug.Log("Generating Forest Complete!");
+	}
+	
+	private void Initialization()
+	{
+		_seed = WorldManager.Instance.Seed;
+		ForestGroundNM.GenerateNoiseTexture(_seed);
+		ForestStoneNM.GenerateNoiseTexture(_seed);
 	}
 	
 	private void GenerateOverworldChunkData()

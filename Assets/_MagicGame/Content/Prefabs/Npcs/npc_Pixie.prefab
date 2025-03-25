@@ -319,7 +319,7 @@ MonoBehaviour:
   <StrafingDuration>k__BackingField: 0.25
   <StrafeIntensity>k__BackingField: 0.5
   <WillChasePlayer>k__BackingField: 1
-  <OnlyChaseWhenProvoked>k__BackingField: 1
+  <OnlyChaseWhenProvoked>k__BackingField: 0
   <CanMove>k__BackingField: 1
 --- !u!1001 &5801241907322578021
 PrefabInstance:

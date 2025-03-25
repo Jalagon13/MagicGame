@@ -16,10 +16,11 @@ public class NpcManager : NetworkBehaviour
 	[SerializeField] private bool _enableSpawning = true;
 	[SerializeField] private float _startSpawnDelay;
 	
-	public NetworkVariable<float> NpcSlots { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	// public NetworkVariable<float> NpcSlots { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private readonly float _tickTime = 1f / 60f; // 60 ticks per second
 	private readonly int _maxSpawnAttempts = 50;
 	private Transform _localPlayerTransform;
+	private float _npcSlots = 0;
 	
 	private void Awake()
 	{
@@ -49,7 +50,7 @@ public class NpcManager : NetworkBehaviour
 		float spawnRate = 1 / (_biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().SpawnRateDenominator * spawnModifier);
 		
 		// Try to spawn an enemy if we're below the max number of NPC slots
-		if (NpcSlots.Value < _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount && UnityEngine.Random.value < spawnRate)
+		if (_npcSlots < _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount && UnityEngine.Random.value < spawnRate)
 		{
 			// Try to find a valid spawn spot and spawn an entity on the first one found
 			int spawnAttempts = 0;
@@ -65,7 +66,7 @@ public class NpcManager : NetworkBehaviour
 				
 				if(SpawnSpotIsValid(potentialSpawnPoint))
 				{
-					float remainingNpcSlotSpace = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount - NpcSlots.Value;
+					float remainingNpcSlotSpace = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount - _npcSlots;
 					NpcSpawnData npcToSpawn = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().GetRandomNpc();
 					
 					if(npcToSpawn.NpcData.SlotAmount <= remainingNpcSlotSpace)
@@ -82,7 +83,8 @@ public class NpcManager : NetworkBehaviour
 	
 	public void SpawnNpc(Vector2 spawnPosition, NpcSO npcToSpawn)
 	{
-		
+		_npcSlots += npcToSpawn.SlotAmount;
+		Debug.Log($"Increasing NPC Slots by {npcToSpawn.SlotAmount}, current amount: {_npcSlots}");
 		int npcId = GameManager.Instance.GetNpcIdFromNpcSO(npcToSpawn);
 		SpawnNpcServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, npcId, NetworkManager.LocalClientId, spawnPosition, npcToSpawn.SlotAmount);
 	}
@@ -101,8 +103,6 @@ public class NpcManager : NetworkBehaviour
 
 		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
 		npcNetworkComponent.InitialieNpcNetwork(spawnPlayerId, npcId, spawnBiome);
-
-		NpcSlots.Value += slotAmount;
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
@@ -111,7 +111,6 @@ public class NpcManager : NetworkBehaviour
 		// Either kill or despawn npc depending on the conditional
 		npcToRemoveNetworkObjectReference.TryGet(out NetworkObject npcNetworkObject);
 		Npc npc = npcNetworkObject.GetComponent<Npc>();
-		NpcSlots.Value -= npc.NpcSO.SlotAmount;
 
 		if (killNpc)
 		{
@@ -120,9 +119,18 @@ public class NpcManager : NetworkBehaviour
 		}
 		
 		npc.DestroySelf();
+		
+		DecrementNpcSlotsClientRpc(npc.NpcSO.SlotAmount, RpcTarget.Single(spawningClientId, RpcTargetUse.Persistent));
 	}
-	
-	private bool SpawnSpotIsValid(Vector2 potentialSpawnPoint)
+
+	[Rpc(SendTo.SpecifiedInParams, RequireOwnership = false)]
+    private void DecrementNpcSlotsClientRpc(float slotAmount, RpcParams rpcParams = default)
+    {
+        _npcSlots -= slotAmount;
+		Debug.Log($"Decreasing NPC Slots by {slotAmount}, current amount: {_npcSlots}");
+    }
+
+    private bool SpawnSpotIsValid(Vector2 potentialSpawnPoint)
 	{
 		if(PointIsInWall(potentialSpawnPoint)) return false;
 		
@@ -212,7 +220,7 @@ public class NpcManager : NetworkBehaviour
 	
 	private float GetSpawnModifier()
 	{
-		float activeRatio = NpcSlots.Value / _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount;
+		float activeRatio = _npcSlots / _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount;
 
 		if (activeRatio < 0.2f)
 		{

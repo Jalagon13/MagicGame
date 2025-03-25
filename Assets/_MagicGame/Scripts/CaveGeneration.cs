@@ -26,11 +26,7 @@ public class CaveGeneration : MonoBehaviour
 
 	private void Start()
 	{
-		// Generate noise textures using game manager seed
-		_seed = WorldManager.Instance.Seed;
-		SpaghettiCaveNM.GenerateNoiseTexture(_seed);
-		CheeseCaveNM.GenerateNoiseTexture(_seed);
-		OreGenNM.GenerateNoiseTexture(_seed);
+		Initialization();
 	}
 
 	public void GenerateCave()
@@ -38,6 +34,7 @@ public class CaveGeneration : MonoBehaviour
 		Debug.Log("Generating Cave...");
 		ChunkManager.IS_GENERATING_BIOME = true;
 
+		Initialization();
 		GenerateCaveChunkData();
 		PlaceStairsToForest();
 
@@ -45,6 +42,15 @@ public class CaveGeneration : MonoBehaviour
 		ChunkManager.IS_GENERATING_BIOME = false;
 		
 		Debug.Log("Cave Generation Complete!");
+	}
+	
+	private void Initialization()
+	{
+		// Generate noise textures using game manager seed
+		_seed = WorldManager.Instance.Seed;
+		SpaghettiCaveNM.GenerateNoiseTexture(_seed);
+		CheeseCaveNM.GenerateNoiseTexture(_seed);
+		OreGenNM.GenerateNoiseTexture(_seed);
 	}
 
     private void GenerateCaveChunkData()

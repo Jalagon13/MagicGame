@@ -53,9 +53,6 @@ public class ChunkGameData
 				}
 			}
 		}
-		
-		// If tile data to delete does not exist, log error it
-		Debug.LogWarning($"Trying to delete a tile that does not exist {position}, {tileType}");
 	}
 	
 	// When a tile is placed, add tile data in chunk
