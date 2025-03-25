@@ -18,7 +18,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3165997416469630793, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <BaseHealth>k__BackingField
-      value: 22
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3165997416469630793, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <IFrameDuration>k__BackingField
+      value: 0.1666667
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damage
@@ -42,7 +46,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _deathSound.Path
-      value: event:/BugDamaged
+      value: event:/BugDeath
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _knockbackResist
@@ -58,27 +62,27 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 3ceffa112137b4c099e594551fc8d67f, type: 2}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _deathSound.Guid.Data1
-      value: 1529267703
+      value: 343470518
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _deathSound.Guid.Data2
-      value: 1144459138
+      value: 1104490139
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _deathSound.Guid.Data3
-      value: -1546983784
+      value: 1878935205
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _deathSound.Guid.Data4
-      value: -1702726188
+      value: 389126360
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: Table.Array.data[0].Max
-      value: 16
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: Table.Array.data[0].Min
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Guid.Data1
@@ -294,13 +298,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <TurnSharpness>k__BackingField: 6
-  <WanderSpeed>k__BackingField: 3
-  <ChaseSpeed>k__BackingField: 4
-  <KnockbackResist>k__BackingField: 5
+  <TurnSharpness>k__BackingField: 7
+  <WanderSpeed>k__BackingField: 2.75
+  <ChaseSpeed>k__BackingField: 3.5
+  <KnockbackResist>k__BackingField: 8
   <MinIdleDuration>k__BackingField: 1
   <MaxIdleDuration>k__BackingField: 2
-  <DetectionRadius>k__BackingField: 25
+  <DetectionRadius>k__BackingField: 30
   <DetectionIntervalDuration>k__BackingField: 0.25
   <ObstrcutionCheckLineThickness>k__BackingField: 0.225
   <WanderRadius>k__BackingField: 10
@@ -308,7 +312,7 @@ MonoBehaviour:
   <StrafingDuration>k__BackingField: 1.5
   <StrafeIntensity>k__BackingField: 0.5
   <WillChasePlayer>k__BackingField: 1
-  <OnlyChaseWhenProvoked>k__BackingField: 1
+  <OnlyChaseWhenProvoked>k__BackingField: 0
   <CanMove>k__BackingField: 1
 --- !u!1001 &5801241907322578021
 PrefabInstance:

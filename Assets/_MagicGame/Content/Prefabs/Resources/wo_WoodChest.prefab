@@ -123,7 +123,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 154920837247502213, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Name
-      value: WoodChest
+      value: wo_WoodChest
       objectReference: {fileID: 0}
     - target: {fileID: 257096646587651372, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_LocalPosition.x
@@ -314,6 +314,13 @@ MonoBehaviour:
       Data3: -1633797458
       Data4: 490440430
     Path: event:/WoodDestroyed
+  <PlaceSound>k__BackingField:
+    Guid:
+      Data1: -281162869
+      Data2: 1160666795
+      Data3: -1901462113
+      Data4: -244489252
+    Path: event:/Thump
   <WorldInput>k__BackingField: {fileID: 9207288352720458267}
 --- !u!4 &8566354021552112440 stripped
 Transform:

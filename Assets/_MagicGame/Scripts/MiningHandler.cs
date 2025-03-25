@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using FMODUnity;
 using UnityEngine;
 
 public enum DestructableType
@@ -10,17 +12,21 @@ public enum DestructableType
 
 public class MiningHandler : MonoBehaviour
 {
+    public static bool FocusingOnWall = true;
+    
     [field: SerializeField] public float TimeBetweenMiningSounds { get; private set; } = 0.25f;
+    [field: SerializeField] public float DelayBetweenPlacingAndMining { get; private set; } = 0.15f;
+    [field: SerializeField] public EventReference FocusWallSound { get; private set; }
+    [field: SerializeField] public EventReference FocusFloorSound { get; private set; }
 
     private Timer _miningTimer, _miningSoundTimer;
-    private bool _focusOnWall = true;
     private DestructableType _destructableFound;
     private WorldObject _worldObjectSelected;
     private TileSO _tileSelected;
     private Vector3Int? _currentBreakTargetPosition = null;
     private StaffItemSO _staffItem;
     private bool _isMiningFlag;
-    private static MiningVisuals _miningVisuals;
+    private bool _placeDelayActive;
 
     private void Awake()
     {
@@ -29,8 +35,6 @@ public class MiningHandler : MonoBehaviour
         _miningSoundTimer.OnTimerEnd += PlayMiningSound;
     }
 
-    
-
     private void Start()
     {
         GameInput.Instance.OnSecondaryActionStarted += ToggleTileFocus;
@@ -38,15 +42,36 @@ public class MiningHandler : MonoBehaviour
 
     private void ToggleTileFocus(object sender, EventArgs e)
     {
-        _focusOnWall = !_focusOnWall;
-        Debug.Log("Toggle Tile Focus, focusing on wall: " + _focusOnWall);
+        bool selectedItemIsStaff = InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedItem) && selectedItem.Item is StaffItemSO;
+        if(!selectedItemIsStaff || Pointer.IsOverUI() || Pointer.IsOverInteractable()) return;
+    
+        FocusingOnWall = !FocusingOnWall;
+        
+        if(FocusingOnWall)
+        {
+            SoundManager.Instance.PlayOneShot(FocusWallSound, Player.LocalClientInstance.transform.position);
+        }
+        else
+        {
+            SoundManager.Instance.PlayOneShot(FocusFloorSound, Player.LocalClientInstance.transform.position);
+        }
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (Player.LocalClientInstance == null) return;
 
         if (Player.LocalClientInstance.HealthState.IsDead || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled() || !InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem)) return;
+
+        if(DeployItemSO.PlacedThisFrameFlag)
+        {
+            if(!_placeDelayActive)
+            {
+                StartCoroutine(SmallPlacementDelay());
+            }
+            
+            return;
+        }
 
         if(selectedInventoryItem.Item is StaffItemSO staffItem)
         {
@@ -64,7 +89,7 @@ public class MiningHandler : MonoBehaviour
                     _destructableFound = DestructableType.WorldObject;
                     _currentBreakTargetPosition = ActionManager.MouseTilePosition;
                 }
-                else if (_focusOnWall)
+                else if (FocusingOnWall)
                 {
                     // Try to find a destructable tile
                     if (TileManager.Instance.WallTm.HasTile(ActionManager.MouseTilePosition))
@@ -129,6 +154,16 @@ public class MiningHandler : MonoBehaviour
                 _isMiningFlag = false;
             }
         }
+    }
+    
+    private IEnumerator SmallPlacementDelay()
+    {
+        _placeDelayActive = true;
+        
+        yield return new WaitForSeconds(DelayBetweenPlacingAndMining);
+
+        _placeDelayActive = false;
+        DeployItemSO.PlacedThisFrameFlag = false;
     }
     
     private void DestroyResource(object sender, EventArgs e)

@@ -172,7 +172,7 @@ public class NpcManager : NetworkBehaviour
 
 	private bool PointIsInWall(Vector2 point)
 	{
-		Vector3Int tilePos = new(Mathf.RoundToInt(point.x), Mathf.RoundToInt(point.y));
+		Vector3Int tilePos = new(Mathf.FloorToInt(point.x), Mathf.FloorToInt(point.y));
 		
 		return TileManager.Instance.WallTm.HasTile(tilePos);
 	}
@@ -212,7 +212,7 @@ public class NpcManager : NetworkBehaviour
 		float randomY = UnityEngine.Random.Range(minY, maxY);
 
 		// Round the position to the nearest tile and return the center of the tile
-		Vector3Int tilePosition = new(Mathf.FloorToInt(randomX), Mathf.FloorToInt(randomY), 0);
+		Vector3Int tilePosition = new(Mathf.RoundToInt(randomX), Mathf.RoundToInt(randomY), 0);
 		Vector2 centerTilePosition = new(tilePosition.x + 0.5f, tilePosition.y + 0.5f);
 
 		return centerTilePosition;

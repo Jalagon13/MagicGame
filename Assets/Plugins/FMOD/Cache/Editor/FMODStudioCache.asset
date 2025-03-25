@@ -1,5 +1,32 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9050220173966839909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Thump
+  m_EditorClassIdentifier: 
+  Path: event:/Thump
+  Guid:
+    Data1: -281162869
+    Data2: 1160666795
+    Data3: -1901462113
+    Data4: -244489252
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-8133402120912244033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,10 +197,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638778040525930344
+  lastModified: 638785113505080117
   FileSizes:
   - Name: Desktop
-    Value: 3065664
+    Value: 3096096
   Exists: 1
 --- !u!114 &-4024909556737517532
 MonoBehaviour:
@@ -283,6 +310,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-1502143533860854701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BugDeath
+  m_EditorClassIdentifier: 
+  Path: event:/BugDeath
+  Guid:
+    Data1: 343470518
+    Data2: 1104490139
+    Data3: 1878935205
+    Data4: 389126360
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-1361311089419184812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,13 +402,44 @@ MonoBehaviour:
   - {fileID: -2151828162186299522}
   - {fileID: -2423619658234550821}
   - {fileID: 5061384021580652553}
+  - {fileID: 6885153926838661541}
+  - {fileID: 1476141278191997832}
+  - {fileID: -1502143533860854701}
+  - {fileID: -9050220173966839909}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6702288669578411488}
   StringsBanks:
   - {fileID: 5574528013551363316}
-  cacheTime: 638778040525930344
+  cacheTime: 638785113505080117
   cacheVersion: 131623
+--- !u!114 &1476141278191997832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/FocusWall
+  m_EditorClassIdentifier: 
+  Path: event:/Player/FocusWall
+  Guid:
+    Data1: 231909717
+    Data2: 1196187336
+    Data3: -672544082
+    Data4: -1828488855
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &2498366552593082144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,10 +637,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638778040524530126
+  lastModified: 638785113504175721
   FileSizes:
   - Name: Desktop
-    Value: 1726
+    Value: 1896
   Exists: 1
 --- !u!114 &5813129133648053243
 MonoBehaviour:
@@ -626,11 +711,38 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638778040524522790
+  lastModified: 638785113504163094
   FileSizes:
   - Name: Desktop
-    Value: 1036
+    Value: 4352
   Exists: 1
+--- !u!114 &6885153926838661541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/FocusFloor
+  m_EditorClassIdentifier: 
+  Path: event:/Player/FocusFloor
+  Guid:
+    Data1: -981375326
+    Data2: 1149087574
+    Data3: -164892751
+    Data4: -247913897
+  Banks:
+  - {fileID: 6702288669578411488}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &9147062409882106512
 MonoBehaviour:
   m_ObjectHideFlags: 0

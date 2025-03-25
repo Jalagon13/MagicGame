@@ -20,6 +20,10 @@ PrefabInstance:
       propertyPath: <BaseHealth>k__BackingField
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 3165997416469630793, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <IFrameDuration>k__BackingField
+      value: 0.16666667
+      objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damage
       value: 6
@@ -74,11 +78,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: Table.Array.data[0].Max
-      value: 16
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: Table.Array.data[0].Min
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: Table.Array.data[1].Max
@@ -319,7 +323,7 @@ MonoBehaviour:
   <StrafingDuration>k__BackingField: 0.25
   <StrafeIntensity>k__BackingField: 0.5
   <WillChasePlayer>k__BackingField: 1
-  <OnlyChaseWhenProvoked>k__BackingField: 0
+  <OnlyChaseWhenProvoked>k__BackingField: 1
   <CanMove>k__BackingField: 1
 --- !u!1001 &5801241907322578021
 PrefabInstance:

@@ -76,11 +76,12 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 		if (_item.HasItem && !InventoryManager.MOUSE_HAS_ITEM)
 		{
 			_hovered = true;
-
+			
 			Tooltip.ShowNew();
 
 			switch (_item.Item)
 			{
+				
 				case WandItemSO wandItemSO:
 					MagicItemSO[] magicArray = (_inventoryAssociatedWith[_inventoryIndex] as WandInventoryItem).MagicArray;
 					Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);

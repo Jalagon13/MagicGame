@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <AllBiomeSpawnRules>k__BackingField:
   - Biome: 0
-    SpawnRateDenominator: 40
+    SpawnRateDenominator: 300
     MaxNpcSlotAmount: 5
     HasDayNightCycle: 1
     NpcSpawnTable:
@@ -25,7 +25,7 @@ MonoBehaviour:
       RelativeSpawnWeight: 100
       SpawnCondition: 2
   - Biome: 1
-    SpawnRateDenominator: 500
+    SpawnRateDenominator: 200
     MaxNpcSlotAmount: 6
     HasDayNightCycle: 0
     NpcSpawnTable:

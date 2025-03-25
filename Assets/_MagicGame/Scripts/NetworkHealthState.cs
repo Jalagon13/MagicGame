@@ -19,7 +19,7 @@ public class NetworkHealthState : NetworkBehaviour
 
     [field: SerializeField] public int BaseHealth { get; private set; } = 100;
     [field: SerializeField] public int BaseDefense { get; private set; } = 0;
-    [field: SerializeField] public float IFrameDuration { get; private set; } = 0.67f;
+    [field: SerializeField] public float IFrameDuration { get; private set; } = 0.1666667f;
     [field: SerializeField] public bool CanDie { get; private set; } = true;
     [field: SerializeField] public bool CanTakeDamage { get; private set; } = true;
 

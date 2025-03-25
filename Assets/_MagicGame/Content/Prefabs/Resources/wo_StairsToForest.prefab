@@ -229,7 +229,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 154920837247502213, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Name
-      value: StairsToForest
+      value: wo_StairsToForest
+      objectReference: {fileID: 0}
+    - target: {fileID: 154920837247502213, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 257096646587651372, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_LocalPosition.x
@@ -392,5 +396,12 @@ MonoBehaviour:
       Data3: 2078279570
       Data4: 643237060
     Path: event:/StoneDestroyed
+  <PlaceSound>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   <DestinationBiome>k__BackingField: 0
   <WorldInput>k__BackingField: {fileID: 6227793256016715967}

@@ -24,6 +24,10 @@ PrefabInstance:
       propertyPath: <Invincible>k__BackingField
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3165997416469630793, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <IFrameDuration>k__BackingField
+      value: 0.1666667
+      objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _maxHealth
       value: 100
@@ -138,6 +142,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4265503197086572365, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852144824365540908, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <CanDespawn>k__BackingField
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4991880406501387780, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}

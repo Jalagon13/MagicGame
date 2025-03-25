@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using FMODUnity;
 using MoreMountains.Tools;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
@@ -9,17 +10,21 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Deployable", menuName = "Create Item/New Deployable")]
 public class DeployItemSO : ItemSO
 {
+	public static bool PlacedThisFrameFlag = false;
+
 	[SerializeField] private WorldObject _deployObjectPrefab;
 	
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
 		Vector2 pos = ActionManager.MouseWorldPosition;
 		
-		if(IsClear(pos) && PlayerInRangeOfMouse())
+		if(IsClear(pos) && PlayerInRangeOfMouse() && !TileManager.Instance.WallTm.HasTile(new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y))))
 		{
 			Vector2Int spawnPosition = new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
 			ObjectManager.Instance.PlaceResourceObjectServerRpc(spawnPosition, GameManager.Instance.GetIDFromWorldObject(_deployObjectPrefab), Player.LocalClientInstance.CurrentPlayerBiome.Value);
 			InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
+			SoundManager.Instance.PlayOneShot(_deployObjectPrefab.PlaceSound, Player.LocalClientInstance.transform.position);
+			PlacedThisFrameFlag = true;
 		}
 		
 		return _baseActionCooldown;

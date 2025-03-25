@@ -21,8 +21,8 @@ MonoBehaviour:
   <ChargeVFX>k__BackingField: {fileID: 3235512204744374167, guid: 966ce96a46a0346519d0f2a96c141a22, type: 3}
   <CastTime>k__BackingField: 0.33
   <CastDelay>k__BackingField: 0.2
-  <Damage>k__BackingField: 6
-  <ManaCost>k__BackingField: 3
+  <Damage>k__BackingField: 7
+  <ManaCost>k__BackingField: 9
   <Knockback>k__BackingField: 10
   <Accuracy>k__BackingField: 0
   <Lifetime>k__BackingField: 1

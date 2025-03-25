@@ -16,6 +16,7 @@ public class WorldObject : MonoBehaviour // Base class for every "physical" asse
 	[field: SerializeField] public List<Loot> Table { get; private set; }
 	[field: SerializeField] public EventReference MiningSound { get; private set; }
 	[field: SerializeField] public EventReference ResourceDestroyed { get; private set; }
+	[field: SerializeField] public EventReference PlaceSound { get; private set; }
 
 
 	private void Awake()

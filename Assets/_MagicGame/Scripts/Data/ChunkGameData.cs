@@ -66,9 +66,7 @@ public class ChunkGameData
 		}
 		else if(tile.TileType == TileType.Floor)
 		{
-			Debug.Log($"Floor tile added: {tileToAdd.TilePosition}");
 			FloorTileGameDataList.Add(tileToAdd);
-			Debug.Log($"Count of floor tiles: {FloorTileGameDataList.Count}");
 		}
 	}
 	
