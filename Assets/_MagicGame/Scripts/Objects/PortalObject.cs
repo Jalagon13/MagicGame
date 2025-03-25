@@ -5,7 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PortalObject : WorldObject
 {
-	[SerializeField] private WorldInput _worldInput;
+	[field: SerializeField] public BiomeType DestinationBiome { get; private set; }
+	[field: SerializeField] public WorldInput WorldInput { get; private set; }
 	
 	private void Start()
 	{
@@ -16,11 +17,9 @@ public class PortalObject : WorldObject
 	{
 		var centerOfChestPosition = new Vector2(transform.position.x + 0.5f, transform.position.y + 0.5f);
 
-		if (_worldInput.IsMouseOverIndputDetector() && PlayerInRangeOfPosition(centerOfChestPosition))
+		if (WorldInput.IsMouseOverIndputDetector() && PlayerInRangeOfPosition(centerOfChestPosition))
 		{
-			// Just hard code it like this for now will change once more environments are added
-			BiomeType destination = Player.LocalClientInstance.CurrentPlayerBiome.Value == BiomeType.Cave ? BiomeType.Forest : BiomeType.Cave;
-			WorldManager.Instance.LoadBiome(destination, transform.position);
+			WorldManager.Instance.LoadBiome(DestinationBiome, transform.position);
 		}
 	}
 	

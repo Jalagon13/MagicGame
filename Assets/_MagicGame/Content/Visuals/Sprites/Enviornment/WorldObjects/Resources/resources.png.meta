@@ -264,7 +264,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rsc_portal
+      name: rsc_stairs_to_cave
       rect:
         serializedVersion: 2
         x: 32
@@ -395,6 +395,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: rsc_stairs_to_surface
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 80
+        width: 16
+        height: 20
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 055f2f495f1604dddb5f5e6ea09ee3f5
+      internalID: 125475558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -418,8 +440,9 @@ TextureImporter:
       rsc_door_open: 1158298151
       rsc_furnace: -1474684095
       rsc_mana_crystal: -1761981032
-      rsc_portal: -1882313086
       rsc_spindle: 250863300
+      rsc_stairs_to_cave: -1882313086
+      rsc_stairs_to_surface: 125475558
       rsc_stone: -153397541
       rsc_target_dummy: 1783913889
   mipmapLimitGroupName: 

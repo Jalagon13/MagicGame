@@ -13,6 +13,8 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
     private float _timeThreshold = 3.5f; // Every _timeThreshold seconds, check if pixie has moved _distanceThreshold
     private float _distanceThreshold = 0.2f;
     private bool _isStuck;
+    private float _distanceToDestination;
+    private Vector2 _startingPosition;
 
     public ChaseAIMoveState(ChaseAIStateMachine.ChaseAIState key, StateMachine<ChaseAIStateMachine.ChaseAIState> context) : base(key, context)
     {
@@ -25,8 +27,10 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
         _timeNotMoved = 0f;
         _lastPosition = _ctx.transform.position;
         _ctx.IsChasing = _ctx.BreadCrumbPositionFound || _ctx.PlayerPositionFound;
+        _distanceToDestination = Vector2.Distance(_ctx.transform.position, _ctx.WanderDestination);
+        _startingPosition = _ctx.transform.position;
 
-        if(!_ctx.IsChasing)
+        if (!_ctx.IsChasing)
         {
             _destinationReached = false;
         }
@@ -45,7 +49,7 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
         {
             // Check if the destination has been reached
             float distanceToDestination = Vector2.Distance(_ctx.transform.position, _ctx.WanderDestination);
-            if (distanceToDestination <= _ctx.StoppingDistance)
+            if (distanceToDestination <= _ctx.StoppingDistance || Vector2.Distance(_ctx.transform.position, _startingPosition) >= _distanceToDestination)
             {
                 _destinationReached = true;
             }

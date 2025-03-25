@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dbb0ce312d9e42cc94b332745f0ba74, type: 3}
-  m_Name: OreGenNM
+  m_Name: nm_OreGen
   m_EditorClassIdentifier: 
   Width: 256
   Height: 256

@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b31f6fd9b04647aeb0c34eda896b8b1, type: 3}
   m_Name: _DefaultCDB
   m_EditorClassIdentifier: 
+  <DatabaseName>k__BackingField: 
   RecipeDatabase:
   - {fileID: 11400000, guid: daf2dc448484f4db69facd208fbdf7eb, type: 2}
   - {fileID: 11400000, guid: a6c33320ec6a24a379860501f478e5b1, type: 2}
-  - {fileID: 11400000, guid: 56ef5edf4331b470db9e75fe1b79a79f, type: 2}
   - {fileID: 11400000, guid: eed561d11da294eb2ac3a8084909d102, type: 2}
+  - {fileID: 11400000, guid: 56ef5edf4331b470db9e75fe1b79a79f, type: 2}

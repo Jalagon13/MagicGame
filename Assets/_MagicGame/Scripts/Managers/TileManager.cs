@@ -95,6 +95,13 @@ public class TileManager : NetworkBehaviour
 			GroundTm.SetTile(tilePosV3Int, tile.TileSO);
 			RemoveTileVisData(tilePosV3Int);
 		}
+		
+		// loop through all floor tiles and set them on tilemap
+		foreach(TileGameData tile in e.Chunk.FloorTileGameDataList)
+		{
+			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
+			FloorTm.SetTile(tilePosV3Int, tile.TileSO);
+		}
 			
 		// loop through all wall tiles and set them on tilemap
 		foreach(TileGameData tile in e.Chunk.WallTileGameDataList)
@@ -112,6 +119,14 @@ public class TileManager : NetworkBehaviour
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			GroundTm.SetTile(tilePosV3Int, null);
+			RemoveTileVisData(tilePosV3Int);
+		}
+		
+		// loop through all floor tiles and set null on tilemap
+		foreach (TileGameData tile in e.Chunk.FloorTileGameDataList)
+		{
+			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
+			FloorTm.SetTile(tilePosV3Int, null);
 			RemoveTileVisData(tilePosV3Int);
 		}
 		

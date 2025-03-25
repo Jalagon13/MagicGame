@@ -57,7 +57,7 @@ public class MiningHandler : MonoBehaviour
             if (staffItem.PlayerWithinMiningRangeOfMouse())
             {
                 // Try to detect a destructable type to destroy
-                if (ObjectManager.Instance.TryToFindWorldObject((Vector2Int)ActionManager.MouseTilePosition, out WorldObject wo))
+                if (ObjectManager.Instance.TryToFindWorldObject((Vector2Int)ActionManager.MouseTilePosition, out WorldObject wo) && wo.CanBeDestroyed)
                 {
                     // Found an object to destroy
                     _worldObjectSelected = wo;

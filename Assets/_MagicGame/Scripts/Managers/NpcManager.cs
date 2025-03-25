@@ -7,8 +7,8 @@ using UnityEngine;
 public class NpcManager : NetworkBehaviour
 {
 	public static NpcManager Instance { get; private set; }
-	public static int OUTER_SPAWN_ZONE_WIDTH = 48; // Outer zone from cam frustum
-	public static int OUTER_SPAWN_ZONE_HEIGHT = 28; // Outer zone from cam frustum
+	public static int OUTER_SPAWN_ZONE_WIDTH = 52; // Outer zone from cam frustum
+	public static int OUTER_SPAWN_ZONE_HEIGHT = 32; // Outer zone from cam frustum
 	public static int NO_SPAWN_ZONE_WIDTH = 35; // Camera Frustum
 	public static int NO_SPAWN_ZONE_HEIGHT = 20; // Camera Frustum
 	
@@ -16,10 +16,9 @@ public class NpcManager : NetworkBehaviour
 	[SerializeField] private bool _enableSpawning = true;
 	[SerializeField] private float _startSpawnDelay;
 	
-	private readonly NetworkList<NetworkObjectReference> _activeNpcNetworkList = new();
+	public NetworkVariable<float> NpcSlots { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	private readonly float _tickTime = 1f / 60f; // 60 ticks per second
 	private readonly int _maxSpawnAttempts = 50;
-	private float _activeNpcSlotAmount = 0; // Number of active NPCs at a given time,
 	private Transform _localPlayerTransform;
 	
 	private void Awake()
@@ -32,12 +31,11 @@ public class NpcManager : NetworkBehaviour
 		}
 	}
 
-	private void NetworkManager_OnClientConnectedCallback(ulong clientId)
+    private void NetworkManager_OnClientConnectedCallback(ulong clientId)
 	{
 		if(NetworkManager.LocalClientId != clientId) return;
 		
 		_localPlayerTransform = NetworkManager.ConnectedClients[clientId].PlayerObject.transform;
-		_activeNpcSlotAmount = 0;
 		
 		InvokeRepeating(nameof(TryToSpawnNpc), _startSpawnDelay, _tickTime);
 	}
@@ -51,7 +49,7 @@ public class NpcManager : NetworkBehaviour
 		float spawnRate = 1 / (_biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().SpawnRateDenominator * spawnModifier);
 		
 		// Try to spawn an enemy if we're below the max number of NPC slots
-		if (_activeNpcSlotAmount < _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount && UnityEngine.Random.value < spawnRate)
+		if (NpcSlots.Value < _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount && UnityEngine.Random.value < spawnRate)
 		{
 			// Try to find a valid spawn spot and spawn an entity on the first one found
 			int spawnAttempts = 0;
@@ -67,7 +65,7 @@ public class NpcManager : NetworkBehaviour
 				
 				if(SpawnSpotIsValid(potentialSpawnPoint))
 				{
-					float remainingNpcSlotSpace = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount - _activeNpcSlotAmount;
+					float remainingNpcSlotSpace = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount - NpcSlots.Value;
 					NpcSpawnData npcToSpawn = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().GetRandomNpc();
 					
 					if(npcToSpawn.NpcData.SlotAmount <= remainingNpcSlotSpace)
@@ -84,13 +82,13 @@ public class NpcManager : NetworkBehaviour
 	
 	public void SpawnNpc(Vector2 spawnPosition, NpcSO npcToSpawn)
 	{
-		_activeNpcSlotAmount += npcToSpawn.SlotAmount;
+		
 		int npcId = GameManager.Instance.GetNpcIdFromNpcSO(npcToSpawn);
-		SpawnNpcServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, npcId, NetworkManager.LocalClientId, spawnPosition);
+		SpawnNpcServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, npcId, NetworkManager.LocalClientId, spawnPosition, npcToSpawn.SlotAmount);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnNpcServerRpc(BiomeType spawnBiome, int npcId, ulong spawnPlayerId, Vector2 position)
+	private void SpawnNpcServerRpc(BiomeType spawnBiome, int npcId, ulong spawnPlayerId, Vector2 position, float slotAmount)
 	{
 		NpcSO npcSO = GameManager.Instance.GetNpcSOFromNpcId(npcId);
 		
@@ -103,25 +101,19 @@ public class NpcManager : NetworkBehaviour
 
 		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
 		npcNetworkComponent.InitialieNpcNetwork(spawnPlayerId, npcId, spawnBiome);
-		
-		// replace this with dimension specific entity list that contains mobs and projectiles for entities
-		_activeNpcNetworkList.Add(npcPrefabNetworkObject);
+
+		NpcSlots.Value += slotAmount;
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void DespawnNpcServerRpc(int npcId, NetworkObjectReference npcToRemoveNetworkObjectReference, ulong spawningClientId, bool killNpc)
 	{
-		if(_activeNpcNetworkList.Contains(npcToRemoveNetworkObjectReference))
-		{
-			_activeNpcNetworkList.Remove(npcToRemoveNetworkObjectReference);
-		}
-		
 		// Either kill or despawn npc depending on the conditional
 		npcToRemoveNetworkObjectReference.TryGet(out NetworkObject npcNetworkObject);
 		Npc npc = npcNetworkObject.GetComponent<Npc>();
-		NpcNetworkComponent npcNetworkComponent = npc.GetComponent<NpcNetworkComponent>();
-		
-		if(killNpc)
+		NpcSlots.Value -= npc.NpcSO.SlotAmount;
+
+		if (killNpc)
 		{
 			// NTFS: Handle other death stuff here
 			npc.DropLoot();
@@ -134,12 +126,30 @@ public class NpcManager : NetworkBehaviour
 	{
 		if(PointIsInWall(potentialSpawnPoint)) return false;
 		
+		if(!IsClear(potentialSpawnPoint)) return false;
+		
+		if(!TileManager.Instance.GroundTm.HasTile(new Vector3Int(Mathf.FloorToInt(potentialSpawnPoint.x), Mathf.FloorToInt(potentialSpawnPoint.y), 0))) return false;
+		
 		// If point is in the no-spawn zone of any other player, it is invalid (Camera frustum, NOTE: this is not dynamic; does not change if you change the cam frustum)
 		if(PointInNoSpawnZoneOfAnyOtherPlayer(potentialSpawnPoint)) return false;
 		
 		return true;
 	}
-	
+
+	private bool IsClear(Vector2 position)
+	{
+		Vector2 positionCheck = new(Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.y));
+		var colliders = Physics2D.OverlapBoxAll(positionCheck + new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), 0);
+
+		foreach (Collider2D col in colliders)
+		{
+			if (col.TryGetComponent(out WorldObject clickable) || col.TryGetComponent(out Npc npc))
+				return false;
+		}
+
+		return true;
+	}
+
 	private bool PointInNoSpawnZoneOfAnyOtherPlayer(Vector2 potentialSpawnPoint)
 	{
 		foreach (var clientId in NetworkManager.ConnectedClientsIds)
@@ -194,7 +204,7 @@ public class NpcManager : NetworkBehaviour
 		float randomY = UnityEngine.Random.Range(minY, maxY);
 
 		// Round the position to the nearest tile and return the center of the tile
-		Vector3Int tilePosition = new(Mathf.RoundToInt(randomX), Mathf.RoundToInt(randomY), 0);
+		Vector3Int tilePosition = new(Mathf.FloorToInt(randomX), Mathf.FloorToInt(randomY), 0);
 		Vector2 centerTilePosition = new(tilePosition.x + 0.5f, tilePosition.y + 0.5f);
 
 		return centerTilePosition;
@@ -202,7 +212,7 @@ public class NpcManager : NetworkBehaviour
 	
 	private float GetSpawnModifier()
 	{
-		float activeRatio = _activeNpcSlotAmount / _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount;
+		float activeRatio = NpcSlots.Value / _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount;
 
 		if (activeRatio < 0.2f)
 		{

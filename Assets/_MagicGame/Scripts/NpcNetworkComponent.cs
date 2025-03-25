@@ -80,6 +80,8 @@ public class NpcNetworkComponent : NetworkBehaviour
 
 	private void NpcNetworkTick()
 	{
+		if (!IsSpawned) return;
+		
 		HandleNpcBiomeVisibility();
 		
 		if(CanDespawn)
@@ -245,8 +247,13 @@ public class NpcNetworkComponent : NetworkBehaviour
 	private void DespawnNpc()
 	{
 		// Debug.Log($"[Client {NetworkManager.LocalClientId}] Despawning NPC.");
-		_npcIsBeingRemoved = true;
-		NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, false);
+		
+		if(IsSpawned)
+		{
+			_npcIsBeingRemoved = true;
+			Debug.Log($"Spawned? {IsSpawned}");
+			NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, false);
+		}
 	}
 
 	public override void OnNetworkDespawn()

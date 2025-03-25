@@ -10,12 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55646a241e94b4a3a9d1cdf6e939102b, type: 3}
-  m_Name: rec_CavePortal
+  m_Name: rec_Merchant
   m_EditorClassIdentifier: 
-  OutputItem: {fileID: 11400000, guid: d4e4d8d6ce2d3416b87474a4415b1967, type: 2}
+  OutputItem: {fileID: 11400000, guid: 21901636f73164237a7f444c9e13ea4c, type: 2}
   OutputAmount: 1
   ResourceList:
-  - Item: {fileID: 11400000, guid: 78d4495e64216404c85d1a0daa71cc1b, type: 2}
-    Quantity: 6
   - Item: {fileID: 11400000, guid: d562dae53acb04aa48034eb14ee90338, type: 2}
-    Quantity: 3
+    Quantity: 8

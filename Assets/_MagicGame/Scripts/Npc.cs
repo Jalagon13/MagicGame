@@ -17,6 +17,7 @@ public class Npc : NetworkBehaviour
 		public Vector2 DamageSourcePosition;
 	}
 
+	[field: SerializeField] public NpcSO NpcSO { get; private set; }
 	[SerializeField] private float _knockbackResist;
 	[SerializeField] private int _damage;
 	[SerializeField] private DamageCollider _damageCollider;

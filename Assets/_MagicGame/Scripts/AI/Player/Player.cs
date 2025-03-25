@@ -224,7 +224,7 @@ public class Player : NetworkBehaviour
 
 		if (CurrentPlayerBiome.Value != _spawnBiome)
 		{
-			WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint, false);
+			WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint);
 		}
 
 		OnRespawn?.Invoke(this, new PlayerIdEventArgs

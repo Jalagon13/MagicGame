@@ -61,7 +61,7 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
         {
             _ctx.Velocity = _ctx.Knockback.Velocity;
         }
-        else
+        else if(!_idleComplete)
         {
             _ctx.Velocity = Vector2.zero;
         }

@@ -83,7 +83,7 @@ public class GameManager : NetworkBehaviour
 	{
 		if(clientId == NetworkManager.ServerClientId)
 		{
-			WorldManager.Instance.LoadBiome(_startingBiome, Player.LocalClientInstance.transform.position, false);
+			WorldManager.Instance.LoadBiome(_startingBiome, Player.LocalClientInstance.transform.position);
 		}
 	}
 	

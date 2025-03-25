@@ -9,8 +9,8 @@ public class ChunkGameData
 {
 	public Vector2Int ChunkPosition { get; private set; }
 	public List<TileGameData> GroundTileGameDataList;
-	public List<TileGameData> WallTileGameDataList;// Note to future self: Make floor serializable too later
-	public List<TileGameData> FloorTileGameDataList;// Note to future self: Make floor serializable too later
+	public List<TileGameData> WallTileGameDataList;
+	public List<TileGameData> FloorTileGameDataList;
 	public List<WorldObjectGameData> WorldObjectGameDataList;
 	public int Size { get; private set; }
 
@@ -25,7 +25,7 @@ public class ChunkGameData
 	}
 	
 	// When a tile is destroyed, delete the tile data in chunk
-	public void RemoveTileData(Vector2Int position, TileType tileType)
+	public void RemoveTileDataIfExists(Vector2Int position, TileType tileType)
 	{
 		if(tileType == TileType.Wall)
 		{
@@ -55,7 +55,7 @@ public class ChunkGameData
 		}
 		
 		// If tile data to delete does not exist, log error it
-		Debug.LogError("Trying to delete tile data that is not there");
+		Debug.LogWarning($"Trying to delete a tile that does not exist {position}, {tileType}");
 	}
 	
 	// When a tile is placed, add tile data in chunk
@@ -69,7 +69,9 @@ public class ChunkGameData
 		}
 		else if(tile.TileType == TileType.Floor)
 		{
+			Debug.Log($"Floor tile added: {tileToAdd.TilePosition}");
 			FloorTileGameDataList.Add(tileToAdd);
+			Debug.Log($"Count of floor tiles: {FloorTileGameDataList.Count}");
 		}
 	}
 	
@@ -100,6 +102,17 @@ public class ChunkGameData
 		else
 		{
 			worldObjectToAdd = new WorldObjectGameData(worldObject, position);
+		}
+
+		for (int i = 0; i < WorldObjectGameDataList.Count; i++)
+		{
+			if (WorldObjectGameDataList[i].Position == position)
+			{
+				// Found something already there
+				Debug.LogWarning($"Found {WorldObjectGameDataList[i].WO} already there at {position}, replacing it with {worldObject}");
+				WorldObjectGameDataList.RemoveAt(i);
+				break;
+			}
 		}
 
 		WorldObjectGameDataList.Add(worldObjectToAdd);

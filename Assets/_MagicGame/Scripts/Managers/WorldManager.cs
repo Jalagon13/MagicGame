@@ -39,7 +39,6 @@ public class WorldManager : NetworkBehaviour
 	[Title("World Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private bool _randomSeed = false;
 	[SerializeField] private string _customSeed = 123.ToString();
-	[SerializeField] private WorldObject _portalObjectPrefab;
 	[SerializeField] private float _portalSearchRadius = 10f;
 	[SerializeField] private float _portalSearchDelayOnBiomeLoad = 0.75f;
 	[SerializeField] private float _endBiomeTransitionDelay = 1f;
@@ -128,9 +127,9 @@ public class WorldManager : NetworkBehaviour
 		_dayDurationInSeconds = dayDurationInSeconds;
 	}
 
-	public void LoadBiome(BiomeType targetBiome, Vector2 portalPosition, bool searchForPortal = true)
+	public void LoadBiome(BiomeType targetBiome, Vector2 position)
 	{
-		PlacePlayerAt(portalPosition);
+		PlacePlayerAt(position);
 		
 		OnBiomeTransitionStart?.Invoke(this, EventArgs.Empty); 
 		
@@ -138,16 +137,16 @@ public class WorldManager : NetworkBehaviour
 		ChunkManager.Instance.UnloadAllChunks();
 		ObjectManager.Instance.ClearAllEnvironmentObjectVisuals();
 		
-		LoadEnvironmentServerRpc(searchForPortal, portalPosition, Player.LocalClientInstance.CurrentPlayerBiome.Value, targetBiome);
+		LoadEnvironmentServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, targetBiome);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void LoadEnvironmentServerRpc(bool searchForPortal, Vector2 portalPosition, BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
+	private void LoadEnvironmentServerRpc(BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
 	{
-		AsyncLoadEnvironment(searchForPortal, portalPosition, fromBiome, toBiome, rpcParams);
+		AsyncLoadEnvironment(fromBiome, toBiome, rpcParams);
 	}
 
-	private async void AsyncLoadEnvironment(bool searchForPortal, Vector2 portalPosition, BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
+	private async void AsyncLoadEnvironment(BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
 	{
 		// Save the last biome it came from and set the player's burrent biome to tobiome.
 		if(!SaveSystem.Instance.IsSaving && SaveSystem.Instance.BiomeLoadedInMemory(fromBiome))
@@ -158,7 +157,7 @@ public class WorldManager : NetworkBehaviour
 		// If the targetBiome is already loaded into memory, 
 		if(SaveSystem.Instance.BiomesInMemory.Contains(toBiome))
 		{
-			LoadChunksClientRpc(toBiome, searchForPortal, portalPosition, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+			LoadChunksClientRpc(toBiome, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
 		}
 		else
 		{
@@ -174,7 +173,7 @@ public class WorldManager : NetworkBehaviour
 				await SaveSystem.Instance.SaveBiome(fromBiome);
 			}
 			
-			LoadChunksClientRpc(toBiome, searchForPortal, portalPosition, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+			LoadChunksClientRpc(toBiome, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
 		}
 	}
 
@@ -192,7 +191,7 @@ public class WorldManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.SpecifiedInParams)]
-	private void LoadChunksClientRpc(BiomeType toBiome, bool searchForPortal, Vector2 portalPosition, RpcParams rpcParams)
+	private void LoadChunksClientRpc(BiomeType toBiome, RpcParams rpcParams)
 	{
 		Debug.Log($"Player biome: {toBiome} Allowing client to load chunks");
 		Player.LocalClientInstance.CurrentPlayerBiome.Value = toBiome;
@@ -202,81 +201,23 @@ public class WorldManager : NetworkBehaviour
 		OnBiomeDataLoaded?.Invoke(this, EventArgs.Empty);
 		IsLoadingBiome = false;
 		
-		StartCoroutine(SearchForPortal(searchForPortal, portalPosition));
+		StartCoroutine(SearchForPortal());
 	}
 
-	private IEnumerator SearchForPortal(bool searchForPortal, Vector2 portalPosition)
+	private IEnumerator SearchForPortal()
 	{
-		if(searchForPortal)
-		{
-			yield return new WaitForSeconds(_portalSearchDelayOnBiomeLoad);
-
-			Collider2D[] colliders = Physics2D.OverlapCircleAll(portalPosition, _portalSearchRadius);
-
-			PortalObject closestPortal = null;
-			float closestDistance = float.MaxValue;
-
-			// Loop through the colliders to find portals and the closest one
-			foreach (var collider in colliders)
-			{
-				PortalObject portal = collider.GetComponent<PortalObject>();
-				if (portal != null)
-				{
-					float distance = Vector2.Distance(portal.transform.position, portalPosition);
-
-					if (distance < closestDistance)
-					{
-						closestPortal = portal;
-						closestDistance = distance;
-					}
-				}
-			}
-
-			if (closestPortal != null)
-			{
-				Debug.Log($"Closest portal found at: {closestPortal.transform.position}");
-				PlacePlayerAt(closestPortal.transform.position);
-			}
-			else
-			{
-				Debug.Log("No portal found within the search radius.");
-				SpawnPortal(portalPosition);
-			}
-		}
-		
 		yield return new WaitForSeconds(_endBiomeTransitionDelay);
-		
+
 		Lightmap.Instance.UpdateLightMap();
 		
 		OnBiomeTransitionEnd?.Invoke(this, EventArgs.Empty); 
 	}
 
-	private void SpawnPortal(Vector2 portalPosition)
-	{
-		Debug.Log("Portal NOT found. Placing player at new portal that is spawned");
-		Vector2Int v2IntPos = new(Mathf.RoundToInt(portalPosition.x), Mathf.RoundToInt(portalPosition.y));
-		ObjectManager.Instance.PlaceResourceObjectServerRpc(v2IntPos, GameManager.Instance.GetIDFromWorldObject(_portalObjectPrefab), Player.LocalClientInstance.CurrentPlayerBiome.Value);
-	}
-	
 	private void PlacePlayerAt(Vector2 portalPosition)
 	{
 		Player.LocalClientInstance.transform.SetPositionAndRotation(new(portalPosition.x + 0.5f, portalPosition.y + 0.5f), Quaternion.identity);
 	}
 	
-	private void DeleteNeighborWallsAroundPoint(Vector3 centerPosition)
-	{
-		Vector3Int centerPositionInt = Vector3Int.FloorToInt(centerPosition);
-	
-		// Nested for loop to check all surrounding tiles within a 3x3 grid centered on the given position
-		for (int x = -1; x <= 1; x++)
-		{
-			for (int y = -1; y <= 1; y++)
-			{
-				Vector3Int neighborPosition = new(centerPositionInt.x + x, centerPositionInt.y + y, centerPositionInt.z);
-				// Environment.Instance.WallTm.DeleteTile(new(neighborPosition.x, neighborPosition.y), Player.LocalClientInstance.CurrentBiome.Value);
-			}
-		}
-	}
 	
 	public bool IsTicking()
 	{

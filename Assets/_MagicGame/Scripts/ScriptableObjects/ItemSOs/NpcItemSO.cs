@@ -93,6 +93,8 @@ public class NpcItemSO : ItemSO
             if (floorTilemap.HasTile(p) && !floorTilePositions.Contains(p))
             {
                 floorTilePositions.Add(p);
+                
+                
 
                 PushAdjacentTiles(p, tilesToCheck);
             }
@@ -147,6 +149,13 @@ public class NpcItemSO : ItemSO
             Debug.LogWarning("Room needs a light source");
             return false;
         }
+        
+        // Check if the room is already occupied
+        if(IsOccupied(floorTilePositions))
+        {
+            Debug.LogWarning("Room is already occupied");
+            return false;
+        }
 
         // If all checks pass
         return true;
@@ -180,6 +189,22 @@ public class NpcItemSO : ItemSO
             foreach (Collider2D col in colliders)
             {
                 if (col.CompareTag("LightSource"))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private bool IsOccupied(List<Vector3Int> floorTilePositions)
+    {
+        foreach (var pos in floorTilePositions)
+        {
+            var centerPos = new Vector2(pos.x + 0.5f, pos.y + 0.5f);
+            var colliders = Physics2D.OverlapCircleAll(centerPos, 0.1f);
+
+            foreach (Collider2D col in colliders)
+            {
+                if (col.CompareTag("FriendlyNpc"))
                     return true;
             }
         }

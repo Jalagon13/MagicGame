@@ -323,8 +323,7 @@ public class ChunkManager : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void RemoveTileServerRpc(TileType tileType, Vector2Int position, BiomeType biome)
 	{
-		Debug.Log("RemoveTileServerRpc");
-		GetChunkFromAnyWorldPos(position, biome).RemoveTileData(position, tileType);
+		GetChunkFromAnyWorldPos(position, biome).RemoveTileDataIfExists(position, tileType);
 
 		if (tileType == TileType.Wall)
 		{

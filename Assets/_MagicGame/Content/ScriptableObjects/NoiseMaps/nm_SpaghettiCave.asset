@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dbb0ce312d9e42cc94b332745f0ba74, type: 3}
-  m_Name: ForestStoneNM
+  m_Name: nm_SpaghettiCave
   m_EditorClassIdentifier: 
   Width: 256
   Height: 256
-  Scale: 20
+  Scale: 60
   Octaves: 4
   Persistence: 0.5
-  Lacunarity: 1.4
-  UseRedistribution: 1
-  Redistribution: 2.45
-  UseFallOffFunction: 1
-  Mix: 0.6
+  Lacunarity: 2.15
+  UseRedistribution: 0
+  Redistribution: 1
+  UseFallOffFunction: 0
+  Mix: 1
   UseBillowed: 0
+  UseSmoothStep: 1
   NoiseTexture: {fileID: 0}

@@ -53,6 +53,10 @@ PrefabInstance:
       value: event:/PixieDamaged
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <NpcSO>k__BackingField
+      value: 
+      objectReference: {fileID: 11400000, guid: 864554e8083dc4218ac4ad191a1023a3, type: 2}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _deathSound.Guid.Data1
       value: 3190678
       objectReference: {fileID: 0}
@@ -236,6 +240,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6511669604684677142, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 1439629023498667455, guid: fb182d42260bd4622a6665ca13fd1b31, type: 3}
     - target: {fileID: 7196426771198909061, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _iHasHealthGameObject
       value: 
@@ -244,7 +252,9 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 3803721222
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6511669604684677142, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+    - {fileID: 248577315121873963, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
     m_RemovedGameObjects:
     - {fileID: 9199464770801132, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
     m_AddedGameObjects:
