@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c165b42f9814629a98a34f3f8f19c8, type: 3}
+  m_Name: TallWallTestTile
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Tall Wall Test Tile
+  <UiDisplay>k__BackingField: {fileID: 1440872479, guid: dd61df6b418fe4d0c9b59cf0fc0d28e4, type: 3}
+  <GoldValue>k__BackingField: 3
+  <Stackable>k__BackingField: 1
+  <Description>k__BackingField: 
+  <TileToPlace>k__BackingField: {fileID: 11400000, guid: b746f1b42d9a8437cb24fbd6724d5b61, type: 2}

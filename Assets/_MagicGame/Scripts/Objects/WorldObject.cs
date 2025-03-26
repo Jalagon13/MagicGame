@@ -35,7 +35,7 @@ public class WorldObject : MonoBehaviour // Base class for every "physical" asse
 			Pathfinding.Instance.RemovePfWallTileServerRpc(objectPosition, biome);
 		}
 		
-		TileManager.Instance.RemoveTileVisData((Vector3Int)objectPosition);
+		TileManager.Instance.RemoveTileVisibilityData((Vector3Int)objectPosition);
 		Lightmap.Instance.UpdateLightMap();
 	}
 	

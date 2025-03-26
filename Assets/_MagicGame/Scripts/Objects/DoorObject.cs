@@ -51,7 +51,7 @@ public class DoorObject : WorldObject
 		_doorSr.sprite = _openSprite;
 		_localWallCollider.gameObject.SetActive(false);
 		
-		TileManager.Instance.RemoveTileVisData(Vector3Int.FloorToInt(transform.position));
+		TileManager.Instance.RemoveTileVisibilityData(Vector3Int.FloorToInt(transform.position));
 		Lightmap.Instance.UpdateLightMap();
 	}
 	
@@ -60,7 +60,7 @@ public class DoorObject : WorldObject
 		_doorSr.sprite = _closeSprite;
 		_localWallCollider.gameObject.SetActive(true);
 		
-		TileManager.Instance.AddTileVisData(Vector3Int.FloorToInt(transform.position), new TileVisibility{ Visibility = 1 });
+		TileManager.Instance.AddTileVisibilityData(Vector3Int.FloorToInt(transform.position), new TileVisibility{ Visibility = 1 });
 		Lightmap.Instance.UpdateLightMap();
 	}
 	

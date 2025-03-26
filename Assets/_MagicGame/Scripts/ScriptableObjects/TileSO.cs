@@ -19,10 +19,16 @@ public class TileSO : RuleTile
 	[Header("Tile Extended Properties")]
 	public TileType TileType;
 	public ItemSO DropItem;
-	public float Hardness = 1f;
+	public float Hardness = 0.65f;
 	
 	[Header("Sounds")]
 	public EventReference MiningSound;
 	public EventReference PlaceSound;
 	public EventReference DestroySound;
+	
+	[Header("Top Tiles (For Walls Only)")]
+	public Sprite TopTileLeft;
+	public Sprite TopTileCenter;
+	public Sprite TopTileRight;
+	public Sprite TopTileSingle;
 }

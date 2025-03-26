@@ -15,6 +15,7 @@ public class TileManager : NetworkBehaviour
 {
 	public static TileManager Instance;
 
+	[field: SerializeField] public TopTile TopTilePrefab { get; private set; }
 	[field: SerializeField] public Tilemap GroundTm { get; private set; }
 	[field: SerializeField] public Tilemap FloorTm { get; private set; }
 	[field: SerializeField] public Tilemap WallTm { get; private set; }
@@ -32,20 +33,52 @@ public class TileManager : NetworkBehaviour
 		WorldManager.Instance.OnBiomeTransitionStart += ClearLocalTilemaps;
 	}
 	
-	public void AddTileVisData(Vector3Int pos, TileVisibility tileVisData)
+	public void AddTileVisibilityData(Vector3Int pos, TileVisibility tileVisData)
 	{
 		TileVisibilityDict[pos] = tileVisData;
 	}
 	
-	public void RemoveTileVisData(Vector3Int tilePosV3Int)
+	public void RemoveTileVisibilityData(Vector3Int tilePosV3Int)
 	{
 		if(TileVisibilityDict.ContainsKey(tilePosV3Int))
 		{
 			TileVisibilityDict.Remove(tilePosV3Int);
 		}
 	}
+	
+	public void SetLocalTile(Vector3Int tilePos, TileSO tileSO, TileType tileType)
+	{
+		switch (tileType)
+		{
+			case TileType.Ground:
+				// NTFS: Need to do this down the line
+				GroundTm.SetTile(tilePos, tileSO);
+				break;
+			case TileType.Floor:
+				FloorTm.SetTile(tilePos, tileSO);
+				break;
+			case TileType.Wall:
+				WallTm.SetTile(tilePos, tileSO);
+				HandleTopWallTiles(tilePos, tileSO);
+				break;
+		}
+	}
 
-	[Rpc(SendTo.Server, RequireOwnership = false)]
+    private void HandleTopWallTiles(Vector3Int botTilePosition, TileSO tileSO)
+    {
+		Vector3Int topTilePosition = botTilePosition + Vector3Int.up;
+		bool tileAboveExists = WallTm.GetTile(topTilePosition) != null;
+		
+        if(tileAboveExists ||tileSO == null || tileSO.TileType != TileType.Wall) return;
+        
+        Debug.Log($"Spawning top tile at: {topTilePosition}");
+        TopTile topTile = Instantiate(TopTilePrefab, topTilePosition, Quaternion.identity);
+		topTile.gameObject.transform.SetParent(WallTm.gameObject.transform);
+		topTile.TileSpriteRenderer.sprite = tileSO.TopTileSingle;
+		topTile.UpdateTopTile();
+	}
+
+    [Rpc(SendTo.Server, RequireOwnership = false)]
 	public void DestroyTileServerRpc(Vector2Int tilePos, int tileId, BiomeType biome)
 	{
 		TileSO tileSO = GameManager.Instance.GetTileSOFromID(tileId);
@@ -92,23 +125,23 @@ public class TileManager : NetworkBehaviour
 		foreach(TileGameData tile in e.Chunk.GroundTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			GroundTm.SetTile(tilePosV3Int, tile.TileSO);
-			RemoveTileVisData(tilePosV3Int);
+			SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
+			RemoveTileVisibilityData(tilePosV3Int);
 		}
 		
 		// loop through all floor tiles and set them on tilemap
 		foreach(TileGameData tile in e.Chunk.FloorTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			FloorTm.SetTile(tilePosV3Int, tile.TileSO);
+			SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
 		}
 			
 		// loop through all wall tiles and set them on tilemap
 		foreach(TileGameData tile in e.Chunk.WallTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			WallTm.SetTile(tilePosV3Int, tile.TileSO);
-			AddTileVisData(tilePosV3Int, new TileVisibility {Visibility = 1});
+			SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
+			AddTileVisibilityData(tilePosV3Int, new TileVisibility {Visibility = 1});
 		}
 	}
 
@@ -118,23 +151,23 @@ public class TileManager : NetworkBehaviour
 		foreach(TileGameData tile in e.Chunk.GroundTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			GroundTm.SetTile(tilePosV3Int, null);
-			RemoveTileVisData(tilePosV3Int);
+			SetLocalTile(tilePosV3Int, null, TileType.Ground);
+			RemoveTileVisibilityData(tilePosV3Int);
 		}
 		
 		// loop through all floor tiles and set null on tilemap
 		foreach (TileGameData tile in e.Chunk.FloorTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			FloorTm.SetTile(tilePosV3Int, null);
-			RemoveTileVisData(tilePosV3Int);
+			SetLocalTile(tilePosV3Int, null, TileType.Floor);
+			RemoveTileVisibilityData(tilePosV3Int);
 		}
 		
 		foreach (TileGameData tile in e.Chunk.WallTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			WallTm.SetTile(tilePosV3Int, null);
-			RemoveTileVisData(tilePosV3Int);
+			SetLocalTile(tilePosV3Int, null, TileType.Wall);
+			RemoveTileVisibilityData(tilePosV3Int);
 		}
 		
 		Pathfinding.Instance.RequestUnloadChunk(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value);

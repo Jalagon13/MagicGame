@@ -349,13 +349,14 @@ public class ChunkManager : NetworkBehaviour
 		switch(syncTileType)
 		{
 			case TileType.Ground:
+				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
 				break;
 			case TileType.Floor:
-				TileManager.Instance.FloorTm.SetTile(pos, tileToPlace == null ? null : tileToPlace);
+				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
 				break;
 			case TileType.Wall:
-				TileManager.Instance.WallTm.SetTile(pos, tileToPlace == null ? null : tileToPlace);
-				TileManager.Instance.AddTileVisData(pos, new TileVisibility {Visibility = tileToPlace == null ? 0 : 1 });
+				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
+				TileManager.Instance.AddTileVisibilityData(pos, new TileVisibility {Visibility = tileToPlace == null ? 0 : 1 });
 				Lightmap.Instance.UpdateLightMap();
 				break;
 		}

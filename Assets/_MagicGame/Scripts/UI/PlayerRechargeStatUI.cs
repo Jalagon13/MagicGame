@@ -15,19 +15,8 @@ public class PlayerRechargeStatUI : MonoBehaviour
 	private void Start()
 	{
 		ActionManager.Instance.OnPlayerManaRechargeUpdated += OnPlayerManaRechargeUpdated;
-		HotbarManager.Instance.OnFocusSlotUpdated += CheckForSpellBook;
 		
 		ShowBar();
-	}
-
-	private void CheckForSpellBook(object sender, HotbarManager.OnFocusItemSetEventArgs e)
-	{
-		var mainHandItemSO = GameManager.Instance.GetItemSOFromItemId(e.SelectedItemIndex);
-		
-		if(mainHandItemSO is not WandItemSO)
-		{
-			HideBar();
-		}
 	}
 
 	private void OnPlayerManaRechargeUpdated(object sender, ActionManager.OnStatUpdatedEventArgs e)
@@ -61,6 +50,5 @@ public class PlayerRechargeStatUI : MonoBehaviour
 	private void OnDestroy()
 	{
 		ActionManager.Instance.OnPlayerManaRechargeUpdated -= OnPlayerManaRechargeUpdated;
-		HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSpellBook;
 	}
 }
