@@ -54,7 +54,7 @@ SortingGroup:
   m_SortingLayerID: -1478012363
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_SortAtRoot: 1
+  m_SortAtRoot: 0
 --- !u!114 &3416200484414636821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,8 +294,6 @@ MonoBehaviour:
   _startingItems:
   - Item: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: 40b88c27ea5084b5580b757ddf38bc59, type: 2}
-    Quantity: 55
   - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
     Quantity: 55
   - Item: {fileID: 11400000, guid: 7a301bb37deb44535a75d1fb8c9190c3, type: 2}

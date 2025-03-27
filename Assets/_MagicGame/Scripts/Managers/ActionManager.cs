@@ -24,10 +24,13 @@ public class ActionManager : MonoBehaviour
 
 	private Timer _itemActionTimer;
 	private InventoryItem _selectedInvItem;
+	private Transform _mouseTriggerTf;
 
 	private void Awake()
 	{
 		Instance = this;
+		_mouseTriggerTf = transform.GetChild(1).transform;
+		_mouseTriggerTf.parent = null;
 
 		_itemActionTimer = new Timer(0.25f);
 	}
@@ -40,7 +43,20 @@ public class ActionManager : MonoBehaviour
 		HotbarManager.Instance.OnFocusSlotUpdated += UpdateSelectedWand;
 	}
 
-    private void UpdateSelectedWand(object sender, HotbarManager.OnFocusItemSetEventArgs e)
+	private void Update()
+	{
+		if (Player.LocalClientInstance == null) return;
+
+		MouseWorldPosition = (Vector2)Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+		MouseTilePosition = Vector3Int.FloorToInt(MouseWorldPosition);
+		_mouseTriggerTf.position = MouseWorldPosition;
+
+		TickTimers(Time.deltaTime);
+		HandleWandUI();
+		HandleItemActionExecutions();
+	}
+
+	private void UpdateSelectedWand(object sender, HotbarManager.OnFocusItemSetEventArgs e)
     {
 		InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
 		
@@ -106,18 +122,6 @@ public class ActionManager : MonoBehaviour
 		}
 	}
 
-	private void Update()
-	{
-		if(Player.LocalClientInstance == null) return;
-		
-		MouseWorldPosition = (Vector2)Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-		MouseTilePosition = Vector3Int.FloorToInt(MouseWorldPosition);
-
-		TickTimers(Time.deltaTime);
-		HandleWandUI();
-		HandleItemActionExecutions();
-	}
-	
 	private void HandleItemActionExecutions()
 	{
 		if(Player.LocalClientInstance.HealthState.IsDead || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled()) return;

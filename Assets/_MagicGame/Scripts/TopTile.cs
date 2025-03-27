@@ -5,10 +5,11 @@ public class TopTile : MonoBehaviour
     private SpriteRenderer _tileSpriteRenderer;
     private TileSO _wallSO;
     private Vector3Int _botMiddleTilePosition;
-    
+
     private void Awake()
     {
         _tileSpriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        Physics2D.queriesHitTriggers = true;
     }
     
     public void Initialize(TileSO wallSO, Vector3Int botMiddleTilePosition)

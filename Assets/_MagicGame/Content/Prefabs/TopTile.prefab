@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8702200012857614823}
   - component: {fileID: 8865054333045185283}
   - component: {fileID: 4092551224124534592}
+  - component: {fileID: 6517968437176310427}
   m_Layer: 0
   m_Name: TopTile
   m_TagString: Untagged
@@ -92,6 +93,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65cb5ca8e8bb34c58bca46c85caff7bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6517968437176310427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2939786904517142342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee0767151f4bb4157a2699413c7c3802, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SpriteRenderer>k__BackingField: {fileID: 690673027864821069}
 --- !u!1 &9168748009488681307
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,7 +132,7 @@ Transform:
   m_GameObject: {fileID: 9168748009488681307}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0, z: 0}
+  m_LocalPosition: {x: 0.5, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -168,7 +182,7 @@ SpriteRenderer:
   m_SortingLayerID: -1478012363
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2229089700820812382, guid: dd61df6b418fe4d0c9b59cf0fc0d28e4, type: 3}
+  m_Sprite: {fileID: -869970413, guid: dd61df6b418fe4d0c9b59cf0fc0d28e4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

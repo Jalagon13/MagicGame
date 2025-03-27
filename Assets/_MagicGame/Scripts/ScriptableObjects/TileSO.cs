@@ -27,8 +27,8 @@ public class TileSO : RuleTile
 	public EventReference DestroySound;
 	
 	[Header("Top Tiles (For Walls Only)")]
+	public Sprite TopTileSingle;
 	public Sprite TopTileLeft;
 	public Sprite TopTileCenter;
 	public Sprite TopTileRight;
-	public Sprite TopTileSingle;
 }

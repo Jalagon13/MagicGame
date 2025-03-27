@@ -40,3 +40,7 @@ MonoBehaviour:
       Data3: -1633797458
       Data4: 490440430
     Path: event:/WoodDestroyed
+  TopTileSingle: {fileID: 0}
+  TopTileLeft: {fileID: 0}
+  TopTileCenter: {fileID: 0}
+  TopTileRight: {fileID: 0}
