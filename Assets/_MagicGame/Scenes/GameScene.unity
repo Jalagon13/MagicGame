@@ -15087,7 +15087,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _dayDurationInSeconds: 600
   _startingTime: 1
-  _isTicking: 0
+  _isTicking: 1
   _randomSeed: 0
   _customSeed: Hell World :D
   _portalSearchRadius: 3

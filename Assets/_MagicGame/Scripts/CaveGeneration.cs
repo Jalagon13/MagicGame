@@ -91,14 +91,16 @@ public class CaveGeneration : MonoBehaviour
 						if (spaghettiCaveValue < 0.45f || spaghettiCaveValue > 0.6f && cheeseCaveValue < 0.375f)
 						{
 							// Adding a cave wall
-							if(oreGenValue > 0.05f)
-							{
-								TryToAddTileToChunk(CobaltOreTile, tileWorldPosition, chunkGameData.WallTileGameDataList);
-							}
-							else
-							{
-								TryToAddTileToChunk(StoneWallTile, tileWorldPosition, chunkGameData.WallTileGameDataList);
-							}
+							// if(oreGenValue > 0.05f)
+							// {
+							// 	TryToAddTileToChunk(CobaltOreTile, tileWorldPosition, chunkGameData.WallTileGameDataList);
+							// }
+							// else
+							// {
+								
+							// }
+
+							TryToAddTileToChunk(StoneWallTile, tileWorldPosition, chunkGameData.WallTileGameDataList);
 						}
 					}
 				}

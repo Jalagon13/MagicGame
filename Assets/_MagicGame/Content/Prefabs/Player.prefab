@@ -300,6 +300,8 @@ MonoBehaviour:
     Quantity: 55
   - Item: {fileID: 11400000, guid: 0d0c117ace8794e798947bdfaa1c52ef, type: 2}
     Quantity: 55
+  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
+    Quantity: 55
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0

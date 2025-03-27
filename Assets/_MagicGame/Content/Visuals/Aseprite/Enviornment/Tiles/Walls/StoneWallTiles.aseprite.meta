@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a8566e9f8623a44c98751c4c29178c45
+guid: 18ae6827f3cf647a0bbbd53b56858c58
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -122,7 +122,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: WoodWallTiles
+  - name: StoneWallTiles
     originalName: 
     pivot: {x: 0.5, y: 0}
     alignment: 9
@@ -134,7 +134,7 @@ ScriptedImporter:
       y: 4
       width: 96
       height: 64
-    spriteID: abe160510e7154df698b6eef016126bb
+    spriteID: 0f2a4c9bff58f4237826114f9a26eb75
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -146,13 +146,13 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: 1569457272
-    name: WoodWallTiles
+    guid: -90659864
+    name: StoneWallTiles
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: WoodWallTiles
+    - name: StoneWallTiles
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
@@ -160,7 +160,7 @@ ScriptedImporter:
         y: 0
         width: 96
         height: 64
-      spriteId: abe160510e7154df698b6eef016126bb
+      spriteId: 0f2a4c9bff58f4237826114f9a26eb75
     linkedCells: []
     parentIndex: -1
   platformSettings:
