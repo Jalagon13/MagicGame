@@ -311,10 +311,10 @@ TextureImporter:
       name: rsc_door_closed
       rect:
         serializedVersion: 2
-        x: 112
-        y: 112
+        x: 64
+        y: 80
         width: 16
-        height: 16
+        height: 20
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -333,10 +333,10 @@ TextureImporter:
       name: rsc_door_open
       rect:
         serializedVersion: 2
-        x: 0
-        y: 96
+        x: 80
+        y: 80
         width: 16
-        height: 16
+        height: 30
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

@@ -45,7 +45,21 @@ public class TileManager : NetworkBehaviour
 			TileVisibilityDict.Remove(tilePosV3Int);
 		}
 	}
-	
+
+	public bool HasTile(Vector3Int position, TileType tileType)
+	{
+		switch (tileType)
+		{
+			case TileType.Ground:
+				return GroundTm.HasTile(position);
+			case TileType.Floor:
+				return FloorTm.HasTile(position);
+			case TileType.Wall:
+				return WallTm.HasTile(position);
+		}
+		return false;
+	}
+
 	public void SetLocalTile(Vector3Int tilePos, TileSO tileSO, TileType tileType)
 	{
 		switch (tileType)
@@ -63,19 +77,64 @@ public class TileManager : NetworkBehaviour
 				break;
 		}
 	}
-
+	
     private void HandleTopWallTiles(Vector3Int botTilePosition, TileSO tileSO)
     {
-		Vector3Int topTilePosition = botTilePosition + Vector3Int.up;
-		bool tileAboveExists = WallTm.GetTile(topTilePosition) != null;
-		
-        if(tileAboveExists ||tileSO == null || tileSO.TileType != TileType.Wall) return;
-        
-        Debug.Log($"Spawning top tile at: {topTilePosition}");
-        TopTile topTile = Instantiate(TopTilePrefab, topTilePosition, Quaternion.identity);
-		topTile.gameObject.transform.SetParent(WallTm.gameObject.transform);
-		topTile.TileSpriteRenderer.sprite = tileSO.TopTileSingle;
-		topTile.UpdateTopTile();
+		if(tileSO != null)
+		{
+			if (tileSO.TopTileSingle == null) return; // This is temp for now
+
+			Vector3Int topTilePosition = botTilePosition + Vector3Int.up;
+			TileBase topTile = WallTm.GetTile(topTilePosition);
+
+			if (topTile != null)
+			{
+				int topTileId = GameManager.Instance.GetTileIdFromTileBase(topTile);
+				int botTileId = GameManager.Instance.GetTileIdFromTileBase(tileSO);
+
+				if (topTileId == botTileId)
+				{
+					UpdateNearbyTopTiles(botTilePosition);
+					return;
+				}
+			}
+
+			Debug.Log($"Spawning top tile at: {topTilePosition}");
+			TopTile tt = Instantiate(TopTilePrefab, topTilePosition, Quaternion.identity);
+			tt.gameObject.transform.SetParent(WallTm.gameObject.transform);
+			tt.Initialize(tileSO, botTilePosition);
+		}
+		else
+		{
+			UpdateNearbyTopTiles(botTilePosition);
+			
+			Vector3Int[] directions = new Vector3Int[] { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right };
+			foreach (Vector3Int direction in directions)
+			{
+			    Vector3Int neighborPos = botTilePosition + direction;
+			    
+			    if (HasTile(neighborPos, TileType.Wall))
+			    {
+					HandleTopWallTiles(neighborPos, GameManager.Instance.GetTileSOFromTileBase(WallTm.GetTile(neighborPos)));
+				}
+			}
+		}
+	}
+	
+	private void UpdateNearbyTopTiles(Vector3Int botTilePosition)
+	{
+		Debug.Log($"Updating top tiles around where {botTilePosition} was destroyed");
+		Vector2 searchPosition = new Vector2(botTilePosition.x + 0.5f, botTilePosition.y + 1f);
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(searchPosition, 3f);
+
+		foreach (var collider in colliders)
+		{
+			TopTile topTileFound = collider.GetComponent<TopTile>();
+			if (topTileFound != null)
+			{
+				topTileFound.UpdateSelf();
+			}
+		}
 	}
 
     [Rpc(SendTo.Server, RequireOwnership = false)]

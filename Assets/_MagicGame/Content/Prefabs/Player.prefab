@@ -2361,7 +2361,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9006510000384411042}
-  - component: {fileID: 230528372142281849}
+  - component: {fileID: 3780080136181159089}
   m_Layer: 8
   m_Name: FeetCollider
   m_TagString: Untagged
@@ -2384,8 +2384,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4572527030133494615}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &230528372142281849
-CircleCollider2D:
+--- !u!70 &3780080136181159089
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2419,7 +2419,8 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.05
+  m_Size: {x: 0.6, y: 0.1}
+  m_Direction: 1
 --- !u!1 &8439818422324346428
 GameObject:
   m_ObjectHideFlags: 0
