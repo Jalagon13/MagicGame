@@ -18,11 +18,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 257096646587651372, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 257096646587651372, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.09
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1342521050942028157, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_IsActive
@@ -72,6 +72,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -597264530, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
+    - target: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
@@ -132,6 +136,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 154920837247502213, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5780725128829530697}
+    - targetCorrespondingSourceObject: {fileID: 8178211193808836871, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1571645827921626969}
   m_SourcePrefab: {fileID: 100100000, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
 --- !u!1 &46882324972706271 stripped
 GameObject:
@@ -185,6 +192,23 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2392654451137683977, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
   m_PrefabInstance: {fileID: 180404121169272410}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8358183205833459549 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8178211193808836871, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+  m_PrefabInstance: {fileID: 180404121169272410}
+  m_PrefabAsset: {fileID: 0}
+--- !u!210 &1571645827921626969
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8358183205833459549}
+  m_Enabled: 1
+  m_SortingLayerID: -1478012363
+  m_SortingLayer: 2
+  m_SortingOrder: 0
+  m_SortAtRoot: 1
 --- !u!1001 &832879343920133718
 PrefabInstance:
   m_ObjectHideFlags: 0

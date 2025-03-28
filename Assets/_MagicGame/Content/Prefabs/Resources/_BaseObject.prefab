@@ -94,11 +94,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <WorldObjectName>k__BackingField: 
-  <MaxHp>k__BackingField: 0
+  <Hardness>k__BackingField: 1
   <PassThrough>k__BackingField: 0
-  <HarvestType>k__BackingField: 0
+  <CanBeDestroyed>k__BackingField: 1
   <Table>k__BackingField: []
-  <ResourceHit>k__BackingField:
+  <MiningSound>k__BackingField:
     Guid:
       Data1: 0
       Data2: 0
@@ -106,6 +106,13 @@ MonoBehaviour:
       Data4: 0
     Path: 
   <ResourceDestroyed>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <PlaceSound>k__BackingField:
     Guid:
       Data1: 0
       Data2: 0
@@ -200,6 +207,7 @@ GameObject:
   m_Component:
   - component: {fileID: 257096646587651372}
   - component: {fileID: 6272191239398136905}
+  - component: {fileID: 6580967737715849053}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -265,7 +273,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1478012363
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -277,3 +285,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+--- !u!210 &6580967737715849053
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8178211193808836871}
+  m_Enabled: 1
+  m_SortingLayerID: -1478012363
+  m_SortingLayer: 2
+  m_SortingOrder: 0
+  m_SortAtRoot: 1
