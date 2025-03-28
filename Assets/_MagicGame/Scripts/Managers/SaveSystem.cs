@@ -94,11 +94,11 @@ public class SaveSystem : MonoBehaviour
 						
 						if(worldObjectGameData is DoorObjectGameData doorObjectGameData)
 						{
-							worldAssetData = new DoorObjectFileData(GameManager.Instance.GetIDFromWorldObject(worldObjectGameData.WO), worldObjectGameData.Position, doorObjectGameData.IsOpen);
+							worldAssetData = new DoorObjectFileData(GameManager.Instance.GetIDFromWorldObject(worldObjectGameData.WO), worldObjectGameData.Position, worldObjectGameData.Orientation, doorObjectGameData.IsOpen);
 						}
 						else
 						{
-							worldAssetData = new WorldObjectFileData(GameManager.Instance.GetIDFromWorldObject(worldObjectGameData.WO), worldObjectGameData.Position);
+							worldAssetData = new WorldObjectFileData(GameManager.Instance.GetIDFromWorldObject(worldObjectGameData.WO), worldObjectGameData.Position, worldObjectGameData.Orientation);
 						}
 						
 						// Push it to WorldAssets in sceneData
@@ -332,7 +332,7 @@ public class SaveSystem : MonoBehaviour
 		{
 			// Fetch each prefab from database
 			WorldObject worldObjectToInst = GameManager.Instance.GetWorldObjectFromID(data.WorldObjectId);
-			ChunkManager.Instance.AddObjectDataToChunk(data, biomeToDeserialize, worldObjectToInst);
+			ChunkManager.Instance.DeserializeObjectDataToChunk(data, biomeToDeserialize, worldObjectToInst, data.Orientation);
 		}
 		
 		Debug.Log($"<color=orange>Asset Data of: </color>{biomeToDeserialize}<color=orange> Deserialized</color>");

@@ -99,7 +99,6 @@ public class TileManager : NetworkBehaviour
 				}
 			}
 
-			Debug.Log($"Spawning top tile at: {topTilePosition}");
 			TopTile tt = Instantiate(TopTilePrefab, topTilePosition, Quaternion.identity);
 			tt.gameObject.transform.SetParent(WallTm.gameObject.transform);
 			tt.Initialize(tileSO, botTilePosition);
@@ -123,7 +122,6 @@ public class TileManager : NetworkBehaviour
 	
 	private void UpdateNearbyTopTiles(Vector3Int botTilePosition)
 	{
-		Debug.Log($"Updating top tiles around where {botTilePosition} was destroyed");
 		Vector2 searchPosition = new Vector2(botTilePosition.x + 0.5f, botTilePosition.y + 1f);
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(searchPosition, 3f);
 

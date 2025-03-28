@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -20,8 +21,13 @@ public class DeployItemSO : ItemSO
 		
 		if(IsClear(pos) && PlayerInRangeOfMouse() && !TileManager.Instance.WallTm.HasTile(new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y))))
 		{
+			CardinalDirection orientation = Player.LocalClientInstance.StateMachine.FacingDirection;
 			Vector2Int spawnPosition = new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
-			ObjectManager.Instance.PlaceResourceObjectServerRpc(spawnPosition, GameManager.Instance.GetIDFromWorldObject(_deployObjectPrefab), Player.LocalClientInstance.CurrentPlayerBiome.Value);
+			BiomeType biome = Player.LocalClientInstance.CurrentPlayerBiome.Value;
+			int id = GameManager.Instance.GetIDFromWorldObject(_deployObjectPrefab);
+
+			Debug.Log($"Placing {_deployObjectPrefab.name} at {pos} with orientation {orientation}");
+			ObjectManager.Instance.PlaceResourceObjectServerRpc(spawnPosition, id, biome, orientation);
 			InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 			SoundManager.Instance.PlayOneShot(_deployObjectPrefab.PlaceSound, Player.LocalClientInstance.transform.position);
 			PlacedThisFrameFlag = true;
@@ -29,9 +35,8 @@ public class DeployItemSO : ItemSO
 		
 		return _baseActionCooldown;
 	}
-	
 
-	private bool PlayerInRangeOfMouse()
+    private bool PlayerInRangeOfMouse()
 	{
 		return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= 3;
 	}

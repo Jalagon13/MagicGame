@@ -12983,6 +12983,20 @@ MonoBehaviour:
       Data3: 197467520
       Data4: 1755672934
     Path: event:/Player/MeleeHit
+  <ForestAmbience>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <CaveAmbience>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!1001 &1744933028
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13123,7 +13137,7 @@ GameObject:
   - component: {fileID: 1776348053}
   - component: {fileID: 1776348055}
   - component: {fileID: 1776348054}
-  m_Layer: 13
+  m_Layer: 14
   m_Name: MouseTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}

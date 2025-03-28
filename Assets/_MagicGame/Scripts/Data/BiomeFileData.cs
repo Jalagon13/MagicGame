@@ -50,11 +50,13 @@ public class WorldObjectFileData // For Serialization
 {
 	public int WorldObjectId;
 	public Vector2Int Pos;
+	public CardinalDirection Orientation;
 	
-	public WorldObjectFileData(int id, Vector2Int pos)
+	public WorldObjectFileData(int id, Vector2Int pos, CardinalDirection orientation)
 	{
 		WorldObjectId = id;
 		Pos = pos;
+		Orientation = orientation;
 	}
 }
 
@@ -63,7 +65,7 @@ public class DoorObjectFileData : WorldObjectFileData
 {
 	public bool IsOpen;
 
-	public DoorObjectFileData(int worldObject, Vector2Int pos, bool isOpen) : base(worldObject, pos)
+	public DoorObjectFileData(int worldObject, Vector2Int pos, CardinalDirection orientation, bool isOpen) : base(worldObject, pos, orientation)
 	{
 		IsOpen = isOpen;
 	}

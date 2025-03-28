@@ -17,11 +17,18 @@ public class WorldObject : MonoBehaviour // Base class for every "physical" asse
 	[field: SerializeField] public EventReference MiningSound { get; private set; }
 	[field: SerializeField] public EventReference ResourceDestroyed { get; private set; }
 	[field: SerializeField] public EventReference PlaceSound { get; private set; }
+	
+	protected CardinalDirection _orientation;
 
 
 	private void Awake()
 	{
 		transform.GetChild(0).gameObject.SetActive(!PassThrough); // Disable local collider so player can walk through it
+	}
+	
+	public virtual void SetOrientation(CardinalDirection orientation)
+	{
+		_orientation = orientation;
 	}
 	
 	public void DestroyObject(Vector2Int objectPosition, BiomeType biome)
@@ -43,6 +50,7 @@ public class WorldObject : MonoBehaviour // Base class for every "physical" asse
 	{
 		return Vector2.Distance(Player.LocalClientInstance.transform.position, position) <= InteractDistance;
 	}
+	
 	public void DestroySelf()
 	{
 		Destroy(gameObject);

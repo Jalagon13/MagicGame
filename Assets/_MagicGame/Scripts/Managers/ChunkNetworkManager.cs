@@ -66,11 +66,18 @@ public class ChunkNetworkManager : NetworkBehaviour
 			
 			if(worldObjectGameData is DoorObjectGameData doorObjectGameData)
 			{
-				syncChunkData.SyncDoorObjectDataList.Add(new DoorObjectSyncData(){ Position = doorObjectGameData.Position, ID = id, IsOpen = doorObjectGameData.IsOpen});
+				syncChunkData.SyncDoorObjectDataList.Add(new DoorObjectSyncData(){ 
+				Position = doorObjectGameData.Position, 
+				ID = id, 
+				Orientation = doorObjectGameData.Orientation, 
+				IsOpen = doorObjectGameData.IsOpen});
 			}
 			else
 			{
-				syncChunkData.SyncObjectAssetDataList.Add(ConvertGameDataIntoGenericSyncData(worldObjectGameData.Position, id));
+				syncChunkData.SyncObjectAssetDataList.Add(new WorldObjectSyncData(){ 
+				Position = worldObjectGameData.Position, 
+				ID = id, 
+				Orientation = worldObjectGameData.Orientation});
 			}
 		}
 
@@ -116,14 +123,14 @@ public class ChunkNetworkManager : NetworkBehaviour
 		ConvertSyncDataList(syncChunkData.SyncObjectAssetDataList, (syncAsset) =>
 		{
 			WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(syncAsset.ID);
-			return new WorldObjectGameData(worldObject, syncAsset.Position);
+			return new WorldObjectGameData(worldObject, syncAsset.Position, syncAsset.Orientation);
 		}, ref chunkGameData.WorldObjectGameDataList);
 		
 		// Convert SyncDoorObjectData To DoorObjectGameData
 		ConvertSyncDataList(syncChunkData.SyncDoorObjectDataList, (syncDoor) => 
 		{
 			WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(syncDoor.ID);
-			return new DoorObjectGameData(worldObject, syncDoor.Position, syncDoor.IsOpen);
+			return new DoorObjectGameData(worldObject, syncDoor.Position, syncDoor.Orientation, syncDoor.IsOpen);
 		}, ref chunkGameData.WorldObjectGameDataList);
 
 		return chunkGameData;

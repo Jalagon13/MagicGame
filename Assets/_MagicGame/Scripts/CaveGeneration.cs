@@ -116,7 +116,7 @@ public class CaveGeneration : MonoBehaviour
 		foreach(Vector2Int position in _stairsToCavePositions)
 		{
 			DeleteNeighborWallsAroundPoint(position);
-			ChunkManager.Instance.AddObjectDataToChunk(position, StairsToForest, _biomeType);
+			ChunkManager.Instance.AddObjectDataToChunkServerRpc(position, GameManager.Instance.GetIDFromWorldObject(StairsToForest), _biomeType, CardinalDirection.North);
 		}
 	}
 

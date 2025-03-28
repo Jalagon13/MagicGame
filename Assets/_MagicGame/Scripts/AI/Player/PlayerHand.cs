@@ -119,7 +119,7 @@ public class PlayerHand : NetworkBehaviour
 		
 		SetPivotPosition(ArmCardinalDirection);
 
-		if (_thisPlayer.GetComponent<PlayerStateMachine>().MovingDirection != ArmCardinalDirection)
+		if (_thisPlayer.GetComponent<PlayerStateMachine>().FacingDirection != ArmCardinalDirection)
 		{
 			OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 		}

@@ -53,11 +53,11 @@ public class ObjectManager : NetworkBehaviour
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void ToggleDoorServerRpc(Vector2Int doorPos, BiomeType biome)
+	public void SetDoorOpenStateServerRpc(Vector2Int doorPos, BiomeType biome, bool isOpen)
 	{
-		bool newIsOpen = ChunkManager.Instance.ToggleDoor(doorPos, biome);
-		
-		if(newIsOpen)
+		ChunkManager.Instance.SetDoorState(doorPos, biome, isOpen);
+
+		if (isOpen)
 		{
 			Pathfinding.Instance.RemovePfWallTileServerRpc(Vector2Int.FloorToInt(doorPos), biome);
 		}
@@ -66,7 +66,7 @@ public class ObjectManager : NetworkBehaviour
 			Pathfinding.Instance.AddPfWallTileServerRpc(Vector2Int.FloorToInt(doorPos), biome);
 		}
 		
-		HandleDoorVisualsClientRpc(doorPos, newIsOpen, biome);
+		HandleDoorVisualsClientRpc(doorPos, isOpen, biome);
 	}
 
 	[Rpc(SendTo.ClientsAndHost)]
@@ -92,30 +92,31 @@ public class ObjectManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void PlaceResourceObjectServerRpc(Vector2Int position, int id, BiomeType biomeToPlaceIn)
+	public void PlaceResourceObjectServerRpc(Vector2Int position, int id, BiomeType biomeToPlaceIn, CardinalDirection orientation)
 	{
 		// While on server, add the data to chunks
-		WorldObject obj = GameManager.Instance.GetWorldObjectFromID(id);
-		ChunkManager.Instance.AddObjectDataToChunk(position, obj, biomeToPlaceIn);
+		ChunkManager.Instance.AddObjectDataToChunkServerRpc(position, id, biomeToPlaceIn, orientation);
 		
+		WorldObject obj = GameManager.Instance.GetWorldObjectFromID(id);
 		if(!obj.PassThrough)
 		{
 			Pathfinding.Instance.AddPfWallTileServerRpc(position, biomeToPlaceIn);
 		}
 		
-		HandleObjectVisualsClientRpc(position, id, biomeToPlaceIn);
+		HandleObjectVisualsClientRpc(position, id, biomeToPlaceIn, orientation);
 	}
 
 	[Rpc(SendTo.ClientsAndHost)]
-	private void HandleObjectVisualsClientRpc(Vector2Int position, int assetID, BiomeType objectBiome)
+	private void HandleObjectVisualsClientRpc(Vector2Int position, int assetID, BiomeType objectBiome, CardinalDirection orientation)
 	{
 		if(objectBiome == Player.LocalClientInstance.CurrentPlayerBiome.Value && ChunkManager.Instance.ObjectPositionInLoadedChunks(position))
 		{
 			// Visually place it down for everyone
 			WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);
 			GameObject placedAsset = Instantiate(worldAsset.gameObject, (Vector2)position, Quaternion.identity);
+			placedAsset.GetComponent<WorldObject>().SetOrientation(orientation);
 
-			if(placedAsset.TryGetComponent(out DoorObject doorObject))
+			if (placedAsset.TryGetComponent(out DoorObject doorObject))
 			{
 				doorObject.InitializeOpenState(false);
 			}
@@ -136,9 +137,13 @@ public class ObjectManager : NetworkBehaviour
 			// Instantiate the visual asset
 			GameObject assetGO = Instantiate(objectData.WO.gameObject, (Vector2)objectData.Position, Quaternion.identity);
 			
-			if(assetGO.TryGetComponent(out DoorObject doorObject))
+			assetGO.GetComponent<WorldObject>().SetOrientation(objectData.Orientation);
+
+			if (assetGO.TryGetComponent(out DoorObject door))
 			{
-				doorObject.InitializeOpenState((objectData as DoorObjectGameData).IsOpen);
+				var doorObject = objectData as DoorObjectGameData;
+				door.SetOrientation(doorObject.Orientation);
+				door.InitializeOpenState(doorObject.IsOpen);
 			}
 			
 			if(!objectData.WO.PassThrough)

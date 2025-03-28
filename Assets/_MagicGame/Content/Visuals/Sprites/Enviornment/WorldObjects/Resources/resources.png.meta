@@ -267,7 +267,7 @@ TextureImporter:
       name: rsc_stairs_to_cave
       rect:
         serializedVersion: 2
-        x: 32
+        x: 16
         y: 96
         width: 16
         height: 16
@@ -308,13 +308,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rsc_door_closed
+      name: rsc_door_closed_mer
       rect:
         serializedVersion: 2
-        x: 64
+        x: 32
         y: 80
         width: 16
-        height: 20
+        height: 22
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -330,13 +330,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rsc_door_open
+      name: rsc_door_open_mer
       rect:
         serializedVersion: 2
-        x: 80
+        x: 48
         y: 80
         width: 16
-        height: 30
+        height: 28
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -355,8 +355,8 @@ TextureImporter:
       name: rsc_chest
       rect:
         serializedVersion: 2
-        x: 16
-        y: 96
+        x: 112
+        y: 112
         width: 16
         height: 16
       alignment: 6
@@ -399,7 +399,7 @@ TextureImporter:
       name: rsc_stairs_to_surface
       rect:
         serializedVersion: 2
-        x: 48
+        x: 0
         y: 80
         width: 16
         height: 20
@@ -413,6 +413,50 @@ TextureImporter:
       bones: []
       spriteID: 055f2f495f1604dddb5f5e6ea09ee3f5
       internalID: 125475558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rsc_door_open_lat
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 80
+        width: 16
+        height: 22
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba9b742321b40470f8d2c75a0fb69992
+      internalID: 797665262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rsc_door_closed_lat
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 80
+        width: 16
+        height: 28
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7f801250288b4090bb9e38ae4a747ce
+      internalID: 1273543132
       vertices: []
       indices: 
       edges: []
@@ -436,8 +480,11 @@ TextureImporter:
       rsc_candle: -597264530
       rsc_chest: 1565617341
       rsc_craft_table: 1014094090
-      rsc_door_closed: -691286103
-      rsc_door_open: 1158298151
+      rsc_door_closed_lat: 1273543132
+      rsc_door_closed_mer: -691286103
+      rsc_door_merclosed: -691286103
+      rsc_door_open_lat: 797665262
+      rsc_door_open_mer: 1158298151
       rsc_furnace: -1474684095
       rsc_mana_crystal: -1761981032
       rsc_spindle: 250863300

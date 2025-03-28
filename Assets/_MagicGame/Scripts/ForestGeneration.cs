@@ -119,7 +119,7 @@ public class ForestGeneration : MonoBehaviour
 			if(groundTilePointValue > 0.125f && wallTilePointValue < 0.6f && wallTilePointValue > 0.35f)
 			{
 				// Add world asset data to chunk
-				ChunkManager.Instance.AddObjectDataToChunk(new Vector2Int(pointX, pointY), TreeObject, BiomeType.Forest);
+				ChunkManager.Instance.AddObjectDataToChunkServerRpc(new Vector2Int(pointX, pointY), GameManager.Instance.GetIDFromWorldObject(TreeObject), BiomeType.Forest, CardinalDirection.North);
 			}
 		}
 	}
@@ -152,7 +152,7 @@ public class ForestGeneration : MonoBehaviour
 	{
 		foreach (Vector2Int pos in GetStairsToCavePositions(_seed))
 		{
-			ChunkManager.Instance.AddObjectDataToChunk(pos, StairsToCave, BiomeType.Forest);
+			ChunkManager.Instance.AddObjectDataToChunkServerRpc(pos, GameManager.Instance.GetIDFromWorldObject(StairsToCave), BiomeType.Forest, CardinalDirection.North);
 		}
 	}
 	

@@ -260,6 +260,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Size.x
       value: 1.28
       objectReference: {fileID: 0}
@@ -421,10 +425,27 @@ MonoBehaviour:
     Path: event:/Thump
   _worldInput: {fileID: 9207288352720458267}
   _doorOpenDistance: 2.75
-  _openSprite: {fileID: 1158298151, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
-  _closeSprite: {fileID: -691286103, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
-  _doorSr: {fileID: 62746517780266360}
   _localWallCollider: {fileID: 2576257406109758003}
+  _openSound:
+    Guid:
+      Data1: 579449027
+      Data2: 1124382483
+      Data3: -1349617790
+      Data4: -270854617
+    Path: event:/DoorOpen
+  _closeSound:
+    Guid:
+      Data1: -733812650
+      Data2: 1336282289
+      Data3: -822515824
+      Data4: 2017467891
+    Path: event:/DoorClosed
+  _doorSr: {fileID: 62746517780266360}
+  _meridianClosedSprite: {fileID: -691286103, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
+  _meridianOpenSprite: {fileID: 1158298151, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
+  _latitudeClosedEastSprite: {fileID: 1273543132, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
+  _latitudeClosedWestSprite: {fileID: 1158298151, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
+  _latitudeOpenSprite: {fileID: 797665262, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
 --- !u!4 &8566354021552112440 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2392654451137683977, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}

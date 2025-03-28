@@ -37,7 +37,7 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	public Rigidbody2D RigidBody2D { get; private set; }
 	public PlayerIdleState PlayerIdleState { get; private set; }
 	public PlayerMoveState PlayerMoveState { get; private set; }
-	public CardinalDirection MovingDirection { get {return _currentDirection; } set {_currentDirection = value; } }
+	public CardinalDirection FacingDirection { get {return _currentDirection; } set {_currentDirection = value; } }
 	public bool IsMoving { get; set; }
 	public bool IsDead { get { return _thisPlayer.HealthState.IsDead; } }
 	public bool CanMove { get; private set; } = true;
@@ -153,17 +153,17 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	public void PlayAnimationBasedOnDirection(CardinalDirection newDirection)
 	{
 		// Add your code here to handle the direction change, such as playing animations or sounds.
-		MovingDirection = newDirection;
+		FacingDirection = newDirection;
 		
 		foreach(var handler in _spriteAnimationHandlerList)
 		{
 			if(MoveVector.magnitude == 0 && Velocity.magnitude < 0.75f)
 			{
-				handler.PlayIdleAnimation(MovingDirection);
+				handler.PlayIdleAnimation(FacingDirection);
 			}
 			else
 			{
-				handler.PlayMoveAnimation(MovingDirection);
+				handler.PlayMoveAnimation(FacingDirection);
 			}
 		}
 	}
@@ -182,7 +182,7 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 		else
 		{
 			UpdateDirectionBasedOnMoveVector();
-			PlayAnimationBasedOnDirection(IsMoving ? MovingDirection : e.Direction);
+			PlayAnimationBasedOnDirection(IsMoving ? FacingDirection : e.Direction);
 		}
 	}
 	
@@ -194,7 +194,7 @@ public class PlayerStateMachine : StateMachine<PlayerStateMachine.PlayerState>
 	private void OnSwingEnd(object sender, PlayerHand.CardinalDirectionEventArgs e)
 	{
 		UpdateDirectionBasedOnMoveVector();
-		PlayAnimationBasedOnDirection(IsMoving ? MovingDirection : e.Direction);
+		PlayAnimationBasedOnDirection(IsMoving ? FacingDirection : e.Direction);
 	}
 	
 	private void OnSwingStart(object sender, PlayerHand.CardinalDirectionEventArgs e)

@@ -250,7 +250,7 @@ public class ChunkManager : NetworkBehaviour
 		}
 	}
 	
-	public bool ToggleDoor(Vector2Int doorPos, BiomeType biome)
+	public bool SetDoorState(Vector2Int doorPos, BiomeType biome, bool isOpen)
 	{
 		if(!IsServer) return false;
 		
@@ -262,7 +262,7 @@ public class ChunkManager : NetworkBehaviour
 			{
 				// Found door
 				var doorObject = worldObject as DoorObjectGameData;
-				doorObject.ToggleDoor();
+				doorObject.SetDoorState(isOpen);
 				
 				return doorObject.IsOpen;
 			}
@@ -271,21 +271,22 @@ public class ChunkManager : NetworkBehaviour
 		return false;
 	}
 	
-	public void AddObjectDataToChunk(WorldObjectFileData worldObjectFileData, BiomeType biome, WorldObject worldObject)
+	public void DeserializeObjectDataToChunk(WorldObjectFileData worldObjectFileData, BiomeType biome, WorldObject worldObject, CardinalDirection orientation)
 	{
 		if(!IsServer) return;
 		
 		ChunkGameData chunk = GetChunkFromAnyWorldPos(worldObjectFileData.Pos, biome);
 		
-		chunk.AddObjectData(worldObjectFileData, worldObject);
+		chunk.DeserializeObjectData(worldObjectFileData, worldObject, orientation);
 	}
-	
-	public void AddObjectDataToChunk(Vector2Int position, WorldObject worldObject, BiomeType biomeToPlaceIn)
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void AddObjectDataToChunkServerRpc(Vector2Int position, int worldObjectId, BiomeType biomeToPlaceIn, CardinalDirection orientation)
 	{
-		if(!IsServer) return;
-		
 		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, biomeToPlaceIn);
-		chunk.AddObjectData(position, worldObject);
+		
+		WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(worldObjectId);
+		chunk.AddObjectData(position, worldObject, orientation);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]

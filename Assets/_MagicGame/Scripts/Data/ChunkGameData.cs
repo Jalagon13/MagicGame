@@ -70,33 +70,33 @@ public class ChunkGameData
 		}
 	}
 	
-	public void AddObjectData(WorldObjectFileData worldObjectFileData, WorldObject worldObject) // For deserialization
+	public void DeserializeObjectData(WorldObjectFileData worldObjectFileData, WorldObject worldObject, CardinalDirection orientation) // For deserialization
 	{
 		WorldObjectGameData worldObjectToAdd;
 		
 		if(worldObjectFileData is DoorObjectFileData doorObjectFileData)
 		{
-			worldObjectToAdd = new DoorObjectGameData(worldObject, worldObjectFileData.Pos, doorObjectFileData.IsOpen);
+			worldObjectToAdd = new DoorObjectGameData(worldObject, worldObjectFileData.Pos, orientation, doorObjectFileData.IsOpen);
 		}
 		else
 		{
-			worldObjectToAdd = new WorldObjectGameData(worldObject, worldObjectFileData.Pos);
+			worldObjectToAdd = new WorldObjectGameData(worldObject, worldObjectFileData.Pos, orientation);
 		}
 		
 		WorldObjectGameDataList.Add(worldObjectToAdd);
 	}
 
-	public void AddObjectData(Vector2Int position, WorldObject worldObject) // For run time game play
+	public void AddObjectData(Vector2Int position, WorldObject worldObject, CardinalDirection orientation) // For run time game play
 	{
 		WorldObjectGameData worldObjectToAdd;
 
 		if (worldObject is DoorObject)
 		{
-			worldObjectToAdd = new DoorObjectGameData(worldObject, position, false);
+			worldObjectToAdd = new DoorObjectGameData(worldObject, position, orientation, false);
 		}
 		else
 		{
-			worldObjectToAdd = new WorldObjectGameData(worldObject, position);
+			worldObjectToAdd = new WorldObjectGameData(worldObject, position, orientation);
 		}
 
 		for (int i = 0; i < WorldObjectGameDataList.Count; i++)
@@ -130,11 +130,13 @@ public class WorldObjectGameData
 {
 	public WorldObject WO { get; private set; }
 	public Vector2Int Position { get; private set; }
+	public CardinalDirection Orientation { get; set; }
 	
-	public WorldObjectGameData(WorldObject worldObject, Vector2Int position)
+	public WorldObjectGameData(WorldObject worldObject, Vector2Int position, CardinalDirection orientation)
 	{
 		WO = worldObject;
 		Position = position;
+		Orientation = orientation;
 	}
 }
 
@@ -142,14 +144,15 @@ public class DoorObjectGameData : WorldObjectGameData
 {
 	public bool IsOpen { get; private set; }
 
-	public DoorObjectGameData(WorldObject worldObject, Vector2Int position, bool isOpen) : base(worldObject, position)
+	public DoorObjectGameData(WorldObject worldObject, Vector2Int position, CardinalDirection orientation, bool isOpen) : base(worldObject, position, orientation)
 	{
 		IsOpen = isOpen;
+		Orientation = orientation;
 	}
 	
-	public void ToggleDoor()
+	public void SetDoorState(bool isOpen)
 	{
-		IsOpen = !IsOpen;
+		IsOpen = isOpen;
 	}
 }
 

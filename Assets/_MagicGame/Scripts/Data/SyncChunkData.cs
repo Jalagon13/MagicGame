@@ -10,7 +10,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 	public List<GenericGameObjectSyncData> SyncGroundTileDataList;
 	public List<GenericGameObjectSyncData> SyncWallTileDataList;
 	public List<GenericGameObjectSyncData> SyncFloorTileDataList;
-	public List<GenericGameObjectSyncData> SyncObjectAssetDataList;
+	public List<WorldObjectSyncData> SyncObjectAssetDataList;
 	public List<DoorObjectSyncData> SyncDoorObjectDataList;
 
 	public bool Equals(SyncChunkData other)
@@ -30,8 +30,55 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 		SerializeAgnosticDataList(serializer, ref SyncGroundTileDataList);
 		SerializeAgnosticDataList(serializer, ref SyncWallTileDataList);
 		SerializeAgnosticDataList(serializer, ref SyncFloorTileDataList);
-		SerializeAgnosticDataList(serializer, ref SyncObjectAssetDataList);
+		SerializeWorldObjectDataList(serializer, ref SyncObjectAssetDataList);
 		SerializeDoorDataList(serializer, ref SyncDoorObjectDataList);
+	}
+	
+	private void SerializeWorldObjectDataList<T>(BufferSerializer<T> serializer, ref List<WorldObjectSyncData> worldObjectDataList) where T : IReaderWriter
+	{
+		if (serializer.IsWriter)
+		{
+			// Serialize the list length
+			ushort listLength = (ushort)worldObjectDataList.Count;
+			serializer.SerializeValue(ref listLength);
+
+			// Serialize each world object in the list
+			for (int i = 0; i < listLength; i++)
+			{
+				WorldObjectSyncData worldObjectData = worldObjectDataList[i];
+				serializer.SerializeValue(ref worldObjectData);
+			}
+		}
+		else
+		{
+			// Deserialize the list length first
+			ushort listLength = 0;
+			serializer.SerializeValue(ref listLength);
+
+			// If the list length is 0, no further deserialization is needed
+			if (listLength == 0)
+			{
+				return;
+			}
+
+			// Initialize or clear the list
+			if (worldObjectDataList == null)
+			{
+				worldObjectDataList = new List<WorldObjectSyncData>();
+			}
+			else
+			{
+				worldObjectDataList.Clear();
+			}
+
+			// Deserialize each item in the list
+			for (int i = 0; i < listLength; i++)
+			{
+				WorldObjectSyncData worldObjectData = default;
+				serializer.SerializeValue(ref worldObjectData);
+				worldObjectDataList.Add(worldObjectData);
+			}
+		}
 	}
 	
 	private void SerializeDoorDataList<T>(BufferSerializer<T> serializer, ref List<DoorObjectSyncData> doorDataList) where T : IReaderWriter
@@ -129,7 +176,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 	}
 }
 
-// For assets and Tiles. NTFS: Might need to make them separate later for now this works
+// For any syncing that just needs pos and id.
 public struct GenericGameObjectSyncData : IEquatable<GenericGameObjectSyncData>, INetworkSerializable
 {
 	public Vector2Int Position;
@@ -147,16 +194,36 @@ public struct GenericGameObjectSyncData : IEquatable<GenericGameObjectSyncData>,
 	}
 }
 
-// For assets and Tiles. NTFS: Might need to make them separate later for now this works
+public struct WorldObjectSyncData : IEquatable<WorldObjectSyncData>, INetworkSerializable
+{
+	public Vector2Int Position;
+	public byte ID;
+	public CardinalDirection Orientation;
+
+	public bool Equals(WorldObjectSyncData other)
+	{
+		return Position.Equals(other.Position) && ID == other.ID && Orientation == other.Orientation;
+	}
+
+	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+	{
+		serializer.SerializeValue(ref Position);
+		serializer.SerializeValue(ref ID);
+		serializer.SerializeValue(ref Orientation);		
+	}
+}
+
+// For Door data syncing
 public struct DoorObjectSyncData : IEquatable<DoorObjectSyncData>, INetworkSerializable
 {
 	public Vector2Int Position;
 	public byte ID;
 	public bool IsOpen;
+	public CardinalDirection Orientation;
 	
 	public bool Equals(DoorObjectSyncData other)
 	{
-		return Position.Equals(other.Position) && IsOpen == other.IsOpen && ID == other.ID;
+		return Position.Equals(other.Position) && IsOpen == other.IsOpen && ID == other.ID && Orientation == other.Orientation;
 	}
 
 	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -164,5 +231,6 @@ public struct DoorObjectSyncData : IEquatable<DoorObjectSyncData>, INetworkSeria
 		serializer.SerializeValue(ref Position);
 		serializer.SerializeValue(ref ID);
 		serializer.SerializeValue(ref IsOpen);
+		serializer.SerializeValue(ref Orientation);
 	}
 }

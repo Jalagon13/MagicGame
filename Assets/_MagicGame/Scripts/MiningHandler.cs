@@ -43,7 +43,6 @@ public class MiningHandler : MonoBehaviour
     private void ToggleTileFocus(object sender, EventArgs e)
     {
         bool selectedItemIsStaff = InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedItem) && selectedItem.Item is StaffItemSO;
-        Debug.Log(selectedItemIsStaff + " " + Pointer.IsOverUI() + " " + Pointer.IsOverInteractable());
         if(!selectedItemIsStaff || Pointer.IsOverUI() || Pointer.IsOverInteractable()) return;
     
         FocusingOnWall = !FocusingOnWall;
