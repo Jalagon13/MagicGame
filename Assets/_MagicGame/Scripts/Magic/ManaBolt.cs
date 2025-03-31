@@ -27,7 +27,7 @@ public class ManaBolt : Spell
 		
 		if(IsOwner)
 		{
-			Velocity = _finalDirection * SpellData.Value.Speed;
+            Velocity.Value = _finalDirection * SpellData.Value.Speed;
 		}
 	}
 
@@ -35,10 +35,10 @@ public class ManaBolt : Spell
     {
         base.FixedUpdate();
 
-        if(_isDead) return;
+        if (!Started.Value || !IsOwner || _isDead) return; //don't do anything before OnNetworkSpawn has run.
 
-        Velocity = Vector2.Lerp(Velocity, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
-        _rigidbody2D.linearVelocity = Velocity;
+        Velocity.Value = Vector2.Lerp(Velocity.Value, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
+        _rigidbody2D.linearVelocity = Velocity.Value;
     }
 
     // private void PlayHitParticles()

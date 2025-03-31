@@ -69,10 +69,10 @@ public class HomingSpellMod : MonoBehaviour, ISpellModifier
             }
             
             // Slightly rotate towards the target
-            float currentSpeed = _spell.Velocity.magnitude;
-            _spell.Velocity = Vector2.Lerp(_spell.Velocity, (closestTarget.transform.position - transform.position).normalized, Mathf.Clamp01(_rotateSharpness * Time.fixedDeltaTime));
-            _spell.Velocity.Normalize();
-            _spell.Velocity *= currentSpeed;
+            float currentSpeed = _spell.Velocity.Value.magnitude;
+            _spell.Velocity.Value = Vector2.Lerp(_spell.Velocity.Value, (closestTarget.transform.position - transform.position).normalized, Mathf.Clamp01(_rotateSharpness * Time.fixedDeltaTime));
+            _spell.Velocity.Value.Normalize();
+            _spell.Velocity.Value *= currentSpeed;
         }
     }
 

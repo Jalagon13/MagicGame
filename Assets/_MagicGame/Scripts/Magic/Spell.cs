@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FMODUnity;
 using MoreMountains.Tools;
 using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
 using Unity.Netcode;
@@ -8,8 +9,10 @@ using UnityEngine;
 
 public class Spell : NetworkBehaviour
 {
-	public event EventHandler OnSpellEnd;
-	[HideInInspector] public Vector2 Velocity;
+	[field: SerializeField] public EventReference HitSomethingSound { get; private set; }
+
+	public event System.EventHandler OnSpellEnd;
+	[HideInInspector] public NetworkVariable<Vector2> Velocity = new NetworkVariable<Vector2>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	[HideInInspector] public NetworkVariable<SyncSpellData> SpellData = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	[HideInInspector] public NetworkVariable<bool> ShowVisuals = new NetworkVariable<bool>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	[HideInInspector] public NetworkVariable<bool> Started = new NetworkVariable<bool>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -18,7 +21,7 @@ public class Spell : NetworkBehaviour
 	public int WallMask { get; private set; }
 	public List<NetworkHealthState> HitTargets { get; private set; } = new();
 	public Timer SpellLifeTimer { get; private set; }
-
+	
 	protected GameObject _spellGameObject;
 	protected CircleCollider2D _spellCollider;
 	protected Vector2 _finalDirection;
@@ -144,7 +147,7 @@ public class Spell : NetworkBehaviour
 		{
 			NetworkObject.Despawn();
 		}
-		Debug.Log($"Spell Destroyed");
+		// Debug.Log($"Spell Destroyed");
 		Destroy(gameObject);
 	}
 	
@@ -196,19 +199,22 @@ public class Spell : NetworkBehaviour
 								if (_bounces >= SpellData.Value.Bounces)
 								{
 									TerminateSpell();
+									
+									SoundManager.Instance.PlayOneShot(HitSomethingSound, transform.position);
+									
 									return;
 								}
 								else
 								{
 									// Bounce if not at max bounces
-									RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Velocity.normalized, _spellCollider.radius, CollisionMask);
+									RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Velocity.Value.normalized, _spellCollider.radius, CollisionMask);
 									foreach (var hit in hits)
 									{
 										if (hit.collider == collisions[i])
 										{
 											Vector2 hitNormal = hit.normal;
-											float speed = Velocity.magnitude;
-											Velocity = Vector2.Reflect(Velocity.normalized, hitNormal) * speed;
+											float speed = Velocity.Value.magnitude;
+											Velocity.Value = Vector2.Reflect(Velocity.Value.normalized, hitNormal) * speed;
 											_bounces++;
 											break;
 										}
@@ -231,7 +237,9 @@ public class Spell : NetworkBehaviour
 							HitTargets.Add(npcHealth);
 							npcHealth.TakeDamageRpc(SpellData.Value.Damage, NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, SpellData.Value.Knockback);
 							
-							if(HitTargets.Count >= SpellData.Value.Pierces)
+							SoundManager.Instance.PlayOneShot(HitSomethingSound, transform.position);
+							
+							if (HitTargets.Count >= SpellData.Value.Pierces)
 							{
 								TerminateSpell();
 								return;

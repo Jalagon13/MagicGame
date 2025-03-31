@@ -10,32 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
-  m_Name: Spell_SparkBlast
+  m_Name: Spell_LightDagger
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Spark Blast
-  <UiDisplay>k__BackingField: {fileID: 1348140596, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
+  <Name>k__BackingField: Light Dagger
+  <UiDisplay>k__BackingField: {fileID: -949320902, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <GoldValue>k__BackingField: 65
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Blasts sparks in a small radius at cast point.
-  <SpellProjectilePrefab>k__BackingField: {fileID: 7666750109937317245, guid: 01b5ea73343a54096bcd9bb319490d98, type: 3}
+  <SpellProjectilePrefab>k__BackingField: {fileID: 3662783723511205044, guid: 96c580fc8465142b5bd351fe0e4c50a9, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 3235512204744374167, guid: 966ce96a46a0346519d0f2a96c141a22, type: 3}
-  <CastTime>k__BackingField: 0.225
+  <CastTime>k__BackingField: 0.2
   <CastDelay>k__BackingField: 0.05
-  <Damage>k__BackingField: 7
-  <ManaCost>k__BackingField: 9
-  <Knockback>k__BackingField: 10
-  <Accuracy>k__BackingField: 0
-  <Lifetime>k__BackingField: 1
-  <Speed>k__BackingField: 0
-  <Recoil>k__BackingField: 3
+  <Damage>k__BackingField: 6
+  <ManaCost>k__BackingField: 4
+  <Knockback>k__BackingField: 3
+  <Accuracy>k__BackingField: 15
+  <Lifetime>k__BackingField: 0.225
+  <Speed>k__BackingField: 15
+  <Recoil>k__BackingField: 0
   <Pierces>k__BackingField: 0
   <Bounces>k__BackingField: 0
   <GhostDistance>k__BackingField: 0
-  <HasteMultiplier>k__BackingField: 0.75
+  <HasteMultiplier>k__BackingField: 1
   <SpellCast>k__BackingField:
     Guid:
-      Data1: -2115950531
-      Data2: 1190229213
-      Data3: 49132942
-      Data4: 1594458749
-    Path: event:/Player/WandCast
+      Data1: -2045704129
+      Data2: 1078438271
+      Data3: 153888670
+      Data4: -2048565155
+    Path: event:/Player/Woosh

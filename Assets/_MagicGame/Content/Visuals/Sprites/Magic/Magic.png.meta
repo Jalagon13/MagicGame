@@ -410,6 +410,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: spell_light_dagger
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d64929f55404e41208aab7ea691d7e0a
+      internalID: -949320902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: proj_light_dagger
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 34
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82738ab96d7d045e9aff9753e9769327
+      internalID: -1275709379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -433,6 +477,8 @@ TextureImporter:
       mod_lifetime: -696574866
       mod_pierce: -1082386244
       mod_speed: -27199075
+      proj_light_dagger: -1275709379
+      spell_light_dagger: -949320902
       spell_mana_bolt: 1484343114
       spell_mining_focus: -571513728
       spell_self_dash: -1614915739

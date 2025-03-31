@@ -82,7 +82,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <MiningSound>k__BackingField.Guid.Data1
@@ -130,11 +130,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[1].Max
-      value: 20
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[1].Min
-      value: 15
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[2].Max
@@ -159,11 +159,11 @@ PrefabInstance:
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[1].Item
       value: 
-      objectReference: {fileID: 11400000, guid: 8aefdfbeb172142758db0f6cace885e7, type: 2}
+      objectReference: {fileID: 11400000, guid: b1ef818a3b6974596ba2183158e148af, type: 2}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[2].Item
       value: 
-      objectReference: {fileID: 11400000, guid: 3517678d66a9b487aa5b7aba225c242b, type: 2}
+      objectReference: {fileID: 11400000, guid: 7085c09076ff64c65815502e952be852, type: 2}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[3].Item
       value: 
@@ -174,11 +174,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[1].Chance
-      value: 100
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[2].Chance
-      value: 100
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <Table>k__BackingField.Array.data[3].Chance
