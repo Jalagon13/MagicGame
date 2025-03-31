@@ -42,11 +42,11 @@ PrefabInstance:
       objectReference: {fileID: 475529618853946519}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: Table.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _deathSound.Path
-      value: event:/BugDeath
+      value: event:/NPCs/BugDeath
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _knockbackResist
@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Path
-      value: event:/BugDamaged
+      value: event:/NPCs/BugDamaged
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <NpcSO>k__BackingField
@@ -85,6 +85,14 @@ PrefabInstance:
       value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.data[1].Max
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.data[1].Min
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Guid.Data1
       value: 1529267703
       objectReference: {fileID: 0}
@@ -105,8 +113,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 8aefdfbeb172142758db0f6cace885e7, type: 2}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.data[1].Item
+      value: 
+      objectReference: {fileID: 11400000, guid: fe14886186b414dc8a0cca5f83f3fdb9, type: 2}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: Table.Array.data[0].Chance
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: Table.Array.data[1].Chance
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <IFrameLength>k__BackingField

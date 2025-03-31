@@ -122,7 +122,16 @@ public class Pathfinding : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void AddPfWallTileServerRpc(Vector2Int position, BiomeType biome)
 	{
-		BiomeToLoadedPathfindingChunks[biome].WallColliderTm.SetTile((Vector3Int)position, _wallTile);
+		if(!BiomeToLoadedPathfindingChunks.ContainsKey(biome))
+		{
+		    Debug.LogWarning($"Biome {biome} does not have a pathfinding tilemap loaded. Can't add wall tile");
+		    return;
+		}
+		
+		if(!BiomeToLoadedPathfindingChunks[biome].WallColliderTm.HasTile((Vector3Int)position))
+		{
+			BiomeToLoadedPathfindingChunks[biome].WallColliderTm.SetTile((Vector3Int)position, _wallTile);
+		}
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]

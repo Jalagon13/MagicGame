@@ -16,7 +16,8 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
     }
 
     public override void EnterState()
-    {
+    {  
+        Debug.Log("Idle State");
         _idleComplete = false;
         
         float idleDuration = UnityEngine.Random.Range(_ctx.MinIdleDuration, _ctx.MaxIdleDuration);
@@ -32,8 +33,10 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
     public override void ExitState()
     {
+        Debug.Log($"Exiting idle state");
         if(_idleComplete)
         {
+            Debug.Log($"Idle state complete, calculating new wander destionation");
             // Calculate new wander destination and desired direction for it
             Vector2? wanderDestination = GetRandomWanderDestinationBFS(_ctx.transform.position, _ctx.WanderRadius);
             
@@ -41,11 +44,13 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
             {
                 _ctx.WanderDestination = wanderDestination.Value;
                 _ctx.DesiredDirection = _ctx.WanderDestination - (Vector2)_ctx.transform.position;
+                Debug.Log($"Wander destination has value: {wanderDestination.Value}");
             }
             else
             {
                 _ctx.WanderDestination = _ctx.transform.position;
                 _ctx.DesiredDirection = _ctx.WanderDestination - (Vector2)_ctx.transform.position;
+                Debug.Log($"Wander destination has no value, setting it to {_ctx.transform.position}");
             }
         }
     }
@@ -81,10 +86,13 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
     private Vector2? GetRandomWanderDestinationBFS(Vector2 startPosition, float wanderRadius)
     {
+        Debug.Log("Starting GetRandomWanderDestinationBFS");
+
         Queue<Vector2> queue = new Queue<Vector2>();
         HashSet<Vector2> visited = new HashSet<Vector2>();
 
         var startTilePos = Vector2Int.FloorToInt(startPosition);
+        Debug.Log($"Start tile pos: {startTilePos}");
         Vector2 centerStartTile = new Vector2(startTilePos.x + 0.5f, startTilePos.y + 0.5f);
 
         queue.Enqueue(centerStartTile);
@@ -92,29 +100,47 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
         List<Vector2> validTiles = new List<Vector2>();
 
+        Debug.Log("Starting BFS loop");
+
         while (queue.Count > 0)
         {
             Vector2 current = queue.Dequeue();
+            Debug.Log($"Dequeued {current}");
 
             // If the tile is walkable and within the radius, add it as a candidate
             if (Vector2.Distance(startPosition, current) <= wanderRadius && _ctx.IsPathUnObstructed(current))
             {
                 validTiles.Add(current);
+                Debug.Log($"Added {current} as a valid tile");
             }
 
             // Explore neighbors in all 4 directions (or 8 for diagonal movement)
             foreach (Vector2 neighbor in GetTileNeighbors(current))
             {
+                Debug.Log($"Checking neighbor {neighbor}" + $"{_ctx.IsPathUnObstructed(neighbor)} {!visited.Contains(neighbor)} {Vector2.Distance(startPosition, neighbor) <= wanderRadius}");
                 if (_ctx.IsPathUnObstructed(neighbor) && !visited.Contains(neighbor) && Vector2.Distance(startPosition, neighbor) <= wanderRadius)
                 {
                     queue.Enqueue(neighbor);
                     visited.Add(neighbor);
+                    Debug.Log($"Enqueued {neighbor}");
                 }
             }
         }
 
+        Debug.Log("Completed BFS loop");
+
         // Pick a random valid tile if any exist
-        return validTiles.Count > 0 ? validTiles[UnityEngine.Random.Range(0, validTiles.Count)] : null;
+        if(validTiles.Count > 0)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, validTiles.Count);
+            Debug.Log($"Returning {validTiles[randomIndex]}");
+            return validTiles[randomIndex];
+        }
+        else
+        {
+            Debug.Log("No valid tiles found");
+            return null;
+        }
     }
 
     private List<Vector2> GetTileNeighbors(Vector2 tilePos)

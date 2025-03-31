@@ -246,7 +246,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _deathSound.Path
-      value: event:/DeerDeath
+      value: event:/Player/PlayerHurt
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Path
@@ -262,19 +262,19 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: b8ba9fec6b8004261b34568f8e366d25, type: 2}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _deathSound.Guid.Data1
-      value: 89985926
+      value: 1908936704
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _deathSound.Guid.Data2
-      value: 1147036939
+      value: 1218061417
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _deathSound.Guid.Data3
-      value: 1353001656
+      value: -617592154
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _deathSound.Guid.Data4
-      value: 1797791123
+      value: 2092223634
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: Table.Array.data[0].Max
@@ -458,10 +458,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3c1c4a0de463546f3b029eedab8067ed, type: 2}
   - {fileID: 11400000, guid: 1164142a845a148a8ae0d7f0a04f74ca, type: 2}
   - {fileID: 11400000, guid: 24e09bdc93f06403bbc64317a192c595, type: 2}
-  - {fileID: 11400000, guid: bf1d2a5b5f1334f7f9a6d0aa32605231, type: 2}
-  - {fileID: 11400000, guid: 64010a88c2f754b6ea0ad2a653f40669, type: 2}
-  - {fileID: 11400000, guid: 8565452f84d47428ca82aed67cb5ca9e, type: 2}
-  - {fileID: 11400000, guid: fa6f83b6b6e5a407ea84c8aad9df12d0, type: 2}
+  - {fileID: 11400000, guid: b3fe2d16a64484c06943064d240713aa, type: 2}
 --- !u!114 &3079678981023877485
 MonoBehaviour:
   m_ObjectHideFlags: 0

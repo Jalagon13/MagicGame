@@ -39,7 +39,6 @@ public class PlayerVisuals : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost)]
     public void PlayChargeVFXClientRpc(int spellIndex)
     {
-        Debug.Log("Playing Charge VFX");
         GameObject chargeVfx = (GameManager.Instance.GetItemSOFromItemId(spellIndex) as SpellItemSO).ChargeVFX;
         _chargeVfx = Instantiate(chargeVfx, _thisPlayer.MainHand.SpellSpawnTransform);
         _chargeVfx.transform.localPosition = Vector3.zero;

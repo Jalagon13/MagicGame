@@ -160,6 +160,18 @@ public class SpellItemSO : MagicItemSO
 
 	[field: SerializeField] public EventReference SpellCast { get; private set; }
 
+	public void NpcShootSpell(Vector2 spawnPos, Vector2 direction, NpcNetworkComponent npc)
+	{
+		SyncSpellData syncSpellData = new SyncSpellData(
+			GameManager.Instance.GetItemIdFromItemSO(this),
+			Damage, Knockback, Pierces, Bounces, Speed, Lifetime, GhostDistance, HasteMultiplier,
+			IdGenerator.GenerateRandomId(),
+			npc.OwnerClientId,
+			npc.NpcBiomeType, null);
+			
+		GameManager.Instance.LoadAndShootSpellServerRpc(syncSpellData, spawnPos, direction);
+	}
+
 	public SyncSpellData LoadSpell(WandItemSO wandSO, List<int> modifierArray)
 	{
 		SyncSpellData syncSpellData = new SyncSpellData(

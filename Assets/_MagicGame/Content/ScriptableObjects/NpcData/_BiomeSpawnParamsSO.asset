@@ -24,6 +24,9 @@ MonoBehaviour:
     - NpcData: {fileID: 11400000, guid: 3ceffa112137b4c099e594551fc8d67f, type: 2}
       RelativeSpawnWeight: 100
       SpawnCondition: 2
+    - NpcData: {fileID: 11400000, guid: 3eb116e0c04fb46ffac017eaaaffaef7, type: 2}
+      RelativeSpawnWeight: 75
+      SpawnCondition: 0
   - Biome: 1
     SpawnRateDenominator: 200
     MaxNpcSlotAmount: 6

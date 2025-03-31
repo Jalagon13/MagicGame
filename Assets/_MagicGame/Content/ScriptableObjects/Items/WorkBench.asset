@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WorkBench
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Work Bench
-  <UiDisplay>k__BackingField: {fileID: 1337721260, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <UiDisplay>k__BackingField: {fileID: 1147903491, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <GoldValue>k__BackingField: 12
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 

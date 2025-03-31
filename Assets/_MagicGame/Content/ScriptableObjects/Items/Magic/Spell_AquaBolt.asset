@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
-  m_Name: Spell_ManaBolt
+  m_Name: Spell_AquaBolt
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Mana Bolt
+  <Name>k__BackingField: Aqua Bolt
   <UiDisplay>k__BackingField: {fileID: 1484343114, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <GoldValue>k__BackingField: 70
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Shoots a single bolt of mana.
   <SpellProjectilePrefab>k__BackingField: {fileID: 6035814809352226819, guid: b690059f7ea154d8bb5b67392ed3195f, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 3235512204744374167, guid: 966ce96a46a0346519d0f2a96c141a22, type: 3}
-  <CastTime>k__BackingField: 0.225
-  <CastDelay>k__BackingField: 0.2
+  <CastTime>k__BackingField: 0.33
+  <CastDelay>k__BackingField: 0.12
   <Damage>k__BackingField: 13
-  <ManaCost>k__BackingField: 11
+  <ManaCost>k__BackingField: 10
   <Knockback>k__BackingField: 5
   <Accuracy>k__BackingField: 2
   <Lifetime>k__BackingField: 1.5

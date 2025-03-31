@@ -72,7 +72,7 @@ public class TileItemSO : ItemSO
 
 		foreach(Collider2D col in colliders)
 		{
-			if(col.TryGetComponent(out WorldObject clickable)) 
+			if(col.TryGetComponent(out WorldObject clickable) || col.TryGetComponent(out Npc npc)) 
 				return false;
 		}
 

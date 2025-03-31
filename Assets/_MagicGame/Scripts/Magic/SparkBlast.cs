@@ -57,7 +57,6 @@ public class SparkBlast : Spell
     private IEnumerator StopSparkBlast()
     {
         _isDead = true;
-        Debug.Log($"Stopping SnapBlast after {_detonateParticles.main.duration} seconds");
         yield return new WaitForSeconds(_detonateParticles.main.duration);
         TerminateSpell();
     }

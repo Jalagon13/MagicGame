@@ -248,7 +248,7 @@ public class Wand
 
 		CastTimeTimer = new(longestCastTime);
 		CastTimeTimer.OnTimerEnd += ExecuteSpells;
-		Debug.Log($"Charging Spells...");
+		// Debug.Log($"Charging Spells...");
 	}
 	
     private void ExecuteSpells(object sender, EventArgs e)
@@ -262,7 +262,7 @@ public class Wand
 		}
     
 		CastTimeTimer.OnTimerEnd -= ExecuteSpells;
-		Debug.Log($"Executing Spells");
+		// Debug.Log($"Executing Spells");
 	}
 	
 	private void CancelSpellCharge()
@@ -276,7 +276,7 @@ public class Wand
 
 		CastTimeTimer.OnTimerEnd -= ExecuteSpells;
 		CastTimeTimer = new Timer(0);
-		Debug.Log($"Cast was interrupted. Reseting spellToCast values");
+		// Debug.Log($"Cast was interrupted. Reseting spellToCast values");
 	}
 	
 	private bool RemainingSpellExists()

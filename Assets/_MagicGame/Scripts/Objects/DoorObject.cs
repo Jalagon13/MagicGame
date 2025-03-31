@@ -52,6 +52,7 @@ public class DoorObject : WorldObject
 			_isOpen = !_isOpen;
 		
 			ObjectManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value, _isOpen);
+			HandlePathfinding();
 		}
 	}
 
@@ -66,6 +67,8 @@ public class DoorObject : WorldObject
 	{
 		SetIsOpen(isOpen, false);
 		SetOrientationSprites();
+		
+		
 	}
 	
 	private void SetOrientationSprites()
@@ -102,8 +105,10 @@ public class DoorObject : WorldObject
 	{
 		_doorSr.sprite = _openSprite;
 		_localWallCollider.gameObject.SetActive(false);
-		
-		if(playSound)
+
+		HandlePathfinding();
+
+		if (playSound)
 		{
 			SoundManager.Instance.PlayOneShot(_openSound, transform.position);
 			Lightmap.Instance.UpdateLightMap();
@@ -116,14 +121,28 @@ public class DoorObject : WorldObject
 	{
 		_doorSr.sprite = _closeSprite;
 		_localWallCollider.gameObject.SetActive(true);
-		
-		if(playSound)
+
+		HandlePathfinding();
+
+		if (playSound)
 		{
 			SoundManager.Instance.PlayOneShot(_closeSound, transform.position);
 			Lightmap.Instance.UpdateLightMap();
 		}
 		
 		TileManager.Instance.AddTileVisibilityData(Vector3Int.FloorToInt(transform.position), new TileVisibility{ Visibility = 1 });
+	}
+	
+	private void HandlePathfinding()
+	{
+		if (_isOpen)
+		{
+			Pathfinding.Instance.RemovePfWallTileServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value);
+		}
+		else
+		{
+			Pathfinding.Instance.AddPfWallTileServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value);
+		}
 	}
 	
 	private void OnDestroy()

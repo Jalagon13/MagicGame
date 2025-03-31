@@ -279,7 +279,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Main Menu
+  m_text: 'Fable
+
+    Forge'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 13493da27847f4c52aeea941cce9d861, type: 2}
   m_sharedMaterial: {fileID: -3009918828552051653, guid: 13493da27847f4c52aeea941cce9d861, type: 2}

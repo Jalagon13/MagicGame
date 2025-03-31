@@ -176,7 +176,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_work_bench
+      name: item_research_table
       rect:
         serializedVersion: 2
         x: 64
@@ -330,7 +330,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_alchemy_table
+      name: item_work_bench
       rect:
         serializedVersion: 2
         x: 48
@@ -791,6 +791,160 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: item_aspect_of_air
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ba2aed65ad9148829bfd7d4ca8a3ce4
+      internalID: 2005844805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_aspect_of_fire
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 112afba4ea370452d807794ca4f2912b
+      internalID: 1277599192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_aspect_of_water
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a8370e5feb5e4e24a0790191637a410
+      internalID: 580891271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_aspect_of_earth
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98b98ae99c7114db5821927e95c4bb2c
+      internalID: -512531796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_aspect_of_order
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d2802b6d9add4c65bace6373bd052f2
+      internalID: -763366888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_aspect_of_chaos
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e00a9154ff5b3488c9afb99e7df792e5
+      internalID: 1651796674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_aspect_of_life
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9da19542c7f4a401eab5c49c33175b8e
+      internalID: -1081829700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -805,7 +959,13 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      item_alchemy_table: 1147903491
+      item_aspect_of_air: 2005844805
+      item_aspect_of_chaos: 1651796674
+      item_aspect_of_earth: -512531796
+      item_aspect_of_fire: 1277599192
+      item_aspect_of_life: -1081829700
+      item_aspect_of_order: -763366888
+      item_aspect_of_water: 580891271
       item_axe: -1431561084
       item_blacksmith: -89414543
       item_blue_bell: -1747701128
@@ -838,6 +998,7 @@ TextureImporter:
       item_pixie_dust: 1964935682
       item_plywood: -328401396
       item_portal: 547736231
+      item_research_table: 1337721260
       item_silk: 1716809911
       item_simple_wand: 1591310652
       item_spindle: 1551977814
@@ -862,7 +1023,7 @@ TextureImporter:
       item_wood_wall: 67440230
       item_wood_wand: 16873710
       item_wooden_catalyst: -686089455
-      item_work_bench: 1337721260
+      item_work_bench: 1147903491
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

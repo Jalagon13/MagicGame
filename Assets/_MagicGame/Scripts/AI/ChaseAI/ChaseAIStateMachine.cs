@@ -14,26 +14,24 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
         Moving
     }
 
-    [Tooltip("Smaller values = slower transition to desired direction")]
+    [field: Tooltip("Smaller values = slower transition to desired direction")]
     [field: SerializeField] public float TurnSharpness { get; private set; } = 5f;
     [field: SerializeField] public float WanderSpeed { get; private set; } = 3f;
     [field: SerializeField] public float ChaseSpeed { get; private set; } = 4f;
     [field: SerializeField] public float KnockbackResist { get; private set; } = 0f;
     [field: SerializeField] public float MinIdleDuration { get; private set; } = 2.5f;
     [field: SerializeField] public float MaxIdleDuration { get; private set; } = 5f;
-    [Tooltip("Detection radius for breadcrumbs and players")]
+    [field: Tooltip("Detection radius for breadcrumbs and players")]
     [field: SerializeField] public float DetectionRadius { get; private set; } = 15f;
     [field: SerializeField] public float DetectionIntervalDuration { get; private set; } = 0.5f;
-    [Tooltip("Thickness of the raycast used to check for obstructions when navigating to a player or breadcrumb. Adjust approximately to the radius of the AI's collider")]
-    [field: SerializeField] public float ObstrcutionCheckLineThickness { get; private set; } = 0.25f;
     [field: SerializeField] public float WanderRadius { get; private set; } = 10f;
-    [Tooltip("How close the AI will get to a WanderDestination before stopping")]
+    [field: Tooltip("How close the AI will get to a WanderDestination before stopping")]
     [field: SerializeField] public float StoppingDistance { get; private set; } = 0.25f;
     [field: SerializeField] public float StrafingDuration { get; private set; } = 0.25f;
     [field: SerializeField] public float StrafeIntensity { get; private set; } = 0.5f;
     [field: SerializeField] public bool WillChasePlayer { get; private set; } = true;
     [field: SerializeField] public bool OnlyChaseWhenProvoked { get; set; } = true;
-    [Tooltip("If set to false, keep NPC on idle state")]
+    [field: Tooltip("If set to false, keep NPC on idle state")]
     [field: SerializeField] public bool CanMove { get; set; } = true;
 
     public Knockback Knockback { get; private set; }
@@ -46,6 +44,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     public bool IsStrafing { get; private set; }
     public Vector2 WanderDestination { get; set; }
     public int StrafingDirection { get; private set; } = 1;
+    public bool PlayerInSight { get; private set; }
 
     private Npc _npc;
     private NpcNetworkComponent _npcNetwork;
@@ -106,6 +105,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
 
         PlayerPositionFound = false;
         BreadCrumbPositionFound = false;
+        PlayerInSight = false;
 
         // Circle cast to find player or breadcrumb in detection radius
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, DetectionRadius, LayerMask.GetMask("Player", "Breadcrumb"));
@@ -157,6 +157,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
             // Debug.Log("Found closest player! moving towards player");
             DesiredDirection = (_closestPlayerPosition - (Vector2)transform.position).normalized;
             IsChasing = true;
+            PlayerInSight = true;
         }
         else if(BreadCrumbPositionFound)
         {
@@ -179,7 +180,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
 
         if(localBiomePfWallCollider == null) return false;
 
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, ObstrcutionCheckLineThickness, direction.normalized, distance, LayerMask.GetMask("PathfindingWall"));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction.normalized, distance, LayerMask.GetMask("PathfindingWall"));
 
         foreach (var hit in hits)
         {

@@ -17,7 +17,7 @@ MonoBehaviour:
   <GoldValue>k__BackingField: 25
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <BaseCastDelay>k__BackingField: 0.085
-  <ReloadDuration>k__BackingField: 0.2
-  <Accuracy>k__BackingField: -3
+  <BaseCastDelay>k__BackingField: 0.18
+  <ReloadDuration>k__BackingField: 0.667
+  <Accuracy>k__BackingField: 3
   <Capacity>k__BackingField: 3

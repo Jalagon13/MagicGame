@@ -26,7 +26,6 @@ public class DeployItemSO : ItemSO
 			BiomeType biome = Player.LocalClientInstance.CurrentPlayerBiome.Value;
 			int id = GameManager.Instance.GetIDFromWorldObject(_deployObjectPrefab);
 
-			Debug.Log($"Placing {_deployObjectPrefab.name} at {pos} with orientation {orientation}");
 			ObjectManager.Instance.PlaceResourceObjectServerRpc(spawnPosition, id, biome, orientation);
 			InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 			SoundManager.Instance.PlayOneShot(_deployObjectPrefab.PlaceSound, Player.LocalClientInstance.transform.position);
