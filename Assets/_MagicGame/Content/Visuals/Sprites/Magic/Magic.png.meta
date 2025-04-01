@@ -147,7 +147,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spell_mana_bolt
+      name: spell_aqua_bolt
       rect:
         serializedVersion: 2
         x: 32
@@ -441,7 +441,7 @@ TextureImporter:
         width: 6
         height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -478,8 +478,8 @@ TextureImporter:
       mod_pierce: -1082386244
       mod_speed: -27199075
       proj_light_dagger: -1275709379
+      spell_aqua_bolt: 1484343114
       spell_light_dagger: -949320902
-      spell_mana_bolt: 1484343114
       spell_mining_focus: -571513728
       spell_self_dash: -1614915739
       spell_self_speed: 2137236163

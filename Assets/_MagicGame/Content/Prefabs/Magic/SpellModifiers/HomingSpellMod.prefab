@@ -100,5 +100,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a4b90ae01654cb8ba22d999d992e5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _detectionRadius: 5
-  _rotateSharpness: 15
+  _detectionRadius: 3.5
+  _rotateSharpness: 1.5

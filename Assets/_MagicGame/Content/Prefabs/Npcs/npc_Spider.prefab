@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _knockbackResist
-      value: 13
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Path
@@ -322,7 +322,6 @@ MonoBehaviour:
   <MaxIdleDuration>k__BackingField: 2
   <DetectionRadius>k__BackingField: 30
   <DetectionIntervalDuration>k__BackingField: 0.25
-  <ObstrcutionCheckLineThickness>k__BackingField: 0.225
   <WanderRadius>k__BackingField: 10
   <StoppingDistance>k__BackingField: 0.25
   <StrafingDuration>k__BackingField: 1.5
@@ -356,7 +355,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6204638039996956914, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}
       propertyPath: <KnockbackForce>k__BackingField
-      value: 1
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6204638039996956914, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}
       propertyPath: 'ExceptionColliders.Array.data[0]'

@@ -27,7 +27,6 @@ public class Wand
 		}
 	}
 
-
 	public Wand(WandInventoryItem wandInventoryItem)
 	{
 		WandInvItem = wandInventoryItem;
@@ -267,6 +266,9 @@ public class Wand
 	
 	private void CancelSpellCharge()
 	{
+		Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(1f);
+		Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
+
 		foreach (LoadedSpell loadedSpell in _loadedSpells)
 		{
 			loadedSpell.SpellToCast.CancelSpell(loadedSpell.SpellData.SpellId);

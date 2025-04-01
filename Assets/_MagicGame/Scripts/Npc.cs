@@ -18,6 +18,7 @@ public class Npc : NetworkBehaviour
 	}
 
 	[field: SerializeField] public NpcSO NpcSO { get; private set; }
+	[Range(0, 1f)]
 	[SerializeField] private float _knockbackResist;
 	[SerializeField] private int _damage;
 	[SerializeField] private DamageCollider _damageCollider;

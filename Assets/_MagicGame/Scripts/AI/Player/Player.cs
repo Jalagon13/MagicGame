@@ -38,7 +38,6 @@ public class Player : NetworkBehaviour
 	public bool IsPerformingSwing { get; set; }
 	
 	[SerializeField] private float _respawnTimerDuration;
-	[Range(0, 100), SerializeField] private float _knockbackResist;
 	[SerializeField] private bool _spawnWandItems;
 	[SerializeField] private List<WandInventoryItem> _startingWandItems = new();
 	[SerializeField] private List<InventoryItem> _startingItems = new();
@@ -176,7 +175,7 @@ public class Player : NetworkBehaviour
 		Debug.Log($"[Client {NetworkManager.LocalClientId}] Applied {damageTaken} Damage to {gameObject.name}!");
 
 		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerDamaged, transform.position);
-		PlayerKnockback.ApplyKnockback(sourcePosition, _knockbackResist, knockbackForce);
+		PlayerKnockback.ApplyKnockback(sourcePosition, PlayerStats.KnockbackResist, knockbackForce);
 
 		OnDamaged?.Invoke(this, new OnDamagedEventArgs
 		{

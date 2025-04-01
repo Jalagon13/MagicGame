@@ -11,6 +11,8 @@ public class PlayerStats : NetworkBehaviour
 	[field: SerializeField] public int ManaRegenPerSecond { get; private set; } = 10;
 	[field: SerializeField] public float BaseSpeed { get; private set; }
 	[field: SerializeField] public float TurnSharpness { get; private set; }
+	[field: Range(0, 1f)]
+	[field: SerializeField] public float KnockbackResist { get; private set; }
 	
 	public float CurrentSpeed { get; private set; }
 	public int CurrentMana { get; private set; }

@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using Unity.Netcode;
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 public class HomingSpellMod : MonoBehaviour, ISpellModifier
 {
     [SerializeField] private float _detectionRadius = 2.5f;
-    [SerializeField] private float _rotateSharpness = 5f; // Higher values = faster rotation, lower values = slower rotation
+    [Tooltip("The higher the value, the faster the spell will home to the target")]
+    [SerializeField] private float _rotateSharpness = 5f; 
 
     private const int MAX_TARGETS = 10;
     private Spell _spell;
@@ -70,9 +72,14 @@ public class HomingSpellMod : MonoBehaviour, ISpellModifier
             
             // Slightly rotate towards the target
             float currentSpeed = _spell.Velocity.Value.magnitude;
-            _spell.Velocity.Value = Vector2.Lerp(_spell.Velocity.Value, (closestTarget.transform.position - transform.position).normalized, Mathf.Clamp01(_rotateSharpness * Time.fixedDeltaTime));
-            _spell.Velocity.Value.Normalize();
-            _spell.Velocity.Value *= currentSpeed;
+            Vector2 desiredDirection = (closestTarget.transform.position - transform.position).normalized;
+
+            // Lerp smoothly towards the desired direction without renormalizing
+            _spell.Velocity.Value = Vector2.Lerp(
+                _spell.Velocity.Value.normalized, 
+                desiredDirection, 
+                Mathf.Clamp01(_rotateSharpness * Time.fixedDeltaTime)
+            ) * currentSpeed;
         }
     }
 

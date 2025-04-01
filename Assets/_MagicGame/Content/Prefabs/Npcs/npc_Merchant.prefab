@@ -249,6 +249,10 @@ PrefabInstance:
       value: event:/Player/PlayerHurt
       objectReference: {fileID: 0}
     - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _knockbackResist
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _damageSound.Path
       value: event:/Player/PlayerHurt
       objectReference: {fileID: 0}
@@ -480,7 +484,6 @@ MonoBehaviour:
   <MaxIdleDuration>k__BackingField: 8
   <DetectionRadius>k__BackingField: 15
   <DetectionIntervalDuration>k__BackingField: 0.5
-  <ObstrcutionCheckLineThickness>k__BackingField: 0.25
   <WanderRadius>k__BackingField: 3
   <StoppingDistance>k__BackingField: 0.25
   <StrafingDuration>k__BackingField: 0.25

@@ -69,7 +69,6 @@ public class ActionManager : MonoBehaviour
 		}
 
 		_selectedInvItem = selectedInventoryItem;
-
 	}
 
     private void UpdateWandDict(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)

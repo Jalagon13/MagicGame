@@ -284,6 +284,10 @@ PrefabInstance:
       propertyPath: _iHasHealthGameObject
       value: 
       objectReference: {fileID: 6633633827701661900}
+    - target: {fileID: 7484194678343393079, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.75
+      objectReference: {fileID: 0}
     - target: {fileID: 8184671317715962605, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3803721222
@@ -349,7 +353,6 @@ MonoBehaviour:
   <MaxIdleDuration>k__BackingField: 0
   <DetectionRadius>k__BackingField: 15
   <DetectionIntervalDuration>k__BackingField: 0.5
-  <ObstrcutionCheckLineThickness>k__BackingField: 0.25
   <WanderRadius>k__BackingField: 4
   <StoppingDistance>k__BackingField: 0.25
   <StrafingDuration>k__BackingField: 0.25
@@ -383,7 +386,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6204638039996956914, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}
       propertyPath: <KnockbackForce>k__BackingField
-      value: 1
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6204638039996956914, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}
       propertyPath: 'ExceptionColliders.Array.data[0]'

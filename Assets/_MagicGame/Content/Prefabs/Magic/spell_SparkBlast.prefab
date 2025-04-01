@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 8104886496655576445}
   - component: {fileID: 8269354046363732758}
   - component: {fileID: 7666750109937317245}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: spell_SparkBlast
   m_TagString: Untagged
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
@@ -224,7 +224,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  Velocity: {x: 0, y: 0}
+  <HitSomethingSound>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Velocity:
+    m_InternalValue: {x: 0, y: 0}
+  ShowVisuals:
+    m_InternalValue: 0
+  Started:
+    m_InternalValue: 0
   _blastRadius: 1.75
   _detonateParticles: {fileID: 5806733700640005283, guid: 01615c6d7f11f4d55a9c48e0a4cde630, type: 3}
 --- !u!1001 &3404457874550790833

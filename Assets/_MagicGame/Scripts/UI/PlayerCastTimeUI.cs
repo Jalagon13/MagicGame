@@ -1,17 +1,24 @@
 using MoreMountains.Tools;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class PlayerCastTimeUI : MonoBehaviour
 {
     [SerializeField] private PlayerManaStatUI _manaStatUI;
     [SerializeField] private MMProgressBar _castTimeBar;
-    [SerializeField] private RectTransform _border; // Set width to max mana dynamically
-    [SerializeField] private TextMeshProUGUI _amountText;
+    // [SerializeField] private RectTransform _border; // Set width to max mana dynamically
+    // [SerializeField] private TextMeshProUGUI _amountText;
 
     private void Start()
     {
         ActionManager.Instance.OnPlayerSpellChargeUpdated += OnPlayerSpellChargeUpdated;
+        HotbarManager.Instance.OnFocusSlotUpdated += HandleUI;
+    }
+
+    private void HandleUI(object sender, HotbarManager.OnFocusItemSetEventArgs e)
+    {
+        HideBar();
     }
 
     private void OnPlayerSpellChargeUpdated(object sender, ActionManager.OnStatUpdatedEventArgs e)
@@ -25,7 +32,7 @@ public class PlayerCastTimeUI : MonoBehaviour
             ShowBar();
         }
     
-        _border.sizeDelta = new Vector2(e.MaxAmount, _border.sizeDelta.y);
+        // _border.sizeDelta = new Vector2(e.MaxAmount, _border.sizeDelta.y);
         UpdateBarFill(e.CurrentAmount, e.MaxAmount);
     }
 
@@ -36,8 +43,8 @@ public class PlayerCastTimeUI : MonoBehaviour
         float curr = (currentAmount / maxAmount) * _manaStatUI.MaxMana;
         
         _castTimeBar.UpdateBar(curr, 0, _manaStatUI.MaxMana);
-        _border.sizeDelta = new Vector2(_manaStatUI.MaxMana * 2, _border.sizeDelta.y);
-        _amountText.text = $"{Mathf.RoundToInt(curr)}/{_manaStatUI.MaxMana}";
+        // _border.sizeDelta = new Vector2(_manaStatUI.MaxMana * 2, _border.sizeDelta.y);
+        // _amountText.text = $"{Mathf.RoundToInt(curr)}/{_manaStatUI.MaxMana}";
     }
 
     private void ShowBar()
@@ -53,5 +60,6 @@ public class PlayerCastTimeUI : MonoBehaviour
     private void OnDestroy()
     {
         ActionManager.Instance.OnPlayerSpellChargeUpdated -= OnPlayerSpellChargeUpdated;
+        HotbarManager.Instance.OnFocusSlotUpdated -= HandleUI;
     }
 }
