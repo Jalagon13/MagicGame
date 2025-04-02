@@ -18,4 +18,6 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 80b56846aa37c45a1b11af4d1a1eb5b9, type: 2}
     Quantity: 2
   - Item: {fileID: 11400000, guid: 5849721283c6441cbaa36b109972e84d, type: 2}
+    Quantity: 2
+  - Item: {fileID: 11400000, guid: d562dae53acb04aa48034eb14ee90338, type: 2}
     Quantity: 1

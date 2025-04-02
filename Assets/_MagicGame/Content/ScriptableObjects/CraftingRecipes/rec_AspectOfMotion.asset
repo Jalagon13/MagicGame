@@ -10,14 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55646a241e94b4a3a9d1cdf6e939102b, type: 3}
-  m_Name: rec_AquaBolt
+  m_Name: rec_AspectOfMotion
   m_EditorClassIdentifier: 
-  OutputItem: {fileID: 11400000, guid: bf1d2a5b5f1334f7f9a6d0aa32605231, type: 2}
+  OutputItem: {fileID: 11400000, guid: 11e8f43b7bc5c4c4397feee3508e5ab7, type: 2}
   OutputAmount: 1
   ResourceList:
-  - Item: {fileID: 11400000, guid: d562dae53acb04aa48034eb14ee90338, type: 2}
-    Quantity: 1
   - Item: {fileID: 11400000, guid: 5849721283c6441cbaa36b109972e84d, type: 2}
-    Quantity: 3
-  - Item: {fileID: 11400000, guid: 7085c09076ff64c65815502e952be852, type: 2}
-    Quantity: 3
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 613cd6896fd8c4dcb918aad3dec0eaab, type: 2}
+    Quantity: 1

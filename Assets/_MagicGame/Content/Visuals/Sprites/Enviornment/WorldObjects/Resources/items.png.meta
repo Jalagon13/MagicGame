@@ -932,7 +932,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -941,6 +941,72 @@ TextureImporter:
       bones: []
       spriteID: 9da19542c7f4a401eab5c49c33175b8e
       internalID: -1081829700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_aspect_of_motion
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f29128488970640cfb8d527b428d5e75
+      internalID: -452698076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_aspect_of_navigation
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7790611b15b004e039dc15c6fc736a06
+      internalID: -44972350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_aspect_of_destruction
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c79d44b78ee304e67894c287bca05896
+      internalID: -969760260
       vertices: []
       indices: 
       edges: []
@@ -961,9 +1027,12 @@ TextureImporter:
     nameFileIdTable:
       item_aspect_of_air: 2005844805
       item_aspect_of_chaos: 1651796674
+      item_aspect_of_destruction: -969760260
       item_aspect_of_earth: -512531796
       item_aspect_of_fire: 1277599192
       item_aspect_of_life: -1081829700
+      item_aspect_of_motion: -452698076
+      item_aspect_of_navigation: -44972350
       item_aspect_of_order: -763366888
       item_aspect_of_water: 580891271
       item_axe: -1431561084
