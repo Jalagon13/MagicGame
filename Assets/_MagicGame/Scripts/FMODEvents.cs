@@ -21,8 +21,7 @@ public class FMODEvents : MonoBehaviour
 	[field: SerializeField] public EventReference MeleeHit { get; private set; }
 	
 	[field: Header("Environment SFX")]
-	[field: SerializeField] public EventReference ForestAmbience { get; private set; }
-	[field: SerializeField] public EventReference CaveAmbience { get; private set; }
+	[field: SerializeField] public EventReference Ambience { get; private set; }
 	
 	
 	private void Awake()

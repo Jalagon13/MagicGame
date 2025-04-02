@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{76c59fa7-f8fe-41a0-8bbc-005d777d03fc}">
-		<property name="assetPath">
-			<value>SFX/SFX_Thump.wav</value>
+	<object class="AudioFile" id="{cc04586a-122e-443d-927b-4cfacd9b542d}">
+		<property name="assetPath" />
+		<property name="isStreaming">
+			<value>true</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>
@@ -11,7 +12,7 @@
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>0.72481249999999997</value>
+			<value>61.580645833333335</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{bc2b5265-0882-4ef2-998c-4498e0c7a8e5}</destination>

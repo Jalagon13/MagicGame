@@ -12304,20 +12304,13 @@ MonoBehaviour:
       Data3: 197467520
       Data4: 1755672934
     Path: event:/Player/MeleeHit
-  <ForestAmbience>k__BackingField:
+  <Ambience>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  <CaveAmbience>k__BackingField:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1999850616
+      Data2: 1096425094
+      Data3: -1876040270
+      Data4: -1388101932
+    Path: event:/Ambience/Ambience
 --- !u!1001 &1744933028
 PrefabInstance:
   m_ObjectHideFlags: 0

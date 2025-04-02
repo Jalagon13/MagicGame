@@ -27,6 +27,32 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-8595475514370727515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Ambience/Ambience
+  m_EditorClassIdentifier: 
+  Name: Ambience
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3654794721
+    data2: 312539312
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - ForestAmbience
+  - CaveAmbience
+  Exists: 1
 --- !u!114 &-8133402120912244033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +255,34 @@ MonoBehaviour:
   - Name: Desktop
     Value: 3146272
   Exists: 1
+--- !u!114 &-4100935872588225253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/Ambience/Ambience
+  Guid:
+    Data1: 1999850616
+    Data2: 1096425094
+    Data3: -1876040270
+    Data4: -1388101932
+  Banks:
+  - {fileID: 6702288669578411488}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -8595475514370727515}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4024909556737517532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,12 +518,13 @@ MonoBehaviour:
   - {fileID: -1277810612265870814}
   - {fileID: 3628296951500610386}
   - {fileID: -326097733281759104}
+  - {fileID: -4100935872588225253}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6702288669578411488}
   StringsBanks:
   - {fileID: 5574528013551363316}
-  cacheTime: 638791015805355647
+  cacheTime: 638791864627546906
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:
@@ -722,10 +777,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638791013064754972
+  lastModified: 638791864627546906
   FileSizes:
   - Name: Desktop
-    Value: 2084
+    Value: 2182
   Exists: 1
 --- !u!114 &5813129133648053243
 MonoBehaviour:
@@ -796,10 +851,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638791013064736840
+  lastModified: 638791864627498096
   FileSizes:
   - Name: Desktop
-    Value: 4352
+    Value: 3619520
   Exists: 1
 --- !u!114 &6885153926838661541
 MonoBehaviour:
