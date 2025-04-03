@@ -16,7 +16,7 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
-  TileType: 2
+  TileType: 1
   DropItem: {fileID: 11400000, guid: 80b56846aa37c45a1b11af4d1a1eb5b9, type: 2}
   Hardness: 0.65
   MiningSound:
@@ -40,3 +40,7 @@ MonoBehaviour:
       Data3: 2078279570
       Data4: 643237060
     Path: event:/StoneDestroyed
+  TopTileSingle: {fileID: 0}
+  TopTileLeft: {fileID: 0}
+  TopTileCenter: {fileID: 0}
+  TopTileRight: {fileID: 0}

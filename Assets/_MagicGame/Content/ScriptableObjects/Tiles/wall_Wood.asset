@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b52052ad4aefe4da580ba4e2ba9fed0c, type: 3}
-  m_Name: WoodWallTile
+  m_Name: wall_Wood
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: -3348714016332750533, guid: 5d9b3ddca3c834037adf5c7c5f75820c, type: 3}
   m_DefaultGameObject: {fileID: 0}
@@ -359,7 +359,7 @@ MonoBehaviour:
     - {x: -1, y: 0, z: 0}
     - {x: 1, y: 0, z: 0}
     m_RuleTransform: 0
-  TileType: 1
+  TileType: 2
   DropItem: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
   Hardness: 0.65
   MiningSound:

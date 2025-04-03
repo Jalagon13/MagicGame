@@ -9,8 +9,9 @@ using UnityEngine.Tilemaps;
 public enum TileType
 {
 	Ground,
+	Floor,
 	Wall,
-	Floor
+	Ore
 }
 
 [CreateAssetMenu(fileName = "New TileSO", menuName = "Tiles/TileSO", order = 1)]

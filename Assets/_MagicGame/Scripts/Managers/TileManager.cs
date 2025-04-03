@@ -19,6 +19,7 @@ public class TileManager : NetworkBehaviour
 	[field: SerializeField] public Tilemap GroundTm { get; private set; }
 	[field: SerializeField] public Tilemap FloorTm { get; private set; }
 	[field: SerializeField] public Tilemap WallTm { get; private set; }
+	[field: SerializeField] public Tilemap OreTm { get; private set; }
 	public Dictionary<Vector3Int, TileVisibility> TileVisibilityDict { get; private set; } = new();
 
 	private void Awake()
@@ -56,6 +57,8 @@ public class TileManager : NetworkBehaviour
 				return FloorTm.HasTile(position);
 			case TileType.Wall:
 				return WallTm.HasTile(position);
+			case TileType.Ore:
+				return OreTm.HasTile(position);
 		}
 		return false;
 	}
