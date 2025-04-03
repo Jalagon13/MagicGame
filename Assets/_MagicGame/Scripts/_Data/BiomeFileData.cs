@@ -42,6 +42,7 @@ public class ChunkFileData // For Serialization
 	public List<TileFileData> GroundTiles;
 	public List<TileFileData> FloorTiles;
 	public List<TileFileData> WallTiles;
+	public List<TileFileData> OreTiles;
 	public int Size; // Width and Height
 }
 

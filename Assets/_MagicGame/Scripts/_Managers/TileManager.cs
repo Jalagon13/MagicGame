@@ -49,19 +49,15 @@ public class TileManager : NetworkBehaviour
 
 	public bool HasTile(Vector3Int position, TileType tileType)
 	{
-		switch (tileType)
-		{
-			case TileType.Ground:
-				return GroundTm.HasTile(position);
-			case TileType.Floor:
-				return FloorTm.HasTile(position);
-			case TileType.Wall:
-				return WallTm.HasTile(position);
-			case TileType.Ore:
-				return OreTm.HasTile(position);
-		}
-		return false;
-	}
+        return tileType switch
+        {
+            TileType.Ground => GroundTm.HasTile(position),
+            TileType.Floor => FloorTm.HasTile(position),
+            TileType.Wall => WallTm.HasTile(position),
+            TileType.Ore => OreTm.HasTile(position),
+            _ => false,
+        };
+    }
 
 	public void SetLocalTile(Vector3Int tilePos, TileSO tileSO, TileType tileType)
 	{
@@ -76,19 +72,27 @@ public class TileManager : NetworkBehaviour
 				break;
 			case TileType.Wall:
 				WallTm.SetTile(tilePos, tileSO);
-				HandleTopWallTiles(tilePos, tileSO);
+				HandleTopWallTiles(tilePos, tileSO, WallTm);
+				break;
+			case TileType.Ore: 
+				OreTm.SetTile(tilePos, tileSO);
+				if(tileSO == null) // When destroying ore, destroy the wall behind it
+				{
+					WallTm.SetTile(tilePos, null);
+				}
+				HandleTopWallTiles(tilePos, tileSO, OreTm);
 				break;
 		}
 	}
 	
-    private void HandleTopWallTiles(Vector3Int botTilePosition, TileSO tileSO)
+    private void HandleTopWallTiles(Vector3Int botTilePosition, TileSO tileSO, Tilemap tilemap)
     {
 		if(tileSO != null)
 		{
 			if (tileSO.TopTileSingle == null) return; // This is temp for now
 
 			Vector3Int topTilePosition = botTilePosition + Vector3Int.up;
-			TileBase topTile = WallTm.GetTile(topTilePosition);
+			TileBase topTile = tilemap.GetTile(topTilePosition);
 
 			if (topTile != null)
 			{
@@ -103,7 +107,7 @@ public class TileManager : NetworkBehaviour
 			}
 
 			TopTile tt = Instantiate(TopTilePrefab, topTilePosition, Quaternion.identity);
-			tt.gameObject.transform.SetParent(WallTm.gameObject.transform);
+			tt.gameObject.transform.SetParent(tilemap.gameObject.transform);
 			tt.Initialize(tileSO, botTilePosition);
 		}
 		else
@@ -117,7 +121,7 @@ public class TileManager : NetworkBehaviour
 			    
 			    if (HasTile(neighborPos, TileType.Wall))
 			    {
-					HandleTopWallTiles(neighborPos, GameManager.Instance.GetTileSOFromTileBase(WallTm.GetTile(neighborPos)));
+					HandleTopWallTiles(neighborPos, GameManager.Instance.GetTileSOFromTileBase(WallTm.GetTile(neighborPos)), tilemap);
 				}
 			}
 		}
@@ -150,7 +154,7 @@ public class TileManager : NetworkBehaviour
 			if (tileList[i].TilePosition == tilePos)
 			{
 				var spawnPos = new Vector2(tileList[i].TilePosition.x + 0.5f, tileList[i].TilePosition.y + 0.5f);
-				GameManager.Instance.SpawnItem(tileSO.DropItem, 1, spawnPos, biome);
+				LootTable.SpawnLoot(tileSO.Table, spawnPos, biome);
 				ChunkManager.Instance.RemoveTileServerRpc(tileSO.TileType, tileList[i].TilePosition, biome);
 				SoundManager.Instance.PlayOneShot(tileSO.DestroySound, spawnPos);
 				break;
@@ -167,6 +171,7 @@ public class TileManager : NetworkBehaviour
 			TileType.Ground => chunk.GroundTileGameDataList,
 			TileType.Floor => chunk.FloorTileGameDataList,
 			TileType.Wall => chunk.WallTileGameDataList,
+			TileType.Ore => chunk.OreTileGameDataList,
 			_ => null
 		};
 	}
@@ -203,11 +208,17 @@ public class TileManager : NetworkBehaviour
 			SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
 			AddTileVisibilityData(tilePosV3Int, new TileVisibility {Visibility = 1});
 		}
+		
+		// loop through all ore tiles and set them on tilemap
+		foreach(TileGameData tile in e.Chunk.OreTileGameDataList)
+		{
+			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
+			SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
+		}
 	}
 
 	private void ChunkManager_OnUnloadChunk(object sender, ChunkManager.ChunkEventArgs e)
 	{
-		// Loop through all ground tiles and set null on tilemap
 		foreach(TileGameData tile in e.Chunk.GroundTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
@@ -215,7 +226,6 @@ public class TileManager : NetworkBehaviour
 			RemoveTileVisibilityData(tilePosV3Int);
 		}
 		
-		// loop through all floor tiles and set null on tilemap
 		foreach (TileGameData tile in e.Chunk.FloorTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
@@ -229,7 +239,14 @@ public class TileManager : NetworkBehaviour
 			SetLocalTile(tilePosV3Int, null, TileType.Wall);
 			RemoveTileVisibilityData(tilePosV3Int);
 		}
-		
+
+		foreach (TileGameData tile in e.Chunk.OreTileGameDataList)
+		{
+			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
+			SetLocalTile(tilePosV3Int, null, TileType.Ore);
+			RemoveTileVisibilityData(tilePosV3Int);
+		}
+
 		Pathfinding.Instance.RequestUnloadChunk(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value);
 	}
 	

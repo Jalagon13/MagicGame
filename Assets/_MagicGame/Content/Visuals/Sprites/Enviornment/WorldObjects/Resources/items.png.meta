@@ -198,7 +198,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_furnace
+      name: item_forge
       rect:
         serializedVersion: 2
         x: 80
@@ -998,7 +998,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1007,6 +1007,50 @@ TextureImporter:
       bones: []
       spriteID: c79d44b78ee304e67894c287bca05896
       internalID: -969760260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_cobalt_ore
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b350a50997ec4b6f869556deb3a333c
+      internalID: 631161573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_cobalt_bar
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e0b620ee2994457ab82015293c12d0b
+      internalID: 1629506966
       vertices: []
       indices: 
       edges: []
@@ -1044,10 +1088,12 @@ TextureImporter:
       item_chest: -1010797688
       item_chicken: 1104096443
       item_coal: -1541828095
+      item_cobalt_bar: 1629506966
+      item_cobalt_ore: 631161573
       item_destruction_tome: -1033124662
       item_door: 730009004
       item_fiber: 847625231
-      item_furnace: -1644608659
+      item_forge: -1644608659
       item_gold: 1322639080
       item_hammer: -670104258
       item_hide: -630612298

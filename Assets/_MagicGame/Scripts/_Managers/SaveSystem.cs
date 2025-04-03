@@ -129,6 +129,7 @@ public class SaveSystem : MonoBehaviour
 				GroundTiles = new(),
 				FloorTiles = new(),
 				WallTiles = new(),
+				OreTiles = new(),
 			};
 
 			// Loop through each tile in ground tiles add create a serializable TileData for it and add it to chunkData
@@ -172,7 +173,21 @@ public class SaveSystem : MonoBehaviour
 				
 				chunkData.WallTiles.Add(tileData);
 			}
-			
+
+			// Loop through each tile in ore tiles add create a serializable TileData for it and add it to chunkData
+			foreach (TileGameData tile in kvp.Value.OreTileGameDataList)
+			{
+				TileSO tileObjectSO = GameManager.Instance.GetTileSOFromTileBase(tile.TileSO);
+				TileFileData tileData = new()
+				{
+					Pos = tile.TilePosition,
+					TileId = GameManager.Instance.GetIDFromTileObjectSO(tileObjectSO),
+					TileType = tileObjectSO.TileType
+				};
+
+				chunkData.OreTiles.Add(tileData);
+			}
+
 			// Add chunkData to sceneData
 			sceneDataChunks.Add(chunkData);
 		}
@@ -294,7 +309,8 @@ public class SaveSystem : MonoBehaviour
 			{
 				GroundTileGameDataList = ConvertTileFileDataToGameData(data.GroundTiles),
 				FloorTileGameDataList = ConvertTileFileDataToGameData(data.FloorTiles),
-				WallTileGameDataList = ConvertTileFileDataToGameData(data.WallTiles)
+				WallTileGameDataList = ConvertTileFileDataToGameData(data.WallTiles),
+				OreTileGameDataList = ConvertTileFileDataToGameData(data.OreTiles)
 			};
 			
 			deserializedChunks.Add(data.ChunkPosition, chunk);

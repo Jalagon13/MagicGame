@@ -9,8 +9,9 @@ public class ChunkGameData
 {
 	public Vector2Int ChunkPosition { get; private set; }
 	public List<TileGameData> GroundTileGameDataList;
-	public List<TileGameData> WallTileGameDataList;
 	public List<TileGameData> FloorTileGameDataList;
+	public List<TileGameData> WallTileGameDataList;
+	public List<TileGameData> OreTileGameDataList;
 	public List<WorldObjectGameData> WorldObjectGameDataList;
 	public int Size { get; private set; }
 
@@ -19,15 +20,40 @@ public class ChunkGameData
 		Size = chunkSize;
 		ChunkPosition = chunkPosition;
 		GroundTileGameDataList = new();
-		WallTileGameDataList = new();
-		WorldObjectGameDataList = new();
 		FloorTileGameDataList = new();
+		WallTileGameDataList = new();
+		OreTileGameDataList = new();
+		WorldObjectGameDataList = new();
 	}
 	
 	// When a tile is destroyed, delete the tile data in chunk
 	public void RemoveTileDataIfExists(Vector2Int position, TileType tileType)
 	{
-		if(tileType == TileType.Wall)
+		if(tileType == TileType.Ore)
+		{
+			foreach (TileGameData tile in WallTileGameDataList)
+			{
+				// If position is found
+				if (tile.TilePosition == position)
+				{
+					// Delete data and return
+					WallTileGameDataList.Remove(tile);
+					break;
+				}
+			}
+			
+			foreach (TileGameData tile in OreTileGameDataList)
+			{
+				// If position is found
+				if (tile.TilePosition == position)
+				{
+					// Delete data and return
+					OreTileGameDataList.Remove(tile);
+					return;
+				}
+			}
+		}
+		else if(tileType == TileType.Wall)
 		{
 			foreach (TileGameData tile in WallTileGameDataList)
 			{

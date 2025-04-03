@@ -132,7 +132,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rsc_furnace
+      name: rsc_forge
       rect:
         serializedVersion: 2
         x: 16
@@ -483,7 +483,7 @@ TextureImporter:
       rsc_door_merclosed: -691286103
       rsc_door_open_lat: 797665262
       rsc_door_open_mer: 1158298151
-      rsc_furnace: -1474684095
+      rsc_forge: -1474684095
       rsc_mana_crystal: -1761981032
       rsc_research_table: -443529757
       rsc_spindle: 250863300

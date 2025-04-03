@@ -359,9 +359,13 @@ MonoBehaviour:
     - {x: -1, y: 0, z: 0}
     - {x: 1, y: 0, z: 0}
     m_RuleTransform: 0
-  TileType: 2
-  DropItem: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
-  Hardness: 0.65
+  TileType: 3
+  <Table>k__BackingField:
+  - Item: {fileID: 11400000, guid: 948cd40c3b143404aa76b1fbde01f383, type: 2}
+    Min: 1
+    Max: 1
+    Chance: 100
+  Hardness: 1
   MiningSound:
     Guid:
       Data1: 249587751

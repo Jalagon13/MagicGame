@@ -94,7 +94,15 @@ public class MiningHandler : MonoBehaviour
                     // Try to find a destructable tile
                     if (TileManager.Instance.WallTm.HasTile(ActionManager.MouseTilePosition))
                     {
-                        _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(ActionManager.MouseTilePosition));
+                        if(TileManager.Instance.OreTm.HasTile(ActionManager.MouseTilePosition))
+                        {
+                            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.OreTm.GetTile(ActionManager.MouseTilePosition));
+                        }
+                        else
+                        {
+                            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(ActionManager.MouseTilePosition));
+                        }
+
                         _destructableFound = DestructableType.Tile;
                         _currentBreakTargetPosition = ActionManager.MouseTilePosition;
                     }

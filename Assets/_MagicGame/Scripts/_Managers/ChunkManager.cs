@@ -326,7 +326,7 @@ public class ChunkManager : NetworkBehaviour
 	{
 		GetChunkFromAnyWorldPos(position, biome).RemoveTileDataIfExists(position, tileType);
 
-		if (tileType == TileType.Wall)
+		if (tileType == TileType.Wall || tileType == TileType.Ore)
 		{
 			Pathfinding.Instance.RemovePfWallTileServerRpc(position, biome);
 		}
@@ -358,6 +358,11 @@ public class ChunkManager : NetworkBehaviour
 			case TileType.Wall:
 				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
 				TileManager.Instance.AddTileVisibilityData(pos, new TileVisibility {Visibility = tileToPlace == null ? 0 : 1 });
+				Lightmap.Instance.UpdateLightMap();
+				break;
+			case TileType.Ore:
+				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
+				TileManager.Instance.AddTileVisibilityData(pos, new TileVisibility { Visibility = tileToPlace == null ? 0 : 1 });
 				Lightmap.Instance.UpdateLightMap();
 				break;
 		}

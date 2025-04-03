@@ -295,9 +295,7 @@ MonoBehaviour:
     Quantity: 1
   - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
     Quantity: 50
-  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
-    Quantity: 50
-  - Item: {fileID: 11400000, guid: fc272cd94af714d699afa490e9481050, type: 2}
+  - Item: {fileID: 11400000, guid: 9e26e0145233d498ab9936ca8144a7e5, type: 2}
     Quantity: 50
 --- !u!114 &6270092794415709611
 MonoBehaviour:
@@ -333,7 +331,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   <BaseMana>k__BackingField: 50
   <ManaRegenPerSecond>k__BackingField: 10
-  <BaseSpeed>k__BackingField: 5
+  <BaseSpeed>k__BackingField: 8
   <TurnSharpness>k__BackingField: 7.5
   <KnockbackResist>k__BackingField: 0
 --- !u!114 &3515157567628285232

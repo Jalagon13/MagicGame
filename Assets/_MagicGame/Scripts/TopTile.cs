@@ -5,6 +5,7 @@ public class TopTile : MonoBehaviour
     private SpriteRenderer _tileSpriteRenderer;
     private TileSO _wallSO;
     private Vector3Int _botMiddleTilePosition;
+    private TileType _tileType;
 
     private void Awake()
     {
@@ -16,8 +17,10 @@ public class TopTile : MonoBehaviour
     {
         _wallSO = wallSO;
         _botMiddleTilePosition = botMiddleTilePosition;
+        _tileType = wallSO.TileType;
 
         UpdateSelf();
+        UpdateSortingLayer();
 
         // After self update, update other top tiles in area
         Vector2 searchPosition = new Vector2(_botMiddleTilePosition.x + 0.5f, _botMiddleTilePosition.y + 1f);
@@ -38,10 +41,10 @@ public class TopTile : MonoBehaviour
         Vector3Int botLeftTilePosition = _botMiddleTilePosition + Vector3Int.left;
         Vector3Int botRightTilePosition = _botMiddleTilePosition + Vector3Int.right;
         
-        bool botLeftTileExists = TileManager.Instance.HasTile(botLeftTilePosition, TileType.Wall);
-        bool botRightTileExists = TileManager.Instance.HasTile(botRightTilePosition, TileType.Wall);
-        bool botMiddleTileExists = TileManager.Instance.HasTile(_botMiddleTilePosition, TileType.Wall);
-        bool hasSpaceForSelf = !TileManager.Instance.HasTile(_botMiddleTilePosition + Vector3Int.up, TileType.Wall);
+        bool botLeftTileExists = TileManager.Instance.HasTile(botLeftTilePosition, _tileType);
+        bool botRightTileExists = TileManager.Instance.HasTile(botRightTilePosition, _tileType);
+        bool botMiddleTileExists = TileManager.Instance.HasTile(_botMiddleTilePosition, _tileType);
+        bool hasSpaceForSelf = !TileManager.Instance.HasTile(_botMiddleTilePosition + Vector3Int.up, _tileType);
         
         if(!botMiddleTileExists || !hasSpaceForSelf)
         {
@@ -62,6 +65,21 @@ public class TopTile : MonoBehaviour
         else if(botLeftTileExists && botRightTileExists && botMiddleTileExists)
         {
             _tileSpriteRenderer.sprite = _wallSO.TopTileCenter;
+        }
+
+        UpdateSortingLayer();
+    }
+
+    private void UpdateSortingLayer()
+    {
+        switch (_tileType)
+        {
+            case TileType.Wall:
+                _tileSpriteRenderer.sortingOrder = 0;
+                break;
+            case TileType.Ore:
+                _tileSpriteRenderer.sortingOrder = 1;
+                break;
         }
     }
 }

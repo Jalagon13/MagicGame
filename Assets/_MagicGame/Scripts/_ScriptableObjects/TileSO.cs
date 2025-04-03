@@ -19,7 +19,8 @@ public class TileSO : RuleTile
 {
 	[Header("Tile Extended Properties")]
 	public TileType TileType;
-	public ItemSO DropItem;
+	[field: SerializeField]
+	public List<Loot> Table { get; private set; }
 	public float Hardness = 0.65f;
 	
 	[Header("Sounds")]
