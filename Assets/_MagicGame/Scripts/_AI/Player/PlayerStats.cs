@@ -5,6 +5,13 @@ using UnityEngine;
 
 public class PlayerStats : NetworkBehaviour
 {
+	public event EventHandler<ArmorChangedEventArgs> OnArmorEquipped;
+	public event EventHandler<ArmorChangedEventArgs> OnArmorUnEquipped;
+	public class ArmorChangedEventArgs : EventArgs 
+	{
+	    public ArmorItemSO ArmorItem;
+	}
+
 	public static PlayerStats Instance { get; private set; }
 
 	[field: SerializeField] public int BaseMana { get; private set; } = 50;
@@ -85,6 +92,7 @@ public class PlayerStats : NetworkBehaviour
 		if(!_equippedArmorItemIdList.Contains(itemId))
 		{
 			_equippedArmorItemIdList.Add(itemId);
+			OnArmorEquipped?.Invoke(this, new ArmorChangedEventArgs { ArmorItem = armor });
 		}
 		
 		UpdatePlayerStats();
@@ -102,6 +110,7 @@ public class PlayerStats : NetworkBehaviour
 		if (_equippedArmorItemIdList.Contains(itemId))
 		{
 			_equippedArmorItemIdList.Remove(itemId);
+			OnArmorUnEquipped?.Invoke(this, new ArmorChangedEventArgs { ArmorItem = armor });
 		}
 
 		UpdatePlayerStats();

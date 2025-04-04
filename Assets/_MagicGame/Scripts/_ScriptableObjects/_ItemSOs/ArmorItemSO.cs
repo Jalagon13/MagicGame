@@ -8,6 +8,7 @@ public class ArmorItemSO : ItemSO
 {
 	[field: SerializeField] public ArmorType ArmorType { get; private set; }
 	[field: SerializeField] public int DefenseAmount { get; private set; }
+	[field: SerializeField] public ArmorSpritesSO ArmorSprites { get; private set; }
 
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{

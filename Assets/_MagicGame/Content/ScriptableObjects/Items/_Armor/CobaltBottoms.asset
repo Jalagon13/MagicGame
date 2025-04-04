@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 005376f4cf790463789cef1fed8b875c, type: 3}
-  m_Name: Robes
+  m_Name: CobaltBottoms
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Robes
-  <UiDisplay>k__BackingField: {fileID: 1972111916, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <ItemActionCooldown>k__BackingField: 0.375
+  <Name>k__BackingField: Cobalt Bottoms
+  <UiDisplay>k__BackingField: {fileID: 1068366592, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <GoldValue>k__BackingField: 0
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  <DefaultParameterList>k__BackingField: []
-  <ArmorType>k__BackingField: 1
-  <DefenseAmount>k__BackingField: 8
+  <ArmorType>k__BackingField: 2
+  <DefenseAmount>k__BackingField: 3
+  <ArmorSprites>k__BackingField: {fileID: 11400000, guid: 3ce723319b872445f9d60a140a797fa4, type: 2}

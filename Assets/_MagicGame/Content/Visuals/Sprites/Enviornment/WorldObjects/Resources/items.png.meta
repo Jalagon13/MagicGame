@@ -572,7 +572,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_wizard_hat
+      name: item_cobalt_hood
       rect:
         serializedVersion: 2
         x: 96
@@ -594,7 +594,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_wizard_robe
+      name: item_cobalt_robe
       rect:
         serializedVersion: 2
         x: 112
@@ -616,7 +616,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_wizard_grieves
+      name: item_cobalt_bottoms
       rect:
         serializedVersion: 2
         x: 0
@@ -1089,7 +1089,10 @@ TextureImporter:
       item_chicken: 1104096443
       item_coal: -1541828095
       item_cobalt_bar: 1629506966
+      item_cobalt_bottoms: 1068366592
+      item_cobalt_hood: -554541973
       item_cobalt_ore: 631161573
+      item_cobalt_robe: 1972111916
       item_destruction_tome: -1033124662
       item_door: 730009004
       item_fiber: 847625231
@@ -1125,9 +1128,6 @@ TextureImporter:
       item_sword: -1843546812
       item_target_dummy: 784093983
       item_web: 995874337
-      item_wizard_grieves: 1068366592
-      item_wizard_hat: -554541973
-      item_wizard_robe: 1972111916
       item_wood: -395863171
       item_wood_axe: -1861176544
       item_wood_floor: -427256236
