@@ -288,14 +288,18 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: bebf7bcfd1de9459aa990b456817daad, type: 2}
-    - {fileID: 11400000, guid: bebf7bcfd1de9459aa990b456817daad, type: 2}
+    - {fileID: 11400000, guid: 64010a88c2f754b6ea0ad2a653f40669, type: 2}
+    - {fileID: 11400000, guid: 64010a88c2f754b6ea0ad2a653f40669, type: 2}
   _startingItems:
   - Item: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
     Quantity: 50
   - Item: {fileID: 11400000, guid: a446ad3687760455aabee48fe233433e, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: ec4a6fa66410745918edadb13423b3ee, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: aa0e76fcdcf124101898bc97c089b57c, type: 2}
     Quantity: 1
 --- !u!114 &6270092794415709611
 MonoBehaviour:
@@ -331,7 +335,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   <BaseMana>k__BackingField: 50
   <ManaRegenPerSecond>k__BackingField: 10
-  <BaseSpeed>k__BackingField: 8
+  <BaseSpeed>k__BackingField: 5
   <TurnSharpness>k__BackingField: 7.5
   <KnockbackResist>k__BackingField: 0
 --- !u!114 &3515157567628285232
@@ -1808,6 +1812,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3137753485887550457}
   - component: {fileID: 8170007643158540964}
+  - component: {fileID: 285421941734170131}
   m_Layer: 0
   m_Name: Arm
   m_TagString: Untagged
@@ -1888,6 +1893,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 2
   m_SpriteSortPoint: 0
+--- !u!114 &285421941734170131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6449608859788415041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf7b42371393f4fce8e5d46be52a052b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <ArmorType>k__BackingField: 1
+  <UseArmSheet>k__BackingField: 1
 --- !u!1 &6606371943454639754
 GameObject:
   m_ObjectHideFlags: 0
@@ -2391,7 +2410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7b42371393f4fce8e5d46be52a052b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ArmorType>k__BackingField: 0
+  <ArmorType>k__BackingField: 1
   <UseArmSheet>k__BackingField: 1
 --- !u!1 &8309369520875900938
 GameObject:

@@ -66,6 +66,8 @@ public class PlayerSpriteOverrider : MonoBehaviour
 
     private void OnArmorUnEquipped(object sender, PlayerStats.ArmorChangedEventArgs e)
     {
+        if (e.ArmorItem.ArmorType != ArmorType) return;
+    
         _overrideSheet = null;
     }
 

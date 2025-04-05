@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: CobaltArmorSprites
   m_EditorClassIdentifier: 
   <HeadSprites>k__BackingField: {fileID: 2800000, guid: 31552640ae2e04a0c85fc2f6bc52cf92, type: 3}
-  <ArmSprites>k__BackingField: {fileID: 0}
-  <ChestSprites>k__BackingField: {fileID: 0}
-  <LegsSprites>k__BackingField: {fileID: 0}
+  <ArmSprites>k__BackingField: {fileID: 2800000, guid: 6b698011d618244c1b81bea32c7a0c4f, type: 3}
+  <ChestSprites>k__BackingField: {fileID: 2800000, guid: a79778ac06a414169af40432c58f87b0, type: 3}
+  <LegsSprites>k__BackingField: {fileID: 2800000, guid: 52b0d9d1570c0436b8bbef5870358930, type: 3}
