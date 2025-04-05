@@ -55,35 +55,47 @@ public class InventoryManager : MonoBehaviour
 		_inventoryModel.OnInventoryUpdate += InventoryModel_OnInventoryUpdate;
 	}
 	
-	private void Update()
+	private void Start()
 	{
-		MouseItemInput();
+		GameInput.Instance.OnSecondaryActionStarted += DropMouseItem;
 	}
-	
-	// NTFS: Refactor this later into a non update input check might be buggy
-	private void MouseItemInput()
+
+	private void Update()
 	{
 		if (_mouseItemModel.MouseInventoryItem.HasItem)
 		{
 			if (_gotItemThisFrame) return;
 
 			UpdateMouseItem();
-			
+
 			_gotItemThisFrame = true;
 			_gaveItemThisFrame = false;
-			
+
 			MOUSE_HAS_ITEM = true;
 			Tooltip.HideUI();
 		}
 		else if (!_gaveItemThisFrame)
 		{
 			UpdateMouseItem();
-			
+
 			_gaveItemThisFrame = true;
 			_gotItemThisFrame = false;
-			
+
 			MOUSE_HAS_ITEM = false;
 		}
+	}
+
+	private void DropMouseItem(object sender, EventArgs e)
+    {
+        if(Pointer.IsOverUI() || Pointer.IsOverInteractable() || !_mouseItemModel.MouseInventoryItem.HasItem) return;
+        
+        GameManager.Instance.SpawnItem(_mouseItemModel.MouseInventoryItem.Item, 
+        _mouseItemModel.MouseInventoryItem.Quantity, 
+        Player.LocalClientInstance.transform.position, 
+        Player.LocalClientInstance.CurrentPlayerBiome.Value);
+        
+		_mouseItemModel.MouseInventoryItem = new();
+		_inventoryModel.UpdateInventory();
 	}
 	
 	public bool SelectedItemExists(out InventoryItem mainHandInventoryItem)
@@ -469,5 +481,7 @@ public class InventoryManager : MonoBehaviour
 	private void OnDestroy()
 	{
 		_inventoryModel.OnInventoryUpdate -= InventoryModel_OnInventoryUpdate;
+
+		GameInput.Instance.OnSecondaryActionStarted -= DropMouseItem;
 	}
 }
