@@ -20,7 +20,7 @@ public class CraftingTableObject : WorldObject
         var centerPosition = new Vector2(transform.position.x + 0.5f, transform.position.y + 0.5f);
         var playerInRange = Vector2.Distance(Player.LocalClientInstance.transform.position, centerPosition) <= InteractDistance;
         
-        if (WorldInput.IsMouseOverIndputDetector() && playerInRange && !Pointer.IsOverUI() && !Pointer.IsOverInteractable())
+        if (WorldInput.IsMouseOverIndputDetector() && playerInRange && !Pointer.IsOverUI())
         {
             InGameMenu.Instance.OpenCraftingMenu(CraftingRecipeDB, gameObject);
         }

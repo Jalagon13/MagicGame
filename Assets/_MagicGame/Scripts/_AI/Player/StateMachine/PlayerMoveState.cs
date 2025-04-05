@@ -46,7 +46,7 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 
 		Vector2 desiredDirection = _ctx.MoveVector.normalized; 
 
-		if(_ctx.Knockback.Velocity.magnitude > 0)
+		if(_ctx.Knockback.KnockbackActive)
 		{
 			_ctx.Velocity = desiredDirection + _ctx.Knockback.Velocity;
 		}

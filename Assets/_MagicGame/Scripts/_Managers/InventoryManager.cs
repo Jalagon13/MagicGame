@@ -88,11 +88,12 @@ public class InventoryManager : MonoBehaviour
 	private void DropMouseItem(object sender, EventArgs e)
     {
         if(Pointer.IsOverUI() || Pointer.IsOverInteractable() || !_mouseItemModel.MouseInventoryItem.HasItem) return;
-        
-        GameManager.Instance.SpawnItem(_mouseItemModel.MouseInventoryItem.Item, 
+
+		GameManager.Instance.SpawnItem(_mouseItemModel.MouseInventoryItem.Item, 
         _mouseItemModel.MouseInventoryItem.Quantity, 
         Player.LocalClientInstance.transform.position, 
-        Player.LocalClientInstance.CurrentPlayerBiome.Value);
+        Player.LocalClientInstance.CurrentPlayerBiome.Value, 
+        ActionManager.PlayerToMouseDirNormalized);
         
 		_mouseItemModel.MouseInventoryItem = new();
 		_inventoryModel.UpdateInventory();

@@ -10,6 +10,7 @@ public class Knockback : MonoBehaviour
 	}
 	
 	public Vector2 Velocity { get; private set; }
+	public bool KnockbackActive => Velocity != Vector2.zero;
 
 	[SerializeField] private bool _knockbackEnabled = true;
 	
@@ -20,9 +21,14 @@ public class Knockback : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		if(Velocity == Vector2.zero) return;
+		
 		Velocity = Vector2.Lerp(Velocity, Vector2.zero, _decayMult * Time.fixedDeltaTime);
-
-		if (Velocity.magnitude < 0.75f) Velocity = Vector2.zero;
+		
+		if (Velocity.magnitude < 0.75f)
+		{
+			Velocity = Vector2.zero;
+		}
 	}
 
 	public void ApplyKnockbackCustomDirection(Vector2 direction, float knockbackResist, float knockbackForce)

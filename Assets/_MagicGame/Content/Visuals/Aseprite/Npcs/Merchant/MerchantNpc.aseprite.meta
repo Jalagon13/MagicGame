@@ -124,7 +124,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: MerchantNpc
     originalName: 
-    pivot: {x: 0.53333336, y: -0.04}
+    pivot: {x: 0.516129, y: -0.40229884}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -132,8 +132,8 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 15
-      height: 25
+      width: 31
+      height: 87
     spriteID: bdda615b84eaf48aa8635dc30e6b2e9e
     spriteBone: []
     spriteOutline: []
@@ -157,9 +157,9 @@ ScriptedImporter:
       additiveSortOrder: 0
       cellRect:
         x: 0
-        y: 1
-        width: 15
-        height: 25
+        y: 35
+        width: 31
+        height: 87
       spriteId: bdda615b84eaf48aa8635dc30e6b2e9e
     linkedCells: []
     parentIndex: -1
@@ -179,4 +179,4 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 16, y: 32}
+  canvasSize: {x: 32, y: 128}

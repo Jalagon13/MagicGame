@@ -69,7 +69,7 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
             desiredDirection = desiredDirection.normalized; // Normalize to maintain consistent speed
         }
 
-        if (_ctx.Knockback.Velocity.magnitude > 0)
+        if (_ctx.Knockback.KnockbackActive)
         {
             _ctx.Velocity = desiredDirection + _ctx.Knockback.Velocity;
         }

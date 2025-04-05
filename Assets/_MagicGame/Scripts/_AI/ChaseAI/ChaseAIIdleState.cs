@@ -62,7 +62,7 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
             _idleTimer.Tick(Time.fixedDeltaTime);
         }
 
-        if (_ctx.Knockback.Velocity.magnitude > 0)
+        if (_ctx.Knockback.KnockbackActive)
         {
             _ctx.Velocity = _ctx.Knockback.Velocity;
         }

@@ -9,7 +9,9 @@ public class Item : NetworkBehaviour
 {
 	[SerializeField] private float _attractRange = 2.75f;
 	[SerializeField] private float _attractSpeed = 5f;
+	[SerializeField] private float _turnSharpness = 5f;
 	[SerializeField] private float _initialCollectDelay = 0.5f;
+	[SerializeField] private float _dropForce = 3f;
 
 	private NetworkVariable<int> _itemIdNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private NetworkVariable<int> _itemAmountNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -21,12 +23,16 @@ public class Item : NetworkBehaviour
 	private BiomeType _itemBiome;
 	private Collider2D _itemCollider;
 	private GameObject _itemGameObject;
+	private Vector2 _velocity;
+	private Knockback _knockback;
+	private Vector2 _direction;
 	
 	private void Awake()
 	{
 		_itemGameObject = transform.GetChild(0).gameObject;
 		_sr = transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
 		_rb = GetComponent<Rigidbody2D>();
+		_knockback = GetComponent<Knockback>();
 	}
 	
 	private IEnumerator Start()
@@ -44,6 +50,12 @@ public class Item : NetworkBehaviour
 			_itemCollider = GetComponent<Collider2D>();
 			
 			HideItem(NetworkManager.ServerClientId);
+			
+			if(_velocity != Vector2.zero)
+			{
+				Debug.Log($"item Velocity: {_velocity}");
+				_knockback.ApplyKnockbackCustomDirection(_velocity, 0, _velocity.magnitude);
+			}
 
 			NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;
 			NetworkManager.NetworkTickSystem.Tick += HandleBiomeVisibility;
@@ -56,8 +68,7 @@ public class Item : NetworkBehaviour
 	
 	private void FixedUpdate()
 	{
-		if (!_canCollect || _itemCollected || !IsServer) return;
-
+		if (_itemCollected || !IsServer) return;
 		
 		CollectTag closestPlayerCollectTag = null;
 		float closestDist = Mathf.Infinity;
@@ -73,18 +84,17 @@ public class Item : NetworkBehaviour
 				closestDist = dist;
 			}
 		}
-		
-		// Move towards the closest collider if found
-		if (closestPlayerCollectTag != null)
+
+		if (closestPlayerCollectTag != null && _canCollect)
 		{
 			Vector2 currentPosition = _rb.position;
 			Vector2 targetPosition = closestPlayerCollectTag.transform.position;
-			Vector2 direction = (targetPosition - currentPosition).normalized;
-			
-			_rb.MovePosition(currentPosition + direction * _attractSpeed * Time.fixedDeltaTime);
-			
+			_direction = (targetPosition - currentPosition).normalized;
+			_velocity = Vector2.Lerp(_velocity, _direction * _attractSpeed, _turnSharpness * Time.fixedDeltaTime);
+			_rb.linearVelocity = _velocity;
+
 			// Check if the item is within the bounds of any CollectTag collider
-			if(Vector2.Distance(currentPosition, targetPosition) < 0.25f)
+			if (Vector2.Distance(currentPosition, targetPosition) < 0.25f)
 			{
 				if (/* closestValidCollectCollider.transform.root.GetComponent<Player>().OwnerClientId == NetworkManager.LocalClientId && */ _canCollect && !_itemCollected /* && !InventoryFull() */)
 				{
@@ -95,8 +105,28 @@ public class Item : NetworkBehaviour
 				}
 			}
 		}
+
+		if (_knockback.KnockbackActive)
+		{
+			_velocity = _direction + _knockback.Velocity;
+		}
+		
+		if(!_knockback.KnockbackActive && closestPlayerCollectTag == null)
+		{
+			_velocity = Vector2.zero;
+		}
+
+		_rb.linearVelocity = _velocity;
 	}
-	
+
+	public void Initialize(ushort itemId, ushort itemAmount, BiomeType biome, Vector2 velocity)
+	{
+		_itemId = itemId;
+		_itemAmount = itemAmount;
+		_itemBiome = biome;
+		_velocity = velocity * _dropForce;
+	}
+
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void AddItemClientRpc(int itemId, int amount, RpcParams rpcParams = default)
 	{
@@ -104,21 +134,6 @@ public class Item : NetworkBehaviour
 		GameManager.Instance.DestroyItem(this);
 	}
 	
-	private void OnTriggerStay2D(Collider2D other)
-	{
-		if(other.TryGetComponent(out CollectTag player))
-		{
-			// _sr.enabled = false;
-		}
-	}
-	
-	public void Initialize(ushort itemId, ushort itemAmount, BiomeType biome)
-	{
-		_itemId = itemId;
-		_itemAmount = itemAmount;
-		_itemBiome = biome;
-	}
-
 	private void HandleBiomeVisibility()
 	{
 		foreach (var clientId in NetworkManager.ConnectedClientsIds)

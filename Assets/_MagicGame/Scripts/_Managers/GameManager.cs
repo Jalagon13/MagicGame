@@ -265,7 +265,7 @@ public class GameManager : NetworkBehaviour
 	
 	#region Item Functions
 	
-	public void SpawnItem(ItemSO itemToSpawn, int amount, Vector2 spawnPos, BiomeType biome)
+	public void SpawnItem(ItemSO itemToSpawn, int amount, Vector2 spawnPos, BiomeType biome, Vector2 velocity = default)
 	{
 		if(itemToSpawn == null)
 		{
@@ -276,16 +276,16 @@ public class GameManager : NetworkBehaviour
 		int itemId = GetItemIdFromItemSO(itemToSpawn); 
 		ushort itemAmount = (ushort)amount;
 		
-		SpawnItemServerRpc((ushort)itemId, itemAmount, spawnPos, biome);
+		SpawnItemServerRpc((ushort)itemId, itemAmount, spawnPos, biome, velocity);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnItemServerRpc(ushort itemId, ushort itemAmount, Vector2 spawnPos, BiomeType biome)
+	private void SpawnItemServerRpc(ushort itemId, ushort itemAmount, Vector2 spawnPos, BiomeType biome, Vector2 velocity)
 	{
 		GameObject itemGameObject = Instantiate(_itemBasePrefab, spawnPos, Quaternion.identity);
 		
 		Item item = itemGameObject.GetComponent<Item>();
-		item.Initialize(itemId, itemAmount, biome);
+		item.Initialize(itemId, itemAmount, biome, velocity);
 		
 		NetworkObject itemNetworkObject = itemGameObject.GetComponent<NetworkObject>();
 		itemNetworkObject.SpawnWithObservers = false;

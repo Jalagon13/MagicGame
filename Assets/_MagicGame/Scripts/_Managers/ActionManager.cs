@@ -10,6 +10,7 @@ public class ActionManager : MonoBehaviour
 {
 	public static ActionManager Instance { get; private set; }
 	public static Vector2 MouseWorldPosition { get; private set; }
+	public static Vector2 PlayerToMouseDirNormalized { get; private set; }
 	public static Vector3Int MouseTilePosition { get; private set; }
 	public static bool IsChargingSpell { get; private set; }
 	
@@ -49,6 +50,7 @@ public class ActionManager : MonoBehaviour
 
 		MouseWorldPosition = (Vector2)Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 		MouseTilePosition = Vector3Int.FloorToInt(MouseWorldPosition);
+		PlayerToMouseDirNormalized = (MouseWorldPosition - (Vector2)Player.LocalClientInstance.transform.position).normalized;
 		_mouseTriggerTf.position = MouseWorldPosition;
 
 		TickTimers(Time.deltaTime);

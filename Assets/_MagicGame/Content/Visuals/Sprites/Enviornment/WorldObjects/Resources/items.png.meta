@@ -572,7 +572,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_cobalt_hood
+      name: item_cobalt_hat
       rect:
         serializedVersion: 2
         x: 96
@@ -1112,7 +1112,7 @@ TextureImporter:
       item_coal: -1541828095
       item_cobalt_bar: 1629506966
       item_cobalt_bottoms: 1068366592
-      item_cobalt_hood: -554541973
+      item_cobalt_hat: -554541973
       item_cobalt_ore: 631161573
       item_cobalt_robe: 1972111916
       item_cobalt_wand: 595962634
