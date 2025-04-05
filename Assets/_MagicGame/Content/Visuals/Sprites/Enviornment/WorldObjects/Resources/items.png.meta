@@ -1055,6 +1055,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: item_cobalt_wand
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b515785c373148289f6a4ff1cb3a7ed
+      internalID: 595962634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1093,6 +1115,7 @@ TextureImporter:
       item_cobalt_hood: -554541973
       item_cobalt_ore: 631161573
       item_cobalt_robe: 1972111916
+      item_cobalt_wand: 595962634
       item_destruction_tome: -1033124662
       item_door: 730009004
       item_fiber: 847625231

@@ -25,7 +25,7 @@ MonoBehaviour:
   <ManaCost>k__BackingField: 10
   <Knockback>k__BackingField: 6
   <Accuracy>k__BackingField: 5
-  <Lifetime>k__BackingField: 1.25
+  <Lifetime>k__BackingField: 1
   <Speed>k__BackingField: 14
   <Recoil>k__BackingField: 6
   <Pierces>k__BackingField: 2
