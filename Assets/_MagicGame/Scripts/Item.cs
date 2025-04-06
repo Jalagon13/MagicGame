@@ -13,13 +13,10 @@ public class Item : NetworkBehaviour
 	[SerializeField] private float _initialCollectDelay = 0.5f;
 	[SerializeField] private float _dropForce = 3f;
 
-	private NetworkVariable<int> _itemIdNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	private NetworkVariable<int> _itemAmountNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	private InventoryItem _itemInventoryItem;
+	private NetworkVariable<SyncItemData> _syncItemDataNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private SpriteRenderer _sr;
 	private bool _canCollect, _itemCollected;
 	private Rigidbody2D _rb;
-	private ushort _itemId, _itemAmount;
 	private BiomeType _itemBiome;
 	private Collider2D _itemCollider;
 	private GameObject _itemGameObject;
@@ -45,8 +42,6 @@ public class Item : NetworkBehaviour
 	{
 		if(IsServer)
 		{
-			_itemIdNetworkVariable.Value = _itemId;
-			_itemAmountNetworkVariable.Value = _itemAmount;
 			_itemCollider = GetComponent<Collider2D>();
 			
 			HideItem(NetworkManager.ServerClientId);
@@ -100,7 +95,7 @@ public class Item : NetworkBehaviour
 				{
 					_itemCollected = true;
 
-					AddItemClientRpc(GameManager.Instance.GetItemIdFromItemSO(_itemInventoryItem.Item), _itemInventoryItem.Quantity, RpcTarget.Single(closestPlayerCollectTag.transform.root.GetComponent<Player>().OwnerClientId, RpcTargetUse.Persistent));
+					AddItemClientRpc(_syncItemDataNetworkVariable.Value, RpcTarget.Single(closestPlayerCollectTag.transform.root.GetComponent<Player>().OwnerClientId, RpcTargetUse.Persistent));
 					return;
 				}
 			}
@@ -119,18 +114,37 @@ public class Item : NetworkBehaviour
 		_rb.linearVelocity = _velocity;
 	}
 
-	public void Initialize(ushort itemId, ushort itemAmount, BiomeType biome, Vector2 velocity)
+	public void Initialize(SyncItemData syncItemData, BiomeType biome, Vector2 velocity)
 	{
-		_itemId = itemId;
-		_itemAmount = itemAmount;
+		_syncItemDataNetworkVariable.Value = syncItemData;
 		_itemBiome = biome;
 		_velocity = velocity * _dropForce;
 	}
 
 	[Rpc(SendTo.SpecifiedInParams)]
-	private void AddItemClientRpc(int itemId, int amount, RpcParams rpcParams = default)
+	private void AddItemClientRpc(SyncItemData syncItemData, RpcParams rpcParams = default)
 	{
-		InventoryManager.Instance.AddItem(GameManager.Instance.GetItemSOFromItemId(itemId), amount);
+		ItemSO itemSO = GameManager.Instance.GetItemSOFromItemId(syncItemData.ItemId);
+		
+		InventoryItem inventoryItem = new();
+		
+		if(itemSO is WandItemSO wandItemSO)
+		{
+			WandInventoryItem wandInventoryItem = new(itemSO, syncItemData.Quantity, wandItemSO.Capacity);
+			
+			for (int i = 0; i < wandInventoryItem.MagicArray.Length; i++)
+			{
+				wandInventoryItem.SetMagic(GameManager.Instance.GetItemSOFromItemId(syncItemData.MagicArray[i]) as MagicItemSO, i);
+			}
+			
+			inventoryItem = wandInventoryItem;
+		}
+		else
+		{
+			inventoryItem = new InventoryItem(itemSO, syncItemData.Quantity);
+		}
+		
+		InventoryManager.Instance.AddItem(inventoryItem);
 		GameManager.Instance.DestroyItem(this);
 	}
 	
@@ -190,11 +204,10 @@ public class Item : NetworkBehaviour
 
 	private void UpdateItemDataAndVisuals()
 	{
-		ItemSO itemSO = GameManager.Instance.GetItemSOFromItemId(_itemIdNetworkVariable.Value);
+		ItemSO itemSO = GameManager.Instance.GetItemSOFromItemId(_syncItemDataNetworkVariable.Value.ItemId);
 		
-		_itemInventoryItem = new(itemSO, _itemAmountNetworkVariable.Value);
-		_sr.sprite = _itemInventoryItem.Item.UiDisplay;
-		gameObject.name = $"Item_{_itemInventoryItem.Item.Name}";
+		_sr.sprite = itemSO.UiDisplay;
+		gameObject.name = $"Item_{itemSO.Name}";
 	}
 	
 	public void DestroySelf()

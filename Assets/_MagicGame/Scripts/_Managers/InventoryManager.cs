@@ -89,8 +89,7 @@ public class InventoryManager : MonoBehaviour
     {
         if(Pointer.IsOverUI() || Pointer.IsOverInteractable() || !_mouseItemModel.MouseInventoryItem.HasItem) return;
 
-		GameManager.Instance.SpawnItem(_mouseItemModel.MouseInventoryItem.Item, 
-        _mouseItemModel.MouseInventoryItem.Quantity, 
+		GameManager.Instance.SpawnItem(_mouseItemModel.MouseInventoryItem, 
         Player.LocalClientInstance.transform.position, 
         Player.LocalClientInstance.CurrentPlayerBiome.Value, 
         ActionManager.PlayerToMouseDirNormalized);
@@ -464,7 +463,7 @@ public class InventoryManager : MonoBehaviour
 		}
 	}
 	
-	private void PlayClickFeedbacks()
+	public void PlayClickFeedbacks()
 	{
 		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.InventorySlotClicked, Player.LocalClientInstance.transform.position);
 	}

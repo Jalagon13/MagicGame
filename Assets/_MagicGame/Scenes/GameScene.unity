@@ -4075,6 +4075,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _armorType: 2
   _armorItemIcon: {fileID: 1112219492}
+  _armorIcon: {fileID: 48023189}
 --- !u!114 &591032847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10098,6 +10099,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _armorType: 1
   _armorItemIcon: {fileID: 965794056}
+  _armorIcon: {fileID: 1570535675}
 --- !u!114 &1480219082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14358,6 +14360,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _armorType: 0
   _armorItemIcon: {fileID: 563966736}
+  _armorIcon: {fileID: 1734210353}
 --- !u!114 &1930408559
 MonoBehaviour:
   m_ObjectHideFlags: 0

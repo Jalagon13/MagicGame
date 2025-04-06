@@ -265,27 +265,31 @@ public class GameManager : NetworkBehaviour
 	
 	#region Item Functions
 	
-	public void SpawnItem(ItemSO itemToSpawn, int amount, Vector2 spawnPos, BiomeType biome, Vector2 velocity = default)
+	public void SpawnItem(InventoryItem inventoryItem, Vector2 spawnPos, BiomeType biome, Vector2 velocity = default)
 	{
-		if(itemToSpawn == null)
+		if(inventoryItem == null)
 		{
 			Debug.LogWarning($"Warning, item can't be spawned because it is null");
 			return;
 		}
 	
-		int itemId = GetItemIdFromItemSO(itemToSpawn); 
-		ushort itemAmount = (ushort)amount;
+		SyncItemData syncItemData = new SyncItemData
+		{
+			ItemId = (ushort)GetItemIdFromItemSO(inventoryItem.Item),
+			Quantity = (ushort)inventoryItem.Quantity,
+			MagicArray = inventoryItem is WandInventoryItem wandInventoryItem ? wandInventoryItem.MagicArray.Select(x => x != null ? GetItemIdFromItemSO(x) : -1).ToList() : new List<int>()
+		};
 		
-		SpawnItemServerRpc((ushort)itemId, itemAmount, spawnPos, biome, velocity);
+		SpawnItemServerRpc(syncItemData, spawnPos, biome, velocity);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnItemServerRpc(ushort itemId, ushort itemAmount, Vector2 spawnPos, BiomeType biome, Vector2 velocity)
+	private void SpawnItemServerRpc(SyncItemData syncItemData, Vector2 spawnPos, BiomeType biome, Vector2 velocity)
 	{
 		GameObject itemGameObject = Instantiate(_itemBasePrefab, spawnPos, Quaternion.identity);
 		
 		Item item = itemGameObject.GetComponent<Item>();
-		item.Initialize(itemId, itemAmount, biome, velocity);
+		item.Initialize(syncItemData, biome, velocity);
 		
 		NetworkObject itemNetworkObject = itemGameObject.GetComponent<NetworkObject>();
 		itemNetworkObject.SpawnWithObservers = false;

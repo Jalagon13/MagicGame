@@ -8,10 +8,11 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 {
 	[SerializeField] private ArmorType _armorType; // The type of armor this slot represents (e.g., Head, Chest, Legs)
 	[SerializeField] private Image _armorItemIcon; // The UI icon for the equipped armor
+	[SerializeField] private Image _armorIcon;
 
 	private ArmorItemSO _armorEquipped; // The currently equipped armor
 
-	public void OnPointerClick(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
 	{
 		// Get the item currently held by the mouse (if any)
 		InventoryItem mouseItem = InventoryManager.Instance.GetMouseItem().MouseInventoryItem;
@@ -66,7 +67,8 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
 		// Optionally, apply stats or effects from the armor to the player
 		Player.LocalClientInstance.PlayerStats.EquipArmor(_armorEquipped);
-		
+		InventoryManager.Instance.PlayClickFeedbacks();
+
 		UpdateSlotUI();
 	}
 
@@ -78,6 +80,7 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
 		// Optionally, remove stats or effects from the armor
 		Player.LocalClientInstance.PlayerStats.UnequipArmor(unequippedArmor);
+		InventoryManager.Instance.PlayClickFeedbacks();
 
 		UpdateSlotUI();
 		
@@ -97,6 +100,7 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 	{
 		// Enable or disable the icon based on whether armor is equipped
 		_armorItemIcon.enabled = ArmorEquipped();
+		_armorIcon.enabled = !ArmorEquipped();
 
 		if (ArmorEquipped())
 		{

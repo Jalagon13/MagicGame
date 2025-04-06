@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public struct ChestSyncItemData : IEquatable<ChestSyncItemData>, INetworkSerializable
+public struct SyncItemData : IEquatable<SyncItemData>, INetworkSerializable
 {
 	public int ItemId;
 	public int Quantity;
 	public List<int> MagicArray;
 
-	public bool Equals(ChestSyncItemData other)
+	public bool Equals(SyncItemData other)
 	{
 		// Check if basic properties are equal
 		if (ItemId != other.ItemId || Quantity != other.Quantity)
@@ -63,7 +63,7 @@ public struct ChestSyncItemData : IEquatable<ChestSyncItemData>, INetworkSeriali
 public struct ChestSyncData : IEquatable<ChestSyncData>, INetworkSerializable
 {
 	public Vector2Int ChestPosition;
-	public List<ChestSyncItemData> ChestItemData;
+	public List<SyncItemData> ChestItemData;
 
 	public bool Equals(ChestSyncData other)
 	{
@@ -78,7 +78,7 @@ public struct ChestSyncData : IEquatable<ChestSyncData>, INetworkSerializable
 		SerializeAgnosticDataList(serializer, ref ChestItemData);
 	}
 
-	private void SerializeAgnosticDataList<T>(BufferSerializer<T> serializer, ref List<ChestSyncItemData> chestItemList) where T : IReaderWriter
+	private void SerializeAgnosticDataList<T>(BufferSerializer<T> serializer, ref List<SyncItemData> chestItemList) where T : IReaderWriter
 	{
 		if (serializer.IsWriter)
 		{
@@ -89,7 +89,7 @@ public struct ChestSyncData : IEquatable<ChestSyncData>, INetworkSerializable
 			// Serialize each tile in the list
 			for (int i = 0; i < listLength; i++)
 			{
-				ChestSyncItemData syncTileData = chestItemList[i];
+				SyncItemData syncTileData = chestItemList[i];
 				serializer.SerializeValue(ref syncTileData);
 			}
 		}
@@ -108,7 +108,7 @@ public struct ChestSyncData : IEquatable<ChestSyncData>, INetworkSerializable
 			// Initialize the list if it's null
 			if (chestItemList == null)
 			{
-				chestItemList = new List<ChestSyncItemData>(listLength);
+				chestItemList = new List<SyncItemData>(listLength);
 			}
 			else
 			{
@@ -118,7 +118,7 @@ public struct ChestSyncData : IEquatable<ChestSyncData>, INetworkSerializable
 			// Deserialize each item in the list
 			for (int i = 0; i < listLength; i++)
 			{
-				ChestSyncItemData chestSyncItemData = default;
+				SyncItemData chestSyncItemData = default;
 				serializer.SerializeValue(ref chestSyncItemData);
 				chestItemList.Add(chestSyncItemData);
 			}
@@ -158,9 +158,9 @@ public class ChestNetworkManager : NetworkBehaviour
 		ChestManager.Instance.OnChestDataRecieved(syncData.ChestPosition, chestItemData);
 	}
 
-	private List<ChestSyncItemData> ConvertToSyncChestData(List<InventoryItem> chestItemDataToConvert)
+	private List<SyncItemData> ConvertToSyncChestData(List<InventoryItem> chestItemDataToConvert)
 	{
-		List<ChestSyncItemData> syncChestData = new List<ChestSyncItemData>();
+		List<SyncItemData> syncChestData = new List<SyncItemData>();
 
 		Debug.Log(chestItemDataToConvert == null);
 		foreach (InventoryItem invItem in chestItemDataToConvert)
@@ -182,7 +182,7 @@ public class ChestNetworkManager : NetworkBehaviour
 				Debug.Log("Sending a magic array with something in it");
 			}
 
-			syncChestData.Add(new ChestSyncItemData
+			syncChestData.Add(new SyncItemData
 			{
 				ItemId = GameManager.Instance.GetItemIdFromItemSO(invItem.Item),
 				Quantity = invItem.Quantity,
@@ -193,11 +193,11 @@ public class ChestNetworkManager : NetworkBehaviour
 		return syncChestData;
 	}
 
-	private List<InventoryItem> ConvertToGameChestData(List<ChestSyncItemData> syncChestData)
+	private List<InventoryItem> ConvertToGameChestData(List<SyncItemData> syncChestData)
 	{
 		List<InventoryItem> chestItemData = new List<InventoryItem>();
 
-		foreach (ChestSyncItemData syncItem in syncChestData)
+		foreach (SyncItemData syncItem in syncChestData)
 		{
 			InventoryItem invItem = new(GameManager.Instance.GetItemSOFromItemId(syncItem.ItemId), syncItem.Quantity);
 			
