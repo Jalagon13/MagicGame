@@ -11,7 +11,6 @@ public class AquaBolt : Spell
 	
 	private Rigidbody2D _rigidbody2D;
 
-
     protected override void Awake()
     {
         base.Awake();

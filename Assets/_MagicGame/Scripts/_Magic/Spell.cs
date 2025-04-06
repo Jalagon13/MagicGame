@@ -34,6 +34,8 @@ public class Spell : NetworkBehaviour
 
 	private SyncSpellData _spellData;
 	private Transform _visualizationTf;
+	private PositionLerper _positionLerper;
+	const float k_LerpTime = 0.1f;
 
 	protected virtual void Awake()
     {
@@ -49,7 +51,7 @@ public class Spell : NetworkBehaviour
 	{
 		ShowVisuals.OnValueChanged += HandleVisuals;
 		
-		if (IsOwner)
+		if (IsServer)
 		{
 			SpellData.Value = _spellData;
 			CollisionMask = LayerMask.GetMask(new[] { "PathfindingWall", "Npc" });
@@ -63,16 +65,24 @@ public class Spell : NetworkBehaviour
 			SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
 			var go = Instantiate(modifier.SpellModifierPrefab, _spellModifierTf);
 
-			if (IsOwner)
+			if (IsServer)
 			{
 				SpellData.Value = go.GetComponent<ISpellModifier>().ModifiySpellData(SpellData.Value, this);
 			}
 		}
 	}
 
+	protected virtual void Update()
+	{
+		if (IsClient && _visualizationTf.gameObject.activeSelf)
+		{
+			_visualizationTf.position = _positionLerper.LerpPosition(_visualizationTf.position, transform.position);
+		}
+	}
+
 	protected virtual void FixedUpdate()
 	{
-		if (!Started.Value || !IsOwner) return; //don't do anything before OnNetworkSpawn has run.
+		if (!Started.Value || !IsServer) return; //don't do anything before OnNetworkSpawn has run.
 
 		SpellLifeTimer.Tick(Time.fixedDeltaTime);
 
@@ -83,13 +93,24 @@ public class Spell : NetworkBehaviour
 		}
 	}
 
+	public override void OnNetworkDespawn()
+	{
+		if (IsClient)
+		{
+			Debug.Log($"Reattaching visualization before despawning");
+			_visualizationTf.parent = transform;
+		}
+	}
+
 	public virtual void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
 	{
-		if(IsOwner)
+		if(IsServer)
 		{
 			Started.Value = true;
 			ShowVisuals.Value = true;
+			transform.position = NetworkManager.Singleton.ConnectedClients[_spellData.OwnerPlayerId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
 			transform.position = spawnPoint;
+
 			_lastPosition = spawnPoint;
 			_finalDirection = finalDirection;
 			_isDead = false;
@@ -103,7 +124,7 @@ public class Spell : NetworkBehaviour
 	{
 		OnSpellEnd?.Invoke(this, EventArgs.Empty);
 
-		if (IsOwner)
+		if (IsServer)
 		{
 			NetworkObject.Despawn();
 		}
@@ -130,11 +151,19 @@ public class Spell : NetworkBehaviour
 
 	private void Show()
 	{
+		Debug.Log($"Showing visualization");
+		Debug.Log($"Detaching visualization and setting up lerper");
+		_visualizationTf.parent = null;
+
+		_positionLerper = new PositionLerper(transform.position, k_LerpTime);
+		_visualizationTf.transform.rotation = transform.rotation;
+
 		_visualizationTf.gameObject.SetActive(true);
 	}
 
 	private void Hide()
 	{
+		Debug.Log($"Hiding visualization");
 		_visualizationTf.gameObject.SetActive(false);
 	}
 
@@ -143,7 +172,7 @@ public class Spell : NetworkBehaviour
 		Started.Value = false;
 		OnSpellEnd?.Invoke(this, EventArgs.Empty);
 
-		if (IsOwner)
+		if (IsServer)
 		{
 			NetworkObject.Despawn();
 		}
