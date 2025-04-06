@@ -26,7 +26,8 @@ public class PlayerCamera : NetworkBehaviour
 		_cinemachineCam = GetComponent<CinemachineCamera>();
 		_originalFollowTarget = _cinemachineCam.Follow;
 		_originalOrthoSize = _cinemachineCam.Lens.OrthographicSize;
-		
+		_cinemachineCam.enabled = false;
+
 		_mainCamera = Camera.main;
 		
 		if(NetworkManager != null)
@@ -60,7 +61,8 @@ public class PlayerCamera : NetworkBehaviour
 		_playerObject = NetworkManager.ConnectedClients[clientId].PlayerObject;
 		_cinemachineCam.Follow = _playerObject.transform;
 		_confiner.BoundingShape2D = WorldBoundary;
-
+		_cinemachineCam.enabled = true;
+		Debug.Log($"Player object: {_playerObject}");
 		SetListenerToPlayer();
 	}
 	

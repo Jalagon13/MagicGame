@@ -287,9 +287,7 @@ MonoBehaviour:
   _startingWandItems:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
-    <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: bebf7bcfd1de9459aa990b456817daad, type: 2}
-    - {fileID: 11400000, guid: bebf7bcfd1de9459aa990b456817daad, type: 2}
+    <MagicArray>k__BackingField: []
   _startingItems:
   - Item: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
     Quantity: 1
@@ -544,8 +542,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7b42371393f4fce8e5d46be52a052b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   <ArmorType>k__BackingField: 1
   <UseArmSheet>k__BackingField: 0
+  <IsAimingArmSprite>k__BackingField: 0
+  <DefaultAimArmSprite>k__BackingField: {fileID: 0}
 --- !u!1 &1555300122986413318
 GameObject:
   m_ObjectHideFlags: 0
@@ -1905,8 +1906,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7b42371393f4fce8e5d46be52a052b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   <ArmorType>k__BackingField: 1
   <UseArmSheet>k__BackingField: 1
+  <IsAimingArmSprite>k__BackingField: 1
+  <DefaultAimArmSprite>k__BackingField: {fileID: 62975214361606658, guid: ce52d1f6752c24ca5a5e54389c4e6e85, type: 3}
 --- !u!1 &6606371943454639754
 GameObject:
   m_ObjectHideFlags: 0
@@ -2080,8 +2084,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7b42371393f4fce8e5d46be52a052b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   <ArmorType>k__BackingField: 0
   <UseArmSheet>k__BackingField: 0
+  <IsAimingArmSprite>k__BackingField: 0
+  <DefaultAimArmSprite>k__BackingField: {fileID: 0}
 --- !u!1 &7342286539496265529
 GameObject:
   m_ObjectHideFlags: 0
@@ -2410,8 +2417,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7b42371393f4fce8e5d46be52a052b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   <ArmorType>k__BackingField: 1
   <UseArmSheet>k__BackingField: 1
+  <IsAimingArmSprite>k__BackingField: 0
+  <DefaultAimArmSprite>k__BackingField: {fileID: 0}
 --- !u!1 &8309369520875900938
 GameObject:
   m_ObjectHideFlags: 0
@@ -2710,8 +2720,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7b42371393f4fce8e5d46be52a052b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   <ArmorType>k__BackingField: 2
   <UseArmSheet>k__BackingField: 0
+  <IsAimingArmSprite>k__BackingField: 0
+  <DefaultAimArmSprite>k__BackingField: {fileID: 0}
 --- !u!1 &9080082044580222623
 GameObject:
   m_ObjectHideFlags: 0

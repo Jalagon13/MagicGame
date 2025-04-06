@@ -20,7 +20,7 @@ public class SpriteAnimationHandler : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
     }
-
+    
     public void PlayIdleAnimation(CardinalDirection direction)
     {
         UpdateSpriteOrientation(direction);

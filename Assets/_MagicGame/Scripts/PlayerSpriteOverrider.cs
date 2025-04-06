@@ -1,55 +1,105 @@
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
 
-public class PlayerSpriteOverrider : MonoBehaviour
+public class PlayerSpriteOverrider : NetworkBehaviour
 {
     [field: SerializeField] public ArmorType ArmorType { get; private set; }
     [field: SerializeField] public bool UseArmSheet { get; private set; }
+    [field: SerializeField] public bool IsAimingArmSprite { get; private set; }
+    [field: SerializeField] public Sprite DefaultAimArmSprite { get; private set; } // NTFS: This will cause visual bugs later down the road when loading player with armor on. Fix it later. Just a quick fix for now.
 
+    private NetworkVariable<int> _armorEquippedId = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private HashSet<Sprite> _overrideSheet;
     private SpriteRenderer _playerPartRenderer;
+    private Player _thisPlayer;
 
     private void Awake()
     {
         _playerPartRenderer = GetComponent<SpriteRenderer>();
+
+        if (_thisPlayer == null)
+        {
+            _thisPlayer = transform.root.GetComponent<Player>();
+        }
     }
 
     private void Start()
     {
-        PlayerStats.Instance.OnArmorEquipped += OnArmorEquipped;
-        PlayerStats.Instance.OnArmorUnEquipped += OnArmorUnEquipped;
+        if(_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
+        {
+            PlayerStats.Instance.OnArmorEquipped += OnArmorEquipped;
+            PlayerStats.Instance.OnArmorUnEquipped += OnArmorUnEquipped;
+        }
+
+        _armorEquippedId.OnValueChanged += OnArmorEquippedIdChanged;
     }
 
-    private void OnArmorEquipped(object sender, PlayerStats.ArmorChangedEventArgs e)
+    public override void OnNetworkSpawn()
     {
-        if (e.ArmorItem.ArmorType != ArmorType) return;
-    
-        _overrideSheet = new();
-        
-        Texture2D armorSheet = null;
-        
-        if(UseArmSheet)
+        if (GameManager.Instance.GetItemSOFromItemId(_armorEquippedId.Value) is not ArmorItemSO) return;
+
+        UpdateSpriteSheet();
+    }
+
+    private void LateUpdate()
+    {
+        if (_overrideSheet == null) return;
+
+        foreach (var sprite in _overrideSheet)
         {
-            armorSheet = e.ArmorItem.ArmorSprites.ArmSprites;
+            string spriteName = sprite.name;
+            if (_playerPartRenderer.sprite.name == spriteName)
+            {
+                _playerPartRenderer.sprite = sprite;
+            }
+        }
+    }
+
+    private void OnArmorEquippedIdChanged(int previousValue, int newValue)
+    {
+        UpdateSpriteSheet();
+    }
+    
+    private void UpdateSpriteSheet()
+    {
+        if (_armorEquippedId.Value == -1)
+        {
+            _overrideSheet = null;
+            if (IsAimingArmSprite)
+            {
+                _playerPartRenderer.sprite = DefaultAimArmSprite;
+            }
+            return;
+        }
+
+        ArmorItemSO armorItem = GameManager.Instance.GetItemSOFromItemId(_armorEquippedId.Value) as ArmorItemSO;
+        _overrideSheet = new();
+
+        Texture2D armorSheet = null;
+
+        if (UseArmSheet)
+        {
+            armorSheet = armorItem.ArmorSprites.ArmSprites;
         }
         else
         {
             switch (ArmorType)
             {
                 case ArmorType.Head:
-                    armorSheet = e.ArmorItem.ArmorSprites.HeadSprites;
+                    armorSheet = armorItem.ArmorSprites.HeadSprites;
                     break;
                 case ArmorType.Chest:
-                    armorSheet = e.ArmorItem.ArmorSprites.ChestSprites;
+                    armorSheet = armorItem.ArmorSprites.ChestSprites;
                     break;
                 case ArmorType.Legs:
-                    armorSheet = e.ArmorItem.ArmorSprites.LegsSprites;
+                    armorSheet = armorItem.ArmorSprites.LegsSprites;
                     break;
             }
         }
-        
+
         UnityEngine.Object[] data = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(armorSheet));
         if (data != null)
         {
@@ -64,30 +114,28 @@ public class PlayerSpriteOverrider : MonoBehaviour
         }
     }
 
+    private void OnArmorEquipped(object sender, PlayerStats.ArmorChangedEventArgs e)
+    {
+        if (e.ArmorItem.ArmorType != ArmorType) return;
+        
+        _armorEquippedId.Value = GameManager.Instance.GetItemIdFromItemSO(e.ArmorItem);
+    }
+
     private void OnArmorUnEquipped(object sender, PlayerStats.ArmorChangedEventArgs e)
     {
         if (e.ArmorItem.ArmorType != ArmorType) return;
     
-        _overrideSheet = null;
+        _armorEquippedId.Value = -1;
     }
 
-    private void LateUpdate()
+    public override void OnDestroy()
     {
-        if(_overrideSheet == null) return;
-
-        foreach (var sprite in _overrideSheet)
+        if (_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
         {
-            string spriteName = sprite.name;
-            if (_playerPartRenderer.sprite.name == spriteName)
-            {
-                _playerPartRenderer.sprite = sprite;
-            }
+            PlayerStats.Instance.OnArmorEquipped -= OnArmorEquipped;
+            PlayerStats.Instance.OnArmorUnEquipped -= OnArmorUnEquipped;
         }
-    }
-    
-    private void OnDestroy()
-    {
-        PlayerStats.Instance.OnArmorEquipped -= OnArmorEquipped;
-        PlayerStats.Instance.OnArmorUnEquipped -= OnArmorUnEquipped;
+
+        _armorEquippedId.OnValueChanged -= OnArmorEquippedIdChanged;
     }
 }
