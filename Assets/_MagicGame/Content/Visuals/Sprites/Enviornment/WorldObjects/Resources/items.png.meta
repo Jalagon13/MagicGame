@@ -1077,6 +1077,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: item_cobalt_staff
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 095adec0c47184fcea788cd876c0f31e
+      internalID: -461732419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1115,6 +1137,7 @@ TextureImporter:
       item_cobalt_hat: -554541973
       item_cobalt_ore: 631161573
       item_cobalt_robe: 1972111916
+      item_cobalt_staff: -461732419
       item_cobalt_wand: 595962634
       item_destruction_tome: -1033124662
       item_door: 730009004

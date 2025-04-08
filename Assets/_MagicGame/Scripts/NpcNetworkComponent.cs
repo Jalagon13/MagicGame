@@ -51,7 +51,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void KillNpcServerRpc()
+	public void KillNpcServerRpc()
 	{
 		Debug.Log($"[Client {NetworkManager.LocalClientId}] Killing NPC.");
 		_npcIsBeingRemoved = true;

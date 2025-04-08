@@ -104,6 +104,46 @@ PrefabInstance:
       propertyPath: Table.Array.data[0].Chance
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <DeathSound>k__BackingField.Path
+      value: event:/WoodDestroyed
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <DamageSound>k__BackingField.Path
+      value: event:/WoodHit
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <DeathSound>k__BackingField.Guid.Data1
+      value: 15823222
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <DeathSound>k__BackingField.Guid.Data2
+      value: 1125522555
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <DeathSound>k__BackingField.Guid.Data3
+      value: -1633797458
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <DeathSound>k__BackingField.Guid.Data4
+      value: 490440430
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <DamageSound>k__BackingField.Guid.Data1
+      value: 1812228115
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <DamageSound>k__BackingField.Guid.Data2
+      value: 1207244471
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <DamageSound>k__BackingField.Guid.Data3
+      value: 1013332110
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247729817130226899, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <DamageSound>k__BackingField.Guid.Data4
+      value: -2033662663
+      objectReference: {fileID: 0}
     - target: {fileID: 3885697903487451157, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Offset.y
       value: 0.66

@@ -1932,7 +1932,7 @@ Camera:
   far clip plane: 5000
   field of view: 9.75
   orthographic: 1
-  orthographic size: 10.114583
+  orthographic size: 16.8125
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -3419,7 +3419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94925e7427004998a47e77a8baaf1e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <TimeBetweenMiningSounds>k__BackingField: 0.3
+  <TimeBetweenMiningSounds>k__BackingField: 0.175
   <DelayBetweenPlacingAndMining>k__BackingField: 0.2
   <FocusWallSound>k__BackingField:
     Guid:

@@ -22,8 +22,8 @@ public class Npc : NetworkBehaviour
 	[SerializeField] private float _knockbackResist;
 	[SerializeField] private int _damage;
 	[SerializeField] private DamageCollider _damageCollider;
-	[SerializeField] private EventReference _damageSound;
-	[SerializeField] private EventReference _deathSound;
+	[field: SerializeField] public EventReference DamageSound { get; private set; }
+	[field: SerializeField] public EventReference DeathSound { get; private set; }
 	[SerializeField] private List<Loot> Table = new();
 	
 	private Knockback _knockback;
@@ -57,7 +57,7 @@ public class Npc : NetworkBehaviour
 	
 	private void OnNpcDamaged(object sender, NetworkHealthState.HitPointsDamagedEventArgs e)
 	{
-		SoundManager.Instance.PlayOneShot(_damageSound, transform.position);
+		SoundManager.Instance.PlayOneShot(DamageSound, transform.position);
 		GameManager.Instance.PlayDamageNumbers(e.DamageTaken, transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
 
 		_knockback.ApplyKnockback(e.SourcePosition, _knockbackResist, e.KnockbackForce);
@@ -70,7 +70,7 @@ public class Npc : NetworkBehaviour
 
 	private void OnNpcDeath(object sender, EventArgs e)
 	{
-		SoundManager.Instance.PlayOneShot(_deathSound, transform.position);
+		SoundManager.Instance.PlayOneShot(DeathSound, transform.position);
 		KillNpc();
 	}
 

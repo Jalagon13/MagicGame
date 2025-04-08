@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55646a241e94b4a3a9d1cdf6e939102b, type: 3}
-  m_Name: rec_CobaltBottoms
+  m_Name: rec_WoodStaff
   m_EditorClassIdentifier: 
-  OutputItem: {fileID: 11400000, guid: aa0e76fcdcf124101898bc97c089b57c, type: 2}
+  OutputItem: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
   OutputAmount: 1
   ResourceList:
-  - Item: {fileID: 11400000, guid: 9d18c082d61ed4db396c5ab1d4276742, type: 2}
-    Quantity: 15
-  - Item: {fileID: 11400000, guid: 04044fe07a04248d68caf80150e53108, type: 2}
+  - Item: {fileID: 11400000, guid: 86cb8623724924d17ae00c150259df3d, type: 2}
+    Quantity: 12
+  - Item: {fileID: 11400000, guid: d562dae53acb04aa48034eb14ee90338, type: 2}
     Quantity: 4

@@ -174,6 +174,7 @@ public class SpellItemSO : MagicItemSO
 
 	public SyncSpellData LoadSpell(WandItemSO wandSO, List<int> modifierArray)
 	{
+		Debug.Log($"player id: {Player.LocalClientInstance.OwnerClientId}");
 		SyncSpellData syncSpellData = new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
 			Damage, Knockback, Pierces, Bounces, Speed, Lifetime, GhostDistance, HasteMultiplier, 

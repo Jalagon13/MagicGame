@@ -31,6 +31,16 @@ public class LightDagger : Spell
         }
     }
 
+    protected override void Update()
+    {
+        base.Update();
+
+        if (Velocity.Value != Vector2.zero)
+        {
+            DaggerSprite.transform.up = Velocity.Value.normalized;
+        }
+    }
+
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
@@ -38,13 +48,5 @@ public class LightDagger : Spell
         if (!Started.Value || !IsOwner || _isDead) return; //don't do anything before OnNetworkSpawn has run.
 
         _rigidbody2D.linearVelocity = Velocity.Value;
-    }
-
-    private void Update()
-    {
-        if (Velocity.Value != Vector2.zero)
-        {
-            DaggerSprite.transform.up = Velocity.Value.normalized;
-        }
     }
 }

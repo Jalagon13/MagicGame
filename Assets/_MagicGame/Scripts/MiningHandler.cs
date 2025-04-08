@@ -7,6 +7,7 @@ public enum DestructableType
 {
     Tile,
     WorldObject,
+    Npc,
     None
 }
 
@@ -27,6 +28,7 @@ public class MiningHandler : MonoBehaviour
     private StaffItemSO _staffItem;
     private bool _isMiningFlag;
     private bool _placeDelayActive;
+    private Npc _selectedNPC;
 
     private void Awake()
     {
@@ -83,8 +85,14 @@ public class MiningHandler : MonoBehaviour
 
             if (staffItem.PlayerWithinMiningRangeOfMouse())
             {
-                // Try to detect a destructable type to destroy
-                if (ObjectManager.Instance.TryToFindWorldObject((Vector2Int)ActionManager.MouseTilePosition, out WorldObject wo) && wo.CanBeDestroyed)
+                if(OverNpc(ActionManager.MouseWorldPosition, out Npc npc))
+                {
+                    Debug.Log($"Detecting NPC: {npc}");
+                    _selectedNPC = npc;
+                    _destructableFound = DestructableType.Npc;
+                    _currentBreakTargetPosition = ActionManager.MouseTilePosition;
+                }
+                else if (ObjectManager.Instance.TryToFindWorldObject((Vector2Int)ActionManager.MouseTilePosition, out WorldObject wo) && wo.CanBeDestroyed) // Try to detect a destructable type to destroy
                 {
                     // Found an object to destroy
                     _worldObjectSelected = wo;
@@ -134,6 +142,7 @@ public class MiningHandler : MonoBehaviour
                     {
                         DestructableType.WorldObject => _worldObjectSelected.Hardness,
                         DestructableType.Tile => _tileSelected.Hardness,
+                        DestructableType.Npc => 1,
                         _ => 1f // Default value
                     };
 
@@ -165,7 +174,27 @@ public class MiningHandler : MonoBehaviour
             }
         }
     }
-    
+
+    private bool OverNpc(Vector2 position, out Npc nonPlayerCharacter)
+    {
+        Debug.Log($"Checking if over npc");
+        Vector2 positionCheck = new(Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.y));
+        var colliders = Physics2D.OverlapBoxAll(positionCheck + new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), 0);
+        Npc npcToReturn = null;
+        foreach (Collider2D col in colliders)
+        {
+            if (col.TryGetComponent(out Npc npc) && npc.GetComponent<NpcNetworkComponent>().NpcBiomeType == Player.LocalClientInstance.CurrentPlayerBiome.Value && col.CompareTag("FriendlyNpc"))
+            {
+                nonPlayerCharacter = npc;
+                Debug.Log($"Found npc: {nonPlayerCharacter}");
+                return true;
+            }
+        }
+        Debug.Log($"No npc found");
+        nonPlayerCharacter = npcToReturn;
+        return false;
+    }
+
     private IEnumerator SmallPlacementDelay()
     {
         _placeDelayActive = true;
@@ -188,6 +217,10 @@ public class MiningHandler : MonoBehaviour
             case DestructableType.Tile:
                 TileManager.Instance.DestroyTileServerRpc((Vector2Int)ActionManager.MouseTilePosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.LocalClientInstance.CurrentPlayerBiome.Value);
                 break;
+            case DestructableType.Npc:
+                Debug.Log("Killing NPC");
+                _selectedNPC.GetComponent<NpcNetworkComponent>().KillNpcServerRpc();
+                break;
         }
     }
 
@@ -203,6 +236,9 @@ public class MiningHandler : MonoBehaviour
                 break;
             case DestructableType.Tile:
                 SoundManager.Instance.PlayOneShot(_tileSelected.MiningSound, transform.position);
+                break;
+            case DestructableType.Npc:
+                SoundManager.Instance.PlayOneShot(_selectedNPC.DamageSound, transform.position);
                 break;
         }
     }

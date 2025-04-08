@@ -35,7 +35,7 @@ public class Spell : NetworkBehaviour
 	private SyncSpellData _spellData;
 	private Transform _visualizationTf;
 	private PositionLerper _positionLerper;
-	const float k_LerpTime = 0.1f;
+	const float k_LerpTime = 0.05f;
 
 	protected virtual void Awake()
     {
@@ -59,7 +59,7 @@ public class Spell : NetworkBehaviour
 			NpcLayer = LayerMask.NameToLayer("Npc");
 			ShowVisuals.Value = false;
 		}
-
+		
 		foreach (int modifierIndex in SpellData.Value.ModifierArray)
 		{
 			SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
@@ -106,10 +106,10 @@ public class Spell : NetworkBehaviour
 	{
 		if(IsServer)
 		{
+			Debug.Log($"player shooting id: {SpellData.Value.OwnerPlayerId}");
+			transform.position = spawnPoint;
 			Started.Value = true;
 			ShowVisuals.Value = true;
-			transform.position = NetworkManager.Singleton.ConnectedClients[_spellData.OwnerPlayerId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
-			transform.position = spawnPoint;
 
 			_lastPosition = spawnPoint;
 			_finalDirection = finalDirection;
@@ -151,19 +151,23 @@ public class Spell : NetworkBehaviour
 
 	private void Show()
 	{
-		Debug.Log($"Showing visualization");
-		Debug.Log($"Detaching visualization and setting up lerper");
-		_visualizationTf.parent = null;
+		if(Player.LocalClientInstance.OwnerClientId == SpellData.Value.OwnerPlayerId)
+		{
+			_visualizationTf.position = Player.LocalClientInstance.MainHand.SpellSpawnTransform.position;
+		}
+		else
+		{
+			_visualizationTf.position = NetworkManager.Singleton.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
+		}
 
 		_positionLerper = new PositionLerper(transform.position, k_LerpTime);
-		_visualizationTf.transform.rotation = transform.rotation;
 
+		_visualizationTf.parent = null;
 		_visualizationTf.gameObject.SetActive(true);
 	}
 
 	private void Hide()
 	{
-		Debug.Log($"Hiding visualization");
 		_visualizationTf.gameObject.SetActive(false);
 	}
 
