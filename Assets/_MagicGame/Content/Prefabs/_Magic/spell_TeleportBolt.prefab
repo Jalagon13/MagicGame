@@ -112,9 +112,9 @@ GameObject:
   - component: {fileID: 8104886496655576445}
   - component: {fileID: 1792131143885239907}
   - component: {fileID: 8269354046363732758}
-  - component: {fileID: 6035814809352226819}
+  - component: {fileID: 433218415224276779}
   m_Layer: 15
-  m_Name: spell_AquaBolt
+  m_Name: spell_TeleportBolt
   m_TagString: Untagged
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1901879802
+  GlobalObjectIdHash: 985413061
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -290,7 +290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
---- !u!114 &6035814809352226819
+--- !u!114 &433218415224276779
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -299,7 +299,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5938426825082082942}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 774bbb9139fab4373915b49b8010a04e, type: 3}
+  m_Script: {fileID: 11500000, guid: 7daee2f3346dc4ce1b8fb7ebf46ccb67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
@@ -318,7 +318,15 @@ MonoBehaviour:
     m_InternalValue: 0
   _hitParticles: {fileID: 5806733700640005283, guid: 05ad6ece201a74f669b5783274d8c8fc, type: 3}
   _trailParticles: {fileID: 4814141149282417133}
-  _velocityDecay: 2
+  _teleportParticles: {fileID: 5806733700640005283, guid: 96c486bc91786419ea4e39208be93aba, type: 3}
+  _teleportSound:
+    Guid:
+      Data1: 660675445
+      Data2: 1220625473
+      Data3: 1963841471
+      Data4: 1725148628
+    Path: event:/MagicWoosh
+  _velocityDecay: 5
 --- !u!1001 &3404457874550790833
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -408,6 +416,34 @@ PrefabInstance:
     - target: {fileID: 504738388458249955, guid: a86cf63bb024947b288d6447e0982440, type: 3}
       propertyPath: InitialModule.startSize.scalar
       value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 504738388458249955, guid: a86cf63bb024947b288d6447e0982440, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 504738388458249955, guid: a86cf63bb024947b288d6447e0982440, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.g
+      value: 0.6745098
+      objectReference: {fileID: 0}
+    - target: {fileID: 504738388458249955, guid: a86cf63bb024947b288d6447e0982440, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.r
+      value: 0.92533267
+      objectReference: {fileID: 0}
+    - target: {fileID: 504738388458249955, guid: a86cf63bb024947b288d6447e0982440, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key1.g
+      value: 0.17647058
+      objectReference: {fileID: 0}
+    - target: {fileID: 504738388458249955, guid: a86cf63bb024947b288d6447e0982440, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key1.r
+      value: 0.6592292
+      objectReference: {fileID: 0}
+    - target: {fileID: 504738388458249955, guid: a86cf63bb024947b288d6447e0982440, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key2.g
+      value: 0.26666662
+      objectReference: {fileID: 0}
+    - target: {fileID: 504738388458249955, guid: a86cf63bb024947b288d6447e0982440, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key2.r
+      value: 0.676407
       objectReference: {fileID: 0}
     - target: {fileID: 1977379051695141661, guid: a86cf63bb024947b288d6447e0982440, type: 3}
       propertyPath: m_LocalPosition.x
