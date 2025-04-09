@@ -15,7 +15,8 @@ MonoBehaviour:
   <DatabaseName>k__BackingField: Forge
   RecipeDatabase:
   - {fileID: 11400000, guid: 74bbbb3efba3143c8bce6d15edd7ec14, type: 2}
-  - {fileID: 11400000, guid: 6f09df162e36b41979645e99cbbd97c1, type: 2}
   - {fileID: 11400000, guid: 609b6769c54224b20ac34e8a8d16f020, type: 2}
   - {fileID: 11400000, guid: de3793e400b254dd9993d3d34d336b7f, type: 2}
   - {fileID: 11400000, guid: 828efe99dd6fe4c059c4c8f611fc7b19, type: 2}
+  - {fileID: 11400000, guid: 6f09df162e36b41979645e99cbbd97c1, type: 2}
+  - {fileID: 11400000, guid: 9e308e05b3f234bc8b4d11707195933e, type: 2}
