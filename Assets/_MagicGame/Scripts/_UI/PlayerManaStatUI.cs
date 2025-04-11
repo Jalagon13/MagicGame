@@ -22,11 +22,6 @@ public class PlayerManaStatUI : MonoBehaviour
 		MaxMana = PlayerStats.Instance.BaseMana;
 	}
 
-    private void OnPlayerManaUpdated(object sender, ActionManager.OnStatUpdatedEventArgs e)
-	{
-		
-	}
-
 	public void UpdateBarFill(float currentAmount, float maxAmount)
 	{
 		

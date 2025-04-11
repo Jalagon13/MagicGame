@@ -12,18 +12,20 @@ public class PlayerCastTimeUI : MonoBehaviour
 
     private void Start()
     {
-        ActionManager.Instance.OnPlayerSpellChargeUpdated += OnPlayerSpellChargeUpdated;
         HotbarManager.Instance.OnFocusSlotUpdated += HandleUI;
     }
 
     private void HandleUI(object sender, HotbarManager.OnFocusItemSetEventArgs e)
     {
-        HideBar();
+        // HideBar();
     }
 
-    private void OnPlayerSpellChargeUpdated(object sender, ActionManager.OnStatUpdatedEventArgs e)
+    private void Update()
     {
-        if(e.CurrentAmount >= e.MaxAmount)
+        float maxAmount = MagicManager.Instance.CastTimeTimer.Duration;
+        float currentAmount = maxAmount - MagicManager.Instance.CastTimeTimer.RemainingSeconds;
+
+        if (currentAmount >= maxAmount)
         {
             HideBar();
         }
@@ -31,15 +33,21 @@ public class PlayerCastTimeUI : MonoBehaviour
         {
             ShowBar();
         }
-    
+
         // _border.sizeDelta = new Vector2(e.MaxAmount, _border.sizeDelta.y);
-        UpdateBarFill(e.CurrentAmount, e.MaxAmount);
+
+        UpdateBarFill(currentAmount, maxAmount);
     }
 
     public void UpdateBarFill(float currentAmount, float maxAmount)
     {
-        if (currentAmount <= 0) return;
+        if (currentAmount <= 0 || currentAmount >= maxAmount)
+        {
+            HideBar();
+            return;
+        }
         
+        // Debug.Log($"Current Amount: {currentAmount} Max Amount: {maxAmount}");
         float curr = (currentAmount / maxAmount) * _manaStatUI.MaxMana;
         
         _castTimeBar.UpdateBar(curr, 0, _manaStatUI.MaxMana);
@@ -49,17 +57,16 @@ public class PlayerCastTimeUI : MonoBehaviour
 
     private void ShowBar()
     {
-        gameObject.SetActive(true);
+        gameObject.transform.GetChild(0).gameObject.SetActive(true);
     }
 
     private void HideBar()
     {
-        gameObject.SetActive(false);
+        gameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
     private void OnDestroy()
     {
-        ActionManager.Instance.OnPlayerSpellChargeUpdated -= OnPlayerSpellChargeUpdated;
         HotbarManager.Instance.OnFocusSlotUpdated -= HandleUI;
     }
 }

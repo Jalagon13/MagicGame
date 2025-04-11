@@ -11,7 +11,6 @@ public class InGameMenuInstantiateHandler : MonoBehaviour
     
     public CraftingMenuUI InstantiateCraftingMenu()
     {
-        Debug.Log("Instantiating Crafting Menu UI");
         GameObject craftingMenuUI = Instantiate(_inGameMenuReferenceHolder.CraftingMenuPrefab, transform);
         
         return craftingMenuUI.GetComponent<CraftingMenuUI>();

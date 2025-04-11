@@ -1,0 +1,122 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class SpellWheelUI : MonoBehaviour
+{
+    [field: SerializeField] public GameObject SpellUIPrefab { get; private set; }
+    [field: SerializeField] public float DistanceFromCenter { get; private set; }
+
+    private Dictionary<GameObject, MagicItemSO> _activeSpellUIDict = new Dictionary<GameObject, MagicItemSO>();
+    private int _numOfSpells;
+
+    private void Start()
+    {
+        MagicManager.Instance.OnSpellWheelOpened += ShowWheel;
+        MagicManager.Instance.OnSpellWheelClosed += HideWheel;
+
+        Hide();
+    }
+    
+    private void Update()
+    {
+        if (_activeSpellUIDict.Count == 0) return;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            GetComponent<RectTransform>(),
+            Input.mousePosition,
+            null,
+            out Vector2 mousePosition
+        );
+
+        GameObject closestUI = null;
+        float closestDistance = float.MaxValue;
+
+        foreach (GameObject ui in _activeSpellUIDict.Keys)
+        {
+            RectTransform rt = ui.GetComponent<RectTransform>();
+            float distance = Vector2.Distance(mousePosition, rt.anchoredPosition);
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestUI = ui;
+            }
+        }
+
+        foreach (GameObject ui in _activeSpellUIDict.Keys)
+        {
+            ui.transform.localScale = (ui == closestUI) ? Vector3.one * 1.5f : Vector3.one;
+        }
+    }
+
+    private void ShowWheel(object sender, EventArgs e)
+    {
+        Show();
+    }
+
+    private void HideWheel(object sender, EventArgs e)
+    {
+        MagicItemSO selectedSpell = null;
+
+        foreach (var kvp in _activeSpellUIDict)
+        {
+            if (kvp.Key.transform.localScale == Vector3.one * 1.5f)
+            {
+                selectedSpell = kvp.Value;
+                break;
+            }
+        }
+
+        MagicManager.Instance.SetSelectedSpell(selectedSpell);
+        Hide();
+    }
+    
+    private void Show()
+    {
+        List<MagicItemSO> spellList = MagicManager.Instance.GetSpells();
+
+        _numOfSpells = spellList != null ? spellList.Count : 0;
+
+        if (_numOfSpells > 0)
+        {
+            float angleStep = 360f / _numOfSpells;
+            float angleOffset = 90f;
+
+            for (int i = 0; i < _numOfSpells; i++)
+            {
+                MagicItemSO spell = spellList[i];
+                GameObject spellUI = Instantiate(SpellUIPrefab, transform);
+                spellUI.GetComponent<Image>().sprite = spell.UiDisplay;
+                _activeSpellUIDict.Add(spellUI, spell);
+                RectTransform rt = spellUI.GetComponent<RectTransform>();
+
+                float angle = (i * angleStep + angleOffset) * Mathf.Deg2Rad;
+                float x = Mathf.Cos(angle) * DistanceFromCenter;
+                float y = Mathf.Sin(angle) * DistanceFromCenter;
+
+                rt.anchoredPosition = new Vector2(x, y);
+            }
+        }
+
+        gameObject.SetActive(true);
+    }
+    
+    private void Hide()
+    {
+        foreach (GameObject ui in _activeSpellUIDict.Keys)
+        {
+            Destroy(ui);
+        }
+        _activeSpellUIDict.Clear();
+
+        gameObject.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        MagicManager.Instance.OnSpellWheelOpened -= ShowWheel;
+        MagicManager.Instance.OnSpellWheelClosed -= HideWheel;
+    }
+}

@@ -58,7 +58,7 @@ public class InGameMenu : MonoBehaviour
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }
     
-    public void OpenWandInspectorMenu(WandInventoryItem wand)
+    public void OpenWandInspectorMenu(SpellbookInventoryItem wand)
     {
         ClearOldMenu();
         

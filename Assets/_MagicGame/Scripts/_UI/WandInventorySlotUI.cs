@@ -8,10 +8,10 @@ public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointer
 {
 	public Image SpellIcon;
 
-	private WandInventoryItem _wandInvItem;
+	private SpellbookInventoryItem _wandInvItem;
 	private int _spellIndex;
 
-	public void Initialize(WandInventoryItem selectedWand, int spellIndex)
+	public void Initialize(SpellbookInventoryItem selectedWand, int spellIndex)
 	{
 		_wandInvItem = selectedWand;
 		_spellIndex = spellIndex;

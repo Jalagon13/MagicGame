@@ -39,7 +39,7 @@ public class Player : NetworkBehaviour
 	
 	[SerializeField] private float _respawnTimerDuration;
 	[SerializeField] private bool _spawnWandItems;
-	[SerializeField] private List<WandInventoryItem> _startingWandItems = new();
+	[SerializeField] private List<SpellbookInventoryItem> _startingWandItems = new();
 	[SerializeField] private List<InventoryItem> _startingItems = new();
 
 	public Knockback PlayerKnockback { get; private set; }
@@ -95,7 +95,7 @@ public class Player : NetworkBehaviour
 		{
 			if (_spawnWandItems)
 			{
-				foreach (WandInventoryItem wandInvItem in _startingWandItems)
+				foreach (SpellbookInventoryItem wandInvItem in _startingWandItems)
 				{
 					if (wandInvItem.Item is not SpellBookItemSO)
 					{
@@ -104,7 +104,7 @@ public class Player : NetworkBehaviour
 					}
 
 					SpellBookItemSO wandItemSO = wandInvItem.Item as SpellBookItemSO;
-					WandInventoryItem wandItemToAdd = (WandInventoryItem)wandItemSO.CreateInventoryItem(1);
+					SpellbookInventoryItem wandItemToAdd = (SpellbookInventoryItem)wandItemSO.CreateInventoryItem(1);
 
 					for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
 					{

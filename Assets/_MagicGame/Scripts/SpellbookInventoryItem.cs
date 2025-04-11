@@ -2,13 +2,13 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class WandInventoryItem : InventoryItem
+public class SpellbookInventoryItem : InventoryItem
 {
 	public event EventHandler OnWandContentsUpdated;
 	
 	[field: SerializeField] public MagicItemSO[] MagicArray { get; private set; }
 
-	public WandInventoryItem(ItemSO itemSO, int quantity, int capacity) : base(itemSO, quantity)
+	public SpellbookInventoryItem(ItemSO itemSO, int quantity, int capacity) : base(itemSO, quantity)
 	{
 		MagicArray = new MagicItemSO[capacity];
 	}

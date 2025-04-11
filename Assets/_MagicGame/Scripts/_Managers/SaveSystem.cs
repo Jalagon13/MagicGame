@@ -211,7 +211,7 @@ public class SaveSystem : MonoBehaviour
 				{
 					List<int> magicArray = new();
 					
-					if(chestData.Value[i] is WandInventoryItem wandInventoryItem)
+					if(chestData.Value[i] is SpellbookInventoryItem wandInventoryItem)
 					{
 						for (int j = 0; j < wandInventoryItem.MagicArray.Length; j++)
 						{
@@ -375,7 +375,7 @@ public class SaveSystem : MonoBehaviour
 				
 				if(itemToAdd is SpellBookItemSO wandItemSO)
 				{
-					WandInventoryItem wandInventoryItem = new WandInventoryItem(itemToAdd, item.Quantity, wandItemSO.Capacity);
+					SpellbookInventoryItem wandInventoryItem = new SpellbookInventoryItem(itemToAdd, item.Quantity, wandItemSO.Capacity);
 
 					for (int i = 0; i < item.MagicArray.Count; i++)
 					{

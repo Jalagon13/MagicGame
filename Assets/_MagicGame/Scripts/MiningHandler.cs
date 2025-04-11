@@ -177,7 +177,6 @@ public class MiningHandler : MonoBehaviour
 
     private bool OverNpc(Vector2 position, out Npc nonPlayerCharacter)
     {
-        Debug.Log($"Checking if over npc");
         Vector2 positionCheck = new(Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.y));
         var colliders = Physics2D.OverlapBoxAll(positionCheck + new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), 0);
         Npc npcToReturn = null;
@@ -186,11 +185,9 @@ public class MiningHandler : MonoBehaviour
             if (col.TryGetComponent(out Npc npc) && npc.GetComponent<NpcNetworkComponent>().NpcBiomeType == Player.LocalClientInstance.CurrentPlayerBiome.Value && col.CompareTag("FriendlyNpc"))
             {
                 nonPlayerCharacter = npc;
-                Debug.Log($"Found npc: {nonPlayerCharacter}");
                 return true;
             }
         }
-        Debug.Log($"No npc found");
         nonPlayerCharacter = npcToReturn;
         return false;
     }

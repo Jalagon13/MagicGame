@@ -443,7 +443,7 @@ public class InventoryManager : MonoBehaviour
 
 		switch (inventoryItem)
 		{
-			case WandInventoryItem wandInventoryItem:
+			case SpellbookInventoryItem wandInventoryItem:
 				MagicItemSO[] magicArray = wandInventoryItem.MagicArray;
 				Tooltip.WandDisplay(wandInventoryItem.Item as SpellBookItemSO, magicArray, fontSize: 12f);
 				break;

@@ -10,6 +10,7 @@ public class GameInput : MonoBehaviour
 
 	public event EventHandler OnShiftStarted;
 	public event EventHandler OnSpaceStarted;
+	public event EventHandler OnSpaceCanceled;
 	public event EventHandler OnSwapHands;
 	public event EventHandler OnSecondaryActionStarted;
 	public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnSecondaryAction;
@@ -71,9 +72,10 @@ public class GameInput : MonoBehaviour
 		_playerInput.Player.Shift.started += PlayerInput_ShiftStart;
 		_playerInput.Player.Shift.canceled += PlayerInput_ShiftCanceled;
 		_playerInput.Player.Space.started += PlayerInput_SpaceStarted;
+		_playerInput.Player.Space.canceled += PlayerInput_SpaceCanceled;
 	}
 
-	private void Start()
+    private void Start()
 	{
 		WorldManager.Instance.OnBiomeTransitionStart += WorldManager_DisableInputs;
 		WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_EnableInputs;
@@ -93,6 +95,11 @@ public class GameInput : MonoBehaviour
     private void PlayerInput_SpaceStarted(InputAction.CallbackContext context)
 	{
 		OnSpaceStarted?.Invoke(this, EventArgs.Empty);
+	}
+
+	private void PlayerInput_SpaceCanceled(InputAction.CallbackContext context)
+	{
+		OnSpaceCanceled?.Invoke(this, EventArgs.Empty);
 	}
 
 	private void WorldManager_EnableInputs(object sender, EventArgs e)

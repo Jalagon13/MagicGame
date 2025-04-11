@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class WandInspectorMenuUI : MonoBehaviour
 {
-	public WandInventoryItem SelectedWand { get; private set; } 
+	public SpellbookInventoryItem SelectedWand { get; private set; } 
 	
 	[field: SerializeField] public TextMeshProUGUI InspectorTitleText;
 	[SerializeField] private WandInventorySlotUI _wandInvSlotPrefab;
@@ -33,7 +33,7 @@ public class WandInspectorMenuUI : MonoBehaviour
 	
 	private void OnInventorySlotShiftLeftClicked_SpellBookShortCut(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
 	{
-		if(e.InventoryItem is WandInventoryItem wandInInv)
+		if(e.InventoryItem is SpellbookInventoryItem wandInInv)
 		{
 			if(HasWand())
 			{
@@ -81,9 +81,9 @@ public class WandInspectorMenuUI : MonoBehaviour
 		return SelectedWand != null;
 	}
 
-	public WandInventoryItem RemoveSelectedWand()
+	public SpellbookInventoryItem RemoveSelectedWand()
 	{
-		WandInventoryItem removedWand = SelectedWand;
+		SpellbookInventoryItem removedWand = SelectedWand;
 
 		SelectedWand = null;
 
@@ -92,7 +92,7 @@ public class WandInspectorMenuUI : MonoBehaviour
 		return removedWand;
 	}
 
-	public void PlaceSelectedWand(WandInventoryItem wandItem)
+	public void PlaceSelectedWand(SpellbookInventoryItem wandItem)
 	{
 		if (wandItem == null)
 		{
@@ -104,7 +104,7 @@ public class WandInspectorMenuUI : MonoBehaviour
 		UpdateWandSlotsUI();
 	}
 
-	public WandInventoryItem SwapWands(WandInventoryItem newWand)
+	public SpellbookInventoryItem SwapWands(SpellbookInventoryItem newWand)
 	{
 		if (newWand == null)
 		{
@@ -112,7 +112,7 @@ public class WandInspectorMenuUI : MonoBehaviour
 		}
 
 		// Store the currently selected spellbook
-		WandInventoryItem previousWand = SelectedWand;
+		SpellbookInventoryItem previousWand = SelectedWand;
 
 		// Replace the selected spellbook with the new one
 		SelectedWand = newWand;

@@ -22,7 +22,7 @@ public class SpellBookItemSO : ItemSO
 	
 	public override InventoryItem CreateInventoryItem(int quantity)
 	{
-		return new WandInventoryItem(this, quantity, Capacity);
+		return new SpellbookInventoryItem(this, quantity, Capacity);
 	}
 
 	public override string GetDescription()

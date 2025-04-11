@@ -277,7 +277,7 @@ public class GameManager : NetworkBehaviour
 		{
 			ItemId = (ushort)GetItemIdFromItemSO(inventoryItem.Item),
 			Quantity = (ushort)inventoryItem.Quantity,
-			MagicArray = inventoryItem is WandInventoryItem wandInventoryItem ? wandInventoryItem.MagicArray.Select(x => x != null ? GetItemIdFromItemSO(x) : -1).ToList() : new List<int>()
+			MagicArray = inventoryItem is SpellbookInventoryItem wandInventoryItem ? wandInventoryItem.MagicArray.Select(x => x != null ? GetItemIdFromItemSO(x) : -1).ToList() : new List<int>()
 		};
 		
 		SpawnItemServerRpc(syncItemData, spawnPos, biome, velocity);

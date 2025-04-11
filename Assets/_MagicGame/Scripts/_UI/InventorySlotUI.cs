@@ -33,7 +33,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 		}
 		else if(eventData.button == PointerEventData.InputButton.Right)
 		{
-			if(_item.HasItem && _item is WandInventoryItem wandInventoryItem)
+			if(_item.HasItem && _item is SpellbookInventoryItem wandInventoryItem)
 			{
 				_inventoryAssociatedWith[_inventoryIndex] = new();
 
@@ -83,7 +83,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 			{
 				
 				case SpellBookItemSO wandItemSO:
-					MagicItemSO[] magicArray = (_inventoryAssociatedWith[_inventoryIndex] as WandInventoryItem).MagicArray;
+					MagicItemSO[] magicArray = (_inventoryAssociatedWith[_inventoryIndex] as SpellbookInventoryItem).MagicArray;
 					Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);
 					break;
 				case SpellItemSO spellItemSO:
