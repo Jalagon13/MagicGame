@@ -172,7 +172,7 @@ public class SpellItemSO : MagicItemSO
 		GameManager.Instance.LoadAndShootSpellServerRpc(syncSpellData, spawnPos, direction);
 	}
 
-	public SyncSpellData LoadSpell(WandItemSO wandSO, List<int> modifierArray)
+	public SyncSpellData LoadSpell(SpellBookItemSO wandSO, List<int> modifierArray)
 	{
 		Debug.Log($"player id: {Player.LocalClientInstance.OwnerClientId}");
 		SyncSpellData syncSpellData = new SyncSpellData(
@@ -187,7 +187,7 @@ public class SpellItemSO : MagicItemSO
 		return syncSpellData;
 	}
 	
-	public void ExecuteSpell(WandItemSO wandSO, ulong spellId)
+	public void ExecuteSpell(SpellBookItemSO wandSO, ulong spellId)
 	{
 		Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
 		Vector2 baseDirection = (ActionManager.MouseWorldPosition - spawnPoint).normalized;

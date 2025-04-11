@@ -128,7 +128,7 @@ public class Item : NetworkBehaviour
 		
 		InventoryItem inventoryItem = new();
 		
-		if(itemSO is WandItemSO wandItemSO)
+		if(itemSO is SpellBookItemSO wandItemSO)
 		{
 			WandInventoryItem wandInventoryItem = new(itemSO, syncItemData.Quantity, wandItemSO.Capacity);
 			

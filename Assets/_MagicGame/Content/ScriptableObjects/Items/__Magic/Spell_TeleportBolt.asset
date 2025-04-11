@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Spell_TeleportBolt
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Teleport Bolt
-  <UiDisplay>k__BackingField: {fileID: 6633855271178478723, guid: ef7386aaf3a91b44bb3fa94463878391, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -13447408, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <GoldValue>k__BackingField: 100
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 

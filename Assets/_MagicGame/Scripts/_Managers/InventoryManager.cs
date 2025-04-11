@@ -445,7 +445,7 @@ public class InventoryManager : MonoBehaviour
 		{
 			case WandInventoryItem wandInventoryItem:
 				MagicItemSO[] magicArray = wandInventoryItem.MagicArray;
-				Tooltip.WandDisplay(wandInventoryItem.Item as WandItemSO, magicArray, fontSize: 12f);
+				Tooltip.WandDisplay(wandInventoryItem.Item as SpellBookItemSO, magicArray, fontSize: 12f);
 				break;
 			default:	
 				if(inventoryItem.Item is SpellItemSO spellItemSO)

@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Wand", menuName = "Create Item/New Wand")]
-public class WandItemSO : ItemSO
+[CreateAssetMenu(fileName = "New SpellBook", menuName = "Create Item/New SpellBook")]
+public class SpellBookItemSO : ItemSO
 {
 	[field: Tooltip("The delay (in seconds) between individual casts of the spell book.")]
 	[field: SerializeField] public float BaseCastDelay { get; private set; } = 0.2f;

@@ -277,10 +277,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638797024971780830
+  lastModified: 638798748345681440
   FileSizes:
   - Name: Desktop
-    Value: 3170304
+    Value: 3192960
   Exists: 1
 --- !u!114 &-4100935872588225253
 MonoBehaviour:
@@ -547,12 +547,13 @@ MonoBehaviour:
   - {fileID: -326097733281759104}
   - {fileID: -4100935872588225253}
   - {fileID: -5669462344721614237}
+  - {fileID: 3972319742351911701}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6702288669578411488}
   StringsBanks:
   - {fileID: 5574528013551363316}
-  cacheTime: 638797024971780830
+  cacheTime: 638798748345681440
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:
@@ -655,6 +656,33 @@ MonoBehaviour:
     Data4: -2033662663
   Banks:
   - {fileID: 4239372470019258213}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3972319742351911701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Shotgun
+  m_EditorClassIdentifier: 
+  Path: event:/Shotgun
+  Guid:
+    Data1: -1949507061
+    Data2: 1258579158
+    Data3: 51854251
+    Data4: 858203368
+  Banks:
+  - {fileID: -4626298972836983042}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -805,10 +833,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638797024970672236
+  lastModified: 638798748344641092
   FileSizes:
   - Name: Desktop
-    Value: 2222
+    Value: 2272
   Exists: 1
 --- !u!114 &5813129133648053243
 MonoBehaviour:
@@ -879,7 +907,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638797024970636386
+  lastModified: 638798748344611205
   FileSizes:
   - Name: Desktop
     Value: 3619520

@@ -201,7 +201,7 @@ public class ChestNetworkManager : NetworkBehaviour
 		{
 			InventoryItem invItem = new(GameManager.Instance.GetItemSOFromItemId(syncItem.ItemId), syncItem.Quantity);
 			
-			if(invItem.Item is WandItemSO wandItemSO)
+			if(invItem.Item is SpellBookItemSO wandItemSO)
 			{
 				var wandInventoryItem = new WandInventoryItem(GameManager.Instance.GetItemSOFromItemId(syncItem.ItemId), syncItem.Quantity, wandItemSO.Capacity);
 			

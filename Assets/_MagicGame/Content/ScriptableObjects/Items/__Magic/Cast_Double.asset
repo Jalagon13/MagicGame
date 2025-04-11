@@ -17,4 +17,4 @@ MonoBehaviour:
   <GoldValue>k__BackingField: 50
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Simultaneously casts 2 spells
-  <MultiCastAmount>k__BackingField: 2
+  <MultiCastAmount>k__BackingField: 4

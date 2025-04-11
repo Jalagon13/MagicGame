@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9486b8ae30ede473d930ac44d01ec3aa, type: 3}
   m_Name: staff_CobaltStaff
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: CobaltStaff
+  <Name>k__BackingField: Cobalt Staff
   <UiDisplay>k__BackingField: {fileID: -461732419, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 0

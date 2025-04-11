@@ -373,7 +373,7 @@ public class SaveSystem : MonoBehaviour
 			{
 				ItemSO itemToAdd = GameManager.Instance.GetItemSOFromItemId(item.ItemId);
 				
-				if(itemToAdd is WandItemSO wandItemSO)
+				if(itemToAdd is SpellBookItemSO wandItemSO)
 				{
 					WandInventoryItem wandInventoryItem = new WandInventoryItem(itemToAdd, item.Quantity, wandItemSO.Capacity);
 

@@ -660,7 +660,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_wood_wand
+      name: item_tattered_journal
       rect:
         serializedVersion: 2
         x: 32
@@ -1056,7 +1056,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_cobalt_wand
+      name: item_cobalt_codex
       rect:
         serializedVersion: 2
         x: 48
@@ -1086,7 +1086,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1123,67 +1123,67 @@ TextureImporter:
       item_aspect_of_navigation: -44972350
       item_aspect_of_order: -763366888
       item_aspect_of_water: 580891271
-      item_axe: -1431561084
-      item_blacksmith: -89414543
+      item_axe: -1009747100
+      item_blacksmith: -1873538081
       item_blue_bell: -1747701128
-      item_bouncy_battle_ball: 1567280107
+      item_bouncy_battle_ball: 1911798325
       item_campfire: -925800054
       item_candle: -1599595118
       item_chest: -1010797688
-      item_chicken: 1104096443
-      item_coal: -1541828095
+      item_chicken: -235104009
+      item_coal: -1903294168
       item_cobalt_bar: 1629506966
       item_cobalt_bottoms: 1068366592
+      item_cobalt_codex: 595962634
       item_cobalt_hat: -554541973
       item_cobalt_ore: 631161573
       item_cobalt_robe: 1972111916
       item_cobalt_staff: -461732419
-      item_cobalt_wand: 595962634
-      item_destruction_tome: -1033124662
+      item_destruction_tome: 1032350063
       item_door: 730009004
-      item_fiber: 847625231
+      item_fiber: -873374552
       item_forge: -1644608659
       item_gold: 1322639080
-      item_hammer: -670104258
+      item_hammer: 741425099
       item_hide: -630612298
-      item_hoe: 535866517
-      item_iron_ingot: -307808466
-      item_iron_ore: -651821871
-      item_mana_bolt: -488747044
+      item_hoe: -691527598
+      item_iron_ingot: -1962668515
+      item_iron_ore: 1692411937
+      item_mana_bolt: -103663402
       item_mana_crystal: -984316580
       item_mana_potion: -854955160
       item_meat_cooked: 1280716566
       item_meat_raw: 1876687506
       item_merchant: -1704938593
-      item_multi_cast: -530616504
-      item_mushed_mushroom: 2142706726
-      item_mushroom: 99796606
-      item_pickaxe: 299098538
+      item_multi_cast: -2003000566
+      item_mushed_mushroom: 607617102
+      item_mushroom: 286475759
+      item_pickaxe: 768276858
       item_pixie_dust: 1964935682
-      item_plywood: -328401396
+      item_plywood: -742536085
       item_portal: 547736231
       item_research_table: 1337721260
       item_silk: 1716809911
-      item_simple_wand: 1591310652
+      item_simple_wand: -1366029322
       item_spindle: 1551977814
       item_stone: -1096778836
-      item_stone_axe: -285810398
-      item_stone_pickaxe: 576272611
-      item_stone_shovel: 1850669481
-      item_stone_sword: 212289767
+      item_stone_axe: -243578635
+      item_stone_pickaxe: 2112777853
+      item_stone_shovel: -1928505105
+      item_stone_sword: 818159147
       item_sword: -1843546812
       item_target_dummy: 784093983
+      item_tattered_journal: 16873710
       item_web: 995874337
       item_wood: -395863171
-      item_wood_axe: -1861176544
+      item_wood_axe: -812258971
       item_wood_floor: -427256236
-      item_wood_hammer: 1076022954
-      item_wood_pickaxe: 161528276
-      item_wood_shovel: 959550348
+      item_wood_hammer: -1864391692
+      item_wood_pickaxe: -1989345648
+      item_wood_shovel: 347135175
       item_wood_staff: -1593785014
       item_wood_wall: 67440230
-      item_wood_wand: 16873710
-      item_wooden_catalyst: -686089455
+      item_wooden_catalyst: -832442734
       item_work_bench: 1147903491
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

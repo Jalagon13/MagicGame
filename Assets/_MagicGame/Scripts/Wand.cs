@@ -6,7 +6,7 @@ using UnityEngine;
 public class Wand
 {
 	public WandInventoryItem WandInvItem { get; private set; }
-	public WandItemSO WandSO { get; private set; }
+	public SpellBookItemSO WandSO { get; private set; }
 	public Timer CastTimeTimer { get; private set; }
 	public float CurrentReload { get; private set; }
 	public float TotalReloadDuration { get; private set; }
@@ -30,7 +30,7 @@ public class Wand
 	public Wand(WandInventoryItem wandInventoryItem)
 	{
 		WandInvItem = wandInventoryItem;
-		WandSO = WandInvItem.Item as WandItemSO;
+		WandSO = WandInvItem.Item as SpellBookItemSO;
 		WandInvItem.OnWandContentsUpdated += OnWandContentsUpdated;
 
 		CastTimeTimer = new Timer(0);

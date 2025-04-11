@@ -97,13 +97,13 @@ public class Player : NetworkBehaviour
 			{
 				foreach (WandInventoryItem wandInvItem in _startingWandItems)
 				{
-					if (wandInvItem.Item is not WandItemSO)
+					if (wandInvItem.Item is not SpellBookItemSO)
 					{
 						Debug.LogWarning($"{wandInvItem.Item} is not a wand. skipping it");
 						continue;
 					}
 
-					WandItemSO wandItemSO = wandInvItem.Item as WandItemSO;
+					SpellBookItemSO wandItemSO = wandInvItem.Item as SpellBookItemSO;
 					WandInventoryItem wandItemToAdd = (WandInventoryItem)wandItemSO.CreateInventoryItem(1);
 
 					for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
@@ -258,7 +258,7 @@ public class Player : NetworkBehaviour
 	{
 		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromItemId(SelectedItemIndexNetworkVariable.Value);
 		
-		return mainHandItem != null && (mainHandItem is StaffItemSO || mainHandItem is WandItemSO);
+		return mainHandItem != null && (mainHandItem is StaffItemSO || mainHandItem is SpellBookItemSO);
 	}
 	
 	public override void OnDestroy()
