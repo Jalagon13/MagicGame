@@ -8,7 +8,7 @@ public class SpellWheelUI : MonoBehaviour
     [field: SerializeField] public GameObject SpellUIPrefab { get; private set; }
     [field: SerializeField] public float DistanceFromCenter { get; private set; }
 
-    private Dictionary<GameObject, MagicItemSO> _activeSpellUIDict = new Dictionary<GameObject, MagicItemSO>();
+    private Dictionary<GameObject, SpellItemSO> _activeSpellUIDict = new Dictionary<GameObject, SpellItemSO>();
     private int _numOfSpells;
 
     private void Start()
@@ -58,7 +58,7 @@ public class SpellWheelUI : MonoBehaviour
 
     private void HideWheel(object sender, EventArgs e)
     {
-        MagicItemSO selectedSpell = null;
+        SpellItemSO selectedSpell = null;
 
         foreach (var kvp in _activeSpellUIDict)
         {
@@ -75,7 +75,7 @@ public class SpellWheelUI : MonoBehaviour
     
     private void Show()
     {
-        List<MagicItemSO> spellList = MagicManager.Instance.GetSpells();
+        List<SpellItemSO> spellList = MagicManager.Instance.GetSpells();
 
         _numOfSpells = spellList != null ? spellList.Count : 0;
 
@@ -86,7 +86,7 @@ public class SpellWheelUI : MonoBehaviour
 
             for (int i = 0; i < _numOfSpells; i++)
             {
-                MagicItemSO spell = spellList[i];
+                SpellItemSO spell = spellList[i];
                 GameObject spellUI = Instantiate(SpellUIPrefab, transform);
                 spellUI.GetComponent<Image>().sprite = spell.UiDisplay;
                 _activeSpellUIDict.Add(spellUI, spell);

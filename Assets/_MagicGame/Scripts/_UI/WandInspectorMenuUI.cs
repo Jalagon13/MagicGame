@@ -47,7 +47,7 @@ public class WandInspectorMenuUI : MonoBehaviour
 				Tooltip.HideUI();
 			}
 		}
-		else if(e.InventoryItem.Item is MagicItemSO magicItemSO)
+		else if(e.InventoryItem.Item is SpellItemSO magicItemSO)
 		{
 			if(HasWand())
 			{

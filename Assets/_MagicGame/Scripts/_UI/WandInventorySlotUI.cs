@@ -29,7 +29,7 @@ public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointer
 			{
 				InventoryManager.Instance.AddItem(_wandInvItem.RemoveMagic(_spellIndex), 1);
 			}
-			else if(mouseItem.HasItem && mouseItem.Item is MagicItemSO mouseMagicItemSO)
+			else if(mouseItem.HasItem && mouseItem.Item is SpellItemSO mouseMagicItemSO)
 			{
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _wandInvItem.SwapMagic(mouseMagicItemSO, _spellIndex);
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = 1;
@@ -42,7 +42,7 @@ public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointer
 
 			Tooltip.HideUI();
 		}
-		else if(mouseItem.HasItem && mouseItem.Item is MagicItemSO mouseMagicItemSO)
+		else if(mouseItem.HasItem && mouseItem.Item is SpellItemSO mouseMagicItemSO)
 		{
 			_wandInvItem.SetMagic(mouseMagicItemSO, _spellIndex);
 			InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
@@ -55,7 +55,7 @@ public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointer
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
 	
-	public void SetMagic(MagicItemSO magicItem)
+	public void SetMagic(SpellItemSO magicItem)
 	{
 		_wandInvItem.SetMagic(magicItem, _spellIndex);
 		UpdateSlotUI();

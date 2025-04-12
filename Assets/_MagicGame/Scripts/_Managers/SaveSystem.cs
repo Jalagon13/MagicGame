@@ -381,7 +381,7 @@ public class SaveSystem : MonoBehaviour
 					{
 						if(item.MagicArray[i] > -1)
 						{
-							wandInventoryItem.SetMagic(GameManager.Instance.GetItemSOFromItemId(item.MagicArray[i]) as MagicItemSO, i);
+							wandInventoryItem.SetMagic(GameManager.Instance.GetItemSOFromItemId(item.MagicArray[i]) as SpellItemSO, i);
 						}
 					}
 

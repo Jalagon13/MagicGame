@@ -6,11 +6,11 @@ public class SpellbookInventoryItem : InventoryItem
 {
 	public event EventHandler OnWandContentsUpdated;
 	
-	[field: SerializeField] public MagicItemSO[] MagicArray { get; private set; }
+	[field: SerializeField] public SpellItemSO[] MagicArray { get; private set; }
 
 	public SpellbookInventoryItem(ItemSO itemSO, int quantity, int capacity) : base(itemSO, quantity)
 	{
-		MagicArray = new MagicItemSO[capacity];
+		MagicArray = new SpellItemSO[capacity];
 	}
 	
 	public void ClearWandContentsUpdatedListeners()
@@ -18,7 +18,7 @@ public class SpellbookInventoryItem : InventoryItem
 		OnWandContentsUpdated = null;
 	}
 	
-	public void SetMagic(MagicItemSO MagicItem, int magicIndex)
+	public void SetMagic(SpellItemSO MagicItem, int magicIndex)
 	{
 		if(magicIndex < 0 || magicIndex >= MagicArray.Length)
 		{
@@ -30,15 +30,15 @@ public class SpellbookInventoryItem : InventoryItem
 		OnWandContentsUpdated?.Invoke(this, EventArgs.Empty);
 	}
 	
-	public MagicItemSO RemoveMagic(int magicIndex)
+	public SpellItemSO RemoveMagic(int magicIndex)
 	{
 		if(magicIndex < 0 || magicIndex >= MagicArray.Length)
 		{
 			Debug.LogError($"Magic index out of bounds");
 			return null;
 		}
-		
-		MagicItemSO removedMagic = MagicArray[magicIndex];
+
+		SpellItemSO removedMagic = MagicArray[magicIndex];
 		MagicArray[magicIndex] = null;
 		
 		OnWandContentsUpdated?.Invoke(this, EventArgs.Empty);
@@ -46,15 +46,15 @@ public class SpellbookInventoryItem : InventoryItem
 		return removedMagic;
 	}
 	
-	public MagicItemSO SwapMagic(MagicItemSO magic, int magicIndex)
+	public SpellItemSO SwapMagic(SpellItemSO magic, int magicIndex)
 	{
 		if(magicIndex < 0 || magicIndex >= MagicArray.Length)
 		{
 			Debug.LogError($"Magic index out of bounds");
 			return null;
 		}
-		
-		MagicItemSO swappedMagic = MagicArray[magicIndex];
+
+		SpellItemSO swappedMagic = MagicArray[magicIndex];
 		MagicArray[magicIndex] = magic;
 		
 		OnWandContentsUpdated?.Invoke(this, EventArgs.Empty);

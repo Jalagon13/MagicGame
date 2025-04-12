@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using FMODUnity;
 using Unity.Netcode;
 using UnityEngine;
@@ -18,9 +19,8 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public ulong SpellId;
 	public ulong OwnerPlayerId;
 	public BiomeType SpawnBiome;
-	public List<int> ModifierArray;
 
-	public SyncSpellData(int spellIndex, int damage, int knockback, int pierces, int bounces, float speed, float lifetime, float ghostDistance, float hasteMultiplier, ulong spellId, ulong ownerPlayerId, BiomeType spawnBiome, List<int> modifierArray)
+	public SyncSpellData(int spellIndex, int damage, int knockback, int pierces, int bounces, float speed, float lifetime, float ghostDistance, float hasteMultiplier, ulong spellId, ulong ownerPlayerId, BiomeType spawnBiome)
 	{
 		SpellIndex = spellIndex;
 		Damage = damage;
@@ -34,7 +34,6 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		SpellId = spellId;
 		OwnerPlayerId = ownerPlayerId;
 		SpawnBiome = spawnBiome;
-		ModifierArray = modifierArray ?? new List<int>(); // Ensure no null lists
 	}
 
 	public bool Equals(SyncSpellData other)
@@ -56,19 +55,6 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 			return false;
 		}
 
-		// Check if both lists are either null or have the same count
-		if (ModifierArray == null && other.ModifierArray == null)
-			return true;
-		if (ModifierArray == null || other.ModifierArray == null || ModifierArray.Count != other.ModifierArray.Count)
-			return false;
-
-		// Compare each element in the lists
-		for (int i = 0; i < ModifierArray.Count; i++)
-		{
-			if (ModifierArray[i] != other.ModifierArray[i])
-				return false;
-		}
-
 		return true;
 	}
 
@@ -86,32 +72,11 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		serializer.SerializeValue(ref SpellId);
 		serializer.SerializeValue(ref OwnerPlayerId);
 		serializer.SerializeValue(ref SpawnBiome);
-
-		// Serialize the list count first
-		int modifierCount = ModifierArray?.Count ?? 0;
-		serializer.SerializeValue(ref modifierCount);
-
-		if (serializer.IsReader)
-		{
-			ModifierArray = new List<int>(modifierCount);
-		}
-
-		// Serialize each element in the list
-		for (int i = 0; i < modifierCount; i++)
-		{
-			int value = serializer.IsReader ? 0 : ModifierArray[i];
-			serializer.SerializeValue(ref value);
-
-			if (serializer.IsReader)
-			{
-				ModifierArray.Add(value);
-			}
-		}
 	}
 }
 
 [CreateAssetMenu(fileName = "New Spell", menuName = "Create Item/New Spell")]
-public class SpellItemSO : MagicItemSO
+public class SpellItemSO : ItemSO
 {
 	[field: Tooltip("Actual Prefab for the projectile.")]
 	[field: SerializeField] public Spell SpellProjectilePrefab { get; private set; }
@@ -167,12 +132,12 @@ public class SpellItemSO : MagicItemSO
 			Damage, Knockback, Pierces, Bounces, Speed, Lifetime, GhostDistance, HasteMultiplier,
 			IdGenerator.GenerateRandomId(),
 			npc.OwnerClientId,
-			npc.NpcBiomeType, null);
+			npc.NpcBiomeType);
 			
 		GameManager.Instance.LoadAndShootSpellServerRpc(syncSpellData, spawnPos, direction);
 	}
 
-	public SyncSpellData LoadSpell(SpellBookItemSO wandSO, List<int> modifierArray)
+	public SyncSpellData LoadSpell(SpellBookItemSO wandSO)
 	{
 		Debug.Log($"player id: {Player.LocalClientInstance.OwnerClientId}");
 		SyncSpellData syncSpellData = new SyncSpellData(
@@ -180,7 +145,7 @@ public class SpellItemSO : MagicItemSO
 			Damage, Knockback, Pierces, Bounces, Speed, Lifetime, GhostDistance, HasteMultiplier, 
 			IdGenerator.GenerateRandomId(),
 			Player.LocalClientInstance.OwnerClientId,
-			Player.LocalClientInstance.CurrentPlayerBiome.Value, modifierArray);
+			Player.LocalClientInstance.CurrentPlayerBiome.Value);
 		
 		GameManager.Instance.LoadSpellServerRpc(syncSpellData, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
 			
@@ -205,5 +170,24 @@ public class SpellItemSO : MagicItemSO
 		Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
 
 		GameManager.Instance.CancelSpellServerRpc(spellId);
+	}
+
+	public override InventoryItem CreateInventoryItem(int quantity)
+	{
+		return new InventoryItem(this, quantity);
+	}
+
+	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
+	{
+		return _baseActionCooldown;
+	}
+
+	public override string GetDescription()
+	{
+		StringBuilder description = new();
+		description.Append($"Can be placed in a wand slot<br>");
+		description.Append($"{GetDescriptionBreak()}");
+
+		return description.ToString();
 	}
 }

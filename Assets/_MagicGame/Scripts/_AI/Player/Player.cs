@@ -108,7 +108,7 @@ public class Player : NetworkBehaviour
 
 					for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
 					{
-						if (wandInvItem.MagicArray[i] is MagicItemSO)
+						if (wandInvItem.MagicArray[i] is SpellItemSO)
 						{
 							if (i < wandItemSO.Capacity)
 							{

@@ -59,17 +59,6 @@ public class Spell : NetworkBehaviour
 			NpcLayer = LayerMask.NameToLayer("Npc");
 			ShowVisuals.Value = false;
 		}
-		
-		foreach (int modifierIndex in SpellData.Value.ModifierArray)
-		{
-			SpellModItemSO modifier = GameManager.Instance.GetItemSOFromItemId(modifierIndex) as SpellModItemSO;
-			var go = Instantiate(modifier.SpellModifierPrefab, _spellModifierTf);
-
-			if (IsServer)
-			{
-				SpellData.Value = go.GetComponent<ISpellModifier>().ModifiySpellData(SpellData.Value, this);
-			}
-		}
 	}
 
 	protected virtual void Update()

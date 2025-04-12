@@ -24,7 +24,7 @@ public class MagicManager : MonoBehaviour
     
     public SpellbookInventoryItem EquippedSpellBook { get; private set; }
     public bool HasEquippedSpellBook => EquippedSpellBook != null;
-    public MagicItemSO SelectedSpell { get; private set; }
+    public SpellItemSO SelectedSpell { get; private set; }
     public Timer CastTimeTimer { get; private set; }
     
     private bool _isSpellWheelOpen;
@@ -73,7 +73,7 @@ public class MagicManager : MonoBehaviour
         // Your spell-casting logic here
         SpellItemSO spell = SelectedSpell as SpellItemSO;
         InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-        _loadedSpell = new(spell, spell.LoadSpell(EquippedSpellBook.Item as SpellBookItemSO, null), selectedInventoryItem);
+        _loadedSpell = new(spell, spell.LoadSpell(EquippedSpellBook.Item as SpellBookItemSO), selectedInventoryItem);
 
         Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(spell.HasteMultiplier);
         Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(_loadedSpell.SpellToCast));
@@ -122,11 +122,11 @@ public class MagicManager : MonoBehaviour
         return primaryHeld && hasSpellbook && hasSelectedSpell && isStaffItem && isCastTimeOver && !_isSpellWheelOpen && !Pointer.IsOverUI() && !Pointer.IsOverInteractable() && hasEnoughMana;
     }
 
-    public List<MagicItemSO> GetSpells()
+    public List<SpellItemSO> GetSpells()
     {
         if (HasEquippedSpellBook)
         {
-            List<MagicItemSO> spellList = new();
+            List<SpellItemSO> spellList = new();
             
             foreach (var spell in EquippedSpellBook.MagicArray)
             {
@@ -153,7 +153,7 @@ public class MagicManager : MonoBehaviour
         OnSpellWheelClosed?.Invoke(this, EventArgs.Empty);
     }
 
-    public void SetSelectedSpell(MagicItemSO spell)
+    public void SetSelectedSpell(SpellItemSO spell)
     {
         SelectedSpell = spell;
     }

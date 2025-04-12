@@ -134,7 +134,7 @@ public class Item : NetworkBehaviour
 			
 			for (int i = 0; i < wandInventoryItem.MagicArray.Length; i++)
 			{
-				wandInventoryItem.SetMagic(GameManager.Instance.GetItemSOFromItemId(syncItemData.MagicArray[i]) as MagicItemSO, i);
+				wandInventoryItem.SetMagic(GameManager.Instance.GetItemSOFromItemId(syncItemData.MagicArray[i]) as SpellItemSO, i);
 			}
 			
 			inventoryItem = wandInventoryItem;
