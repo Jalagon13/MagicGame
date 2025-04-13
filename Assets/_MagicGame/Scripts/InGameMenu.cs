@@ -5,13 +5,15 @@ using UnityEngine;
 [RequireComponent(typeof(InGameMenuReferenceHolder))]
 public class InGameMenu : MonoBehaviour
 {
-    public event EventHandler OnMenuClose;
     public static InGameMenu Instance { get; private set; }
-    
+    public event EventHandler OnMenuClose;
     public event EventHandler OnMenuOpen;
+    
+    [field: SerializeField] public GameObject DefaultCraftingMenu { get; private set; }
     
     private InGameMenuReferenceHolder _menuReferenceHolder;
     private InGameMenuInstantiateHandler _instantiateHandler;
+    private bool _menuOpen => transform.childCount > 0;
     
     private void Awake()
     {
@@ -27,12 +29,20 @@ public class InGameMenu : MonoBehaviour
 
     private void OnInventoryToggleOff(object sender, GameInput.OnToggleInventoryEventArgs e)
     {
-        if (!e.InventoryOpen)
+        if (e.InventoryOpen)
+        {
+            if (!_menuOpen)
+            {
+                Debug.Log("Opening default menu");
+                DefaultCraftingMenu.SetActive(true);
+            }
+        }
+        else
         {
             ClearOldMenu();
         }
     }
-
+    
     public void OpenCraftingMenu(RecipeDataBaseObject recipeDataBase, GameObject menuSourceGO)
     {
         ClearOldMenu();
@@ -42,7 +52,8 @@ public class InGameMenu : MonoBehaviour
         craftingMenuUI.PopulateCraftingMenuUI(recipeDataBase);
 
         _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
-
+        Debug.Log("Closing default menu");
+        DefaultCraftingMenu.SetActive(false);
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }
     
@@ -54,41 +65,47 @@ public class InGameMenu : MonoBehaviour
         chestMenuUI.PopulateChestMenuUI(localChestItemData, chestPosition);
 
         _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
-
+        Debug.Log("Closing default menu");
+        DefaultCraftingMenu.SetActive(false);
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }
     
-    public void OpenWandInspectorMenu(SpellbookInventoryItem wand)
+    public void OpenSpellbookInspectorMenu(SpellbookInventoryItem wand)
     {
         ClearOldMenu();
         
-        WandInspectorMenuUI wandInspectorMenuUI = _instantiateHandler.InstantiateWandInspectorMenu();
+        SpellbookInspectorMenuUI wandInspectorMenuUI = _instantiateHandler.InstantiateWandInspectorMenu();
         wandInspectorMenuUI.PlaceSelectedWand(wand);
 
         _menuReferenceHolder.SetMenuSourceGO(Player.LocalClientInstance.gameObject);
-
+        Debug.Log("Closing default menu");
+        DefaultCraftingMenu.SetActive(false);
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }
     
     public void OpenNpcMenu(List<ItemSO> itemsToSell, GameObject menuSourceGO)
     {
         ClearOldMenu();
+        
         NpcMenuUI npcMenuUI = _instantiateHandler.InstantiateNpcMenu();
         npcMenuUI.SetItemsToSell(itemsToSell);
         npcMenuUI.InitializeSellSlots();
 
         _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
-
+        Debug.Log("Closing default menu");
+        DefaultCraftingMenu.SetActive(false);
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }
     
     public void InvokeOnMenuClose()
     {
+        DefaultCraftingMenu.SetActive(true);
         OnMenuClose?.Invoke(this, EventArgs.Empty);
     }
 
     public void ClearOldMenu()
     {
+        DefaultCraftingMenu.SetActive(true);
         _menuReferenceHolder.ClearOldMenu();
     }
     

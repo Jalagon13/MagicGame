@@ -87,8 +87,8 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("Time it takes to cast this projectile (in seconds).")]
 	[field: SerializeField] public float CastTime { get; private set; } = 0.2f;
 
-	[field: Tooltip("The additional delay (in seconds) added to the casting time of this projectile. Negative values reduce the delay.")]
-	[field: SerializeField] public float CastDelay { get; private set; } = 0.1f;
+	[field: Tooltip("The cooldown time (in seconds) before this spell can be cast again. A lower value means the spell can be reused more quickly.")]
+	[field: SerializeField] public float Cooldown { get; private set; } = 0.1f;
 	
 	[field: Tooltip("The amount of damage this projectile deals upon hitting an enemy.")]
 	[field: SerializeField] public int Damage { get; private set; } = 3;

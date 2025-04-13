@@ -37,7 +37,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 			{
 				_inventoryAssociatedWith[_inventoryIndex] = new();
 
-				InGameMenu.Instance.OpenWandInspectorMenu(wandInventoryItem);
+				InGameMenu.Instance.OpenSpellbookInspectorMenu(wandInventoryItem);
 			}
 			else
 			{

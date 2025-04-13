@@ -146,15 +146,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ResearchMenu"",
-                    ""type"": ""Button"",
-                    ""id"": ""ffbe704b-6a45-47d8-a653-5d15a4bb39d4"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Shift"",
                     ""type"": ""Button"",
                     ""id"": ""b73c6445-93af-4d5b-bba6-79c47df338d7"",
@@ -167,6 +158,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": ""Space"",
                     ""type"": ""Button"",
                     ""id"": ""cfe0c85e-108d-488b-bef0-9920c0b5ddf5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleMiningFocus"",
+                    ""type"": ""Button"",
+                    ""id"": ""d2ac4338-7103-4e43-adbd-ded162d323e6"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -286,17 +286,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""4ed04e1d-5661-4084-a15c-3534f4db8803"",
-                    ""path"": ""<Keyboard>/tab"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ResearchMenu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""9912636a-4d40-4bed-ab17-286e19106076"",
                     ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
@@ -314,6 +303,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Space"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""83b02f44-ca74-42fe-bdde-5a462c618ddc"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleMiningFocus"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -538,9 +538,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_ToggleInventory = m_Player.FindAction("ToggleInventory", throwIfNotFound: true);
         m_Player_SwapHands = m_Player.FindAction("SwapHands", throwIfNotFound: true);
         m_Player_Esc = m_Player.FindAction("Esc", throwIfNotFound: true);
-        m_Player_ResearchMenu = m_Player.FindAction("ResearchMenu", throwIfNotFound: true);
         m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
         m_Player_Space = m_Player.FindAction("Space", throwIfNotFound: true);
+        m_Player_ToggleMiningFocus = m_Player.FindAction("ToggleMiningFocus", throwIfNotFound: true);
         // Hotbar
         m_Hotbar = asset.FindActionMap("Hotbar", throwIfNotFound: true);
         m_Hotbar__1 = m_Hotbar.FindAction("1", throwIfNotFound: true);
@@ -640,9 +640,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ToggleInventory;
     private readonly InputAction m_Player_SwapHands;
     private readonly InputAction m_Player_Esc;
-    private readonly InputAction m_Player_ResearchMenu;
     private readonly InputAction m_Player_Shift;
     private readonly InputAction m_Player_Space;
+    private readonly InputAction m_Player_ToggleMiningFocus;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -679,10 +679,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Esc => m_Wrapper.m_Player_Esc;
         /// <summary>
-        /// Provides access to the underlying input action "Player/ResearchMenu".
-        /// </summary>
-        public InputAction @ResearchMenu => m_Wrapper.m_Player_ResearchMenu;
-        /// <summary>
         /// Provides access to the underlying input action "Player/Shift".
         /// </summary>
         public InputAction @Shift => m_Wrapper.m_Player_Shift;
@@ -690,6 +686,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Space".
         /// </summary>
         public InputAction @Space => m_Wrapper.m_Player_Space;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/ToggleMiningFocus".
+        /// </summary>
+        public InputAction @ToggleMiningFocus => m_Wrapper.m_Player_ToggleMiningFocus;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -734,15 +734,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Esc.started += instance.OnEsc;
             @Esc.performed += instance.OnEsc;
             @Esc.canceled += instance.OnEsc;
-            @ResearchMenu.started += instance.OnResearchMenu;
-            @ResearchMenu.performed += instance.OnResearchMenu;
-            @ResearchMenu.canceled += instance.OnResearchMenu;
             @Shift.started += instance.OnShift;
             @Shift.performed += instance.OnShift;
             @Shift.canceled += instance.OnShift;
             @Space.started += instance.OnSpace;
             @Space.performed += instance.OnSpace;
             @Space.canceled += instance.OnSpace;
+            @ToggleMiningFocus.started += instance.OnToggleMiningFocus;
+            @ToggleMiningFocus.performed += instance.OnToggleMiningFocus;
+            @ToggleMiningFocus.canceled += instance.OnToggleMiningFocus;
         }
 
         /// <summary>
@@ -772,15 +772,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Esc.started -= instance.OnEsc;
             @Esc.performed -= instance.OnEsc;
             @Esc.canceled -= instance.OnEsc;
-            @ResearchMenu.started -= instance.OnResearchMenu;
-            @ResearchMenu.performed -= instance.OnResearchMenu;
-            @ResearchMenu.canceled -= instance.OnResearchMenu;
             @Shift.started -= instance.OnShift;
             @Shift.performed -= instance.OnShift;
             @Shift.canceled -= instance.OnShift;
             @Space.started -= instance.OnSpace;
             @Space.performed -= instance.OnSpace;
             @Space.canceled -= instance.OnSpace;
+            @ToggleMiningFocus.started -= instance.OnToggleMiningFocus;
+            @ToggleMiningFocus.performed -= instance.OnToggleMiningFocus;
+            @ToggleMiningFocus.canceled -= instance.OnToggleMiningFocus;
         }
 
         /// <summary>
@@ -1059,13 +1059,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnEsc(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "ResearchMenu" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnResearchMenu(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "Shift" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1079,6 +1072,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSpace(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleMiningFocus" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleMiningFocus(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Hotbar" which allows adding and removing callbacks.

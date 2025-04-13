@@ -39,16 +39,11 @@ public class MiningHandler : MonoBehaviour
 
     private void Start()
     {
-        GameInput.Instance.OnSecondaryActionStarted += ToggleTileFocus;
+        GameInput.Instance.OnMiningFocusToggled += ToggleTileFocus;
     }
 
     private void ToggleTileFocus(object sender, EventArgs e)
     {
-        bool selectedItemIsStaff = InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedItem) && selectedItem.Item is StaffItemSO;
-        var mouseInventoryItem = InventoryManager.Instance.GetMouseItem().MouseInventoryItem;
-        
-        if(!selectedItemIsStaff || Pointer.IsOverUI() || Pointer.IsOverInteractable() || (mouseInventoryItem.HasItem && mouseInventoryItem.Item is StaffItemSO)) return;
-    
         FocusingOnWall = !FocusingOnWall;
         
         if(FocusingOnWall)
@@ -242,6 +237,6 @@ public class MiningHandler : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameInput.Instance.OnSecondaryActionStarted -= ToggleTileFocus;
+        GameInput.Instance.OnMiningFocusToggled -= ToggleTileFocus;
     }
 }

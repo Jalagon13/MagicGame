@@ -17,7 +17,11 @@ MonoBehaviour:
   m_DefaultColliderType: 1
   m_TilingRules: []
   TileType: 1
-  DropItem: {fileID: 11400000, guid: 7a301bb37deb44535a75d1fb8c9190c3, type: 2}
+  <Table>k__BackingField:
+  - Item: {fileID: 11400000, guid: 7a301bb37deb44535a75d1fb8c9190c3, type: 2}
+    Min: 1
+    Max: 1
+    Chance: 100
   Hardness: 0.65
   MiningSound:
     Guid:

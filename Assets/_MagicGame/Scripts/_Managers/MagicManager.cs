@@ -17,19 +17,25 @@ public struct LoadedSpell
 }
 
 public class MagicManager : MonoBehaviour
-{
+{  
+    public static MagicManager Instance { get; private set; }
+    
+    public event EventHandler OnSpellbookUpdated;
     public event EventHandler OnSpellWheelOpened;
     public event EventHandler OnSpellWheelClosed;
-    public static MagicManager Instance { get; private set; }
+    public event EventHandler OnSelectedSpellUpdated;
+    public event EventHandler OnSpellCooldownTimersUpdated;
     
     public SpellbookInventoryItem EquippedSpellBook { get; private set; }
     public bool HasEquippedSpellBook => EquippedSpellBook != null;
     public SpellItemSO SelectedSpell { get; private set; }
     public Timer CastTimeTimer { get; private set; }
+    public Dictionary<int, Timer> SpellCooldownTimers { get; private set; } = new(); // Id of the spell on CD and the CD timer associated with it
     
     private bool _isSpellWheelOpen;
     private LoadedSpell _loadedSpell;
-    
+    private List<SpellItemSO> _spellsEquipped = new();
+
     private void Awake()
     {
         Instance = this;
@@ -45,11 +51,32 @@ public class MagicManager : MonoBehaviour
 
     private void Update()
     {
-        CastTimeTimer.Tick(Time.deltaTime);
+        HandleTimers();
 
         if (CanCastSelectedSpell())
         {
             LoadSpell();
+        }
+    }
+    
+    private void HandleTimers()
+    {
+        CastTimeTimer.Tick(Time.deltaTime);
+
+        foreach (int key in new List<int>(SpellCooldownTimers.Keys)) // To avoid modifying the collection while iterating
+        {
+            Timer spellCdTimer = SpellCooldownTimers[key];
+            spellCdTimer.Tick(Time.deltaTime);
+
+            if (spellCdTimer.RemainingSeconds <= 0)
+            {
+                SpellCooldownTimers.Remove(key);
+            }
+        }
+
+        if (SpellCooldownTimers.Count > 0)
+        {
+            OnSpellCooldownTimersUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -71,17 +98,14 @@ public class MagicManager : MonoBehaviour
     private void LoadSpell()
     {
         // Your spell-casting logic here
-        SpellItemSO spell = SelectedSpell as SpellItemSO;
         InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-        _loadedSpell = new(spell, spell.LoadSpell(EquippedSpellBook.Item as SpellBookItemSO), selectedInventoryItem);
+        _loadedSpell = new(SelectedSpell, SelectedSpell.LoadSpell(EquippedSpellBook.Item as SpellBookItemSO), selectedInventoryItem);
 
-        Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(spell.HasteMultiplier);
+        Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(SelectedSpell.HasteMultiplier);
         Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(_loadedSpell.SpellToCast));
 
-        CastTimeTimer = new((SelectedSpell as SpellItemSO).CastTime);
+        CastTimeTimer = new(SelectedSpell.CastTime);
         CastTimeTimer.OnTimerEnd += ExecuteSpell;
-        
-        Debug.Log($"Casting {SelectedSpell.Name}... ({(SelectedSpell as SpellItemSO).CastTime}sec)");
     }
 
     private void ExecuteSpell(object sender, EventArgs e)
@@ -91,9 +115,13 @@ public class MagicManager : MonoBehaviour
         PlayerStats.Instance.SubtractMana(_loadedSpell.SpellToCast.ManaCost);
 
         _loadedSpell.SpellToCast.ExecuteSpell(EquippedSpellBook.Item as SpellBookItemSO, _loadedSpell.SpellData.SpellId);
-        CastTimeTimer.OnTimerEnd -= ExecuteSpell;
         
-        Debug.Log($"Executing {SelectedSpell.Name}!!!!");
+        int selectedSpellId = GameManager.Instance.GetItemIdFromItemSO(_loadedSpell.SpellToCast);
+        SpellCooldownTimers[selectedSpellId] = new Timer(_loadedSpell.SpellToCast.Cooldown);
+
+        _loadedSpell = new();
+
+        CastTimeTimer.OnTimerEnd -= ExecuteSpell;
     }
 
     private void CancelSpellCharge()
@@ -105,21 +133,27 @@ public class MagicManager : MonoBehaviour
 
         CastTimeTimer.OnTimerEnd -= ExecuteSpell;
         CastTimeTimer = new Timer(0);
-        
-        Debug.Log($"Cast was interrupted. Reseting spellToCast values");
     }
 
     private bool CanCastSelectedSpell()
     {
-        bool primaryHeld = GameInput.Instance.GetPrimaryHeldDown();
+        bool secondaryHeldDown = GameInput.Instance.GetSecondaryHeldDown();
         bool hasSpellbook = HasEquippedSpellBook;
         bool hasSelectedSpell = SelectedSpell != null;
         bool selectedItemExists = InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
         bool isStaffItem = selectedItemExists && selectedInventoryItem.Item is StaffItemSO;
         bool isCastTimeOver = CastTimeTimer.RemainingSeconds <= 0;
-        bool hasEnoughMana = SelectedSpell != null && PlayerStats.Instance.CurrentMana >= (SelectedSpell as SpellItemSO).ManaCost;
+        bool hasEnoughMana = SelectedSpell != null && PlayerStats.Instance.CurrentMana >= SelectedSpell.ManaCost;
+        bool selectedSpellOnCooldown = IsSelectedSpellOnCooldown();
 
-        return primaryHeld && hasSpellbook && hasSelectedSpell && isStaffItem && isCastTimeOver && !_isSpellWheelOpen && !Pointer.IsOverUI() && !Pointer.IsOverInteractable() && hasEnoughMana;
+        return secondaryHeldDown && hasSpellbook && hasSelectedSpell && isStaffItem && isCastTimeOver && !_isSpellWheelOpen && !Pointer.IsOverUI() && !Pointer.IsOverInteractable() && hasEnoughMana && !selectedSpellOnCooldown;
+    }
+
+    private bool IsSelectedSpellOnCooldown()
+    {
+        int selectedSpellId = GameManager.Instance.GetItemIdFromItemSO(SelectedSpell);
+        
+        return SpellCooldownTimers.ContainsKey(selectedSpellId);
     }
 
     public List<SpellItemSO> GetSpells()
@@ -156,23 +190,39 @@ public class MagicManager : MonoBehaviour
     public void SetSelectedSpell(SpellItemSO spell)
     {
         SelectedSpell = spell;
+        OnSelectedSpellUpdated?.Invoke(this, EventArgs.Empty);
     }
 
     public void ClearSelectedSpell()
     {
         SelectedSpell = null;
+        OnSelectedSpellUpdated?.Invoke(this, EventArgs.Empty);
     }
 
-    public void SetEquippedSpellBook(SpellbookInventoryItem spellbook)
+    public void EquipSpellBook(SpellbookInventoryItem spellbook)
     {
         EquippedSpellBook = spellbook;
+        OnSpellbookUpdated?.Invoke(this, EventArgs.Empty);
+
+        _spellsEquipped = GetSpells();
+        if (_spellsEquipped != null && _spellsEquipped.Count > 0)
+        {
+            SetSelectedSpell(_spellsEquipped[0]);
+        }
+        else
+        {
+            ClearSelectedSpell();
+        }
     }
 
     public SpellbookInventoryItem RemoveEquippedSpellBook()
     {
+        ClearSelectedSpell();
         SpellbookInventoryItem oldSpellbook = EquippedSpellBook;
         EquippedSpellBook = null;
-
+        
+        OnSpellbookUpdated?.Invoke(this, EventArgs.Empty);
+        
         return oldSpellbook;
     }
 
@@ -180,6 +230,8 @@ public class MagicManager : MonoBehaviour
     {
         SpellbookInventoryItem oldSpellbook = EquippedSpellBook;
         EquippedSpellBook = spellbook;
+
+        OnSpellbookUpdated?.Invoke(this, EventArgs.Empty);
 
         return oldSpellbook;
     }

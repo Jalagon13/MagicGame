@@ -19,9 +19,9 @@ MonoBehaviour:
   <Description>k__BackingField: Blasts sparks in a small radius at cast point.
   <SpellProjectilePrefab>k__BackingField: {fileID: 7666750109937317245, guid: 01b5ea73343a54096bcd9bb319490d98, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 3235512204744374167, guid: 966ce96a46a0346519d0f2a96c141a22, type: 3}
-  <CastTime>k__BackingField: 0.85
-  <CastDelay>k__BackingField: 0.15
-  <Damage>k__BackingField: 13
+  <CastTime>k__BackingField: 0.75
+  <Cooldown>k__BackingField: 2
+  <Damage>k__BackingField: 22
   <ManaCost>k__BackingField: 17
   <Knockback>k__BackingField: 22
   <Accuracy>k__BackingField: 0

@@ -19,7 +19,7 @@ public class TileFocusUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     private void Start()
     {
-        GameInput.Instance.OnSecondaryActionStarted += UpdateUI;
+        GameInput.Instance.OnMiningFocusToggled += UpdateUI;
     }
 
     private void UpdateUI(object sender, EventArgs e)
@@ -49,6 +49,6 @@ public class TileFocusUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     
     private void OnDestroy()
     {
-        GameInput.Instance.OnSecondaryActionStarted -= UpdateUI;
+        GameInput.Instance.OnMiningFocusToggled -= UpdateUI;
     }
 }

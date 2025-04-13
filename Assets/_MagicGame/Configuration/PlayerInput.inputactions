@@ -60,15 +60,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ResearchMenu",
-                    "type": "Button",
-                    "id": "ffbe704b-6a45-47d8-a653-5d15a4bb39d4",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Shift",
                     "type": "Button",
                     "id": "b73c6445-93af-4d5b-bba6-79c47df338d7",
@@ -81,6 +72,15 @@
                     "name": "Space",
                     "type": "Button",
                     "id": "cfe0c85e-108d-488b-bef0-9920c0b5ddf5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleMiningFocus",
+                    "type": "Button",
+                    "id": "d2ac4338-7103-4e43-adbd-ded162d323e6",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -200,17 +200,6 @@
                 },
                 {
                     "name": "",
-                    "id": "4ed04e1d-5661-4084-a15c-3534f4db8803",
-                    "path": "<Keyboard>/tab",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ResearchMenu",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "9912636a-4d40-4bed-ab17-286e19106076",
                     "path": "<Keyboard>/shift",
                     "interactions": "",
@@ -228,6 +217,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Space",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "83b02f44-ca74-42fe-bdde-5a462c618ddc",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleMiningFocus",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

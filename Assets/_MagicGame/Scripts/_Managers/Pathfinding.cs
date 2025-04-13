@@ -40,7 +40,6 @@ public class Pathfinding : NetworkBehaviour
 	
 	private void Start()
 	{
-		GameInput.Instance.OnResearchMenuButton += GameInput_OnResearchMenuButton;
 		WorldManager.Instance.OnBiomeDataLoaded += CacheCurrentPlayerBiome;
 	}
 
@@ -59,11 +58,6 @@ public class Pathfinding : NetworkBehaviour
 	private void CacheCurrentPlayerBiome(object sender, EventArgs e)
 	{
 		_currentPlayerBiome = Player.LocalClientInstance.CurrentPlayerBiome.Value;
-	}
-
-	private void GameInput_OnResearchMenuButton(object sender, EventArgs e)
-	{
-		// IsPositionOnWalkableTile(ActionManager.MouseWorldPosition, Player.LocalClientInstance.PlayerEnvironment.Value);
 	}
 
 	public void OnClientConnected(ulong clientId)
@@ -257,5 +251,12 @@ public class Pathfinding : NetworkBehaviour
 		}
 		
 		return false;
+	}
+	
+	public override void OnDestroy()
+	{
+		base.OnDestroy();
+		
+		WorldManager.Instance.OnBiomeDataLoaded -= CacheCurrentPlayerBiome;
 	}
 }

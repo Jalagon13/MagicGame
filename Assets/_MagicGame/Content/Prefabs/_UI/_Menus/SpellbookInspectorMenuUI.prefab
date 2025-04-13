@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 8869806273717075281}
   - component: {fileID: 2934342826124736804}
   m_Layer: 5
-  m_Name: WandnventorySlotGroup
+  m_Name: SpellbooknventorySlotGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -360,7 +360,7 @@ GameObject:
   - component: {fileID: 2713260557430236435}
   - component: {fileID: 3706797553482093995}
   m_Layer: 5
-  m_Name: WandInspectorMenuUI
+  m_Name: SpellbookInspectorMenuUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -426,7 +426,7 @@ GameObject:
   - component: {fileID: 3265844754461259686}
   - component: {fileID: 8436096197633298375}
   m_Layer: 5
-  m_Name: WandSlotUI
+  m_Name: SpellbookSlotUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

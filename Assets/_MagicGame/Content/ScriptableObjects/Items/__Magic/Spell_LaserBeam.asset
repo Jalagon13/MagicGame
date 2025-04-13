@@ -20,7 +20,7 @@ MonoBehaviour:
   <SpellProjectilePrefab>k__BackingField: {fileID: 2570443936740275607, guid: 4621b9892db014957bc48c82394bfe22, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 3235512204744374167, guid: 966ce96a46a0346519d0f2a96c141a22, type: 3}
   <CastTime>k__BackingField: 0.8
-  <CastDelay>k__BackingField: 0.8
+  <Cooldown>k__BackingField: 0.2
   <Damage>k__BackingField: 5
   <ManaCost>k__BackingField: 18
   <Knockback>k__BackingField: 1

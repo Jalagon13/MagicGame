@@ -23,11 +23,11 @@ public class InGameMenuInstantiateHandler : MonoBehaviour
         return chestMenuUI.GetComponent<ChestMenuUI>();
     }
 
-    public WandInspectorMenuUI InstantiateWandInspectorMenu()
+    public SpellbookInspectorMenuUI InstantiateWandInspectorMenu()
     {
         GameObject wandInspectorMenuUI = Instantiate(_inGameMenuReferenceHolder.WandInspectorMenuPrefab, transform);
 
-        return wandInspectorMenuUI.GetComponent<WandInspectorMenuUI>();
+        return wandInspectorMenuUI.GetComponent<SpellbookInspectorMenuUI>();
     }
 
     public NpcMenuUI InstantiateNpcMenu()

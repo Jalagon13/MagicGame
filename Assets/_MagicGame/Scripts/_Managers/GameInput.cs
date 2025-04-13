@@ -34,7 +34,7 @@ public class GameInput : MonoBehaviour
 		public bool InventoryOpen;
 	}
 	
-	public event EventHandler OnResearchMenuButton;
+	public event EventHandler OnMiningFocusToggled;
 	
 	private PlayerInput _playerInput;
 	
@@ -67,12 +67,12 @@ public class GameInput : MonoBehaviour
 		_playerInput.Player.SecondaryAction.started += PlayerInput_SecondaryActionStarted; 
 		_playerInput.Player.SecondaryAction.performed += PlayerInput_SecondaryAction; 
 		_playerInput.Player.SecondaryAction.canceled += PlayerInput_SecondaryActionCanceled; 
-		_playerInput.Player.ResearchMenu.started += PlayerInput_ResearchMenu;
 		_playerInput.Player.SwapHands.started += PlayerInput_SwapHands;
 		_playerInput.Player.Shift.started += PlayerInput_ShiftStart;
 		_playerInput.Player.Shift.canceled += PlayerInput_ShiftCanceled;
 		_playerInput.Player.Space.started += PlayerInput_SpaceStarted;
 		_playerInput.Player.Space.canceled += PlayerInput_SpaceCanceled;
+		_playerInput.Player.ToggleMiningFocus.started += PlayerInput_ToggleMiningFocus;
 	}
 
     private void Start()
@@ -82,7 +82,12 @@ public class GameInput : MonoBehaviour
 		InGameMenu.Instance.OnMenuOpen += InGameMenu_OnMenuOpen;
 	}
 
-    private void InGameMenu_OnMenuOpen(object sender, EventArgs e)
+	private void PlayerInput_ToggleMiningFocus(InputAction.CallbackContext context)
+	{
+		OnMiningFocusToggled?.Invoke(this, EventArgs.Empty);
+	}
+
+	private void InGameMenu_OnMenuOpen(object sender, EventArgs e)
     {
 		_inventoryOpen = true;
 
@@ -129,11 +134,6 @@ public class GameInput : MonoBehaviour
 		OnSwapHands?.Invoke(this, EventArgs.Empty);
 	}
 
-	private void PlayerInput_ResearchMenu(InputAction.CallbackContext context)
-	{
-		OnResearchMenuButton?.Invoke(this, EventArgs.Empty);
-	}
-	
 	private void PlayerInput_SecondaryActionStarted(InputAction.CallbackContext context)
 	{
 		if(!_inputsEnabled) return;

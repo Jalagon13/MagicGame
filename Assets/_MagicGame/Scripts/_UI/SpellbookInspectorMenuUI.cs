@@ -4,7 +4,7 @@ using AdvancedTooltips.Core;
 using TMPro;
 using UnityEngine;
 
-public class WandInspectorMenuUI : MonoBehaviour
+public class SpellbookInspectorMenuUI : MonoBehaviour
 {
 	public SpellbookInventoryItem SelectedWand { get; private set; } 
 	
@@ -89,6 +89,8 @@ public class WandInspectorMenuUI : MonoBehaviour
 
 		RemoveUI();
 		
+		InGameMenu.Instance.ClearOldMenu();
+		
 		return removedWand;
 	}
 
@@ -156,6 +158,6 @@ public class WandInspectorMenuUI : MonoBehaviour
 			}	
 		}
 
-		InspectorTitleText.text = $"Wand Inspector";
+		InspectorTitleText.text = $"Spellbook Inspector";
 	}
 }
