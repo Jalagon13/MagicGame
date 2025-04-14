@@ -13,8 +13,8 @@ public class SpellWheelUI : MonoBehaviour
 
     private void Start()
     {
-        MagicManager.Instance.OnSpellWheelOpened += ShowWheel;
-        MagicManager.Instance.OnSpellWheelClosed += HideWheel;
+        SpellManager.Instance.OnSpellWheelOpened += ShowWheel;
+        SpellManager.Instance.OnSpellWheelClosed += HideWheel;
 
         Hide();
     }
@@ -69,13 +69,13 @@ public class SpellWheelUI : MonoBehaviour
             }
         }
 
-        MagicManager.Instance.SetSelectedSpell(selectedSpell);
+        SpellManager.Instance.SetSelectedSpell(selectedSpell);
         Hide();
     }
     
     private void Show()
     {
-        List<SpellItemSO> spellList = MagicManager.Instance.GetSpells();
+        List<SpellItemSO> spellList = SpellManager.Instance.GetSpells();
 
         _numOfSpells = spellList != null ? spellList.Count : 0;
 
@@ -116,7 +116,7 @@ public class SpellWheelUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        MagicManager.Instance.OnSpellWheelOpened -= ShowWheel;
-        MagicManager.Instance.OnSpellWheelClosed -= HideWheel;
+        SpellManager.Instance.OnSpellWheelOpened -= ShowWheel;
+        SpellManager.Instance.OnSpellWheelClosed -= HideWheel;
     }
 }

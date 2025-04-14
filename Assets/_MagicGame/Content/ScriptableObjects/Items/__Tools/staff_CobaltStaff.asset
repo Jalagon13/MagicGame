@@ -17,6 +17,4 @@ MonoBehaviour:
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <MiningPower>k__BackingField: 2
-  <MiningRange>k__BackingField: 4
-  <MiningVisualsPrefab>k__BackingField: {fileID: 8556308733887093175, guid: 1f41c9fd0b67b4deabf38d42320fb4e8, type: 3}
+  <MeleeDamage>k__BackingField: 9

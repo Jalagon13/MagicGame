@@ -1099,6 +1099,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: item_wood_wand
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9bcd4b86ed88400e90a070487e24ad3
+      internalID: 475129307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_cobalt_wand
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 041da7d5072b54cb2b7b5bb2fce83754
+      internalID: -1329316587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1139,6 +1183,7 @@ TextureImporter:
       item_cobalt_ore: 631161573
       item_cobalt_robe: 1972111916
       item_cobalt_staff: -461732419
+      item_cobalt_wand: -1329316587
       item_destruction_tome: 1032350063
       item_door: 730009004
       item_fiber: -873374552
@@ -1183,6 +1228,7 @@ TextureImporter:
       item_wood_shovel: 347135175
       item_wood_staff: -1593785014
       item_wood_wall: 67440230
+      item_wood_wand: 475129307
       item_wooden_catalyst: -832442734
       item_work_bench: 1147903491
   mipmapLimitGroupName: 

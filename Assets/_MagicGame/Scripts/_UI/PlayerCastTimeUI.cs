@@ -22,8 +22,8 @@ public class PlayerCastTimeUI : MonoBehaviour
 
     private void Update()
     {
-        float maxAmount = MagicManager.Instance.CastTimeTimer.Duration;
-        float currentAmount = maxAmount - MagicManager.Instance.CastTimeTimer.RemainingSeconds;
+        float maxAmount = SpellManager.Instance.CastTimeTimer.Duration;
+        float currentAmount = maxAmount - SpellManager.Instance.CastTimeTimer.RemainingSeconds;
 
         if (currentAmount >= maxAmount)
         {

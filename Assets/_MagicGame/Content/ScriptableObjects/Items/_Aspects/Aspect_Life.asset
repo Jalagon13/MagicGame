@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2639c94874c947ca9b3c0b265407970, type: 3}
   m_Name: Aspect_Life
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Aspect of Life
+  <Name>k__BackingField: Life Essence
   <UiDisplay>k__BackingField: {fileID: -1081829700, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 1

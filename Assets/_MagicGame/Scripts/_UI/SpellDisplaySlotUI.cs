@@ -22,14 +22,14 @@ public class SpellDisplaySlotUI : MonoBehaviour
     private void Start()
     {
         CooldownUI.enabled = false;
-        MagicManager.Instance.OnSpellCooldownTimersUpdated += UpdateCooldownDisplay;
+        SpellManager.Instance.OnSpellCooldownTimersUpdated += UpdateCooldownDisplay;
     }
 
     private void UpdateCooldownDisplay(object sender, EventArgs e)
     {
-        if(MagicManager.Instance.SpellCooldownTimers.ContainsKey(_spellId))
+        if(SpellManager.Instance.SpellCooldownTimers.ContainsKey(_spellId))
         {
-            Timer spellCdTimer = MagicManager.Instance.SpellCooldownTimers[_spellId];
+            Timer spellCdTimer = SpellManager.Instance.SpellCooldownTimers[_spellId];
             CooldownUI.enabled = true;
             CooldownUI.fillAmount = spellCdTimer.RemainingSeconds / spellCdTimer.Duration;
         }
@@ -64,6 +64,6 @@ public class SpellDisplaySlotUI : MonoBehaviour
     
     private void OnDestroy()
     {
-        MagicManager.Instance.OnSpellCooldownTimersUpdated -= UpdateCooldownDisplay;
+        SpellManager.Instance.OnSpellCooldownTimersUpdated -= UpdateCooldownDisplay;
     }
 }

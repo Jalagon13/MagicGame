@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b31f6fd9b04647aeb0c34eda896b8b1, type: 3}
-  m_Name: _ResearchTableCDB
+  m_Name: _ScrollBindingTableCDB
   m_EditorClassIdentifier: 
-  <DatabaseName>k__BackingField: Research Table
+  <DatabaseName>k__BackingField: Scroll Binding Table
   RecipeDatabase:
   - {fileID: 11400000, guid: 56ef5edf4331b470db9e75fe1b79a79f, type: 2}
   - {fileID: 11400000, guid: 999207c79bfc148c1849d34673999d2d, type: 2}

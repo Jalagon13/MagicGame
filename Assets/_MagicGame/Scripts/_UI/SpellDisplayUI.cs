@@ -10,15 +10,15 @@ public class SpellDisplayUI : MonoBehaviour
 
     private void Start()
     {
-        MagicManager.Instance.OnSpellbookUpdated += UpdateSpellDisplay;
-        MagicManager.Instance.OnSelectedSpellUpdated += UpdateSelectedSpell;
+        SpellManager.Instance.OnSpellbookUpdated += UpdateSpellDisplay;
+        SpellManager.Instance.OnSelectedSpellUpdated += UpdateSelectedSpell;
     }
 
     private void UpdateSpellDisplay(object sender, EventArgs e)
     {
-        if(MagicManager.Instance.HasEquippedSpellBook)
+        if(SpellManager.Instance.HasEquippedSpellBook)
         {
-            foreach (SpellItemSO spell in MagicManager.Instance.GetSpells())
+            foreach (SpellItemSO spell in SpellManager.Instance.GetSpells())
             {
                 GameObject spellDisplaySlotUI = Instantiate(SpellDisplaySlotUIPrefab, transform);
                 SpellDisplaySlotUI slotUI = spellDisplaySlotUI.GetComponent<SpellDisplaySlotUI>();
@@ -36,7 +36,7 @@ public class SpellDisplayUI : MonoBehaviour
 
     private void UpdateSelectedSpell(object sender, EventArgs e)
     {
-        SpellItemSO selectedSpell = MagicManager.Instance.SelectedSpell;
+        SpellItemSO selectedSpell = SpellManager.Instance.SelectedSpell;
         
         if(selectedSpell != null)
         {
@@ -67,7 +67,7 @@ public class SpellDisplayUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        MagicManager.Instance.OnSpellbookUpdated -= UpdateSpellDisplay;
-        MagicManager.Instance.OnSelectedSpellUpdated -= UpdateSelectedSpell;
+        SpellManager.Instance.OnSpellbookUpdated -= UpdateSpellDisplay;
+        SpellManager.Instance.OnSelectedSpellUpdated -= UpdateSelectedSpell;
     }
 }

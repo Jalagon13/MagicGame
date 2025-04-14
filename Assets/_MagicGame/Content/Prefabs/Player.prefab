@@ -293,6 +293,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: bebf7bcfd1de9459aa990b456817daad, type: 2}
     - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
   _startingItems:
+  - Item: {fileID: 11400000, guid: 9641abfbdc9ce4397985eef9216c780d, type: 2}
+    Quantity: 1
   - Item: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
     Quantity: 1
 --- !u!114 &6270092794415709611
@@ -1334,9 +1336,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5908567600357599322}
+  - component: {fileID: 5148406131904805326}
   - component: {fileID: 4604921083407888490}
   - component: {fileID: 7552163614298674993}
-  - component: {fileID: 5148406131904805326}
   m_Layer: 0
   m_Name: MainHand
   m_TagString: Untagged
@@ -1360,6 +1362,18 @@ Transform:
   - {fileID: 4063995504710540096}
   m_Father: {fileID: 1332535597681020578}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &5148406131904805326
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5933339187041847009}
+  m_Enabled: 1
+  m_SortingLayerID: -1478012363
+  m_SortingLayer: 2
+  m_SortingOrder: 11
+  m_SortAtRoot: 0
 --- !u!114 &4604921083407888490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1397,18 +1411,6 @@ MonoBehaviour:
   _mainHand: {fileID: 4604921083407888490}
   _offHand: {fileID: 0}
   _armPivotGO: {fileID: 6010529099300971215}
---- !u!210 &5148406131904805326
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5933339187041847009}
-  m_Enabled: 1
-  m_SortingLayerID: -1478012363
-  m_SortingLayer: 2
-  m_SortingOrder: 11
-  m_SortAtRoot: 0
 --- !u!1 &5942745410432643869
 GameObject:
   m_ObjectHideFlags: 0

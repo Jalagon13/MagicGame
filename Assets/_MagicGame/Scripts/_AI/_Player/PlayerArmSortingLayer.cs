@@ -6,7 +6,6 @@ public class PlayerArmSortingLayer : MonoBehaviour
 {
 	[SerializeField] private bool _isMainHand;
 	[SerializeField] private PlayerHand _mainHand;
-	[SerializeField] private PlayerHand _offHand;
 	[SerializeField] private GameObject _armPivotGO;
 	
 	private SortingGroup _sortingGroup;
@@ -23,12 +22,6 @@ public class PlayerArmSortingLayer : MonoBehaviour
 			_mainHand.OnSwingStart += MainHandOnSwingStart;
 			_mainHand.OnHoldingWandStart += MainHandOnHoldingWandStart;
 			_mainHand.OnCastingArmDirectionChanged += MainHandOnCastingArmDirectionChanged;
-		}
-		else
-		{
-			_offHand.OnSwingStart += OffHandOnSwingStart;
-			_offHand.OnHoldingWandStart += OffHandOnHoldingWandStart;
-			_offHand.OnCastingArmDirectionChanged += OffHandOnCastingArmDirectionChanged;
 		}
 	}
 
@@ -197,12 +190,6 @@ public class PlayerArmSortingLayer : MonoBehaviour
 			_mainHand.OnSwingStart -= MainHandOnSwingStart;
 			_mainHand.OnHoldingWandStart -= MainHandOnHoldingWandStart;
 			_mainHand.OnCastingArmDirectionChanged -= MainHandOnCastingArmDirectionChanged;
-		}
-		else
-		{
-			_offHand.OnSwingStart -= MainHandOnSwingStart;
-			_offHand.OnHoldingWandStart -= MainHandOnHoldingWandStart;
-			_offHand.OnCastingArmDirectionChanged -= OffHandOnCastingArmDirectionChanged;
 		}
 	}
 }

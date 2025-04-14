@@ -25,14 +25,14 @@ public class SpellbookSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
     {
         if (e.InventoryItem is SpellbookInventoryItem wandInInv)
         {
-            if (MagicManager.Instance.HasEquippedSpellBook)
+            if (SpellManager.Instance.HasEquippedSpellBook)
             {
-                InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = MagicManager.Instance.SwapEquippedSpellBook(wandInInv);
+                InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = SpellManager.Instance.SwapEquippedSpellBook(wandInInv);
                 InventoryManager.Instance.ShowInventoryItemTooltip(InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex]);
             }
             else
             {
-                MagicManager.Instance.EquipSpellBook(wandInInv);
+                SpellManager.Instance.EquipSpellBook(wandInInv);
                 InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SlotIndex] = new();
                 Tooltip.HideUI();
             }
@@ -49,7 +49,7 @@ public class SpellbookSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
             // Get the item currently held by the mouse (if any)
             InventoryItem mouseItem = InventoryManager.Instance.GetMouseItem().MouseInventoryItem;
 
-            if (MagicManager.Instance.HasEquippedSpellBook)
+            if (SpellManager.Instance.HasEquippedSpellBook)
             {
                 // If there's already a spellbook equipped
                 if (mouseItem.HasItem)
@@ -57,7 +57,7 @@ public class SpellbookSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
                     if (mouseItem is SpellbookInventoryItem mouseSpellbookInventoryItem)
                     {
                         // Swap the equipped armor with the armor held by the mouse
-                        InventoryManager.Instance.GetMouseItem().MouseInventoryItem = MagicManager.Instance.SwapEquippedSpellBook(mouseSpellbookInventoryItem);
+                        InventoryManager.Instance.GetMouseItem().MouseInventoryItem = SpellManager.Instance.SwapEquippedSpellBook(mouseSpellbookInventoryItem);
                     }
                 }
                 else
@@ -65,12 +65,12 @@ public class SpellbookSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
                     if (GameInput.Instance.GetShiftHeldDown())
                     {
                         // If Shift is held, add the unequipped armor to the inventory
-                        InventoryManager.Instance.AddItem(MagicManager.Instance.RemoveEquippedSpellBook());
+                        InventoryManager.Instance.AddItem(SpellManager.Instance.RemoveEquippedSpellBook());
                     }
                     else
                     {
                         // Otherwise, place the unequipped armor on the mouse
-                        InventoryManager.Instance.GetMouseItem().MouseInventoryItem = MagicManager.Instance.RemoveEquippedSpellBook();
+                        InventoryManager.Instance.GetMouseItem().MouseInventoryItem = SpellManager.Instance.RemoveEquippedSpellBook();
                     }
 
                     Tooltip.HideUI();
@@ -78,17 +78,17 @@ public class SpellbookSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
             }
             else if (mouseItem.HasItem && mouseItem is SpellbookInventoryItem mouseSpellbookInventoryItem)
             {
-                MagicManager.Instance.EquipSpellBook(mouseSpellbookInventoryItem);
+                SpellManager.Instance.EquipSpellBook(mouseSpellbookInventoryItem);
                 InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
                 InventoryManager.Instance.ShowInventoryItemTooltip(mouseSpellbookInventoryItem);
             }
         }
         else if (eventData.button == PointerEventData.InputButton.Right)
         {
-            if (MagicManager.Instance.HasEquippedSpellBook)
+            if (SpellManager.Instance.HasEquippedSpellBook)
             {
-                InGameMenu.Instance.OpenSpellbookInspectorMenu(MagicManager.Instance.EquippedSpellBook);
-                MagicManager.Instance.RemoveEquippedSpellBook();
+                InGameMenu.Instance.OpenSpellbookInspectorMenu(SpellManager.Instance.EquippedSpellBook);
+                SpellManager.Instance.RemoveEquippedSpellBook();
             }
         }
 
@@ -100,10 +100,10 @@ public class SpellbookSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
     {
         _hovered = true;
 
-        if (MagicManager.Instance.HasEquippedSpellBook)
+        if (SpellManager.Instance.HasEquippedSpellBook)
         {
             Tooltip.ShowNew();
-            InventoryManager.Instance.ShowInventoryItemTooltip(MagicManager.Instance.EquippedSpellBook);
+            InventoryManager.Instance.ShowInventoryItemTooltip(SpellManager.Instance.EquippedSpellBook);
         }
     }
 
@@ -117,18 +117,18 @@ public class SpellbookSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public void UpdateSlotUI()
     {
         // Enable or disable the icon based on whether armor is equipped
-        EquippedSpellbookImage.enabled = MagicManager.Instance.HasEquippedSpellBook;
-        SpellbookIconImage.enabled = !MagicManager.Instance.HasEquippedSpellBook;
+        EquippedSpellbookImage.enabled = SpellManager.Instance.HasEquippedSpellBook;
+        SpellbookIconImage.enabled = !SpellManager.Instance.HasEquippedSpellBook;
 
-        if (MagicManager.Instance.HasEquippedSpellBook)
+        if (SpellManager.Instance.HasEquippedSpellBook)
         {
             // Update the icon to display the equipped armor's sprite
-            EquippedSpellbookImage.sprite = MagicManager.Instance.EquippedSpellBook.Item.UiDisplay;
+            EquippedSpellbookImage.sprite = SpellManager.Instance.EquippedSpellBook.Item.UiDisplay;
 
             if (_hovered)
             {
                 Tooltip.ShowNew();
-                InventoryManager.Instance.ShowInventoryItemTooltip(MagicManager.Instance.EquippedSpellBook);
+                InventoryManager.Instance.ShowInventoryItemTooltip(SpellManager.Instance.EquippedSpellBook);
             }
         }
     }

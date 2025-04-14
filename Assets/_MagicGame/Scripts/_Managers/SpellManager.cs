@@ -16,9 +16,9 @@ public struct LoadedSpell
     }
 }
 
-public class MagicManager : MonoBehaviour
+public class SpellManager : MonoBehaviour
 {  
-    public static MagicManager Instance { get; private set; }
+    public static SpellManager Instance { get; private set; }
     
     public event EventHandler OnSpellbookUpdated;
     public event EventHandler OnSpellWheelOpened;
@@ -137,7 +137,7 @@ public class MagicManager : MonoBehaviour
 
     private bool CanCastSelectedSpell()
     {
-        bool secondaryHeldDown = GameInput.Instance.GetSecondaryHeldDown();
+        bool primaryHeldDown = GameInput.Instance.GetPrimaryHeldDown();
         bool hasSpellbook = HasEquippedSpellBook;
         bool hasSelectedSpell = SelectedSpell != null;
         bool selectedItemExists = InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
@@ -146,7 +146,7 @@ public class MagicManager : MonoBehaviour
         bool hasEnoughMana = SelectedSpell != null && PlayerStats.Instance.CurrentMana >= SelectedSpell.ManaCost;
         bool selectedSpellOnCooldown = IsSelectedSpellOnCooldown();
 
-        return secondaryHeldDown && hasSpellbook && hasSelectedSpell && isStaffItem && isCastTimeOver && !_isSpellWheelOpen && !Pointer.IsOverUI() && !Pointer.IsOverInteractable() && hasEnoughMana && !selectedSpellOnCooldown;
+        return primaryHeldDown && hasSpellbook && hasSelectedSpell && isStaffItem && isCastTimeOver && !_isSpellWheelOpen && !Pointer.IsOverUI() && !Pointer.IsOverInteractable() && hasEnoughMana && !selectedSpellOnCooldown;
     }
 
     private bool IsSelectedSpellOnCooldown()

@@ -25,7 +25,7 @@ public class MiningHandler : MonoBehaviour
     private WorldObject _worldObjectSelected;
     private TileSO _tileSelected;
     private Vector3Int? _currentBreakTargetPosition = null;
-    private StaffItemSO _staffItem;
+    private WandItemSO _staffItem;
     private bool _isMiningFlag;
     private bool _placeDelayActive;
     private Npc _selectedNPC;
@@ -72,13 +72,13 @@ public class MiningHandler : MonoBehaviour
             return;
         }
 
-        if(selectedInventoryItem.Item is StaffItemSO staffItem)
+        if(selectedInventoryItem.Item is WandItemSO wandItem)
         {
-            _staffItem = staffItem;
+            _staffItem = wandItem;
             _destructableFound = DestructableType.None;
             _currentBreakTargetPosition = null;
 
-            if (staffItem.PlayerWithinMiningRangeOfMouse())
+            if (wandItem.PlayerWithinMiningRangeOfMouse())
             {
                 if(OverNpc(ActionManager.MouseWorldPosition, out Npc npc))
                 {

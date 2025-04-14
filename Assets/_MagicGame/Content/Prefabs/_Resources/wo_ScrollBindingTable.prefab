@@ -123,7 +123,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 154920837247502213, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Name
-      value: wo_ResearchTable
+      value: wo_ScrollBindingTable
       objectReference: {fileID: 0}
     - target: {fileID: 154920837247502213, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Layer
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd0317ec138084df9b0828660d7c4d81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <WorldObjectName>k__BackingField: Research Table
+  <WorldObjectName>k__BackingField: Scroll Binding Table
   <Hardness>k__BackingField: 0.65
   <PassThrough>k__BackingField: 0
   <CanBeDestroyed>k__BackingField: 1
