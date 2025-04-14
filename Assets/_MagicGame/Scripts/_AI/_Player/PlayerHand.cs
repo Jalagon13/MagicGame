@@ -19,6 +19,7 @@ public class PlayerHand : NetworkBehaviour
 		public CardinalDirection Direction;
 	}
 
+	[field: SerializeField] public float SwingCooldown { get; private set; }
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _northPivot;
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _southPivot;
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _eastPivot;
@@ -32,6 +33,7 @@ public class PlayerHand : NetworkBehaviour
 
 	private Player _thisPlayer;
 	private bool _stoppingSwing;
+	private Timer _swingCooldownTimer;
 
 	private NetworkVariable<float> _angleNetworkVariable = new(
 		default,
@@ -45,7 +47,10 @@ public class PlayerHand : NetworkBehaviour
 
 	private void Awake()
 	{
-		if(_thisPlayer == null)
+		_swingCooldownTimer = new(SwingCooldown);
+
+
+		if (_thisPlayer == null)
 		{
 			_thisPlayer = transform.root.GetComponent<Player>();
 
@@ -66,6 +71,8 @@ public class PlayerHand : NetworkBehaviour
 
 		if (IsOwner)
 		{
+			_swingCooldownTimer.Tick(Time.deltaTime);
+
 			Vector3 direction = ActionManager.MouseWorldPosition - (Vector2)transform.position;
 			_angleNetworkVariable.Value = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 		}
@@ -73,20 +80,23 @@ public class PlayerHand : NetworkBehaviour
 		float angle = NormalizeAngle(_angleNetworkVariable.Value);
 		ArmCardinalDirection = DetermineCardinalDirection(angle);
 		
-		if(HeldItem is StaffItemSO || HeldItem is WandItemSO)
+		if((HeldItem is StaffItemSO || HeldItem is WandItemSO) && IsOwner)
 		{
 			if (!IsSwinging)
 			{
 				RotateArmBasedOnAngle();
 			}
 			
-			TryToSwing();
+			if(HeldItem is StaffItemSO)
+			{
+				TryToSwing();
+			}
 		}
 	}
 	
 	private void TryToSwing()
 	{
-		if (IsSwinging || Pointer.IsOverUI() || Pointer.IsOverInteractable() || !IsOwner) return;
+		if (IsSwinging || Pointer.IsOverUI() || Pointer.IsOverInteractable() || !IsOwner || _swingCooldownTimer.RemainingSeconds > 0) return;
 		
 		if (GameInput.Instance.GetSecondaryHeldDown())
 		{
@@ -251,7 +261,8 @@ public class PlayerHand : NetworkBehaviour
 	private IEnumerator FinishSwing(float duration, Quaternion endRotation)
 	{
 		yield return new WaitForSeconds(duration * 0.3f);
-		
+
+		_swingCooldownTimer.Reset();
 		_armPivotGO.transform.rotation = endRotation;
 		IsSwinging = false;
 		_thisPlayer.IsPerformingSwing = false;
@@ -267,19 +278,6 @@ public class PlayerHand : NetworkBehaviour
 		// Ensure ActionManager.MouseWorldPosition is defined and accessible
 		Vector3 direction = (Vector3)ActionManager.MouseWorldPosition - SpellSpawnTransform.position;
 		return direction.normalized;
-	}
-
-	private void CopyTransformValues(Transform source, Transform target)
-	{
-		if (source == null || target == null)
-		{
-			Debug.LogError("Source or target Transform is null.");
-			return;
-		}
-
-		target.position = source.position;
-		target.rotation = source.rotation;
-		target.localScale = source.localScale;
 	}
 
 	private void SetPivotPosition(CardinalDirection direction)

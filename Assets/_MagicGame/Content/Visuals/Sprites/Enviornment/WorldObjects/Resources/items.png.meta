@@ -1108,7 +1108,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1130,7 +1130,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1139,6 +1139,160 @@ TextureImporter:
       bones: []
       spriteID: 041da7d5072b54cb2b7b5bb2fce83754
       internalID: -1329316587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_blank_scroll
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5cc2830ce466344e9a4fd6b19539eeae
+      internalID: -1705064197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_light_dagger_scroll
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 099ecebb98f174c67ac87f21e9e9b16b
+      internalID: -1827269340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_aqua_bolt_scroll
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a570bd1c109b049f9bf5f73247c0ee20
+      internalID: -1849769598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_spark_blast_scroll
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fcc1ee5ace30c4113b7a4fd0c4b4f5b2
+      internalID: 1446047900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_hand_gun_scroll
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 441a03fc34c744280948ef575c1c6485
+      internalID: -1128092838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_teleport_bolt_scroll
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64f3b5b69907d45f5ab979c259b5b548
+      internalID: 2041746723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_health_potion
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65c31993ce9ca437ca7d573ea47a5f11
+      internalID: -1818261724
       vertices: []
       indices: 
       edges: []
@@ -1157,6 +1311,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      item_aqua_bolt_scroll: -1849769598
       item_aspect_of_air: 2005844805
       item_aspect_of_chaos: 1651796674
       item_aspect_of_destruction: -969760260
@@ -1169,6 +1324,7 @@ TextureImporter:
       item_aspect_of_water: 580891271
       item_axe: -1009747100
       item_blacksmith: -1873538081
+      item_blank_scroll: -1705064197
       item_blue_bell: -1747701128
       item_bouncy_battle_ball: 1911798325
       item_campfire: -925800054
@@ -1190,12 +1346,16 @@ TextureImporter:
       item_forge: -1644608659
       item_gold: 1322639080
       item_hammer: 741425099
+      item_hand_gun_scroll: -1128092838
+      item_health_potion: -1818261724
       item_hide: -630612298
       item_hoe: -691527598
       item_iron_ingot: -1962668515
       item_iron_ore: 1692411937
+      item_light_dagger_scroll: -1827269340
       item_mana_bolt: -103663402
       item_mana_crystal: -984316580
+      item_mana_potio: -1996889973
       item_mana_potion: -854955160
       item_meat_cooked: 1280716566
       item_meat_raw: 1876687506
@@ -1210,6 +1370,7 @@ TextureImporter:
       item_research_table: 1337721260
       item_silk: 1716809911
       item_simple_wand: -1366029322
+      item_spark_blast_scroll: 1446047900
       item_spindle: 1551977814
       item_stone: -1096778836
       item_stone_axe: -243578635
@@ -1219,6 +1380,7 @@ TextureImporter:
       item_sword: -1843546812
       item_target_dummy: 784093983
       item_tattered_journal: 16873710
+      item_teleport_bolt_scroll: 2041746723
       item_web: 995874337
       item_wood: -395863171
       item_wood_axe: -812258971

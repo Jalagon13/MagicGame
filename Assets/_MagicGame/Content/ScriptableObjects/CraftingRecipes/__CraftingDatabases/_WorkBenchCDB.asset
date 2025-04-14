@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <DatabaseName>k__BackingField: Work Bench
   RecipeDatabase:
+  - {fileID: 11400000, guid: d8fdb0ce30bc34a3aa1bd46d6890e707, type: 2}
   - {fileID: 11400000, guid: 0188324dc8cb840c181e547b85719c39, type: 2}
-  - {fileID: 11400000, guid: daf2dc448484f4db69facd208fbdf7eb, type: 2}
   - {fileID: 11400000, guid: 498e7ec868b79460fb589ec71b0ec415, type: 2}
+  - {fileID: 11400000, guid: edac62978006948aa86640434e667a50, type: 2}
+  - {fileID: 11400000, guid: daf2dc448484f4db69facd208fbdf7eb, type: 2}
   - {fileID: 11400000, guid: a6c33320ec6a24a379860501f478e5b1, type: 2}
   - {fileID: 11400000, guid: 1ba4854e219f34554acc16f5ae7029d0, type: 2}
   - {fileID: 11400000, guid: 4229e9a8fc9d44ddc90d536dfa598935, type: 2}

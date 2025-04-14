@@ -13,12 +13,20 @@ MonoBehaviour:
   m_Name: Spell_SparkBlast
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Spark Blast
-  <UiDisplay>k__BackingField: {fileID: 1348140596, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
+  <UiDisplay>k__BackingField: {fileID: 1446047900, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <GoldValue>k__BackingField: 65
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Blasts sparks in a small radius at cast point.
   <SpellProjectilePrefab>k__BackingField: {fileID: 7666750109937317245, guid: 01b5ea73343a54096bcd9bb319490d98, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 3235512204744374167, guid: 966ce96a46a0346519d0f2a96c141a22, type: 3}
+  <SpellPortrait>k__BackingField: {fileID: 1348140596, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
+  <SpellCast>k__BackingField:
+    Guid:
+      Data1: -959941032
+      Data2: 1128627620
+      Data3: -1885222999
+      Data4: 915117413
+    Path: event:/FireBurst
   <CastTime>k__BackingField: 0.75
   <Cooldown>k__BackingField: 2
   <Damage>k__BackingField: 22
@@ -32,10 +40,3 @@ MonoBehaviour:
   <Bounces>k__BackingField: 0
   <GhostDistance>k__BackingField: 0
   <HasteMultiplier>k__BackingField: 0.5
-  <SpellCast>k__BackingField:
-    Guid:
-      Data1: -959941032
-      Data2: 1128627620
-      Data3: -1885222999
-      Data4: 915117413
-    Path: event:/FireBurst

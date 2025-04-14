@@ -78,12 +78,18 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 [CreateAssetMenu(fileName = "New Spell", menuName = "Create Item/New Spell")]
 public class SpellItemSO : ItemSO
 {
+	[field: Header("Visuals")]
 	[field: Tooltip("Actual Prefab for the projectile.")]
 	[field: SerializeField] public Spell SpellProjectilePrefab { get; private set; }
 	
 	[field: Tooltip("Spell charging animation.")]
 	[field: SerializeField] public GameObject ChargeVFX { get; private set; }
-	
+
+	[field: Tooltip("Image displayed when equipped to a spellbook")]
+	[field: SerializeField] public Sprite SpellPortrait { get; private set; }
+	[field: SerializeField] public EventReference SpellCast { get; private set; }
+
+	[field: Header("Stats")]
 	[field: Tooltip("Time it takes to cast this projectile (in seconds).")]
 	[field: SerializeField] public float CastTime { get; private set; } = 0.2f;
 
@@ -122,8 +128,6 @@ public class SpellItemSO : ItemSO
 
 	[field: Tooltip("Multiplier on fast the player moves when casting this spell")]
 	[field: SerializeField] public float HasteMultiplier { get; private set; } = 0.5f;
-
-	[field: SerializeField] public EventReference SpellCast { get; private set; }
 
 	public void NpcShootSpell(Vector2 spawnPos, Vector2 direction, NpcNetworkComponent npc)
 	{

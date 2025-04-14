@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2639c94874c947ca9b3c0b265407970, type: 3}
-  m_Name: Aspect_Fire
+  m_Script: {fileID: 11500000, guid: ae8d9452d0c0d480f9a80d58066f02fa, type: 3}
+  m_Name: food_ManaPotion
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Fire Essence
-  <UiDisplay>k__BackingField: {fileID: 1277599192, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <GoldValue>k__BackingField: 5
+  <Name>k__BackingField: Mana Potion
+  <UiDisplay>k__BackingField: {fileID: -854955160, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <GoldValue>k__BackingField: 25
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 

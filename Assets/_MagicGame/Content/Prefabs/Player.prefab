@@ -297,6 +297,8 @@ MonoBehaviour:
     Quantity: 1
   - Item: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
     Quantity: 1
+  - Item: {fileID: 11400000, guid: 53060a096c6084e7d821a236c81b1195, type: 2}
+    Quantity: 1
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1387,6 +1389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  <SwingCooldown>k__BackingField: 0.25
   _northPivot: {fileID: 3775953093180886463}
   _southPivot: {fileID: 3951572965716743613}
   _eastPivot: {fileID: 5690394868646927140}
@@ -1409,7 +1412,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isMainHand: 1
   _mainHand: {fileID: 4604921083407888490}
-  _offHand: {fileID: 0}
   _armPivotGO: {fileID: 6010529099300971215}
 --- !u!1 &5942745410432643869
 GameObject:

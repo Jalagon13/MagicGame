@@ -14,12 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <DatabaseName>k__BackingField: Scroll Binding Table
   RecipeDatabase:
-  - {fileID: 11400000, guid: 56ef5edf4331b470db9e75fe1b79a79f, type: 2}
   - {fileID: 11400000, guid: 999207c79bfc148c1849d34673999d2d, type: 2}
   - {fileID: 11400000, guid: 3a31a6b59e0ec4b6cb2b137fc27f902a, type: 2}
   - {fileID: 11400000, guid: 1085ef29ea0d84a0993603ebec327738, type: 2}
   - {fileID: 11400000, guid: 6c8f3950209f640a28f526cb05fd6317, type: 2}
-  - {fileID: 11400000, guid: ef102a371c50546208f3f5d6f819eeff, type: 2}
-  - {fileID: 11400000, guid: a522839519c3f4284b3833c9b1b13171, type: 2}
-  - {fileID: 11400000, guid: b14551fc94e8c4194bccd6f576de6110, type: 2}
-  - {fileID: 11400000, guid: 5780e8b3dfbf24239b7536d55007cf04, type: 2}

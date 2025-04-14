@@ -13,12 +13,20 @@ MonoBehaviour:
   m_Name: Spell_LightDagger
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Light Dagger
-  <UiDisplay>k__BackingField: {fileID: -949320902, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -1827269340, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <GoldValue>k__BackingField: 65
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Blasts sparks in a small radius at cast point.
   <SpellProjectilePrefab>k__BackingField: {fileID: 3662783723511205044, guid: 96c580fc8465142b5bd351fe0e4c50a9, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 3235512204744374167, guid: 966ce96a46a0346519d0f2a96c141a22, type: 3}
+  <SpellPortrait>k__BackingField: {fileID: -949320902, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
+  <SpellCast>k__BackingField:
+    Guid:
+      Data1: -2045704129
+      Data2: 1078438271
+      Data3: 153888670
+      Data4: -2048565155
+    Path: event:/Player/Woosh
   <CastTime>k__BackingField: 0.2
   <Cooldown>k__BackingField: 0.1
   <Damage>k__BackingField: 6
@@ -32,10 +40,3 @@ MonoBehaviour:
   <Bounces>k__BackingField: 0
   <GhostDistance>k__BackingField: 0
   <HasteMultiplier>k__BackingField: 1
-  <SpellCast>k__BackingField:
-    Guid:
-      Data1: -2045704129
-      Data2: 1078438271
-      Data3: 153888670
-      Data4: -2048565155
-    Path: event:/Player/Woosh

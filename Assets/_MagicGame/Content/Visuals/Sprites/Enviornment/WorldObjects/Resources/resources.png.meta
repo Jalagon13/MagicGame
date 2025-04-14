@@ -461,6 +461,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: rsc_cauldron
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d15a14bb14a46463c81750510be073e6
+      internalID: -410619020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -477,6 +499,7 @@ TextureImporter:
     nameFileIdTable:
       rsc_campfire: 1706644685
       rsc_candle: -597264530
+      rsc_cauldron: -410619020
       rsc_chest: 1565617341
       rsc_door_closed_lat: 1273543132
       rsc_door_closed_mer: -691286103
