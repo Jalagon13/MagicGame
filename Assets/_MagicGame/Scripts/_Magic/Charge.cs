@@ -1,10 +1,12 @@
+using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class SelfCastDash : Spell
+public class Charge : Spell
 {
-    [SerializeField] private float _bouncePower = 30f;
-
+    [SerializeField] private float _playerSpeedDecayMult = 2f;
+    
     private bool _isSelfCasting = false;
 
     public override void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
@@ -19,8 +21,7 @@ public class SelfCastDash : Spell
     {
         Started.OnValueChanged += SelfCastEnd;
 
-        Vector2 knockerSourcePosition = (Vector2)Player.LocalClientInstance.transform.position + Player.LocalClientInstance.StateMachine.MoveVector;
-        Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(knockerSourcePosition, 0, _bouncePower, true);
+        PlayerStats.Instance.ApplySpeedModifier(_playerSpeedDecayMult);
 
         _isSelfCasting = true;
     }
@@ -28,13 +29,17 @@ public class SelfCastDash : Spell
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-
+        
         // Only play for the spell caster client, is started, and self casting started
-        if (!Started.Value || !_isSelfCasting || Player.LocalClientInstance.OwnerClientId != SpellData.Value.OwnerPlayerId) return;
+        if(!Started.Value || !_isSelfCasting || Player.LocalClientInstance.OwnerClientId != SpellData.Value.OwnerPlayerId) return;
+
+        PlayerStats.Instance.ApplySpeedModifier(Mathf.Lerp(_playerSpeedDecayMult, 1, SpellLifeTimer.PercentRemaining));
     }
 
     private void SelfCastEnd(bool previousValue, bool newValue)
     {
-        if (newValue) return;
+        if(newValue) return;
+        
+        PlayerStats.Instance.ApplySpeedModifier(1);
     }
 }

@@ -28,13 +28,13 @@ MonoBehaviour:
       Data4: -2048565155
     Path: event:/Player/Woosh
   <CastTime>k__BackingField: 0.2
-  <Cooldown>k__BackingField: 0.1
+  <Cooldown>k__BackingField: 0.3
   <Damage>k__BackingField: 6
   <ManaCost>k__BackingField: 3
   <Knockback>k__BackingField: 3
   <Accuracy>k__BackingField: 15
-  <Lifetime>k__BackingField: 0.255
-  <Speed>k__BackingField: 12
+  <Lifetime>k__BackingField: 0.5
+  <Speed>k__BackingField: 20
   <Recoil>k__BackingField: 0
   <Pierces>k__BackingField: 0
   <Bounces>k__BackingField: 0

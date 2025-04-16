@@ -14,9 +14,9 @@ public class PlayerManaStatUI : MonoBehaviour
     {
 		if(PlayerStats.Instance == null) return;
     
-		_border.sizeDelta = new Vector2(PlayerStats.Instance.BaseMana, _border.sizeDelta.y);
+		// _border.sizeDelta = new Vector2(PlayerStats.Instance.BaseMana, _border.sizeDelta.y);
 		_manaBar.UpdateBar(PlayerStats.Instance.CurrentMana, 0, PlayerStats.Instance.BaseMana);
-		_border.sizeDelta = new Vector2(PlayerStats.Instance.BaseMana * 2, _border.sizeDelta.y);
+		// _border.sizeDelta = new Vector2(PlayerStats.Instance.BaseMana * 2, _border.sizeDelta.y);
 		_amountText.text = $"{Mathf.RoundToInt(PlayerStats.Instance.CurrentMana)}/{PlayerStats.Instance.BaseMana}";
 
 		MaxMana = PlayerStats.Instance.BaseMana;

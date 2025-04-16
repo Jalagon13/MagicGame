@@ -176,70 +176,10 @@ PrefabInstance:
     - {fileID: 4388047220858872420, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1574713361264783037}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
 --- !u!1 &3583022790027280923 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
   m_PrefabInstance: {fileID: 8652789913409017745}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1574713361264783037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3583022790027280923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  m_Graph: {fileID: -2886738209571348641, guid: 24912bd11aa2a48348abb62bd16f4a5c, type: 2}
-  m_BlackboardVariableOverridesList:
-  - rid: 2948846905284886720
-  - rid: 2948846905284886845
-  - rid: 2948846905284887004
-  - rid: 2948846928740484020
-  m_IsInitialised: 0
-  m_IsStarted: 0
-  NetcodeRunOnlyOnOwner: 1
-  references:
-    version: 2
-    RefIds:
-    - rid: 2948846905284886720
-      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1
-          m_Value1: 0
-        Name: Self
-        m_Value: {fileID: 3583022790027280923}
-    - rid: 2948846905284886845
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 6639735210481233650
-          m_Value1: 17181388704984548911
-        Name: MaxWanderDistance
-        m_Value: 3
-    - rid: 2948846905284887004
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 2340894599642784118
-          m_Value1: 511265977762974940
-        Name: WanderSpeed
-        m_Value: 10
-    - rid: 2948846928740484020
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 16776494197961774382
-          m_Value1: 9418826327438765941
-        Name: FleeSpeed
-        m_Value: 25

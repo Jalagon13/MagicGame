@@ -96,18 +96,15 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("The cooldown time (in seconds) before this spell can be cast again. A lower value means the spell can be reused more quickly.")]
 	[field: SerializeField] public float Cooldown { get; private set; } = 0.1f;
 	
-	[field: Tooltip("The amount of damage this projectile deals upon hitting an enemy.")]
-	[field: SerializeField] public int Damage { get; private set; } = 3;
-	
 	[field: Tooltip("The mana cost required to cast this projectile.")]
 	[field: SerializeField] public int ManaCost { get; private set; } = 5;
+	
+	[field: Tooltip("The amount of damage this projectile deals upon hitting an enemy.")]
+	[field: SerializeField] public int Damage { get; private set; } = 3;
 	
 	[field: Tooltip("The amount of knockback this projectile deals upon hitting an enemy.")]
 	[field: SerializeField] public int Knockback { get; private set; } = 3;
 
-	[field: Tooltip("The amount of randomness in the projectile's trajectory (in degrees). A higher value means more spread.")]
-	[field: SerializeField] public float Accuracy { get; private set; } = 1f;
-	
 	[field: Tooltip("The lifetime in seconds of the projectile.")]
 	[field: SerializeField] public float Lifetime { get; private set; } = 2f;
 
@@ -160,12 +157,9 @@ public class SpellItemSO : ItemSO
 	{
 		Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
 		Vector2 baseDirection = (ActionManager.MouseWorldPosition - spawnPoint).normalized;
-		float totalSpread = Mathf.Max(0, Accuracy + wandSO.Accuracy);
-		float randomAngle = UnityEngine.Random.Range(-totalSpread, totalSpread);
-		Vector2 finalDirection = Quaternion.Euler(0, 0, randomAngle) * baseDirection;
 		
 		Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, Recoil);
-		GameManager.Instance.ExecuteSpellServerRpc(spellId, finalDirection, spawnPoint);
+		GameManager.Instance.ExecuteSpellServerRpc(spellId, baseDirection, spawnPoint);
 		SoundManager.Instance.PlayOneShot(SpellCast, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
 	}
 	

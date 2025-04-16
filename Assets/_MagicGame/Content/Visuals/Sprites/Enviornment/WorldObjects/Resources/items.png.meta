@@ -308,7 +308,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_mana_crystal
+      name: item_cobalt_crystal
       rect:
         serializedVersion: 2
         x: 32
@@ -1232,28 +1232,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_hand_gun_scroll
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 441a03fc34c744280948ef575c1c6485
-      internalID: -1128092838
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: item_teleport_bolt_scroll
       rect:
         serializedVersion: 2
@@ -1297,6 +1275,72 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: item_self_heal_scroll
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74c3ea46f9ae0421991cfb3b55da9ad7
+      internalID: 1503089564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_self_speed_scroll
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04c638f30e3fe46c094376edf1c33761
+      internalID: -1387778833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: item_poison_dart_scroll
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5497c19b06eec4021b4d23c1d4166bc1
+      internalID: 1350024289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1322,76 +1366,79 @@ TextureImporter:
       item_aspect_of_navigation: -44972350
       item_aspect_of_order: -763366888
       item_aspect_of_water: 580891271
-      item_axe: -1009747100
-      item_blacksmith: -1873538081
+      item_axe: -334272895
+      item_blacksmith: -1696018657
       item_blank_scroll: -1705064197
       item_blue_bell: -1747701128
-      item_bouncy_battle_ball: 1911798325
+      item_bouncy_battle_ball: 349609646
       item_campfire: -925800054
       item_candle: -1599595118
       item_chest: -1010797688
-      item_chicken: -235104009
-      item_coal: -1903294168
+      item_chicken: -1172625449
+      item_coal: -209821574
       item_cobalt_bar: 1629506966
       item_cobalt_bottoms: 1068366592
       item_cobalt_codex: 595962634
+      item_cobalt_crystal: -984316580
       item_cobalt_hat: -554541973
       item_cobalt_ore: 631161573
       item_cobalt_robe: 1972111916
       item_cobalt_staff: -461732419
       item_cobalt_wand: -1329316587
-      item_destruction_tome: 1032350063
+      item_destruction_tome: -1955096840
       item_door: 730009004
-      item_fiber: -873374552
+      item_fiber: 1004665155
       item_forge: -1644608659
       item_gold: 1322639080
-      item_hammer: 741425099
+      item_hammer: 1520274442
       item_hand_gun_scroll: -1128092838
       item_health_potion: -1818261724
       item_hide: -630612298
-      item_hoe: -691527598
-      item_iron_ingot: -1962668515
-      item_iron_ore: 1692411937
+      item_hoe: 107197368
+      item_iron_ingot: -350869721
+      item_iron_ore: 956428723
       item_light_dagger_scroll: -1827269340
-      item_mana_bolt: -103663402
-      item_mana_crystal: -984316580
-      item_mana_potio: -1996889973
+      item_mana_bolt: 640905509
+      item_mana_potio: -95443136
       item_mana_potion: -854955160
       item_meat_cooked: 1280716566
       item_meat_raw: 1876687506
       item_merchant: -1704938593
-      item_multi_cast: -2003000566
-      item_mushed_mushroom: 607617102
-      item_mushroom: 286475759
-      item_pickaxe: 768276858
+      item_multi_cast: 532532688
+      item_mushed_mushroom: 463760923
+      item_mushroom: -688969598
+      item_pickaxe: 583766240
       item_pixie_dust: 1964935682
-      item_plywood: -742536085
+      item_plywood: 1411270587
+      item_poison_dart_scroll: 1350024289
       item_portal: 547736231
       item_research_table: 1337721260
+      item_self_heal_scroll: 1503089564
+      item_self_speed_scroll: -1387778833
       item_silk: 1716809911
-      item_simple_wand: -1366029322
+      item_simple_wand: -1915968853
       item_spark_blast_scroll: 1446047900
       item_spindle: 1551977814
       item_stone: -1096778836
-      item_stone_axe: -243578635
-      item_stone_pickaxe: 2112777853
-      item_stone_shovel: -1928505105
-      item_stone_sword: 818159147
+      item_stone_axe: -651105760
+      item_stone_pickaxe: 1754374393
+      item_stone_shovel: 659069105
+      item_stone_sword: 449342737
       item_sword: -1843546812
       item_target_dummy: 784093983
       item_tattered_journal: 16873710
       item_teleport_bolt_scroll: 2041746723
       item_web: 995874337
       item_wood: -395863171
-      item_wood_axe: -812258971
+      item_wood_axe: -1172762928
       item_wood_floor: -427256236
-      item_wood_hammer: -1864391692
-      item_wood_pickaxe: -1989345648
-      item_wood_shovel: 347135175
+      item_wood_hammer: 354745959
+      item_wood_pickaxe: 920078536
+      item_wood_shovel: 1734408219
       item_wood_staff: -1593785014
       item_wood_wall: 67440230
       item_wood_wand: 475129307
-      item_wooden_catalyst: -832442734
+      item_wooden_catalyst: 1722320204
       item_work_bench: 1147903491
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

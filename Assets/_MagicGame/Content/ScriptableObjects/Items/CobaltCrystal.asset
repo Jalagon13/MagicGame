@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2639c94874c947ca9b3c0b265407970, type: 3}
-  m_Name: CobaltBar
+  m_Name: CobaltCrystal
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Cobalt Bar
-  <UiDisplay>k__BackingField: {fileID: 1629506966, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <Name>k__BackingField: Cobalt Crystal
+  <UiDisplay>k__BackingField: {fileID: -984316580, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 

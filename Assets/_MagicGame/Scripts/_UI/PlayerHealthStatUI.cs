@@ -34,7 +34,7 @@ public class PlayerHealthStatUI : MonoBehaviour
 	private void UpdateView(int currentAmount, int maxAmount)
 	{
 		_healthBar.UpdateBar(currentAmount, 0, maxAmount);
-		_border.sizeDelta = new Vector2(maxAmount * 2, _border.sizeDelta.y);
+		// _border.sizeDelta = new Vector2(maxAmount * 2, _border.sizeDelta.y);
 		_amountText.text = $"{currentAmount}/{maxAmount}";
 	}
 	

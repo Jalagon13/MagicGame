@@ -288,17 +288,19 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: 01e2155cb3ee84797bfacd0127a02625, type: 2}
-    - {fileID: 11400000, guid: 64010a88c2f754b6ea0ad2a653f40669, type: 2}
-    - {fileID: 11400000, guid: bebf7bcfd1de9459aa990b456817daad, type: 2}
-    - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
+    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+    - {fileID: 11400000, guid: 8565452f84d47428ca82aed67cb5ca9e, type: 2}
   _startingItems:
   - Item: {fileID: 11400000, guid: 9641abfbdc9ce4397985eef9216c780d, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: 53060a096c6084e7d821a236c81b1195, type: 2}
-    Quantity: 1
+  - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
+    Quantity: 11
+  - Item: {fileID: 11400000, guid: d7f6664b8772746fe92f3f5fb8fa611c, type: 2}
+    Quantity: 11
+  - Item: {fileID: 11400000, guid: 1f5976d23a3604357a6c04793f9b3868, type: 2}
+    Quantity: 11
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,8 +333,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <BaseMana>k__BackingField: 50
-  <ManaRegenPerSecond>k__BackingField: 10
+  <BaseMana>k__BackingField: 100
+  <ManaRegenPerSecond>k__BackingField: 1
+  <HealthRegenPerSecond>k__BackingField: 1
   <BaseSpeed>k__BackingField: 5
   <TurnSharpness>k__BackingField: 7.5
   <KnockbackResist>k__BackingField: 0

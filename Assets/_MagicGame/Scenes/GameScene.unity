@@ -512,7 +512,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  BumpScaleOnChange: 1
+  BumpScaleOnChange: 0
   BumpOnIncrease: 0
   BumpOnDecrease: 0
   BumpDuration: 0.15
@@ -1125,7 +1125,7 @@ GameObject:
   - component: {fileID: 121676585}
   - component: {fileID: 121676584}
   m_Layer: 0
-  m_Name: MagicManager
+  m_Name: SpellManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1976,7 +1976,7 @@ Camera:
   far clip plane: 5000
   field of view: 9.75
   orthographic: 1
-  orthographic size: 16.78125
+  orthographic size: 11.9375
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -10984,7 +10984,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
-  _enableSpawning: 0
+  _enableSpawning: 1
   _startSpawnDelay: 1
 --- !u!224 &1618469497 stripped
 RectTransform:

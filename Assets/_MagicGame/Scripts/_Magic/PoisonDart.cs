@@ -1,9 +1,10 @@
 using FMODUnity;
+using Unity.Netcode;
 using UnityEngine;
 
-public class LightDagger : Spell
+public class PoisonDart : Spell
 {
-    [field: SerializeField] public SpriteRenderer DaggerSprite { get; private set; }
+    [field: SerializeField] public SpriteRenderer PoisonDartSprite { get; private set; }
     [SerializeField] private float _velocityDecay = 5f;
 
     private Rigidbody2D _rigidbody2D;
@@ -13,9 +14,10 @@ public class LightDagger : Spell
         base.Awake();
 
         _rigidbody2D = GetComponent<Rigidbody2D>();
+
         if (Random.value < 0.5f)
         {
-            DaggerSprite.transform.localScale = new Vector3(-DaggerSprite.transform.localScale.x, DaggerSprite.transform.localScale.y, DaggerSprite.transform.localScale.z);
+            PoisonDartSprite.transform.localScale = new Vector3(-PoisonDartSprite.transform.localScale.x, PoisonDartSprite.transform.localScale.y, PoisonDartSprite.transform.localScale.z);
         }
     }
 
@@ -31,16 +33,6 @@ public class LightDagger : Spell
         }
     }
 
-    protected override void Update()
-    {
-        base.Update();
-
-        if (Velocity.Value != Vector2.zero)
-        {
-            DaggerSprite.transform.up = Velocity.Value.normalized;
-        }
-    }
-
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
@@ -49,5 +41,15 @@ public class LightDagger : Spell
 
         Velocity.Value = Vector2.Lerp(Velocity.Value, Vector2.zero, _velocityDecay * Time.fixedDeltaTime);
         _rigidbody2D.linearVelocity = Velocity.Value;
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if (Velocity.Value != Vector2.zero)
+        {
+            PoisonDartSprite.transform.up = Velocity.Value.normalized;
+        }
     }
 }

@@ -16,6 +16,7 @@ public class PlayerStats : NetworkBehaviour
 
 	[field: SerializeField] public int BaseMana { get; private set; } = 50;
 	[field: SerializeField] public int ManaRegenPerSecond { get; private set; } = 10;
+	[field: SerializeField] public int HealthRegenPerSecond { get; private set; } = 5;
 	[field: SerializeField] public float BaseSpeed { get; private set; }
 	[field: SerializeField] public float TurnSharpness { get; private set; }
 	[field: Range(0, 1f)]
@@ -23,11 +24,18 @@ public class PlayerStats : NetworkBehaviour
 	
 	public float CurrentSpeed { get; private set; }
 	public int CurrentMana { get; private set; }
+	public bool ManaRegenBuffActive => _temporaryManaRegen.HasValue;
+	public bool HealthRegenBuffActive => _temporaryHealthRegen.HasValue;
 	
 	private NetworkHealthState _healthState;
 	private List<int> _equippedArmorItemIdList = new();
 	private float _speedModifier = 1f;
 	private float _manaRegenAccumulator = 0f;
+	private float _healthRegenAccumulator = 0f;
+	private int? _temporaryManaRegen = null;
+	private Timer _manaBuffTimer;
+	private int? _temporaryHealthRegen = null;
+	private Timer _healthBuffTimer;
 	
 	private void Awake()
 	{
@@ -44,7 +52,7 @@ public class PlayerStats : NetworkBehaviour
     }
     
     private void Start()
-    {
+	{
 		CurrentSpeed = BaseSpeed;
 	}
 
@@ -52,14 +60,19 @@ public class PlayerStats : NetworkBehaviour
 	{
 		CurrentSpeed = BaseSpeed * _speedModifier;
 
+		_manaBuffTimer?.Tick(Time.deltaTime);
+		_healthBuffTimer?.Tick(Time.deltaTime);
+
 		RegenerateMana();
+		RegenerateHealth();
 	}
 
 	private void RegenerateMana()
 	{
 		if (CurrentMana < BaseMana)
 		{
-			_manaRegenAccumulator += ManaRegenPerSecond * Time.deltaTime;
+			int regenRate = _temporaryManaRegen.HasValue ? _temporaryManaRegen.Value : ManaRegenPerSecond;
+			_manaRegenAccumulator += regenRate * Time.deltaTime;
 
 			int manaToRegen = Mathf.FloorToInt(_manaRegenAccumulator);
 
@@ -69,6 +82,22 @@ public class PlayerStats : NetworkBehaviour
 
 				CurrentMana = Mathf.Min(CurrentMana + manaToRegen, BaseMana);
 			}
+		}
+	}
+
+	private void RegenerateHealth()
+	{
+	    if (_healthState == null || _healthState.IsDead || _healthState.HitPoints.Value >= _healthState.MaxHealth) return;
+
+	    int regenRate = _temporaryHealthRegen.HasValue ? _temporaryHealthRegen.Value : HealthRegenPerSecond;
+	    _healthRegenAccumulator += regenRate * Time.deltaTime;
+
+	    int healthToRegen = Mathf.FloorToInt(_healthRegenAccumulator);
+
+	    if (healthToRegen > 0)
+	    {
+	        _healthRegenAccumulator -= healthToRegen;
+			_healthState.HealRpc(healthToRegen);
 		}
 	}
 
@@ -129,7 +158,33 @@ public class PlayerStats : NetworkBehaviour
 		_healthState.SetCurrentDefenseRpc(currentDefense);
 	}
 	
-	public override void OnDestroy()
+	public void ApplyManaRegenBuff(int manaPerSecond, float duration)
+	{
+		_temporaryManaRegen = manaPerSecond;
+		_manaBuffTimer = new(duration);
+		_manaBuffTimer.OnTimerEnd += EndManaRegenBuff;
+	}
+
+	public void ApplyHealthRegenBuff(int healthPerSecond, float duration)
+	{
+		_temporaryHealthRegen = healthPerSecond;
+		_healthBuffTimer = new(duration);
+		_healthBuffTimer.OnTimerEnd += EndHealthRegenBuff;
+	}
+
+    private void EndManaRegenBuff(object sender, EventArgs e)
+	{
+		_manaBuffTimer.OnTimerEnd -= EndManaRegenBuff;
+		_temporaryManaRegen = null;
+	}
+
+	private void EndHealthRegenBuff(object sender, EventArgs e)
+	{
+		_healthBuffTimer.OnTimerEnd -= EndHealthRegenBuff;
+		_temporaryHealthRegen = null;
+	}
+
+    public override void OnDestroy()
 	{
 		base.OnDestroy();
 	}

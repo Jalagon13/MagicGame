@@ -389,7 +389,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spell_self_dash
+      name: spell_self_heal
       rect:
         serializedVersion: 2
         x: 80
@@ -463,7 +463,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -477,7 +477,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spell_handgun
+      name: spell_poison_dart
       rect:
         serializedVersion: 2
         x: 0
@@ -485,7 +485,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -494,6 +494,28 @@ TextureImporter:
       bones: []
       spriteID: 72690cc885d7147cbaaa83002703920a
       internalID: -2131166066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: proj_poison_dart
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 18
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 556bf3af1703d4047bc303fe984aa06e
+      internalID: 568982434
       vertices: []
       indices: 
       edges: []
@@ -522,11 +544,12 @@ TextureImporter:
       mod_pierce: -1082386244
       mod_speed: -27199075
       proj_light_dagger: -1275709379
+      proj_poison_dart: 568982434
       spell_aqua_bolt: 1484343114
-      spell_handgun: -2131166066
       spell_light_dagger: -949320902
       spell_mining_focus: -571513728
-      spell_self_dash: -1614915739
+      spell_poison_dart: -2131166066
+      spell_self_heal: -1614915739
       spell_self_speed: 2137236163
       spell_spark_blast: 1348140596
       spell_teleport_bolt: -13447408

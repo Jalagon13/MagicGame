@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
-  m_Name: Spell_Handgun
+  m_Name: Spell_PoisonDart
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Handgun
-  <UiDisplay>k__BackingField: {fileID: -1128092838, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <Name>k__BackingField: Poison Dart
+  <UiDisplay>k__BackingField: {fileID: 1350024289, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <GoldValue>k__BackingField: 70
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Shoots a single bolt of mana.
@@ -22,20 +22,20 @@ MonoBehaviour:
   <SpellPortrait>k__BackingField: {fileID: -2131166066, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <SpellCast>k__BackingField:
     Guid:
-      Data1: -1949507061
-      Data2: 1258579158
-      Data3: 51854251
-      Data4: 858203368
-    Path: event:/Shotgun
-  <CastTime>k__BackingField: 0.25
-  <Cooldown>k__BackingField: 0.4
-  <Damage>k__BackingField: 17
-  <ManaCost>k__BackingField: 9
-  <Knockback>k__BackingField: 8
+      Data1: -2045704129
+      Data2: 1078438271
+      Data3: 153888670
+      Data4: -2048565155
+    Path: event:/Player/Woosh
+  <CastTime>k__BackingField: 0.2
+  <Cooldown>k__BackingField: 0.5
+  <Damage>k__BackingField: 10
+  <ManaCost>k__BackingField: 8
+  <Knockback>k__BackingField: 3
   <Accuracy>k__BackingField: 0
-  <Lifetime>k__BackingField: 0.35
-  <Speed>k__BackingField: 45
-  <Recoil>k__BackingField: 16
+  <Lifetime>k__BackingField: 1
+  <Speed>k__BackingField: 30
+  <Recoil>k__BackingField: 0
   <Pierces>k__BackingField: 0
   <Bounces>k__BackingField: 0
   <GhostDistance>k__BackingField: 0

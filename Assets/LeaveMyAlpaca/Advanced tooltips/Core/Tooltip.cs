@@ -127,9 +127,6 @@ namespace AdvancedTooltips.Core
 			script.WandIcon.sprite = wand.UiDisplay;
 			
 			JustText($"<br>Value: {wand.GoldValue} Gold"
-			+ $"<br>{wand.BaseCastDelay} s   cast delay" 
-			+ $"<br>{wand.ReloadDuration} s   reload dur."
-			+ $"<br>{wand.Accuracy} deg.   accuracy"
 			+ $"<br>{wand.Capacity}   capacity", Color.white, fontSize: fontSize, customLayout: script.StatLayout);
 			
 			for (int i = 0; i < magicArray.Length; i++)
@@ -159,7 +156,6 @@ namespace AdvancedTooltips.Core
 			+ $"<br>{spell.Damage}   damage"
 			+ $"<br>{spell.ManaCost}   cost to cast"
 			+ $"<br>{spell.Knockback}   knockback"
-			+ $"<br>{spell.Accuracy} deg.   accuracy"
 			+ $"<br>{spell.Speed}   speed", Color.white, fontSize: fontSize, customLayout: script.StatLayout);
 		}
 		
