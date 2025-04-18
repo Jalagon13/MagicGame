@@ -9,29 +9,25 @@ public class Charge : Spell
     
     private bool _isSelfCasting = false;
 
-    public override void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
+    protected override void OnOwnerExecuteSpellStart()
     {
-        base.ExecuteSpellStart(finalDirection, spawnPoint);
-        
         SelfCastStartClientRpc(RpcTarget.Single(SpellData.Value.OwnerPlayerId, RpcTargetUse.Persistent));
     }
 
     [Rpc(SendTo.SpecifiedInParams)]
     private void SelfCastStartClientRpc(RpcParams rpcParams = default)
     {
-        Started.OnValueChanged += SelfCastEnd;
+        IsStarted.OnValueChanged += SelfCastEnd;
 
         PlayerStats.Instance.ApplySpeedModifier(_playerSpeedDecayMult);
 
         _isSelfCasting = true;
     }
 
-    protected override void FixedUpdate()
+    private void FixedUpdate()
     {
-        base.FixedUpdate();
-        
         // Only play for the spell caster client, is started, and self casting started
-        if(!Started.Value || !_isSelfCasting || Player.LocalClientInstance.OwnerClientId != SpellData.Value.OwnerPlayerId) return;
+        if(!IsStarted.Value || !_isSelfCasting || Player.LocalClientInstance.OwnerClientId != SpellData.Value.OwnerPlayerId) return;
 
         PlayerStats.Instance.ApplySpeedModifier(Mathf.Lerp(_playerSpeedDecayMult, 1, SpellLifeTimer.PercentRemaining));
     }

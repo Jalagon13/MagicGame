@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public struct LoadedSpell
@@ -25,7 +26,14 @@ public class SpellManager : MonoBehaviour
     public event EventHandler OnSpellWheelClosed;
     public event EventHandler OnSelectedSpellUpdated;
     public event EventHandler OnSpellCooldownTimersUpdated;
-    
+    public event EventHandler<ExecuteSpellsEventArgs> OnExecuteSpells;
+    public event EventHandler OnCancelSpells;
+    public class ExecuteSpellsEventArgs : EventArgs
+    {
+        public Vector2 SpawnPoint;
+        public Vector2 Direction;
+    }
+
     public SpellbookInventoryItem EquippedSpellBook { get; private set; }
     public bool HasEquippedSpellBook => EquippedSpellBook != null;
     public SpellItemSO SelectedSpell { get; private set; }
@@ -114,7 +122,17 @@ public class SpellManager : MonoBehaviour
         Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
         PlayerStats.Instance.SubtractMana(_loadedSpell.SpellToCast.ManaCost);
 
-        _loadedSpell.SpellToCast.ExecuteSpell(EquippedSpellBook.Item as SpellBookItemSO, _loadedSpell.SpellData.SpellId);
+        Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
+        Vector2 baseDirection = (ActionManager.MouseWorldPosition - spawnPoint).normalized;
+        Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, _loadedSpell.SpellToCast.Recoil);
+        SoundManager.Instance.PlayOneShot(_loadedSpell.SpellToCast.SpellCast, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
+
+        Debug.Log($"SPellManager execute spell");
+        OnExecuteSpells?.Invoke(this, new ExecuteSpellsEventArgs 
+        { 
+            SpawnPoint = spawnPoint, 
+            Direction = baseDirection 
+        });
         
         int selectedSpellId = GameManager.Instance.GetItemIdFromItemSO(_loadedSpell.SpellToCast);
         SpellCooldownTimers[selectedSpellId] = new Timer(_loadedSpell.SpellToCast.Cooldown);
@@ -129,7 +147,7 @@ public class SpellManager : MonoBehaviour
         Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(1f);
         Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
 
-        _loadedSpell.SpellToCast.CancelSpell(_loadedSpell.SpellData.SpellId);
+        OnCancelSpells?.Invoke(this, EventArgs.Empty);
 
         CastTimeTimer.OnTimerEnd -= ExecuteSpell;
         CastTimeTimer = new Timer(0);

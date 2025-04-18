@@ -55,10 +55,8 @@ public class TeleportBolt : Spell
         }
     }
 
-    public override void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
+    protected override void OnOwnerExecuteSpellStart()
     {
-        base.ExecuteSpellStart(finalDirection, spawnPoint);
-
         _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 
         if (IsServer)
@@ -67,11 +65,9 @@ public class TeleportBolt : Spell
         }
     }
 
-    protected override void FixedUpdate()
+    private void FixedUpdate()
     {
-        base.FixedUpdate();
-
-        if (!Started.Value || !IsOwner || _isDead) return; //don't do anything before OnNetworkSpawn has run.
+        if (!IsStarted.Value || !IsOwner) return; //don't do anything before OnNetworkSpawn has run.
 
         Velocity.Value = Vector2.Lerp(Velocity.Value, Velocity.Value, _velocityDecay * Time.fixedDeltaTime);
         _rigidbody2D.linearVelocity = Velocity.Value;

@@ -15,10 +15,8 @@ public class FireBall : Spell
         _rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
-    public override void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
+    protected override void OnOwnerExecuteSpellStart()
     {
-        base.ExecuteSpellStart(finalDirection, spawnPoint);
-
         _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
         _startTime = Time.time;
 
@@ -28,11 +26,9 @@ public class FireBall : Spell
         }
     }
 
-    protected override void FixedUpdate()
+    private void FixedUpdate()
     {
-        base.FixedUpdate();
-
-        if (!Started.Value || !IsOwner || _isDead) return; //don't do anything before OnNetworkSpawn has run.
+        if (!IsStarted.Value || !IsOwner) return; //don't do anything before OnNetworkSpawn has run.
 
         float t = Mathf.Clamp01((Time.time - _startTime) / SpellData.Value.Lifetime);
         Velocity.Value = Vector2.Lerp(Vector2.zero, _finalSpeed, t);

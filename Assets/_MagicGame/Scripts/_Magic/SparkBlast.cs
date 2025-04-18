@@ -18,11 +18,9 @@ public class SparkBlast : Spell
         _vfx.transform.localPosition = Vector3.zero;
     }
 
-    public override void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
+    protected override void OnOwnerExecuteSpellStart()
     {
-        base.ExecuteSpellStart(finalDirection, spawnPoint);
-        
-        SpawnBlastParticlesClientRpc(spawnPoint);
+        SpawnBlastParticlesClientRpc(transform.position);
 
         Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _blastRadius, CollisionMask);
         for (int i = 0; i < collisions.Length; i++)
@@ -43,7 +41,7 @@ public class SparkBlast : Spell
                 }
             }
         }
-        
+
         StartCoroutine(StopSparkBlast());
     }
     
@@ -56,8 +54,7 @@ public class SparkBlast : Spell
     
     private IEnumerator StopSparkBlast()
     {
-        _isDead = true;
         yield return new WaitForSeconds(_detonateParticles.main.duration);
-        TerminateSpell();
+        OnOwnerSpellEnd();
     }
 }

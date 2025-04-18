@@ -7,10 +7,8 @@ public class SelfHeal : Spell
 
     private bool _isSelfCasting = false;
 
-    public override void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
+    protected override void OnOwnerExecuteSpellStart()
     {
-        base.ExecuteSpellStart(finalDirection, spawnPoint);
-        
         SelfCastStartClientRpc(RpcTarget.Single(SpellData.Value.OwnerPlayerId, RpcTargetUse.Persistent));
     }
 
@@ -20,13 +18,5 @@ public class SelfHeal : Spell
         Player.LocalClientInstance.HealthState.HealRpc(HealAmount);
 
         _isSelfCasting = true;
-    }
-
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-
-        // Only play for the spell caster client, is started, and self casting started
-        if (!Started.Value || !_isSelfCasting || Player.LocalClientInstance.OwnerClientId != SpellData.Value.OwnerPlayerId) return;
     }
 }

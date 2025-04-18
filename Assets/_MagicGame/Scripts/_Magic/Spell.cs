@@ -11,11 +11,10 @@ public class Spell : NetworkBehaviour
 {
 	[field: SerializeField] public EventReference HitSomethingSound { get; private set; }
 
-	public event System.EventHandler OnSpellEnd;
-	[HideInInspector] public NetworkVariable<Vector2> Velocity = new NetworkVariable<Vector2>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	[HideInInspector] public NetworkVariable<SyncSpellData> SpellData = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	[HideInInspector] public NetworkVariable<bool> ShowVisuals = new NetworkVariable<bool>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	[HideInInspector] public NetworkVariable<bool> Started = new NetworkVariable<bool>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	public NetworkVariable<Vector2> Velocity { get; set; } = new NetworkVariable<Vector2>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public NetworkVariable<SyncSpellData> SpellData { get; set; } = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	public NetworkVariable<bool> ShowVisuals { get; set; } = new NetworkVariable<bool>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public NetworkVariable<bool> IsStarted { get; set; } = new NetworkVariable<bool>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public int CollisionMask { get; private set; }
 	public int NpcLayer { get; private set; }
 	public int WallMask { get; private set; }
@@ -25,14 +24,7 @@ public class Spell : NetworkBehaviour
 	protected GameObject _spellGameObject;
 	protected CircleCollider2D _spellCollider;
 	protected Vector2 _finalDirection;
-	protected Vector2 _lastPosition;
-	protected Transform _spellModifierTf;
-	protected bool _isDead;
-	protected int _bounces;
-	protected bool _passingThroughWall;
-	protected float _totalPassThroughDistance;
 
-	private SyncSpellData _spellData;
 	private Transform _visualizationTf;
 	private PositionLerper _positionLerper;
 	const float k_LerpTime = 0.05f;
@@ -41,8 +33,7 @@ public class Spell : NetworkBehaviour
     {
 		_spellGameObject = transform.GetChild(0).gameObject;
 		_spellCollider = GetComponent<CircleCollider2D>();
-		_spellModifierTf = transform.GetChild(0).GetChild(0);
-		_visualizationTf = transform.GetChild(0).GetChild(1);
+		_visualizationTf = transform.GetChild(0).GetChild(0);
 		
 		Hide();
 	}
@@ -51,81 +42,83 @@ public class Spell : NetworkBehaviour
 	{
 		ShowVisuals.OnValueChanged += HandleVisuals;
 		
-		if (IsServer)
+		if (IsOwner)
 		{
-			SpellData.Value = _spellData;
+			ShowVisuals.Value = false;
+			
 			CollisionMask = LayerMask.GetMask(new[] { "PathfindingWall", "Npc" });
 			WallMask = LayerMask.NameToLayer("PathfindingWall");
 			NpcLayer = LayerMask.NameToLayer("Npc");
-			ShowVisuals.Value = false;
+
+			OnOwnerSpellSpawned();
+
+			Debug.Log($"Registering on execute spell start");
+			SpellManager.Instance.OnExecuteSpells += ExecuteSpellStart;
+			SpellManager.Instance.OnCancelSpells += CancelSpellCharge;
 		}
 	}
 
-	protected virtual void Update()
+	private void ExecuteSpellStart(object sender, SpellManager.ExecuteSpellsEventArgs e)
 	{
+		transform.position = e.SpawnPoint;
+		_finalDirection = e.Direction;
+
+		IsStarted.Value = true;
+		ShowVisuals.Value = true;
+
+		SpellLifeTimer = new Timer(SpellData.Value.Lifetime);
+		SpellLifeTimer.OnTimerEnd += OnSpellLifeTimerEnd;
+
+		OnOwnerExecuteSpellStart();
+	}
+
+	private void CancelSpellCharge(object sender, EventArgs e)
+    {
+		OnOwnerSpellCanceled();
+	}
+
+    protected virtual void Update()
+	{
+		if(IsStarted.Value && IsOwner)
+		{
+			SpellLifeTimer.Tick(Time.deltaTime);
+		}
+	
 		if (IsClient && _visualizationTf.gameObject.activeSelf)
 		{
 			_visualizationTf.position = _positionLerper.LerpPosition(_visualizationTf.position, transform.position);
 		}
+		// don't do anything before OnNetworkSpawn has run.
 	}
 
-	protected virtual void FixedUpdate()
+	protected virtual void OnOwnerSpellSpawned() { }
+	protected virtual void OnOwnerExecuteSpellStart() { }
+	protected virtual void OnOwnerSpellEnd()
 	{
-		if (!Started.Value || !IsServer) return; //don't do anything before OnNetworkSpawn has run.
-
-		SpellLifeTimer.Tick(Time.fixedDeltaTime);
-
-		if (!_isDead)
-		{
-			PassThroughWall();
-			DetectCollisions();
-		}
+		IsStarted.Value = false;
+		DespawnSpellServerRpc();
 	}
 
-	public override void OnNetworkDespawn()
+	public virtual void OnOwnerSpellCanceled()
 	{
-		if (IsClient)
-		{
-			Debug.Log($"Reattaching visualization before despawning");
-			_visualizationTf.parent = transform;
-		}
+		IsStarted.Value = false;
+		DespawnSpellServerRpc();
 	}
 
-	public virtual void ExecuteSpellStart(Vector2 finalDirection, Vector2 spawnPoint)
+	private void OnSpellLifeTimerEnd(object sender, EventArgs e)
 	{
-		if(IsServer)
-		{
-			Debug.Log($"player shooting id: {SpellData.Value.OwnerPlayerId}");
-			transform.position = spawnPoint;
-			Started.Value = true;
-			ShowVisuals.Value = true;
-
-			_lastPosition = spawnPoint;
-			_finalDirection = finalDirection;
-			_isDead = false;
-			
-			SpellLifeTimer = new Timer(SpellData.Value.Lifetime);
-			SpellLifeTimer.OnTimerEnd += DestroySpell;
-		}
+		SpellLifeTimer.OnTimerEnd -= OnSpellLifeTimerEnd;
+		OnOwnerSpellEnd();
 	}
 
-    public void CancelSpell()
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void DespawnSpellServerRpc()
 	{
-		OnSpellEnd?.Invoke(this, EventArgs.Empty);
+		Debug.Log($"Despawning Spell. Server id: {NetworkObject.OwnerClientId}");
+		NetworkObject.DontDestroyWithOwner = true;
+		NetworkObject.Despawn();
+	}
 
-		if (IsServer)
-		{
-			NetworkObject.Despawn();
-		}
-		
-		Destroy(gameObject);
-	}
-	
-	public void SetSpellData(SyncSpellData spellData)
-	{
-		_spellData = spellData;
-	}
-	
     private void HandleVisuals(bool previousValue, bool newValue)
     {
         if(newValue)
@@ -159,117 +152,101 @@ public class Spell : NetworkBehaviour
 	{
 		_visualizationTf.gameObject.SetActive(false);
 	}
-
-	private void DestroySpell(object sender, EventArgs e)
-    {
-		Started.Value = false;
-		OnSpellEnd?.Invoke(this, EventArgs.Empty);
-
-		if (IsServer)
-		{
-			NetworkObject.Despawn();
-		}
-		// Debug.Log($"Spell Destroyed");
-		Destroy(gameObject);
-	}
 	
-	private void PassThroughWall()
+	protected void DamageTargets()
 	{
-		float distanceThisFrame = Vector2.Distance(transform.position, _lastPosition);
-		if (_passingThroughWall)
-		{
-			_totalPassThroughDistance += distanceThisFrame;
-			if (_totalPassThroughDistance >= SpellData.Value.GhostDistance)
-			{
-				TerminateSpell();
-				return;
-			}
-		}
-
-		_passingThroughWall = false;
-		_lastPosition = transform.position;
+	    
 	}
 
-	protected void TerminateSpell()
-	{
-		_isDead = true;
-		SpellLifeTimer.Tick(Mathf.Infinity);
-	}
-
-	private void DetectCollisions()
-    {
-		if(_spellCollider == null) return;
+	// private void DetectCollisions()
+    // {
+	// 	if(_spellCollider == null) return;
     
-		Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _spellCollider.radius, CollisionMask);
-		for (int i = 0; i < collisions.Length; i++)
-		{
-			int layerTest = 1 << collisions[i].gameObject.layer;
-			if((layerTest & CollisionMask) != 0)
-			{
-			    if(collisions[i].gameObject.layer == WallMask)
-			    {
-					if (collisions[i].TryGetComponent(out PathfindingWallTm pfWall))
-			        {
-						if (pfWall.BiomeSameAs(SpellData.Value.SpawnBiome))
-						{
-							if(SpellData.Value.GhostDistance > 0)
-							{
-							    _passingThroughWall = true;
-							}
-							else
-							{
-								if (_bounces >= SpellData.Value.Bounces)
-								{
-									TerminateSpell();
-									
-									SoundManager.Instance.PlayOneShot(HitSomethingSound, transform.position);
-									
-									return;
-								}
-								else
-								{
-									// Bounce if not at max bounces
-									RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Velocity.Value.normalized, _spellCollider.radius, CollisionMask);
-									foreach (var hit in hits)
-									{
-										if (hit.collider == collisions[i])
-										{
-											Vector2 hitNormal = hit.normal;
-											float speed = Velocity.Value.magnitude;
-											Velocity.Value = Vector2.Reflect(Velocity.Value.normalized, hitNormal) * speed;
-											_bounces++;
-											break;
-										}
-									}
-								}
-							}
-						}
-					}
-			    }
-			    
-			    if(collisions[i].gameObject.layer == NpcLayer)
-			    {
-			    	if(collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
-			    	{
-						NetworkHealthState npcHealth = npcNet.gameObject.GetComponent<NetworkHealthState>();
+	// 	Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _spellCollider.radius, CollisionMask);
+	// 	for (int i = 0; i < collisions.Length; i++)
+	// 	{
+	// 		int layerTest = 1 << collisions[i].gameObject.layer;
+	// 		if((layerTest & CollisionMask) != 0)
+	// 		{
+	// 		    if(collisions[i].gameObject.layer == WallMask)
+	// 		    {
+	// 				if (collisions[i].TryGetComponent(out PathfindingWallTm pfWall))
+	// 		        {
+	// 					if (pfWall.BiomeSameAs(SpellData.Value.SpawnBiome))
+	// 					{
+	// 						if(SpellData.Value.GhostDistance > 0)
+	// 						{
+	// 						    _passingThroughWall = true;
+	// 						}
+	// 						else
+	// 						{
+	// 							if (_bounces >= SpellData.Value.Bounces)
+	// 							{
+	// 								OnOwnerSpellEnd();
 
-						// Overlapping with an NPC in the same biome
-						if (!HitTargets.Contains(npcHealth))
-			    		{
-							HitTargets.Add(npcHealth);
-							npcHealth.TakeDamageRpc(SpellData.Value.Damage, NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, SpellData.Value.Knockback);
+	// 								SoundManager.Instance.PlayOneShot(HitSomethingSound, transform.position);
+									
+	// 								return;
+	// 							}
+	// 							else
+	// 							{
+	// 								// Bounce if not at max bounces
+	// 								RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Velocity.Value.normalized, _spellCollider.radius, CollisionMask);
+	// 								foreach (var hit in hits)
+	// 								{
+	// 									if (hit.collider == collisions[i])
+	// 									{
+	// 										Vector2 hitNormal = hit.normal;
+	// 										float speed = Velocity.Value.magnitude;
+	// 										Velocity.Value = Vector2.Reflect(Velocity.Value.normalized, hitNormal) * speed;
+	// 										_bounces++;
+	// 										break;
+	// 									}
+	// 								}
+	// 							}
+	// 						}
+	// 					}
+	// 				}
+	// 		    }
+			    
+	// 		    if(collisions[i].gameObject.layer == NpcLayer)
+	// 		    {
+	// 		    	if(collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
+	// 		    	{
+	// 					NetworkHealthState npcHealth = npcNet.gameObject.GetComponent<NetworkHealthState>();
+
+	// 					// Overlapping with an NPC in the same biome
+	// 					if (!HitTargets.Contains(npcHealth))
+	// 		    		{
+	// 						HitTargets.Add(npcHealth);
+	// 						npcHealth.TakeDamageRpc(SpellData.Value.Damage, NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, SpellData.Value.Knockback);
 							
-							SoundManager.Instance.PlayOneShot(HitSomethingSound, transform.position);
+	// 						SoundManager.Instance.PlayOneShot(HitSomethingSound, transform.position);
 							
-							if (HitTargets.Count >= SpellData.Value.Pierces)
-							{
-								TerminateSpell();
-								return;
-							}
-						}
-			    	}
-			    }
-			}
+	// 						if (HitTargets.Count >= SpellData.Value.Pierces)
+	// 						{
+	// 							OnOwnerSpellEnd();
+	// 							return;
+	// 						}
+	// 					}
+	// 		    	}
+	// 		    }
+	// 		}
+	// 	}
+	// }
+
+	public override void OnNetworkDespawn()
+	{
+		if(IsOwner)
+		{
+			SpellManager.Instance.OnExecuteSpells -= ExecuteSpellStart;
+			SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
+		}
+	
+		if (IsClient)
+		{
+			Debug.Log($"Reattaching visualization before despawning");
+			_visualizationTf.parent = transform;
 		}
 	}
 }
