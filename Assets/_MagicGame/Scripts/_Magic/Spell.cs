@@ -114,7 +114,6 @@ public class Spell : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void DespawnSpellServerRpc()
 	{
-		Debug.Log($"Despawning Spell. Server id: {NetworkObject.OwnerClientId}");
 		NetworkObject.DontDestroyWithOwner = true;
 		NetworkObject.Despawn();
 	}

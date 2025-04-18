@@ -23,7 +23,7 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
     public override void EnterState()
     {
-        Debug.Log("Move State");
+        // Debug.Log("Move State");
         _isStuck = false;
         _timeNotMoved = 0f;
         _lastPosition = _ctx.transform.position;

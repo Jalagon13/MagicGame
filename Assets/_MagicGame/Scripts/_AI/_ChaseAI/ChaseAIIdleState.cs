@@ -33,10 +33,8 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
     public override void ExitState()
     {
-        Debug.Log($"Exiting idle state");
         if(_idleComplete)
         {
-            Debug.Log($"Idle state complete, calculating new wander destionation");
             // Calculate new wander destination and desired direction for it
             Vector2? wanderDestination = GetRandomWanderDestinationBFS(_ctx.transform.position, _ctx.WanderRadius);
             
@@ -44,13 +42,11 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
             {
                 _ctx.WanderDestination = wanderDestination.Value;
                 _ctx.DesiredDirection = _ctx.WanderDestination - (Vector2)_ctx.transform.position;
-                Debug.Log($"Wander destination has value: {wanderDestination.Value}");
             }
             else
             {
                 _ctx.WanderDestination = _ctx.transform.position;
                 _ctx.DesiredDirection = _ctx.WanderDestination - (Vector2)_ctx.transform.position;
-                Debug.Log($"Wander destination has no value, setting it to {_ctx.transform.position}");
             }
         }
     }
