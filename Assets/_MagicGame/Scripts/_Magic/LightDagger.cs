@@ -23,7 +23,7 @@ public class LightDagger : Spell
     {
         _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 
-        if (IsServer)
+        if (IsOwner)
         {
             Velocity.Value = _finalDirection * SpellData.Value.Speed;
         }

@@ -22,7 +22,7 @@ public class BubbleBulwark : Spell
         
     }
     
-    protected override void OnOwnerSpellEnd()
+    public override void OnOwnerSpellEnd()
     {
         Debug.Log($"Ending Bubble Spell");
         DetonateBubble();

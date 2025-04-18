@@ -455,13 +455,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <HitSomethingSound>k__BackingField:
-    Guid:
-      Data1: 249587751
-      Data2: 1169178929
-      Data3: -130389574
-      Data4: -1987048442
-    Path: event:/StoneHit
   <DaggerSprite>k__BackingField: {fileID: 5628283990125563510}
   _velocityDecay: 5
 --- !u!1 &7369372193081266863

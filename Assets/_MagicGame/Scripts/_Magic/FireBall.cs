@@ -4,9 +4,7 @@ public class FireBall : Spell
 {
     [field: SerializeField] public float VelocityDecay { get; private set; } = 5f;
     
-    private float _startTime;
     private Rigidbody2D _rigidbody2D;
-    private Vector2 _finalSpeed;
 
     protected override void Awake()
     {
@@ -18,20 +16,18 @@ public class FireBall : Spell
     protected override void OnOwnerExecuteSpellStart()
     {
         _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-        _startTime = Time.time;
 
         if (IsOwner)
         {
-            _finalSpeed = _finalDirection * SpellData.Value.Speed;
+            Velocity.Value = _finalDirection * SpellData.Value.Speed;
         }
     }
 
     private void FixedUpdate()
     {
-        if (!IsStarted.Value || !IsOwner) return; //don't do anything before OnNetworkSpawn has run.
+        if (!IsStarted.Value || !IsOwner) return; 
 
-        float t = Mathf.Clamp01((Time.time - _startTime) / SpellData.Value.Lifetime);
-        Velocity.Value = Vector2.Lerp(Vector2.zero, _finalSpeed, t);
+        Velocity.Value = Vector2.Lerp(Velocity.Value, Vector2.zero, VelocityDecay * Time.fixedDeltaTime);
         _rigidbody2D.linearVelocity = Velocity.Value;
     }
 }

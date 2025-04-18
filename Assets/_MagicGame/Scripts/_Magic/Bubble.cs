@@ -17,7 +17,7 @@ public class Bubble : Spell
 
     }
 
-    protected override void OnOwnerSpellEnd()
+    public override void OnOwnerSpellEnd()
     {
         
 

@@ -271,13 +271,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <HitSomethingSound>k__BackingField:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
   <PoisonDartSprite>k__BackingField: {fileID: 8103417690550109733}
   _velocityDecay: 3
 --- !u!1 &6308151217577337701

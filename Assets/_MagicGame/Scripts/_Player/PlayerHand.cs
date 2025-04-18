@@ -80,7 +80,7 @@ public class PlayerHand : NetworkBehaviour
 		float angle = NormalizeAngle(_angleNetworkVariable.Value);
 		ArmCardinalDirection = DetermineCardinalDirection(angle);
 		
-		if((HeldItem is StaffItemSO || HeldItem is WandItemSO) && IsOwner)
+		if(HeldItem is StaffItemSO || HeldItem is WandItemSO)
 		{
 			if (!IsSwinging)
 			{

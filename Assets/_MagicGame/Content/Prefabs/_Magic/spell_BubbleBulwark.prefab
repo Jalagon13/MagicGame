@@ -224,13 +224,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <HitSomethingSound>k__BackingField:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
   BlastRadius: 4
   PopParticles: {fileID: 5806733700640005283, guid: 44514b830e66a49798df9d5b5a290d09, type: 3}
 --- !u!1 &6817384772933635733

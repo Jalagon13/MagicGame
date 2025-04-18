@@ -29,14 +29,11 @@ MonoBehaviour:
     Path: event:/FireBurst
   <CastTime>k__BackingField: 0.33
   <Cooldown>k__BackingField: 0.2
+  <ManaCost>k__BackingField: 1
   <Damage>k__BackingField: 13
-  <ManaCost>k__BackingField: 10
   <Knockback>k__BackingField: 6
-  <Accuracy>k__BackingField: 5
-  <Lifetime>k__BackingField: 0.65
-  <Speed>k__BackingField: 30
+  <Lifetime>k__BackingField: 3
+  <Speed>k__BackingField: 25
   <Recoil>k__BackingField: 6
-  <Pierces>k__BackingField: 999
-  <Bounces>k__BackingField: 0
-  <GhostDistance>k__BackingField: 0
   <HasteMultiplier>k__BackingField: 0.6
+  <DespawnIfFocusSlotChanged>k__BackingField: 0

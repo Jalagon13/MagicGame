@@ -28,7 +28,7 @@ public class ShockRay : Spell
         _damageTimer = new Timer(0.1f);
     }
 
-    protected override void OnOwnerSpellEnd()
+    public override void OnOwnerSpellEnd()
     {
         // Any local cleanup goes here
 
