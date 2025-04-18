@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class Spell : NetworkBehaviour
 {
-	[field: SerializeField] public EventReference HitSomethingSound { get; private set; }
+	public static bool IsContinuouslyCasting;
 
 	public NetworkVariable<Vector2> Velocity { get; set; } = new NetworkVariable<Vector2>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<SyncSpellData> SpellData { get; set; } = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -50,15 +50,28 @@ public class Spell : NetworkBehaviour
 			WallMask = LayerMask.NameToLayer("PathfindingWall");
 			NpcLayer = LayerMask.NameToLayer("Npc");
 
-			OnOwnerSpellSpawned();
-
-			Debug.Log($"Registering on execute spell start");
 			SpellManager.Instance.OnExecuteSpells += ExecuteSpellStart;
 			SpellManager.Instance.OnCancelSpells += CancelSpellCharge;
+			HotbarManager.Instance.OnFocusSlotUpdated += TryToDespawnIfSlotChanged;
+			
+			OnOwnerSpellSpawned();
 		}
 	}
 
-	private void ExecuteSpellStart(object sender, SpellManager.ExecuteSpellsEventArgs e)
+    private void TryToDespawnIfSlotChanged(object sender, HotbarManager.OnFocusItemSetEventArgs e)
+    {
+        if(SpellData.Value.DespawnIfFocusSlotChanged)
+        {
+			InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
+			
+			if(selectedInventoryItem.Id != SpellData.Value.InventorySlotId)
+			{
+				OnOwnerSpellEnd();
+			}
+		}
+    }
+
+    private void ExecuteSpellStart(object sender, SpellManager.ExecuteSpellsEventArgs e)
 	{
 		transform.position = e.SpawnPoint;
 		_finalDirection = e.Direction;
@@ -240,6 +253,7 @@ public class Spell : NetworkBehaviour
 		{
 			SpellManager.Instance.OnExecuteSpells -= ExecuteSpellStart;
 			SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
+			HotbarManager.Instance.OnFocusSlotUpdated -= TryToDespawnIfSlotChanged;
 		}
 	
 		if (IsClient)

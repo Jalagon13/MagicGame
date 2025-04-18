@@ -17,7 +17,6 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
     public override void EnterState()
     {  
-        Debug.Log("Idle State");
         _idleComplete = false;
         
         float idleDuration = UnityEngine.Random.Range(_ctx.MinIdleDuration, _ctx.MaxIdleDuration);

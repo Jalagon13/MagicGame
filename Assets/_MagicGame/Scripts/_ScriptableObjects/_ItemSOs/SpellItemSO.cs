@@ -15,9 +15,11 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public float HasteMultiplier;
 	public ulong SpellId;
 	public ulong OwnerPlayerId;
+	public ulong InventorySlotId;
+	public bool DespawnIfFocusSlotChanged;
 	public BiomeType SpawnBiome;
 
-	public SyncSpellData(int spellIndex, int damage, int knockback, float speed, float lifetime, float hasteMultiplier, ulong spellId, ulong ownerPlayerId, BiomeType spawnBiome)
+	public SyncSpellData(int spellIndex, int damage, int knockback, float speed, float lifetime, float hasteMultiplier, ulong spellId, ulong ownerPlayerId, ulong inventorySlotId, bool despawnIfFocusSlotChanged, BiomeType spawnBiome)
 	{
 		SpellIndex = spellIndex;
 		Damage = damage;
@@ -27,6 +29,8 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		HasteMultiplier = hasteMultiplier;
 		SpellId = spellId;
 		OwnerPlayerId = ownerPlayerId;
+		InventorySlotId = inventorySlotId;
+		DespawnIfFocusSlotChanged = despawnIfFocusSlotChanged;
 		SpawnBiome = spawnBiome;
 	}
 
@@ -41,6 +45,8 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 			HasteMultiplier != other.HasteMultiplier ||
 			SpellId != other.SpellId ||
 			OwnerPlayerId != other.OwnerPlayerId ||
+			InventorySlotId != other.InventorySlotId ||
+			DespawnIfFocusSlotChanged != other.DespawnIfFocusSlotChanged ||
 			SpawnBiome != other.SpawnBiome)
 		{
 			return false;
@@ -59,6 +65,8 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		serializer.SerializeValue(ref HasteMultiplier);
 		serializer.SerializeValue(ref SpellId);
 		serializer.SerializeValue(ref OwnerPlayerId);
+		serializer.SerializeValue(ref InventorySlotId);
+		serializer.SerializeValue(ref DespawnIfFocusSlotChanged);
 		serializer.SerializeValue(ref SpawnBiome);
 	}
 }
@@ -104,14 +112,21 @@ public class SpellItemSO : ItemSO
 
 	[field: Tooltip("Multiplier on fast the player moves when casting this spell")]
 	[field: SerializeField] public float HasteMultiplier { get; private set; } = 0.5f;
-
+	
+	[field: Tooltip("Should the spell be despawned if the slot it was cast from changes during spell lifetime")]
+	[field: SerializeField] public bool DespawnIfFocusSlotChanged { get; private set; }
+	
 	public SyncSpellData GetSpellDataForLocalClientInstance()
 	{
+		InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
+
 		return new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
 			Damage, Knockback, Speed, Lifetime, HasteMultiplier, 
 			IdGenerator.GenerateRandomId(),
 			Player.LocalClientInstance.OwnerClientId,
+			selectedInventoryItem.Id,
+			DespawnIfFocusSlotChanged,
 			Player.LocalClientInstance.CurrentPlayerBiome.Value);
 	}
 

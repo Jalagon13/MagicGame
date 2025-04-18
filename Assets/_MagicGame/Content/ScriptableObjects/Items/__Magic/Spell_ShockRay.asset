@@ -28,14 +28,12 @@ MonoBehaviour:
       Data4: -1689700191
     Path: event:/WaterSplash
   <CastTime>k__BackingField: 0.2
-  <Cooldown>k__BackingField: 1
-  <ManaCost>k__BackingField: 15
-  <Damage>k__BackingField: 6
+  <Cooldown>k__BackingField: 5
+  <ManaCost>k__BackingField: 20
+  <Damage>k__BackingField: 2
   <Knockback>k__BackingField: 1
-  <Lifetime>k__BackingField: 5
+  <Lifetime>k__BackingField: 4
   <Speed>k__BackingField: 0
   <Recoil>k__BackingField: 0
-  <Pierces>k__BackingField: 0
-  <Bounces>k__BackingField: 0
-  <GhostDistance>k__BackingField: 0
   <HasteMultiplier>k__BackingField: 0.6
+  <DespawnIfFocusSlotChanged>k__BackingField: 1

@@ -27,12 +27,12 @@ public class SpellManager : MonoBehaviour
     public event EventHandler OnSelectedSpellUpdated;
     public event EventHandler OnSpellCooldownTimersUpdated;
     public event EventHandler<ExecuteSpellsEventArgs> OnExecuteSpells;
-    public event EventHandler OnCancelSpells;
     public class ExecuteSpellsEventArgs : EventArgs
     {
         public Vector2 SpawnPoint;
         public Vector2 Direction;
     }
+    public event EventHandler OnCancelSpells;
 
     public SpellbookInventoryItem EquippedSpellBook { get; private set; }
     public bool HasEquippedSpellBook => EquippedSpellBook != null;
@@ -94,7 +94,6 @@ public class SpellManager : MonoBehaviour
 
         if (CastTimeTimer.RemainingSeconds > 0)
         {
-            Debug.Log($"Id: {selectedInventoryItem.Id} | _loadedSpell.Id: {_loadedSpell.StaffUsedForCast.Id}");
             if(selectedInventoryItem.Id != _loadedSpell.StaffUsedForCast.Id)
             {
                 // Selected another item that wasn't the item used on to cast the spell

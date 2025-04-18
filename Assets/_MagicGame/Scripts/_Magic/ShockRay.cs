@@ -1,94 +1,110 @@
 using System.Collections.Generic;
+using FMODUnity;
+using Unity.Netcode;
 using UnityEngine;
 
 public class ShockRay : Spell
 {
     [field: SerializeField] public float Range { get; private set; }
+    [field: SerializeField] public float TimeBetweenDamage { get; private set; } = 0.25f;
     [field: SerializeField] public LineRenderer BeamRenderer { get; private set; }
+    [field: SerializeField] public EventReference DamageSound { get; private set; }
 
-    private List<GameObject> _potentialTargetsToLockOnTo = new();
+    public NetworkVariable<bool> BeamVisible { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<Vector2> BeamStart { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<Vector2> BeamEnd { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+    private List<NetworkHealthState> _potentialTargetsToLockOnTo = new();
+    private Timer _damageTimer;
 
     protected override void OnOwnerSpellSpawned()
     {
-        Debug.Log($"Spawned Shockray Spell. Client owner: {OwnerClientId}");
-        
         
     }
 
     protected override void OnOwnerExecuteSpellStart()
     {
-        Debug.Log($"Executing Shockray Spell. Owner: {NetworkObject.OwnerClientId}");
-
         BeamRenderer.useWorldSpace = true;
+        _damageTimer = new Timer(0.1f);
     }
 
     protected override void OnOwnerSpellEnd()
     {
-        Debug.Log($"Ending Shockray Spell");
+        // Any local cleanup goes here
 
         base.OnOwnerSpellEnd();
-    }
-
-    public override void OnOwnerSpellCanceled()
-    {
-        Debug.Log($"Cancelling Shockray Spell");
-
-        base.OnOwnerSpellCanceled();
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if(!IsOwner || !IsStarted.Value) return;
-
-        _potentialTargetsToLockOnTo.Clear();
-        BeamRenderer.positionCount = 0;
-        BeamRenderer.enabled = false;
-        
-        Vector2 wandPos = Player.LocalClientInstance.MainHand.SpellSpawnTransform.position;
-        Collider2D[] collisions = Physics2D.OverlapCircleAll(wandPos, Range, CollisionMask);
-
-        for (int i = 0; i < collisions.Length; i++)
+        if(IsOwner && IsStarted.Value)
         {
-            int layerTest = 1 << collisions[i].gameObject.layer;
-            if ((layerTest & CollisionMask) != 0)
+            _damageTimer.Tick(Time.deltaTime);
+            _potentialTargetsToLockOnTo.Clear();
+            BeamVisible.Value = false;
+
+            Vector2 wandPos = Player.LocalClientInstance.MainHand.SpellSpawnTransform.position;
+            Collider2D[] collisions = Physics2D.OverlapCircleAll(wandPos, Range, CollisionMask);
+
+            for (int i = 0; i < collisions.Length; i++)
             {
-                if (collisions[i].gameObject.layer == NpcLayer)
+                int layerTest = 1 << collisions[i].gameObject.layer;
+                if ((layerTest & CollisionMask) != 0)
                 {
-                    if (collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
+                    if (collisions[i].gameObject.layer == NpcLayer)
                     {
-                        NetworkHealthState npc = npcNet.GetComponent<NetworkHealthState>();
-                        if(!_potentialTargetsToLockOnTo.Contains(collisions[i].gameObject))
+                        if (collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
                         {
-                            _potentialTargetsToLockOnTo.Add(collisions[i].gameObject);
+                            NetworkHealthState npc = npcNet.GetComponent<NetworkHealthState>();
+                            if (!_potentialTargetsToLockOnTo.Contains(npc))
+                            {
+                                _potentialTargetsToLockOnTo.Add(npc);
+                            }
                         }
                     }
                 }
             }
+
+            NetworkHealthState closestTarget = null;
+
+            if (_potentialTargetsToLockOnTo.Count > 0)
+            {
+                // Pick the closest target to home to
+                float closestDistance = float.MaxValue;
+
+                foreach (NetworkHealthState target in _potentialTargetsToLockOnTo)
+                {
+                    float distance = Vector2.Distance(wandPos, target.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestTarget = target;
+                    }
+                }
+
+                if (closestTarget == null) return;
+
+                if (_damageTimer.RemainingSeconds <= 0)
+                {
+                    _damageTimer.RemainingSeconds = TimeBetweenDamage;
+
+                    closestTarget.TakeDamageRpc(SpellData.Value.Damage, NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, SpellData.Value.Knockback);
+                    SoundManager.Instance.PlayOneShot(DamageSound, transform.position);
+                }
+
+                BeamVisible.Value = true;
+                BeamStart.Value = wandPos;
+                BeamEnd.Value = closestTarget.transform.position;
+            }
         }
 
-        if (_potentialTargetsToLockOnTo.Count > 0)
+        if(IsClient && IsStarted.Value)
         {
-            // Pick the closest target to home to
-            float closestDistance = float.MaxValue;
-            GameObject closestTarget = null;
-            foreach (GameObject target in _potentialTargetsToLockOnTo)
-            {
-                float distance = Vector2.Distance(transform.position, target.transform.position);
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    closestTarget = target;
-                }
-            }
-            
-            if(closestTarget == null) return;
-            Debug.Log($"Locking on to {closestTarget.name}");
-            BeamRenderer.enabled = true;
-            BeamRenderer.positionCount = 2;
-            BeamRenderer.SetPosition(0, wandPos);
-            BeamRenderer.SetPosition(1, closestTarget.transform.position);
+            BeamRenderer.enabled = BeamVisible.Value;
+            BeamRenderer.SetPosition(0, BeamStart.Value);
+            BeamRenderer.SetPosition(1, BeamEnd.Value);
         }
     }
 }
