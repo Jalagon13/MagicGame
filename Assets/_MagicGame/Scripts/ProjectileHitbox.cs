@@ -57,7 +57,7 @@ public class ProjectileHitbox : MonoBehaviour
         // Second: Handle wall bounces using a predictive raycast
         Vector2 currentPosition = transform.root.position;
         Vector2 direction = Spell.Velocity.Value.normalized;
-        float distance = Spell.Velocity.Value.magnitude * Time.fixedDeltaTime + _spellCollider.radius + 1f;
+        float distance = Spell.Velocity.Value.magnitude * Time.fixedDeltaTime + 0.02f;
 
         RaycastHit2D hit = Physics2D.Raycast(currentPosition, direction, distance, Spell.CollisionMask);
         if (hit.collider != null && hit.collider.gameObject.layer == 9)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
 using MoreMountains.Tools;
@@ -12,6 +13,7 @@ public class Spell : NetworkBehaviour
 	public static bool IsContinuouslyCasting;
 	
 	[field: SerializeField] public GameObject Visualization { get; private set; }
+	[field: SerializeField] public float DespawnDelay { get; private set; }
 
 	public NetworkVariable<Vector2> Velocity { get; set; } = new NetworkVariable<Vector2>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<SyncSpellData> SpellData { get; set; } = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -27,7 +29,8 @@ public class Spell : NetworkBehaviour
 	protected Vector2 _finalDirection;
 
 	private PositionLerper _positionLerper;
-	const float k_LerpTime = 0.05f;
+	private const float k_LerpTime = 0.02f;
+	private bool _despawning;
 
 	protected virtual void Awake()
     {
@@ -40,6 +43,7 @@ public class Spell : NetworkBehaviour
 		if(IsClient)
 		{
 			ShowVisuals.OnValueChanged += HandleVisuals;
+			IsStarted.OnValueChanged += HandleStarted;
 		}
 		
 		if (IsOwner)
@@ -58,6 +62,16 @@ public class Spell : NetworkBehaviour
 		}
 	}
 
+    private void HandleStarted(bool previousValue, bool newValue)
+    {
+		if(!newValue)
+		{
+			OnStopped();
+		}
+	}
+    
+    protected virtual void OnStopped() { }
+
     private void TryToDespawnIfSlotChanged(object sender, HotbarManager.OnFocusItemSetEventArgs e)
     {
         if(SpellData.Value.DespawnIfFocusSlotChanged)
@@ -73,7 +87,7 @@ public class Spell : NetworkBehaviour
 
     private void ExecuteSpellStart(object sender, SpellManager.ExecuteSpellsEventArgs e)
 	{
-		if(IsStarted.Value) return;
+		if(IsStarted.Value || _despawning) return;
 
 		SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
 
@@ -96,38 +110,44 @@ public class Spell : NetworkBehaviour
 
     protected virtual void Update()
 	{
-		if(IsStarted.Value && IsOwner)
+		if(IsOwner && SpellLifeTimer != null && SpellLifeTimer.RemainingSeconds > 0)
 		{
 			SpellLifeTimer.Tick(Time.deltaTime);
 		}
-	
-		if (IsClient && IsStarted.Value)
-		{
-			Visualization.transform.position = _positionLerper.LerpPosition(Visualization.transform.position, transform.position);
-			
-			if(_spellGameObject.activeSelf)
-			{
-				Visualization.SetActive(true);
-			}
-			else
-			{
-				Visualization.SetActive(false);
-			}
-		}
+
+		// Visualization.transform.position = _positionLerper.LerpPosition(Visualization.transform.position, transform.position);
+
+		// if (IsClient && IsStarted.Value)
+		// {
+		// 	Visualization.SetActive(_spellGameObject.activeSelf);
+		// }
 		// don't do anything before OnNetworkSpawn has run.
 	}
 
 	protected virtual void OnOwnerSpellSpawned() { }
 	protected virtual void OnOwnerExecuteSpellStart() { }
-	public virtual void OnOwnerSpellEnd()
-	{
-		IsStarted.Value = false;
-		DespawnSpellServerRpc();
-	}
 
 	public virtual void OnOwnerSpellCanceled()
 	{
 		IsStarted.Value = false;
+		DespawnSpellServerRpc();
+	}
+	
+	public virtual void OnOwnerSpellEnd()
+	{
+		IsStarted.Value = false;
+		StartCoroutine(WaitToDespawnRoutine());
+	}
+
+	private IEnumerator WaitToDespawnRoutine()
+	{
+		_despawning = true;
+		
+		if (DespawnDelay > 0)
+		{
+			yield return new WaitForSeconds(DespawnDelay);
+		}
+	
 		DespawnSpellServerRpc();
 	}
 
@@ -148,18 +168,18 @@ public class Spell : NetworkBehaviour
     {
         if(newValue)
         {
-			Visualization.transform.parent = null;
+			// Visualization.transform.parent = null;
 			
-			if (Player.LocalClientInstance.OwnerClientId == SpellData.Value.OwnerPlayerId) // If I am on owner client
-			{
-				Visualization.transform.position = Player.LocalClientInstance.MainHand.SpellSpawnTransform.position;
-			}
-			else // If I am on any other client
-			{
-				Visualization.transform.position = NetworkManager.Singleton.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
-			}
+			// if (Player.LocalClientInstance.OwnerClientId == SpellData.Value.OwnerPlayerId) // If I am on owner client
+			// {
+			// 	Visualization.transform.position = Player.LocalClientInstance.MainHand.SpellSpawnTransform.position;
+			// }
+			// else // If I am on any other client
+			// {
+			// 	Visualization.transform.position = NetworkManager.Singleton.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
+			// }
 
-			_positionLerper = new PositionLerper(transform.position, k_LerpTime);
+			// _positionLerper = new PositionLerper(transform.position, k_LerpTime);
 			Debug.Log($"Showing visualization");
 			Visualization.SetActive(true);
 		}

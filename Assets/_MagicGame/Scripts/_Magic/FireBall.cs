@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class FireBall : Spell
 {
+    [field: Header("Fireball")]
     [field: SerializeField] public float VelocityDecay { get; private set; } = 5f;
+    [field: SerializeField] public ParticleSystem Trail { get; private set; }
     
     private Rigidbody2D _rigidbody2D;
 
@@ -23,11 +25,21 @@ public class FireBall : Spell
         }
     }
 
+    protected override void OnStopped()
+    {
+        Debug.Log($"Stopping fireball");
+        if (Trail != null)
+        {
+            Trail.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+    }
+
     private void FixedUpdate()
     {
-        if (!IsStarted.Value || !IsOwner) return; 
-
-        Velocity.Value = Vector2.Lerp(Velocity.Value, Vector2.zero, VelocityDecay * Time.fixedDeltaTime);
-        _rigidbody2D.linearVelocity = Velocity.Value;
+        if(IsOwner)
+        {
+            Velocity.Value = Vector2.Lerp(Velocity.Value, Vector2.zero, VelocityDecay * Time.fixedDeltaTime);
+            _rigidbody2D.linearVelocity = Velocity.Value;
+        }
     }
 }
