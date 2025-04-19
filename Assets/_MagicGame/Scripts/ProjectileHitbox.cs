@@ -20,7 +20,7 @@ public class ProjectileHitbox : MonoBehaviour
     
     private void FixedUpdate()
     {
-        if (_spellCollider == null || !Spell.IsOwner || !Spell.IsStarted.Value) return;
+        if (_spellCollider == null || Spell.SpellData.Value.OwnerPlayerId != Player.LocalClientInstance.OwnerClientId || !Spell.IsStarted.Value) return;
 
         // First: Handle NPC hits using OverlapCircleAll
         Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _spellCollider.radius, Spell.CollisionMask);
@@ -60,25 +60,22 @@ public class ProjectileHitbox : MonoBehaviour
         float distance = Spell.Velocity.Value.magnitude * Time.fixedDeltaTime + _spellCollider.radius + 1f;
 
         RaycastHit2D hit = Physics2D.Raycast(currentPosition, direction, distance, Spell.CollisionMask);
-        if (hit.collider != null && hit.collider.gameObject.layer == Spell.WallMask)
+        if (hit.collider != null && hit.collider.gameObject.layer == 9)
         {
-            if (hit.collider.TryGetComponent(out PathfindingWallTm pfWall) && pfWall.BiomeSameAs(Spell.SpellData.Value.SpawnBiome))
+            if (_bounces >= BounceCount)
             {
-                if (_bounces >= BounceCount)
-                {
-                    Debug.Log($"Ending spell on bounce");
-                    Spell.OnOwnerSpellEnd();
-                    return;
-                }
-                else
-                {
-                    Vector2 hitNormal = hit.normal;
-                    float speed = Spell.Velocity.Value.magnitude;
-                    Spell.Velocity.Value = Vector2.Reflect(direction, hitNormal) * speed;
-                    _bounces++;
-                    Debug.Log($"Bounced! Bounce count: {_bounces}");
-                    return;
-                }
+                Debug.Log($"Ending spell on bounce");
+                Spell.OnOwnerSpellEnd();
+                return;
+            }
+            else
+            {
+                Vector2 hitNormal = hit.normal;
+                float speed = Spell.Velocity.Value.magnitude;
+                Spell.Velocity.Value = Vector2.Reflect(direction, hitNormal) * speed;
+                _bounces++;
+                Debug.Log($"Bounced! Bounce count: {_bounces}");
+                return;
             }
         }
     }

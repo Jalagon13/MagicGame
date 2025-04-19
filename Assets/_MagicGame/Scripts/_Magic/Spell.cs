@@ -10,6 +10,8 @@ using UnityEngine;
 public class Spell : NetworkBehaviour
 {
 	public static bool IsContinuouslyCasting;
+	
+	[field: SerializeField] public GameObject Visualization { get; private set; }
 
 	public NetworkVariable<Vector2> Velocity { get; set; } = new NetworkVariable<Vector2>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<SyncSpellData> SpellData { get; set; } = new NetworkVariable<SyncSpellData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -24,29 +26,29 @@ public class Spell : NetworkBehaviour
 	protected GameObject _spellGameObject;
 	protected Vector2 _finalDirection;
 
-	private Transform _visualizationTf;
 	private PositionLerper _positionLerper;
 	const float k_LerpTime = 0.05f;
 
 	protected virtual void Awake()
     {
 		_spellGameObject = transform.GetChild(0).gameObject;
-		_visualizationTf = transform.GetChild(0).GetChild(0);
-		
-		Hide();
+		Visualization.SetActive(false);
 	}
 
 	public override void OnNetworkSpawn()
 	{
-		ShowVisuals.OnValueChanged += HandleVisuals;
+		if(IsClient)
+		{
+			ShowVisuals.OnValueChanged += HandleVisuals;
+		}
 		
 		if (IsOwner)
 		{
-			ShowVisuals.Value = false;
-			
-			CollisionMask = LayerMask.GetMask(new[] { "PathfindingWall", "Npc" });
-			WallMask = LayerMask.NameToLayer("PathfindingWall");
+			CollisionMask = LayerMask.GetMask(new[] { "LocalWall", "Npc" });
+			WallMask = LayerMask.NameToLayer("LocalWall");
 			NpcLayer = LayerMask.NameToLayer("Npc");
+			
+			Visualization.SetActive(false);	
 
 			SpellManager.Instance.OnExecuteSpells += ExecuteSpellStart;
 			SpellManager.Instance.OnCancelSpells += CancelSpellCharge;
@@ -71,6 +73,10 @@ public class Spell : NetworkBehaviour
 
     private void ExecuteSpellStart(object sender, SpellManager.ExecuteSpellsEventArgs e)
 	{
+		if(IsStarted.Value) return;
+
+		SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
+
 		transform.position = e.SpawnPoint;
 		_finalDirection = e.Direction;
 
@@ -95,9 +101,18 @@ public class Spell : NetworkBehaviour
 			SpellLifeTimer.Tick(Time.deltaTime);
 		}
 	
-		if (IsClient && _visualizationTf.gameObject.activeSelf)
+		if (IsClient && IsStarted.Value)
 		{
-			_visualizationTf.position = _positionLerper.LerpPosition(_visualizationTf.position, transform.position);
+			Visualization.transform.position = _positionLerper.LerpPosition(Visualization.transform.position, transform.position);
+			
+			if(_spellGameObject.activeSelf)
+			{
+				Visualization.SetActive(true);
+			}
+			else
+			{
+				Visualization.SetActive(false);
+			}
 		}
 		// don't do anything before OnNetworkSpawn has run.
 	}
@@ -133,36 +148,28 @@ public class Spell : NetworkBehaviour
     {
         if(newValue)
         {
-            Show();
-        }
+			Visualization.transform.parent = null;
+			
+			if (Player.LocalClientInstance.OwnerClientId == SpellData.Value.OwnerPlayerId) // If I am on owner client
+			{
+				Visualization.transform.position = Player.LocalClientInstance.MainHand.SpellSpawnTransform.position;
+			}
+			else // If I am on any other client
+			{
+				Visualization.transform.position = NetworkManager.Singleton.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
+			}
+
+			_positionLerper = new PositionLerper(transform.position, k_LerpTime);
+			Debug.Log($"Showing visualization");
+			Visualization.SetActive(true);
+		}
         else
         {
-            Hide();
-        }
+			Debug.Log($"Hiding visualization");
+			Visualization.SetActive(false);
+		}
     }
 
-	private void Show()
-	{
-		if(Player.LocalClientInstance.OwnerClientId == SpellData.Value.OwnerPlayerId)
-		{
-			_visualizationTf.position = Player.LocalClientInstance.MainHand.SpellSpawnTransform.position;
-		}
-		else
-		{
-			_visualizationTf.position = NetworkManager.Singleton.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
-		}
-
-		_positionLerper = new PositionLerper(transform.position, k_LerpTime);
-
-		_visualizationTf.parent = null;
-		_visualizationTf.gameObject.SetActive(true);
-	}
-
-	private void Hide()
-	{
-		_visualizationTf.gameObject.SetActive(false);
-	}
-	
 	public override void OnNetworkDespawn()
 	{
 		if(IsOwner)
@@ -175,7 +182,7 @@ public class Spell : NetworkBehaviour
 		if (IsClient)
 		{
 			Debug.Log($"Reattaching visualization before despawning");
-			_visualizationTf.parent = transform;
+			Visualization.transform.parent = transform;
 		}
 	}
 }
