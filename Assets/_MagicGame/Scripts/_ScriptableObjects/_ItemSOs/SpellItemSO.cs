@@ -133,7 +133,6 @@ public class SpellItemSO : ItemSO
 	public SyncSpellData LoadSpell(SpellBookItemSO wandSO)
 	{
 		var syncSpellData = GetSpellDataForLocalClientInstance();
-		Debug.Log($"LoadSpell in Spellitemso {syncSpellData.SpellId}");
 		GameManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
 		return syncSpellData;
 	}

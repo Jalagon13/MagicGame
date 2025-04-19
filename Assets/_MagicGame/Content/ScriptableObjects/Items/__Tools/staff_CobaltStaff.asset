@@ -17,4 +17,5 @@ MonoBehaviour:
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <MeleeDamage>k__BackingField: 9
+  <MeleeDamage>k__BackingField: 7
+  <Knockback>k__BackingField: 4

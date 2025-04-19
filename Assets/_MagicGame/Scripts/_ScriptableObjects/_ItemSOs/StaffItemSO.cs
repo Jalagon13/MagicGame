@@ -7,6 +7,7 @@ public class StaffItemSO : ItemSO
 {
 	// For custom spell modifiers
 	[field: SerializeField] public int MeleeDamage { get; private set; }
+	[field: SerializeField] public int Knockback { get; private set; }
 
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{

@@ -126,7 +126,6 @@ public class SpellManager : MonoBehaviour
         Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, _loadedSpell.SpellToCast.Recoil);
         SoundManager.Instance.PlayOneShot(_loadedSpell.SpellToCast.SpellCast, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
 
-        Debug.Log($"SPellManager execute spell");
         OnExecuteSpells?.Invoke(this, new ExecuteSpellsEventArgs 
         { 
             SpawnPoint = spawnPoint, 

@@ -28,6 +28,7 @@ public class PlayerHand : NetworkBehaviour
 	[SerializeField] private GameObject _armPivotGO;
 	[SerializeField] private GameObject _armGO;
 	[field: SerializeField] public Transform SpellSpawnTransform;
+	[field: SerializeField] public MeleeCollider MeleeCollider;
 	public bool IsSwinging { get; private set; }
 	public ItemSO HeldItem { get; private set; }
 
@@ -224,7 +225,9 @@ public class PlayerHand : NetworkBehaviour
 
 		Quaternion startRotation = Quaternion.Euler(0, 0, startAngle);
 		Quaternion endRotation = Quaternion.Euler(0, 0, endAngle);
-
+		
+		MeleeCollider.StartSwing(HeldItem as StaffItemSO);
+		
 		float elapsedTime = 0f;
 		while (elapsedTime < duration)
 		{
@@ -255,12 +258,7 @@ public class PlayerHand : NetworkBehaviour
 			OnSwingEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
 		}
 
-		StartCoroutine(FinishSwing(duration, endRotation));
-	}
-
-	private IEnumerator FinishSwing(float duration, Quaternion endRotation)
-	{
-		yield return new WaitForSeconds(duration * 0.3f);
+		MeleeCollider.EndSwing();
 
 		_swingCooldownTimer.Reset();
 		_armPivotGO.transform.rotation = endRotation;

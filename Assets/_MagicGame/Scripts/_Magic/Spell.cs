@@ -27,9 +27,6 @@ public class Spell : NetworkBehaviour
 	
 	protected GameObject _spellGameObject;
 	protected Vector2 _finalDirection;
-
-	private PositionLerper _positionLerper;
-	private const float k_LerpTime = 0.02f;
 	private bool _despawning;
 
 	protected virtual void Awake()
@@ -114,14 +111,6 @@ public class Spell : NetworkBehaviour
 		{
 			SpellLifeTimer.Tick(Time.deltaTime);
 		}
-
-		// Visualization.transform.position = _positionLerper.LerpPosition(Visualization.transform.position, transform.position);
-
-		// if (IsClient && IsStarted.Value)
-		// {
-		// 	Visualization.SetActive(_spellGameObject.activeSelf);
-		// }
-		// don't do anything before OnNetworkSpawn has run.
 	}
 
 	protected virtual void OnOwnerSpellSpawned() { }
@@ -166,28 +155,7 @@ public class Spell : NetworkBehaviour
 
     private void HandleVisuals(bool previousValue, bool newValue)
     {
-        if(newValue)
-        {
-			// Visualization.transform.parent = null;
-			
-			// if (Player.LocalClientInstance.OwnerClientId == SpellData.Value.OwnerPlayerId) // If I am on owner client
-			// {
-			// 	Visualization.transform.position = Player.LocalClientInstance.MainHand.SpellSpawnTransform.position;
-			// }
-			// else // If I am on any other client
-			// {
-			// 	Visualization.transform.position = NetworkManager.Singleton.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
-			// }
-
-			// _positionLerper = new PositionLerper(transform.position, k_LerpTime);
-			Debug.Log($"Showing visualization");
-			Visualization.SetActive(true);
-		}
-        else
-        {
-			Debug.Log($"Hiding visualization");
-			Visualization.SetActive(false);
-		}
+		Visualization.SetActive(newValue);
     }
 
 	public override void OnNetworkDespawn()

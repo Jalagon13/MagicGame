@@ -224,6 +224,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  <Visualization>k__BackingField: {fileID: 0}
+  <DespawnDelay>k__BackingField: 0
   BlastRadius: 4
   PopParticles: {fileID: 5806733700640005283, guid: 44514b830e66a49798df9d5b5a290d09, type: 3}
 --- !u!1 &6817384772933635733

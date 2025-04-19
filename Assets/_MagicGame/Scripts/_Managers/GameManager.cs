@@ -215,7 +215,6 @@ public class GameManager : NetworkBehaviour
 		
 		spell.SpellData.Value = spellData;
 		spell.GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);
-		Debug.Log($"SERVER GAMEMANAGER spell id: {spell.SpellData.Value.SpellId} ");
 	}
 	
 	#endregion

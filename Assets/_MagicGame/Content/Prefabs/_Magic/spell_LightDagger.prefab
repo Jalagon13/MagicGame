@@ -455,6 +455,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  <Visualization>k__BackingField: {fileID: 0}
+  <DespawnDelay>k__BackingField: 0
   <DaggerSprite>k__BackingField: {fileID: 5628283990125563510}
   _velocityDecay: 5
 --- !u!1 &7369372193081266863

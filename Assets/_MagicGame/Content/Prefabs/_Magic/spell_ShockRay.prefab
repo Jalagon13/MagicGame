@@ -224,6 +224,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  <Visualization>k__BackingField: {fileID: 1896378920223993688}
+  <DespawnDelay>k__BackingField: 0
   <Range>k__BackingField: 5
   <TimeBetweenDamage>k__BackingField: 0.25
   <BeamRenderer>k__BackingField: {fileID: 4215576305477434275}
