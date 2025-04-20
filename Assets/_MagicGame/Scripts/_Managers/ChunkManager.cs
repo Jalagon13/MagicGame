@@ -12,7 +12,7 @@ public class ChunkManager : NetworkBehaviour
 {
 	public static bool IS_GENERATING_BIOME;
 	public static int BIOME_SIDE_LENGTH = 256;
-	public static int CHUNK_SIZE = 4;
+	public static int CHUNK_SIZE = 32;
 
 	public class OnActiveChunksUpdatedEventArgs : EventArgs
 	{

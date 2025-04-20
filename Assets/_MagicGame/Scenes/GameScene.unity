@@ -6317,8 +6317,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _chunkLoadCooldown: 0.0075
-  _chunkLoadRadiusX: 12
-  _chunkLoadRadiusY: 10
+  _chunkLoadRadiusX: 8
+  _chunkLoadRadiusY: 8
 --- !u!114 &876396789
 MonoBehaviour:
   m_ObjectHideFlags: 0
