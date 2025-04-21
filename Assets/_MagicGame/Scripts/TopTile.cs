@@ -21,18 +21,7 @@ public class TopTile : MonoBehaviour
 
         UpdateSelf();
         UpdateSortingLayer();
-
-        // After self update, update other top tiles in area
-        Vector3 centerTileWorldPos = new Vector3(_botMiddleTilePosition.x + 0.5f, _botMiddleTilePosition.y + 0.5f);
-        Collider2D[] colliders = Physics2D.OverlapPointAll(centerTileWorldPos);
-        foreach (Collider2D collider in colliders)
-        {
-            TopTile topTile = collider.GetComponent<TopTile>();
-            if (topTile != null)
-            {
-                topTile.UpdateSelf();
-            }
-        }
+        TileManager.Instance.UpdateNearbyTopTiles(_botMiddleTilePosition);
     }
     
     public void UpdateSelf()

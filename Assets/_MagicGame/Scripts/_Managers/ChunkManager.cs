@@ -255,6 +255,7 @@ public class ChunkManager : NetworkBehaviour
 				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
 				TileManager.Instance.AddTileVisibilityData(pos, new TileVisibility {Visibility = tileToPlace == null ? 0 : 1 });
 				Lightmap.Instance.UpdateLightMap();
+				TileManager.Instance.HandleTopWallTiles(pos, tileToPlace, TileManager.Instance.WallTm);
 				break;
 			case TileType.Ore:
 				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
@@ -263,12 +264,6 @@ public class ChunkManager : NetworkBehaviour
 				break;
 		}
 	}
-	
-	// public bool ObjectPositionInLoadedChunks(Vector2 position) // Check if the position is within the bounds
-	// {
-	// 	return position.x >= MinLoadedTilePosition.x && position.x <= MaxLoadedTilePosition.x &&
-	// 		   position.y >= MinLoadedTilePosition.y && position.y <= MaxLoadedTilePosition.y;
-	// }
 
 	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType environmentToGetChunkFrom)
 	{

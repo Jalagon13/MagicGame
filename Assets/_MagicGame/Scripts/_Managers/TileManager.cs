@@ -87,7 +87,7 @@ public class TileManager : NetworkBehaviour
 				WallTm.SetTile(tilePos, tileSO);
 				if(tileSO == null) // When destroying wall, destroy the wall behind it
 				{
-					HandleTopWallTiles(tilePos, tileSO, WallTm);
+					RefreshNearbyTopTiles(tilePos, WallTm);
 				}
 				break;
 			case TileType.Ore: 
@@ -95,7 +95,7 @@ public class TileManager : NetworkBehaviour
 				if(tileSO == null) // When destroying ore, destroy the wall behind it
 				{
 					WallTm.SetTile(tilePos, tileSO);
-					HandleTopWallTiles(tilePos, tileSO, OreTm);
+					RefreshNearbyTopTiles(tilePos, OreTm);
 				}
 				break;
 		}
@@ -122,7 +122,7 @@ public class TileManager : NetworkBehaviour
 	    }
 	}
 	
-    private void HandleTopWallTiles(Vector3Int botTilePosition, TileSO tileSO, Tilemap tilemap)
+    public void HandleTopWallTiles(Vector3Int botTilePosition, TileSO tileSO, Tilemap tilemap)
     {
 		if(tileSO != null)
 		{
@@ -149,22 +149,27 @@ public class TileManager : NetworkBehaviour
 		}
 		else
 		{
-			UpdateNearbyTopTiles(botTilePosition);
-			
-			Vector3Int[] directions = new Vector3Int[] { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right };
-			foreach (Vector3Int direction in directions)
+			RefreshNearbyTopTiles(botTilePosition, tilemap);
+		}
+	}
+	
+	public void RefreshNearbyTopTiles(Vector3Int botTilePosition, Tilemap tilemap)
+	{
+		UpdateNearbyTopTiles(botTilePosition);
+
+		Vector3Int[] directions = new Vector3Int[] { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right };
+		foreach (Vector3Int direction in directions)
+		{
+			Vector3Int neighborPos = botTilePosition + direction;
+
+			if (HasTile(neighborPos, TileType.Wall))
 			{
-			    Vector3Int neighborPos = botTilePosition + direction;
-			    
-			    if (HasTile(neighborPos, TileType.Wall))
-			    {
-					HandleTopWallTiles(neighborPos, GameManager.Instance.GetTileSOFromTileBase(WallTm.GetTile(neighborPos)), tilemap);
-				}
+				HandleTopWallTiles(neighborPos, GameManager.Instance.GetTileSOFromTileBase(WallTm.GetTile(neighborPos)), tilemap);
 			}
 		}
 	}
 	
-	private void UpdateNearbyTopTiles(Vector3Int botTilePosition)
+	public void UpdateNearbyTopTiles(Vector3Int botTilePosition)
 	{
 	    Vector3Int[] directions = new Vector3Int[]
 	    {
@@ -175,7 +180,8 @@ public class TileManager : NetworkBehaviour
 	        new Vector3Int(1, 0, 0),   // Right
 	        new Vector3Int(-1, -1, 0), // Bottom-left
 	        new Vector3Int(0, -1, 0),  // Bottom
-	        new Vector3Int(1, -1, 0)   // Bottom-right
+	        new Vector3Int(1, -1, 0),   // Bottom-right
+	        new Vector3Int(0, 0, 0)
 	    };
 
 	    foreach (var offset in directions)
