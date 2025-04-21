@@ -10,6 +10,8 @@ using Random = UnityEngine.Random;
 
 public class ChunkManager : NetworkBehaviour
 {
+	public static ChunkManager Instance { get; private set; }
+	
 	public static bool IS_GENERATING_BIOME;
 	public static int BIOME_SIDE_LENGTH = 256;
 	public static int CHUNK_SIZE = 32;
@@ -25,165 +27,100 @@ public class ChunkManager : NetworkBehaviour
 	{
 		public ChunkGameData Chunk;
 	}
-
-	public static ChunkManager Instance { get; private set; }
 	
-	public Vector2Int MinLoadedTilePosition { get; private set; }
-	public Vector2Int MaxLoadedTilePosition { get; private set; }
-	
-	[SerializeField] private float _chunkLoadCooldown;
-	[SerializeField] private int _chunkLoadRadiusX = 5;
-	[SerializeField] private int _chunkLoadRadiusY = 4;
-	
-	public Dictionary<Vector2Int, ChunkGameData> LoadedChunks { get; private set; } = new(); // Data structure to hold chunk data that is loaded around player
 	private Dictionary<Vector2Int, ChunkGameData> _forestChunks = new(); // Data structure to hold chunk data
 	private Dictionary<Vector2Int, ChunkGameData> _caveChunks = new(); // Data structure to hold chunk data
-	private Queue<Vector2Int> _chunksToLoad = new Queue<Vector2Int>();
-	private Queue<Vector2Int> _chunksToUnload = new Queue<Vector2Int>();
 	private ChunkNetworkManager _chunkNetworkManager;
-	private Vector2Int _currentChunkPosition; // Current chunk the player is in
-	private Vector2Int _lastChunkPosition; // Last chunk position for comparison
-	private bool _updateLightsFlag;
+	private List<ChunkGameData> _chunksToLoad = new();
 	
 	private void Awake()
 	{
 		Instance = this;
+		
 		_chunkNetworkManager = GetComponent<ChunkNetworkManager>();
 	}
 	
 	private void Start()
 	{
 		WorldManager.Instance.OnBiomeDataLoaded += OnBiomeDataLoaded;
-		
-		InvokeRepeating(nameof(TryToLoadChunk), _chunkLoadCooldown, _chunkLoadCooldown);
+	}
+	
+	private List<Vector2Int> GetChunkPositions()
+	{
+		Vector2Int playerChunkPos = GetChunkCoordFromPosition(Player.LocalClientInstance.transform.position);
+	    List<Vector2Int> chunkPositions = new();
+	    int numChunks = BIOME_SIDE_LENGTH / CHUNK_SIZE;
+	
+	    for (int y = 0; y < numChunks; y++)
+	    {
+	        for (int x = 0; x < numChunks; x++)
+	        {
+	            chunkPositions.Add(new Vector2Int(x, y));
+	        }
+	    }
+	
+	    chunkPositions = chunkPositions.OrderBy(pos => Vector2Int.Distance(pos, playerChunkPos)).ToList();
+	    return chunkPositions;
 	}
 	
 	private void OnBiomeDataLoaded(object sender, EventArgs e)
 	{
-		_chunksToLoad.Clear();
-		_chunksToUnload.Clear();
-	
-		_lastChunkPosition = new Vector2Int(-99, 99); // Set it to an impossible chunk position so UpdateChunksAroundPlayer executes;
+		// StartCoroutine(StaggerChunkRequests());
+		_chunksToLoad = new List<ChunkGameData>((BIOME_SIDE_LENGTH / CHUNK_SIZE) * (BIOME_SIDE_LENGTH / CHUNK_SIZE));
+
+		foreach (Vector2Int chunkPos in GetChunkPositions())
+		{
+			_chunkNetworkManager.RequestChunkDataServerRpc(Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value, chunkPos);
+		}
+
+		Debug.Log($"ChunkManager: OnBiomeDataLoaded for {Player.LocalClientInstance.CurrentPlayerBiome.Value}");
 	}
 	
-	private void TryToLoadChunk()
+	private IEnumerator StaggerChunkRequests()
 	{
-		if(Player.LocalClientInstance == null || IS_GENERATING_BIOME || WorldManager.Instance.IsLoadingBiome) return;
+		_chunksToLoad = new List<ChunkGameData>((BIOME_SIDE_LENGTH / CHUNK_SIZE) * (BIOME_SIDE_LENGTH / CHUNK_SIZE));
+	
+		foreach (Vector2Int chunkPos in GetChunkPositions())
+		{
+			_chunkNetworkManager.RequestChunkDataServerRpc(Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value, chunkPos);
+			yield return null;
+		}
+
+		Debug.Log($"ChunkManager: OnBiomeDataLoaded for {Player.LocalClientInstance.CurrentPlayerBiome.Value}");
+	}
+	
+	public void LoadChunk(ChunkGameData chunkGameDataToLoad)
+	{
+		_chunksToLoad.Add(chunkGameDataToLoad);
 		
-		Vector2Int newChunkPosition = GetChunkPosition(Player.LocalClientInstance.transform.position);
-		if (newChunkPosition != _lastChunkPosition)
+		if(_chunksToLoad.Count == (BIOME_SIDE_LENGTH / CHUNK_SIZE) * (BIOME_SIDE_LENGTH / CHUNK_SIZE))
 		{
-			_lastChunkPosition = newChunkPosition;
-			_currentChunkPosition = newChunkPosition;
-			UpdateChunksAroundPlayer();
-		}
-
-		// Set min and max loaded tile positions by looping through loaded chunks
-		Vector2Int minLoadedTilePos = new(int.MaxValue, int.MaxValue);
-		Vector2Int maxLoadedTilePos = new(int.MinValue, int.MinValue);
-
-		foreach (var item in LoadedChunks)
-		{
-			Vector2Int loadedChunkWorldPosition = item.Key * CHUNK_SIZE;
-			minLoadedTilePos = Vector2Int.Min(minLoadedTilePos, loadedChunkWorldPosition);
-			maxLoadedTilePos = Vector2Int.Max(maxLoadedTilePos, loadedChunkWorldPosition);
-		}
-
-		// Add chunk size to maxLoadedTilePosCoord to account for the chunk's area
-		maxLoadedTilePos += new Vector2Int(CHUNK_SIZE, CHUNK_SIZE);
-
-		// Set the final values
-		MinLoadedTilePosition = minLoadedTilePos;
-		MaxLoadedTilePosition = maxLoadedTilePos;
-		
-		if(_chunksToLoad.Count > 0)
-		{
-			_chunkNetworkManager.RequestChunkDataServerRpc(Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value, _chunksToLoad.Dequeue());
-		}
+			foreach (ChunkGameData chunk in _chunksToLoad)
+			{
+				OnLoadChunk?.Invoke(this, new ChunkEventArgs
+				{
+					Chunk = chunk
+				});
+			}
 			
-		if(_chunksToUnload.Count > 0)
-		{
-			UnloadChunk(_chunksToUnload.Dequeue());
-		}
-		
-		if(_chunksToLoad.Count <= 0 && _chunksToUnload.Count <= 0 && _updateLightsFlag)
-		{
-			Lightmap.Instance.UpdateLightMap(MinLoadedTilePosition, MaxLoadedTilePosition);
-			_updateLightsFlag = false;
-		}
-	}
-	
-	public void UpdateChunksAroundPlayer()
-	{
-		var playerChunkPos = GetChunkPosition(Player.LocalClientInstance.transform.position);
-
-		// Get chunks around the player the player wants to load
-		List<Vector2Int> chunksToLoadAroundPlayer = GetPositionsToLoadAroundPlayer();
-
-		// Sort chunks by distance to the player (closest first)
-		chunksToLoadAroundPlayer = chunksToLoadAroundPlayer
-			.OrderBy(chunkPos => Vector2Int.Distance(playerChunkPos, chunkPos))
-			.ToList();
-
-		// For each of those chunks, load them if they are not already loaded
-		foreach (Vector2Int chunkPos in chunksToLoadAroundPlayer)
-		{
-			if (!LoadedChunks.ContainsKey(chunkPos))
-			{
-				_chunksToLoad.Enqueue(chunkPos);
-			}
-		}
-
-		// In the loaded player chunks, if any of them are not in chunksToLoadAroundPlayer, unload them
-		foreach (Vector2Int chunkPos in LoadedChunks.Keys.ToList())
-		{
-			if (!chunksToLoadAroundPlayer.Contains(chunkPos))
-			{
-				_chunksToUnload.Enqueue(chunkPos);
-			}
-		}
-		
-		_updateLightsFlag = true;
-	}
-
-	private void UnloadChunk(Vector2Int chunkPos)
-	{
-		if(LoadedChunks.ContainsKey(chunkPos))
-		{
-			InvokeOnUnloadChunk(LoadedChunks[chunkPos]);
+			TileManager.Instance.ExecuteTopTilePassthrough();
 		}
 	}
 
-	public void InvokeOnLoadChunk(ChunkGameData chunkGameDataToLoad)
+	public void UnloadAllPlayerChunks()
 	{
-		if (!LoadedChunks.ContainsKey(chunkGameDataToLoad.ChunkPosition))
-		{
-			OnLoadChunk?.Invoke(this, new ChunkEventArgs
-			{
-				Chunk = chunkGameDataToLoad
-			});
-		
-			LoadedChunks.Add(chunkGameDataToLoad.ChunkPosition, chunkGameDataToLoad);
-		}
-	}
-	
-	public void InvokeOnUnloadChunk(ChunkGameData chunkGameDataToUnload)
-	{
-		// Remove the chunk from the list of loaded chunks
-		if(LoadedChunks.ContainsKey(chunkGameDataToUnload.ChunkPosition))
+		foreach (var item in GetChunksFromBiome(Player.LocalClientInstance.CurrentPlayerBiome.Value))
 		{
 			OnUnloadChunk?.Invoke(this, new ChunkEventArgs
 			{
-				Chunk = chunkGameDataToUnload
+				Chunk = item.Value
 			});
-		
-			LoadedChunks.Remove(chunkGameDataToUnload.ChunkPosition);
 		}
 	}
 	
-	public ChunkGameData GetChunkFromChunkPosition(BiomeType environment, Vector2Int chunkPosition)
+	public ChunkGameData GetChunkFromChunkPosition(BiomeType biome, Vector2Int chunkPosition)
 	{
-		switch(environment)
+		switch(biome)
 		{
 			case BiomeType.Forest:
 			
@@ -207,47 +144,6 @@ public class ChunkManager : NetworkBehaviour
 		
 		Debug.LogError("No Environment found for _activeEnvironment variable");
 		return null;
-	}
-	
-	public List<Vector2Int> GetPositionsToLoadAroundPlayer()
-	{
-		List<Vector2Int> chunksToLoad = new();
-		
-		for (int x = -_chunkLoadRadiusX; x <= _chunkLoadRadiusX; x++)
-		{
-			for (int y = -_chunkLoadRadiusY; y <= _chunkLoadRadiusY; y++)
-			{
-				Vector2Int chunkCoord = new Vector2Int(_currentChunkPosition.x + x, _currentChunkPosition.y + y);
-				
-				// If chunkCoord is not within the bounds of the world, skip it
-				if (chunkCoord.x < 0 || chunkCoord.x >= BIOME_SIDE_LENGTH / CHUNK_SIZE || chunkCoord.y < 0 || chunkCoord.y >= BIOME_SIDE_LENGTH / CHUNK_SIZE)
-				{
-					continue;
-				}
-				
-				chunksToLoad.Add(chunkCoord);
-			}
-		}
-		
-		return chunksToLoad;
-	}
-	
-	private Vector2Int GetChunkPosition(Vector3 worldPosition)
-	{
-		int chunkSize = CHUNK_SIZE;
-		return new Vector2Int(
-			Mathf.FloorToInt(worldPosition.x / chunkSize),
-			Mathf.FloorToInt(worldPosition.y / chunkSize)
-		);
-	}
-	
-	public void UnloadAllChunks()
-	{
-		for (int i = LoadedChunks.Count - 1; i >= 0; i--)
-		{
-			var chunk = LoadedChunks.ElementAt(i);
-			InvokeOnUnloadChunk(chunk.Value);
-		}
 	}
 	
 	public bool SetDoorState(Vector2Int doorPos, BiomeType biome, bool isOpen)
@@ -299,7 +195,7 @@ public class ChunkManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void TryToRemoveObjectClientRpc(Vector2Int position, BiomeType biomeToRemoveObjData)
 	{
-		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != biomeToRemoveObjData || !ObjectPositionInLoadedChunks(position)) return;
+		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != biomeToRemoveObjData) return;
 		
 		if(ObjectManager.Instance.TryToFindWorldObject(position, out WorldObject wo))
 		{
@@ -337,7 +233,7 @@ public class ChunkManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void HandleTileVisualClientRpc(Vector3Int pos, int syncTileId, TileType syncTileType, BiomeType biome)
 	{
-		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != biome || !ObjectPositionInLoadedChunks((Vector2Int)pos)) return;
+		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != biome) return;
 		
 		TileSO tileToPlace = null;
 		
@@ -368,11 +264,11 @@ public class ChunkManager : NetworkBehaviour
 		}
 	}
 	
-	public bool ObjectPositionInLoadedChunks(Vector2 position) // Check if the position is within the bounds
-	{
-		return position.x >= MinLoadedTilePosition.x && position.x <= MaxLoadedTilePosition.x &&
-			   position.y >= MinLoadedTilePosition.y && position.y <= MaxLoadedTilePosition.y;
-	}
+	// public bool ObjectPositionInLoadedChunks(Vector2 position) // Check if the position is within the bounds
+	// {
+	// 	return position.x >= MinLoadedTilePosition.x && position.x <= MaxLoadedTilePosition.x &&
+	// 		   position.y >= MinLoadedTilePosition.y && position.y <= MaxLoadedTilePosition.y;
+	// }
 
 	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType environmentToGetChunkFrom)
 	{
@@ -391,9 +287,9 @@ public class ChunkManager : NetworkBehaviour
 		return new Vector2Int(chunkX, chunkY);
 	}
 
-	public Dictionary<Vector2Int, ChunkGameData> GetChunksFromBiome(BiomeType environmentToGet)
+	public Dictionary<Vector2Int, ChunkGameData> GetChunksFromBiome(BiomeType biome)
 	{
-		switch(environmentToGet)
+		switch(biome)
 		{
 			case BiomeType.Forest:
 				return _forestChunks;
@@ -401,7 +297,7 @@ public class ChunkManager : NetworkBehaviour
 				return _caveChunks;
 		}
 		
-		Debug.LogError($"Environment {environmentToGet} should exist but doesn't, add environment chunks to ChunkManager");
+		Debug.LogError($"Biome {biome} should exist but doesn't, add environment chunks to ChunkManager");
 		return null;
 	}
 
@@ -417,6 +313,6 @@ public class ChunkManager : NetworkBehaviour
 				return;
 		}
 		
-		Debug.LogError("No Environment found for _activeEnvironment variable");
+		Debug.LogError("No Biome found for _activeEnvironment variable");
 	}
 }

@@ -34,6 +34,19 @@ public class TileManager : NetworkBehaviour
 		WorldManager.Instance.OnBiomeTransitionStart += ClearLocalTilemaps;
 	}
 	
+	public void ClearTopTiles()
+	{
+	    foreach (Transform child in WallTm.transform)
+	    {
+	        Destroy(child.gameObject);
+	    }
+
+		foreach (Transform child in OreTm.transform)
+		{
+			Destroy(child.gameObject);
+		}
+	}
+	
 	public void AddTileVisibilityData(Vector3Int pos, TileVisibility tileVisData)
 	{
 		TileVisibilityDict[pos] = tileVisData;
@@ -72,17 +85,41 @@ public class TileManager : NetworkBehaviour
 				break;
 			case TileType.Wall:
 				WallTm.SetTile(tilePos, tileSO);
-				HandleTopWallTiles(tilePos, tileSO, WallTm);
+				if(tileSO == null) // When destroying wall, destroy the wall behind it
+				{
+					HandleTopWallTiles(tilePos, tileSO, WallTm);
+				}
 				break;
 			case TileType.Ore: 
 				OreTm.SetTile(tilePos, tileSO);
 				if(tileSO == null) // When destroying ore, destroy the wall behind it
 				{
-					WallTm.SetTile(tilePos, null);
+					WallTm.SetTile(tilePos, tileSO);
+					HandleTopWallTiles(tilePos, tileSO, OreTm);
 				}
-				HandleTopWallTiles(tilePos, tileSO, OreTm);
 				break;
 		}
+	}
+	
+	public void ExecuteTopTilePassthrough()
+	{
+		Debug.Log("ExecuteTopTilePassthrough");
+	    foreach (Vector3Int pos in WallTm.cellBounds.allPositionsWithin)
+	    {
+	        if (!WallTm.HasTile(pos)) continue;
+	
+			if(!WallTm.HasTile(pos + Vector3Int.up))
+			{
+				if(OreTm.HasTile(pos))
+				{
+					TileSO oreTileSO = GameManager.Instance.GetTileSOFromTileBase(OreTm.GetTile(pos));
+					HandleTopWallTiles(pos, oreTileSO, OreTm);
+				}
+
+				TileSO tileSO = GameManager.Instance.GetTileSOFromTileBase(WallTm.GetTile(pos));
+				HandleTopWallTiles(pos, tileSO, WallTm);
+			}
+	    }
 	}
 	
     private void HandleTopWallTiles(Vector3Int botTilePosition, TileSO tileSO, Tilemap tilemap)
@@ -129,17 +166,31 @@ public class TileManager : NetworkBehaviour
 	
 	private void UpdateNearbyTopTiles(Vector3Int botTilePosition)
 	{
-		Vector2 searchPosition = new Vector2(botTilePosition.x + 0.5f, botTilePosition.y + 1f);
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(searchPosition, 3f);
+	    Vector3Int[] directions = new Vector3Int[]
+	    {
+	        new Vector3Int(-1, 1, 0),  // Top-left
+	        new Vector3Int(0, 1, 0),   // Top
+	        new Vector3Int(1, 1, 0),   // Top-right
+	        new Vector3Int(-1, 0, 0),  // Left
+	        new Vector3Int(1, 0, 0),   // Right
+	        new Vector3Int(-1, -1, 0), // Bottom-left
+	        new Vector3Int(0, -1, 0),  // Bottom
+	        new Vector3Int(1, -1, 0)   // Bottom-right
+	    };
 
-		foreach (var collider in colliders)
-		{
-			TopTile topTileFound = collider.GetComponent<TopTile>();
-			if (topTileFound != null)
-			{
-				topTileFound.UpdateSelf();
-			}
-		}
+	    foreach (var offset in directions)
+	    {
+	        Vector3Int neighborPos = botTilePosition + offset;
+	        Collider2D[] colliders = Physics2D.OverlapPointAll(new Vector2(neighborPos.x + 0.5f, neighborPos.y + 0.5f));
+	        foreach (var collider in colliders)
+	        {
+	            TopTile topTileFound = collider.GetComponent<TopTile>();
+	            if (topTileFound != null)
+	            {
+	                topTileFound.UpdateSelf();
+	            }
+	        }
+	    }
 	}
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
@@ -182,6 +233,7 @@ public class TileManager : NetworkBehaviour
 		GroundTm.ClearAllTiles();
 		FloorTm.ClearAllTiles();
 		WallTm.ClearAllTiles();
+		OreTm.ClearAllTiles();
 	}
 
 	private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)

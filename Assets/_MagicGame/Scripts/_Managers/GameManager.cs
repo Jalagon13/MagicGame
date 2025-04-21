@@ -79,10 +79,13 @@ public class GameManager : NetworkBehaviour
 
 	private void OnClientConnected(ulong clientId)
 	{
-		if(clientId == NetworkManager.ServerClientId)
-		{
-			WorldManager.Instance.LoadBiome(_startingBiome, Player.LocalClientInstance.transform.position);
-		}
+		LoadBiomeClientRpc(_startingBiome, RpcTarget.Single(clientId, RpcTargetUse.Persistent));
+	}
+	
+	[Rpc(SendTo.SpecifiedInParams, RequireOwnership = false)]
+	private void LoadBiomeClientRpc(BiomeType biome, RpcParams rpcParams = default)
+	{
+		WorldManager.Instance.LoadBiome(_startingBiome, Player.LocalClientInstance.transform.position);
 	}
 	
 	#endregion
@@ -278,7 +281,7 @@ public class GameManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void PlayDamageNumbersClibentRpc(int damageAmount, Vector2 position, BiomeType biome)
 	{
-		if(biome == Player.LocalClientInstance.CurrentPlayerBiome.Value && ChunkManager.Instance.ObjectPositionInLoadedChunks(position))
+		if(biome == Player.LocalClientInstance.CurrentPlayerBiome.Value)
 		{
 			MMF_Player damageNumberFeedbacks = transform.GetChild(0).GetComponent<MMF_Player>();
 			MMF_FloatingText floatingText = damageNumberFeedbacks.GetFeedbackOfType<MMF_FloatingText>();

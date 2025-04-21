@@ -134,7 +134,7 @@ public class WorldManager : NetworkBehaviour
 		OnBiomeTransitionStart?.Invoke(this, EventArgs.Empty); 
 		
 		IsLoadingBiome = true;
-		ChunkManager.Instance.UnloadAllChunks();
+		ChunkManager.Instance.UnloadAllPlayerChunks();
 		ObjectManager.Instance.ClearAllEnvironmentObjectVisuals();
 		
 		LoadEnvironmentServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, targetBiome);
@@ -198,6 +198,7 @@ public class WorldManager : NetworkBehaviour
 		
 		// Invoke it first to prep the last chunk position to garentee a new set of chunks to generate, then set loadingbiome to true to resume the update method
 		TileManager.Instance.TileVisibilityDict.Clear();
+		TileManager.Instance.ClearTopTiles();
 		OnBiomeDataLoaded?.Invoke(this, EventArgs.Empty);
 		IsLoadingBiome = false;
 		

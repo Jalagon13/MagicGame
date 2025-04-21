@@ -16,13 +16,14 @@ public class ChunkNetworkManager : NetworkBehaviour
 		SendChunkDataToClientRpc(requestBiome, syncChunkData, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
 	}
 
+	// TODO: Chunk and throttle map data sync to avoid UTP pipeline overload
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void SendChunkDataToClientRpc(BiomeType requestBiome, SyncChunkData syncChunkData, RpcParams rpcParams)
 	{
 		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != requestBiome) return;
 	
-		var chunkGameData = ConvertToGameChunkData(syncChunkData);
-		ChunkManager.Instance.InvokeOnLoadChunk(chunkGameData);
+		ChunkGameData chunkGameData = ConvertToGameChunkData(syncChunkData);
+		ChunkManager.Instance.LoadChunk(chunkGameData);
 	}
 	
 	private SyncChunkData ConvertToSyncChunkData(ChunkGameData chunkGameData)
