@@ -208,6 +208,7 @@ public class Lightmap : MonoBehaviour
 			case BiomeType.Forest:
 				return new Vector3(0.01f, 0.01f, 0.01f);
 			case BiomeType.Cave:
+				// return new Vector3(0.01f, 0.01f, 0.01f);
 				return new Vector3(0.0f, 0.0f, 0.0f);
 			default:
 				return new Vector3(0.01f, 0.01f, 0.01f);

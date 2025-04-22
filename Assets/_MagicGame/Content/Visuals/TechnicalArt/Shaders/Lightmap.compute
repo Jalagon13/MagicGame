@@ -45,11 +45,6 @@ float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
 		iterations = abs(yDiff); // Number of steps along y
 	}
 
-	// Apply distance-based attenuation
-	float normalizedDistance = distance / radius;
-	float attenuation = (1.0 - normalizedDistance) * (1.0 - normalizedDistance); // Quadratic falloff
-	attenuation = max(attenuation, 0.0); // Ensure it doesn't go negative
-
 	// Start traversing from the light source position
 	float2 currentPos = lightPos;
 	
@@ -68,13 +63,32 @@ float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
 
 		if (tileTransparency == 1) // Opaque tile
 		{
-			if (opaqueTilesFound < OpaqueTileTolerance)
+			opaqueTilesFound++;
+
+			if (opaqueTilesFound < OpaqueTileTolerance * 0.5f)
 			{
-				opaqueTilesFound++;
+				// currentIntensity *= pow(0.9875, float(opaqueTilesFound));
+				currentIntensity *= pow(0.995, float(opaqueTilesFound)); // Exponential reduction with respect to the number of opaque tiles
+			}
+			else if (opaqueTilesFound < OpaqueTileTolerance)
+			{
+				// currentIntensity *= pow(0.9875, float(opaqueTilesFound));
+				currentIntensity *= pow(0.99, float(opaqueTilesFound)); // Exponential reduction with respect to the number of opaque tiles
+			}
+			else if(opaqueTilesFound < OpaqueTileTolerance * 1.5f)
+			{
+				// currentIntensity *= dStep ? 0.875 : 0.89; // Major reduction
+				currentIntensity *= pow(0.985, float(opaqueTilesFound)); // Exponential reduction with respect to the number of opaque tiles
+			}
+			else if(opaqueTilesFound < OpaqueTileTolerance * 2.15f)
+			{
+				// currentIntensity *= dStep ? 0.875 : 0.89; // Major reduction
+				currentIntensity *= pow(0.9795, float(opaqueTilesFound * 0.5f)); // Exponential reduction with respect to the number of opaque tiles
 			}
 			else
 			{
-				currentIntensity *= dStep ? 0.875 : 0.9; // Major reduction
+				// currentIntensity *= dStep ? 0.875 : 0.89; // Major reduction
+				currentIntensity *= pow(0.955, float(opaqueTilesFound * 0.1f)); // Exponential reduction with respect to the number of opaque tiles
 			}
 		}
 		else // Transparent tile
@@ -105,6 +119,13 @@ float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
 		
 		lastPos = float2(round(currentPos.x), round(currentPos.y));
 	}
+
+	// Apply distance-based attenuation
+	float normalizedDistance = distance / radius;
+
+	// Use a cubic falloff to create a smoother transition
+	float attenuation = pow(1 - normalizedDistance, 2); // Cubic falloff for smoother transition
+	attenuation = max(attenuation, 0.0); // Ensure it doesn't go negative
 
 	currentIntensity *= attenuation;
 
