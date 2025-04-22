@@ -113,8 +113,6 @@ public class DoorObject : WorldObject
 			SoundManager.Instance.PlayOneShot(_openSound, transform.position);
 			Lightmap.Instance.UpdateLightMap();
 		}
-		
-		TileManager.Instance.RemoveTileVisibilityData(Vector3Int.FloorToInt(transform.position));
 	}
 	
 	private void CloseDoor(bool playSound = false)
@@ -129,8 +127,6 @@ public class DoorObject : WorldObject
 			SoundManager.Instance.PlayOneShot(_closeSound, transform.position);
 			Lightmap.Instance.UpdateLightMap();
 		}
-		
-		TileManager.Instance.AddTileVisibilityData(Vector3Int.FloorToInt(transform.position), new TileVisibility{ Visibility = 1 });
 	}
 	
 	private void HandlePathfinding()

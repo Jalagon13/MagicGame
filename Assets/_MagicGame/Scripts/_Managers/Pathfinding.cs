@@ -182,13 +182,8 @@ public class Pathfinding : NetworkBehaviour
 		return wallColliderTm;
 	}
 
-	public void RequestUnloadChunk(Vector2Int chunkPos, ulong clientId, BiomeType environment)
-	{
-		RequestUnloadChunkServerRpc(chunkPos, clientId, environment);
-	}
-
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void RequestUnloadChunkServerRpc(Vector2Int chunkPos, ulong clientId, BiomeType biome)
+	public void RequestUnloadChunkServerRpc(Vector2Int chunkPos, ulong clientId, BiomeType biome)
 	{
 		_playerToChunks[clientId].Remove(chunkPos);
 

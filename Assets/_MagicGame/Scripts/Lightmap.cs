@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 public class Lightmap : MonoBehaviour
@@ -105,7 +106,7 @@ public class Lightmap : MonoBehaviour
 		DispatchComputeShader();
 	}
 	
-	public void UpdateLightMap(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos)
+	public void UpdateLightMapBounds(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos)
 	{
 		if(!WorldManager.Instance.IsTicking()) return;
 		
@@ -150,6 +151,7 @@ public class Lightmap : MonoBehaviour
 			enableRandomWrite = true,
 			filterMode = _usePointFilter ? FilterMode.Point : FilterMode.Bilinear,
 		};
+		
 		_lightmapRenderTexture.Create();
 	}
 
@@ -246,29 +248,62 @@ public class Lightmap : MonoBehaviour
 		float y = (tilePos.y - _minLoadedTilePos.y) / (_maxLoadedTilePos.y - _minLoadedTilePos.y);
 
 		// Scale to render texture dimensions
-		return new Vector2(x * _lightmapRenderTexture.width, y * _lightmapRenderTexture.height);
+		Vector2 renderTextureCoord = new Vector2(x * _lightmapRenderTexture.width, y * _lightmapRenderTexture.height);
+
+		// Snap to the nearest pixel
+		renderTextureCoord.x = Mathf.Round(renderTextureCoord.x);
+		renderTextureCoord.y = Mathf.Round(renderTextureCoord.y);
+
+		return renderTextureCoord;
 	}
 
 	private void PopulateTileVisibilityArray(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos, int scale, TileVisibility[] tileVisibilityArray, int renderTextureWidth)
 	{
-		foreach (var kvp in TileManager.Instance.TileVisibilityDict)
+		Tilemap wallTm = TileManager.Instance.WallTm;
+
+		// Build local visibility dictionary
+		Dictionary<Vector3Int, TileVisibility> localVisibilityDict = new Dictionary<Vector3Int, TileVisibility>();
+
+		for (int x = minLoadedTilePos.x; x < maxLoadedTilePos.x; x++)
+		{
+			for (int y = minLoadedTilePos.y; y < maxLoadedTilePos.y; y++)
+			{
+				Vector3Int tilePosition = new Vector3Int(x, y, 0);
+				localVisibilityDict[tilePosition] = new TileVisibility(wallTm.HasTile(tilePosition) ? 1 : 0);
+			}
+		}
+
+		// Define the bounds based on minLoadedTilePos and maxLoadedTilePos
+		Vector2 minWorldPos = TileToWorldPosition(minLoadedTilePos);
+		Vector2 maxWorldPos = TileToWorldPosition(maxLoadedTilePos);
+		Rect bounds = new Rect(minWorldPos, maxWorldPos - minWorldPos); // Create a rectangle from the bounds
+
+		// Use Physics2D.OverlapAreaAll to get colliders within the bounds
+		Collider2D[] colliders = Physics2D.OverlapAreaAll(bounds.min, bounds.max);
+
+		// Loop through all the colliders within the bounds
+		foreach (Collider2D collider in colliders)
+		{
+			if(collider.TryGetComponent(out WorldObject worldObject) && !worldObject.PassThrough)
+			{
+				Vector3Int tilePosition = new Vector3Int(Mathf.FloorToInt(worldObject.transform.position.x), Mathf.FloorToInt(worldObject.transform.position.y), 0);
+				localVisibilityDict[tilePosition] = new TileVisibility(1);
+			}
+		}
+
+		foreach (var kvp in localVisibilityDict)
 		{
 			Vector3Int tilePosition = kvp.Key;
 			TileVisibility visibility = kvp.Value;
 
-			// Calculate the relative position in the texture grid, considering the scale
 			int relativeX = (tilePosition.x - minLoadedTilePos.x) * scale;
 			int relativeY = (tilePosition.y - minLoadedTilePos.y) * scale;
 
-			// Now we need to place the tileVisibility in the correct block of the RenderTexture
 			for (int y = 0; y < scale; y++)
 			{
 				for (int x = 0; x < scale; x++)
 				{
-					// Find the correct index in the 1D texture array
 					int index = (relativeY + y) * renderTextureWidth + (relativeX + x);
-
-					// Check if the index is within bounds
 					if (index >= 0 && index < tileVisibilityArray.Length)
 					{
 						tileVisibilityArray[index] = visibility;

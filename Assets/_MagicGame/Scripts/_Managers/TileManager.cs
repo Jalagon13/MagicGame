@@ -9,6 +9,11 @@ using UnityEngine.Tilemaps;
 public struct TileVisibility
 {
 	public int Visibility; // 0 = transparent, 1 = opaque
+	
+	public TileVisibility(int visibility)
+	{
+		Visibility = visibility;
+	}
 }
 
 public class TileManager : NetworkBehaviour
@@ -20,7 +25,6 @@ public class TileManager : NetworkBehaviour
 	[field: SerializeField] public Tilemap FloorTm { get; private set; }
 	[field: SerializeField] public Tilemap WallTm { get; private set; }
 	[field: SerializeField] public Tilemap OreTm { get; private set; }
-	public Dictionary<Vector3Int, TileVisibility> TileVisibilityDict { get; private set; } = new();
 
 	private void Awake()
 	{
@@ -47,19 +51,6 @@ public class TileManager : NetworkBehaviour
 		}
 	}
 	
-	public void AddTileVisibilityData(Vector3Int pos, TileVisibility tileVisData)
-	{
-		TileVisibilityDict[pos] = tileVisData;
-	}
-	
-	public void RemoveTileVisibilityData(Vector3Int tilePosV3Int)
-	{
-		if(TileVisibilityDict.ContainsKey(tilePosV3Int))
-		{
-			TileVisibilityDict.Remove(tilePosV3Int);
-		}
-	}
-
 	public bool HasTile(Vector3Int position, TileType tileType)
 	{
         return tileType switch
@@ -249,7 +240,6 @@ public class TileManager : NetworkBehaviour
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
-			RemoveTileVisibilityData(tilePosV3Int);
 		}
 		
 		// loop through all floor tiles and set them on tilemap
@@ -264,7 +254,6 @@ public class TileManager : NetworkBehaviour
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
-			AddTileVisibilityData(tilePosV3Int, new TileVisibility {Visibility = 1});
 		}
 		
 		// loop through all ore tiles and set them on tilemap
@@ -281,31 +270,27 @@ public class TileManager : NetworkBehaviour
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			SetLocalTile(tilePosV3Int, null, TileType.Ground);
-			RemoveTileVisibilityData(tilePosV3Int);
 		}
 		
 		foreach (TileGameData tile in e.Chunk.FloorTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			SetLocalTile(tilePosV3Int, null, TileType.Floor);
-			RemoveTileVisibilityData(tilePosV3Int);
 		}
 		
 		foreach (TileGameData tile in e.Chunk.WallTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			SetLocalTile(tilePosV3Int, null, TileType.Wall);
-			RemoveTileVisibilityData(tilePosV3Int);
 		}
 
 		foreach (TileGameData tile in e.Chunk.OreTileGameDataList)
 		{
 			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
 			SetLocalTile(tilePosV3Int, null, TileType.Ore);
-			RemoveTileVisibilityData(tilePosV3Int);
 		}
 
-		Pathfinding.Instance.RequestUnloadChunk(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+		Pathfinding.Instance.RequestUnloadChunkServerRpc(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value);
 	}
 	
 	public override void OnDestroy()

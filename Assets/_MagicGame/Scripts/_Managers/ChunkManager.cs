@@ -253,13 +253,11 @@ public class ChunkManager : NetworkBehaviour
 				break;
 			case TileType.Wall:
 				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
-				TileManager.Instance.AddTileVisibilityData(pos, new TileVisibility {Visibility = tileToPlace == null ? 0 : 1 });
 				Lightmap.Instance.UpdateLightMap();
 				TileManager.Instance.HandleTopWallTiles(pos, tileToPlace, TileManager.Instance.WallTm);
 				break;
 			case TileType.Ore:
 				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
-				TileManager.Instance.AddTileVisibilityData(pos, new TileVisibility { Visibility = tileToPlace == null ? 0 : 1 });
 				Lightmap.Instance.UpdateLightMap();
 				break;
 		}

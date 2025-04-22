@@ -1976,7 +1976,7 @@ Camera:
   far clip plane: 5000
   field of view: 9.75
   orthographic: 1
-  orthographic size: 10.9375
+  orthographic size: 12.84375
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -4707,9 +4707,9 @@ MonoBehaviour:
     m_NumColorKeys: 8
     m_NumAlphaKeys: 2
   _lightmapComputeShader: {fileID: 7200000, guid: 26fe7936a0e164328b7f319d2182e7ed, type: 3}
-  _lightmapScale: 10
-  _usePointFilter: 0
-  _enableDayNightCycle: 1
+  _lightmapScale: 8
+  _usePointFilter: 1
+  _enableDayNightCycle: 0
 --- !u!1 &647140514
 GameObject:
   m_ObjectHideFlags: 0
@@ -12781,6 +12781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  <MinMaxOffsetPadding>k__BackingField: 3
   <WorldBoundary>k__BackingField: {fileID: 652259852}
 --- !u!114 &1785759329
 MonoBehaviour:
@@ -13874,7 +13875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _dayDurationInSeconds: 600
+  _dayDurationInSeconds: 10
   _startingTime: 1
   _isTicking: 1
   _randomSeed: 0

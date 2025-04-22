@@ -7,6 +7,8 @@ using FMOD.Studio;
 
 public class PlayerCamera : NetworkBehaviour
 {
+	[field: Tooltip("How much padding, from the min and max points of the camera bounds to give to cover the whole frustum for the lightmap")]
+	[field: SerializeField] public float MinMaxOffsetPadding { get; private set; }
 	[field: SerializeField] public PolygonCollider2D WorldBoundary { get; private set; }
 
 	private CinemachineConfiner2D _confiner;
@@ -17,6 +19,9 @@ public class PlayerCamera : NetworkBehaviour
 	private float _originalOrthoSize;
 	private NetworkObject _playerObject;
 	private Vector3 _lastPlayerPosition;
+
+	private Vector2Int _cachedMinCorner;
+	private Vector2Int _cachedMaxCorner;
 	
 	private void Awake() 
 	{
@@ -47,11 +52,41 @@ public class PlayerCamera : NetworkBehaviour
 	
 	private void Update()
 	{
+		if(_playerObject == null) return;
+	
 		if(_playerObject != null && _playerObject.transform.position != _lastPlayerPosition)
 		{
 			SetListenerToPlayer();
 			_lastPlayerPosition = _playerObject.transform.position;
 		}
+
+        // Update the frustum collider in case the camera size has changed
+        float verticalSize = _mainCamera.orthographicSize * 2;
+        float horizontalSize = verticalSize * _mainCamera.aspect;
+        _cameraFrustumCollider.size = new Vector2(horizontalSize, verticalSize);
+        _cameraFrustumCollider.offset = Vector2.zero;
+
+        // Check if the camera frustum bounds have changed, with padding
+        Bounds bounds = _cameraFrustumCollider.bounds;
+        int width = Mathf.CeilToInt(bounds.size.x + MinMaxOffsetPadding * 2);
+        int height = Mathf.CeilToInt(bounds.size.y + MinMaxOffsetPadding * 2);
+        Vector2 center = bounds.center;
+        Vector2Int centerInt = Vector2Int.RoundToInt(center);
+        Vector2Int currentMin = centerInt - new Vector2Int(width / 2, height / 2);
+        Vector2Int currentMax = centerInt + new Vector2Int(width / 2, height / 2);
+
+        if (currentMin != _cachedMinCorner || currentMax != _cachedMaxCorner)
+        {
+            _cachedMinCorner = currentMin;
+            _cachedMaxCorner = currentMax;
+            OnFrustumBoundsChanged();
+        }
+	}
+
+	private void OnFrustumBoundsChanged()
+	{
+		// TODO: Implement logic when camera bounds change
+		Lightmap.Instance.UpdateLightMapBounds(_cachedMinCorner, _cachedMaxCorner);
 	}
 
 	private void RegisterCameraToPlayer(ulong clientId)
