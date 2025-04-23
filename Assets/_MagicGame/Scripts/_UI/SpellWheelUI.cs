@@ -88,7 +88,7 @@ public class SpellWheelUI : MonoBehaviour
             {
                 SpellItemSO spell = spellList[i];
                 GameObject spellUI = Instantiate(SpellUIPrefab, transform);
-                spellUI.GetComponent<Image>().sprite = spell.SpellPortrait;
+                spellUI.GetComponent<Image>().sprite = spell.UiDisplay;
                 _activeSpellUIDict.Add(spellUI, spell);
                 RectTransform rt = spellUI.GetComponent<RectTransform>();
 

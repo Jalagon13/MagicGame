@@ -107,9 +107,19 @@ public class Spell : NetworkBehaviour
 
     protected virtual void Update()
 	{
-		if(IsOwner && SpellLifeTimer != null && SpellLifeTimer.RemainingSeconds > 0)
+		if(IsOwner)
 		{
-			SpellLifeTimer.Tick(Time.deltaTime);
+			if(SpellData.Value.IsContinuousCast && IsStarted.Value)
+			{
+			    if(!GameInput.Instance.GetPrimaryHeldDown())
+			    {
+					OnOwnerSpellEnd();
+				}
+			}
+			else if (SpellLifeTimer != null && SpellLifeTimer.RemainingSeconds > 0)
+			{
+				SpellLifeTimer.Tick(Time.deltaTime);
+			}
 		}
 	}
 
@@ -119,12 +129,26 @@ public class Spell : NetworkBehaviour
 	public virtual void OnOwnerSpellCanceled()
 	{
 		IsStarted.Value = false;
+		
+		if (IsOwner && SpellData.Value.IsContinuousCast)
+		{
+			Debug.Log($"SPELL class: Stopping continuous casting");
+			SpellManager.Instance.IsContinuouslyCasting = false;
+		}
+
 		DespawnSpellServerRpc();
 	}
 	
 	public virtual void OnOwnerSpellEnd()
 	{
 		IsStarted.Value = false;
+		
+		if(IsOwner && SpellData.Value.IsContinuousCast )
+		{
+			Debug.Log($"SPELL class: Stopping continuous casting");
+		    SpellManager.Instance.IsContinuouslyCasting = false;
+		}
+		
 		StartCoroutine(WaitToDespawnRoutine());
 	}
 

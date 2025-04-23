@@ -53,6 +53,33 @@ MonoBehaviour:
   - ForestAmbience
   - CaveAmbience
   Exists: 1
+--- !u!114 &-8368555601859639280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/SpellHeal
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/SpellHeal
+  Guid:
+    Data1: -1323676631
+    Data2: 1148896384
+    Data3: -1934371966
+    Data4: 306405590
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-8133402120912244033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,33 +174,6 @@ MonoBehaviour:
     Data4: -1372581738
   Banks:
   - {fileID: -7513412204427243761}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-5669462344721614237
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/MagicWoosh
-  m_EditorClassIdentifier: 
-  Path: event:/MagicWoosh
-  Guid:
-    Data1: 660675445
-    Data2: 1220625473
-    Data3: 1963841471
-    Data4: 1725148628
-  Banks:
-  - {fileID: -4626298972836983042}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -277,10 +277,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638798748345681440
+  lastModified: 638809993158956668
   FileSizes:
   - Name: Desktop
-    Value: 3192960
+    Value: 3209216
   Exists: 1
 --- !u!114 &-4100935872588225253
 MonoBehaviour:
@@ -472,6 +472,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-961492354960494440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/FireBurst
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/FireBurst
+  Guid:
+    Data1: -959941032
+    Data2: 1128627620
+    Data3: -1885222999
+    Data4: 915117413
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-326097733281759104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -543,17 +570,18 @@ MonoBehaviour:
   - {fileID: 6887363961906838663}
   - {fileID: -5253504312498639110}
   - {fileID: -1277810612265870814}
-  - {fileID: 3628296951500610386}
   - {fileID: -326097733281759104}
   - {fileID: -4100935872588225253}
-  - {fileID: -5669462344721614237}
   - {fileID: 3972319742351911701}
+  - {fileID: -8368555601859639280}
+  - {fileID: 8116599811075677841}
+  - {fileID: -961492354960494440}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6702288669578411488}
   StringsBanks:
   - {fileID: 5574528013551363316}
-  cacheTime: 638798748345681440
+  cacheTime: 638809993158956668
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:
@@ -600,33 +628,6 @@ MonoBehaviour:
     Data2: 1196187336
     Data3: -672544082
     Data4: -1828488855
-  Banks:
-  - {fileID: -4626298972836983042}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &3628296951500610386
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/FireBurst
-  m_EditorClassIdentifier: 
-  Path: event:/FireBurst
-  Guid:
-    Data1: -959941032
-    Data2: 1128627620
-    Data3: -1885222999
-    Data4: 915117413
   Banks:
   - {fileID: -4626298972836983042}
   IsStream: 0
@@ -833,10 +834,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638798748344641092
+  lastModified: 638809993158383734
   FileSizes:
   - Name: Desktop
-    Value: 2272
+    Value: 2330
   Exists: 1
 --- !u!114 &5813129133648053243
 MonoBehaviour:
@@ -907,7 +908,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638798748344611205
+  lastModified: 638809993158370791
   FileSizes:
   - Name: Desktop
     Value: 3619520
@@ -984,6 +985,33 @@ MonoBehaviour:
     Data2: 1147036939
     Data3: 1353001656
     Data4: 1797791123
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8116599811075677841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/MagicWoosh
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/MagicWoosh
+  Guid:
+    Data1: 660675445
+    Data2: 1220625473
+    Data3: 1963841471
+    Data4: 1725148628
   Banks:
   - {fileID: -4626298972836983042}
   IsStream: 0

@@ -8,6 +8,7 @@ using UnityEngine;
 public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 {
 	public int SpellIndex;
+	public int ManaCost;
 	public int Damage;
 	public int Knockback;
 	public float Speed;
@@ -17,11 +18,13 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public ulong OwnerPlayerId;
 	public ulong InventorySlotId;
 	public bool DespawnIfFocusSlotChanged;
+	public bool IsContinuousCast;
 	public BiomeType SpawnBiome;
 
-	public SyncSpellData(int spellIndex, int damage, int knockback, float speed, float lifetime, float hasteMultiplier, ulong spellId, ulong ownerPlayerId, ulong inventorySlotId, bool despawnIfFocusSlotChanged, BiomeType spawnBiome)
+	public SyncSpellData(int spellIndex, int damage, int manaCost, int knockback, float speed, float lifetime, float hasteMultiplier, ulong spellId, ulong ownerPlayerId, ulong inventorySlotId, bool despawnIfFocusSlotChanged, bool isContinuousCast, BiomeType spawnBiome)
 	{
 		SpellIndex = spellIndex;
+		ManaCost = manaCost;
 		Damage = damage;
 		Knockback = knockback;
 		Speed = speed;
@@ -31,6 +34,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		OwnerPlayerId = ownerPlayerId;
 		InventorySlotId = inventorySlotId;
 		DespawnIfFocusSlotChanged = despawnIfFocusSlotChanged;
+		IsContinuousCast = isContinuousCast;
 		SpawnBiome = spawnBiome;
 	}
 
@@ -38,6 +42,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	{
 		// Check if all primitive properties match
 		if (SpellIndex != other.SpellIndex ||
+			ManaCost != other.ManaCost ||
 			Damage != other.Damage ||
 			Knockback != other.Knockback ||
 			Speed != other.Speed ||
@@ -47,6 +52,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 			OwnerPlayerId != other.OwnerPlayerId ||
 			InventorySlotId != other.InventorySlotId ||
 			DespawnIfFocusSlotChanged != other.DespawnIfFocusSlotChanged ||
+			IsContinuousCast != other.IsContinuousCast ||
 			SpawnBiome != other.SpawnBiome)
 		{
 			return false;
@@ -58,6 +64,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
 	{
 		serializer.SerializeValue(ref SpellIndex);
+		serializer.SerializeValue(ref ManaCost);
 		serializer.SerializeValue(ref Damage);
 		serializer.SerializeValue(ref Knockback);
 		serializer.SerializeValue(ref Speed);
@@ -67,6 +74,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 		serializer.SerializeValue(ref OwnerPlayerId);
 		serializer.SerializeValue(ref InventorySlotId);
 		serializer.SerializeValue(ref DespawnIfFocusSlotChanged);
+		serializer.SerializeValue(ref IsContinuousCast);
 		serializer.SerializeValue(ref SpawnBiome);
 	}
 }
@@ -81,8 +89,6 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("Spell charging animation.")]
 	[field: SerializeField] public GameObject ChargeVFX { get; private set; }
 
-	[field: Tooltip("Image displayed when equipped to a spellbook")]
-	[field: SerializeField] public Sprite SpellPortrait { get; private set; }
 	[field: SerializeField] public EventReference SpellCast { get; private set; }
 
 	[field: Header("Stats")]
@@ -116,17 +122,21 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("Should the spell be despawned if the slot it was cast from changes during spell lifetime")]
 	[field: SerializeField] public bool DespawnIfFocusSlotChanged { get; private set; }
 	
+	[field: Tooltip("Should the spell be continuous cast while holding down cast button")]
+	[field: SerializeField] public bool IsContinuousCast { get; private set; } = false;
+	
 	public SyncSpellData GetSpellDataForLocalClientInstance()
 	{
 		InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
 
 		return new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			Damage, Knockback, Speed, Lifetime, HasteMultiplier, 
+			ManaCost, Damage, Knockback, Speed, Lifetime, HasteMultiplier, 
 			IdGenerator.GenerateRandomId(),
 			Player.LocalClientInstance.OwnerClientId,
 			selectedInventoryItem.Id,
 			DespawnIfFocusSlotChanged,
+			IsContinuousCast,
 			Player.LocalClientInstance.CurrentPlayerBiome.Value);
 	}
 

@@ -39,7 +39,8 @@ public class SpellManager : MonoBehaviour
     public SpellItemSO SelectedSpell { get; private set; }
     public Timer CastTimeTimer { get; private set; }
     public Dictionary<int, Timer> SpellCooldownTimers { get; private set; } = new(); // Id of the spell on CD and the CD timer associated with it
-    
+    public bool IsContinuouslyCasting { get; set; }
+
     private bool _isSpellWheelOpen;
     private LoadedSpell _loadedSpell;
     private List<SpellItemSO> _spellsEquipped = new();
@@ -119,8 +120,7 @@ public class SpellManager : MonoBehaviour
     {
         Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(1f);
         Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
-        PlayerStats.Instance.SubtractMana(_loadedSpell.SpellToCast.ManaCost);
-
+        
         Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
         Vector2 baseDirection = (ActionManager.MouseWorldPosition - spawnPoint).normalized;
         Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, _loadedSpell.SpellToCast.Recoil);
@@ -133,7 +133,17 @@ public class SpellManager : MonoBehaviour
         });
         
         int selectedSpellId = GameManager.Instance.GetItemIdFromItemSO(_loadedSpell.SpellToCast);
-        SpellCooldownTimers[selectedSpellId] = new Timer(_loadedSpell.SpellToCast.Cooldown);
+        
+        if(_loadedSpell.SpellToCast.IsContinuousCast)
+        {
+            Debug.Log($"Starting continuous casting");
+            IsContinuouslyCasting = true;
+        }
+        else
+        {
+            PlayerStats.Instance.SubtractMana(_loadedSpell.SpellToCast.ManaCost);
+            SpellCooldownTimers[selectedSpellId] = new Timer(_loadedSpell.SpellToCast.Cooldown);
+        }
 
         _loadedSpell = new();
 
@@ -142,6 +152,14 @@ public class SpellManager : MonoBehaviour
 
     private void CancelSpellCharge()
     {
+        if(_loadedSpell.SpellToCast.IsContinuousCast)
+        {
+            Debug.Log($"canceling spell: Stopping continuous casting");
+            IsContinuouslyCasting = false;
+        }
+
+        _loadedSpell = new();
+
         Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(1f);
         Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
 
@@ -162,7 +180,7 @@ public class SpellManager : MonoBehaviour
         bool hasEnoughMana = SelectedSpell != null && PlayerStats.Instance.CurrentMana >= SelectedSpell.ManaCost;
         bool selectedSpellOnCooldown = IsSelectedSpellOnCooldown();
 
-        return primaryHeldDown && hasSpellbook && hasSelectedSpell && isStaffItem && isCastTimeOver && !_isSpellWheelOpen && !Pointer.IsOverUI() && !Pointer.IsOverInteractable() && hasEnoughMana && !selectedSpellOnCooldown;
+        return primaryHeldDown && hasSpellbook && hasSelectedSpell && isStaffItem && isCastTimeOver && !_isSpellWheelOpen && !Pointer.IsOverUI() && !Pointer.IsOverInteractable() && hasEnoughMana && !selectedSpellOnCooldown && !IsContinuouslyCasting;
     }
 
     private bool IsSelectedSpellOnCooldown()

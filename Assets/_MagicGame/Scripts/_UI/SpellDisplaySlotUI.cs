@@ -42,7 +42,7 @@ public class SpellDisplaySlotUI : MonoBehaviour
     public void SetSpell(SpellItemSO spell)
     {
         _spell = spell;
-        _spellIcon.sprite = _spell.SpellPortrait;
+        _spellIcon.sprite = _spell.UiDisplay;
         _spellId = GameManager.Instance.GetItemIdFromItemSO(_spell);
     }
     

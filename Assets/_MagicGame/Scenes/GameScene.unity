@@ -4709,7 +4709,7 @@ MonoBehaviour:
   _lightmapComputeShader: {fileID: 7200000, guid: 26fe7936a0e164328b7f319d2182e7ed, type: 3}
   _lightmapScale: 8
   _usePointFilter: 1
-  _enableDayNightCycle: 0
+  _enableDayNightCycle: 1
 --- !u!1 &647140514
 GameObject:
   m_ObjectHideFlags: 0
@@ -13875,7 +13875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _dayDurationInSeconds: 10
+  _dayDurationInSeconds: 600
   _startingTime: 1
   _isTicking: 1
   _randomSeed: 0
@@ -14730,7 +14730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.13679245, g: 0.16002141, b: 0.5471698, a: 0.1764706}
+  m_Color: {r: 0.11160557, g: 0.38066137, b: 0.7169812, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -14826,7 +14826,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2735849, g: 0.2735849, b: 0.2735849, a: 0.33333334}
+  m_Color: {r: 0.2735849, g: 0.2735849, b: 0.2735849, a: 0.6117647}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

@@ -27,7 +27,6 @@ public class FireBall : Spell
 
     protected override void OnStopped()
     {
-        Debug.Log($"Stopping fireball");
         if (Trail != null)
         {
             Trail.Stop(true, ParticleSystemStopBehavior.StopEmitting);
