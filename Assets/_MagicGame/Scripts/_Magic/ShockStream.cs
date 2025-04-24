@@ -1,13 +1,18 @@
 using System.Collections.Generic;
 using FMODUnity;
 using Unity.Netcode;
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 public class ShockStream : Spell
 {
+    private bool _hadTargetLastFrame = false;
+
     [field: SerializeField] public float Range { get; private set; }
     [field: SerializeField] public float TimeBetweenDamage { get; private set; } = 0.25f;
-    [field: SerializeField] public LineRenderer BeamRenderer { get; private set; }
+    [field: Tooltip("Lifetime of particle system per distance for the beam")]
+    [field: SerializeField] public float LifetimePerDistanceUnit { get; private set; } = 0.05f;
+    [field: SerializeField] public ParticleSystem LightningStream { get; private set; }
     [field: SerializeField] public EventReference DamageSound { get; private set; }
 
     public NetworkVariable<bool> BeamVisible { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -19,33 +24,28 @@ public class ShockStream : Spell
 
     protected override void OnOwnerExecuteSpellStart()
     {
-        BeamRenderer.useWorldSpace = true;
         _damageTimer = new Timer(0.1f);
-    }
-
-    public override void OnOwnerSpellEnd()
-    {
-        // Any local cleanup goes here
-
-        base.OnOwnerSpellEnd();
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (IsOwner)
-        {
-            transform.position = Player.LocalClientInstance.transform.position;
-        }
-
         if (IsOwner && IsStarted.Value)
         {
+            if(Player.LocalClientInstance.PlayerStats.CurrentMana < SpellData.Value.ManaCost)
+            {
+                OnOwnerSpellEnd();
+                return;
+            }
+        
+            Vector2 wandPos = Player.LocalClientInstance.MainHand.SpellSpawnTransform.position;
+            transform.position = wandPos;
+            
             _damageTimer.Tick(Time.deltaTime);
             _potentialTargetsToLockOnTo.Clear();
             BeamVisible.Value = false;
 
-            Vector2 wandPos = Player.LocalClientInstance.MainHand.SpellSpawnTransform.position;
             Collider2D[] collisions = Physics2D.OverlapCircleAll(wandPos, Range, CollisionMask);
 
             for (int i = 0; i < collisions.Length; i++)
@@ -99,13 +99,38 @@ public class ShockStream : Spell
                 BeamStart.Value = wandPos;
                 BeamEnd.Value = closestTarget.transform.position;
             }
+
+            bool hasTargetNow = closestTarget != null;
+
+            if (hasTargetNow && !_hadTargetLastFrame)
+            {
+                LightningStream.Play();
+            }
+            else if (!hasTargetNow && _hadTargetLastFrame)
+            {
+                LightningStream.Stop();
+            }
+
+            _hadTargetLastFrame = hasTargetNow;
         }
 
-        if(IsClient && IsStarted.Value)
+        if (IsClient && IsStarted.Value)
         {
-            BeamRenderer.enabled = BeamVisible.Value;
-            BeamRenderer.SetPosition(0, BeamStart.Value);
-            BeamRenderer.SetPosition(1, BeamEnd.Value);
+            // Calculate direction and distance
+            Vector2 direction = BeamEnd.Value - BeamStart.Value;
+            float distance = direction.magnitude;
+
+            // Set lifetime based on distance
+            var main = LightningStream.main;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(distance * LifetimePerDistanceUnit);
+
+            // Rotate the particle system to face the direction of the beam
+            if (direction != Vector2.zero)
+            {
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                LightningStream.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
+                LightningStream.transform.position = BeamStart.Value;
+            }
         }
     }
 }
