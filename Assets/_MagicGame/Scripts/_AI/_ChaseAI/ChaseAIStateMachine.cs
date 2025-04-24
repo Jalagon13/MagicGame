@@ -61,7 +61,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
             _healthState = GetComponent<NetworkHealthState>();
             _npcNetwork = GetComponent<NpcNetworkComponent>();
             _npc = GetComponent<Npc>();
-            _npc.OnNpcDamged += OnNpcDamged;
+            _npc.OnServerNpcDamged += OnNpcDamged;
 
             _states[ChaseAIState.Idle] = new ChaseAIIdleState(ChaseAIState.Idle, this);
             _states[ChaseAIState.Moving] = new ChaseAIMoveState(ChaseAIState.Moving, this);

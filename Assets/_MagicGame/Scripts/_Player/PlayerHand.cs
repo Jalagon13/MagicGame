@@ -19,7 +19,6 @@ public class PlayerHand : NetworkBehaviour
 		public CardinalDirection Direction;
 	}
 
-	[field: SerializeField] public float SwingCooldown { get; private set; }
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _northPivot;
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _southPivot;
 	[FoldoutGroup("Pivots"), SerializeField] private Transform _eastPivot;
@@ -48,7 +47,7 @@ public class PlayerHand : NetworkBehaviour
 
 	private void Awake()
 	{
-		_swingCooldownTimer = new(SwingCooldown);
+		_swingCooldownTimer = new(0);
 
 
 		if (_thisPlayer == null)
@@ -260,7 +259,7 @@ public class PlayerHand : NetworkBehaviour
 
 		MeleeCollider.EndSwing();
 
-		_swingCooldownTimer.Reset();
+		_swingCooldownTimer = new(HeldItem is StaffItemSO staffItemSO ? staffItemSO.SwingCooldown : 0.25f);
 		_armPivotGO.transform.rotation = endRotation;
 		IsSwinging = false;
 		_thisPlayer.IsPerformingSwing = false;

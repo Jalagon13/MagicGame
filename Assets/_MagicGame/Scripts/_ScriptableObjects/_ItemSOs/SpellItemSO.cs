@@ -21,7 +21,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	public bool IsContinuousCast;
 	public BiomeType SpawnBiome;
 
-	public SyncSpellData(int spellIndex, int damage, int manaCost, int knockback, float speed, float lifetime, float hasteMultiplier, ulong spellId, ulong ownerPlayerId, ulong inventorySlotId, bool despawnIfFocusSlotChanged, bool isContinuousCast, BiomeType spawnBiome)
+	public SyncSpellData(int spellIndex, int manaCost,int damage, int knockback, float speed, float lifetime, float hasteMultiplier, ulong spellId, ulong ownerPlayerId, ulong inventorySlotId, bool despawnIfFocusSlotChanged, bool isContinuousCast, BiomeType spawnBiome)
 	{
 		SpellIndex = spellIndex;
 		ManaCost = manaCost;

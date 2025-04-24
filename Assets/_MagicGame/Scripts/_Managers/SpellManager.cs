@@ -136,7 +136,6 @@ public class SpellManager : MonoBehaviour
         
         if(_loadedSpell.SpellToCast.IsContinuousCast)
         {
-            Debug.Log($"Starting continuous casting");
             IsContinuouslyCasting = true;
         }
         else
@@ -154,7 +153,6 @@ public class SpellManager : MonoBehaviour
     {
         if(_loadedSpell.SpellToCast.IsContinuousCast)
         {
-            Debug.Log($"canceling spell: Stopping continuous casting");
             IsContinuouslyCasting = false;
         }
 

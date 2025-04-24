@@ -164,7 +164,7 @@ public class Player : NetworkBehaviour
 	private void OnPlayerDamaged(object sender, NetworkHealthState.HitPointsDamagedEventArgs e)
 	{
 		Debug.Log($"Damaging player {OwnerClientId}");
-		GameManager.Instance.PlayDamageNumbers(e.DamageTaken, transform.position, CurrentPlayerBiome.Value);
+		GameManager.Instance.PlayDamageNumbersClientRpc(e.DamageTaken, transform.position, CurrentPlayerBiome.Value, Color.red);
 
 		OnPlayerDamagedClientRpc(e.DamageTaken, e.SourcePosition, e.KnockbackForce, RpcTarget.Single(OwnerClientId, RpcTargetUse.Persistent));
 	}

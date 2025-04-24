@@ -61,9 +61,7 @@ public class MeleeCollider : NetworkBehaviour
                 
                 targetToDamage.TakeDamageRpc(_staffItemSO.MeleeDamage, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position, _staffItemSO.Knockback);
                 _targetsFound.Remove(targetToDamage);
-                
-                // Play sound here
-                
+                _staffItemSO.PlayHitSound();
                 _targetsHit.Add(targetToDamage);
                 
                 yield return new WaitForSeconds(DetectionBetweenHitsDuration);

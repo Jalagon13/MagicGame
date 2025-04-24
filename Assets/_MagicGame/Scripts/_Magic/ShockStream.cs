@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FMOD.Studio;
 using FMODUnity;
 using Unity.Netcode;
 using UnityEditor.EditorTools;
@@ -14,19 +15,30 @@ public class ShockStream : Spell
     [field: SerializeField] public float LifetimePerDistanceUnit { get; private set; } = 0.05f;
     [field: SerializeField] public ParticleSystem LightningStream { get; private set; }
     [field: SerializeField] public EventReference DamageSound { get; private set; }
+    [field: SerializeField] public EventReference SustainedElectricitySound { get; private set; }
 
-    public NetworkVariable<bool> BeamVisible { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Vector2> BeamStart { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Vector2> BeamEnd { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private List<NetworkHealthState> _potentialTargetsToLockOnTo = new();
     private Timer _damageTimer;
+    private EventInstance _sustainedElectricitySoundEventInstance;
 
     protected override void OnOwnerExecuteSpellStart()
     {
         _damageTimer = new Timer(0.1f);
+
+        _sustainedElectricitySoundEventInstance = SoundManager.Instance.CreateInstance(SustainedElectricitySound);
     }
 
+    public override void OnOwnerSpellEnd()
+    {
+        _sustainedElectricitySoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        LightningStream.Stop();
+
+        base.OnOwnerSpellEnd();
+    }
+    
     protected override void Update()
     {
         base.Update();
@@ -44,7 +56,6 @@ public class ShockStream : Spell
             
             _damageTimer.Tick(Time.deltaTime);
             _potentialTargetsToLockOnTo.Clear();
-            BeamVisible.Value = false;
 
             Collider2D[] collisions = Physics2D.OverlapCircleAll(wandPos, Range, CollisionMask);
 
@@ -95,7 +106,6 @@ public class ShockStream : Spell
                     SoundManager.Instance.PlayOneShot(DamageSound, transform.position);
                 }
 
-                BeamVisible.Value = true;
                 BeamStart.Value = wandPos;
                 BeamEnd.Value = closestTarget.transform.position;
             }
@@ -104,10 +114,12 @@ public class ShockStream : Spell
 
             if (hasTargetNow && !_hadTargetLastFrame)
             {
+                _sustainedElectricitySoundEventInstance.start();
                 LightningStream.Play();
             }
             else if (!hasTargetNow && _hadTargetLastFrame)
             {
+                _sustainedElectricitySoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 LightningStream.Stop();
             }
 

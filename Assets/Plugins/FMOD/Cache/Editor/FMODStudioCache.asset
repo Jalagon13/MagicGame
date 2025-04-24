@@ -72,7 +72,7 @@ MonoBehaviour:
     Data3: -1934371966
     Data4: 306405590
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: -2722816956503410227}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -181,6 +181,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-5820898319506228955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/Zap1
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/Zap1
+  Guid:
+    Data1: -693106639
+    Data2: 1337153438
+    Data3: -530487679
+    Data4: 360285647
+  Banks:
+  - {fileID: -2722816956503410227}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-5380485776774333557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,11 +304,38 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638810170591215802
+  lastModified: 638810759788612229
   FileSizes:
   - Name: Desktop
-    Value: 3323968
+    Value: 3104480
   Exists: 1
+--- !u!114 &-4447199315379070513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/Zap2
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/Zap2
+  Guid:
+    Data1: -382369934
+    Data2: 1264056192
+    Data3: 1511411633
+    Data4: 1298307303
+  Banks:
+  - {fileID: -2722816956503410227}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4100935872588225253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,6 +391,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-2722816956503410227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Magic.bank
+  m_EditorClassIdentifier: 
+  Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Magic.bank
+  Name: Magic
+  StudioPath: bank:/Magic
+  lastModified: 638810773655865397
+  FileSizes:
+  - Name: Desktop
+    Value: 240224
+  Exists: 1
 --- !u!114 &-2423619658234550821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,7 +565,7 @@ MonoBehaviour:
     Data3: -1885222999
     Data4: 915117413
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: -2722816956503410227}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -518,7 +592,7 @@ MonoBehaviour:
     Data3: -219622527
     Data4: -1689700191
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: -2722816956503410227}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -544,6 +618,7 @@ MonoBehaviour:
   - {fileID: -4626298972836983042}
   - {fileID: 4239372470019258213}
   - {fileID: -7513412204427243761}
+  - {fileID: -2722816956503410227}
   EditorEvents:
   - {fileID: -2013000793435297120}
   - {fileID: 5242794587038571529}
@@ -577,12 +652,14 @@ MonoBehaviour:
   - {fileID: 8116599811075677841}
   - {fileID: -961492354960494440}
   - {fileID: 6371852465751065072}
+  - {fileID: -5820898319506228955}
+  - {fileID: -4447199315379070513}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6702288669578411488}
   StringsBanks:
   - {fileID: 5574528013551363316}
-  cacheTime: 638810170591215802
+  cacheTime: 638810773655865397
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:
@@ -684,7 +761,7 @@ MonoBehaviour:
     Data3: 51854251
     Data4: 858203368
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: -2722816956503410227}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -835,10 +912,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638810170589363728
+  lastModified: 638810773655251082
   FileSizes:
   - Name: Desktop
-    Value: 2392
+    Value: 2516
   Exists: 1
 --- !u!114 &5813129133648053243
 MonoBehaviour:
@@ -859,7 +936,7 @@ MonoBehaviour:
     Data3: 49132942
     Data4: 1594458749
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: -2722816956503410227}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -908,19 +985,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/Magic/SustainedElectricity
   Guid:
-    Data1: 1542209105
-    Data2: 1083810083
-    Data3: -1699275122
-    Data4: 47460019
+    Data1: 1872068791
+    Data2: 1217057027
+    Data3: 1303084456
+    Data4: 28021889
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: -2722816956503410227}
   IsStream: 0
   Is3D: 0
-  IsOneShot: 1
+  IsOneShot: 0
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 0
+  Length: 4990
 --- !u!114 &6702288669578411488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -936,7 +1013,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638810170589324998
+  lastModified: 638810773655230897
   FileSizes:
   - Name: Desktop
     Value: 3619520
@@ -1041,7 +1118,7 @@ MonoBehaviour:
     Data3: 1963841471
     Data4: 1725148628
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: -2722816956503410227}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1

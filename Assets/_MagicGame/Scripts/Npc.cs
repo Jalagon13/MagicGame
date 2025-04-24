@@ -10,8 +10,9 @@ using UnityEngine;
 [RequireComponent(typeof(NpcNetworkComponent))]
 public class Npc : NetworkBehaviour
 {	
-	public event System.EventHandler OnNpcKilled;
-	public event EventHandler<OnNpcDamagedEventArgs> OnNpcDamged;
+	public event System.EventHandler OnServerNpcKilled;
+	public event EventHandler<OnNpcDamagedEventArgs> OnServerNpcDamged;
+	public event EventHandler<OnNpcDamagedEventArgs> OnClientNpcDamged;
 	public class OnNpcDamagedEventArgs : EventArgs
 	{
 		public Vector2 DamageSourcePosition;
@@ -58,13 +59,24 @@ public class Npc : NetworkBehaviour
 	private void OnNpcDamaged(object sender, NetworkHealthState.HitPointsDamagedEventArgs e)
 	{
 		SoundManager.Instance.PlayOneShot(DamageSound, transform.position);
-		GameManager.Instance.PlayDamageNumbers(e.DamageTaken, transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
+		GameManager.Instance.PlayDamageNumbersClientRpc(e.DamageTaken, transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType, Color.yellow);
 
 		_knockback.ApplyKnockback(e.SourcePosition, _knockbackResist, e.KnockbackForce);
 
-		OnNpcDamged?.Invoke(this, new OnNpcDamagedEventArgs
+		OnServerNpcDamged?.Invoke(this, new OnNpcDamagedEventArgs
 		{
 			DamageSourcePosition = e.SourcePosition
+		});
+
+		OnNpcDamagedClientRpc(e.SourcePosition);
+	}
+	
+	[Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+	private void OnNpcDamagedClientRpc(Vector2 sourcePosition)
+	{
+		OnClientNpcDamged?.Invoke(this, new OnNpcDamagedEventArgs
+		{
+			DamageSourcePosition = sourcePosition
 		});
 	}
 
@@ -81,7 +93,7 @@ public class Npc : NetworkBehaviour
 	
 	public void KillNpc()
 	{
-		OnNpcKilled?.Invoke(this, EventArgs.Empty);
+		OnServerNpcKilled?.Invoke(this, EventArgs.Empty);
 	}
 	
 	public void DropLoot()

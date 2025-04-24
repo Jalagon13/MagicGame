@@ -25,7 +25,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 		{
 			_npcGameObject = transform.GetChild(0).gameObject;
 			_npc = GetComponent<Npc>();
-			_npc.OnNpcKilled += Npc_OnNpcKilled;
+			_npc.OnServerNpcKilled += Npc_OnNpcKilled;
 		
 			_despawnTimer = new Timer(DESPAWN_TIMER_DURATION);
 			_despawnTimer.OnTimerEnd += HandleDespawnTimerEnd;
@@ -262,7 +262,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 		{
 			NetworkObject.CheckObjectVisibility -= CheckIfInSameEnvironment;
 			NetworkManager.NetworkTickSystem.Tick -= NpcNetworkTick;
-			_npc.OnNpcKilled -= Npc_OnNpcKilled;
+			_npc.OnServerNpcKilled -= Npc_OnNpcKilled;
 		}
 
 		// Debug.Log($"OnNetworkDespawn callback on {gameObject.name} for client: {NetworkManager.LocalClientId}");

@@ -772,7 +772,7 @@ Transform:
   m_GameObject: {fileID: 4182005648016098197}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.211, y: 0.022, z: 0}
+  m_LocalPosition: {x: -0.216, y: -0.034, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1365,8 +1365,8 @@ Transform:
   m_GameObject: {fileID: 5903708091970681359}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.92387956, w: 0.38268343}
-  m_LocalPosition: {x: -0.176, y: 0.068, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_LocalPosition: {x: -0.228, y: 0.007, z: 0}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3137753485887550457}
@@ -1486,7 +1486,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <SwingCooldown>k__BackingField: 0.25
   _northPivot: {fileID: 3775953093180886463}
   _southPivot: {fileID: 3951572965716743613}
   _eastPivot: {fileID: 5690394868646927140}

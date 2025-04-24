@@ -17,5 +17,13 @@ MonoBehaviour:
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <MeleeDamage>k__BackingField: 7
-  <Knockback>k__BackingField: 4
+  <MeleeDamage>k__BackingField: 9
+  <Knockback>k__BackingField: 8
+  <SwingCooldown>k__BackingField: 0.15
+  <HitSound>k__BackingField:
+    Guid:
+      Data1: -321209541
+      Data2: 1119949590
+      Data3: 197467520
+      Data4: 1755672934
+    Path: event:/Player/MeleeHit

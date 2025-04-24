@@ -268,25 +268,44 @@ public class GameManager : NetworkBehaviour
 		
 		item.DestroySelf();
 	}
-	
+
 	#endregion
-	
+
 	#region Damage Number Functions
-	
-	public void PlayDamageNumbers(int amount, Vector2 position, BiomeType biome)
-	{
-		PlayDamageNumbersClibentRpc(amount, position, biome);
-	}
-	
+
+	private Gradient _gradient;
+	private GradientColorKey[] _colorKey;
+	private GradientAlphaKey[] _alphaKey;
+
 	[Rpc(SendTo.ClientsAndHost)]
-	private void PlayDamageNumbersClibentRpc(int damageAmount, Vector2 position, BiomeType biome)
+	public void PlayDamageNumbersClientRpc(int amount, Vector2 position, BiomeType biome, Color color)
 	{
-		if(biome == Player.LocalClientInstance.CurrentPlayerBiome.Value)
+		if (biome == Player.LocalClientInstance.CurrentPlayerBiome.Value)
 		{
 			MMF_Player damageNumberFeedbacks = transform.GetChild(0).GetComponent<MMF_Player>();
 			MMF_FloatingText floatingText = damageNumberFeedbacks.GetFeedbackOfType<MMF_FloatingText>();
-	
-			floatingText.Value = damageAmount.ToString();
+
+			floatingText.Value = amount.ToString();
+			
+			// we setup some fancy colors
+			_gradient = new Gradient();
+			// Populate the color keys at the relative time 0 and 1 (0 and 100%)
+			_colorKey = new GradientColorKey[2];
+			_colorKey[0].color = color;
+			_colorKey[0].time = 0.0f;
+			_colorKey[1].color = color;
+			_colorKey[1].time = 1.0f;
+			// Populate the alpha  keys at relative time 0 and 1  (0 and 100%)
+			_alphaKey = new GradientAlphaKey[2];
+			_alphaKey[0].alpha = 0.0f;
+			_alphaKey[0].time = 0.0f;
+			_alphaKey[1].alpha = 1.0f;
+			_alphaKey[1].time = 1.0f;
+			_gradient.SetKeys(_colorKey, _alphaKey);
+
+			floatingText.ForceColor = true;
+			floatingText.AnimateColorGradient = _gradient;
+			
 			damageNumberFeedbacks.transform.position = position;
 			damageNumberFeedbacks.PlayFeedbacks(position);
 		}
