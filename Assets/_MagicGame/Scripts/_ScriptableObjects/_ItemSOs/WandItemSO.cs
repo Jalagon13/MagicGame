@@ -7,7 +7,6 @@ public class WandItemSO : ItemSO
     [field: SerializeField] public int MiningPower { get; private set; }
     [Tooltip("Mining speed / 60 = time between mining ticks")]
     [field: SerializeField] public float MiningRange { get; private set; }
-    [field: SerializeField] public MiningVisuals MiningVisualsPrefab { get; private set; }
 
     public bool PlayerWithinMiningRangeOfMouse()
     {

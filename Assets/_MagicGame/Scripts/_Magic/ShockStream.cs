@@ -107,7 +107,7 @@ public class ShockStream : Spell
                 }
 
                 BeamStart.Value = wandPos;
-                BeamEnd.Value = closestTarget.transform.position;
+                BeamEnd.Value = closestTarget.GetComponent<Collider2D>().bounds.center;
             }
 
             bool hasTargetNow = closestTarget != null;

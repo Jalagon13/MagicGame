@@ -30,7 +30,7 @@ MonoBehaviour:
   <Cooldown>k__BackingField: 0
   <ManaCost>k__BackingField: 3
   <Damage>k__BackingField: 6
-  <Knockback>k__BackingField: 2
+  <Knockback>k__BackingField: 8
   <Lifetime>k__BackingField: 4
   <Speed>k__BackingField: 0
   <Recoil>k__BackingField: 0

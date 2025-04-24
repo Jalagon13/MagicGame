@@ -17,5 +17,5 @@ MonoBehaviour:
   <GoldValue>k__BackingField: 10
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  <NpcToSpawn>k__BackingField: {fileID: 11400000, guid: 864554e8083dc4218ac4ad191a1023a3, type: 2}
+  <NpcToSpawn>k__BackingField: {fileID: 11400000, guid: 3eb116e0c04fb46ffac017eaaaffaef7, type: 2}
   <IgnoreNpcHousingCheck>k__BackingField: 1

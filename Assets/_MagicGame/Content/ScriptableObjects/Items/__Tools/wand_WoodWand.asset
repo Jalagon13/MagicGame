@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: wand_WoodWand
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Wood Wand
-  <UiDisplay>k__BackingField: {fileID: 475129307, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <UiDisplay>k__BackingField: {fileID: 1111476618149907708, guid: 1bf7f9aa6100f45aba161b26ead13824, type: 3}
   <GoldValue>k__BackingField: 15
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
   <MiningPower>k__BackingField: 1
   <MiningRange>k__BackingField: 4
-  <MiningVisualsPrefab>k__BackingField: {fileID: 8556308733887093175, guid: 1f41c9fd0b67b4deabf38d42320fb4e8, type: 3}

@@ -13,25 +13,28 @@ public enum DestructableType
 
 public class MiningHandler : MonoBehaviour
 {
+    public static MiningHandler Instance { get; private set; }
     public static bool FocusingOnWall = true;
     
     [field: SerializeField] public float TimeBetweenMiningSounds { get; private set; } = 0.25f;
     [field: SerializeField] public float DelayBetweenPlacingAndMining { get; private set; } = 0.15f;
     [field: SerializeField] public EventReference FocusWallSound { get; private set; }
     [field: SerializeField] public EventReference FocusFloorSound { get; private set; }
+    public bool IsMining { get; private set; }
 
     private Timer _miningTimer, _miningSoundTimer;
     private DestructableType _destructableFound;
     private WorldObject _worldObjectSelected;
     private TileSO _tileSelected;
     private Vector3Int? _currentBreakTargetPosition = null;
-    private WandItemSO _staffItem;
-    private bool _isMiningFlag;
+    private WandItemSO _wandItem;
     private bool _placeDelayActive;
     private Npc _selectedNPC;
 
     private void Awake()
     {
+        Instance = this;
+
         _miningTimer = new Timer(0f);
         _miningSoundTimer = new Timer(TimeBetweenMiningSounds);
         _miningSoundTimer.OnTimerEnd += PlayMiningSound;
@@ -58,9 +61,8 @@ public class MiningHandler : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (Player.LocalClientInstance == null) return;
-
-        if (Player.LocalClientInstance.HealthState.IsDead || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled() || !InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem)) return;
+        if (Player.LocalClientInstance == null || Player.LocalClientInstance.HealthState.IsDead || Pointer.IsOverUI() || 
+        !GameInput.Instance.GetInputsEnabled() || !InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem)) return;
 
         if(DeployItemSO.PlacedThisFrameFlag)
         {
@@ -74,7 +76,7 @@ public class MiningHandler : MonoBehaviour
 
         if(selectedInventoryItem.Item is WandItemSO wandItem)
         {
-            _staffItem = wandItem;
+            _wandItem = wandItem;
             _destructableFound = DestructableType.None;
             _currentBreakTargetPosition = null;
 
@@ -82,7 +84,6 @@ public class MiningHandler : MonoBehaviour
             {
                 if(OverNpc(ActionManager.MouseWorldPosition, out Npc npc))
                 {
-                    Debug.Log($"Detecting NPC: {npc}");
                     _selectedNPC = npc;
                     _destructableFound = DestructableType.Npc;
                     _currentBreakTargetPosition = ActionManager.MouseTilePosition;
@@ -120,17 +121,11 @@ public class MiningHandler : MonoBehaviour
                 }
             }
 
-            if (_destructableFound == DestructableType.None)
+            if (GameInput.Instance.GetPrimaryHeldDown() && _destructableFound != DestructableType.None)
             {
-                _isMiningFlag = false;
-                return;
-            }
-
-            if (GameInput.Instance.GetPrimaryHeldDown())
-            {
-                if (_currentBreakTargetPosition != ActionManager.MouseTilePosition || _isMiningFlag == false)
+                if (_currentBreakTargetPosition != ActionManager.MouseTilePosition || IsMining == false)
                 {
-                    _isMiningFlag = true;
+                    IsMining = true;
                     _currentBreakTargetPosition = ActionManager.MouseTilePosition;
 
                     float hardness = _destructableFound switch
@@ -141,7 +136,7 @@ public class MiningHandler : MonoBehaviour
                         _ => 1f // Default value
                     };
 
-                    float totalTicks = hardness * 30f / Mathf.Max(_staffItem.MiningPower, 0.1f);
+                    float totalTicks = hardness * 30f / Mathf.Max(_wandItem.MiningPower, 0.1f);
                     float totalMiningTime = totalTicks * 0.05f;
                     Debug.Log($"Total Mining Time: {totalMiningTime}");
                     if (totalMiningTime == 0)
@@ -154,10 +149,9 @@ public class MiningHandler : MonoBehaviour
                         _miningTimer.OnTimerEnd -= DestroyResource;
                         _miningTimer.OnTimerEnd += DestroyResource;
                     }
-
                 }
 
-                if (_isMiningFlag)
+                if (IsMining)
                 {
                     _miningTimer.Tick(Time.deltaTime);
                     _miningSoundTimer.Tick(Time.deltaTime);
@@ -165,8 +159,10 @@ public class MiningHandler : MonoBehaviour
             }
             else
             {
-                _isMiningFlag = false;
+                IsMining = false;
             }
+            
+            Debug.Log($"Mining Flag: {IsMining}");
         }
     }
 
@@ -218,7 +214,6 @@ public class MiningHandler : MonoBehaviour
 
     private void PlayMiningSound(object sender, EventArgs e)
     {
-        Instantiate(_staffItem.MiningVisualsPrefab, ActionManager.MouseWorldPosition, Quaternion.identity);
         _miningSoundTimer.RemainingSeconds = TimeBetweenMiningSounds;
 
         switch (_destructableFound)

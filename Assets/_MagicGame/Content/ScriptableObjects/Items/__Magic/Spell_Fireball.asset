@@ -28,11 +28,12 @@ MonoBehaviour:
     Path: event:/Magic/FireBurst
   <CastTime>k__BackingField: 0.5
   <Cooldown>k__BackingField: 0.35
-  <ManaCost>k__BackingField: 3
-  <Damage>k__BackingField: 8
-  <Knockback>k__BackingField: 4
+  <ManaCost>k__BackingField: 5
+  <Damage>k__BackingField: 14
+  <Knockback>k__BackingField: 15
   <Lifetime>k__BackingField: 0.75
   <Speed>k__BackingField: 15
   <Recoil>k__BackingField: 6
   <HasteMultiplier>k__BackingField: 0.6
   <DespawnIfFocusSlotChanged>k__BackingField: 0
+  <IsContinuousCast>k__BackingField: 0
