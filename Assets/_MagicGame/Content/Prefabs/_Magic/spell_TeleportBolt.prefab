@@ -271,19 +271,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <HitSomethingSound>k__BackingField:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  Velocity:
-    m_InternalValue: {x: 0, y: 0}
-  ShowVisuals:
-    m_InternalValue: 0
-  Started:
-    m_InternalValue: 0
+  <Visualization>k__BackingField: {fileID: 1896378920223993688}
+  <DespawnDelay>k__BackingField: 0.25
   _hitParticles: {fileID: 5806733700640005283, guid: 05ad6ece201a74f669b5783274d8c8fc, type: 3}
   _trailParticles: {fileID: 4814141149282417133}
   _teleportParticles: {fileID: 5806733700640005283, guid: 96c486bc91786419ea4e39208be93aba, type: 3}
@@ -293,7 +282,7 @@ MonoBehaviour:
       Data2: 1220625473
       Data3: 1963841471
       Data4: 1725148628
-    Path: event:/MagicWoosh
+    Path: event:/Magic/MagicWoosh
   _velocityDecay: 5
 --- !u!1001 &3404457874550790833
 PrefabInstance:

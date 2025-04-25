@@ -9,17 +9,25 @@ public static class AnimStateManager
     public static int CurrentStateHash;
     public static int CurrentAnimatorInstanceID;
 
-    public static void ChangeAnimationState(Animator animator, AnimationClip animClip)
+    public static void ChangeAnimationState(Animator animator, AnimationClip animClip, float? desiredDuration = null)
     {
-        Timing.RunCoroutine(ChangeState(animator, animClip));
+        Timing.RunCoroutine(ChangeState(animator, animClip, desiredDuration));
     }
 	
-    private static IEnumerator<float> ChangeState(Animator animator, AnimationClip animClip)
+    private static IEnumerator<float> ChangeState(Animator animator, AnimationClip animClip, float? desiredDuration)
     {
         yield return Timing.WaitForOneFrame;
-		
+
         int animHash = Animator.StringToHash(animClip.name);
-		
+
+        float playbackSpeed = 1f;
+        if (desiredDuration.HasValue)
+        {
+            float originalClipLength = animClip.length;
+            playbackSpeed = originalClipLength / desiredDuration.Value;
+        }
+        animator.speed = playbackSpeed;
+
         if (CurrentStateHash == animHash)
         {
             if (animator.GetInstanceID() != CurrentAnimatorInstanceID)

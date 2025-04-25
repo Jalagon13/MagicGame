@@ -33,7 +33,7 @@ public class MiningBeam : NetworkBehaviour
             {
                 Vector2 direction = _miningBeamEndPosition.Value - _miningBeamStartPosition.Value;
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                _startVfx.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
+                _startVfx.transform.rotation = Quaternion.Euler(0, 0, angle + 90f);
                 _startVfx.transform.position = _miningBeamStartPosition.Value;
                 
                 _miningBeamRenderer.positionCount = 2;

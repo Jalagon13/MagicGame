@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b52052ad4aefe4da580ba4e2ba9fed0c, type: 3}
-  m_Name: StoneFloorTile
+  m_Name: temp_StoneFloorTile
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 813459068, guid: 1a9d0adf4241541cdb05232ff4807e6e, type: 3}
   m_DefaultGameObject: {fileID: 0}

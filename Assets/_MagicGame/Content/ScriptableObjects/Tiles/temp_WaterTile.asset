@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b52052ad4aefe4da580ba4e2ba9fed0c, type: 3}
-  m_Name: PfWallTile
+  m_Name: temp_WaterTile
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 1626218805, guid: dc81f93c811174e9cb2f8e81d43820f4, type: 3}
+  m_DefaultSprite: {fileID: 161851590, guid: 41f868bf152c1445284f7bb62bfccefb, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
@@ -20,24 +20,6 @@ MonoBehaviour:
   HarvestType: 0
   DropItem: {fileID: 0}
   MaxHitPoints: 0
-  HitSound:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  PlaceSound:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  DestroySound:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+  HitSound: {fileID: 0}
+  PlaceSound: {fileID: 0}
+  DestroySound: {fileID: 0}

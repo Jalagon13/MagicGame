@@ -16,26 +16,46 @@ public class MiningHandler : MonoBehaviour
     public static MiningHandler Instance { get; private set; }
     public static bool FocusingOnWall = true;
     
+    public event System.EventHandler OnMiningStopped;
+    public event EventHandler<MiningStartedEventArgs> OnMiningStarted;
+    public class MiningStartedEventArgs : EventArgs
+    {
+        public Vector2Int BreakTargetPosition;
+        public float TotalMiningTime;
+        public BiomeType Biome;
+
+        public MiningStartedEventArgs(float totalMiningTime, Vector2Int breakTargetPosition, BiomeType biome)
+        {
+            TotalMiningTime = totalMiningTime;
+            BreakTargetPosition = breakTargetPosition;
+            Biome = biome;
+        }
+    }
+    
     [field: SerializeField] public float TimeBetweenMiningSounds { get; private set; } = 0.25f;
     [field: SerializeField] public float DelayBetweenPlacingAndMining { get; private set; } = 0.15f;
+    [field: SerializeField] public float BreakCooldownDuration { get; private set; } = 0.15f;
     [field: SerializeField] public EventReference FocusWallSound { get; private set; }
     [field: SerializeField] public EventReference FocusFloorSound { get; private set; }
     public bool IsMining { get; private set; }
 
-    private Timer _miningTimer, _miningSoundTimer;
+    private Timer _miningTimer, _miningSoundTimer, _breakCooldownTimer;
     private DestructableType _destructableFound;
     private WorldObject _worldObjectSelected;
     private TileSO _tileSelected;
     private Vector3Int? _currentBreakTargetPosition = null;
+    private Vector3Int? _originalBreakTargetPosition = null;
     private WandItemSO _wandItem;
     private bool _placeDelayActive;
     private Npc _selectedNPC;
+    private float _cachedTotalMiningTime;
 
     private void Awake()
     {
         Instance = this;
 
         _miningTimer = new Timer(0f);
+        _breakCooldownTimer = new Timer(0f);
         _miningSoundTimer = new Timer(TimeBetweenMiningSounds);
         _miningSoundTimer.OnTimerEnd += PlayMiningSound;
     }
@@ -74,7 +94,9 @@ public class MiningHandler : MonoBehaviour
             return;
         }
 
-        if(selectedInventoryItem.Item is WandItemSO wandItem)
+        _breakCooldownTimer.Tick(Time.deltaTime);
+
+        if (selectedInventoryItem.Item is WandItemSO wandItem)
         {
             _wandItem = wandItem;
             _destructableFound = DestructableType.None;
@@ -98,19 +120,20 @@ public class MiningHandler : MonoBehaviour
                 else if (FocusingOnWall)
                 {
                     // Try to find a destructable tile
-                    if (TileManager.Instance.WallTm.HasTile(ActionManager.MouseTilePosition))
+                    Vector3Int pos = Pointer.IsOverTopTile() ? ActionManager.MouseTilePosition + Vector3Int.down : ActionManager.MouseTilePosition;
+                    if (TileManager.Instance.WallTm.HasTile(pos))
                     {
-                        if(TileManager.Instance.OreTm.HasTile(ActionManager.MouseTilePosition))
+                        if(TileManager.Instance.OreTm.HasTile(pos))
                         {
-                            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.OreTm.GetTile(ActionManager.MouseTilePosition));
+                            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.OreTm.GetTile(pos));
                         }
                         else
                         {
-                            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(ActionManager.MouseTilePosition));
+                            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(pos));
                         }
 
                         _destructableFound = DestructableType.Tile;
-                        _currentBreakTargetPosition = ActionManager.MouseTilePosition;
+                        _currentBreakTargetPosition = pos;
                     }
                 }
                 else if (TileManager.Instance.FloorTm.HasTile(ActionManager.MouseTilePosition))
@@ -121,12 +144,18 @@ public class MiningHandler : MonoBehaviour
                 }
             }
 
-            if (GameInput.Instance.GetPrimaryHeldDown() && _destructableFound != DestructableType.None)
+            bool wasMining = IsMining;
+
+            if(_destructableFound == DestructableType.None || _breakCooldownTimer.RemainingSeconds > 0)
             {
-                if (_currentBreakTargetPosition != ActionManager.MouseTilePosition || IsMining == false)
+                IsMining = false;
+            }
+            else if (GameInput.Instance.GetPrimaryHeldDown())
+            {
+                if (IsMining == false)
                 {
                     IsMining = true;
-                    _currentBreakTargetPosition = ActionManager.MouseTilePosition;
+                    _originalBreakTargetPosition = _currentBreakTargetPosition;
 
                     float hardness = _destructableFound switch
                     {
@@ -138,7 +167,7 @@ public class MiningHandler : MonoBehaviour
 
                     float totalTicks = hardness * 30f / Mathf.Max(_wandItem.MiningPower, 0.1f);
                     float totalMiningTime = totalTicks * 0.05f;
-                    Debug.Log($"Total Mining Time: {totalMiningTime}");
+                    _cachedTotalMiningTime = totalMiningTime;
                     if (totalMiningTime == 0)
                     {
                         DestroyResource(null, null);
@@ -146,6 +175,7 @@ public class MiningHandler : MonoBehaviour
                     else
                     {
                         _miningTimer = new Timer(totalMiningTime);
+                        PlayMiningSound(null, null);
                         _miningTimer.OnTimerEnd -= DestroyResource;
                         _miningTimer.OnTimerEnd += DestroyResource;
                     }
@@ -153,6 +183,14 @@ public class MiningHandler : MonoBehaviour
 
                 if (IsMining)
                 {
+                    if (_currentBreakTargetPosition != _originalBreakTargetPosition)
+                    {
+                        IsMining = false;
+                        _originalBreakTargetPosition = null;
+                        _breakCooldownTimer.RemainingSeconds = BreakCooldownDuration;
+                        OnMiningStateChanged();
+                        return;
+                    }
                     _miningTimer.Tick(Time.deltaTime);
                     _miningSoundTimer.Tick(Time.deltaTime);
                 }
@@ -160,9 +198,25 @@ public class MiningHandler : MonoBehaviour
             else
             {
                 IsMining = false;
+                _originalBreakTargetPosition = null;
             }
             
-            Debug.Log($"Mining Flag: {IsMining}");
+            if (wasMining != IsMining)
+            {
+                OnMiningStateChanged();
+            }
+        }
+    }
+
+    private void OnMiningStateChanged()
+    {
+        if (IsMining)
+        {
+            OnMiningStarted?.Invoke(this, new MiningStartedEventArgs(_cachedTotalMiningTime, (Vector2Int)_currentBreakTargetPosition, Player.LocalClientInstance.CurrentPlayerBiome.Value));
+        }
+        else
+        {
+            OnMiningStopped?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -200,16 +254,17 @@ public class MiningHandler : MonoBehaviour
         switch (_destructableFound)
         {
             case DestructableType.WorldObject:
-                ObjectManager.Instance.DestroyObjectServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, (Vector2Int)ActionManager.MouseTilePosition, GameManager.Instance.GetIDFromWorldObject(_worldObjectSelected));
+                ObjectManager.Instance.DestroyObjectServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetIDFromWorldObject(_worldObjectSelected));
                 break;
             case DestructableType.Tile:
-                TileManager.Instance.DestroyTileServerRpc((Vector2Int)ActionManager.MouseTilePosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.LocalClientInstance.CurrentPlayerBiome.Value);
+                TileManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.LocalClientInstance.CurrentPlayerBiome.Value);
                 break;
             case DestructableType.Npc:
-                Debug.Log("Killing NPC");
                 _selectedNPC.GetComponent<NpcNetworkComponent>().KillNpcServerRpc();
                 break;
         }
+
+        _breakCooldownTimer.RemainingSeconds = BreakCooldownDuration;
     }
 
     private void PlayMiningSound(object sender, EventArgs e)
@@ -219,13 +274,13 @@ public class MiningHandler : MonoBehaviour
         switch (_destructableFound)
         {
             case DestructableType.WorldObject:
-                SoundManager.Instance.PlayOneShot(_worldObjectSelected.MiningSound, transform.position);
+                SoundManager.Instance.PlayOneShot(_worldObjectSelected.MiningSound, (Vector3)_currentBreakTargetPosition);
                 break;
             case DestructableType.Tile:
-                SoundManager.Instance.PlayOneShot(_tileSelected.MiningSound, transform.position);
+                SoundManager.Instance.PlayOneShot(_tileSelected.MiningSound, (Vector3)_currentBreakTargetPosition);
                 break;
             case DestructableType.Npc:
-                SoundManager.Instance.PlayOneShot(_selectedNPC.DamageSound, transform.position);
+                SoundManager.Instance.PlayOneShot(_selectedNPC.DamageSound, (Vector3)_currentBreakTargetPosition);
                 break;
         }
     }

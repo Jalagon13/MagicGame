@@ -10,7 +10,8 @@ using UnityEngine;
 public enum BiomeType // NTFS: When adding new IDs remember to put the value to the next power of 2 for the [Flags] to work properly
 {
 	Forest = 0,
-	Cave = 1
+	Cave = 1,
+	None = 2
 }
 
 public class WorldManager : NetworkBehaviour

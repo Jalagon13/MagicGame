@@ -44,5 +44,24 @@ public static class Pointer
 
         return false;
     }
+    
+    public static bool IsOverTopTile()
+    {
+        PointerEventData eventDataCurrentPosition = new(EventSystem.current)
+        {
+            position = Mouse.current.position.ReadValue()
+        };
+
+        List<RaycastResult> results = new();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+
+        foreach (RaycastResult raycastResult in results)
+        {
+            if (raycastResult.gameObject.TryGetComponent(out TopTile topTile))
+                return true;
+        }
+
+        return false;
+    }
 }
 

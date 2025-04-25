@@ -83,24 +83,24 @@ public class PlayerCamera : NetworkBehaviour
         }
 	}
 
+	private void RegisterCameraToPlayer(ulong clientId)
+	{
+		if (NetworkManager.LocalClientId != clientId) return;
+
+		_playerObject = NetworkManager.ConnectedClients[clientId].PlayerObject;
+		_cinemachineCam.Follow = _playerObject.transform;
+		_confiner.BoundingShape2D = WorldBoundary;
+		_cinemachineCam.enabled = true;
+		
+		SetListenerToPlayer();
+	}
+
 	private void OnFrustumBoundsChanged()
 	{
 		// TODO: Implement logic when camera bounds change
 		Lightmap.Instance.UpdateLightMapBounds(_cachedMinCorner, _cachedMaxCorner);
 	}
 
-	private void RegisterCameraToPlayer(ulong clientId)
-	{
-		if(NetworkManager.LocalClientId != clientId) return;
-		
-		_playerObject = NetworkManager.ConnectedClients[clientId].PlayerObject;
-		_cinemachineCam.Follow = _playerObject.transform;
-		_confiner.BoundingShape2D = WorldBoundary;
-		_cinemachineCam.enabled = true;
-		Debug.Log($"Player object: {_playerObject}");
-		SetListenerToPlayer();
-	}
-	
 	private void SetListenerToPlayer()
 	{
 		var attributes = new FMOD.ATTRIBUTES_3D
