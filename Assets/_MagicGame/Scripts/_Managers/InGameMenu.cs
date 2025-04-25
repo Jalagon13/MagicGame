@@ -74,8 +74,8 @@ public class InGameMenu : MonoBehaviour
     {
         ClearOldMenu();
         
-        SpellbookInspectorMenuUI wandInspectorMenuUI = _instantiateHandler.InstantiateWandInspectorMenu();
-        wandInspectorMenuUI.PlaceSelectedWand(wand);
+        SpellbookInspectorMenuUI spellbookInspectorMenuUI = _instantiateHandler.InstantiateWandInspectorMenu();
+        spellbookInspectorMenuUI.PlaceSelectedWand(wand);
 
         _menuReferenceHolder.SetMenuSourceGO(Player.LocalClientInstance.gameObject);
         Debug.Log("Closing default menu");

@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class TeleportBolt : Spell
 {
-    [SerializeField] private ParticleSystem _hitParticles;
-    [SerializeField] private ParticleSystem _trailParticles;
-    [SerializeField] private ParticleSystem _teleportParticles;
-    [SerializeField] private EventReference _teleportSound;
-    [SerializeField] private float _velocityDecay = 5f;
+    [field: Header("Teleport Bolt")]
+    [field: SerializeField] public float VelocityDecay { get; private set; } = 5f;
+    [field: SerializeField] public ParticleSystem TeleportParticles { get; private set; }
+    [field: SerializeField] public ParticleSystem Trail { get; private set; }
+    [field: SerializeField] public EventReference TeleportSound { get; private set; }
 
     private Rigidbody2D _rigidbody2D;
     private GameObject _vfx;
@@ -24,25 +24,16 @@ public class TeleportBolt : Spell
     {
         base.OnNetworkSpawn();
 
-        _vfx = Instantiate(_teleportParticles.gameObject, _spellGameObject.transform);
+        _vfx = Instantiate(TeleportParticles.gameObject, _spellGameObject.transform);
         _vfx.transform.localPosition = Vector3.zero;
     }
 
-    public override void OnNetworkDespawn()
-    {
-        base.OnNetworkDespawn();
-        
-        if (IsServer)
-        {
-            SpawnTeleportParticlesClientRpc(NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, transform.position);
-        }
-    }
-
-    [Rpc(SendTo.ClientsAndHost)]
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
     private void SpawnTeleportParticlesClientRpc(Vector2 particleSpawnPoint, Vector2 teleportPoint)
     {
-        SoundManager.Instance.PlayOneShot(_teleportSound, transform.position);
-        Debug.Log("Spawning Teleport Particles");
+        if(Player.LocalClientInstance.CurrentPlayerBiome.Value != SpellData.Value.SpawnBiome) return;
+    
+        SoundManager.Instance.PlayOneShot(TeleportSound, transform.position);
         _vfx.transform.position = particleSpawnPoint;
         _vfx.transform.parent = null;
         _vfx.GetComponent<ParticleSystem>().Play();
@@ -59,7 +50,7 @@ public class TeleportBolt : Spell
     {
         _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 
-        if (IsServer)
+        if (IsOwner)
         {
             Velocity.Value = _finalDirection * SpellData.Value.Speed;
         }
@@ -67,19 +58,23 @@ public class TeleportBolt : Spell
 
     private void FixedUpdate()
     {
-        if (!IsStarted.Value || !IsOwner) return; //don't do anything before OnNetworkSpawn has run.
-
-        Velocity.Value = Vector2.Lerp(Velocity.Value, Velocity.Value, _velocityDecay * Time.fixedDeltaTime);
-        _rigidbody2D.linearVelocity = Velocity.Value;
+        if (IsOwner)
+        {
+            Velocity.Value = Vector2.Lerp(Velocity.Value, Vector2.zero, VelocityDecay * Time.fixedDeltaTime);
+            _rigidbody2D.linearVelocity = Velocity.Value;
+        }
     }
 
-    public override void OnDestroy()
+    protected override void OnStopped()
     {
-        _trailParticles.gameObject.transform.parent = null;
-        var main = _trailParticles.main;
-        main.loop = false;
-        main.stopAction = ParticleSystemStopAction.Destroy;
+        if (Trail != null)
+        {
+            Trail.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
 
-        base.OnDestroy();
+        if (IsOwner)
+        {
+            SpawnTeleportParticlesClientRpc(NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, transform.position);
+        }
     }
 }

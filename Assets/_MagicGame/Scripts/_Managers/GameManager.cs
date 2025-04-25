@@ -205,23 +205,6 @@ public class GameManager : NetworkBehaviour
 	
 	#endregion
 
-	#region Spell Projectile Functions
-	
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void SpawnSpellServerRpc(SyncSpellData spellData, Vector2 loadPoint, RpcParams rpcParams = default)
-	{
-		Spell spell = Instantiate((GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO).SpellProjectilePrefab, loadPoint, Quaternion.identity);
-		
-		NetworkObject no = spell.GetComponent<NetworkObject>();
-		no.SpawnWithObservers = false;
-		no.SpawnWithOwnership(spellData.OwnerPlayerId, true);
-		
-		spell.SpellData.Value = spellData;
-		spell.GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);
-	}
-	
-	#endregion
-	
 	#region Item Functions
 	
 	public void SpawnItem(InventoryItem inventoryItem, Vector2 spawnPos, BiomeType biome, Vector2 velocity = default)

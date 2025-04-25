@@ -19,14 +19,14 @@ MonoBehaviour:
   <Description>k__BackingField: Shoots a single bolt of mana.
   <SpellProjectilePrefab>k__BackingField: {fileID: 328760061712302374, guid: 621ecfce8088a4bbd936f81d32ea71b3, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 8220174660526289276, guid: 7df632c9cec31475d85746569af60ab7, type: 3}
-  <SpellCast>k__BackingField:
+  <SpellCastSound>k__BackingField:
     Guid:
       Data1: -1323676631
       Data2: 1148896384
       Data3: -1934371966
       Data4: 306405590
     Path: event:/Magic/SpellHeal
-  <CastTime>k__BackingField: 1
+  <CastTime>k__BackingField: 0.2
   <Cooldown>k__BackingField: 5
   <ManaCost>k__BackingField: 18
   <Damage>k__BackingField: 0
@@ -36,3 +36,4 @@ MonoBehaviour:
   <Recoil>k__BackingField: 0
   <HasteMultiplier>k__BackingField: 0.25
   <DespawnIfFocusSlotChanged>k__BackingField: 0
+  <IsContinuousCast>k__BackingField: 0

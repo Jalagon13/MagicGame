@@ -1,30 +1,34 @@
+using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using FMODUnity;
 
 [CreateAssetMenu(fileName = "wand_", menuName = "Create Item/New Wand")]
 public class WandItemSO : ItemSO
 {
-    [Tooltip("Power of each mining tick")]
-    [field: SerializeField] public int MiningPower { get; private set; }
-    [Tooltip("Mining speed / 60 = time between mining ticks")]
-    [field: SerializeField] public float MiningRange { get; private set; }
+	// For custom spell modifiers
+	[field: SerializeField] public int MeleeDamage { get; private set; }
+	[field: SerializeField] public int Knockback { get; private set; }
+	[field: SerializeField] public float SwingCooldown { get; private set; } = 0.25f;
+	[field: SerializeField] public EventReference HitSound { get; private set; }
 
-    public bool PlayerWithinMiningRangeOfMouse()
-    {
-        return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= MiningRange;
-    }
+	public void PlayHitSound()
+	{
+	    SoundManager.Instance.PlayOneShot(HitSound, Player.LocalClientInstance.transform.position);
+	}
 
-    public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
-    {
-        return _baseActionCooldown;
-    }
-
-    public override string GetDescription()
-    {
-        return Description;
-    }
-
-    public override InventoryItem CreateInventoryItem(int quantity)
-    {
-        return new InventoryItem(this, quantity);
-    }
+	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
+	{
+		return _baseActionCooldown;
+	}
+	
+	public override string GetDescription()
+	{
+		return Description;
+	}
+	
+	public override InventoryItem CreateInventoryItem(int quantity)
+	{
+		return new InventoryItem(this, quantity);
+	}
 }

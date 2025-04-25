@@ -45,7 +45,6 @@ public class MiningHandler : MonoBehaviour
     private TileSO _tileSelected;
     private Vector3Int? _currentBreakTargetPosition = null;
     private Vector3Int? _originalBreakTargetPosition = null;
-    private WandItemSO _wandItem;
     private bool _placeDelayActive;
     private Npc _selectedNPC;
     private float _cachedTotalMiningTime;
@@ -96,13 +95,12 @@ public class MiningHandler : MonoBehaviour
 
         _breakCooldownTimer.Tick(Time.deltaTime);
 
-        if (selectedInventoryItem.Item is WandItemSO wandItem)
+        if (selectedInventoryItem.Item is WandItemSO wandItem && SpellManager.Instance.SelectedSpell is MiningSpellItemSO miningSpellItemSO)
         {
-            _wandItem = wandItem;
             _destructableFound = DestructableType.None;
             _currentBreakTargetPosition = null;
 
-            if (wandItem.PlayerWithinMiningRangeOfMouse())
+            if (miningSpellItemSO.PlayerWithinMiningRangeOfMouse())
             {
                 if(OverNpc(ActionManager.MouseWorldPosition, out Npc npc))
                 {
@@ -165,7 +163,7 @@ public class MiningHandler : MonoBehaviour
                         _ => 1f // Default value
                     };
 
-                    float totalTicks = hardness * 30f / Mathf.Max(_wandItem.MiningPower, 0.1f);
+                    float totalTicks = hardness * 30f / Mathf.Max(miningSpellItemSO.MiningPower, 0.1f);
                     float totalMiningTime = totalTicks * 0.05f;
                     _cachedTotalMiningTime = totalMiningTime;
                     if (totalMiningTime == 0)

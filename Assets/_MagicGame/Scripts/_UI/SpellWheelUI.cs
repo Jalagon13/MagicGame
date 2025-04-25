@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using FMODUnity;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,9 +9,19 @@ public class SpellWheelUI : MonoBehaviour
 {
     [field: SerializeField] public GameObject SpellUIPrefab { get; private set; }
     [field: SerializeField] public float DistanceFromCenter { get; private set; }
+    [field: SerializeField] public EventReference SpellSelectedSound { get; private set; }
 
     private Dictionary<GameObject, SpellItemSO> _activeSpellUIDict = new Dictionary<GameObject, SpellItemSO>();
     private int _numOfSpells;
+    private GameObject _lastClosestUI = null;
+    private GameObject _spellUIHolder;
+    private TextMeshProUGUI _selectedSpellText;
+
+    private void Awake()
+    {
+        _selectedSpellText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        _spellUIHolder = transform.GetChild(1).gameObject;
+    }
 
     private void Start()
     {
@@ -49,6 +61,12 @@ public class SpellWheelUI : MonoBehaviour
         {
             ui.transform.localScale = (ui == closestUI) ? Vector3.one * 1.5f : Vector3.one;
         }
+        
+        if (closestUI != _lastClosestUI)
+        {
+            _lastClosestUI = closestUI;
+            OnClosestSpellChanged(_activeSpellUIDict[closestUI]);
+        }
     }
 
     private void ShowWheel(object sender, EventArgs e)
@@ -87,7 +105,7 @@ public class SpellWheelUI : MonoBehaviour
             for (int i = 0; i < _numOfSpells; i++)
             {
                 SpellItemSO spell = spellList[i];
-                GameObject spellUI = Instantiate(SpellUIPrefab, transform);
+                GameObject spellUI = Instantiate(SpellUIPrefab, _spellUIHolder.transform);
                 spellUI.GetComponent<Image>().sprite = spell.UiDisplay;
                 _activeSpellUIDict.Add(spellUI, spell);
                 RectTransform rt = spellUI.GetComponent<RectTransform>();
@@ -118,5 +136,12 @@ public class SpellWheelUI : MonoBehaviour
     {
         SpellManager.Instance.OnSpellWheelOpened -= ShowWheel;
         SpellManager.Instance.OnSpellWheelClosed -= HideWheel;
+    }
+
+    private void OnClosestSpellChanged(SpellItemSO newSpell)
+    {
+        // Put your desired logic here
+        _selectedSpellText.text = newSpell.Name;
+        SoundManager.Instance.PlayOneShot(SpellSelectedSound, transform.position);
     }
 }

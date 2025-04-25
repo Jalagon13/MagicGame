@@ -89,7 +89,7 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("Spell charging animation.")]
 	[field: SerializeField] public GameObject ChargeVFX { get; private set; }
 
-	[field: SerializeField] public EventReference SpellCast { get; private set; }
+	[field: SerializeField] public EventReference SpellCastSound { get; private set; }
 
 	[field: Header("Stats")]
 	[field: Tooltip("Time it takes to cast this projectile (in seconds).")]
@@ -143,7 +143,7 @@ public class SpellItemSO : ItemSO
 	public SyncSpellData LoadSpell(SpellBookItemSO wandSO)
 	{
 		var syncSpellData = GetSpellDataForLocalClientInstance();
-		GameManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
+		SpellManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
 		return syncSpellData;
 	}
 	

@@ -17,7 +17,7 @@ public struct LoadedSpell
     }
 }
 
-public class SpellManager : MonoBehaviour
+public class SpellManager : NetworkBehaviour
 {  
     public static SpellManager Instance { get; private set; }
     
@@ -67,7 +67,35 @@ public class SpellManager : MonoBehaviour
             LoadSpell();
         }
     }
-    
+
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    public void SpawnSpellServerRpc(SyncSpellData spellData, Vector2 loadPoint, RpcParams rpcParams = default)
+    {
+        Spell spell = Instantiate((GameManager.Instance.GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO).SpellProjectilePrefab, loadPoint, Quaternion.identity);
+
+        NetworkObject no = spell.GetComponent<NetworkObject>();
+        no.SpawnWithObservers = false;
+        no.SpawnWithOwnership(spellData.OwnerPlayerId, true);
+
+        spell.SpellData.Value = spellData;
+        spell.GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);
+    }
+
+    private bool CanCastSelectedSpell()
+    {
+        bool primaryHeldDown = GameInput.Instance.GetPrimaryHeldDown();
+        bool hasSpellbook = HasEquippedSpellBook;
+        bool hasSelectedSpell = SelectedSpell != null;
+        bool selectedItemExists = InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
+        bool isStaffItem = selectedItemExists && selectedInventoryItem.Item is WandItemSO;
+        bool isCastTimeOver = CastTimeTimer.RemainingSeconds <= 0;
+        bool hasEnoughMana = SelectedSpell != null && PlayerStats.Instance.CurrentMana >= SelectedSpell.ManaCost;
+        bool selectedSpellOnCooldown = IsSelectedSpellOnCooldown();
+
+        return primaryHeldDown && hasSpellbook && hasSelectedSpell && isStaffItem && isCastTimeOver && !_isSpellWheelOpen && !Pointer.IsOverUI() && 
+        !Pointer.IsOverInteractable() && hasEnoughMana && !selectedSpellOnCooldown && !IsContinuouslyCasting && SelectedSpell is not MiningSpellItemSO;
+    }
+
     private void HandleTimers()
     {
         CastTimeTimer.Tick(Time.deltaTime);
@@ -124,7 +152,7 @@ public class SpellManager : MonoBehaviour
         Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
         Vector2 baseDirection = (ActionManager.MouseWorldPosition - spawnPoint).normalized;
         Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, _loadedSpell.SpellToCast.Recoil);
-        SoundManager.Instance.PlayOneShot(_loadedSpell.SpellToCast.SpellCast, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
+        SoundManager.Instance.PlayOneShot(_loadedSpell.SpellToCast.SpellCastSound, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
 
         OnExecuteSpells?.Invoke(this, new ExecuteSpellsEventArgs 
         { 
@@ -165,20 +193,6 @@ public class SpellManager : MonoBehaviour
 
         CastTimeTimer.OnTimerEnd -= ExecuteSpell;
         CastTimeTimer = new Timer(0);
-    }
-
-    private bool CanCastSelectedSpell()
-    {
-        bool primaryHeldDown = GameInput.Instance.GetPrimaryHeldDown();
-        bool hasSpellbook = HasEquippedSpellBook;
-        bool hasSelectedSpell = SelectedSpell != null;
-        bool selectedItemExists = InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-        bool isStaffItem = selectedItemExists && selectedInventoryItem.Item is StaffItemSO;
-        bool isCastTimeOver = CastTimeTimer.RemainingSeconds <= 0;
-        bool hasEnoughMana = SelectedSpell != null && PlayerStats.Instance.CurrentMana >= SelectedSpell.ManaCost;
-        bool selectedSpellOnCooldown = IsSelectedSpellOnCooldown();
-
-        return primaryHeldDown && hasSpellbook && hasSelectedSpell && isStaffItem && isCastTimeOver && !_isSpellWheelOpen && !Pointer.IsOverUI() && !Pointer.IsOverInteractable() && hasEnoughMana && !selectedSpellOnCooldown && !IsContinuouslyCasting;
     }
 
     private bool IsSelectedSpellOnCooldown()
@@ -269,7 +283,7 @@ public class SpellManager : MonoBehaviour
     }
     #endregion
 
-    private void OnDestroy()
+    public override void OnDestroy()
     {
         GameInput.Instance.OnSpaceStarted -= OpenSpellWheel;
         GameInput.Instance.OnSpaceCanceled -= CloseSpellWheel;

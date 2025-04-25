@@ -283,17 +283,15 @@ MonoBehaviour:
   _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
   _respawnTimerDuration: 2
   _spawnWandItems: 1
-  _startingWandItems:
+  _startingSpellBookItems:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
+    - {fileID: 11400000, guid: 9641abfbdc9ce4397985eef9216c780d, type: 2}
     - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
     - {fileID: 11400000, guid: 8565452f84d47428ca82aed67cb5ca9e, type: 2}
     - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
   _startingItems:
-  - Item: {fileID: 11400000, guid: 9641abfbdc9ce4397985eef9216c780d, type: 2}
-    Quantity: 1
   - Item: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
@@ -805,7 +803,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.914263, g: 0.3504361, b: 0.990566, a: 1}
+      maxColor: {r: 0.99215686, g: 0.87751204, b: 0.34901965, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5949,7 +5947,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.914263, g: 0.3504361, b: 0.990566, a: 1}
+      maxColor: {r: 0.99215686, g: 0.81618464, b: 0.34901965, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -12582,7 +12580,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.15114745
+        value: 0.21364884
         inSlope: 0
         outSlope: 0
         tangentMode: 0

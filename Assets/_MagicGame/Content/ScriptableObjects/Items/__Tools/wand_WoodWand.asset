@@ -9,13 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31f93096594bb4953a290f8553bb16cf, type: 3}
-  m_Name: wand_WoodWand
+  m_Script: {fileID: 11500000, guid: 9486b8ae30ede473d930ac44d01ec3aa, type: 3}
+  m_Name: Wand_WoodWand
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Wood Wand
   <UiDisplay>k__BackingField: {fileID: 1111476618149907708, guid: 1bf7f9aa6100f45aba161b26ead13824, type: 3}
-  <GoldValue>k__BackingField: 15
-  <Stackable>k__BackingField: 1
+  <GoldValue>k__BackingField: 5
+  <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <MiningPower>k__BackingField: 1
-  <MiningRange>k__BackingField: 4
+  <MeleeDamage>k__BackingField: 6
+  <Knockback>k__BackingField: 8
+  <SwingCooldown>k__BackingField: 0.15
+  <HitSound>k__BackingField:
+    Guid:
+      Data1: -321209541
+      Data2: 1119949590
+      Data3: 197467520
+      Data4: 1755672934
+    Path: event:/Player/MeleeHit

@@ -33,13 +33,12 @@ public class Player : NetworkBehaviour
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
 	[SerializeField] private GameObject _breadCrumbPrefab;
 	public PlayerStats PlayerStats { get; private set; }
-	public BiomeType Biome { get { return CurrentPlayerBiome.Value; } }
 	public Collider2D HitCollider { get; private set; }
 	public bool IsPerformingSwing { get; set; }
 	
 	[SerializeField] private float _respawnTimerDuration;
 	[SerializeField] private bool _spawnWandItems;
-	[SerializeField] private List<SpellbookInventoryItem> _startingWandItems = new();
+	[SerializeField] private List<SpellbookInventoryItem> _startingSpellBookItems = new();
 	[SerializeField] private List<InventoryItem> _startingItems = new();
 
 	public Knockback PlayerKnockback { get; private set; }
@@ -102,7 +101,7 @@ public class Player : NetworkBehaviour
 					yield return new WaitForEndOfFrame();
 				}
 
-				foreach (SpellbookInventoryItem wandInvItem in _startingWandItems)
+				foreach (SpellbookInventoryItem wandInvItem in _startingSpellBookItems)
 				{
 					if (wandInvItem.Item is not SpellBookItemSO)
 					{
@@ -258,7 +257,7 @@ public class Player : NetworkBehaviour
 	{
 		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromItemId(SelectedItemIndexNetworkVariable.Value);
 		
-		return mainHandItem != null && (mainHandItem is StaffItemSO || mainHandItem is SpellBookItemSO);
+		return mainHandItem != null && (mainHandItem is WandItemSO || mainHandItem is SpellBookItemSO);
 	}
 	
 	public override void OnDestroy()

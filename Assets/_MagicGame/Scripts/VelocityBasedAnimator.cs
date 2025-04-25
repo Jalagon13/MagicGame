@@ -15,13 +15,10 @@ public class VelocityBasedAnimator : NetworkBehaviour
     {
         if(!IsServer) return;
 
-        Debug.Log($"Velocity magnitude: {Rigidbody2D.linearVelocity.magnitude}");
-
         if (Rigidbody2D.linearVelocity.magnitude > 0.1f)
         {
             // Get the current velocity and convert it to a cardinal direction.
             _currentDirection = GetCardinalDirection(Rigidbody2D.linearVelocity);
-            Debug.Log($"Current direction: {_currentDirection}");
 
             foreach (var handler in SpriteDirectionHandlers)
             {
