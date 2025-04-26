@@ -34,7 +34,6 @@ public class TileManager : NetworkBehaviour
 	private void Start()
 	{
 		ChunkManager.Instance.OnLoadChunk += ChunkManager_OnLoadChunk;
-		ChunkManager.Instance.OnUnloadChunk += ChunkManager_OnUnloadChunk;
 		WorldManager.Instance.OnBiomeTransitionStart += ClearLocalTilemaps;
 	}
 	
@@ -264,40 +263,10 @@ public class TileManager : NetworkBehaviour
 		}
 	}
 
-	private void ChunkManager_OnUnloadChunk(object sender, ChunkManager.ChunkEventArgs e)
-	{
-		foreach(TileGameData tile in e.Chunk.GroundTileGameDataList)
-		{
-			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			SetLocalTile(tilePosV3Int, null, TileType.Ground);
-		}
-		
-		foreach (TileGameData tile in e.Chunk.FloorTileGameDataList)
-		{
-			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			SetLocalTile(tilePosV3Int, null, TileType.Floor);
-		}
-		
-		foreach (TileGameData tile in e.Chunk.WallTileGameDataList)
-		{
-			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			SetLocalTile(tilePosV3Int, null, TileType.Wall);
-		}
-
-		foreach (TileGameData tile in e.Chunk.OreTileGameDataList)
-		{
-			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			SetLocalTile(tilePosV3Int, null, TileType.Ore);
-		}
-
-		Pathfinding.Instance.RequestUnloadChunkServerRpc(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value);
-	}
-	
 	public override void OnDestroy()
 	{
 		base.OnDestroy();
 		ChunkManager.Instance.OnLoadChunk -= ChunkManager_OnLoadChunk;
-		ChunkManager.Instance.OnUnloadChunk -= ChunkManager_OnUnloadChunk;
 		WorldManager.Instance.OnBiomeTransitionStart -= ClearLocalTilemaps;
 	}
 }

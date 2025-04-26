@@ -41,9 +41,10 @@ public class Pathfinding : NetworkBehaviour
 	private void Start()
 	{
 		WorldManager.Instance.OnBiomeDataLoaded += CacheCurrentPlayerBiome;
+		ChunkManager.Instance.OnUnloadChunk += RequestUnlockPfChunk;
 	}
 
-	public TilemapCollider2D GetPathfindingWallCollider(BiomeType biome)
+    public TilemapCollider2D GetPathfindingWallCollider(BiomeType biome)
 	{
 		if(BiomeToLoadedPathfindingChunks.ContainsKey(biome))
 		{
@@ -182,8 +183,13 @@ public class Pathfinding : NetworkBehaviour
 		return wallColliderTm;
 	}
 
+	private void RequestUnlockPfChunk(object sender, ChunkManager.ChunkEventArgs e)
+	{
+		RequestUnloadChunkServerRpc(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+	}
+
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void RequestUnloadChunkServerRpc(Vector2Int chunkPos, ulong clientId, BiomeType biome)
+	private void RequestUnloadChunkServerRpc(Vector2Int chunkPos, ulong clientId, BiomeType biome)
 	{
 		_playerToChunks[clientId].Remove(chunkPos);
 
@@ -253,5 +259,6 @@ public class Pathfinding : NetworkBehaviour
 		base.OnDestroy();
 		
 		WorldManager.Instance.OnBiomeDataLoaded -= CacheCurrentPlayerBiome;
+		ChunkManager.Instance.OnUnloadChunk -= RequestUnlockPfChunk;
 	}
 }
