@@ -28,16 +28,24 @@ public class ChunkNetworkManager : NetworkBehaviour
 	
 	private SyncChunkData ConvertToSyncChunkData(ChunkGameData chunkGameData)
 	{
-		// Create a new SyncChunkData object
+		// Create a new SyncChunkData object, pre-sizing lists for efficiency
+		int doorCount = 0;
+		foreach (var worldObjectGameData in chunkGameData.WorldObjectGameDataList)
+		{
+			if (worldObjectGameData is DoorObjectGameData)
+			{
+				doorCount++;
+			}
+		}
 		SyncChunkData syncChunkData = new SyncChunkData
 		{
 			SyncChunkPosition = chunkGameData.ChunkPosition,
-			SyncGroundTileDataList = new(),
-			SyncFloorTileDataList = new(),
-			SyncWallTileDataList = new(),
-			SyncOreTileDataList = new(),
-			SyncObjectAssetDataList = new(),
-			SyncDoorObjectDataList = new()
+			SyncGroundTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GroundTileGameDataList.Count),
+			SyncFloorTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.FloorTileGameDataList.Count),
+			SyncWallTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.WallTileGameDataList.Count),
+			SyncOreTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.OreTileGameDataList.Count),
+			SyncObjectAssetDataList = new List<WorldObjectSyncData>(chunkGameData.WorldObjectGameDataList.Count),
+			SyncDoorObjectDataList = new List<DoorObjectSyncData>(doorCount)
 		};
 
 		// Convert ground tile game data to agnostic sync data

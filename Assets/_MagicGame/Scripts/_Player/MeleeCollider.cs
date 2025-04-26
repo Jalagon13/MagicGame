@@ -21,7 +21,7 @@ public class MeleeCollider : NetworkBehaviour
     public void StartSwing(WandItemSO staffItemSO)
     {
         if (!IsOwner) return;
-        Debug.Log("Swing started");
+        
         _staffItemSO = staffItemSO;
         _targetsFound = new();
         _targetsHit = new();
@@ -33,7 +33,7 @@ public class MeleeCollider : NetworkBehaviour
     public void EndSwing()
     {
         if (!IsOwner) return;
-        Debug.Log("Swing Ended");
+        
         _targetsFound = new();
         _targetsHit = new();
         _meleeCollider.enabled = false;

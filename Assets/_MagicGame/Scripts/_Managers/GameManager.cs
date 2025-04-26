@@ -52,7 +52,12 @@ public class GameManager : NetworkBehaviour
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if(NetworkManager.Singleton == null) return;
-		
+
+		// Prevent duplicate subscriptions
+		NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+		NetworkManager.Singleton.OnClientConnectedCallback -= Pathfinding_OnClientConnected;
+		NetworkManager.Singleton.OnClientDisconnectCallback -= Pathfinding_OnClientDisconnected;
+
 		NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
 		NetworkManager.Singleton.OnClientConnectedCallback += Pathfinding_OnClientConnected;
 		NetworkManager.Singleton.OnClientDisconnectCallback += Pathfinding_OnClientDisconnected;
@@ -79,12 +84,16 @@ public class GameManager : NetworkBehaviour
 
 	private void OnClientConnected(ulong clientId)
 	{
+		if(NetworkManager.LocalClientId != clientId) return;
+	
 		LoadBiomeClientRpc(_startingBiome, RpcTarget.Single(clientId, RpcTargetUse.Persistent));
 	}
 	
 	[Rpc(SendTo.SpecifiedInParams, RequireOwnership = false)]
 	private void LoadBiomeClientRpc(BiomeType biome, RpcParams rpcParams = default)
 	{
+		if(NetworkManager.LocalClientId != rpcParams.Receive.SenderClientId) return;
+	
 		WorldManager.Instance.LoadBiome(_startingBiome, Player.LocalClientInstance.transform.position);
 	}
 	

@@ -2037,7 +2037,7 @@ Transform:
   m_GameObject: {fileID: 242063066}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 128, y: 124.36, z: -10}
+  m_LocalPosition: {x: 96, y: 96, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4232,7 +4232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.23921569}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4824,8 +4824,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 128, y: 128}
-  m_SizeDelta: {x: 256, y: 256}
+  m_AnchoredPosition: {x: 96, y: 96}
+  m_SizeDelta: {x: 192, y: 192}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &632392013
 MonoBehaviour:
@@ -5019,9 +5019,9 @@ EdgeCollider2D:
   m_EdgeRadius: 0
   m_Points:
   - {x: 0, y: 0}
-  - {x: 256, y: 0}
-  - {x: 256, y: 256}
-  - {x: 0, y: 256}
+  - {x: 192, y: 0}
+  - {x: 192, y: 192}
+  - {x: 0, y: 192}
   - {x: 0, y: 0}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
@@ -5074,9 +5074,9 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 0, y: 0}
-      - {x: 256, y: 0}
-      - {x: 256, y: 256}
-      - {x: 0, y: 256}
+      - {x: 192, y: 0}
+      - {x: 192, y: 192}
+      - {x: 0, y: 192}
       - {x: 0, y: 0}
   m_UseDelaunayMesh: 0
 --- !u!1001 &664645033
@@ -6479,6 +6479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  <TimeBetweenChunkLoads>k__BackingField: 0.02
 --- !u!114 &876396789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11144,7 +11145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
-  _enableSpawning: 1
+  _enableSpawning: 0
   _startSpawnDelay: 1
 --- !u!224 &1618469497 stripped
 RectTransform:
@@ -12965,7 +12966,7 @@ Transform:
   m_GameObject: {fileID: 1785759320}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 128, y: 124.36, z: -10}
+  m_LocalPosition: {x: 96, y: 96, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14095,7 +14096,7 @@ MonoBehaviour:
   _startingTime: 1
   _isTicking: 1
   _randomSeed: 0
-  _customSeed: Hell World :D
+  _customSeed: zotty
   _portalSearchRadius: 3
   _portalSearchDelayOnBiomeLoad: 0.25
   _endBiomeTransitionDelay: 0.75
@@ -16372,8 +16373,8 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 704164455}
-  - {fileID: 1937202726}
   - {fileID: 2018757677}
+  - {fileID: 1937202726}
   - {fileID: 876396786}
   - {fileID: 1616656745}
   - {fileID: 832159822}

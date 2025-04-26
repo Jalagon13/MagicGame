@@ -13,8 +13,8 @@ public class ChunkManager : NetworkBehaviour
 	public static ChunkManager Instance { get; private set; }
 	
 	public static bool IS_GENERATING_BIOME;
-	public static int BIOME_SIDE_LENGTH = 256;
-	public static int CHUNK_SIZE = 32;
+	public static int BIOME_SIDE_LENGTH = 192;
+	public static int CHUNK_SIZE = 24;
 
 	public class OnActiveChunksUpdatedEventArgs : EventArgs
 	{
@@ -28,6 +28,9 @@ public class ChunkManager : NetworkBehaviour
 		public ChunkGameData Chunk;
 	}
 	
+	[field: SerializeField] public float TimeBetweenChunkLoads { get; private set; } = 0.0185f;
+
+
 	private Dictionary<Vector2Int, ChunkGameData> _forestChunks = new(); // Data structure to hold chunk data
 	private Dictionary<Vector2Int, ChunkGameData> _caveChunks = new(); // Data structure to hold chunk data
 	private ChunkNetworkManager _chunkNetworkManager;
@@ -65,15 +68,7 @@ public class ChunkManager : NetworkBehaviour
 	
 	private void OnBiomeDataLoaded(object sender, EventArgs e)
 	{
-		// StartCoroutine(StaggerChunkRequests());
-		_chunksToLoad = new List<ChunkGameData>((BIOME_SIDE_LENGTH / CHUNK_SIZE) * (BIOME_SIDE_LENGTH / CHUNK_SIZE));
-
-		foreach (Vector2Int chunkPos in GetChunkPositions())
-		{
-			_chunkNetworkManager.RequestChunkDataServerRpc(Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value, chunkPos);
-		}
-
-		Debug.Log($"ChunkManager: OnBiomeDataLoaded for {Player.LocalClientInstance.CurrentPlayerBiome.Value}");
+		StartCoroutine(StaggerChunkRequests());
 	}
 	
 	private IEnumerator StaggerChunkRequests()
@@ -83,7 +78,7 @@ public class ChunkManager : NetworkBehaviour
 		foreach (Vector2Int chunkPos in GetChunkPositions())
 		{
 			_chunkNetworkManager.RequestChunkDataServerRpc(Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value, chunkPos);
-			yield return null;
+			yield return new WaitForSeconds(TimeBetweenChunkLoads);
 		}
 
 		Debug.Log($"ChunkManager: OnBiomeDataLoaded for {Player.LocalClientInstance.CurrentPlayerBiome.Value}");
@@ -92,18 +87,17 @@ public class ChunkManager : NetworkBehaviour
 	public void LoadChunk(ChunkGameData chunkGameDataToLoad)
 	{
 		_chunksToLoad.Add(chunkGameDataToLoad);
-		
-		if(_chunksToLoad.Count == (BIOME_SIDE_LENGTH / CHUNK_SIZE) * (BIOME_SIDE_LENGTH / CHUNK_SIZE))
+
+		OnLoadChunk?.Invoke(this, new ChunkEventArgs
 		{
-			foreach (ChunkGameData chunk in _chunksToLoad)
-			{
-				OnLoadChunk?.Invoke(this, new ChunkEventArgs
-				{
-					Chunk = chunk
-				});
-			}
-			
+			Chunk = chunkGameDataToLoad
+		});
+
+		if (_chunksToLoad.Count == (BIOME_SIDE_LENGTH / CHUNK_SIZE) * (BIOME_SIDE_LENGTH / CHUNK_SIZE))
+		{
 			TileManager.Instance.ExecuteTopTilePassthrough();
+			Lightmap.Instance.UpdateLightMap();
+			WorldManager.Instance.ExecuteOnBiomeTransitionEnd();
 		}
 	}
 

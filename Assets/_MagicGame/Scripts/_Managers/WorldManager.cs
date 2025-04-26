@@ -158,6 +158,7 @@ public class WorldManager : NetworkBehaviour
 		// If the targetBiome is already loaded into memory, 
 		if(SaveSystem.Instance.BiomesInMemory.Contains(toBiome))
 		{
+			Debug.Log($"Biome already exists in memory: {toBiome}. loading chunks...");
 			LoadChunksClientRpc(toBiome, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
 		}
 		else
@@ -200,18 +201,13 @@ public class WorldManager : NetworkBehaviour
 		// Invoke it first to prep the last chunk position to garentee a new set of chunks to generate, then set loadingbiome to true to resume the update method
 		TileManager.Instance.ClearTopTiles();
 		OnBiomeDataLoaded?.Invoke(this, EventArgs.Empty);
-		IsLoadingBiome = false;
 		
-		StartCoroutine(SearchForPortal());
 	}
 
-	private IEnumerator SearchForPortal()
+	public void ExecuteOnBiomeTransitionEnd() // Yeah this is scuffed i know
 	{
-		yield return new WaitForSeconds(_endBiomeTransitionDelay);
-
-		Lightmap.Instance.UpdateLightMap();
-		
-		OnBiomeTransitionEnd?.Invoke(this, EventArgs.Empty); 
+		OnBiomeTransitionEnd?.Invoke(this, EventArgs.Empty);
+		IsLoadingBiome = false;
 	}
 
 	private void PlacePlayerAt(Vector2 portalPosition)

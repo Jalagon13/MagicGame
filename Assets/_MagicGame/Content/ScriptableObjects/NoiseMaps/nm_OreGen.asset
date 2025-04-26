@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dbb0ce312d9e42cc94b332745f0ba74, type: 3}
   m_Name: nm_OreGen
   m_EditorClassIdentifier: 
-  Width: 256
-  Height: 256
+  Width: 192
+  Height: 192
   Scale: 6
   Octaves: 10
   Persistence: 0.01
