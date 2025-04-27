@@ -18,7 +18,7 @@ public class Item : NetworkBehaviour
 	private bool _canCollect, _itemCollected;
 	private Rigidbody2D _rb;
 	private BiomeType _itemBiome;
-	private Collider2D _itemCollider;
+	private Collider2D _itemCollider, _wallCollider;
 	private GameObject _itemGameObject;
 	private Vector2 _velocity;
 	private Knockback _knockback;
@@ -30,6 +30,7 @@ public class Item : NetworkBehaviour
 		_sr = transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
 		_rb = GetComponent<Rigidbody2D>();
 		_knockback = GetComponent<Knockback>();
+		_wallCollider = transform.GetChild(0).GetChild(2).GetComponent<Collider2D>();
 	}
 	
 	private IEnumerator Start()
@@ -40,24 +41,11 @@ public class Item : NetworkBehaviour
 
 	public override void OnNetworkSpawn()
 	{
-		if(IsServer)
+		if(IsClient && !IsHost)
 		{
-			_itemCollider = GetComponent<Collider2D>();
-			
-			HideItem(NetworkManager.ServerClientId);
-			
-			if(_velocity != Vector2.zero)
-			{
-				Debug.Log($"item Velocity: {_velocity}");
-				_knockback.ApplyKnockbackCustomDirection(_velocity, 0, _velocity.magnitude);
-			}
-
-			NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;
-			NetworkManager.NetworkTickSystem.Tick += HandleBiomeVisibility;
+			UpdateItemDataAndVisuals();
 		}
-		
-		UpdateItemDataAndVisuals();
-		
+
 		base.OnNetworkSpawn();
 	}
 	
@@ -87,6 +75,7 @@ public class Item : NetworkBehaviour
 			_direction = (targetPosition - currentPosition).normalized;
 			_velocity = Vector2.Lerp(_velocity, _direction * _attractSpeed, _turnSharpness * Time.fixedDeltaTime);
 			_rb.linearVelocity = _velocity;
+			_wallCollider.enabled = false;
 
 			// Check if the item is within the bounds of any CollectTag collider
 			if (Vector2.Distance(currentPosition, targetPosition) < 0.25f)
@@ -99,6 +88,10 @@ public class Item : NetworkBehaviour
 					return;
 				}
 			}
+		}
+		else
+		{
+			_wallCollider.enabled = true;
 		}
 
 		if (_knockback.KnockbackActive)
@@ -119,6 +112,19 @@ public class Item : NetworkBehaviour
 		_syncItemDataNetworkVariable.Value = syncItemData;
 		_itemBiome = biome;
 		_velocity = velocity * _dropForce;
+		_itemCollider = GetComponent<Collider2D>();
+
+		HideItem(NetworkManager.ServerClientId);
+
+		if (_velocity != Vector2.zero)
+		{
+			_knockback.ApplyKnockbackCustomDirection(_velocity, 0, _velocity.magnitude);
+		}
+
+		NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;
+		NetworkManager.NetworkTickSystem.Tick += HandleBiomeVisibility;
+
+		UpdateItemDataAndVisuals();
 	}
 
 	[Rpc(SendTo.SpecifiedInParams)]

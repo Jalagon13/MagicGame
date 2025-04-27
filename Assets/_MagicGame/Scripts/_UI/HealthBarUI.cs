@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class HealthBarUI : MonoBehaviour
 {
+	[field: SerializeField] public NetworkHealthState NetworkHealthState { get; private set; }
+	
 	private MMProgressBar _progressBar;
-	private NetworkHealthState _networkHealthState;
 	
 	private void Awake()
 	{
 		_progressBar = GetComponent<MMProgressBar>();
-		_networkHealthState = transform.root.gameObject.GetComponent<NetworkHealthState>();
-		if (_networkHealthState == null)
+		if (NetworkHealthState == null)
 		{
 			Debug.LogError("Root GameObject" + transform.root.gameObject.name + " does not have component that implements IHasHealth");
 		}
@@ -20,33 +20,39 @@ public class HealthBarUI : MonoBehaviour
 	
 	private void Start()
 	{
-		_networkHealthState.OnHitPointsDamaged += OnHitPointsDamaged;
-		_networkHealthState.OnHitPointsReplenished += OnHitPointsReplenished;
-		_networkHealthState.OnHitPointsDepleted += OnHitPointsDepleted;
+		Debug.Log($"Subscribing to health events for {transform.root.gameObject.name}");
+		NetworkHealthState.OnHitPointsDamaged += OnHitPointsDamaged;
+		NetworkHealthState.OnHitPointsReplenished += OnHitPointsReplenished;
+		NetworkHealthState.OnHitPointsDepleted += OnHitPointsDepleted;
 
 		Hide();
 	}
 
     private void OnHitPointsDamaged(object sender, NetworkHealthState.HitPointsDamagedEventArgs e)
     {
+		Debug.Log($"Hit Points Damaged: {e.DamageTaken}");
 		UpdateHealthBarVisibility();
 	}
 
     private void OnHitPointsReplenished(object sender, EventArgs e)
     {
+		Debug.Log($"Hit Points Replenished");
 		UpdateHealthBarVisibility();
 	}
 
     private void OnHitPointsDepleted(object sender, EventArgs e)
     {
+		Debug.Log($"Hit Points Depleted");
 		UpdateHealthBarVisibility();
 	}
     
     private void UpdateHealthBarVisibility()
     {
-		_progressBar.UpdateBar(_networkHealthState.HitPoints.Value, 0, _networkHealthState.MaxHealth);
+		_progressBar.UpdateBar(NetworkHealthState.HitPoints.Value, 0, NetworkHealthState.MaxHealth.Value);
 
-		if (_networkHealthState.HitPoints.Value <= 0 || _networkHealthState.HitPoints.Value >= _networkHealthState.MaxHealth)
+		Debug.Log($"Health: {NetworkHealthState.HitPoints.Value} / {NetworkHealthState.MaxHealth.Value}");
+
+		if (NetworkHealthState.HitPoints.Value <= 0 || NetworkHealthState.HitPoints.Value >= NetworkHealthState.MaxHealth.Value)
 		{
 			Hide();
 		}
@@ -58,18 +64,20 @@ public class HealthBarUI : MonoBehaviour
 
     private void Show()
 	{
+		Debug.Log($"Showing health bar for {transform.root.gameObject.name}");
 		gameObject.SetActive(true);
 	}
 	
 	private void Hide()
 	{
+		Debug.Log($"Hiding health bar for {transform.root.gameObject.name}");
 		gameObject.SetActive(false);
 	}
 	
 	private void OnDestroy()
 	{
-		_networkHealthState.OnHitPointsDamaged -= OnHitPointsDamaged;
-		_networkHealthState.OnHitPointsReplenished -= OnHitPointsReplenished;
-		_networkHealthState.OnHitPointsDepleted -= OnHitPointsDepleted;
+		NetworkHealthState.OnHitPointsDamaged -= OnHitPointsDamaged;
+		NetworkHealthState.OnHitPointsReplenished -= OnHitPointsReplenished;
+		NetworkHealthState.OnHitPointsDepleted -= OnHitPointsDepleted;
 	}
 }

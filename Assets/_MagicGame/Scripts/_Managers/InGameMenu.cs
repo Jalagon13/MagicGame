@@ -33,7 +33,6 @@ public class InGameMenu : MonoBehaviour
         {
             if (!_menuOpen)
             {
-                Debug.Log("Opening default menu");
                 DefaultCraftingMenu.SetActive(true);
             }
         }

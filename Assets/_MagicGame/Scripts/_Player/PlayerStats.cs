@@ -87,7 +87,7 @@ public class PlayerStats : NetworkBehaviour
 
 	private void RegenerateHealth()
 	{
-	    if (_healthState == null || _healthState.IsDead || _healthState.HitPoints.Value >= _healthState.MaxHealth) return;
+	    if (_healthState == null || _healthState.IsDead || _healthState.HitPoints.Value >= _healthState.MaxHealth.Value) return;
 
 	    int regenRate = _temporaryHealthRegen.HasValue ? _temporaryHealthRegen.Value : HealthRegenPerSecond;
 	    _healthRegenAccumulator += regenRate * Time.deltaTime;

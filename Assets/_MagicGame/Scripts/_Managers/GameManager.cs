@@ -239,12 +239,12 @@ public class GameManager : NetworkBehaviour
 	{
 		GameObject itemGameObject = Instantiate(_itemBasePrefab, spawnPos, Quaternion.identity);
 		
-		Item item = itemGameObject.GetComponent<Item>();
-		item.Initialize(syncItemData, biome, velocity);
-		
 		NetworkObject itemNetworkObject = itemGameObject.GetComponent<NetworkObject>();
 		itemNetworkObject.SpawnWithObservers = false;
 		itemNetworkObject.Spawn(true);
+		
+		Item item = itemGameObject.GetComponent<Item>();
+		item.Initialize(syncItemData, biome, velocity);
 	}
 	
 	public void DestroyItem(Item itemToDestroy)

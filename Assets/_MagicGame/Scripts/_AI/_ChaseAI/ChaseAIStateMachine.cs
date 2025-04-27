@@ -98,7 +98,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     {
         if(!WillChasePlayer) return;
 
-        if (OnlyChaseWhenProvoked && _healthState.HitPoints.Value >= _healthState.MaxHealth)
+        if (OnlyChaseWhenProvoked && _healthState.HitPoints.Value >= _healthState.MaxHealth.Value)
         {
             return;
         }

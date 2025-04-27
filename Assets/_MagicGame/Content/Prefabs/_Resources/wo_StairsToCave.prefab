@@ -299,6 +299,14 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6580967737715849053, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: m_SortAtRoot
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6580967737715849053, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: _worldObjectName
       value: Portal

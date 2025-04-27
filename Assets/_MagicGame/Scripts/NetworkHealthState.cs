@@ -23,15 +23,15 @@ public class NetworkHealthState : NetworkBehaviour
     [field: SerializeField] public bool CanDie { get; private set; } = true;
     [field: SerializeField] public bool CanTakeDamage { get; private set; } = true;
 
-    public NetworkVariable<int> HitPoints { get; set; } = new NetworkVariable<int>();
-    public NetworkVariable<int> CurrentDefense { get; private set; } = new NetworkVariable<int>();
+    public NetworkVariable<int> HitPoints { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> CurrentDefense { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> MaxHealth { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<Vector2> DamagerPosition { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> KnockbackForce { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public bool Invulnerable => _iFrameTimer.RemainingSeconds > 0;
     public bool IsDead => HitPoints.Value <= 0;
-    public int MaxHealth { get; private set; }
 
     private Timer _iFrameTimer;
-    private Vector2 _damagerPosition;
-    private int _knockbackForce;
 
     private void OnEnable()
     {
@@ -46,9 +46,11 @@ public class NetworkHealthState : NetworkBehaviour
     {
         if(IsServer)
         {
+            KnockbackForce.Value = 0;
+            DamagerPosition.Value = Vector2.zero;
             CurrentDefense.Value = BaseDefense;
             HitPoints.Value = BaseHealth;
-            MaxHealth = BaseHealth;
+            MaxHealth.Value = BaseHealth;
             _iFrameTimer = new Timer(IFrameDuration);
         }
     }
@@ -69,11 +71,12 @@ public class NetworkHealthState : NetworkBehaviour
         else if (newValue < previousValue)
         {
             int damageTaken = previousValue - newValue;
+            Debug.Log($"Before sending damage event. Sourceposition: {DamagerPosition.Value}, Knockbackforce: {KnockbackForce.Value}");
             OnHitPointsDamaged?.Invoke(this, new HitPointsDamagedEventArgs
             {
                 DamageTaken = damageTaken,
-                SourcePosition = _damagerPosition,
-                KnockbackForce = _knockbackForce
+                SourcePosition = DamagerPosition.Value,
+                KnockbackForce = KnockbackForce.Value
             });
         }
         else if (previousValue <= 0 && newValue > 0)
@@ -86,9 +89,10 @@ public class NetworkHealthState : NetworkBehaviour
     public void TakeDamageRpc(int amount, Vector2 damagerPosition, int knockbackForce)
     {
         if(IsDead || Invulnerable || !CanTakeDamage) return;
-    
-        _damagerPosition = damagerPosition;
-        _knockbackForce = knockbackForce;
+        
+        DamagerPosition.Value = damagerPosition;
+        KnockbackForce.Value = knockbackForce;
+        Debug.Log($"Taking {amount} damage from {DamagerPosition.Value} with force {KnockbackForce.Value}");
         
         int damageReduction = CurrentDefense.Value / 2;
         int finalDamage = Mathf.Max(1, amount - damageReduction);
@@ -105,8 +109,8 @@ public class NetworkHealthState : NetworkBehaviour
             OnHitPointsDamaged?.Invoke(this, new HitPointsDamagedEventArgs
             {
                 DamageTaken = finalDamage,
-                SourcePosition = _damagerPosition,
-                KnockbackForce = _knockbackForce
+                SourcePosition = DamagerPosition.Value,
+                KnockbackForce = KnockbackForce.Value
             });
         }
 

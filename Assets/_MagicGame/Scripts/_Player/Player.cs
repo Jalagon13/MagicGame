@@ -84,14 +84,14 @@ public class Player : NetworkBehaviour
 
 	private IEnumerator Start()
 	{
-		HealthState.OnHitPointsDamaged += OnPlayerDamaged;
-		HealthState.OnHitPointsDepleted += OnPlayerDeath;
-		HealthState.OnHitPointsReplenished += OnPlayerRecovery;
-
 		yield return new WaitForEndOfFrame();
 	
 		if (IsOwner)
 		{
+			HealthState.OnHitPointsDamaged += OnPlayerDamaged;
+			HealthState.OnHitPointsDepleted += OnPlayerDeath;
+			HealthState.OnHitPointsReplenished += OnPlayerRecovery;
+
 			if (_spawnWandItems)
 			{
 				foreach (InventoryItem item in _startingItems)
@@ -162,17 +162,19 @@ public class Player : NetworkBehaviour
 
 	private void OnPlayerDamaged(object sender, NetworkHealthState.HitPointsDamagedEventArgs e)
 	{
-		Debug.Log($"Damaging player {OwnerClientId}");
+		Debug.Log($"Damaging player {OwnerClientId}, knockback force: {e.KnockbackForce}");
 		GameManager.Instance.PlayDamageNumbersClientRpc(e.DamageTaken, transform.position, CurrentPlayerBiome.Value, Color.red);
 
-		OnPlayerDamagedClientRpc(e.DamageTaken, e.SourcePosition, e.KnockbackForce, RpcTarget.Single(OwnerClientId, RpcTargetUse.Persistent));
+		if(NetworkManager.LocalClientId == OwnerClientId)
+		{
+			OnPlayerDamagedClientRpc(e.DamageTaken, e.SourcePosition, e.KnockbackForce, RpcTarget.Single(OwnerClientId, RpcTargetUse.Temp));
+		}
 	}
 
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void OnPlayerDamagedClientRpc(int damageTaken, Vector3 sourcePosition, float knockbackForce, RpcParams rpcParams = default)
 	{
-		Debug.Log($"[Client {NetworkManager.LocalClientId}] Applied {damageTaken} Damage to {gameObject.name}!");
-
+		Debug.Log($"Knockback force: {knockbackForce}");
 		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerDamaged, transform.position);
 		PlayerKnockback.ApplyKnockback(sourcePosition, PlayerStats.KnockbackResist, knockbackForce);
 

@@ -28,7 +28,7 @@ public class FoodItemSO : ItemSO
             manaApplied = true;
         }
 
-        if (!Player.LocalClientInstance.PlayerStats.HealthRegenBuffActive && NetHealthGain > 0 && Player.LocalClientInstance.HealthState.HitPoints.Value < Player.LocalClientInstance.HealthState.MaxHealth)
+        if (!Player.LocalClientInstance.PlayerStats.HealthRegenBuffActive && NetHealthGain > 0 && Player.LocalClientInstance.HealthState.HitPoints.Value < Player.LocalClientInstance.HealthState.MaxHealth.Value)
         {
             int healthPerSecond = Mathf.RoundToInt(NetHealthGain / Duration);
             Player.LocalClientInstance.PlayerStats.ApplyHealthRegenBuff(healthPerSecond, Duration);
