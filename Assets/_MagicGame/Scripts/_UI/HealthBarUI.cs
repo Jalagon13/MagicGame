@@ -20,7 +20,6 @@ public class HealthBarUI : MonoBehaviour
 	
 	private void Start()
 	{
-		Debug.Log($"Subscribing to health events for {transform.root.gameObject.name}");
 		NetworkHealthState.OnHitPointsDamaged += OnHitPointsDamaged;
 		NetworkHealthState.OnHitPointsReplenished += OnHitPointsReplenished;
 		NetworkHealthState.OnHitPointsDepleted += OnHitPointsDepleted;
@@ -30,27 +29,22 @@ public class HealthBarUI : MonoBehaviour
 
     private void OnHitPointsDamaged(object sender, NetworkHealthState.HitPointsDamagedEventArgs e)
     {
-		Debug.Log($"Hit Points Damaged: {e.DamageTaken}");
 		UpdateHealthBarVisibility();
 	}
 
     private void OnHitPointsReplenished(object sender, EventArgs e)
     {
-		Debug.Log($"Hit Points Replenished");
 		UpdateHealthBarVisibility();
 	}
 
     private void OnHitPointsDepleted(object sender, EventArgs e)
     {
-		Debug.Log($"Hit Points Depleted");
 		UpdateHealthBarVisibility();
 	}
     
     private void UpdateHealthBarVisibility()
     {
 		_progressBar.UpdateBar(NetworkHealthState.HitPoints.Value, 0, NetworkHealthState.MaxHealth.Value);
-
-		Debug.Log($"Health: {NetworkHealthState.HitPoints.Value} / {NetworkHealthState.MaxHealth.Value}");
 
 		if (NetworkHealthState.HitPoints.Value <= 0 || NetworkHealthState.HitPoints.Value >= NetworkHealthState.MaxHealth.Value)
 		{

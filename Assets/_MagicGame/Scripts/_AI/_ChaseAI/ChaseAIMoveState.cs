@@ -71,15 +71,15 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
         if (_ctx.Knockback.KnockbackActive)
         {
-            _ctx.Velocity = desiredDirection + _ctx.Knockback.Velocity;
+            _ctx.Velocity.Value = /* desiredDirection +  */_ctx.Knockback.Velocity;
         }
         else
         {
             float speed = _ctx.IsChasing ? _ctx.ChaseSpeed : _ctx.WanderSpeed;
-            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, desiredDirection * speed, _ctx.TurnSharpness * Time.fixedDeltaTime);
+            _ctx.Velocity.Value = Vector2.Lerp(_ctx.Velocity.Value, desiredDirection * speed, _ctx.TurnSharpness * Time.fixedDeltaTime);
         }
 
-        _ctx.RigidBody2D.linearVelocity = _ctx.Velocity;
+        _ctx.RigidBody2D.linearVelocity = _ctx.Velocity.Value;
 
         _timeNotMoved += Time.fixedDeltaTime;
         if (_timeNotMoved >= _timeThreshold)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
@@ -19,6 +20,7 @@ public class ShockStream : Spell
 
     public NetworkVariable<Vector2> BeamStart { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Vector2> BeamEnd { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> BeamOn { get; private set; } = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private List<NetworkHealthState> _potentialTargetsToLockOnTo = new();
     private Timer _damageTimer;
@@ -27,6 +29,7 @@ public class ShockStream : Spell
     protected override void OnOwnerExecuteSpellStart()
     {
         _damageTimer = new Timer(0.1f);
+        BeamOn.OnValueChanged += BeamOnChanged;
 
         _sustainedElectricitySoundEventInstance = SoundManager.Instance.CreateInstance(SustainedElectricitySound);
     }
@@ -109,6 +112,11 @@ public class ShockStream : Spell
                 BeamStart.Value = wandPos;
                 BeamEnd.Value = closestTarget.GetComponent<Collider2D>().bounds.center;
             }
+            else
+            {
+                BeamStart.Value = wandPos;
+                BeamEnd.Value = wandPos;
+            }
 
             bool hasTargetNow = closestTarget != null;
 
@@ -116,11 +124,13 @@ public class ShockStream : Spell
             {
                 _sustainedElectricitySoundEventInstance.start();
                 LightningStream.Play();
+                BeamOn.Value = true;
             }
             else if (!hasTargetNow && _hadTargetLastFrame)
             {
                 _sustainedElectricitySoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 LightningStream.Stop();
+                BeamOn.Value = false;
             }
 
             _hadTargetLastFrame = hasTargetNow;
@@ -129,20 +139,41 @@ public class ShockStream : Spell
         if (IsClient && IsStarted.Value)
         {
             // Calculate direction and distance
-            Vector2 direction = BeamEnd.Value - BeamStart.Value;
-            float distance = direction.magnitude;
-
-            // Set lifetime based on distance
-            var main = LightningStream.main;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(distance * LifetimePerDistanceUnit);
-
-            // Rotate the particle system to face the direction of the beam
-            if (direction != Vector2.zero)
+            if(BeamOn.Value)
             {
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                LightningStream.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
+                Vector2 direction = BeamEnd.Value - BeamStart.Value;
+                float distance = direction.magnitude;
+
+                // Set lifetime based on distance
+                var main = LightningStream.main;
+                main.startLifetime = new ParticleSystem.MinMaxCurve(distance * LifetimePerDistanceUnit);
+
+                // Rotate the particle system to face the direction of the beam
+                if (direction != Vector2.zero)
+                {
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    LightningStream.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
+                    LightningStream.transform.position = BeamStart.Value;
+                }
+            }
+            else
+            {
+                var main = LightningStream.main;
+                main.startLifetime = new ParticleSystem.MinMaxCurve(0.01f);
                 LightningStream.transform.position = BeamStart.Value;
             }
+        }
+    }
+
+    private void BeamOnChanged(bool previousValue, bool newValue)
+    {
+        if (newValue)
+        {
+            LightningStream.Play();
+        }
+        else
+        {
+            LightningStream.Stop();
         }
     }
 }

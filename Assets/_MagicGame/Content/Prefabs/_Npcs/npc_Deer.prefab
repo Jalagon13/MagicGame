@@ -294,6 +294,10 @@ PrefabInstance:
       propertyPath: SyncScaleY
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5432751543366974388, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: SyncScaleZ
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5534304216892901271, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
@@ -334,6 +338,10 @@ PrefabInstance:
       propertyPath: _iHasHealthGameObject
       value: 
       objectReference: {fileID: 3583022790027280923}
+    - target: {fileID: 7196426771198909061, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: <NetworkHealthState>k__BackingField
+      value: 
+      objectReference: {fileID: 6051434324151621848}
     - target: {fileID: 7408233348082829139, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: SyncScaleX
       value: 0
@@ -372,6 +380,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4388047220858872420, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+    - {fileID: 7524884885499047273, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+    - {fileID: 5432751543366974388, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7066091553908842752, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
@@ -413,7 +423,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <Rigidbody2D>k__BackingField: {fileID: 3370946594538830692}
   <SpriteDirectionHandlers>k__BackingField:
   - {fileID: 3221309251872524564}
 --- !u!114 &3221309251872524564 stripped
@@ -427,11 +436,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8066f214e926c43c4b5d9d1bf4fbd377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!50 &3370946594538830692 stripped
-Rigidbody2D:
-  m_CorrespondingSourceObject: {fileID: 6259124446735330549, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
-  m_PrefabInstance: {fileID: 8652789913409017745}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3583022790027280923 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
@@ -454,8 +458,8 @@ MonoBehaviour:
   <WanderSpeed>k__BackingField: 1
   <ChaseSpeed>k__BackingField: 1
   <KnockbackResist>k__BackingField: 0
-  <MinIdleDuration>k__BackingField: 2.5
-  <MaxIdleDuration>k__BackingField: 5
+  <MinIdleDuration>k__BackingField: 0.5
+  <MaxIdleDuration>k__BackingField: 0.5
   <DetectionRadius>k__BackingField: 15
   <DetectionIntervalDuration>k__BackingField: 0.5
   <WanderRadius>k__BackingField: 4
@@ -465,3 +469,14 @@ MonoBehaviour:
   <WillChasePlayer>k__BackingField: 0
   <OnlyChaseWhenProvoked>k__BackingField: 1
   <CanMove>k__BackingField: 1
+--- !u!114 &6051434324151621848 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3165997416469630793, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+  m_PrefabInstance: {fileID: 8652789913409017745}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3583022790027280923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c5580f2a973948778c2f8d6b6a5f0c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

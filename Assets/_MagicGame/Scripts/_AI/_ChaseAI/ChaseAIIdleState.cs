@@ -59,14 +59,14 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
         if (_ctx.Knockback.KnockbackActive)
         {
-            _ctx.Velocity = _ctx.Knockback.Velocity;
+            _ctx.Velocity.Value = _ctx.Knockback.Velocity;
         }
         else if(!_idleComplete)
         {
-            _ctx.Velocity = Vector2.zero;
+            _ctx.Velocity.Value = Vector2.zero;
         }
 
-        _ctx.RigidBody2D.linearVelocity = _ctx.Velocity;
+        _ctx.RigidBody2D.linearVelocity = _ctx.Velocity.Value;
     }
 
     public override ChaseAIStateMachine.ChaseAIState GetNextState()

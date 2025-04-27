@@ -35,7 +35,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     [field: SerializeField] public bool CanMove { get; set; } = true;
 
     public Knockback Knockback { get; private set; }
-    public Vector2 Velocity { get; set; }
+    public NetworkVariable<Vector2> Velocity { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public Rigidbody2D RigidBody2D { get; private set; }
     public Vector2 DesiredDirection { get; set; }
     public bool PlayerPositionFound { get; private set; }
@@ -51,10 +51,13 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     private Vector2 _freshestBreadCrumbPosition = Vector2.zero;
     private Vector2 _closestPlayerPosition = Vector2.zero;
     private NetworkHealthState _healthState;
+    private VelocityBasedAnimator _velocityBasedAnimator;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+
+        _velocityBasedAnimator = transform.GetChild(0).GetChild(1).GetComponent<VelocityBasedAnimator>();
 
         if (IsServer)
         {
@@ -73,6 +76,16 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
             RigidBody2D.linearDamping = KnockbackResist;
 
             InvokeRepeating(nameof(TryToFindBreadcrumb), DetectionIntervalDuration, DetectionIntervalDuration);
+        }
+    }
+
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        
+        if(_velocityBasedAnimator != null)
+        {
+            _velocityBasedAnimator.AnimateBasedOnVelocity(Velocity.Value);
         }
     }
 

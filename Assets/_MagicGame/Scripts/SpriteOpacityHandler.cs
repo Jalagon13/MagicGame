@@ -6,7 +6,7 @@ public class SpriteOpacityHandler : MonoBehaviour
     
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.layer == 11 || other.gameObject.layer == 14 || other.gameObject.layer == 15)
+        if (other.gameObject.layer == 11 || other.gameObject.layer == 14 || other.gameObject.layer == 15 || other.gameObject.layer == 12)
         {
             SetTranslucent();
         }

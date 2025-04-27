@@ -29,11 +29,6 @@ public class Knockback : MonoBehaviour
 		{
 			Velocity = Vector2.zero;
 		}
-		
-		if(Velocity != Vector2.zero)
-		{
-			Debug.Log($"Knockback velocity: {Velocity}");
-		}
 	}
 
 	public void ApplyKnockbackCustomDirection(Vector2 direction, float knockbackResist, float knockbackForce)
@@ -69,6 +64,5 @@ public class Knockback : MonoBehaviour
 		_decayMult = Mathf.Lerp(10, 1, _finalKnockback / _maxKnockback);
 
 		Velocity = direction * _finalKnockback;
-		Debug.Log($"final knockback velocity: {Velocity}, force: {_finalKnockback}");
 	}
 }

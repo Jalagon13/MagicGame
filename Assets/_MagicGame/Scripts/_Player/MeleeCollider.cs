@@ -59,7 +59,7 @@ public class MeleeCollider : NetworkBehaviour
             {
                 if(_targetsHit.Contains(targetToDamage)) continue;
                 
-                targetToDamage.TakeDamageRpc(_staffItemSO.MeleeDamage, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position, _staffItemSO.Knockback);
+                targetToDamage.TakeDamageRpc(_staffItemSO.MeleeDamage, Player.LocalClientInstance.transform.position, _staffItemSO.Knockback);
                 _targetsFound.Remove(targetToDamage);
                 _staffItemSO.PlayHitSound();
                 _targetsHit.Add(targetToDamage);

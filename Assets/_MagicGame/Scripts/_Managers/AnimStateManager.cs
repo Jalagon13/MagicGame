@@ -11,7 +11,9 @@ public static class AnimStateManager
 
     public static void ChangeAnimationState(Animator animator, AnimationClip animClip, float? desiredDuration = null)
     {
-        Timing.RunCoroutine(ChangeState(animator, animClip, desiredDuration));
+        if (animator == null) return;
+        
+        Timing.RunCoroutine(ChangeState(animator, animClip, desiredDuration).CancelWith(animator.gameObject));
     }
 	
     private static IEnumerator<float> ChangeState(Animator animator, AnimationClip animClip, float? desiredDuration)

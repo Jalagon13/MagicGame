@@ -4,22 +4,18 @@ using UnityEngine;
 
 public class VelocityBasedAnimator : NetworkBehaviour
 {
-    [field: SerializeField] public Rigidbody2D Rigidbody2D { get; private set; }
     [field: SerializeField] public List<SpriteAnimationHandler> SpriteDirectionHandlers { get; private set; }
 
-    private CardinalDirection _previousDirection;
     private CardinalDirection _currentDirection;
     private bool _changedToIdleThisFrame;
 
-    private void FixedUpdate()
+    public void AnimateBasedOnVelocity(Vector2 velocity)
     {
-        if(!IsServer) return;
-
-        if (Rigidbody2D.linearVelocity.magnitude > 0.1f)
+        if (velocity.magnitude > 0.1f)
         {
             // Get the current velocity and convert it to a cardinal direction.
-            _currentDirection = GetCardinalDirection(Rigidbody2D.linearVelocity);
-
+            _currentDirection = GetCardinalDirection(velocity);
+            
             foreach (var handler in SpriteDirectionHandlers)
             {
                 handler.PlayMoveAnimation(_currentDirection);
