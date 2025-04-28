@@ -32,7 +32,10 @@ public class SpriteAnimationHandler : MonoBehaviour
             _ => _sideIdleClip,
         };
 
-        AnimStateManager.ChangeAnimationState(_animator, idleClip);
+        if(idleClip != null)
+        {
+            AnimStateManager.ChangeAnimationState(_animator, idleClip);
+        }
     }
 	
     public void PlayMoveAnimation(CardinalDirection direction)
@@ -46,7 +49,10 @@ public class SpriteAnimationHandler : MonoBehaviour
             _ => _sideMoveClip,
         };
 
-        AnimStateManager.ChangeAnimationState(_animator, moveClip);
+        if(moveClip != null)
+        {
+            AnimStateManager.ChangeAnimationState(_animator, moveClip);
+        }
     }
 
     private void UpdateSpriteOrientation(CardinalDirection direction)

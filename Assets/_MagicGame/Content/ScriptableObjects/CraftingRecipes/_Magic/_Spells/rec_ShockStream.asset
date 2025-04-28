@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55646a241e94b4a3a9d1cdf6e939102b, type: 3}
-  m_Name: rec_GaleSurge
+  m_Name: rec_ShockStream
   m_EditorClassIdentifier: 
-  OutputItem: {fileID: 11400000, guid: fa6f83b6b6e5a407ea84c8aad9df12d0, type: 2}
+  OutputItem: {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
   OutputAmount: 1
   ResourceList:
-  - Item: {fileID: 11400000, guid: 38f7861ff20ac42c5bf7fd53dce5e82a, type: 2}
-    Quantity: 1
-  - Item: {fileID: 11400000, guid: 5849721283c6441cbaa36b109972e84d, type: 2}
+  - Item: {fileID: 11400000, guid: fe14886186b414dc8a0cca5f83f3fdb9, type: 2}
+    Quantity: 3
+  - Item: {fileID: 11400000, guid: 613cd6896fd8c4dcb918aad3dec0eaab, type: 2}
     Quantity: 3
