@@ -312,14 +312,4 @@ public class GameManager : NetworkBehaviour
 		   SpawnedBreadCrumbPrefab = breadCrumb 
 		});
 	}
-
-	public void TogglePvp(bool pvpEnabled)
-	{
-		if(Player.LocalClientInstance != null)
-		{
-			Debug.Log($"Pvp enabled: {pvpEnabled}");
-			Player.LocalClientInstance.TogglePvp(pvpEnabled);
-		}
-	}
-	
 }

@@ -26,7 +26,6 @@ public class Player : NetworkBehaviour
 	
 	public NetworkVariable<int> SelectedItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<BiomeType> CurrentPlayerBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	public NetworkVariable<bool> PvpEnabled { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	
 	[field: SerializeField] public PlayerHand MainHand { get; private set; }
 	[field: SerializeField] public PlayerVisuals PlayerVisuals { get; private set; }
@@ -231,12 +230,6 @@ public class Player : NetworkBehaviour
 		{
 			PlayerId = OwnerClientId
 		});
-	}
-
-	public void TogglePvp(bool pvpEnabled)
-	{
-		PvpEnabled.Value = pvpEnabled;
-		Debug.Log($"Pvp enabled: {PvpEnabled.Value}");
 	}
 
 	private void HotbarManager_OnSelectedItemUpdated(object sender, HotbarManager.OnFocusItemSetEventArgs e)

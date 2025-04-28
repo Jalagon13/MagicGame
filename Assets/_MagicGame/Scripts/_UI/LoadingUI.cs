@@ -14,11 +14,13 @@ public class LoadingUI : MonoBehaviour
     private void Show(object sender, EventArgs e)
     {
         gameObject.SetActive(true);
+        Debug.Log($"Showing loading UI");
     }
 
     private void Hide(object sender, EventArgs e)
     {
         gameObject.SetActive(false);
+        Debug.Log($"Hiding loading UI");
     }
 
     private void OnDestroy()
