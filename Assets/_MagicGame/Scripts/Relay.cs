@@ -10,8 +10,6 @@ using UnityEngine;
 
 public class Relay : MonoBehaviour
 {
-	public static string JOIN_CODE;
-
 	private bool _createdRelay;
 	private bool _joinedRelay;
 
@@ -37,7 +35,7 @@ public class Relay : MonoBehaviour
 			Allocation allocation = await RelayService.Instance.CreateAllocationAsync(7);
 
 			string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-			JOIN_CODE = joinCode;
+			GUIUtility.systemCopyBuffer = joinCode.ToString();
 			Debug.Log(allocation.Region);
 			Debug.Log(joinCode);
 

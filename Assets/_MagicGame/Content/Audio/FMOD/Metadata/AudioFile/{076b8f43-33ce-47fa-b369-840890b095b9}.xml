@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{076b8f43-33ce-47fa-b369-840890b095b9}">
+		<property name="assetPath">
+			<value>SFX/SFX_FocusFloor.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>24</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.59429166666666666</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bc2b5265-0882-4ef2-998c-4498e0c7a8e5}</destination>
+		</relationship>
+	</object>
+</objects>

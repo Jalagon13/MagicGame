@@ -7,55 +7,52 @@ using UnityEngine.Tilemaps;
 
 public class ForestGeneration : MonoBehaviour
 {
-	[FoldoutGroup("Overworld Generation")]
-	[SerializeField] private NoiseMapSO _forestGroundNM;
-	
-	[FoldoutGroup("Overworld Generation")]
-	[SerializeField] private NoiseMapSO _forestStoneNM;
-	
-	[FoldoutGroup("Overworld Generation")]
-	[SerializeField] private TileSO _grassTile;
-	
-	[FoldoutGroup("Overworld Generation")]
-	[SerializeField] private TileSO _sandTile;
-	
-	[FoldoutGroup("Overworld Generation")]
-	[SerializeField] private TileSO _waterTile;
-	
-	[FoldoutGroup("Overworld Generation")]
-	[SerializeField] private TileSO _stoneWallTile;
-	
-	[FoldoutGroup("Overworld Generation")]
-	[SerializeField] private TileSO _stoneFloorTile;
-	
-	[FoldoutGroup("Overworld Generation")]
-	[SerializeField] private WorldObject _treeObject;
-	
+	[field: SerializeField] public WorldObject TreeObject { get; private set; }
+	[field: SerializeField] public WorldObject StairsToCave { get; private set; }
+	[field: SerializeField] public float MinTreeDistance { get; private set; } = 3f;
+	[field: SerializeField] public float MaxTreeDistance { get; private set; } = 8.5f;
+	[field: SerializeField] public float MinPortalDistance { get; private set; } = 25f;
+	[field: SerializeField] public float MaxPortalDistance { get; private set; } = 45f;
+
+	[Header("Noise Maps")]
+	[field: SerializeField] public NoiseMapSO ForestGroundNM;
+	[field: SerializeField] public NoiseMapSO ForestStoneNM;
+
+	[Header("Tiles")]
+	[field: SerializeField] public TileSO GrassTile;
+	[field: SerializeField] public TileSO SandTile;
+	[field: SerializeField] public TileSO WaterTile;
+	[field: SerializeField] public TileSO StoneWallTile;
+	[field: SerializeField] public TileSO StoneFloorTile;
 	
 	private string _seed;
-	
-	public void GenerateForest()
+
+    private void Start()
+    {
+		Initialization();
+	}
+
+    public void GenerateForest()
 	{
 		Debug.Log("Generating Forest Data...");
 		ChunkManager.IS_GENERATING_BIOME = true;
-		
-		// Generate World Data
-		GenerateNoiseMapsBasedOnSeed();
+
+		// Generate noise textures using game manager seed
+		Initialization();
 		GenerateOverworldChunkData();
 		GenerateTrees();
-		
+		GenerateStairsToCave();
+
 		SaveSystem.Instance.AddBiomeToMemorySessionTracker(BiomeType.Forest);
 		ChunkManager.IS_GENERATING_BIOME = false;
 		Debug.Log("Generating Forest Complete!");
 	}
 	
-	private void GenerateNoiseMapsBasedOnSeed()
+	private void Initialization()
 	{
 		_seed = WorldManager.Instance.Seed;
-		
-		// Generate noise textures using game manager seed
-		_forestGroundNM.GenerateNoiseTexture(_seed);
-		_forestStoneNM.GenerateNoiseTexture(_seed);
+		ForestGroundNM.GenerateNoiseTexture(_seed);
+		ForestStoneNM.GenerateNoiseTexture(_seed);
 	}
 	
 	private void GenerateOverworldChunkData()
@@ -83,8 +80,8 @@ public class ForestGeneration : MonoBehaviour
 						Vector2Int tileWorldPosition = new(tilePosX, tilePosY);
 						
 						// For the position of the tile, find out which tile to place here using its grayscale value
-						float groundTilePointValue = GetNoiseMapPointValueAtCoords(_forestGroundNM, tilePosX, tilePosY);
-						float wallTilePointValue = GetNoiseMapPointValueAtCoords(_forestStoneNM, tilePosX, tilePosY);
+						float groundTilePointValue = GetNoiseMapPointValueAtCoords(ForestGroundNM, tilePosX, tilePosY);
+						float wallTilePointValue = GetNoiseMapPointValueAtCoords(ForestStoneNM, tilePosX, tilePosY);
 						
 						// Get the Tilebase for the given point value
 						TileSO groundTileSO = GetOverworldGroundTileFromPointValue(groundTilePointValue);
@@ -109,39 +106,67 @@ public class ForestGeneration : MonoBehaviour
 	
 	private void GenerateTrees()
 	{
-		// Generate Tree placements
-		float minTreeDistance = 3f;
-		float maxTreeDistance = 10f;
-		
-		List<Vector2> treePoints = PoissonDiskSampling.GeneratePoints(_forestStoneNM, minTreeDistance, maxTreeDistance, _seed);
+		List<Vector2> treePoints = PoissonDiskSampling.GeneratePoints(ForestStoneNM, MinTreeDistance, MaxTreeDistance, _seed);
 		
 		foreach (Vector2 point in treePoints)
 		{
 			int pointX = Mathf.RoundToInt(point.x);
 			int pointY = Mathf.RoundToInt(point.y);
 			
-			float groundTilePointValue = _forestGroundNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
-			float wallTilePointValue = _forestStoneNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
+			float groundTilePointValue = ForestGroundNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
+			float wallTilePointValue = ForestStoneNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
 			
-			if(groundTilePointValue > 0.125f && (wallTilePointValue < 0.6f && wallTilePointValue > 0.35f))
+			if(groundTilePointValue > 0.125f && wallTilePointValue < 0.6f && wallTilePointValue > 0.35f)
 			{
 				// Add world asset data to chunk
-				ChunkManager.Instance.AddObjectDataToChunk(new Vector2Int(pointX, pointY), _treeObject, BiomeType.Forest);
+				ChunkManager.Instance.AddObjectDataToChunkServerRpc(new Vector2Int(pointX, pointY), GameManager.Instance.GetIDFromWorldObject(TreeObject), BiomeType.Forest, CardinalDirection.North);
 			}
+		}
+	}
+	
+	public HashSet<Vector2Int> GetStairsToCavePositions(string seed)
+	{
+		HashSet<Vector2Int> positions = new HashSet<Vector2Int>();
+	
+		List<Vector2> points = PoissonDiskSampling.GeneratePoints(ForestStoneNM, MinPortalDistance, MaxPortalDistance, seed);
+
+		foreach (Vector2 point in points)
+		{
+			int pointX = Mathf.RoundToInt(point.x);
+			int pointY = Mathf.RoundToInt(point.y);
+
+			float groundTilePointValue = ForestGroundNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
+			float wallTilePointValue = ForestStoneNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
+
+			if (groundTilePointValue > 0.125f && wallTilePointValue < 0.6f && wallTilePointValue > 0.35f)
+			{
+				var pos = new Vector2Int(pointX, pointY);
+				positions.Add(pos);
+			}
+		}
+		
+		return positions;
+	}
+	
+	private void GenerateStairsToCave()
+	{
+		foreach (Vector2Int pos in GetStairsToCavePositions(_seed))
+		{
+			ChunkManager.Instance.AddObjectDataToChunkServerRpc(pos, GameManager.Instance.GetIDFromWorldObject(StairsToCave), BiomeType.Forest, CardinalDirection.North);
 		}
 	}
 	
 	private TileSO GetOverworldWallTileFromPointValue(float pointValue)
 	{
-		if(pointValue > 0.4f ) return _stoneWallTile;
+		if(pointValue > 0.4f ) return StoneWallTile;
 		return null;
 	}	
 	
 	private TileSO GetOverworldGroundTileFromPointValue(float pointValue)
 	{
-		if(pointValue < 0.1f) return _waterTile;
-		if(pointValue < 0.125f) return _sandTile;
-		return _grassTile;
+		if(pointValue < 0.1f) return WaterTile;
+		if(pointValue < 0.125f) return SandTile;
+		return GrassTile;
 	}
 	
 	private float GetNoiseMapPointValueAtCoords(NoiseMapSO noiseMapSO, int x, int y)

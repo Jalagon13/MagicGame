@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a7aded7ceac2467a95225af72ed6b1a, type: 3}
+  m_Name: Candle
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Candle
+  <UiDisplay>k__BackingField: {fileID: -1599595118, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <GoldValue>k__BackingField: 5
+  <Stackable>k__BackingField: 1
+  <Description>k__BackingField: 
+  _deployObjectPrefab: {fileID: 5780725128829530697, guid: beba537ea73434d4fb7eed0f1a7fc2fc, type: 3}

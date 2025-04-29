@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31f93096594bb4953a290f8553bb16cf, type: 3}
+  m_Name: Spell_LightRay
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Light Ray
+  <UiDisplay>k__BackingField: {fileID: -2225708762962743431, guid: 1bf7f9aa6100f45aba161b26ead13824, type: 3}
+  <GoldValue>k__BackingField: 15
+  <Stackable>k__BackingField: 1
+  <Description>k__BackingField: 
+  <SpellProjectilePrefab>k__BackingField: {fileID: 0}
+  <ChargeVFX>k__BackingField: {fileID: 0}
+  <SpellCastSound>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <CastTime>k__BackingField: 0.2
+  <Cooldown>k__BackingField: 0.1
+  <ManaCost>k__BackingField: 5
+  <Damage>k__BackingField: 3
+  <Knockback>k__BackingField: 3
+  <Lifetime>k__BackingField: 2
+  <Speed>k__BackingField: 100
+  <Recoil>k__BackingField: 2
+  <HasteMultiplier>k__BackingField: 0.5
+  <DespawnIfFocusSlotChanged>k__BackingField: 0
+  <IsContinuousCast>k__BackingField: 0
+  <MiningPower>k__BackingField: 1
+  <MiningRange>k__BackingField: 4

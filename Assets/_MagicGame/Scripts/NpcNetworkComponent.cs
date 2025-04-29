@@ -6,7 +6,8 @@ using UnityEngine;
 public class NpcNetworkComponent : NetworkBehaviour
 {
 	[SerializeField] private WallColliderDetector _wallColliderDetector;
-	[SerializeField] private bool _continuallyCheckVisibility = true;
+	// NTFS: This just makes it so it cannot despawn, it does nothing to alter AI behavior. Can potentially find an NPC in a wall if NPC is allowed to move around while no player (no pathfinding walls available) is around
+	[field: SerializeField] public bool CanDespawn { get; private set; } = true; 
 
 	private const int DESPAWN_TIMER_DURATION = 3;
 	private ulong _spawningClientId;
@@ -24,7 +25,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 		{
 			_npcGameObject = transform.GetChild(0).gameObject;
 			_npc = GetComponent<Npc>();
-			_npc.OnNpcKilled += Npc_OnNpcKilled;
+			_npc.OnServerNpcKilled += Npc_OnNpcKilled;
 		
 			_despawnTimer = new Timer(DESPAWN_TIMER_DURATION);
 			_despawnTimer.OnTimerEnd += HandleDespawnTimerEnd;
@@ -34,16 +35,15 @@ public class NpcNetworkComponent : NetworkBehaviour
 			HideNpc(NetworkManager.ServerClientId);
 
 			NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;
-			
-			if (_continuallyCheckVisibility)
-			{
-				NetworkManager.NetworkTickSystem.Tick += NpcNetworkTick;
-			}
+			NetworkManager.NetworkTickSystem.Tick += NpcNetworkTick;
 		}
 		base.OnNetworkSpawn();
 	}
 	
-	
+	public bool SameBiomeAs(BiomeType biome)
+	{
+	    return NpcBiomeType == biome;
+	}
 
 	private void Npc_OnNpcKilled(object sender, EventArgs e)
 	{
@@ -51,7 +51,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void KillNpcServerRpc()
+	public void KillNpcServerRpc()
 	{
 		Debug.Log($"[Client {NetworkManager.LocalClientId}] Killing NPC.");
 		_npcIsBeingRemoved = true;
@@ -66,7 +66,6 @@ public class NpcNetworkComponent : NetworkBehaviour
 		
 		if(_wallColliderDetector != null)
 		{
-			Debug.Log($"Found wallcolliderdetector for biome {NpcBiomeType}");
 			_wallColliderDetector.SetEnvironment(NpcBiomeType, Pathfinding.Instance.GetExistingPathfindingBiomes());
 		}
 	}
@@ -76,15 +75,21 @@ public class NpcNetworkComponent : NetworkBehaviour
 		if (!IsSpawned) return false;
 
 		Vector2 playerPos = NetworkManager.ConnectedClients[clientId].PlayerObject.transform.position;
-		return IsPointInRectangle(transform.position, playerPos, NpcManager.SPAWN_ZONE_WIDTH, NpcManager.SPAWN_ZONE_HEIGHT);
+		return IsPointInRectangle(transform.position, playerPos, NpcManager.OUTER_SPAWN_ZONE_WIDTH, NpcManager.OUTER_SPAWN_ZONE_HEIGHT);
 	}
 
 	private void NpcNetworkTick()
 	{
+		if (!IsSpawned) return;
+		
 		HandleNpcBiomeVisibility();
-		HandleNpcSpawnZoneVisibility();
-		HandlePathfindingVisibility();
-		UpdateDespawnTimer();
+		
+		if(CanDespawn)
+		{
+			HandleNpcSpawnZoneVisibility();
+			HandlePathfindingVisibility();
+			UpdateDespawnTimer();
+		}
 	}
 
 	private void HandlePathfindingVisibility()
@@ -242,8 +247,13 @@ public class NpcNetworkComponent : NetworkBehaviour
 	private void DespawnNpc()
 	{
 		// Debug.Log($"[Client {NetworkManager.LocalClientId}] Despawning NPC.");
-		_npcIsBeingRemoved = true;
-		NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, false);
+		
+		if(IsSpawned)
+		{
+			_npcIsBeingRemoved = true;
+			Debug.Log($"Spawned? {IsSpawned}");
+			NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, false);
+		}
 	}
 
 	public override void OnNetworkDespawn()
@@ -252,7 +262,7 @@ public class NpcNetworkComponent : NetworkBehaviour
 		{
 			NetworkObject.CheckObjectVisibility -= CheckIfInSameEnvironment;
 			NetworkManager.NetworkTickSystem.Tick -= NpcNetworkTick;
-			_npc.OnNpcKilled -= Npc_OnNpcKilled;
+			_npc.OnServerNpcKilled -= Npc_OnNpcKilled;
 		}
 
 		// Debug.Log($"OnNetworkDespawn callback on {gameObject.name} for client: {NetworkManager.LocalClientId}");

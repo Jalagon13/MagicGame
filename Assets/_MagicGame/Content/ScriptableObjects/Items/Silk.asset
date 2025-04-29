@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Silk
   <UiDisplay>k__BackingField: {fileID: 1716809911, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <ItemActionCooldown>k__BackingField: 0.375
+  <GoldValue>k__BackingField: 7
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 

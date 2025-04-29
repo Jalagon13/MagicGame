@@ -21,6 +21,8 @@ public abstract class StateMachine<EState> : NetworkBehaviour where EState : Enu
 	
     protected virtual void FixedUpdate()
     {
+        if(_currentState == null) return;
+    
         EState nextStateKey = _currentState.GetNextState();
 		
         if(!_isTransitioningState && nextStateKey.Equals(_currentState.StateKey))

@@ -1,0 +1,131 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using MoreMountains.Tools;
+using UnityEngine;
+
+public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
+{
+    private ChaseAIStateMachine _ctx;
+    private bool _destinationReached;
+    private Vector2 _lastPosition;
+    private float _timeNotMoved = 0f;
+    private float _timeThreshold = 3.5f; // Every _timeThreshold seconds, check if pixie has moved _distanceThreshold
+    private float _distanceThreshold = 0.2f;
+    private bool _isStuck;
+    private float _distanceToDestination;
+    private Vector2 _startingPosition;
+
+    public ChaseAIMoveState(ChaseAIStateMachine.ChaseAIState key, StateMachine<ChaseAIStateMachine.ChaseAIState> context) : base(key, context)
+    {
+        _ctx = Context as ChaseAIStateMachine;
+    }
+
+    public override void EnterState()
+    {
+        // Debug.Log("Move State");
+        _isStuck = false;
+        _timeNotMoved = 0f;
+        _lastPosition = _ctx.transform.position;
+        _ctx.IsChasing = _ctx.BreadCrumbPositionFound || _ctx.PlayerPositionFound;
+        _distanceToDestination = Vector2.Distance(_ctx.transform.position, _ctx.WanderDestination);
+        _startingPosition = _ctx.transform.position;
+
+        if (!_ctx.IsChasing)
+        {
+            _destinationReached = false;
+        }
+    }
+
+    public override void ExitState()
+    {
+
+    }
+
+    public override void FixedUpdate()
+    {
+        if(!_ctx.CanMove) return;
+
+        if (!_ctx.IsChasing)
+        {
+            // Check if the destination has been reached
+            float distanceToDestination = Vector2.Distance(_ctx.transform.position, _ctx.WanderDestination);
+            if (distanceToDestination <= _ctx.StoppingDistance || Vector2.Distance(_ctx.transform.position, _startingPosition) >= _distanceToDestination)
+            {
+                _destinationReached = true;
+            }
+        }
+
+        Vector2 desiredDirection = _ctx.DesiredDirection.normalized;
+
+        // Strafe while chasing
+        if (_ctx.IsChasing && _ctx.IsStrafing)
+        {
+            // Get a perpendicular vector (left or right)
+            Vector2 perpendicular = new Vector2(-desiredDirection.y, desiredDirection.x) * _ctx.StrafingDirection;
+
+            // Apply strafing effect by blending it into the desired direction
+            desiredDirection += perpendicular * _ctx.StrafeIntensity;
+            desiredDirection = desiredDirection.normalized; // Normalize to maintain consistent speed
+        }
+
+        if (_ctx.Knockback.KnockbackActive)
+        {
+            _ctx.Velocity.Value = /* desiredDirection +  */_ctx.Knockback.Velocity;
+        }
+        else
+        {
+            float speed = _ctx.IsChasing ? _ctx.ChaseSpeed : _ctx.WanderSpeed;
+            _ctx.Velocity.Value = Vector2.Lerp(_ctx.Velocity.Value, desiredDirection * speed, _ctx.TurnSharpness * Time.fixedDeltaTime);
+        }
+
+        _ctx.RigidBody2D.linearVelocity = _ctx.Velocity.Value;
+
+        _timeNotMoved += Time.fixedDeltaTime;
+        if (_timeNotMoved >= _timeThreshold)
+        {
+            float distanceMoved = Vector2.Distance(_lastPosition, _ctx.transform.position);
+
+            if (distanceMoved < _distanceThreshold)
+            {
+                // AI is stuck
+                _isStuck = true;
+            }
+
+            // Reset timer and update last known position
+            _timeNotMoved = 0f;
+            _lastPosition = _ctx.transform.position;
+        }
+    }
+
+    public override ChaseAIStateMachine.ChaseAIState GetNextState()
+    {
+        if(!_ctx.CanMove)
+        {
+            return ChaseAIStateMachine.ChaseAIState.Idle;
+        }
+    
+        if (_isStuck)
+        {
+            Debug.Log($"AI is stuck, returning to idle state");
+            return ChaseAIStateMachine.ChaseAIState.Idle;
+        }
+
+        if(_ctx.IsChasing)
+        {
+            if (!_ctx.BreadCrumbPositionFound && !_ctx.PlayerPositionFound)
+            {
+                return ChaseAIStateMachine.ChaseAIState.Idle;
+            }
+        }
+        else
+        {
+            if(_destinationReached)
+            {
+                return ChaseAIStateMachine.ChaseAIState.Idle;
+            }
+        }
+
+        return StateKey;
+    }
+}

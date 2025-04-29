@@ -12,8 +12,11 @@
     "EnableMajorShortcuts": true,
     "DisableHierarchyDesignerDuringPlayMode": false,
     "ExcludeFolderProperties": true,
-    "ExcludeTransformForGameObjectComponentIcons": true,
-    "ExcludeCanvasRendererForGameObjectComponentIcons": true,
+    "ExcludedComponents": [
+        "Transform",
+        "RectTransform",
+        "CanvasRenderer"
+    ],
     "MaximumComponentIconsAmount": 10,
     "ExcludedTags": [],
     "ExcludedLayers": []

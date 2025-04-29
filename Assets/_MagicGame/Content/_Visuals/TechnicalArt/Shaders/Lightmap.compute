@@ -1,0 +1,182 @@
+#pragma kernel CSMain
+
+StructuredBuffer<uint> TileData; // Tile data (1 = opaque, 0 = transparent)
+StructuredBuffer<float4> LightSources; // Each float4 is (x, y, intensity, radius)
+
+// Output lightmap
+RWTexture2D<float4> Result;
+
+// World/tilemap dimensions
+uint Width;
+uint Height;
+int NumLights;
+uint OpaqueTileTolerance;
+float3 BaseLight;
+
+// Function to calculate light contribution for a pixel
+float3 CalculateLightContribution(float2 targetPos, float4 lightSource)
+{
+	float2 lightPos = lightSource.xy;
+	float currentIntensity = lightSource.z; // Float between 0 and 1
+	float radius = lightSource.w; // Light radius
+
+	float distance = length(targetPos - lightPos);
+
+	uint opaqueTilesFound = 0; // Tracks the number of opaque tiles encountered
+
+	// Differences in x and y
+	float xDiff = targetPos.x - lightPos.x;
+	float yDiff = targetPos.y - lightPos.y;
+
+	// Determine dominant axis and step sizes
+	float xStep, yStep;
+	int iterations;
+
+	if (abs(xDiff) > abs(yDiff))
+	{
+		xStep = xDiff > 0 ? 1.0 : -1.0;
+		yStep = yDiff / abs(xDiff); // Proportional step in y
+		iterations = abs(xDiff); // Number of steps along x
+	}
+	else
+	{
+		yStep = yDiff > 0 ? 1.0 : -1.0;
+		xStep = xDiff / abs(yDiff); // Proportional step in x
+		iterations = abs(yDiff); // Number of steps along y
+	}
+
+	// Start traversing from the light source position
+	float2 currentPos = lightPos;
+	
+	float2 lastPos = currentPos;
+	bool dStep = false;
+
+	for (int i = 0; i < iterations; ++i)
+	{
+		// Calculate the current tile position
+		int tileX = int(round(currentPos.x));
+		int tileY = int(round(currentPos.y));
+		int tileIndex = tileY * Width + tileX;
+
+		// Check tile transparency
+		uint tileTransparency = TileData[tileIndex];
+
+		if (tileTransparency == 1) // Opaque tile
+		{
+			opaqueTilesFound++;
+
+			if (opaqueTilesFound < OpaqueTileTolerance * 0.5f)
+			{
+				// currentIntensity *= pow(0.9875, float(opaqueTilesFound));
+				currentIntensity *= pow(0.995, float(opaqueTilesFound)); // Exponential reduction with respect to the number of opaque tiles
+			}
+			else if (opaqueTilesFound < OpaqueTileTolerance)
+			{
+				// currentIntensity *= pow(0.9875, float(opaqueTilesFound));
+				currentIntensity *= pow(0.99, float(opaqueTilesFound)); // Exponential reduction with respect to the number of opaque tiles
+			}
+			else if(opaqueTilesFound < OpaqueTileTolerance * 1.5f)
+			{
+				// currentIntensity *= dStep ? 0.875 : 0.89; // Major reduction
+				currentIntensity *= pow(0.985, float(opaqueTilesFound)); // Exponential reduction with respect to the number of opaque tiles
+			}
+			else if(opaqueTilesFound < OpaqueTileTolerance * 2.15f)
+			{
+				// currentIntensity *= dStep ? 0.875 : 0.89; // Major reduction
+				currentIntensity *= pow(0.9795, float(opaqueTilesFound * 0.5f)); // Exponential reduction with respect to the number of opaque tiles
+			}
+			else
+			{
+				// currentIntensity *= dStep ? 0.875 : 0.89; // Major reduction
+				currentIntensity *= pow(0.955, float(opaqueTilesFound * 0.1f)); // Exponential reduction with respect to the number of opaque tiles
+			}
+		}
+		else // Transparent tile
+		{
+			currentIntensity *= dStep ? 0.98 : 0.99; // Minor reduction
+		}
+
+		// Stop if intensity is too low
+		if (currentIntensity < 0.01)
+		{
+			return float3(0, 0, 0);
+		}
+
+		// Move to the next position
+		currentPos += float2(xStep, yStep);
+		
+		float dx = abs(lastPos.x - round(currentPos.x));
+		float dy = abs(lastPos.y - round(currentPos.y));
+		
+		if(dx > 0 && dy > 0)
+		{
+			dStep = true;
+		}
+		else
+		{
+			dStep = false;
+		}
+		
+		lastPos = float2(round(currentPos.x), round(currentPos.y));
+	}
+
+	// Apply distance-based attenuation
+	float normalizedDistance = distance / radius;
+
+	// Use a cubic falloff to create a smoother transition
+	float attenuation = pow(1 - normalizedDistance, 2); // Cubic falloff for smoother transition
+	attenuation = max(attenuation, 0.0); // Ensure it doesn't go negative
+
+	currentIntensity *= attenuation;
+
+	return float3(currentIntensity, currentIntensity, currentIntensity);
+}
+
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID) 
+{
+	// Ensure we're within bounds
+	if (id.x >= Width || id.y >= Height) return;
+
+	// Get pixel coordinates
+	int x = id.x;
+	int y = id.y;
+
+	// Check if there are no lights
+	if (NumLights == 0)
+	{
+		// Write only ambient light and exit
+		Result[id.xy] = float4(BaseLight, 1.0); // Ambient light only
+		return;
+	}
+
+	// Calculate the 1D index of the tile in the buffer
+	int tileIndex = y * Width + x;
+
+	// Read tile transparency (1 = opaque, 0 = transparent)
+	uint tileTransparency = TileData[tileIndex];
+	
+	// Process light sources
+	for (int i = 0; i < NumLights; ++i)
+	{
+		float4 lightSource = LightSources[i];
+
+		// Calculate distance from light to pixel
+		float distance = length(float2(x, y) - lightSource.xy);
+
+		// Skip lights that don't affect this pixel
+		if (distance > lightSource.w) continue;
+
+		// Add the light contribution
+		float3 lightContribution = CalculateLightContribution(float2(x, y), lightSource);
+
+		// Accumulate light contributions
+		BaseLight += lightContribution;
+	}
+
+	// Clamp the final light value to [0, 1] range
+	BaseLight = clamp(BaseLight, 0.0, 1.0);
+
+	// Write the final color to the output texture
+	Result[id.xy] = float4(BaseLight, 1.0);
+}

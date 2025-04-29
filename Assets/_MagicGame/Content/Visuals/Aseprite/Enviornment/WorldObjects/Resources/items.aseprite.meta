@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1bf7f9aa6100f45aba161b26ead13824
+guid: 173b632e3123f4e96b5ff242221ae108
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -124,7 +124,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: items
     originalName: 
-    pivot: {x: 0.503937, y: -1.048387}
+    pivot: {x: 0.503937, y: -0.14414415}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -133,8 +133,8 @@ ScriptedImporter:
       x: 4
       y: 4
       width: 127
-      height: 62
-    spriteID: 3cdea146be6d543fe8e271e877e3ac97
+      height: 111
+    spriteID: 180e25069c5f9471eb9beb26447b5b8d
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -157,13 +157,25 @@ ScriptedImporter:
       additiveSortOrder: 0
       cellRect:
         x: 0
-        y: 65
+        y: 16
         width: 127
-        height: 62
-      spriteId: 3cdea146be6d543fe8e271e877e3ac97
+        height: 111
+      spriteId: 180e25069c5f9471eb9beb26447b5b8d
     linkedCells: []
     parentIndex: -1
-  platformSettings: []
+  platformSettings:
+  - name: Default
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 

@@ -1,5 +1,85 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9050220173966839909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Thump
+  m_EditorClassIdentifier: 
+  Path: event:/Thump
+  Guid:
+    Data1: -281162869
+    Data2: 1160666795
+    Data3: -1901462113
+    Data4: -244489252
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-8595475514370727515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Ambience/Ambience
+  m_EditorClassIdentifier: 
+  Name: Ambience
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3654794721
+    data2: 312539312
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - ForestAmbience
+  - CaveAmbience
+  Exists: 1
+--- !u!114 &-8368555601859639280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/SpellHeal
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/SpellHeal
+  Guid:
+    Data1: -1323676631
+    Data2: 1148896384
+    Data3: -1934371966
+    Data4: 306405590
+  Banks:
+  - {fileID: -2722816956503410227}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-8133402120912244033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27,7 +107,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-7679922678811790186
+--- !u!114 &-8102585319215244543
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -37,14 +117,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/DeerDamaged
+  m_Name: event:/DoorClosed
   m_EditorClassIdentifier: 
-  Path: event:/DeerDamaged
+  Path: event:/DoorClosed
   Guid:
-    Data1: -1016024945
-    Data2: 1270028947
-    Data3: 124954255
-    Data4: -1982127540
+    Data1: -733812650
+    Data2: 1336282289
+    Data3: -822515824
+    Data4: 2017467891
   Banks:
   - {fileID: -4626298972836983042}
   IsStream: 0
@@ -74,33 +154,6 @@ MonoBehaviour:
   - Name: Desktop
     Value: 21696
   Exists: 1
---- !u!114 &-6619175988692293846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/DeerDeath
-  m_EditorClassIdentifier: 
-  Path: event:/DeerDeath
-  Guid:
-    Data1: 89985926
-    Data2: 1147036939
-    Data3: 1353001656
-    Data4: 1797791123
-  Banks:
-  - {fileID: -4626298972836983042}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
 --- !u!114 &-5868496055694042480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,6 +174,33 @@ MonoBehaviour:
     Data4: -1372581738
   Banks:
   - {fileID: -7513412204427243761}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-5820898319506228955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/Zap1
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/Zap1
+  Guid:
+    Data1: -693106639
+    Data2: 1337153438
+    Data3: -530487679
+    Data4: 360285647
+  Banks:
+  - {fileID: -2722816956503410227}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -155,6 +235,60 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-5253504312498639110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/DoorOpen
+  m_EditorClassIdentifier: 
+  Path: event:/DoorOpen
+  Guid:
+    Data1: 579449027
+    Data2: 1124382483
+    Data3: -1349617790
+    Data4: -270854617
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-5100934024035244767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPCs/DeerDamaged
+  m_EditorClassIdentifier: 
+  Path: event:/NPCs/DeerDamaged
+  Guid:
+    Data1: -1016024945
+    Data2: 1270028947
+    Data3: 124954255
+    Data4: -1982127540
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4626298972836983042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,11 +304,66 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638762250258541728
+  lastModified: 638810759788612229
   FileSizes:
   - Name: Desktop
-    Value: 3058976
+    Value: 3104480
   Exists: 1
+--- !u!114 &-4447199315379070513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/Zap2
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/Zap2
+  Guid:
+    Data1: -382369934
+    Data2: 1264056192
+    Data3: 1511411633
+    Data4: 1298307303
+  Banks:
+  - {fileID: -2722816956503410227}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4100935872588225253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/Ambience/Ambience
+  Guid:
+    Data1: 1999850616
+    Data2: 1096425094
+    Data3: -1876040270
+    Data4: -1388101932
+  Banks:
+  - {fileID: 6702288669578411488}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -8595475514370727515}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4024909556737517532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,6 +391,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-2722816956503410227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Magic.bank
+  m_EditorClassIdentifier: 
+  Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Magic.bank
+  Name: Magic
+  StudioPath: bank:/Magic
+  lastModified: 638810773655865397
+  FileSizes:
+  - Name: Desktop
+    Value: 240224
+  Exists: 1
 --- !u!114 &-2423619658234550821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -310,6 +519,87 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-1277810612265870814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPCs/BugDamaged
+  m_EditorClassIdentifier: 
+  Path: event:/NPCs/BugDamaged
+  Guid:
+    Data1: 1529267703
+    Data2: 1144459138
+    Data3: -1546983784
+    Data4: -1702726188
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-961492354960494440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/FireBurst
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/FireBurst
+  Guid:
+    Data1: -959941032
+    Data2: 1128627620
+    Data3: -1885222999
+    Data4: 915117413
+  Banks:
+  - {fileID: -2722816956503410227}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-326097733281759104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/WaterSplash
+  m_EditorClassIdentifier: 
+  Path: event:/WaterSplash
+  Guid:
+    Data1: 187038373
+    Data2: 1135141932
+    Data3: -219622527
+    Data4: -1689700191
+  Banks:
+  - {fileID: -2722816956503410227}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,17 +618,14 @@ MonoBehaviour:
   - {fileID: -4626298972836983042}
   - {fileID: 4239372470019258213}
   - {fileID: -7513412204427243761}
+  - {fileID: -2722816956503410227}
   EditorEvents:
   - {fileID: -2013000793435297120}
   - {fileID: 5242794587038571529}
   - {fileID: 5813129133648053243}
   - {fileID: -8133402120912244033}
-  - {fileID: -6619175988692293846}
   - {fileID: 5852192925778057525}
-  - {fileID: -7679922678811790186}
-  - {fileID: 2498366552593082144}
   - {fileID: 4743123837593905006}
-  - {fileID: 9147062409882106512}
   - {fileID: 3628424433783273261}
   - {fileID: -1361311089419184812}
   - {fileID: -5380485776774333557}
@@ -347,14 +634,34 @@ MonoBehaviour:
   - {fileID: -4024909556737517532}
   - {fileID: -2151828162186299522}
   - {fileID: -2423619658234550821}
+  - {fileID: 5061384021580652553}
+  - {fileID: 6885153926838661541}
+  - {fileID: 1476141278191997832}
+  - {fileID: -9050220173966839909}
+  - {fileID: -8102585319215244543}
+  - {fileID: 7723739634505854117}
+  - {fileID: -5100934024035244767}
+  - {fileID: 1299394522513603259}
+  - {fileID: 6887363961906838663}
+  - {fileID: -5253504312498639110}
+  - {fileID: -1277810612265870814}
+  - {fileID: -326097733281759104}
+  - {fileID: -4100935872588225253}
+  - {fileID: 3972319742351911701}
+  - {fileID: -8368555601859639280}
+  - {fileID: 8116599811075677841}
+  - {fileID: -961492354960494440}
+  - {fileID: 6371852465751065072}
+  - {fileID: -5820898319506228955}
+  - {fileID: -4447199315379070513}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6702288669578411488}
   StringsBanks:
   - {fileID: 5574528013551363316}
-  cacheTime: 638762250258541728
+  cacheTime: 638811757878481328
   cacheVersion: 131623
---- !u!114 &2498366552593082144
+--- !u!114 &1299394522513603259
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -364,14 +671,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/PixieDamaged
+  m_Name: event:/NPCs/PixieDamaged
   m_EditorClassIdentifier: 
-  Path: event:/PixieDamaged
+  Path: event:/NPCs/PixieDamaged
   Guid:
     Data1: 3190678
     Data2: 1255253222
     Data3: 756817558
     Data4: 811093164
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &1476141278191997832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/FocusWall
+  m_EditorClassIdentifier: 
+  Path: event:/Player/FocusWall
+  Guid:
+    Data1: 231909717
+    Data2: 1196187336
+    Data3: -672544082
+    Data4: -1828488855
   Banks:
   - {fileID: -4626298972836983042}
   IsStream: 0
@@ -408,6 +742,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &3972319742351911701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Shotgun
+  m_EditorClassIdentifier: 
+  Path: event:/Shotgun
+  Guid:
+    Data1: -1949507061
+    Data2: 1258579158
+    Data3: 51854251
+    Data4: 858203368
+  Banks:
+  - {fileID: -2722816956503410227}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &4239372470019258213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -423,10 +784,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Tiles.bank
   Name: Tiles
   StudioPath: bank:/Tiles
-  lastModified: 638729612341832738
+  lastModified: 638811757878481328
   FileSizes:
   - Name: Desktop
-    Value: 48480
+    Value: 47648
   Exists: 1
 --- !u!114 &4743123837593905006
 MonoBehaviour:
@@ -482,6 +843,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &5061384021580652553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/CoinPickup
+  m_EditorClassIdentifier: 
+  Path: event:/Player/CoinPickup
+  Guid:
+    Data1: -39638898
+    Data2: 1298088544
+    Data3: 676110012
+    Data4: -906671215
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &5242794587038571529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,10 +912,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638762250256055088
+  lastModified: 638810773655251082
   FileSizes:
   - Name: Desktop
-    Value: 1684
+    Value: 2516
   Exists: 1
 --- !u!114 &5813129133648053243
 MonoBehaviour:
@@ -548,7 +936,7 @@ MonoBehaviour:
     Data3: 49132942
     Data4: 1594458749
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: -2722816956503410227}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -583,6 +971,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &6371852465751065072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/SustainedElectricity
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/SustainedElectricity
+  Guid:
+    Data1: 1872068791
+    Data2: 1217057027
+    Data3: 1303084456
+    Data4: 28021889
+  Banks:
+  - {fileID: -2722816956503410227}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 4990
 --- !u!114 &6702288669578411488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -598,12 +1013,12 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638762250256046047
+  lastModified: 638810773655230897
   FileSizes:
   - Name: Desktop
-    Value: 1036
+    Value: 3619520
   Exists: 1
---- !u!114 &9147062409882106512
+--- !u!114 &6885153926838661541
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -613,16 +1028,97 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/BugDamaged
+  m_Name: event:/Player/FocusFloor
   m_EditorClassIdentifier: 
-  Path: event:/BugDamaged
+  Path: event:/Player/FocusFloor
   Guid:
-    Data1: 1529267703
-    Data2: 1144459138
-    Data3: -1546983784
-    Data4: -1702726188
+    Data1: -981375326
+    Data2: 1149087574
+    Data3: -164892751
+    Data4: -247913897
+  Banks:
+  - {fileID: 6702288669578411488}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &6887363961906838663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPCs/BugDeath
+  m_EditorClassIdentifier: 
+  Path: event:/NPCs/BugDeath
+  Guid:
+    Data1: 343470518
+    Data2: 1104490139
+    Data3: 1878935205
+    Data4: 389126360
   Banks:
   - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &7723739634505854117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPCs/DeerDeath
+  m_EditorClassIdentifier: 
+  Path: event:/NPCs/DeerDeath
+  Guid:
+    Data1: 89985926
+    Data2: 1147036939
+    Data3: 1353001656
+    Data4: 1797791123
+  Banks:
+  - {fileID: -4626298972836983042}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8116599811075677841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/MagicWoosh
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/MagicWoosh
+  Guid:
+    Data1: 660675445
+    Data2: 1220625473
+    Data3: 1963841471
+    Data4: 1725148628
+  Banks:
+  - {fileID: -2722816956503410227}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1

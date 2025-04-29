@@ -7,48 +7,56 @@ using UnityEngine.Tilemaps;
 
 public class CaveGeneration : MonoBehaviour
 {
-	[FoldoutGroup("Cave Generation")]
-	[SerializeField] private NoiseMapSO _spaghettiCaveNM;
-	
-	[FoldoutGroup("Cave Generation")]
-	[SerializeField] private NoiseMapSO _cheeseCaveNM;
+	[field: SerializeField] public WorldObject StairsToForest { get; private set; }
+	[field: SerializeField] public ForestGeneration ForestGeneration { get; private set; }
 
-	[FoldoutGroup("Cave Generation")]
-	[SerializeField] private NoiseMapSO _oreGenNM;
-	
-	[FoldoutGroup("Cave Generation")]
-	[SerializeField] private TileSO _stoneWallTile;
-	
-	[FoldoutGroup("Cave Generation")]
-	[SerializeField] private TileSO _stoneFloorTile;
+	[Header("Noise Maps")]
+	[field: SerializeField] public NoiseMapSO SpaghettiCaveNM;
+	[field: SerializeField] public NoiseMapSO CheeseCaveNM;
+	[field: SerializeField] public NoiseMapSO OreGenNM;
 
-	[FoldoutGroup("Cave Generation")]
-	[SerializeField] private TileSO _cobaltOreTile;
+	[Header("Tiles")]
+	[field: SerializeField] public TileSO StoneWallTile;
+	[field: SerializeField] public TileSO StoneFloorTile;
+	[field: SerializeField] public TileSO CobaltOreTile;
 
 	private string _seed;
+	private BiomeType _biomeType = BiomeType.Cave;
+	private HashSet<Vector2Int> _stairsToCavePositions = new HashSet<Vector2Int>();
+
+	private void Start()
+	{
+		Initialization();
+	}
 
 	public void GenerateCave()
 	{
 		Debug.Log("Generating Cave...");
 		ChunkManager.IS_GENERATING_BIOME = true;
 
-		// Generate noise textures using game manager seed
-		_seed = WorldManager.Instance.Seed;
-		_spaghettiCaveNM.GenerateNoiseTexture(_seed);
-		_cheeseCaveNM.GenerateNoiseTexture(_seed);
-		_oreGenNM.GenerateNoiseTexture(_seed);
-
+		Initialization();
 		GenerateCaveChunkData();
+		PlaceStairsToForest();
 
-		SaveSystem.Instance.AddBiomeToMemorySessionTracker(BiomeType.Cave);
+		SaveSystem.Instance.AddBiomeToMemorySessionTracker(_biomeType);
 		ChunkManager.IS_GENERATING_BIOME = false;
 		
 		Debug.Log("Cave Generation Complete!");
 	}
-
-	private void GenerateCaveChunkData()
+	
+	private void Initialization()
 	{
-		ChunkManager.Instance.GetChunksFromBiome(BiomeType.Cave).Clear();
+		// Generate noise textures using game manager seed
+		_seed = WorldManager.Instance.Seed;
+		SpaghettiCaveNM.GenerateNoiseTexture(_seed);
+		CheeseCaveNM.GenerateNoiseTexture(_seed);
+		OreGenNM.GenerateNoiseTexture(_seed);
+	}
+
+    private void GenerateCaveChunkData()
+	{
+		_stairsToCavePositions = ForestGeneration.GetStairsToCavePositions(_seed);
+		ChunkManager.Instance.GetChunksFromBiome(_biomeType).Clear();
 		
 		int chunkSideAmount = ChunkManager.BIOME_SIDE_LENGTH / ChunkManager.CHUNK_SIZE;
 		for (int chunkX = 0; chunkX < chunkSideAmount; chunkX++)
@@ -69,29 +77,54 @@ public class CaveGeneration : MonoBehaviour
 						int tilePosY = chunkCoord.y * ChunkManager.CHUNK_SIZE + y;
 						Vector2Int tileWorldPosition = new(tilePosX, tilePosY);
 						
-						float cheeseCaveValue = GetNoiseMapPointValueAtCoords(_cheeseCaveNM, tilePosX, tilePosY);
-						float spaghettiCaveValue = GetNoiseMapPointValueAtCoords(_spaghettiCaveNM, tilePosX, tilePosY);
-						float oreGenValue = GetNoiseMapPointValueAtCoords(_oreGenNM, tilePosX, tilePosY);
+						float cheeseCaveValue = GetNoiseMapPointValueAtCoords(CheeseCaveNM, tilePosX, tilePosY);
+						float spaghettiCaveValue = GetNoiseMapPointValueAtCoords(SpaghettiCaveNM, tilePosX, tilePosY);
+						float oreGenValue = GetNoiseMapPointValueAtCoords(OreGenNM, tilePosX, tilePosY);
 
-						TryToAddTileToChunk(_stoneFloorTile, tileWorldPosition, chunkGameData.GroundTileGameDataList);
+						TryToAddTileToChunk(StoneFloorTile, tileWorldPosition, chunkGameData.GroundTileGameDataList);
+						
+						if(_stairsToCavePositions.Contains(tileWorldPosition))
+						{
+							continue;
+						}
 
 						if (spaghettiCaveValue < 0.45f || spaghettiCaveValue > 0.6f && cheeseCaveValue < 0.375f)
 						{
 							// Adding a cave wall
 							if(oreGenValue > 0.05f)
 							{
-								TryToAddTileToChunk(_cobaltOreTile, tileWorldPosition, chunkGameData.WallTileGameDataList);
+								TryToAddTileToChunk(CobaltOreTile, tileWorldPosition, chunkGameData.OreTileGameDataList);
 							}
-							else
-							{
-								TryToAddTileToChunk(_stoneWallTile, tileWorldPosition, chunkGameData.WallTileGameDataList);
-							}
+
+							TryToAddTileToChunk(StoneWallTile, tileWorldPosition, chunkGameData.WallTileGameDataList);
 						}
 					}
 				}
 				
 				// Populate the overworld chunk data
-				ChunkManager.Instance.GetChunksFromBiome(BiomeType.Cave)[chunkCoord] = chunkGameData;
+				ChunkManager.Instance.GetChunksFromBiome(_biomeType)[chunkCoord] = chunkGameData;
+			}
+		}
+	}
+
+	private void PlaceStairsToForest()
+	{
+		foreach(Vector2Int position in _stairsToCavePositions)
+		{
+			DeleteNeighborWallsAroundPoint(position);
+			ChunkManager.Instance.AddObjectDataToChunkServerRpc(position, GameManager.Instance.GetIDFromWorldObject(StairsToForest), _biomeType, CardinalDirection.North);
+		}
+	}
+
+	private void DeleteNeighborWallsAroundPoint(Vector2Int centerPosition)
+	{
+		// Nested for loop to check all surrounding tiles within a 3x3 grid centered on the given position
+		for (int x = -1; x <= 1; x++)
+		{
+			for (int y = -1; y <= 1; y++)
+			{
+				Vector2Int neighborPosition = new(centerPosition.x + x, centerPosition.y + y);
+				ChunkManager.Instance.RemoveTileServerRpc(TileType.Wall, neighborPosition, _biomeType);
 			}
 		}
 	}

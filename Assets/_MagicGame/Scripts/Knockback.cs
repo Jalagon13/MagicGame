@@ -10,19 +10,25 @@ public class Knockback : MonoBehaviour
 	}
 	
 	public Vector2 Velocity { get; private set; }
+	public bool KnockbackActive => Velocity != Vector2.zero;
 
 	[SerializeField] private bool _knockbackEnabled = true;
-	[SerializeField] private float _decayMult = 5f; // Higher = knockback fades out faster
 	
-	private float _minKnockback = 1;
+	private float _decayMult = 5f; // Higher = knockback fades out faster
+	private float _minKnockback = 0;
 	private float _maxKnockback = 100;
 	private float _finalKnockback;
 
 	private void FixedUpdate()
 	{
+		if(Velocity == Vector2.zero) return;
+		
 		Velocity = Vector2.Lerp(Velocity, Vector2.zero, _decayMult * Time.fixedDeltaTime);
-
-		if (Velocity.magnitude < 0.75f) Velocity = Vector2.zero;
+		
+		if (Velocity.magnitude < 0.75f)
+		{
+			Velocity = Vector2.zero;
+		}
 	}
 
 	public void ApplyKnockbackCustomDirection(Vector2 direction, float knockbackResist, float knockbackForce)
@@ -45,7 +51,6 @@ public class Knockback : MonoBehaviour
 		{
 			KnockBackerPosition = knockerSourcePosition
 		});
-
 		if (knockbackForce == -1) knockbackForce = _minKnockback;
 
 		Vector2 direction = ((Vector2)transform.position - knockerSourcePosition).normalized;
@@ -56,6 +61,7 @@ public class Knockback : MonoBehaviour
 		// Calculate knockback with resistance
 		float finalKnockback = knockbackForce * (1 - knockbackResist);
 		_finalKnockback = Mathf.Clamp(finalKnockback, _minKnockback, _maxKnockback);
+		_decayMult = Mathf.Lerp(10, 1, _finalKnockback / _maxKnockback);
 
 		Velocity = direction * _finalKnockback;
 	}

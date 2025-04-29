@@ -120,17 +120,13 @@ namespace AdvancedTooltips.Core
 			}
 		}
 		
-		public static void WandDisplay(WandItemSO wand, MagicItemSO[] magicArray, Transform customLayout = null, float fontSize = 10)
+		public static void WandDisplay(SpellBookItemSO wand, SpellItemSO[] magicArray, Transform customLayout = null, float fontSize = 10)
 		{
 			WandTooltipDisplayHandlerUI script = _instantiateHandler.InstantiateWandTooltipDisplay(customLayout);
 			script.WandName.text = wand.Name;
 			script.WandIcon.sprite = wand.UiDisplay;
 			
-			JustText($"{wand.BaseCastDelay} s   cast delay" 
-			+ $"<br>{wand.MaxMana}   max. mana"
-			+ $"<br>{wand.ManaRegenSpeed}   mana regen."
-			+ $"<br>{wand.ReloadDuration} s   reload dur."
-			+ $"<br>{wand.Accuracy} deg.   accuracy"
+			JustText($"<br>Value: {wand.GoldValue} Gold"
 			+ $"<br>{wand.Capacity}   capacity", Color.white, fontSize: fontSize, customLayout: script.StatLayout);
 			
 			for (int i = 0; i < magicArray.Length; i++)
@@ -155,12 +151,11 @@ namespace AdvancedTooltips.Core
 			script.WandName.text = spell.Name;
 			script.WandIcon.sprite = spell.UiDisplay;
 
-			JustText(spell.GetDescription(), Color.white, fontSize: fontSize, customLayout: script.StatLayout);
-			JustText($"{spell.CastDelay} s   cast delay"
+			JustText($"<br>Value: {spell.GoldValue} Gold<br>" + spell.GetDescription(), Color.white, fontSize: fontSize, customLayout: script.StatLayout);
+			JustText($"{spell.Cooldown} s   cast delay"
 			+ $"<br>{spell.Damage}   damage"
 			+ $"<br>{spell.ManaCost}   cost to cast"
 			+ $"<br>{spell.Knockback}   knockback"
-			+ $"<br>{spell.Accuracy} deg.   accuracy"
 			+ $"<br>{spell.Speed}   speed", Color.white, fontSize: fontSize, customLayout: script.StatLayout);
 		}
 		

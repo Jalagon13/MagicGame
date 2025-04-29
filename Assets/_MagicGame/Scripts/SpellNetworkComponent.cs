@@ -6,11 +6,10 @@ using UnityEngine.Tilemaps;
 
 public class SpellNetworkComponent : NetworkBehaviour
 {
-	[SerializeField] private WallColliderDetector _wallDetectorCollider;
-
 	private SyncSpellData _spellData;
 	private GameObject _spellGameObject;
 	private Collider2D _spellCollider;
+	private Spell _spell;
 
 	public override void OnNetworkSpawn()
 	{
@@ -21,7 +20,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 
 			HideSpell(NetworkManager.ServerClientId);
 			
-			NetworkObject.CheckObjectVisibility += CheckIfInSameBiome;
+			NetworkObject.CheckObjectVisibility += InitialVisCheck;
 			NetworkManager.NetworkTickSystem.Tick += SpellNetworkTick;
 		}
 		
@@ -30,17 +29,14 @@ public class SpellNetworkComponent : NetworkBehaviour
 	
 	public void InitializeSpellNetwork(SyncSpellData syncSpellData)
 	{
+		_spell = GetComponent<Spell>();
 		_spellData = syncSpellData;
-		
-		// Find walldetectorcollider and populate it
-		if(_wallDetectorCollider != null)
-		{
-			_wallDetectorCollider.SetEnvironment(_spellData.SpawnBiome, Pathfinding.Instance.GetExistingPathfindingBiomes());
-		}
 	}
 
 	private void SpellNetworkTick()
 	{
+		// if(!_spell.Started) return;
+	
 		HandleBiomeVisibility();
 	}
 
@@ -62,6 +58,13 @@ public class SpellNetworkComponent : NetworkBehaviour
 		}
 	}
 	
+	private bool InitialVisCheck(ulong clientId)
+	{
+		// if (!_spell.Started) return false;
+		
+		return CheckIfInSameBiome(clientId);
+	}
+	
 	private bool CheckIfInSameBiome(ulong clientId)
 	{
 		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value == _spellData.SpawnBiome;
@@ -77,8 +80,11 @@ public class SpellNetworkComponent : NetworkBehaviour
 		if(clientId == NetworkManager.ServerClientId)
 		{
 			_spellGameObject.SetActive(true);
-			_spellCollider.enabled = true;
-			_spellCollider.isTrigger = true;
+			if(_spellCollider != null)
+			{
+				_spellCollider.enabled = true;
+				_spellCollider.isTrigger = true;
+			}
 		}
 		else
 		{
@@ -93,8 +99,11 @@ public class SpellNetworkComponent : NetworkBehaviour
 		if(clientId == NetworkManager.ServerClientId)
 		{
 			_spellGameObject.SetActive(false);
-			_spellCollider.enabled = false;		
-			_spellCollider.isTrigger = false;
+			if(_spellCollider != null)
+			{
+				_spellCollider.enabled = false;
+				_spellCollider.isTrigger = false;
+			}
 		}
 		else
 		{
@@ -106,7 +115,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 	{
 		if (IsServer)
 		{
-			NetworkObject.CheckObjectVisibility -= CheckIfInSameBiome;
+			NetworkObject.CheckObjectVisibility -= InitialVisCheck;
 			NetworkManager.NetworkTickSystem.Tick -= SpellNetworkTick;
 		}
 

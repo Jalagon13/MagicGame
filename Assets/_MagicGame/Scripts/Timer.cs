@@ -11,6 +11,8 @@ using UnityEngine;
     private float _remainingSeconds;
     private readonly float _duration;
 
+    public float PercentRemaining => _duration > 0 ? 1 - (_remainingSeconds / _duration) : 0;
+
     public float RemainingSeconds
     {
         get { return _remainingSeconds; }
@@ -24,6 +26,11 @@ using UnityEngine;
     public float ElapsedSeconds
     {
         get { return _duration - _remainingSeconds; }
+    }
+    
+    public float Duration
+    {
+        get { return _duration; }
     }
 	
     public void Reset()

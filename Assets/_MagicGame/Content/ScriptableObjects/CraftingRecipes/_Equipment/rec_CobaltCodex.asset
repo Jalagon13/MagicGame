@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55646a241e94b4a3a9d1cdf6e939102b, type: 3}
+  m_Name: rec_CobaltCodex
+  m_EditorClassIdentifier: 
+  OutputItem: {fileID: 11400000, guid: c4927bf03814a4704890caffd32c85df, type: 2}
+  OutputAmount: 1
+  ResourceList:
+  - Item: {fileID: 11400000, guid: 948cd40c3b143404aa76b1fbde01f383, type: 2}
+    Quantity: 12
+  - Item: {fileID: 11400000, guid: 38f7861ff20ac42c5bf7fd53dce5e82a, type: 2}
+    Quantity: 8
+  - Item: {fileID: 11400000, guid: d562dae53acb04aa48034eb14ee90338, type: 2}
+    Quantity: 4

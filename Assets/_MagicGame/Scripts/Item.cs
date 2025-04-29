@@ -9,24 +9,28 @@ public class Item : NetworkBehaviour
 {
 	[SerializeField] private float _attractRange = 2.75f;
 	[SerializeField] private float _attractSpeed = 5f;
+	[SerializeField] private float _turnSharpness = 5f;
 	[SerializeField] private float _initialCollectDelay = 0.5f;
+	[SerializeField] private float _dropForce = 3f;
 
-	private NetworkVariable<int> _itemIdNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	private NetworkVariable<int> _itemAmountNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	private InventoryItem _itemInventoryItem;
+	private NetworkVariable<SyncItemData> _syncItemDataNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	private SpriteRenderer _sr;
 	private bool _canCollect, _itemCollected;
 	private Rigidbody2D _rb;
-	private ushort _itemId, _itemAmount;
 	private BiomeType _itemBiome;
-	private Collider2D _itemCollider;
+	private Collider2D _itemCollider, _wallCollider;
 	private GameObject _itemGameObject;
+	private Vector2 _velocity;
+	private Knockback _knockback;
+	private Vector2 _direction;
 	
 	private void Awake()
 	{
 		_itemGameObject = transform.GetChild(0).gameObject;
 		_sr = transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
 		_rb = GetComponent<Rigidbody2D>();
+		_knockback = GetComponent<Knockback>();
+		_wallCollider = transform.GetChild(0).GetChild(2).GetComponent<Collider2D>();
 	}
 	
 	private IEnumerator Start()
@@ -37,27 +41,17 @@ public class Item : NetworkBehaviour
 
 	public override void OnNetworkSpawn()
 	{
-		if(IsServer)
+		if(IsClient && !IsHost)
 		{
-			_itemIdNetworkVariable.Value = _itemId;
-			_itemAmountNetworkVariable.Value = _itemAmount;
-			_itemCollider = GetComponent<Collider2D>();
-			
-			HideItem(NetworkManager.ServerClientId);
-
-			NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;
-			NetworkManager.NetworkTickSystem.Tick += HandleBiomeVisibility;
+			UpdateItemDataAndVisuals();
 		}
-		
-		UpdateItemDataAndVisuals();
-		
+
 		base.OnNetworkSpawn();
 	}
 	
 	private void FixedUpdate()
 	{
-		if (!_canCollect || _itemCollected || !IsServer) return;
-
+		if (_itemCollected || !IsServer) return;
 		
 		CollectTag closestPlayerCollectTag = null;
 		float closestDist = Mathf.Infinity;
@@ -73,52 +67,93 @@ public class Item : NetworkBehaviour
 				closestDist = dist;
 			}
 		}
-		
-		// Move towards the closest collider if found
-		if (closestPlayerCollectTag != null)
+
+		if (closestPlayerCollectTag != null && _canCollect)
 		{
 			Vector2 currentPosition = _rb.position;
 			Vector2 targetPosition = closestPlayerCollectTag.transform.position;
-			Vector2 direction = (targetPosition - currentPosition).normalized;
-			
-			_rb.MovePosition(currentPosition + direction * _attractSpeed * Time.fixedDeltaTime);
-			
+			_direction = (targetPosition - currentPosition).normalized;
+			_velocity = Vector2.Lerp(_velocity, _direction * _attractSpeed, _turnSharpness * Time.fixedDeltaTime);
+			_rb.linearVelocity = _velocity;
+			_wallCollider.enabled = false;
+
 			// Check if the item is within the bounds of any CollectTag collider
-			if(Vector2.Distance(currentPosition, targetPosition) < 0.25f)
+			if (Vector2.Distance(currentPosition, targetPosition) < 0.25f)
 			{
 				if (/* closestValidCollectCollider.transform.root.GetComponent<Player>().OwnerClientId == NetworkManager.LocalClientId && */ _canCollect && !_itemCollected /* && !InventoryFull() */)
 				{
 					_itemCollected = true;
 
-					AddItemClientRpc(GameManager.Instance.GetItemIdFromItemSO(_itemInventoryItem.Item), _itemInventoryItem.Quantity, RpcTarget.Single(closestPlayerCollectTag.transform.root.GetComponent<Player>().OwnerClientId, RpcTargetUse.Persistent));
+					AddItemClientRpc(_syncItemDataNetworkVariable.Value, RpcTarget.Single(closestPlayerCollectTag.transform.root.GetComponent<Player>().OwnerClientId, RpcTargetUse.Persistent));
 					return;
 				}
 			}
 		}
+		else
+		{
+			_wallCollider.enabled = true;
+		}
+
+		if (_knockback.KnockbackActive)
+		{
+			_velocity = _direction + _knockback.Velocity;
+		}
+		
+		if(!_knockback.KnockbackActive && closestPlayerCollectTag == null)
+		{
+			_velocity = Vector2.zero;
+		}
+
+		_rb.linearVelocity = _velocity;
 	}
-	
-	[Rpc(SendTo.SpecifiedInParams)]
-	private void AddItemClientRpc(int itemId, int amount, RpcParams rpcParams = default)
+
+	public void Initialize(SyncItemData syncItemData, BiomeType biome, Vector2 velocity)
 	{
-		InventoryManager.Instance.AddItem(GameManager.Instance.GetItemSOFromItemId(itemId), amount);
+		_syncItemDataNetworkVariable.Value = syncItemData;
+		_itemBiome = biome;
+		_velocity = velocity * _dropForce;
+		_itemCollider = GetComponent<Collider2D>();
+
+		HideItem(NetworkManager.ServerClientId);
+
+		if (_velocity != Vector2.zero)
+		{
+			_knockback.ApplyKnockbackCustomDirection(_velocity, 0, _velocity.magnitude);
+		}
+
+		NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;
+		NetworkManager.NetworkTickSystem.Tick += HandleBiomeVisibility;
+
+		UpdateItemDataAndVisuals();
+	}
+
+	[Rpc(SendTo.SpecifiedInParams)]
+	private void AddItemClientRpc(SyncItemData syncItemData, RpcParams rpcParams = default)
+	{
+		ItemSO itemSO = GameManager.Instance.GetItemSOFromItemId(syncItemData.ItemId);
+		
+		InventoryItem inventoryItem = new();
+		
+		if(itemSO is SpellBookItemSO wandItemSO)
+		{
+			SpellbookInventoryItem wandInventoryItem = new(itemSO, syncItemData.Quantity, wandItemSO.Capacity);
+			
+			for (int i = 0; i < wandInventoryItem.MagicArray.Length; i++)
+			{
+				wandInventoryItem.SetMagic(GameManager.Instance.GetItemSOFromItemId(syncItemData.MagicArray[i]) as SpellItemSO, i);
+			}
+			
+			inventoryItem = wandInventoryItem;
+		}
+		else
+		{
+			inventoryItem = new InventoryItem(itemSO, syncItemData.Quantity);
+		}
+		
+		InventoryManager.Instance.AddItem(inventoryItem);
 		GameManager.Instance.DestroyItem(this);
 	}
 	
-	private void OnTriggerStay2D(Collider2D other)
-	{
-		if(other.TryGetComponent(out CollectTag player))
-		{
-			// _sr.enabled = false;
-		}
-	}
-	
-	public void Initialize(ushort itemId, ushort itemAmount, BiomeType biome)
-	{
-		_itemId = itemId;
-		_itemAmount = itemAmount;
-		_itemBiome = biome;
-	}
-
 	private void HandleBiomeVisibility()
 	{
 		foreach (var clientId in NetworkManager.ConnectedClientsIds)
@@ -175,11 +210,10 @@ public class Item : NetworkBehaviour
 
 	private void UpdateItemDataAndVisuals()
 	{
-		ItemSO itemSO = GameManager.Instance.GetItemSOFromItemId(_itemIdNetworkVariable.Value);
+		ItemSO itemSO = GameManager.Instance.GetItemSOFromItemId(_syncItemDataNetworkVariable.Value.ItemId);
 		
-		_itemInventoryItem = new(itemSO, _itemAmountNetworkVariable.Value);
-		_sr.sprite = _itemInventoryItem.Item.UiDisplay;
-		gameObject.name = $"Item_{_itemInventoryItem.Item.Name}";
+		_sr.sprite = itemSO.UiDisplay;
+		gameObject.name = $"Item_{itemSO.Name}";
 	}
 	
 	public void DestroySelf()
