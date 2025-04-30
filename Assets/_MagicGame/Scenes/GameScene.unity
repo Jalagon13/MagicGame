@@ -10922,7 +10922,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
-  _enableSpawning: 1
+  _enableSpawning: 0
   _startSpawnDelay: 1
 --- !u!224 &1618469497 stripped
 RectTransform:

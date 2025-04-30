@@ -43,12 +43,12 @@ namespace AdvancedTooltips.Core
 			return gameObject.GetComponent<WandTooltipDisplayHandlerUI>();
 		}
 		
-		public WandInventorySlotUI InstantiateWandInvSlotUI(Transform customLayout = null)
+		public SpellbookInventorySlotUI InstantiateWandInvSlotUI(Transform customLayout = null)
 		{
 			var gameObject = Instantiate(referenceHolder.WandInvSlotPrefab, customLayout == null ? referenceHolder.Layout.transform : customLayout);
 			referenceHolder.oldPrefabs.Add(gameObject);
 
-			return gameObject.GetComponent<WandInventorySlotUI>();
+			return gameObject.GetComponent<SpellbookInventorySlotUI>();
 		}
 
 		public JustTextHandler InstantiateIngredientUI(Transform customLayout = null)

@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Spell_TeleportBolt
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Teleport Bolt
-  <UiDisplay>k__BackingField: {fileID: 3132989317568370445, guid: 1bf7f9aa6100f45aba161b26ead13824, type: 3}
+  <UiDisplay>k__BackingField: {fileID: 4187424857206490876, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
   <GoldValue>k__BackingField: 100
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <SpellProjectilePrefab>k__BackingField: {fileID: 433218415224276779, guid: 7b76a216d688c40859abed843d362a5f, type: 3}
+  <SpellUIDisplaySprite>k__BackingField: {fileID: -762693607845688436, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 3235512204744374167, guid: 966ce96a46a0346519d0f2a96c141a22, type: 3}
   <SpellCastSound>k__BackingField:
     Guid:

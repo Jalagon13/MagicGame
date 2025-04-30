@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31f93096594bb4953a290f8553bb16cf, type: 3}
-  m_Name: Spell_LightRay
+  m_Name: Spell_MiningBeam
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Light Ray
-  <UiDisplay>k__BackingField: {fileID: -2225708762962743431, guid: 1bf7f9aa6100f45aba161b26ead13824, type: 3}
+  <Name>k__BackingField: Mining Beam
+  <UiDisplay>k__BackingField: {fileID: -5787464713916110728, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
   <GoldValue>k__BackingField: 15
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
   <SpellProjectilePrefab>k__BackingField: {fileID: 0}
+  <SpellUIDisplaySprite>k__BackingField: {fileID: -2285764028107368278, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 0}
   <SpellCastSound>k__BackingField:
     Guid:
