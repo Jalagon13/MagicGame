@@ -295,18 +295,28 @@ MonoBehaviour:
   _startingItems:
   - Item: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: 53060a096c6084e7d821a236c81b1195, type: 2}
-    Quantity: 1
-  - Item: {fileID: 11400000, guid: d3be2b9539bc040428db5097cea0bed6, type: 2}
-    Quantity: 1
-  - Item: {fileID: 11400000, guid: 9e26e0145233d498ab9936ca8144a7e5, type: 2}
-    Quantity: 1
-  - Item: {fileID: 11400000, guid: 69e56cd3052a345a8a60b0a50e39e3f4, type: 2}
-    Quantity: 1
   - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
     Quantity: 99
-  - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
-    Quantity: 99
+  - Item: {fileID: 11400000, guid: 5849721283c6441cbaa36b109972e84d, type: 2}
+    Quantity: 12
+  - Item: {fileID: 11400000, guid: fe14886186b414dc8a0cca5f83f3fdb9, type: 2}
+    Quantity: 12
+  - Item: {fileID: 11400000, guid: b1ef818a3b6974596ba2183158e148af, type: 2}
+    Quantity: 12
+  - Item: {fileID: 11400000, guid: 128b887eb5a144b6c8c4d6b1ad559dcf, type: 2}
+    Quantity: 12
+  - Item: {fileID: 11400000, guid: 613cd6896fd8c4dcb918aad3dec0eaab, type: 2}
+    Quantity: 12
+  - Item: {fileID: 11400000, guid: 7085c09076ff64c65815502e952be852, type: 2}
+    Quantity: 12
+  - Item: {fileID: 11400000, guid: 71a2492b3b2f64a7e8b162bd20772dc6, type: 2}
+    Quantity: 12
+  - Item: {fileID: 11400000, guid: 1b9fbb3ae6f4642dca15ca0e4ad83f07, type: 2}
+    Quantity: 12
+  - Item: {fileID: 11400000, guid: 11e8f43b7bc5c4c4397feee3508e5ab7, type: 2}
+    Quantity: 12
+  - Item: {fileID: 11400000, guid: 5236446761b8f4e9f91609fdeadda334, type: 2}
+    Quantity: 12
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0

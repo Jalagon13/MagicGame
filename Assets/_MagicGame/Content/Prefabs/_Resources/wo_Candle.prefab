@@ -279,7 +279,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2632368461171692627, guid: ac698e0838c2249d8942bf90dfd85103, type: 3}
       propertyPath: <LightIntensity>k__BackingField
-      value: 0.65
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5906563809962967930, guid: ac698e0838c2249d8942bf90dfd85103, type: 3}
       propertyPath: m_Name

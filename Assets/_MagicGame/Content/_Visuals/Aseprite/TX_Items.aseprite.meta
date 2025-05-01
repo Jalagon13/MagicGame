@@ -77,7 +77,7 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
-    mosaicPadding: 0
+    mosaicPadding: 6
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -90,14 +90,14 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
-    mosaicPadding: 0
+    mosaicPadding: 6
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638815119472045560
+  platformSettingsDirtyTick: 638816872144439260
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -186,27 +186,6 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_blank_scroll
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 0
-      y: 16
-      width: 16
-      height: 16
-    spriteID: 35b6424ddb2784a45b56557af078d23b
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
   - name: icon_fire_ball
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -215,8 +194,8 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 0
-      y: 0
+      x: 6
+      y: 6
       width: 16
       height: 16
     spriteID: bc5489c049fe8468fa3608c78f219bd5
@@ -236,8 +215,8 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 16
-      y: 0
+      x: 22
+      y: 6
       width: 16
       height: 16
     spriteID: 20db170a258184d7cb7589123ee34fd9
@@ -257,8 +236,8 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 32
-      y: 0
+      x: 38
+      y: 6
       width: 16
       height: 16
     spriteID: b717c414df5734a93991017bc9e0a84d
@@ -278,8 +257,8 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 48
-      y: 0
+      x: 54
+      y: 6
       width: 16
       height: 16
     spriteID: e672d66fe1ca24bcb8d041d69c4130b1
@@ -291,7 +270,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_scroll
+  - name: item_air_glyph
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -299,29 +278,8 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 16
-      y: 16
-      width: 16
-      height: 16
-    spriteID: a213025e55e744bfaa50d6662058e6b5
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: item_air_scroll
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 32
-      y: 16
+      x: 22
+      y: 22
       width: 16
       height: 16
     spriteID: f59a0e50cdf9f44b285c6db00b3b91df
@@ -333,7 +291,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_fire_scroll
+  - name: item_fire_glyph
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -341,8 +299,8 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 48
-      y: 16
+      x: 6
+      y: 22
       width: 16
       height: 16
     spriteID: c0c2b749a56384a3383d634f823f73ab
@@ -354,7 +312,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_chaos_scroll
+  - name: item_chaos_glyph
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -362,8 +320,8 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 64
-      y: 16
+      x: 86
+      y: 22
       width: 16
       height: 16
     spriteID: 80014e1bf00d7401f95bf58138a1b413
@@ -375,7 +333,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_earth_scroll
+  - name: item_earth_glyph
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -383,8 +341,8 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 80
-      y: 16
+      x: 54
+      y: 22
       width: 16
       height: 16
     spriteID: 4c71d9147f6d247ee9170f5d5b21f699
@@ -396,7 +354,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_water_scroll
+  - name: item_water_glyph
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -404,8 +362,8 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 96
-      y: 16
+      x: 38
+      y: 22
       width: 16
       height: 16
     spriteID: 4c7b37bcae39e4b91b2405a37eb768b9
@@ -417,7 +375,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_order_scroll
+  - name: item_order_glyph
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -425,8 +383,8 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 112
-      y: 16
+      x: 70
+      y: 22
       width: 16
       height: 16
     spriteID: 251aa6ee50f09491890204ea4ff4dcad
@@ -446,11 +404,95 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 64
-      y: 0
+      x: 70
+      y: 6
       width: 16
       height: 16
     spriteID: 188d3f2f9989b45148677c86ab774588
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: item_life_glyph
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 102
+      y: 22
+      width: 16
+      height: 16
+    spriteID: 7d1d635a5a8b5446eafc6fbab926025a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: item_destruction_glyph
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 118
+      y: 22
+      width: 16
+      height: 16
+    spriteID: f4b4af225a55f480486b43e215cba230
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: item_motion_glyph
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 134
+      y: 22
+      width: 16
+      height: 16
+    spriteID: 833e021428e5f4f85b0f11feb24ec772
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: item_navigation_glyph
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 150
+      y: 22
+      width: 16
+      height: 16
+    spriteID: 46e0474602388457cae07802c6113f79
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -473,8 +515,8 @@ ScriptedImporter:
       cellRect:
         x: 0
         y: 128
-        width: 128
-        height: 31
+        width: 155
+        height: 28
       spriteId: 2c592773024ba46e4b62c1838b5cf244
     linkedCells: []
     parentIndex: -1

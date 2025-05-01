@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Spell_MiningBeam
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Mining Beam
-  <UiDisplay>k__BackingField: {fileID: -5787464713916110728, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -2285764028107368278, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
   <GoldValue>k__BackingField: 15
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
