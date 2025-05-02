@@ -4283,7 +4283,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Description>k__BackingField: 
+  <SandNoiseMap>k__BackingField: {fileID: 11400000, guid: e7b13fcb8d79849faa86e090ebc6112c, type: 2}
   <Width>k__BackingField: 3
+  <SandThreshold>k__BackingField: 0.5
   <SandTile>k__BackingField: {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
   <GrassTile>k__BackingField: {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
   <WaterTile>k__BackingField: {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
@@ -9065,8 +9067,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Description>k__BackingField: 
   <RiverNoiseMap>k__BackingField: {fileID: 11400000, guid: 9903e6dce86c94c10bef89bed861db9f, type: 2}
-  <RiverLowerThreshold>k__BackingField: 0.455
-  <RiverUpperThreshold>k__BackingField: 0.58
+  <RiverLowerThreshold>k__BackingField: 0.465
+  <RiverUpperThreshold>k__BackingField: 0.5375
   <WaterTile>k__BackingField: {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
   <GrassTile>k__BackingField: {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
 --- !u!224 &1195613696 stripped
@@ -9590,6 +9592,7 @@ MonoBehaviour:
   <NoiseMapsToApplySeed>k__BackingField:
   - {fileID: 11400000, guid: 9903e6dce86c94c10bef89bed861db9f, type: 2}
   - {fileID: 11400000, guid: 10d54a956e86d4aa8bc8927008e59238, type: 2}
+  - {fileID: 11400000, guid: e7b13fcb8d79849faa86e090ebc6112c, type: 2}
 --- !u!1 &1366530093
 GameObject:
   m_ObjectHideFlags: 0
