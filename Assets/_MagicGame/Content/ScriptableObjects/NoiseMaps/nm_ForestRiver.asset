@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dbb0ce312d9e42cc94b332745f0ba74, type: 3}
-  m_Name: nm_ForestGround
+  m_Name: nm_ForestRiver
   m_EditorClassIdentifier: 
   Width: 192
   Height: 192
-  Scale: 50
+  Scale: 85
   Octaves: 4
   Persistence: 0.4
-  Lacunarity: 1.5
+  Lacunarity: 2.25
   UseRedistribution: 0
-  Redistribution: 3.24
+  Redistribution: 1
   UseFallOffFunction: 0
-  Mix: 0.8
+  Mix: 1
   UseBillowed: 0
-  UseSmoothStep: 0
+  UseSmoothStep: 1
   NoiseTexture: {fileID: 0}

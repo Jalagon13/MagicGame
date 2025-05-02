@@ -85,14 +85,36 @@ public class ChunkGameData
 	public void AddTileData(Vector2Int position, TileSO tile)
 	{
 		TileGameData tileToAdd = new(tile, position);
-		
-		if(tile.TileType == TileType.Wall)
+
+		switch (tile.TileType)
 		{
-			WallTileGameDataList.Add(tileToAdd);
-		}
-		else if(tile.TileType == TileType.Floor)
-		{
-			FloorTileGameDataList.Add(tileToAdd);
+			case TileType.Wall:
+			{
+				var existingIndex = WallTileGameDataList.FindIndex(t => t.TilePosition == position);
+				if (existingIndex >= 0)
+					WallTileGameDataList[existingIndex] = tileToAdd;
+				else
+					WallTileGameDataList.Add(tileToAdd);
+				break;
+			}
+			case TileType.Floor:
+			{
+				var existingIndex = FloorTileGameDataList.FindIndex(t => t.TilePosition == position);
+				if (existingIndex >= 0)
+					FloorTileGameDataList[existingIndex] = tileToAdd;
+				else
+					FloorTileGameDataList.Add(tileToAdd);
+				break;
+			}
+			case TileType.Ground:
+			{
+				var existingIndex = GroundTileGameDataList.FindIndex(t => t.TilePosition == position);
+				if (existingIndex >= 0)
+					GroundTileGameDataList[existingIndex] = tileToAdd;
+				else
+					GroundTileGameDataList.Add(tileToAdd);
+				break;
+			}
 		}
 	}
 	

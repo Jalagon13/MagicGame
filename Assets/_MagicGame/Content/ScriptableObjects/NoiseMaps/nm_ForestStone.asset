@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Width: 192
   Height: 192
-  Scale: 20
+  Scale: 20.6
   Octaves: 4
-  Persistence: 0.5
-  Lacunarity: 1.4
+  Persistence: 0.41
+  Lacunarity: 1.58
   UseRedistribution: 1
-  Redistribution: 2.45
-  UseFallOffFunction: 1
-  Mix: 0.6
+  Redistribution: 0.66
+  UseFallOffFunction: 0
+  Mix: 0.418
   UseBillowed: 0
-  UseSmoothStep: 0
+  UseSmoothStep: 1
   NoiseTexture: {fileID: 0}

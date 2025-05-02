@@ -119,6 +119,59 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &6936908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6936909}
+  - component: {fileID: 6936910}
+  m_Layer: 0
+  m_Name: StoneGenerationStep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6936909
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6936908}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 445444401}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6936910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6936908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0dcc0ef318c946e8873bba305353eb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: 
+  <ForestStoneNoiseMap>k__BackingField: {fileID: 11400000, guid: 10d54a956e86d4aa8bc8927008e59238, type: 2}
+  <RiverNoiseMap>k__BackingField: {fileID: 11400000, guid: 9903e6dce86c94c10bef89bed861db9f, type: 2}
+  <StoneWallThreshold>k__BackingField: 0.4
+  <RiverLowerThreshold>k__BackingField: 0.085
+  <RiverUpperThreshold>k__BackingField: 0.915
+  <StoneWallTile>k__BackingField: {fileID: 11400000, guid: c5388903dacbb4c4db84b0b22dae9c49, type: 2}
+  <WaterTile>k__BackingField: {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
+  <SandTile>k__BackingField: {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
 --- !u!1001 &10676565
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1321,37 +1374,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!1 &140401945
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 140401946}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &140401946
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 140401945}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 313.66516, y: 154.87444, z: 1.2176756}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &143992709
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3429,10 +3451,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 359721944}
-  - {fileID: 652259849}
-  - {fileID: 438106778}
+  - {fileID: 2082001252}
+  - {fileID: 2114616226}
   - {fileID: 1630212177}
-  - {fileID: 1414248200}
   - {fileID: 632392012}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3610,7 +3631,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 429902436}
+  m_Father: {fileID: 2114616226}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &438106781
 MonoBehaviour:
@@ -3627,6 +3648,40 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _wallTile: {fileID: 11400000, guid: 22963e4707bfb4704ba99cff2a64c732, type: 2}
   _wallColliderTmPrefab: {fileID: 6350066355212168945, guid: 61615dd68f5cc40188ce15c415de1e0d, type: 3}
+--- !u!1 &445444400
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 445444401}
+  m_Layer: 0
+  m_Name: GenerationSteps
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &445444401
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445444400}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1179738375}
+  - {fileID: 557389543}
+  - {fileID: 6936909}
+  m_Father: {fileID: 1611659668}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &462286016
 GameObject:
   m_ObjectHideFlags: 0
@@ -3793,6 +3848,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 498927233}
   m_CullTransparentMesh: 1
+--- !u!1 &502763116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 502763117}
+  - component: {fileID: 502763118}
+  m_Layer: 0
+  m_Name: ForestGenerationData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &502763117
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502763116}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1611659668}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &502763118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502763116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a65c64baf20f4cdda1a4025952d66ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MapGenerationSeed: 
 --- !u!1001 &502895895
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4138,6 +4238,55 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
+--- !u!1 &557389542
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 557389543}
+  - component: {fileID: 557389544}
+  m_Layer: 0
+  m_Name: ExpandShoreLineGenerationStep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &557389543
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557389542}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 445444401}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &557389544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557389542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f36b8487c4954f2a930335659f06b0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: 
+  <Width>k__BackingField: 3
+  <SandTile>k__BackingField: {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
+  <GrassTile>k__BackingField: {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
+  <WaterTile>k__BackingField: {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
 --- !u!1 &563966734
 GameObject:
   m_ObjectHideFlags: 0
@@ -5004,12 +5153,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 652259848}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 429902436}
+  m_Father: {fileID: 2114616226}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!68 &652259851
 EdgeCollider2D:
@@ -8870,6 +9019,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1178905913}
   m_CullTransparentMesh: 1
+--- !u!1 &1179738374
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1179738375}
+  - component: {fileID: 1179738376}
+  m_Layer: 0
+  m_Name: LandWaterGenerationStep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1179738375
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179738374}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 445444401}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1179738376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179738374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8429039722eb4fd5889f549415859da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: 
+  <RiverNoiseMap>k__BackingField: {fileID: 11400000, guid: 9903e6dce86c94c10bef89bed861db9f, type: 2}
+  <RiverLowerThreshold>k__BackingField: 0.455
+  <RiverUpperThreshold>k__BackingField: 0.58
+  <WaterTile>k__BackingField: {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
+  <GrassTile>k__BackingField: {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
 --- !u!224 &1195613696 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
@@ -9339,6 +9538,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1349719453}
   m_CullTransparentMesh: 1
+--- !u!1 &1357089831
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1357089832}
+  - component: {fileID: 1357089833}
+  m_Layer: 0
+  m_Name: ForestGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1357089832
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1357089831}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1611659668}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1357089833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1357089831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07adef75b37884d8c805eb2f9740faee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <ForestGenerationData>k__BackingField: {fileID: 502763118}
+  <GenerationSteps>k__BackingField:
+  - {fileID: 1179738376}
+  - {fileID: 557389544}
+  - {fileID: 6936910}
+  <NoiseMapsToApplySeed>k__BackingField:
+  - {fileID: 11400000, guid: 9903e6dce86c94c10bef89bed861db9f, type: 2}
+  - {fileID: 11400000, guid: 10d54a956e86d4aa8bc8927008e59238, type: 2}
 --- !u!1 &1366530093
 GameObject:
   m_ObjectHideFlags: 0
@@ -9707,7 +9958,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 429902436}
+  m_Father: {fileID: 2114616226}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1414248201
 MonoBehaviour:
@@ -10850,6 +11101,40 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596603585}
   m_CullTransparentMesh: 1
+--- !u!1 &1611659667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1611659668}
+  m_Layer: 0
+  m_Name: Forest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1611659668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611659667}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 502763117}
+  - {fileID: 1357089832}
+  - {fileID: 445444401}
+  m_Father: {fileID: 2082001252}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1616656744
 GameObject:
   m_ObjectHideFlags: 0
@@ -13687,7 +13972,6 @@ GameObject:
   - component: {fileID: 1937202726}
   - component: {fileID: 1937202727}
   - component: {fileID: 1937202730}
-  - component: {fileID: 1937202729}
   - component: {fileID: 1937202728}
   m_Layer: 0
   m_Name: WorldManager
@@ -13749,38 +14033,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <StairsToForest>k__BackingField: {fileID: 5150323723629226184, guid: 751f13ce30c9145419bf57f41f494fef, type: 3}
-  <ForestGeneration>k__BackingField: {fileID: 1937202729}
+  <ForestGeneration>k__BackingField: {fileID: 0}
   SpaghettiCaveNM: {fileID: 11400000, guid: c621735f7aae34658a8101ebe324437c, type: 2}
   CheeseCaveNM: {fileID: 11400000, guid: fb24aaaf205ca41ac928db4d742f1f5c, type: 2}
   OreGenNM: {fileID: 11400000, guid: e05079a8f761b4e5e8f0f7f3c492221d, type: 2}
   StoneWallTile: {fileID: 11400000, guid: c5388903dacbb4c4db84b0b22dae9c49, type: 2}
   StoneFloorTile: {fileID: 11400000, guid: d2ceefd9a0a224533922e3657ca61e16, type: 2}
   CobaltOreTile: {fileID: 11400000, guid: 4f8bf3351009c45c4a6ad868dd7eccbd, type: 2}
---- !u!114 &1937202729
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1937202725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5801a5dccb01e4120aa90f5162553eae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <TreeObject>k__BackingField: {fileID: 1030882037603866735, guid: f4caf4c5091224ab38ce3d21bbffe7bf, type: 3}
-  <StairsToCave>k__BackingField: {fileID: 5150323723629226184, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
-  <MinTreeDistance>k__BackingField: 3
-  <MaxTreeDistance>k__BackingField: 8.5
-  <MinPortalDistance>k__BackingField: 20
-  <MaxPortalDistance>k__BackingField: 30
-  ForestGroundNM: {fileID: 11400000, guid: 8dae2400c78244ccb8115cb58db0043a, type: 2}
-  ForestStoneNM: {fileID: 11400000, guid: 10d54a956e86d4aa8bc8927008e59238, type: 2}
-  GrassTile: {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
-  SandTile: {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
-  WaterTile: {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
-  StoneWallTile: {fileID: 11400000, guid: c5388903dacbb4c4db84b0b22dae9c49, type: 2}
-  StoneFloorTile: {fileID: 11400000, guid: d2ceefd9a0a224533922e3657ca61e16, type: 2}
 --- !u!114 &1937202730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13797,11 +14056,12 @@ MonoBehaviour:
   _dayDurationInSeconds: 600
   _startingTime: 1
   _isTicking: 1
-  _randomSeed: 0
+  _randomSeed: 1
   _customSeed: zotty
   _portalSearchRadius: 3
   _portalSearchDelayOnBiomeLoad: 0.25
   _endBiomeTransitionDelay: 0.75
+  <ForestGenerator>k__BackingField: {fileID: 1357089833}
 --- !u!1 &1945104449
 GameObject:
   m_ObjectHideFlags: 0
@@ -14530,6 +14790,72 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
   m_PrefabInstance: {fileID: 1927035354}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2082001251
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2082001252}
+  m_Layer: 0
+  m_Name: ProceduralGeneration
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2082001252
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082001251}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1611659668}
+  m_Father: {fileID: 429902436}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2114616225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2114616226}
+  m_Layer: 0
+  m_Name: TechnicalElements
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2114616226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114616225}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 652259849}
+  - {fileID: 438106778}
+  - {fileID: 1414248200}
+  m_Father: {fileID: 429902436}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &154946631035586327
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16095,4 +16421,3 @@ SceneRoots:
   - {fileID: 429902436}
   - {fileID: 597565687}
   - {fileID: 288463390}
-  - {fileID: 140401946}

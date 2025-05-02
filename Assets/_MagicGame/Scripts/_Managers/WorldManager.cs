@@ -43,6 +43,7 @@ public class WorldManager : NetworkBehaviour
 	[SerializeField] private float _portalSearchRadius = 10f;
 	[SerializeField] private float _portalSearchDelayOnBiomeLoad = 0.75f;
 	[SerializeField] private float _endBiomeTransitionDelay = 1f;
+	[field: SerializeField] public ForestGenerator ForestGenerator { get; private set; }
 	
 	private float _currentTime;
 	
@@ -184,7 +185,7 @@ public class WorldManager : NetworkBehaviour
 		switch (toBiome)
 		{
 			case BiomeType.Forest:
-				GetComponent<ForestGeneration>().GenerateForest();
+				ForestGenerator.GenerateForest();
 				break;
 			case BiomeType.Cave:
 				GetComponent<CaveGeneration>().GenerateCave();
