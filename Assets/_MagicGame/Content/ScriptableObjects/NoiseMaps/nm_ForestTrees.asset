@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dbb0ce312d9e42cc94b332745f0ba74, type: 3}
-  m_Name: nm_ForestStone
+  m_Name: nm_ForestTrees
   m_EditorClassIdentifier: 
   Width: 192
   Height: 192
-  Scale: 11.91
+  Scale: 100
   Octaves: 4
-  Persistence: 0.32
-  Lacunarity: 1.78
+  Persistence: 0.5
+  Lacunarity: 2.15
   UseRedistribution: 1
-  Redistribution: 5.86
+  Redistribution: 0.95
   UseFallOffFunction: 0
-  Mix: 0.418
+  Mix: 1
   UseBillowed: 0
   UseSmoothStep: 1
   NoiseTexture: {fileID: 0}

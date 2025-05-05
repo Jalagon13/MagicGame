@@ -36,6 +36,7 @@ public class WorldManager : NetworkBehaviour
 	[SerializeField] private float _dayDurationInSeconds;
 	[SerializeField] private float _startingTime = 0.0f;
 	[SerializeField] private bool _isTicking = true;
+	[SerializeField] private bool _saveAfterGeneration = true;
 	
 	[Title("World Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private bool _randomSeed = false;
@@ -173,7 +174,10 @@ public class WorldManager : NetworkBehaviour
 			{
 				GenerateBiome(toBiome);
 				
-				await SaveSystem.Instance.SaveBiome(fromBiome);
+				if(_saveAfterGeneration)
+				{
+					await SaveSystem.Instance.SaveBiome(fromBiome);
+				}
 			}
 			
 			LoadChunksClientRpc(toBiome, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));

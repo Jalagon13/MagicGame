@@ -10,36 +10,40 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b52052ad4aefe4da580ba4e2ba9fed0c, type: 3}
-  m_Name: temp_WaterTile
+  m_Name: tile_tall_grass
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 161851590, guid: 41f868bf152c1445284f7bb62bfccefb, type: 3}
+  m_DefaultSprite: {fileID: -2185965059797946875, guid: 6af26ec302fd4416eab46141a8e44a05, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
-  TileType: 5
-  <Table>k__BackingField: []
+  TileType: 4
+  <Table>k__BackingField:
+  - Item: {fileID: 11400000, guid: b1ef818a3b6974596ba2183158e148af, type: 2}
+    Min: 0
+    Max: 0
+    Chance: 100
   Hardness: 0.65
   MiningSound:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -281162869
+      Data2: 1160666795
+      Data3: -1901462113
+      Data4: -244489252
+    Path: event:/Thump
   PlaceSound:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -281162869
+      Data2: 1160666795
+      Data3: -1901462113
+      Data4: -244489252
+    Path: event:/Thump
   DestroySound:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -281162869
+      Data2: 1160666795
+      Data3: -1901462113
+      Data4: -244489252
+    Path: event:/Thump
   TopTileSingle: {fileID: 0}
   TopTileLeft: {fileID: 0}
   TopTileCenter: {fileID: 0}

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExpandShoreLineGenerationStep : GenerationStep
+public class ShoreLineGenerationStep : GenerationStep
 {
     [field: SerializeField] public NoiseMapSO SandNoiseMap { get; private set; }
     [field: SerializeField] public int Width { get; private set; }
@@ -26,7 +26,7 @@ public class ExpandShoreLineGenerationStep : GenerationStep
         };
 
         HashSet<Vector2Int> initialShoreTiles = new();
-        HashSet<Vector2Int> allInitialShoreTiles = GenerationUtils.GetEdgeTiles(_tilesToSearchFor, new List<TileSO>() { WaterTile }, DirectionsHelper.DirectionOffsets8, genData.TileMatrix);
+        HashSet<Vector2Int> allInitialShoreTiles = GenerationUtils.GetEdgeTiles(_tilesToSearchFor, new List<TileSO>() { WaterTile }, DirectionsHelper.DirectionOffsets8, genData.MostFrontRenderedTileMatrix);
         foreach (Vector2Int shoreTile in allInitialShoreTiles) // Need to do it like this so tilematrix gets updated
         {
             float noiseValue = SandNoiseMap.NoiseTexture.GetPixel(shoreTile.x, shoreTile.y).grayscale;
@@ -39,7 +39,7 @@ public class ExpandShoreLineGenerationStep : GenerationStep
         }
         
         // Width - 1 because initial shore tiles are already expanded
-        HashSet<Vector2Int> shoreTiles = GenerationUtils.ExpandEdgeTiles(initialShoreTiles, Width - 1, _tilesToSearchFor, genData.TileMatrix);
+        HashSet<Vector2Int> shoreTiles = GenerationUtils.ExpandEdgeTiles(initialShoreTiles, Width - 1, _tilesToSearchFor, genData.MostFrontRenderedTileMatrix);
         foreach (Vector2Int shoreTile in shoreTiles)
         {
             genData.SetTileData(shoreTile.x, shoreTile.y, SandTile);

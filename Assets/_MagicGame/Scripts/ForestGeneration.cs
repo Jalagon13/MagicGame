@@ -106,44 +106,44 @@ public class ForestGeneration : MonoBehaviour
 	
 	private void GenerateTrees()
 	{
-		List<Vector2> treePoints = PoissonDiskSampling.GeneratePoints(ForestStoneNM, MinTreeDistance, MaxTreeDistance, _seed);
+		// List<Vector2> treePoints = PoissonDiskSampling.GeneratePoints(ForestStoneNM, MinTreeDistance, MaxTreeDistance, _seed);
 		
-		foreach (Vector2 point in treePoints)
-		{
-			int pointX = Mathf.RoundToInt(point.x);
-			int pointY = Mathf.RoundToInt(point.y);
+		// foreach (Vector2 point in treePoints)
+		// {
+		// 	int pointX = Mathf.RoundToInt(point.x);
+		// 	int pointY = Mathf.RoundToInt(point.y);
 			
-			float groundTilePointValue = ForestGroundNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
-			float wallTilePointValue = ForestStoneNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
+		// 	float groundTilePointValue = ForestGroundNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
+		// 	float wallTilePointValue = ForestStoneNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
 			
-			if(groundTilePointValue > 0.125f && wallTilePointValue < 0.6f && wallTilePointValue > 0.35f)
-			{
-				// Add world asset data to chunk
-				ChunkManager.Instance.AddObjectDataToChunkServerRpc(new Vector2Int(pointX, pointY), GameManager.Instance.GetIDFromWorldObject(TreeObject), BiomeType.Forest, CardinalDirection.North);
-			}
-		}
+		// 	if(groundTilePointValue > 0.125f && wallTilePointValue < 0.6f && wallTilePointValue > 0.35f)
+		// 	{
+		// 		// Add world asset data to chunk
+		// 		ChunkManager.Instance.AddObjectDataToChunkServerRpc(new Vector2Int(pointX, pointY), GameManager.Instance.GetIDFromWorldObject(TreeObject), BiomeType.Forest, CardinalDirection.North);
+		// 	}
+		// }
 	}
 	
 	public HashSet<Vector2Int> GetStairsToCavePositions(string seed)
 	{
 		HashSet<Vector2Int> positions = new HashSet<Vector2Int>();
 	
-		List<Vector2> points = PoissonDiskSampling.GeneratePoints(ForestStoneNM, MinPortalDistance, MaxPortalDistance, seed);
+		// List<Vector2> points = PoissonDiskSampling.GeneratePoints(ForestStoneNM, MinPortalDistance, MaxPortalDistance, seed);
 
-		foreach (Vector2 point in points)
-		{
-			int pointX = Mathf.RoundToInt(point.x);
-			int pointY = Mathf.RoundToInt(point.y);
+		// foreach (Vector2 point in points)
+		// {
+		// 	int pointX = Mathf.RoundToInt(point.x);
+		// 	int pointY = Mathf.RoundToInt(point.y);
 
-			float groundTilePointValue = ForestGroundNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
-			float wallTilePointValue = ForestStoneNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
+		// 	float groundTilePointValue = ForestGroundNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
+		// 	float wallTilePointValue = ForestStoneNM.NoiseTexture.GetPixel(pointX, pointY).grayscale;
 
-			if (groundTilePointValue > 0.125f && wallTilePointValue < 0.6f && wallTilePointValue > 0.35f)
-			{
-				var pos = new Vector2Int(pointX, pointY);
-				positions.Add(pos);
-			}
-		}
+		// 	if (groundTilePointValue > 0.125f && wallTilePointValue < 0.6f && wallTilePointValue > 0.35f)
+		// 	{
+		// 		var pos = new Vector2Int(pointX, pointY);
+		// 		positions.Add(pos);
+		// 	}
+		// }
 		
 		return positions;
 	}

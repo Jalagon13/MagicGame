@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Width: 192
   Height: 192
-  Scale: 22.3
+  Scale: 14.5
   Octaves: 4
   Persistence: 0.297
   Lacunarity: 1.38
   UseRedistribution: 1
-  Redistribution: 0.47
+  Redistribution: 0.81
   UseFallOffFunction: 0
   Mix: 0.418
   UseBillowed: 0

@@ -25,18 +25,71 @@ public class TileManager : NetworkBehaviour
 	[field: SerializeField] public Tilemap FloorTm { get; private set; }
 	[field: SerializeField] public Tilemap WallTm { get; private set; }
 	[field: SerializeField] public Tilemap OreTm { get; private set; }
+	[field: SerializeField] public Tilemap FoliageTm { get; private set; }
+	[field: SerializeField] public Tilemap LiquidTm { get; private set; }
 
 	private void Awake()
 	{
+		WallTm.GetComponent<TilemapCollider2D>().enabled = false;
+		FoliageTm.GetComponent<TilemapCollider2D>().enabled = false;
+		LiquidTm.GetComponent<TilemapCollider2D>().enabled = false;
+
 		Instance = this;
 	}
 	
 	private void Start()
 	{
 		ChunkManager.Instance.OnLoadChunk += ChunkManager_OnLoadChunk;
-		WorldManager.Instance.OnBiomeTransitionStart += ClearLocalTilemaps;
+		WorldManager.Instance.OnBiomeTransitionStart += WorldManager_OnBiomeTransitionStart;
+		WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_OnBiomeTransitionEnd;
 	}
-	
+
+	private void WorldManager_OnBiomeTransitionStart(object sender, EventArgs e)
+	{
+		WallTm.GetComponent<TilemapCollider2D>().enabled = false;
+		FoliageTm.GetComponent<TilemapCollider2D>().enabled = false;
+		LiquidTm.GetComponent<TilemapCollider2D>().enabled = false;
+
+		// Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
+		GroundTm.ClearAllTiles();
+		FloorTm.ClearAllTiles();
+		WallTm.ClearAllTiles();
+		OreTm.ClearAllTiles();
+		FoliageTm.ClearAllTiles();
+		LiquidTm.ClearAllTiles();
+	}
+
+	private void WorldManager_OnBiomeTransitionEnd(object sender, EventArgs e)
+    {
+		WallTm.GetComponent<TilemapCollider2D>().enabled = true;
+		FoliageTm.GetComponent<TilemapCollider2D>().enabled = true;
+		LiquidTm.GetComponent<TilemapCollider2D>().enabled = true;
+	}
+
+    private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)
+	{
+		// Create a list of lists to hold all the different tile layers
+		var allTileLayers = new List<List<TileGameData>>
+		{
+			e.Chunk.GroundTileGameDataList,
+			e.Chunk.FloorTileGameDataList,
+			e.Chunk.WallTileGameDataList,
+			e.Chunk.OreTileGameDataList,
+			e.Chunk.FoliageTileGameDataList,
+			e.Chunk.LiquidTileGameDataList
+		};
+
+		// Iterate through each list and set the tiles on the tilemap
+		foreach (var tileLayer in allTileLayers)
+		{
+			foreach (TileGameData tile in tileLayer)
+			{
+				var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
+				SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
+			}
+		}
+	}
+
 	public void ClearTopTiles()
 	{
 	    foreach (Transform child in WallTm.transform)
@@ -87,6 +140,12 @@ public class TileManager : NetworkBehaviour
 					WallTm.SetTile(tilePos, tileSO);
 					RefreshNearbyTopTiles(tilePos, OreTm);
 				}
+				break;
+			case TileType.Foliage:
+				FoliageTm.SetTile(tilePos, tileSO);
+				break;
+			case TileType.Liquid:
+				LiquidTm.SetTile(tilePos, tileSO);
 				break;
 		}
 	}
@@ -222,51 +281,12 @@ public class TileManager : NetworkBehaviour
 			_ => null
 		};
 	}
-	
-	private void ClearLocalTilemaps(object sender, EventArgs e)
-	{
-		// Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
-		GroundTm.ClearAllTiles();
-		FloorTm.ClearAllTiles();
-		WallTm.ClearAllTiles();
-		OreTm.ClearAllTiles();
-	}
-
-	private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)
-	{
-		// Loop through all ground tiles and set them on tilemap
-		foreach(TileGameData tile in e.Chunk.GroundTileGameDataList)
-		{
-			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
-		}
-		
-		// loop through all floor tiles and set them on tilemap
-		foreach(TileGameData tile in e.Chunk.FloorTileGameDataList)
-		{
-			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
-		}
-			
-		// loop through all wall tiles and set them on tilemap
-		foreach(TileGameData tile in e.Chunk.WallTileGameDataList)
-		{
-			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
-		}
-		
-		// loop through all ore tiles and set them on tilemap
-		foreach(TileGameData tile in e.Chunk.OreTileGameDataList)
-		{
-			var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-			SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
-		}
-	}
 
 	public override void OnDestroy()
 	{
 		base.OnDestroy();
 		ChunkManager.Instance.OnLoadChunk -= ChunkManager_OnLoadChunk;
-		WorldManager.Instance.OnBiomeTransitionStart -= ClearLocalTilemaps;
+		WorldManager.Instance.OnBiomeTransitionStart -= WorldManager_OnBiomeTransitionStart;
+		WorldManager.Instance.OnBiomeTransitionEnd -= WorldManager_OnBiomeTransitionEnd;
 	}
 }

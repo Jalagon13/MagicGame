@@ -122,70 +122,44 @@ public class SaveSystem : MonoBehaviour
 		// Convert chunks into ChunkData for serialization
 		foreach (var kvp in ChunkManager.Instance.GetChunksFromBiome(biomeToSave))
 		{
+			int listSize = kvp.Value.Size * kvp.Value.Size;
+		
 			ChunkFileData chunkData = new()
 			{
 				ChunkPosition = kvp.Key,
 				Size = kvp.Value.Size,
-				GroundTiles = new(),
-				FloorTiles = new(),
-				WallTiles = new(),
-				OreTiles = new(),
+				GroundTiles = new(listSize),
+				FloorTiles = new(listSize),
+				WallTiles = new(listSize),
+				OreTiles = new(listSize),
+				FoliageTiles = new(listSize),
+				LiquidTiles = new(listSize)
 			};
 
-			// Loop through each tile in ground tiles add create a serializable TileData for it and add it to chunkData
-			foreach (TileGameData tile in kvp.Value.GroundTileGameDataList)
+			var tileGroups = new List<(List<TileGameData> source, List<TileFileData> target)>
 			{
-				TileSO tileObjectSO = GameManager.Instance.GetTileSOFromTileBase(tile.TileSO);
-				TileFileData tileData = new()
-				{
-					Pos = tile.TilePosition,
-					TileId = GameManager.Instance.GetIDFromTileObjectSO(tileObjectSO),
-					TileType = tileObjectSO.TileType
-				};
-				
-				chunkData.GroundTiles.Add(tileData);
-			}
+				(kvp.Value.GroundTileGameDataList, chunkData.GroundTiles),
+				(kvp.Value.FloorTileGameDataList, chunkData.FloorTiles),
+				(kvp.Value.WallTileGameDataList, chunkData.WallTiles),
+				(kvp.Value.OreTileGameDataList, chunkData.OreTiles),
+				(kvp.Value.FoliageTileGameDataList, chunkData.FoliageTiles),
+				(kvp.Value.LiquidTileGameDataList, chunkData.LiquidTiles)
+			};
 
-			// Loop through each tile in floor tiles add create a serializable TileData for it and add it to chunkData
-			foreach (TileGameData tile in kvp.Value.FloorTileGameDataList)
+			foreach (var (sourceList, targetList) in tileGroups)
 			{
-				TileSO tileObjectSO = GameManager.Instance.GetTileSOFromTileBase(tile.TileSO);
-				TileFileData tileData = new()
+				foreach (TileGameData tile in sourceList)
 				{
-					Pos = tile.TilePosition,
-					TileId = GameManager.Instance.GetIDFromTileObjectSO(tileObjectSO),
-					TileType = tileObjectSO.TileType
-				};
+					TileSO tileObjectSO = GameManager.Instance.GetTileSOFromTileBase(tile.TileSO);
+					TileFileData tileData = new()
+					{
+						Pos = tile.TilePosition,
+						TileId = GameManager.Instance.GetIDFromTileObjectSO(tileObjectSO),
+						TileType = tileObjectSO.TileType
+					};
 
-				chunkData.FloorTiles.Add(tileData);
-			}
-
-			// Loop through each tile in ground tiles add create a serializable TileData for it and add it to chunkData
-			foreach (TileGameData tile in kvp.Value.WallTileGameDataList)
-			{
-				TileSO tileObjectSO = GameManager.Instance.GetTileSOFromTileBase(tile.TileSO);
-				TileFileData tileData = new()
-				{
-					Pos = tile.TilePosition,
-					TileId = GameManager.Instance.GetIDFromTileObjectSO(tileObjectSO),
-					TileType = tileObjectSO.TileType
-				};
-				
-				chunkData.WallTiles.Add(tileData);
-			}
-
-			// Loop through each tile in ore tiles add create a serializable TileData for it and add it to chunkData
-			foreach (TileGameData tile in kvp.Value.OreTileGameDataList)
-			{
-				TileSO tileObjectSO = GameManager.Instance.GetTileSOFromTileBase(tile.TileSO);
-				TileFileData tileData = new()
-				{
-					Pos = tile.TilePosition,
-					TileId = GameManager.Instance.GetIDFromTileObjectSO(tileObjectSO),
-					TileType = tileObjectSO.TileType
-				};
-
-				chunkData.OreTiles.Add(tileData);
+					targetList.Add(tileData);
+				}
 			}
 
 			// Add chunkData to sceneData
@@ -310,7 +284,9 @@ public class SaveSystem : MonoBehaviour
 				GroundTileGameDataList = ConvertTileFileDataToGameData(data.GroundTiles),
 				FloorTileGameDataList = ConvertTileFileDataToGameData(data.FloorTiles),
 				WallTileGameDataList = ConvertTileFileDataToGameData(data.WallTiles),
-				OreTileGameDataList = ConvertTileFileDataToGameData(data.OreTiles)
+				OreTileGameDataList = ConvertTileFileDataToGameData(data.OreTiles),
+				FoliageTileGameDataList = ConvertTileFileDataToGameData(data.FoliageTiles),
+				LiquidTileGameDataList = ConvertTileFileDataToGameData(data.LiquidTiles)
 			};
 			
 			deserializedChunks.Add(data.ChunkPosition, chunk);

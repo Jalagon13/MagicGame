@@ -11,7 +11,9 @@ public enum TileType
 	Ground,
 	Floor,
 	Wall,
-	Ore
+	Ore,
+	Foliage,
+	Liquid
 }
 
 [CreateAssetMenu(fileName = "New TileSO", menuName = "Tiles/TileSO", order = 1)]

@@ -12,18 +12,33 @@ public class ChunkGameData
 	public List<TileGameData> FloorTileGameDataList;
 	public List<TileGameData> WallTileGameDataList;
 	public List<TileGameData> OreTileGameDataList;
+	public List<TileGameData> FoliageTileGameDataList;
+	public List<TileGameData> LiquidTileGameDataList;
 	public List<WorldObjectGameData> WorldObjectGameDataList;
 	public int Size { get; private set; }
+
+	private readonly Dictionary<TileType, List<TileGameData>> _tileTypeToList;
 
 	public ChunkGameData(int chunkSize, Vector2Int chunkPosition)
 	{
 		Size = chunkSize;
 		ChunkPosition = chunkPosition;
-		GroundTileGameDataList = new();
-		FloorTileGameDataList = new();
-		WallTileGameDataList = new();
-		OreTileGameDataList = new();
-		WorldObjectGameDataList = new();
+		GroundTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		FloorTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		WallTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		OreTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		FoliageTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		LiquidTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		WorldObjectGameDataList = new List<WorldObjectGameData>(chunkSize * chunkSize);
+
+		_tileTypeToList = new Dictionary<TileType, List<TileGameData>>
+		{
+			{ TileType.Ground, GroundTileGameDataList },
+			{ TileType.Floor, FloorTileGameDataList },
+			{ TileType.Wall, WallTileGameDataList },
+			{ TileType.Foliage, FoliageTileGameDataList },
+			{ TileType.Liquid, LiquidTileGameDataList }
+		};
 	}
 	
 	// When a tile is destroyed, delete the tile data in chunk
@@ -86,35 +101,13 @@ public class ChunkGameData
 	{
 		TileGameData tileToAdd = new(tile, position);
 
-		switch (tile.TileType)
+		if (_tileTypeToList.TryGetValue(tile.TileType, out var list))
 		{
-			case TileType.Wall:
-			{
-				var existingIndex = WallTileGameDataList.FindIndex(t => t.TilePosition == position);
-				if (existingIndex >= 0)
-					WallTileGameDataList[existingIndex] = tileToAdd;
-				else
-					WallTileGameDataList.Add(tileToAdd);
-				break;
-			}
-			case TileType.Floor:
-			{
-				var existingIndex = FloorTileGameDataList.FindIndex(t => t.TilePosition == position);
-				if (existingIndex >= 0)
-					FloorTileGameDataList[existingIndex] = tileToAdd;
-				else
-					FloorTileGameDataList.Add(tileToAdd);
-				break;
-			}
-			case TileType.Ground:
-			{
-				var existingIndex = GroundTileGameDataList.FindIndex(t => t.TilePosition == position);
-				if (existingIndex >= 0)
-					GroundTileGameDataList[existingIndex] = tileToAdd;
-				else
-					GroundTileGameDataList.Add(tileToAdd);
-				break;
-			}
+			int existingIndex = list.FindIndex(t => t.TilePosition == position);
+			if (existingIndex >= 0)
+				list[existingIndex] = tileToAdd;
+			else
+				list.Add(tileToAdd);
 		}
 	}
 	

@@ -11,6 +11,7 @@ public class LandWaterGenerationStep : GenerationStep
     [field: Header("Terrain Tiles")]
     [field: SerializeField] public TileSO WaterTile { get; private set; }
     [field: SerializeField] public TileSO GrassTile { get; private set; }
+    [field: SerializeField] public TileSO SandTile { get; private set; }
 
     public override void Execute(ForestGenerationData genData)
     {
@@ -22,6 +23,7 @@ public class LandWaterGenerationStep : GenerationStep
 
                 if (riverNoiseValue > RiverLowerThreshold && riverNoiseValue < RiverUpperThreshold)
                 {
+                    genData.SetTileData(x, y, SandTile);
                     genData.SetTileData(x, y, WaterTile);
                 }
                 else
