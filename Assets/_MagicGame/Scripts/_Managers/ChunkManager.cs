@@ -95,7 +95,7 @@ public class ChunkManager : NetworkBehaviour
 
 		if (_chunksToLoad.Count == (BIOME_SIDE_LENGTH / CHUNK_SIZE) * (BIOME_SIDE_LENGTH / CHUNK_SIZE))
 		{
-			TileManager.Instance.ExecuteTopTilePassthrough();
+			TileRenderManager.Instance.ExecuteTopTilePassthrough();
 			Lightmap.Instance.UpdateLightMap();
 			WorldManager.Instance.ExecuteOnBiomeTransitionEnd();
 		}
@@ -239,19 +239,19 @@ public class ChunkManager : NetworkBehaviour
 		// Chunk is loaded visually, therefore visually update whatever tile wants to be updated
 		switch(syncTileType)
 		{
-			case TileType.Ground:
-				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
+			case TileType.Terrain:
+				TileRenderManager.Instance.RenderTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
 				break;
 			case TileType.Floor:
-				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
+				TileRenderManager.Instance.RenderTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
 				break;
 			case TileType.Wall:
-				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
+				TileRenderManager.Instance.RenderTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
 				Lightmap.Instance.UpdateLightMap();
-				TileManager.Instance.HandleTopWallTiles(pos, tileToPlace, TileManager.Instance.WallTm);
+				TileRenderManager.Instance.HandleTopWallTiles(pos, tileToPlace, TileRenderManager.Instance.WallTm);
 				break;
 			case TileType.Ore:
-				TileManager.Instance.SetLocalTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
+				TileRenderManager.Instance.RenderTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
 				Lightmap.Instance.UpdateLightMap();
 				break;
 		}

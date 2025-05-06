@@ -21,7 +21,7 @@ public class TopTile : MonoBehaviour
 
         UpdateSelf();
         UpdateSortingLayer();
-        TileManager.Instance.UpdateNearbyTopTiles(_botMiddleTilePosition);
+        TileRenderManager.Instance.UpdateNearbyTopTiles(_botMiddleTilePosition);
     }
     
     public void UpdateSelf()
@@ -29,10 +29,10 @@ public class TopTile : MonoBehaviour
         Vector3Int botLeftTilePosition = _botMiddleTilePosition + Vector3Int.left;
         Vector3Int botRightTilePosition = _botMiddleTilePosition + Vector3Int.right;
         
-        bool botLeftTileExists = TileManager.Instance.HasTile(botLeftTilePosition, _tileType);
-        bool botRightTileExists = TileManager.Instance.HasTile(botRightTilePosition, _tileType);
-        bool botMiddleTileExists = TileManager.Instance.HasTile(_botMiddleTilePosition, _tileType);
-        bool hasSpaceForSelf = !TileManager.Instance.HasTile(_botMiddleTilePosition + Vector3Int.up, _tileType);
+        bool botLeftTileExists = TileRenderManager.Instance.HasTile(botLeftTilePosition, _tileType);
+        bool botRightTileExists = TileRenderManager.Instance.HasTile(botRightTilePosition, _tileType);
+        bool botMiddleTileExists = TileRenderManager.Instance.HasTile(_botMiddleTilePosition, _tileType);
+        bool hasSpaceForSelf = !TileRenderManager.Instance.HasTile(_botMiddleTilePosition + Vector3Int.up, _tileType);
         
         if(!botMiddleTileExists || !hasSpaceForSelf)
         {

@@ -119,24 +119,24 @@ public class MiningHandler : MonoBehaviour
                 {
                     // Try to find a destructable tile
                     Vector3Int pos = Pointer.IsOverTopTile() ? ActionManager.MouseTilePosition + Vector3Int.down : ActionManager.MouseTilePosition;
-                    if (TileManager.Instance.WallTm.HasTile(pos))
+                    if (TileRenderManager.Instance.WallTm.HasTile(pos))
                     {
-                        if(TileManager.Instance.OreTm.HasTile(pos))
+                        if(TileRenderManager.Instance.OreTm.HasTile(pos))
                         {
-                            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.OreTm.GetTile(pos));
+                            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.OreTm.GetTile(pos));
                         }
                         else
                         {
-                            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(pos));
+                            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.WallTm.GetTile(pos));
                         }
 
                         _destructableFound = DestructableType.Tile;
                         _currentBreakTargetPosition = pos;
                     }
                 }
-                else if (TileManager.Instance.FloorTm.HasTile(ActionManager.MouseTilePosition))
+                else if (TileRenderManager.Instance.FloorTm.HasTile(ActionManager.MouseTilePosition))
                 {
-                    _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.FloorTm.GetTile(ActionManager.MouseTilePosition));
+                    _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.FloorTm.GetTile(ActionManager.MouseTilePosition));
                     _destructableFound = DestructableType.Tile;
                     _currentBreakTargetPosition = ActionManager.MouseTilePosition;
                 }
@@ -255,7 +255,7 @@ public class MiningHandler : MonoBehaviour
                 ObjectManager.Instance.DestroyObjectServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetIDFromWorldObject(_worldObjectSelected));
                 break;
             case DestructableType.Tile:
-                TileManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.LocalClientInstance.CurrentPlayerBiome.Value);
+                TileRenderManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.LocalClientInstance.CurrentPlayerBiome.Value);
                 break;
             case DestructableType.Npc:
                 _selectedNPC.GetComponent<NpcNetworkComponent>().KillNpcServerRpc();

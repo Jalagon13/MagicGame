@@ -16,35 +16,31 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
-  TileType: 4
-  <Table>k__BackingField:
-  - Item: {fileID: 11400000, guid: b1ef818a3b6974596ba2183158e148af, type: 2}
-    Min: 0
-    Max: 0
-    Chance: 100
-  Hardness: 0.65
-  MiningSound:
+  <TileType>k__BackingField: 4
+  <Hardness>k__BackingField: 0.65
+  <ItemDropTable>k__BackingField: []
+  <MiningSound>k__BackingField:
     Guid:
-      Data1: -281162869
-      Data2: 1160666795
-      Data3: -1901462113
-      Data4: -244489252
-    Path: event:/Thump
-  PlaceSound:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <PlaceSound>k__BackingField:
     Guid:
-      Data1: -281162869
-      Data2: 1160666795
-      Data3: -1901462113
-      Data4: -244489252
-    Path: event:/Thump
-  DestroySound:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <DestroySound>k__BackingField:
     Guid:
-      Data1: -281162869
-      Data2: 1160666795
-      Data3: -1901462113
-      Data4: -244489252
-    Path: event:/Thump
-  TopTileSingle: {fileID: 0}
-  TopTileLeft: {fileID: 0}
-  TopTileCenter: {fileID: 0}
-  TopTileRight: {fileID: 0}
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <TopTileSingle>k__BackingField: {fileID: 0}
+  <TopTileLeft>k__BackingField: {fileID: 0}
+  <TopTileCenter>k__BackingField: {fileID: 0}
+  <TopTileRight>k__BackingField: {fileID: 0}

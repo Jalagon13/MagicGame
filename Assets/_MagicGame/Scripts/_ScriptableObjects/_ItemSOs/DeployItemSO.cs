@@ -19,7 +19,7 @@ public class DeployItemSO : ItemSO
 	{
 		Vector2 pos = ActionManager.MouseWorldPosition;
 		
-		if(IsClear(pos) && PlayerInRangeOfMouse() && !TileManager.Instance.WallTm.HasTile(new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y))))
+		if(IsClear(pos) && PlayerInRangeOfMouse() && !TileRenderManager.Instance.WallTm.HasTile(new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y))))
 		{
 			CardinalDirection orientation = Player.LocalClientInstance.StateMachine.FacingDirection;
 			Vector2Int spawnPosition = new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));

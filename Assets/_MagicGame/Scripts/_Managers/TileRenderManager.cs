@@ -16,17 +16,17 @@ public struct TileVisibility
 	}
 }
 
-public class TileManager : NetworkBehaviour
+public class TileRenderManager : NetworkBehaviour
 {
-	public static TileManager Instance;
+	public static TileRenderManager Instance;
 
 	[field: SerializeField] public TopTile TopTilePrefab { get; private set; }
-	[field: SerializeField] public Tilemap GroundTm { get; private set; }
 	[field: SerializeField] public Tilemap FloorTm { get; private set; }
 	[field: SerializeField] public Tilemap WallTm { get; private set; }
 	[field: SerializeField] public Tilemap OreTm { get; private set; }
 	[field: SerializeField] public Tilemap FoliageTm { get; private set; }
 	[field: SerializeField] public Tilemap LiquidTm { get; private set; }
+	[field: SerializeField] public TerrainTileRenderer TerrainTileRenderer { get; private set; }
 
 	private void Awake()
 	{
@@ -51,7 +51,7 @@ public class TileManager : NetworkBehaviour
 		LiquidTm.GetComponent<TilemapCollider2D>().enabled = false;
 
 		// Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
-		GroundTm.ClearAllTiles();
+		TerrainTileRenderer.ClearAllTerrainTiles();
 		FloorTm.ClearAllTiles();
 		WallTm.ClearAllTiles();
 		OreTm.ClearAllTiles();
@@ -85,7 +85,7 @@ public class TileManager : NetworkBehaviour
 			foreach (TileGameData tile in tileLayer)
 			{
 				var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-				SetLocalTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
+				RenderTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
 			}
 		}
 	}
@@ -107,7 +107,7 @@ public class TileManager : NetworkBehaviour
 	{
         return tileType switch
         {
-            TileType.Ground => GroundTm.HasTile(position),
+            TileType.Terrain => TerrainTileRenderer.HasTile(position),
             TileType.Floor => FloorTm.HasTile(position),
             TileType.Wall => WallTm.HasTile(position),
             TileType.Ore => OreTm.HasTile(position),
@@ -115,13 +115,13 @@ public class TileManager : NetworkBehaviour
         };
     }
 
-	public void SetLocalTile(Vector3Int tilePos, TileSO tileSO, TileType tileType)
+	public void RenderTile(Vector3Int tilePos, TileSO tileSO, TileType tileType)
 	{
 		switch (tileType)
 		{
-			case TileType.Ground:
+			case TileType.Terrain:
 				// NTFS: Need to do this down the line
-				GroundTm.SetTile(tilePos, tileSO);
+				TerrainTileRenderer.RenderTerrainTile(tilePos, tileSO);
 				break;
 			case TileType.Floor:
 				FloorTm.SetTile(tilePos, tileSO);
@@ -260,7 +260,7 @@ public class TileManager : NetworkBehaviour
 			if (tileList[i].TilePosition == tilePos)
 			{
 				var spawnPos = new Vector2(tileList[i].TilePosition.x + 0.5f, tileList[i].TilePosition.y + 0.5f);
-				LootTable.SpawnLoot(tileSO.Table, spawnPos, biome);
+				LootTable.SpawnLoot(tileSO.ItemDropTable, spawnPos, biome);
 				ChunkManager.Instance.RemoveTileServerRpc(tileSO.TileType, tileList[i].TilePosition, biome);
 				SoundManager.Instance.PlayOneShot(tileSO.DestroySound, spawnPos);
 				break;
@@ -274,7 +274,7 @@ public class TileManager : NetworkBehaviour
 
 		return tileType switch
 		{
-			TileType.Ground => chunk.GroundTileGameDataList,
+			TileType.Terrain => chunk.GroundTileGameDataList,
 			TileType.Floor => chunk.FloorTileGameDataList,
 			TileType.Wall => chunk.WallTileGameDataList,
 			TileType.Ore => chunk.OreTileGameDataList,

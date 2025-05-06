@@ -33,7 +33,7 @@ public class ChunkGameData
 
 		_tileTypeToList = new Dictionary<TileType, List<TileGameData>>
 		{
-			{ TileType.Ground, GroundTileGameDataList },
+			{ TileType.Terrain, GroundTileGameDataList },
 			{ TileType.Floor, FloorTileGameDataList },
 			{ TileType.Wall, WallTileGameDataList },
 			{ TileType.Foliage, FoliageTileGameDataList },

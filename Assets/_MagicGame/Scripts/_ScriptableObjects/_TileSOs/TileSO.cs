@@ -1,0 +1,37 @@
+using System.Collections;
+using System.Collections.Generic;
+using FMODUnity;
+using Sirenix.OdinInspector;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+[System.Serializable]
+public enum TileType
+{
+	Terrain,
+	Floor,
+	Wall,
+	Ore,
+	Foliage,
+	Liquid
+}
+
+[CreateAssetMenu(fileName = "New TileSO", menuName = "Tiles/TileSO", order = 1)]
+public class TileSO : RuleTile
+{
+	[field: Header("TileSO Properties")]
+	[field: SerializeField] public TileType TileType { get; private set; }
+	[field: SerializeField] public float Hardness { get; private set; } = 0.65f;
+	[field: SerializeField] public List<Loot> ItemDropTable { get; private set; }
+	
+	[field: Header("Sounds")]
+	[field: SerializeField] public EventReference MiningSound { get; private set; }
+	[field: SerializeField] public EventReference PlaceSound { get; private set; }
+	[field: SerializeField] public EventReference DestroySound { get; private set; }
+
+	[field: Header("Top Tiles (For Walls Only)")]
+	[field: SerializeField] public Sprite TopTileSingle { get; private set; }
+	[field: SerializeField] public Sprite TopTileLeft { get; private set; }
+	[field: SerializeField] public Sprite TopTileCenter { get; private set; }
+	[field: SerializeField] public Sprite TopTileRight { get; private set; }
+}

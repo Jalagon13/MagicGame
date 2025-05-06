@@ -260,7 +260,7 @@ public class Lightmap : MonoBehaviour
 
 	private void PopulateTileVisibilityArray(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos, int scale, TileVisibility[] tileVisibilityArray, int renderTextureWidth)
 	{
-		Tilemap wallTm = TileManager.Instance.WallTm;
+		Tilemap wallTm = TileRenderManager.Instance.WallTm;
 
 		// Build local visibility dictionary
 		Dictionary<Vector3Int, TileVisibility> localVisibilityDict = new Dictionary<Vector3Int, TileVisibility>();

@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 public class CaveGeneration : MonoBehaviour
 {
 	[field: SerializeField] public WorldObject StairsToForest { get; private set; }
-	[field: SerializeField] public ForestGeneration ForestGeneration { get; private set; }
+	// [field: SerializeField] public ForestGeneration ForestGeneration { get; private set; }
 
 	[Header("Noise Maps")]
 	[field: SerializeField] public NoiseMapSO SpaghettiCaveNM;
@@ -55,7 +55,7 @@ public class CaveGeneration : MonoBehaviour
 
     private void GenerateCaveChunkData()
 	{
-		_stairsToCavePositions = ForestGeneration.GetStairsToCavePositions(_seed);
+		// _stairsToCavePositions = ForestGeneration.GetStairsToCavePositions(_seed);
 		ChunkManager.Instance.GetChunksFromBiome(_biomeType).Clear();
 		
 		int chunkSideAmount = ChunkManager.BIOME_SIDE_LENGTH / ChunkManager.CHUNK_SIZE;

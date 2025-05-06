@@ -136,7 +136,7 @@ public class NpcManager : NetworkBehaviour
 		
 		if(!IsClear(potentialSpawnPoint)) return false;
 		
-		if(!TileManager.Instance.GroundTm.HasTile(new Vector3Int(Mathf.FloorToInt(potentialSpawnPoint.x), Mathf.FloorToInt(potentialSpawnPoint.y), 0))) return false;
+		if(!TileRenderManager.Instance.TerrainTileRenderer.HasTile(new Vector3Int(Mathf.FloorToInt(potentialSpawnPoint.x), Mathf.FloorToInt(potentialSpawnPoint.y), 0))) return false;
 		
 		// If point is in the no-spawn zone of any other player, it is invalid (Camera frustum, NOTE: this is not dynamic; does not change if you change the cam frustum)
 		if(PointInNoSpawnZoneOfAnyOtherPlayer(potentialSpawnPoint)) return false;
@@ -174,7 +174,7 @@ public class NpcManager : NetworkBehaviour
 	{
 		Vector3Int tilePos = new(Mathf.FloorToInt(point.x), Mathf.FloorToInt(point.y));
 		
-		return TileManager.Instance.WallTm.HasTile(tilePos);
+		return TileRenderManager.Instance.WallTm.HasTile(tilePos);
 	}
 	
 	private bool PointInRectangle(Vector2 point, Vector2 rectCenter, float rectWidth, float rectHeight)

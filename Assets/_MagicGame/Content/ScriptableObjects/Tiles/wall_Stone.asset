@@ -19,6 +19,9 @@ MonoBehaviour:
   - m_Id: 0
     m_Sprites:
     - {fileID: -3347302374123360772, guid: a7607542f398f4e668471296c02b146e, type: 3}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
@@ -359,35 +362,31 @@ MonoBehaviour:
     - {x: -1, y: 0, z: 0}
     - {x: 1, y: 0, z: 0}
     m_RuleTransform: 0
-  TileType: 2
-  <Table>k__BackingField:
-  - Item: {fileID: 11400000, guid: 80b56846aa37c45a1b11af4d1a1eb5b9, type: 2}
-    Min: 1
-    Max: 1
-    Chance: 100
-  Hardness: 0.65
-  MiningSound:
+  <TileType>k__BackingField: 0
+  <Hardness>k__BackingField: 0.65
+  <ItemDropTable>k__BackingField: []
+  <MiningSound>k__BackingField:
     Guid:
-      Data1: 249587751
-      Data2: 1169178929
-      Data3: -130389574
-      Data4: -1987048442
-    Path: event:/StoneHit
-  PlaceSound:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <PlaceSound>k__BackingField:
     Guid:
-      Data1: 249587751
-      Data2: 1169178929
-      Data3: -130389574
-      Data4: -1987048442
-    Path: event:/StoneHit
-  DestroySound:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <DestroySound>k__BackingField:
     Guid:
-      Data1: -557428352
-      Data2: 1107459471
-      Data3: 2078279570
-      Data4: 643237060
-    Path: event:/StoneDestroyed
-  TopTileSingle: {fileID: -743263003, guid: a7607542f398f4e668471296c02b146e, type: 3}
-  TopTileLeft: {fileID: -503482117, guid: a7607542f398f4e668471296c02b146e, type: 3}
-  TopTileCenter: {fileID: -1084791293, guid: a7607542f398f4e668471296c02b146e, type: 3}
-  TopTileRight: {fileID: -1065834952, guid: a7607542f398f4e668471296c02b146e, type: 3}
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <TopTileSingle>k__BackingField: {fileID: 0}
+  <TopTileLeft>k__BackingField: {fileID: 0}
+  <TopTileCenter>k__BackingField: {fileID: 0}
+  <TopTileRight>k__BackingField: {fileID: 0}

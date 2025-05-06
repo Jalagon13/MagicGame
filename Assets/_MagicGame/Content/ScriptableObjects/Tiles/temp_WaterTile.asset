@@ -16,31 +16,31 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
-  TileType: 5
-  <Table>k__BackingField: []
-  Hardness: 0.65
-  MiningSound:
+  <TileType>k__BackingField: 5
+  <Hardness>k__BackingField: 0.65
+  <ItemDropTable>k__BackingField: []
+  <MiningSound>k__BackingField:
     Guid:
       Data1: 0
       Data2: 0
       Data3: 0
       Data4: 0
     Path: 
-  PlaceSound:
+  <PlaceSound>k__BackingField:
     Guid:
       Data1: 0
       Data2: 0
       Data3: 0
       Data4: 0
     Path: 
-  DestroySound:
+  <DestroySound>k__BackingField:
     Guid:
       Data1: 0
       Data2: 0
       Data3: 0
       Data4: 0
     Path: 
-  TopTileSingle: {fileID: 0}
-  TopTileLeft: {fileID: 0}
-  TopTileCenter: {fileID: 0}
-  TopTileRight: {fileID: 0}
+  <TopTileSingle>k__BackingField: {fileID: 0}
+  <TopTileLeft>k__BackingField: {fileID: 0}
+  <TopTileCenter>k__BackingField: {fileID: 0}
+  <TopTileRight>k__BackingField: {fileID: 0}

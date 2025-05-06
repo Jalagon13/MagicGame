@@ -44,10 +44,10 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Ground
+  - name: Terrain
     uniqueID: 3110640677
     locked: 0
-  - name: WorldObject
+  - name: WorldObjects
     uniqueID: 2816954933
     locked: 0
   - name: UI
