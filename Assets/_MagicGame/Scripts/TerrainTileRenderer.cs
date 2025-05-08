@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,11 +7,26 @@ using UnityEngine.Tilemaps;
 public class TerrainTileRenderer : MonoBehaviour
 {
     [field: SerializeField] public TerrainTilemap TerrainTilemapPrefab { get; private set; }
+    [field: SerializeField] public TerrainTilemap LiquidTerrainTilemapPrefab { get; private set; }
     [field: Space(10)]
     [field: SerializeField, Tooltip("Top tiles are highest priority, bottom is lowest")] 
     public List<TileSO> TerrainRenderHierarchy { get; private set; }
 
     private readonly Dictionary<TileSO, TerrainTilemap> _tilemaps = new();
+
+    private void Start()
+    {
+        WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_OnBiomeTransitionEnd;
+    }
+
+    private void WorldManager_OnBiomeTransitionEnd(object sender, EventArgs e)
+    {
+        foreach (TerrainTilemap terrainTilemap in _tilemaps.Values)
+        {
+            terrainTilemap.RefreshTerrainTilemap();
+        }
+        Debug.Log($"Refreshed terrain tilemaps");
+    }
 
     public void RenderTerrainTile(Vector3Int tilePosition, TileSO tileSO)
     {
@@ -47,9 +63,9 @@ public class TerrainTileRenderer : MonoBehaviour
         // If the Tilemap doesn't exist for this TileSO, create one
         if (!_tilemaps.TryGetValue(tileSO, out TerrainTilemap map))
         {
-            map = Instantiate(TerrainTilemapPrefab, transform);
+            map = Instantiate(tileSO.TileType == TileType.Terrain ? TerrainTilemapPrefab : LiquidTerrainTilemapPrefab, transform);
             map.Initialize(tileSO.DualGridTiles);
-            map.name = $"Tilemap_{tileSO.name}";
+            map.name = tileSO.TileType == TileType.Terrain ? $"TerrainTilemap_{tileSO.name}" : $"LiquidTilemap_{tileSO.name}";
             int order = TerrainRenderHierarchy.IndexOf(tileSO);
             map.GetComponent<Renderer>().sortingOrder = TerrainRenderHierarchy.Count - order;
             map.transform.SetSiblingIndex(order);
@@ -76,5 +92,10 @@ public class TerrainTileRenderer : MonoBehaviour
                 return true;
         }
         return false;
+    }
+    
+    private void OnDestroy()
+    {
+        WorldManager.Instance.OnBiomeTransitionEnd -= WorldManager_OnBiomeTransitionEnd;
     }
 }

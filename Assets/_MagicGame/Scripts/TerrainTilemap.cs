@@ -24,6 +24,11 @@ public class TerrainTilemap : MonoBehaviour
     
     public void Initialize(TileBase[] tiles)
     {
+        if(tiles.Length != 16)
+        {
+            Debug.LogError($"Expected 16 tiles, received {tiles.Length}");
+        }
+    
         _neighborTupleToTile = new()
         {
             {new (1, 1, 1, 1), tiles[6]},
@@ -85,7 +90,6 @@ public class TerrainTilemap : MonoBehaviour
         return null;
     }
 
-    [Button("Refresh Terrain Tilemap")]
     public void RefreshTerrainTilemap()
     {
         foreach (var pos in _dataTilePositions)

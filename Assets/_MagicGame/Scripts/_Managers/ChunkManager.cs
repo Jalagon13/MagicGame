@@ -33,14 +33,14 @@ public class ChunkManager : NetworkBehaviour
 
 	private Dictionary<Vector2Int, ChunkGameData> _forestChunks = new(); // Data structure to hold chunk data
 	private Dictionary<Vector2Int, ChunkGameData> _caveChunks = new(); // Data structure to hold chunk data
-	private ChunkNetworkManager _chunkNetworkManager;
+	private NetworkChunkManager _chunkNetworkManager;
 	private List<ChunkGameData> _chunksToLoad = new();
 	
 	private void Awake()
 	{
 		Instance = this;
 		
-		_chunkNetworkManager = GetComponent<ChunkNetworkManager>();
+		_chunkNetworkManager = GetComponent<NetworkChunkManager>();
 	}
 	
 	private void Start()
@@ -80,8 +80,6 @@ public class ChunkManager : NetworkBehaviour
 			_chunkNetworkManager.RequestChunkDataServerRpc(Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value, chunkPos);
 			yield return new WaitForSeconds(TimeBetweenChunkLoads);
 		}
-
-		Debug.Log($"ChunkManager: OnBiomeDataLoaded for {Player.LocalClientInstance.CurrentPlayerBiome.Value}");
 	}
 	
 	public void LoadChunk(ChunkGameData chunkGameDataToLoad)
@@ -98,6 +96,7 @@ public class ChunkManager : NetworkBehaviour
 			TileRenderManager.Instance.ExecuteTopTilePassthrough();
 			Lightmap.Instance.UpdateLightMap();
 			WorldManager.Instance.ExecuteOnBiomeTransitionEnd();
+			Debug.Log($"ChunkManager: OnBiomeDataLoaded for {Player.LocalClientInstance.CurrentPlayerBiome.Value}");
 		}
 	}
 

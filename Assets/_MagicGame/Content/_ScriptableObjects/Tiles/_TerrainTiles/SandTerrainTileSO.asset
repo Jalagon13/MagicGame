@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b52052ad4aefe4da580ba4e2ba9fed0c, type: 3}
+  m_Name: SandTerrainTileSO
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 181828538, guid: 41f868bf152c1445284f7bb62bfccefb, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 1
+  m_TilingRules: []
+  <TileType>k__BackingField: 0
+  <Hardness>k__BackingField: 0.65
+  <ItemDropTable>k__BackingField: []
+  <MiningSound>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <PlaceSound>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <DestroySound>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <TopTileSingle>k__BackingField: {fileID: 0}
+  <TopTileLeft>k__BackingField: {fileID: 0}
+  <TopTileCenter>k__BackingField: {fileID: 0}
+  <TopTileRight>k__BackingField: {fileID: 0}
+  <DualGridTiles>k__BackingField:
+  - {fileID: 11400000, guid: 3ea6a86a6360d4c4f8d54d7434e2d519, type: 2}
+  - {fileID: 11400000, guid: b9b70e76ba3ea467d82c810575625230, type: 2}
+  - {fileID: 11400000, guid: f8e8f0fdc1f9742d485eb34e9500b7ba, type: 2}
+  - {fileID: 11400000, guid: ff98fa282ba5243c6a0d03f2d963b3f2, type: 2}
+  - {fileID: 11400000, guid: 665bcbc255efe4833a1e25027f6b9e84, type: 2}
+  - {fileID: 11400000, guid: ef0e8c024f9aa4b678ca2de3adca9f05, type: 2}
+  - {fileID: 11400000, guid: 0b8a13edb6d054399b956ecce2897ebe, type: 2}
+  - {fileID: 11400000, guid: 03c4328ce90214c3da1964fddf05e7c2, type: 2}
+  - {fileID: 11400000, guid: adee463da7801472aaeecdff49a2da83, type: 2}
+  - {fileID: 11400000, guid: 313d6933023614fab8d6d7fa0fc8be49, type: 2}
+  - {fileID: 11400000, guid: 49abf661e6fb04c9bb88fafede128775, type: 2}
+  - {fileID: 11400000, guid: aaaa6c02740a8424a84270877fdc05d6, type: 2}
+  - {fileID: 11400000, guid: d451d2b623ec245e6bd74602381df3f9, type: 2}
+  - {fileID: 11400000, guid: 228856d37ba21483e8dd67efc41de528, type: 2}
+  - {fileID: 11400000, guid: d967cf4b42b4c4e949e5232ccd332a7b, type: 2}
+  - {fileID: 11400000, guid: 9bbd6dfa7442549f4888dc07dd88d55e, type: 2}

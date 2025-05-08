@@ -26,7 +26,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 			   SyncWallTileDataList.Equals(other.SyncWallTileDataList) && 
 			   SyncOreTileDataList.Equals(other.SyncOreTileDataList) &&
 			   SyncFoliageTileDataList.Equals(other.SyncFoliageTileDataList) &&
-			   SyncLiquidTileDataList.Equals(other.SyncLiquidTileDataList) && 
+			   SyncLiquidTileDataList.Equals(other.SyncLiquidTileDataList) &&
 			   SyncObjectAssetDataList.Equals(other.SyncObjectAssetDataList) &&
 			   SyncDoorObjectDataList.Equals(other.SyncDoorObjectDataList);
 	}

@@ -25,14 +25,12 @@ public class TileRenderManager : NetworkBehaviour
 	[field: SerializeField] public Tilemap WallTm { get; private set; }
 	[field: SerializeField] public Tilemap OreTm { get; private set; }
 	[field: SerializeField] public Tilemap FoliageTm { get; private set; }
-	[field: SerializeField] public Tilemap LiquidTm { get; private set; }
 	[field: SerializeField] public TerrainTileRenderer TerrainTileRenderer { get; private set; }
 
 	private void Awake()
 	{
 		WallTm.GetComponent<TilemapCollider2D>().enabled = false;
 		FoliageTm.GetComponent<TilemapCollider2D>().enabled = false;
-		LiquidTm.GetComponent<TilemapCollider2D>().enabled = false;
 
 		Instance = this;
 	}
@@ -48,7 +46,6 @@ public class TileRenderManager : NetworkBehaviour
 	{
 		WallTm.GetComponent<TilemapCollider2D>().enabled = false;
 		FoliageTm.GetComponent<TilemapCollider2D>().enabled = false;
-		LiquidTm.GetComponent<TilemapCollider2D>().enabled = false;
 
 		// Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
 		TerrainTileRenderer.ClearAllTerrainTiles();
@@ -56,14 +53,12 @@ public class TileRenderManager : NetworkBehaviour
 		WallTm.ClearAllTiles();
 		OreTm.ClearAllTiles();
 		FoliageTm.ClearAllTiles();
-		LiquidTm.ClearAllTiles();
 	}
 
 	private void WorldManager_OnBiomeTransitionEnd(object sender, EventArgs e)
     {
 		WallTm.GetComponent<TilemapCollider2D>().enabled = true;
 		FoliageTm.GetComponent<TilemapCollider2D>().enabled = true;
-		LiquidTm.GetComponent<TilemapCollider2D>().enabled = true;
 	}
 
     private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)
@@ -76,7 +71,6 @@ public class TileRenderManager : NetworkBehaviour
 			e.Chunk.WallTileGameDataList,
 			e.Chunk.OreTileGameDataList,
 			e.Chunk.FoliageTileGameDataList,
-			e.Chunk.LiquidTileGameDataList
 		};
 
 		// Iterate through each list and set the tiles on the tilemap
@@ -120,7 +114,9 @@ public class TileRenderManager : NetworkBehaviour
 		switch (tileType)
 		{
 			case TileType.Terrain:
-				// NTFS: Need to do this down the line
+				TerrainTileRenderer.RenderTerrainTile(tilePos, tileSO);
+				break;
+			case TileType.Liquid:
 				TerrainTileRenderer.RenderTerrainTile(tilePos, tileSO);
 				break;
 			case TileType.Floor:
@@ -143,9 +139,6 @@ public class TileRenderManager : NetworkBehaviour
 				break;
 			case TileType.Foliage:
 				FoliageTm.SetTile(tilePos, tileSO);
-				break;
-			case TileType.Liquid:
-				LiquidTm.SetTile(tilePos, tileSO);
 				break;
 		}
 	}

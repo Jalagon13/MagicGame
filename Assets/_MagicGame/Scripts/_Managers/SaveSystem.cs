@@ -286,7 +286,7 @@ public class SaveSystem : MonoBehaviour
 				WallTileGameDataList = ConvertTileFileDataToGameData(data.WallTiles),
 				OreTileGameDataList = ConvertTileFileDataToGameData(data.OreTiles),
 				FoliageTileGameDataList = ConvertTileFileDataToGameData(data.FoliageTiles),
-				LiquidTileGameDataList = ConvertTileFileDataToGameData(data.LiquidTiles)
+				LiquidTileGameDataList = ConvertTileFileDataToGameData(data.LiquidTiles),
 			};
 			
 			deserializedChunks.Add(data.ChunkPosition, chunk);

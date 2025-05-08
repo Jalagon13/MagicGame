@@ -8,7 +8,7 @@ public class LoadingUI : MonoBehaviour
         WorldManager.Instance.OnBiomeTransitionStart += Show;
         WorldManager.Instance.OnBiomeTransitionEnd += Hide;
         
-        gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 
     private void Show(object sender, EventArgs e)

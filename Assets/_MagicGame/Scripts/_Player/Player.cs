@@ -96,7 +96,7 @@ public class Player : NetworkBehaviour
 				foreach (InventoryItem item in _startingItems)
 				{
 					InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
-					InventoryManager.Instance.AddItem(itemToAdd);
+					InventoryManager.Instance.AddItem(itemToAdd, false);
 					yield return new WaitForEndOfFrame();
 				}
 
@@ -126,7 +126,7 @@ public class Player : NetworkBehaviour
 						}
 					}
 
-					InventoryManager.Instance.AddItem(wandItemToAdd);
+					InventoryManager.Instance.AddItem(wandItemToAdd, false);
 					yield return new WaitForEndOfFrame();
 				}
 			}
