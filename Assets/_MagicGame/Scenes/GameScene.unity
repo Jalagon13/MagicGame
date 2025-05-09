@@ -14300,7 +14300,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _dayDurationInSeconds: 600
   _startingTime: 1
-  _isTicking: 1
+  _isTicking: 0
   _saveAfterGeneration: 1
   _randomSeed: 1
   _customSeed: zotty
@@ -14715,7 +14715,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1988082014
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class TerrainTileRenderer : MonoBehaviour
     [field: SerializeField, Tooltip("Top tiles are highest priority, bottom is lowest")] 
     public List<TileSO> TerrainRenderHierarchy { get; private set; }
 
-    private readonly Dictionary<TileSO, TerrainTilemap> _tilemaps = new();
+    private readonly Dictionary<TileSO, TerrainTilemap> _terrainTilemaps = new();
 
     private void Start()
     {
@@ -21,14 +21,14 @@ public class TerrainTileRenderer : MonoBehaviour
 
     private void WorldManager_OnBiomeTransitionEnd(object sender, EventArgs e)
     {
-        foreach (TerrainTilemap terrainTilemap in _tilemaps.Values)
+        foreach (TerrainTilemap terrainTilemap in _terrainTilemaps.Values)
         {
             terrainTilemap.RefreshTerrainTilemap();
         }
         Debug.Log($"Refreshed terrain tilemaps");
     }
 
-    public void RenderTerrainTile(Vector3Int tilePosition, TileSO tileSO)
+    public void SetTerrainTileData(Vector3Int tilePosition, TileSO tileSO)
     {
         if (!TerrainRenderHierarchy.Contains(tileSO) && tileSO != null)
         {
@@ -39,7 +39,7 @@ public class TerrainTileRenderer : MonoBehaviour
         // Remove the tile if tileSO is null
         if (tileSO == null)
         {
-            foreach (var kvp in _tilemaps)
+            foreach (var kvp in _terrainTilemaps)
             {
                 TerrainTilemap terrainTilemap = kvp.Value;
 
@@ -50,7 +50,7 @@ public class TerrainTileRenderer : MonoBehaviour
                     if (terrainTilemap.IsEmpty())
                     {
                         Destroy(terrainTilemap.gameObject);
-                        _tilemaps.Remove(kvp.Key);
+                        _terrainTilemaps.Remove(kvp.Key);
                     }
 
                     break;
@@ -61,15 +61,20 @@ public class TerrainTileRenderer : MonoBehaviour
         }
 
         // If the Tilemap doesn't exist for this TileSO, create one
-        if (!_tilemaps.TryGetValue(tileSO, out TerrainTilemap map))
+        if (!_terrainTilemaps.TryGetValue(tileSO, out TerrainTilemap map))
         {
             map = Instantiate(tileSO.TileType == TileType.Terrain ? TerrainTilemapPrefab : LiquidTerrainTilemapPrefab, transform);
             map.Initialize(tileSO.DualGridTiles);
             map.name = tileSO.TileType == TileType.Terrain ? $"TerrainTilemap_{tileSO.name}" : $"LiquidTilemap_{tileSO.name}";
+            Debug.Log($"Created {map.name}");
             int order = TerrainRenderHierarchy.IndexOf(tileSO);
             map.GetComponent<Renderer>().sortingOrder = TerrainRenderHierarchy.Count - order;
             map.transform.SetSiblingIndex(order);
-            _tilemaps[tileSO] = map;
+            
+            if(tileSO.DualGridFillTileMaterial != null)
+                map.GetComponent<Renderer>().material = tileSO.DualGridFillTileMaterial;
+                
+            _terrainTilemaps[tileSO] = map;
         }
 
         map.SetTileData(tilePosition);
@@ -77,16 +82,16 @@ public class TerrainTileRenderer : MonoBehaviour
     
     public void ClearAllTerrainTiles()
     {
-        foreach (var tilemap in _tilemaps.Values.ToList())
+        foreach (var tilemap in _terrainTilemaps.Values.ToList())
         {
             Destroy(tilemap.gameObject);
         }
-        _tilemaps.Clear();
+        _terrainTilemaps.Clear();
     }
     
     public bool HasTile(Vector3Int position)
     {
-        foreach (TerrainTilemap terrainTilemap in _tilemaps.Values)
+        foreach (TerrainTilemap terrainTilemap in _terrainTilemaps.Values)
         {
             if (terrainTilemap.HasTileData(position))
                 return true;

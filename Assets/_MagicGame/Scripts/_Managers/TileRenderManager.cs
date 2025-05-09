@@ -67,6 +67,7 @@ public class TileRenderManager : NetworkBehaviour
 		var allTileLayers = new List<List<TileGameData>>
 		{
 			e.Chunk.GroundTileGameDataList,
+			e.Chunk.LiquidTileGameDataList,
 			e.Chunk.FloorTileGameDataList,
 			e.Chunk.WallTileGameDataList,
 			e.Chunk.OreTileGameDataList,
@@ -114,10 +115,10 @@ public class TileRenderManager : NetworkBehaviour
 		switch (tileType)
 		{
 			case TileType.Terrain:
-				TerrainTileRenderer.RenderTerrainTile(tilePos, tileSO);
+				TerrainTileRenderer.SetTerrainTileData(tilePos, tileSO);
 				break;
 			case TileType.Liquid:
-				TerrainTileRenderer.RenderTerrainTile(tilePos, tileSO);
+				TerrainTileRenderer.SetTerrainTileData(tilePos, tileSO);
 				break;
 			case TileType.Floor:
 				FloorTm.SetTile(tilePos, tileSO);
@@ -268,6 +269,7 @@ public class TileRenderManager : NetworkBehaviour
 		return tileType switch
 		{
 			TileType.Terrain => chunk.GroundTileGameDataList,
+			TileType.Liquid => chunk.LiquidTileGameDataList,
 			TileType.Floor => chunk.FloorTileGameDataList,
 			TileType.Wall => chunk.WallTileGameDataList,
 			TileType.Ore => chunk.OreTileGameDataList,

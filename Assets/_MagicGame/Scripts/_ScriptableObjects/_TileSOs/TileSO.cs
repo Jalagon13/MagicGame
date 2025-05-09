@@ -34,5 +34,8 @@ public class TileSO : RuleTile
 	[field: SerializeField] public Sprite TopTileLeft { get; private set; }
 	[field: SerializeField] public Sprite TopTileCenter { get; private set; }
 	[field: SerializeField] public Sprite TopTileRight { get; private set; }
+	
+	[field: Header("Dual Grid Properties (probably make this its own class)")]
+	[field: SerializeField] public Material DualGridFillTileMaterial { get; private set; }
 	[field: SerializeField] public TileBase[] DualGridTiles { get; private set; }
 }

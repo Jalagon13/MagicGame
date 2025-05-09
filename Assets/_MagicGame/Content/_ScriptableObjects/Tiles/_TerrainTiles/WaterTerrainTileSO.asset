@@ -16,7 +16,7 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
-  <TileType>k__BackingField: 0
+  <TileType>k__BackingField: 5
   <Hardness>k__BackingField: 0.65
   <ItemDropTable>k__BackingField: []
   <MiningSound>k__BackingField:
@@ -44,6 +44,7 @@ MonoBehaviour:
   <TopTileLeft>k__BackingField: {fileID: 0}
   <TopTileCenter>k__BackingField: {fileID: 0}
   <TopTileRight>k__BackingField: {fileID: 0}
+  <DualGridFillTileMaterial>k__BackingField: {fileID: 2100000, guid: f2a962971ee2c4f22af83fb7a7511d0a, type: 2}
   <DualGridTiles>k__BackingField:
   - {fileID: 11400000, guid: a78f7a3705da04119a44c675e15290ce, type: 2}
   - {fileID: 11400000, guid: a5012be781fdb4fd7ba8aa01d82d100f, type: 2}

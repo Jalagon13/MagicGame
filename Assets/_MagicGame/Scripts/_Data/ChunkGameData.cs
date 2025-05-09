@@ -9,11 +9,11 @@ public class ChunkGameData
 {
 	public Vector2Int ChunkPosition { get; private set; }
 	public List<TileGameData> GroundTileGameDataList;
+	public List<TileGameData> LiquidTileGameDataList;
 	public List<TileGameData> FloorTileGameDataList;
 	public List<TileGameData> WallTileGameDataList;
 	public List<TileGameData> OreTileGameDataList;
 	public List<TileGameData> FoliageTileGameDataList;
-	public List<TileGameData> LiquidTileGameDataList;
 	public List<WorldObjectGameData> WorldObjectGameDataList;
 	public int Size { get; private set; }
 
@@ -24,11 +24,11 @@ public class ChunkGameData
 		Size = chunkSize;
 		ChunkPosition = chunkPosition;
 		GroundTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		LiquidTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		FloorTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		WallTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		OreTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		FoliageTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
-		LiquidTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		WorldObjectGameDataList = new List<WorldObjectGameData>(chunkSize * chunkSize);
 
 		_tileTypeToList = new Dictionary<TileType, List<TileGameData>>
