@@ -142,7 +142,6 @@ public class SaveSystem : MonoBehaviour
 				(kvp.Value.FloorTileGameDataList, chunkData.FloorTiles),
 				(kvp.Value.WallTileGameDataList, chunkData.WallTiles),
 				(kvp.Value.OreTileGameDataList, chunkData.OreTiles),
-				(kvp.Value.FoliageTileGameDataList, chunkData.FoliageTiles),
 				(kvp.Value.LiquidTileGameDataList, chunkData.LiquidTiles)
 			};
 
@@ -285,7 +284,6 @@ public class SaveSystem : MonoBehaviour
 				FloorTileGameDataList = ConvertTileFileDataToGameData(data.FloorTiles),
 				WallTileGameDataList = ConvertTileFileDataToGameData(data.WallTiles),
 				OreTileGameDataList = ConvertTileFileDataToGameData(data.OreTiles),
-				FoliageTileGameDataList = ConvertTileFileDataToGameData(data.FoliageTiles),
 				LiquidTileGameDataList = ConvertTileFileDataToGameData(data.LiquidTiles),
 			};
 			

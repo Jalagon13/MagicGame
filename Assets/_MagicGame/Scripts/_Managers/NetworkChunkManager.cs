@@ -45,7 +45,6 @@ public class NetworkChunkManager : NetworkBehaviour
 			SyncFloorTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.FloorTileGameDataList.Count),
 			SyncWallTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.WallTileGameDataList.Count),
 			SyncOreTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.OreTileGameDataList.Count),
-			SyncFoliageTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.FoliageTileGameDataList.Count),
 			SyncLiquidTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.LiquidTileGameDataList.Count),
 			
 			SyncObjectAssetDataList = new List<WorldObjectSyncData>(chunkGameData.WorldObjectGameDataList.Count),
@@ -57,7 +56,6 @@ public class NetworkChunkManager : NetworkBehaviour
 		ConvertTileList(chunkGameData.FloorTileGameDataList, syncChunkData.SyncFloorTileDataList);
 		ConvertTileList(chunkGameData.WallTileGameDataList, syncChunkData.SyncWallTileDataList);
 		ConvertTileList(chunkGameData.OreTileGameDataList, syncChunkData.SyncOreTileDataList);
-		ConvertTileList(chunkGameData.FoliageTileGameDataList, syncChunkData.SyncFoliageTileDataList);
 		ConvertTileList(chunkGameData.LiquidTileGameDataList, syncChunkData.SyncLiquidTileDataList);
 
 		// Convert world asset game data to agnostic sync data
@@ -136,13 +134,6 @@ public class NetworkChunkManager : NetworkBehaviour
 			TileSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
 			return new TileGameData(tileSO, new(syncTile.Position.x, syncTile.Position.y));
 		}, ref chunkGameData.OreTileGameDataList);
-
-		// Convert SyncFoliageTileData to TileGameData
-		ConvertSyncDataList(syncChunkData.SyncFoliageTileDataList, (syncTile) =>
-		{
-			TileSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
-			return new TileGameData(tileSO, new(syncTile.Position.x, syncTile.Position.y));
-		}, ref chunkGameData.FoliageTileGameDataList);
 
 		// Convert SyncLiquidTileData to TileGameData
 		ConvertSyncDataList(syncChunkData.SyncLiquidTileDataList, (syncTile) =>

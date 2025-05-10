@@ -519,6 +519,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
   - {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
   - {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
+  - {fileID: 11400000, guid: 3144a3907552b4687a0f9c034cc12b4d, type: 2}
 --- !u!1 &64475651
 GameObject:
   m_ObjectHideFlags: 0
@@ -1634,6 +1635,54 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
   m_PrefabInstance: {fileID: 145531616}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &151123418
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 151123419}
+  - component: {fileID: 151123420}
+  m_Layer: 0
+  m_Name: CaveEntranceGenerationStep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &151123419
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151123418}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 445444401}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &151123420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151123418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48e84f00bc8d8442e8be6fef0b91cdcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: 
+  <MinCaveEntranceDistance>k__BackingField: 20
+  <MaxCaveEntranceDistance>k__BackingField: 40
+  <CaveEntranceSpawnThreshold>k__BackingField: 0.85
 --- !u!1 &193592847
 GameObject:
   m_ObjectHideFlags: 0
@@ -2564,6 +2613,55 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf4ea186d6b188b4f917afa3e084053c, type: 3}
+--- !u!1 &303935834
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 303935836}
+  - component: {fileID: 303935835}
+  m_Layer: 0
+  m_Name: CaveGenerationData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &303935835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 303935834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 013dacf8d9fc24390926dc67cde81ce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MapGenerationSeed: 
+  <StoneTerrainTile>k__BackingField: {fileID: 11400000, guid: 3144a3907552b4687a0f9c034cc12b4d, type: 2}
+  SpaghettiCaveNM: {fileID: 11400000, guid: c621735f7aae34658a8101ebe324437c, type: 2}
+  CheeseCaveNM: {fileID: 11400000, guid: fb24aaaf205ca41ac928db4d742f1f5c, type: 2}
+  OreGenNM: {fileID: 11400000, guid: e05079a8f761b4e5e8f0f7f3c492221d, type: 2}
+--- !u!4 &303935836
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 303935834}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 397047566}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &333420532
 GameObject:
   m_ObjectHideFlags: 0
@@ -3229,7 +3327,6 @@ Transform:
   - {fileID: 1170602978}
   - {fileID: 285752937211302053}
   - {fileID: 912824414}
-  - {fileID: 1242585392}
   m_Father: {fileID: 429902436}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &359721945
@@ -3249,7 +3346,6 @@ MonoBehaviour:
   <FloorTm>k__BackingField: {fileID: 1170602981}
   <WallTm>k__BackingField: {fileID: 3724763379825386475}
   <OreTm>k__BackingField: {fileID: 912824416}
-  <FoliageTm>k__BackingField: {fileID: 1242585397}
   <TerrainTileRenderer>k__BackingField: {fileID: 61712750}
 --- !u!1 &366871599
 GameObject:
@@ -3326,6 +3422,40 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 366871599}
   m_CullTransparentMesh: 1
+--- !u!1 &397047565
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 397047566}
+  m_Layer: 0
+  m_Name: Cave
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &397047566
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397047565}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 303935836}
+  - {fileID: 2110037626}
+  - {fileID: 520333813}
+  m_Father: {fileID: 2082001252}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &404487046
 GameObject:
   m_ObjectHideFlags: 0
@@ -3447,6 +3577,7 @@ GameObject:
   - component: {fileID: 429902439}
   - component: {fileID: 429902441}
   - component: {fileID: 429902440}
+  - component: {fileID: 429902442}
   m_Layer: 0
   m_Name: GameWorld
   m_TagString: Untagged
@@ -3525,6 +3656,30 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &429902442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429902435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5461ac62a8e974ddbae85b4246c9638b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _dayDurationInSeconds: 600
+  _startingTime: 1
+  _isTicking: 0
+  _saveAfterGeneration: 1
+  _randomSeed: 1
+  _customSeed: zotty
+  _portalSearchRadius: 3
+  _portalSearchDelayOnBiomeLoad: 0.25
+  _endBiomeTransitionDelay: 0.75
+  <ForestGenerator>k__BackingField: {fileID: 1357089833}
+  <CaveGenerator>k__BackingField: {fileID: 2110037627}
 --- !u!1 &437544570
 GameObject:
   m_ObjectHideFlags: 0
@@ -3657,7 +3812,7 @@ GameObject:
   m_Component:
   - component: {fileID: 445444401}
   m_Layer: 0
-  m_Name: GenerationSteps
+  m_Name: ForestGenerationSteps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3680,6 +3835,7 @@ Transform:
   - {fileID: 557389543}
   - {fileID: 809660013}
   - {fileID: 639079824}
+  - {fileID: 151123419}
   m_Father: {fileID: 1611659668}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &462286016
@@ -3893,6 +4049,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MapGenerationSeed: 
+  <GrassTerrainTile>k__BackingField: {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
+  <SandTerrainTile>k__BackingField: {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
+  <WaterTerrainTile>k__BackingField: {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
+  <TreeWorldObject>k__BackingField: {fileID: 1030882037603866735, guid: f4caf4c5091224ab38ce3d21bbffe7bf, type: 3}
+  <TallGrassWorldObject>k__BackingField: {fileID: 1030882037603866735, guid: cda73a4b8f328425a98c66683a6e5abd, type: 3}
+  <CaveEntranceWorldObject>k__BackingField: {fileID: 5150323723629226184, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
+  <RiverNoiseMap>k__BackingField: {fileID: 11400000, guid: 9903e6dce86c94c10bef89bed861db9f, type: 2}
+  <SandNoiseMap>k__BackingField: {fileID: 11400000, guid: e7b13fcb8d79849faa86e090ebc6112c, type: 2}
+  <ForestTreesNM>k__BackingField: {fileID: 11400000, guid: 2fbe3d2f45936463ea656a0bf3a99669, type: 2}
+  <ForestTallGrassNM>k__BackingField: {fileID: 11400000, guid: e1eb820c9ffa94983931c706e77adb26, type: 2}
 --- !u!1001 &502895895
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4238,6 +4404,41 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
+--- !u!1 &520333812
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 520333813}
+  m_Layer: 0
+  m_Name: CaveGenerationSteps
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &520333813
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520333812}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 767011083}
+  - {fileID: 1532492749}
+  - {fileID: 621504237}
+  - {fileID: 698152854}
+  m_Father: {fileID: 397047566}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &557389542
 GameObject:
   m_ObjectHideFlags: 0
@@ -4283,12 +4484,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Description>k__BackingField: 
-  <SandNoiseMap>k__BackingField: {fileID: 11400000, guid: e7b13fcb8d79849faa86e090ebc6112c, type: 2}
   <Width>k__BackingField: 2
   <SandThreshold>k__BackingField: 0.35
-  <SandTile>k__BackingField: {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
-  <GrassTile>k__BackingField: {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
-  <WaterTile>k__BackingField: {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
 --- !u!1 &563966734
 GameObject:
   m_ObjectHideFlags: 0
@@ -4771,6 +4968,51 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &621504236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 621504237}
+  - component: {fileID: 621504238}
+  m_Layer: 0
+  m_Name: OreGenerationStep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &621504237
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621504236}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 520333813}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &621504238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621504236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2415680389c37411a905bf73e0ab7c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: 
 --- !u!1001 &623672983
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5065,7 +5307,7 @@ GameObject:
   - component: {fileID: 639079824}
   - component: {fileID: 639079825}
   m_Layer: 0
-  m_Name: GrassGenerationStep
+  m_Name: TallGrassGenerationStep
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5099,11 +5341,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Description>k__BackingField: 
-  <LandWaterStep>k__BackingField: {fileID: 1179738376}
-  <MinGrassDistance>k__BackingField: 1
-  <MaxGrassDistance>k__BackingField: 4
-  <TallGrassThreshold>k__BackingField: 0.75
-  <TallGrassTile>k__BackingField: {fileID: 11400000, guid: 78f05ab5d19c648e6b5f674efdf28b4c, type: 2}
+  <MinGrassDistance>k__BackingField: 0.75
+  <MaxGrassDistance>k__BackingField: 15
+  <TallGrassThreshold>k__BackingField: 0.85
 --- !u!1 &647140514
 GameObject:
   m_ObjectHideFlags: 0
@@ -5553,6 +5793,51 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &698152853
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 698152854}
+  - component: {fileID: 698152855}
+  m_Layer: 0
+  m_Name: ForestStairsGenerationStep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &698152854
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698152853}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 520333813}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &698152855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698152853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f6708ca113364aee9627643fa32ca12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: 
 --- !u!1 &704164452
 GameObject:
   m_ObjectHideFlags: 0
@@ -5848,6 +6133,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 764658898}
   m_CullTransparentMesh: 1
+--- !u!1 &767011082
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 767011083}
+  - component: {fileID: 767011084}
+  m_Layer: 0
+  m_Name: CaveFloorGenerationStep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &767011083
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767011082}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 520333813}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &767011084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767011082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a38e4f5ffdb24bcebafacb9d5402404, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: 
 --- !u!1 &783008782
 GameObject:
   m_ObjectHideFlags: 0
@@ -5964,12 +6294,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Description>k__BackingField: 
-  <ForestTreesNM>k__BackingField: {fileID: 11400000, guid: 2fbe3d2f45936463ea656a0bf3a99669, type: 2}
   <MinTreeDistance>k__BackingField: 4
   <MaxTreeDistance>k__BackingField: 8.5
   <TreeThreshold>k__BackingField: 0.75
-  <GrassTile>k__BackingField: {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
-  <TreeTile>k__BackingField: {fileID: 11400000, guid: 3ef70109c26924478ad7e5136f35f57a, type: 2}
 --- !u!1001 &811733070
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9068,12 +9395,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Description>k__BackingField: 
-  <RiverNoiseMap>k__BackingField: {fileID: 11400000, guid: 9903e6dce86c94c10bef89bed861db9f, type: 2}
   <RiverLowerThreshold>k__BackingField: 0.465
   <RiverUpperThreshold>k__BackingField: 0.5375
-  <WaterTile>k__BackingField: {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
-  <GrassTile>k__BackingField: {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
-  <SandTile>k__BackingField: {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
 --- !u!224 &1195613696 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
@@ -9405,244 +9728,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <FocusWallSprite>k__BackingField: {fileID: 67440230, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <FocusFloorSprite>k__BackingField: {fileID: -427256236, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
---- !u!1 &1242585391
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1242585392}
-  - component: {fileID: 1242585397}
-  - component: {fileID: 1242585396}
-  - component: {fileID: 1242585395}
-  - component: {fileID: 1242585394}
-  - component: {fileID: 1242585393}
-  m_Layer: 0
-  m_Name: FoliageTm
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1242585392
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1242585391}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 359721944}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!66 &1242585393
-CompositeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1242585391}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
-  m_GenerationType: 0
-  m_EdgeRadius: 0
-  m_ColliderPaths:
-  - m_Collider: {fileID: 1242585395}
-    m_ColliderPaths: []
-  m_CompositePaths:
-    m_Paths: []
-  m_VertexDistance: 0.0005
-  m_OffsetDistance: 0.00005
-  m_UseDelaunayMesh: 0
-  m_CompositeGameObject: {fileID: 1242585391}
---- !u!50 &1242585394
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1242585391}
-  m_BodyType: 2
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!19719996 &1242585395
-TilemapCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1242585391}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 1
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_MaximumTileChangeCount: 1000
-  m_ExtrusionFactor: 0
-  m_UseDelaunayMesh: 0
---- !u!483693784 &1242585396
-TilemapRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1242585391}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 0
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: f47de66c646eeb440bc6b139cb5053d4, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1478012363
-  m_SortingLayer: 2
-  m_SortingOrder: 0
-  m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
-  m_MaxChunkCount: 16
-  m_MaxFrameAge: 16
-  m_SortOrder: 0
-  m_Mode: 1
-  m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
---- !u!1839735485 &1242585397
-Tilemap:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1242585391}
-  m_Enabled: 1
-  m_Tiles: {}
-  m_AnimatedTiles: {}
-  m_TileAssetArray: []
-  m_TileSpriteArray: []
-  m_TileMatrixArray: []
-  m_TileColorArray: []
-  m_TileObjectToInstantiateArray: []
-  m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: 0, y: 0, z: 0}
-  m_Size: {x: 0, y: 0, z: 1}
-  m_TileAnchor: {x: 0, y: 0, z: 0}
-  m_TileOrientation: 0
-  m_TileOrientationMatrix:
-    e00: 1
-    e01: 0
-    e02: 0
-    e03: 0
-    e10: 0
-    e11: 1
-    e12: 0
-    e13: 0
-    e20: 0
-    e21: 0
-    e22: 1
-    e23: 0
-    e30: 0
-    e31: 0
-    e32: 0
-    e33: 1
 --- !u!1 &1276006750
 GameObject:
   m_ObjectHideFlags: 0
@@ -9831,11 +9916,13 @@ MonoBehaviour:
   - {fileID: 557389544}
   - {fileID: 809660014}
   - {fileID: 639079825}
+  - {fileID: 151123420}
   <NoiseMapsToApplySeed>k__BackingField:
   - {fileID: 11400000, guid: 9903e6dce86c94c10bef89bed861db9f, type: 2}
   - {fileID: 11400000, guid: 10d54a956e86d4aa8bc8927008e59238, type: 2}
   - {fileID: 11400000, guid: e7b13fcb8d79849faa86e090ebc6112c, type: 2}
   - {fileID: 11400000, guid: 2fbe3d2f45936463ea656a0bf3a99669, type: 2}
+  - {fileID: 11400000, guid: e1eb820c9ffa94983931c706e77adb26, type: 2}
 --- !u!1 &1366530093
 GameObject:
   m_ObjectHideFlags: 0
@@ -11109,6 +11196,51 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
   m_PrefabInstance: {fileID: 1965965940}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1532492748
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1532492749}
+  - component: {fileID: 1532492750}
+  m_Layer: 0
+  m_Name: CaveWallGenerationStep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1532492749
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1532492748}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 520333813}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1532492750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1532492748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c6be26527f0b4073906fb184702a4c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: 
 --- !u!224 &1545729187 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
@@ -14207,107 +14339,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1930408556}
   m_CullTransparentMesh: 1
---- !u!1 &1937202725
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1937202726}
-  - component: {fileID: 1937202727}
-  - component: {fileID: 1937202730}
-  - component: {fileID: 1937202728}
-  m_Layer: 0
-  m_Name: WorldManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1937202726
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1937202725}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1937202727
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1937202725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1888061625
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 0
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
---- !u!114 &1937202728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1937202725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dd7e771787c540f18102d9a87e1fe76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <StairsToForest>k__BackingField: {fileID: 5150323723629226184, guid: 751f13ce30c9145419bf57f41f494fef, type: 3}
-  SpaghettiCaveNM: {fileID: 11400000, guid: c621735f7aae34658a8101ebe324437c, type: 2}
-  CheeseCaveNM: {fileID: 11400000, guid: fb24aaaf205ca41ac928db4d742f1f5c, type: 2}
-  OreGenNM: {fileID: 11400000, guid: e05079a8f761b4e5e8f0f7f3c492221d, type: 2}
-  StoneWallTile: {fileID: 11400000, guid: c5388903dacbb4c4db84b0b22dae9c49, type: 2}
-  StoneFloorTile: {fileID: 11400000, guid: d2ceefd9a0a224533922e3657ca61e16, type: 2}
-  CobaltOreTile: {fileID: 11400000, guid: 4f8bf3351009c45c4a6ad868dd7eccbd, type: 2}
---- !u!114 &1937202730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1937202725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5461ac62a8e974ddbae85b4246c9638b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  _dayDurationInSeconds: 600
-  _startingTime: 1
-  _isTicking: 0
-  _saveAfterGeneration: 1
-  _randomSeed: 1
-  _customSeed: zotty
-  _portalSearchRadius: 3
-  _portalSearchDelayOnBiomeLoad: 0.25
-  _endBiomeTransitionDelay: 0.75
-  <ForestGenerator>k__BackingField: {fileID: 1357089833}
 --- !u!1 &1945104449
 GameObject:
   m_ObjectHideFlags: 0
@@ -15119,8 +15150,63 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1611659668}
+  - {fileID: 397047566}
   m_Father: {fileID: 429902436}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2110037625
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2110037626}
+  - component: {fileID: 2110037627}
+  m_Layer: 0
+  m_Name: CaveGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2110037626
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110037625}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 397047566}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2110037627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110037625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bef8c671dd91408aa30d31fb58d56af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <CaveGenerationData>k__BackingField: {fileID: 303935835}
+  <GenerationSteps>k__BackingField:
+  - {fileID: 767011084}
+  - {fileID: 1532492750}
+  - {fileID: 621504238}
+  - {fileID: 698152855}
+  <NoiseMapsToApplySeed>k__BackingField:
+  - {fileID: 11400000, guid: fb24aaaf205ca41ac928db4d742f1f5c, type: 2}
+  - {fileID: 11400000, guid: e05079a8f761b4e5e8f0f7f3c492221d, type: 2}
+  - {fileID: 11400000, guid: c621735f7aae34658a8101ebe324437c, type: 2}
 --- !u!1 &2114616225
 GameObject:
   m_ObjectHideFlags: 0
@@ -15130,6 +15216,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2114616226}
+  - component: {fileID: 2114616227}
   m_Layer: 0
   m_Name: TechnicalElements
   m_TagString: Untagged
@@ -15155,6 +15242,22 @@ Transform:
   - {fileID: 1414248200}
   m_Father: {fileID: 429902436}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2114616227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114616225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48e84f00bc8d8442e8be6fef0b91cdcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: 
+  <MinCaveEntranceDistance>k__BackingField: 20
+  <MaxCaveEntranceDistance>k__BackingField: 40
+  <CaveEntranceSpawnThreshold>k__BackingField: 0.85
 --- !u!224 &154946631035586327
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16701,7 +16804,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 704164455}
   - {fileID: 2018757677}
-  - {fileID: 1937202726}
   - {fileID: 876396786}
   - {fileID: 1616656745}
   - {fileID: 832159822}

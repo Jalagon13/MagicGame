@@ -16,7 +16,7 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
-  <TileType>k__BackingField: 5
+  <TileType>k__BackingField: 4
   <Hardness>k__BackingField: 0.65
   <ItemDropTable>k__BackingField: []
   <MiningSound>k__BackingField:

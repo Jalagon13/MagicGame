@@ -24,13 +24,11 @@ public class TileRenderManager : NetworkBehaviour
 	[field: SerializeField] public Tilemap FloorTm { get; private set; }
 	[field: SerializeField] public Tilemap WallTm { get; private set; }
 	[field: SerializeField] public Tilemap OreTm { get; private set; }
-	[field: SerializeField] public Tilemap FoliageTm { get; private set; }
 	[field: SerializeField] public TerrainTileRenderer TerrainTileRenderer { get; private set; }
 
 	private void Awake()
 	{
 		WallTm.GetComponent<TilemapCollider2D>().enabled = false;
-		FoliageTm.GetComponent<TilemapCollider2D>().enabled = false;
 
 		Instance = this;
 	}
@@ -45,20 +43,17 @@ public class TileRenderManager : NetworkBehaviour
 	private void WorldManager_OnBiomeTransitionStart(object sender, EventArgs e)
 	{
 		WallTm.GetComponent<TilemapCollider2D>().enabled = false;
-		FoliageTm.GetComponent<TilemapCollider2D>().enabled = false;
 
 		// Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
 		TerrainTileRenderer.ClearAllTerrainTiles();
 		FloorTm.ClearAllTiles();
 		WallTm.ClearAllTiles();
 		OreTm.ClearAllTiles();
-		FoliageTm.ClearAllTiles();
 	}
 
 	private void WorldManager_OnBiomeTransitionEnd(object sender, EventArgs e)
     {
 		WallTm.GetComponent<TilemapCollider2D>().enabled = true;
-		FoliageTm.GetComponent<TilemapCollider2D>().enabled = true;
 	}
 
     private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)
@@ -71,7 +66,6 @@ public class TileRenderManager : NetworkBehaviour
 			e.Chunk.FloorTileGameDataList,
 			e.Chunk.WallTileGameDataList,
 			e.Chunk.OreTileGameDataList,
-			e.Chunk.FoliageTileGameDataList,
 		};
 
 		// Iterate through each list and set the tiles on the tilemap
@@ -137,9 +131,6 @@ public class TileRenderManager : NetworkBehaviour
 					WallTm.SetTile(tilePos, tileSO);
 					RefreshNearbyTopTiles(tilePos, OreTm);
 				}
-				break;
-			case TileType.Foliage:
-				FoliageTm.SetTile(tilePos, tileSO);
 				break;
 		}
 	}

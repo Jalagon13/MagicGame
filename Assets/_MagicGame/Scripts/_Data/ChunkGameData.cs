@@ -13,7 +13,6 @@ public class ChunkGameData
 	public List<TileGameData> FloorTileGameDataList;
 	public List<TileGameData> WallTileGameDataList;
 	public List<TileGameData> OreTileGameDataList;
-	public List<TileGameData> FoliageTileGameDataList;
 	public List<WorldObjectGameData> WorldObjectGameDataList;
 	public int Size { get; private set; }
 
@@ -28,7 +27,6 @@ public class ChunkGameData
 		FloorTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		WallTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		OreTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
-		FoliageTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		WorldObjectGameDataList = new List<WorldObjectGameData>(chunkSize * chunkSize);
 
 		_tileTypeToList = new Dictionary<TileType, List<TileGameData>>
@@ -36,7 +34,6 @@ public class ChunkGameData
 			{ TileType.Terrain, GroundTileGameDataList },
 			{ TileType.Floor, FloorTileGameDataList },
 			{ TileType.Wall, WallTileGameDataList },
-			{ TileType.Foliage, FoliageTileGameDataList },
 			{ TileType.Liquid, LiquidTileGameDataList },
 		};
 	}

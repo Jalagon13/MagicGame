@@ -45,6 +45,7 @@ public class WorldManager : NetworkBehaviour
 	[SerializeField] private float _portalSearchDelayOnBiomeLoad = 0.75f;
 	[SerializeField] private float _endBiomeTransitionDelay = 1f;
 	[field: SerializeField] public ForestGenerator ForestGenerator { get; private set; }
+	[field: SerializeField] public CaveGenerator CaveGenerator { get; private set; }
 	
 	private float _currentTime;
 	
@@ -140,16 +141,16 @@ public class WorldManager : NetworkBehaviour
 		ChunkManager.Instance.UnloadAllPlayerChunks();
 		ObjectManager.Instance.ClearAllEnvironmentObjectVisuals();
 		
-		LoadEnvironmentServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, targetBiome);
+		LoadBiomeServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, targetBiome);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void LoadEnvironmentServerRpc(BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
+	private void LoadBiomeServerRpc(BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
 	{
-		AsyncLoadEnvironment(fromBiome, toBiome, rpcParams);
+		AsyncLoadBiome(fromBiome, toBiome, rpcParams);
 	}
 
-	private async void AsyncLoadEnvironment(BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
+	private async void AsyncLoadBiome(BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
 	{
 		// Save the last biome it came from and set the player's burrent biome to tobiome.
 		if(!SaveSystem.Instance.IsSaving && SaveSystem.Instance.BiomeLoadedInMemory(fromBiome))
@@ -192,7 +193,7 @@ public class WorldManager : NetworkBehaviour
 				ForestGenerator.GenerateForest();
 				break;
 			case BiomeType.Cave:
-				GetComponent<CaveGeneration>().GenerateCave();
+				CaveGenerator.GenerateCave();
 				break;
 		}
 	}

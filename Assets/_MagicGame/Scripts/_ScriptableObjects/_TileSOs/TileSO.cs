@@ -12,7 +12,6 @@ public enum TileType
 	Floor,
 	Wall,
 	Ore,
-	Foliage,
 	Liquid
 }
 
