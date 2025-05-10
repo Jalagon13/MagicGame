@@ -44,3 +44,5 @@ MonoBehaviour:
   <TopTileLeft>k__BackingField: {fileID: 0}
   <TopTileCenter>k__BackingField: {fileID: 0}
   <TopTileRight>k__BackingField: {fileID: 0}
+  <DualGridFillTileMaterial>k__BackingField: {fileID: 0}
+  <DualGridTiles>k__BackingField: []

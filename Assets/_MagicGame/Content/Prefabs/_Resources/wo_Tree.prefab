@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 257096646587651372, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2392654451137683977, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_LocalPosition.x
@@ -383,7 +383,7 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 2}
+  m_Offset: {x: 0.5, y: 2}
   m_Radius: 1
 --- !u!114 &4358446635611556821
 MonoBehaviour:
