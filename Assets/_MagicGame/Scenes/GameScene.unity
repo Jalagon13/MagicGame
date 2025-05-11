@@ -2644,6 +2644,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapGenerationSeed: 
   <StoneTerrainTile>k__BackingField: {fileID: 11400000, guid: 3144a3907552b4687a0f9c034cc12b4d, type: 2}
+  <StoneWallTile>k__BackingField: {fileID: 11400000, guid: c5388903dacbb4c4db84b0b22dae9c49, type: 2}
+  <CoboltOreTile>k__BackingField: {fileID: 11400000, guid: 4f8bf3351009c45c4a6ad868dd7eccbd, type: 2}
+  <StairsToForest>k__BackingField: {fileID: 5150323723629226184, guid: 751f13ce30c9145419bf57f41f494fef, type: 3}
+  <StairsToCave>k__BackingField: {fileID: 5150323723629226184, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
   SpaghettiCaveNM: {fileID: 11400000, guid: c621735f7aae34658a8101ebe324437c, type: 2}
   CheeseCaveNM: {fileID: 11400000, guid: fb24aaaf205ca41ac928db4d742f1f5c, type: 2}
   OreGenNM: {fileID: 11400000, guid: e05079a8f761b4e5e8f0f7f3c492221d, type: 2}
@@ -5013,6 +5017,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Description>k__BackingField: 
+  <OreGenThreshold>k__BackingField: 0.05
 --- !u!1001 &623672983
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11241,6 +11246,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Description>k__BackingField: 
+  <CheeseCaveThreshold>k__BackingField: 0.375
+  <SpaghettiCaveThresholdMin>k__BackingField: 0.45
+  <SpaghettiCaveThresholdMax>k__BackingField: 0.6
 --- !u!224 &1545729187 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}

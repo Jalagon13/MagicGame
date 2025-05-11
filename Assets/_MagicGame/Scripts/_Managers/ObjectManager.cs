@@ -47,7 +47,7 @@ public class ObjectManager : NetworkBehaviour
 		}
 	}
 	
-	public void ClearAllEnvironmentObjectVisuals()
+	public void ClearAllBiomeObjectVisuals()
 	{
 		OnClearAllEnvironmentObjects?.Invoke(this, new EventArgs());
 	}

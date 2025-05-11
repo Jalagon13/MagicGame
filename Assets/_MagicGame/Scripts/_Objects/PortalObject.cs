@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PortalObject : WorldObject
+public class BiomeTransitionObject : WorldObject
 {
 	[field: SerializeField] public BiomeType DestinationBiome { get; private set; }
 	[field: SerializeField] public WorldInput WorldInput { get; private set; }

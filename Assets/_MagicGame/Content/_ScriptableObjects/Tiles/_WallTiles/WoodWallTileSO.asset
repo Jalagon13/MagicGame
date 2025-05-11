@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b52052ad4aefe4da580ba4e2ba9fed0c, type: 3}
-  m_Name: wall_Wood
+  m_Name: WoodWallTileSO
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: -3348714016332750533, guid: 5d9b3ddca3c834037adf5c7c5f75820c, type: 3}
   m_DefaultGameObject: {fileID: 0}
@@ -359,35 +359,33 @@ MonoBehaviour:
     - {x: -1, y: 0, z: 0}
     - {x: 1, y: 0, z: 0}
     m_RuleTransform: 0
-  TileType: 2
-  <Table>k__BackingField:
-  - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
-    Min: 1
-    Max: 1
-    Chance: 100
-  Hardness: 0.65
-  MiningSound:
+  <TileType>k__BackingField: 2
+  <Hardness>k__BackingField: 0.65
+  <ItemDropTable>k__BackingField: []
+  <MiningSound>k__BackingField:
     Guid:
-      Data1: 1812228115
-      Data2: 1207244471
-      Data3: 1013332110
-      Data4: -2033662663
-    Path: event:/WoodHit
-  PlaceSound:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <PlaceSound>k__BackingField:
     Guid:
-      Data1: 1812228115
-      Data2: 1207244471
-      Data3: 1013332110
-      Data4: -2033662663
-    Path: event:/WoodHit
-  DestroySound:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <DestroySound>k__BackingField:
     Guid:
-      Data1: 15823222
-      Data2: 1125522555
-      Data3: -1633797458
-      Data4: 490440430
-    Path: event:/WoodDestroyed
-  TopTileSingle: {fileID: -1850262651, guid: 5d9b3ddca3c834037adf5c7c5f75820c, type: 3}
-  TopTileLeft: {fileID: -542621510, guid: 5d9b3ddca3c834037adf5c7c5f75820c, type: 3}
-  TopTileCenter: {fileID: 1680974825, guid: 5d9b3ddca3c834037adf5c7c5f75820c, type: 3}
-  TopTileRight: {fileID: 1458013136, guid: 5d9b3ddca3c834037adf5c7c5f75820c, type: 3}
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <TopTileSingle>k__BackingField: {fileID: 0}
+  <TopTileLeft>k__BackingField: {fileID: 0}
+  <TopTileCenter>k__BackingField: {fileID: 0}
+  <TopTileRight>k__BackingField: {fileID: 0}
+  <DualGridFillTileMaterial>k__BackingField: {fileID: 0}
+  <DualGridTiles>k__BackingField: []

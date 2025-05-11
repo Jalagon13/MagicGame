@@ -139,7 +139,7 @@ public class WorldManager : NetworkBehaviour
 		
 		IsLoadingBiome = true;
 		ChunkManager.Instance.UnloadAllPlayerChunks();
-		ObjectManager.Instance.ClearAllEnvironmentObjectVisuals();
+		ObjectManager.Instance.ClearAllBiomeObjectVisuals();
 		
 		LoadBiomeServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, targetBiome);
 	}

@@ -226,6 +226,32 @@ public class SaveSystem : MonoBehaviour
 	
 	#region Deserialization
 	
+public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWorldObjectData(BiomeType biomeToLoad)
+{
+    _path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{biomeToLoad}_data.json";
+    List<(int WorldObjectId, Vector2Int Position)> transitionDataList = new();
+
+    if (File.Exists(_path))
+    {
+        string json = File.ReadAllText(_path);
+        BiomeFileData biomeFileData = JsonUtility.FromJson<BiomeFileData>(json);
+        List<WorldObjectFileData> worldObjectFileData = new(biomeFileData.WorldObjectsList);
+
+        // Collect data for each BiomeTransitionObject
+        foreach (WorldObjectFileData data in worldObjectFileData)
+        {
+            if (GameManager.Instance.GetWorldObjectFromID(data.WorldObjectId) is BiomeTransitionObject)
+            {
+                Debug.Log($"Found BiomeTransitionObject: {data.WorldObjectId} at {data.Pos}");
+                transitionDataList.Add((data.WorldObjectId, data.Pos));
+            }
+        }
+    }
+
+    Debug.Log($"Count FROM SAVE SYSTEM: {transitionDataList.Count}");
+    return transitionDataList;
+}
+	
 	public async Task DeserializeAndDispatchData(BiomeType biomeToLoad)
 	{
 		if (BiomesInMemory.Contains(biomeToLoad))

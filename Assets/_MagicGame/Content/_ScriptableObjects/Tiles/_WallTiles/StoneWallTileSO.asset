@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b52052ad4aefe4da580ba4e2ba9fed0c, type: 3}
-  m_Name: wall_Stone
+  m_Name: StoneWallTileSO
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: -3347302374123360772, guid: a7607542f398f4e668471296c02b146e, type: 3}
   m_DefaultGameObject: {fileID: 0}
@@ -362,7 +362,7 @@ MonoBehaviour:
     - {x: -1, y: 0, z: 0}
     - {x: 1, y: 0, z: 0}
     m_RuleTransform: 0
-  <TileType>k__BackingField: 0
+  <TileType>k__BackingField: 2
   <Hardness>k__BackingField: 0.65
   <ItemDropTable>k__BackingField: []
   <MiningSound>k__BackingField:
@@ -390,3 +390,5 @@ MonoBehaviour:
   <TopTileLeft>k__BackingField: {fileID: 0}
   <TopTileCenter>k__BackingField: {fileID: 0}
   <TopTileRight>k__BackingField: {fileID: 0}
+  <DualGridFillTileMaterial>k__BackingField: {fileID: 0}
+  <DualGridTiles>k__BackingField: []

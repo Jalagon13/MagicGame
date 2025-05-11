@@ -34,6 +34,7 @@ public class ChunkGameData
 			{ TileType.Terrain, GroundTileGameDataList },
 			{ TileType.Floor, FloorTileGameDataList },
 			{ TileType.Wall, WallTileGameDataList },
+			{ TileType.Ore, OreTileGameDataList },
 			{ TileType.Liquid, LiquidTileGameDataList },
 		};
 	}
