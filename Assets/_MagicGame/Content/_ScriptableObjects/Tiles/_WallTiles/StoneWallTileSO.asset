@@ -386,9 +386,9 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  <TopTileSingle>k__BackingField: {fileID: 0}
-  <TopTileLeft>k__BackingField: {fileID: 0}
-  <TopTileCenter>k__BackingField: {fileID: 0}
-  <TopTileRight>k__BackingField: {fileID: 0}
+  <TopTileSingle>k__BackingField: {fileID: -743263003, guid: a7607542f398f4e668471296c02b146e, type: 3}
+  <TopTileLeft>k__BackingField: {fileID: -503482117, guid: a7607542f398f4e668471296c02b146e, type: 3}
+  <TopTileCenter>k__BackingField: {fileID: -1084791293, guid: a7607542f398f4e668471296c02b146e, type: 3}
+  <TopTileRight>k__BackingField: {fileID: -1065834952, guid: a7607542f398f4e668471296c02b146e, type: 3}
   <DualGridFillTileMaterial>k__BackingField: {fileID: 0}
   <DualGridTiles>k__BackingField: []

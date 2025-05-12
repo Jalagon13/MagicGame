@@ -247,7 +247,6 @@ public class ChunkManager : NetworkBehaviour
 			case TileType.Wall:
 				TileRenderManager.Instance.RenderTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
 				Lightmap.Instance.UpdateLightMap();
-				TileRenderManager.Instance.HandleTopWallTiles(pos, tileToPlace, TileRenderManager.Instance.WallTm);
 				break;
 			case TileType.Ore:
 				TileRenderManager.Instance.RenderTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);

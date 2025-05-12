@@ -47,17 +47,14 @@ public static class Pointer
     
     public static bool IsOverTopTile()
     {
-        PointerEventData eventDataCurrentPosition = new(EventSystem.current)
-        {
-            position = Mouse.current.position.ReadValue()
-        };
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        Collider2D[] colliders = Physics2D.OverlapPointAll(mousePosition);
 
-        List<RaycastResult> results = new();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return TileRenderManager.Instance.UpperWallTm.IsOverTopTile(mousePosition);
 
-        foreach (RaycastResult raycastResult in results)
+        foreach (Collider2D collider in colliders)
         {
-            if (raycastResult.gameObject.TryGetComponent(out TopTile topTile))
+            if (collider.TryGetComponent(out UpperWallTm upperWallTm))
                 return true;
         }
 

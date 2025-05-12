@@ -205,9 +205,8 @@ public class WorldManager : NetworkBehaviour
 		Player.LocalClientInstance.CurrentPlayerBiome.Value = toBiome;
 		
 		// Invoke it first to prep the last chunk position to garentee a new set of chunks to generate, then set loadingbiome to true to resume the update method
-		TileRenderManager.Instance.ClearTopTiles();
+		TileRenderManager.Instance.UpperWallTm.ClearAllTopTiles();
 		OnBiomeDataLoaded?.Invoke(this, EventArgs.Empty);
-		
 	}
 
 	public void ExecuteOnBiomeTransitionEnd() // Yeah this is scuffed i know

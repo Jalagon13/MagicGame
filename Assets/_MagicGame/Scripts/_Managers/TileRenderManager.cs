@@ -20,11 +20,11 @@ public class TileRenderManager : NetworkBehaviour
 {
 	public static TileRenderManager Instance;
 
-	[field: SerializeField] public TopTile TopTilePrefab { get; private set; }
 	[field: SerializeField] public Tilemap FloorTm { get; private set; }
 	[field: SerializeField] public Tilemap WallTm { get; private set; }
 	[field: SerializeField] public Tilemap OreTm { get; private set; }
 	[field: SerializeField] public TerrainTileRenderer TerrainTileRenderer { get; private set; }
+	[field: SerializeField] public UpperWallTm UpperWallTm { get; private set; }
 
 	private void Awake()
 	{
@@ -39,10 +39,11 @@ public class TileRenderManager : NetworkBehaviour
 		WorldManager.Instance.OnBiomeTransitionStart += WorldManager_OnBiomeTransitionStart;
 		WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_OnBiomeTransitionEnd;
 	}
-
+	
 	private void WorldManager_OnBiomeTransitionStart(object sender, EventArgs e)
 	{
 		WallTm.GetComponent<TilemapCollider2D>().enabled = false;
+		UpperWallTm.EnableTilemapCollider(false);
 
 		// Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
 		TerrainTileRenderer.ClearAllTerrainTiles();
@@ -54,6 +55,7 @@ public class TileRenderManager : NetworkBehaviour
 	private void WorldManager_OnBiomeTransitionEnd(object sender, EventArgs e)
     {
 		WallTm.GetComponent<TilemapCollider2D>().enabled = true;
+		UpperWallTm.EnableTilemapCollider(true);
 	}
 
     private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)
@@ -79,19 +81,6 @@ public class TileRenderManager : NetworkBehaviour
 		}
 	}
 
-	public void ClearTopTiles()
-	{
-	    foreach (Transform child in WallTm.transform)
-	    {
-	        Destroy(child.gameObject);
-	    }
-
-		foreach (Transform child in OreTm.transform)
-		{
-			Destroy(child.gameObject);
-		}
-	}
-	
 	public bool HasTile(Vector3Int position, TileType tileType)
 	{
         return tileType switch
@@ -100,6 +89,7 @@ public class TileRenderManager : NetworkBehaviour
             TileType.Floor => FloorTm.HasTile(position),
             TileType.Wall => WallTm.HasTile(position),
             TileType.Ore => OreTm.HasTile(position),
+            TileType.Liquid => TerrainTileRenderer.HasTile(position),
             _ => false,
         };
     }
@@ -119,19 +109,19 @@ public class TileRenderManager : NetworkBehaviour
 				break;
 			case TileType.Wall:
 				WallTm.SetTile(tilePos, tileSO);
-				if(tileSO == null) // When destroying wall, destroy the wall behind it
-				{
-					RefreshNearbyTopTiles(tilePos, WallTm);
-				}
 				break;
 			case TileType.Ore: 
 				OreTm.SetTile(tilePos, tileSO);
 				if(tileSO == null) // When destroying ore, destroy the wall behind it
 				{
 					WallTm.SetTile(tilePos, tileSO);
-					RefreshNearbyTopTiles(tilePos, OreTm);
 				}
 				break;
+		}
+		
+		if(tileSO == null && (tileType == TileType.Wall || tileType == TileType.Ore))
+		{
+			UpperWallTm.DeleteUpperWallTile(tilePos);
 		}
 	}
 	
@@ -147,92 +137,13 @@ public class TileRenderManager : NetworkBehaviour
 				if(OreTm.HasTile(pos))
 				{
 					TileSO oreTileSO = GameManager.Instance.GetTileSOFromTileBase(OreTm.GetTile(pos));
-					HandleTopWallTiles(pos, oreTileSO, OreTm);
 				}
 
 				TileSO tileSO = GameManager.Instance.GetTileSOFromTileBase(WallTm.GetTile(pos));
-				HandleTopWallTiles(pos, tileSO, WallTm);
 			}
 	    }
 	}
 	
-    public void HandleTopWallTiles(Vector3Int botTilePosition, TileSO tileSO, Tilemap tilemap)
-    {
-		if(tileSO != null)
-		{
-			if (tileSO.TopTileSingle == null) return; // This is temp for now
-
-			Vector3Int topTilePosition = botTilePosition + Vector3Int.up;
-			TileBase topTile = tilemap.GetTile(topTilePosition);
-
-			if (topTile != null)
-			{
-				int topTileId = GameManager.Instance.GetTileIdFromTileBase(topTile);
-				int botTileId = GameManager.Instance.GetTileIdFromTileBase(tileSO);
-
-				if (topTileId == botTileId)
-				{
-					UpdateNearbyTopTiles(botTilePosition);
-					return;
-				}
-			}
-
-			TopTile tt = Instantiate(TopTilePrefab, topTilePosition, Quaternion.identity);
-			tt.gameObject.transform.SetParent(tilemap.gameObject.transform);
-			tt.Initialize(tileSO, botTilePosition);
-		}
-		else
-		{
-			RefreshNearbyTopTiles(botTilePosition, tilemap);
-		}
-	}
-	
-	public void RefreshNearbyTopTiles(Vector3Int botTilePosition, Tilemap tilemap)
-	{
-		UpdateNearbyTopTiles(botTilePosition);
-
-		Vector3Int[] directions = new Vector3Int[] { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right };
-		foreach (Vector3Int direction in directions)
-		{
-			Vector3Int neighborPos = botTilePosition + direction;
-
-			if (HasTile(neighborPos, TileType.Wall))
-			{
-				HandleTopWallTiles(neighborPos, GameManager.Instance.GetTileSOFromTileBase(WallTm.GetTile(neighborPos)), tilemap);
-			}
-		}
-	}
-	
-	public void UpdateNearbyTopTiles(Vector3Int botTilePosition)
-	{
-	    Vector3Int[] directions = new Vector3Int[]
-	    {
-	        new Vector3Int(-1, 1, 0),  // Top-left
-	        new Vector3Int(0, 1, 0),   // Top
-	        new Vector3Int(1, 1, 0),   // Top-right
-	        new Vector3Int(-1, 0, 0),  // Left
-	        new Vector3Int(1, 0, 0),   // Right
-	        new Vector3Int(-1, -1, 0), // Bottom-left
-	        new Vector3Int(0, -1, 0),  // Bottom
-	        new Vector3Int(1, -1, 0),   // Bottom-right
-	        new Vector3Int(0, 0, 0)
-	    };
-
-	    foreach (var offset in directions)
-	    {
-	        Vector3Int neighborPos = botTilePosition + offset;
-	        Collider2D[] colliders = Physics2D.OverlapPointAll(new Vector2(neighborPos.x + 0.5f, neighborPos.y + 0.5f));
-	        foreach (var collider in colliders)
-	        {
-	            TopTile topTileFound = collider.GetComponent<TopTile>();
-	            if (topTileFound != null)
-	            {
-	                topTileFound.UpdateSelf();
-	            }
-	        }
-	    }
-	}
-
     [Rpc(SendTo.Server, RequireOwnership = false)]
 	public void DestroyTileServerRpc(Vector2Int tilePos, int tileId, BiomeType biome)
 	{
