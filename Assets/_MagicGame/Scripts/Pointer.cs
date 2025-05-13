@@ -51,14 +51,6 @@ public static class Pointer
         Collider2D[] colliders = Physics2D.OverlapPointAll(mousePosition);
 
         return TileRenderManager.Instance.UpperWallTm.IsOverTopTile(mousePosition);
-
-        foreach (Collider2D collider in colliders)
-        {
-            if (collider.TryGetComponent(out UpperWallTm upperWallTm))
-                return true;
-        }
-
-        return false;
     }
 }
 

@@ -175,6 +175,7 @@ public class Spell : NetworkBehaviour
 	{
 		NetworkObject.DontDestroyWithOwner = true;
 		NetworkObject.Despawn();
+		Debug.Log($"Despawning spell");
 	}
 
     private void HandleVisuals(bool previousValue, bool newValue)

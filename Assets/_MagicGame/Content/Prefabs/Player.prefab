@@ -336,7 +336,7 @@ MonoBehaviour:
   <BaseMana>k__BackingField: 100
   <ManaRegenPerSecond>k__BackingField: 1
   <HealthRegenPerSecond>k__BackingField: 1
-  <BaseSpeed>k__BackingField: 10
+  <BaseSpeed>k__BackingField: 5
   <TurnSharpness>k__BackingField: 7.5
   <KnockbackResist>k__BackingField: 0
 --- !u!114 &3515157567628285232

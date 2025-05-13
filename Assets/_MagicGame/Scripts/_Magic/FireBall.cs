@@ -4,7 +4,6 @@ public class FireBall : Spell
 {
     [field: Header("Fireball")]
     [field: SerializeField] public float VelocityDecay { get; private set; } = 5f;
-    [field: SerializeField] public ParticleSystem Trail { get; private set; }
     
     private Rigidbody2D _rigidbody2D;
 
@@ -25,11 +24,17 @@ public class FireBall : Spell
         }
     }
 
-    protected override void OnStopped()
+    public override void OnOwnerSpellEnd()
     {
-        if (Trail != null)
+        base.OnOwnerSpellEnd();
+        Debug.Log($"Stopping particles");
+        foreach (Transform child in Visualization.transform)
         {
-            Trail.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            ParticleSystem ps = child.GetComponent<ParticleSystem>();
+            if (ps != null)
+            {
+                ps.Stop(false, ParticleSystemStopBehavior.StopEmitting);
+            }
         }
     }
 
