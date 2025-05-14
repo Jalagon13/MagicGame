@@ -138,7 +138,7 @@ public class SpellManager : NetworkBehaviour
         _loadedSpell = new(SelectedSpell, SelectedSpell.LoadSpell(EquippedSpellBook.Item as SpellBookItemSO), selectedInventoryItem);
 
         Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(SelectedSpell.HasteMultiplier);
-        Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(_loadedSpell.SpellToCast));
+        Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(_loadedSpell.SpellToCast), SelectedSpell.CastTime);
 
         CastTimeTimer = new(SelectedSpell.CastTime);
         CastTimeTimer.OnTimerEnd += ExecuteSpell;

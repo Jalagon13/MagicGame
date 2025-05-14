@@ -37,19 +37,18 @@ public class PlayerVisuals : NetworkBehaviour
     }
     
     [Rpc(SendTo.ClientsAndHost)]
-    public void PlayChargeVFXClientRpc(int spellIndex)
+    public void PlayChargeVFXClientRpc(int spellIndex, float castTime)
     {
         GameObject chargeVfx = (GameManager.Instance.GetItemSOFromItemId(spellIndex) as SpellItemSO).ChargeVFX;
         _chargeVfx = Instantiate(chargeVfx, _thisPlayer.MainHand.SpellSpawnTransform);
         _chargeVfx.transform.localPosition = Vector3.zero;
+        _chargeVfx.GetComponent<MagicCircle>().StartAnimation(castTime);
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     public void StopChargeVfxClientRpc()
     {
-        var main = _chargeVfx.GetComponent<ParticleSystem>().main;
-        main.loop = false;
-        main.stopAction = ParticleSystemStopAction.Destroy;
+        _chargeVfx.GetComponent<MagicCircle>().StopAnimation();
     }
 	
     public override void OnDestroy()

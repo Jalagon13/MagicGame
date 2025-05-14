@@ -377,7 +377,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7667179753420663057, guid: b50dfc1a768304c78bddeb6be336e5f6, type: 3}
       propertyPath: ShapeModule.radius.value
-      value: 0.275
+      value: 0.325
       objectReference: {fileID: 0}
     - target: {fileID: 7667179753420663057, guid: b50dfc1a768304c78bddeb6be336e5f6, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
