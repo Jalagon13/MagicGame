@@ -5,80 +5,6 @@ using FMODUnity;
 using Unity.Netcode;
 using UnityEngine;
 
-public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
-{
-	public int SpellIndex;
-	public int ManaCost;
-	public int Damage;
-	public int Knockback;
-	public float Speed;
-	public float Lifetime;
-	public float HasteMultiplier;
-	public ulong SpellId;
-	public ulong OwnerPlayerId;
-	public ulong InventorySlotId;
-	public bool DespawnIfFocusSlotChanged;
-	public bool IsContinuousCast;
-	public BiomeType SpawnBiome;
-
-	public SyncSpellData(int spellIndex, int manaCost,int damage, int knockback, float speed, float lifetime, float hasteMultiplier, ulong spellId, ulong ownerPlayerId, ulong inventorySlotId, bool despawnIfFocusSlotChanged, bool isContinuousCast, BiomeType spawnBiome)
-	{
-		SpellIndex = spellIndex;
-		ManaCost = manaCost;
-		Damage = damage;
-		Knockback = knockback;
-		Speed = speed;
-		Lifetime = lifetime;
-		HasteMultiplier = hasteMultiplier;
-		SpellId = spellId;
-		OwnerPlayerId = ownerPlayerId;
-		InventorySlotId = inventorySlotId;
-		DespawnIfFocusSlotChanged = despawnIfFocusSlotChanged;
-		IsContinuousCast = isContinuousCast;
-		SpawnBiome = spawnBiome;
-	}
-
-	public bool Equals(SyncSpellData other)
-	{
-		// Check if all primitive properties match
-		if (SpellIndex != other.SpellIndex ||
-			ManaCost != other.ManaCost ||
-			Damage != other.Damage ||
-			Knockback != other.Knockback ||
-			Speed != other.Speed ||
-			Lifetime != other.Lifetime ||
-			HasteMultiplier != other.HasteMultiplier ||
-			SpellId != other.SpellId ||
-			OwnerPlayerId != other.OwnerPlayerId ||
-			InventorySlotId != other.InventorySlotId ||
-			DespawnIfFocusSlotChanged != other.DespawnIfFocusSlotChanged ||
-			IsContinuousCast != other.IsContinuousCast ||
-			SpawnBiome != other.SpawnBiome)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-	{
-		serializer.SerializeValue(ref SpellIndex);
-		serializer.SerializeValue(ref ManaCost);
-		serializer.SerializeValue(ref Damage);
-		serializer.SerializeValue(ref Knockback);
-		serializer.SerializeValue(ref Speed);
-		serializer.SerializeValue(ref Lifetime);
-		serializer.SerializeValue(ref HasteMultiplier);
-		serializer.SerializeValue(ref SpellId);
-		serializer.SerializeValue(ref OwnerPlayerId);
-		serializer.SerializeValue(ref InventorySlotId);
-		serializer.SerializeValue(ref DespawnIfFocusSlotChanged);
-		serializer.SerializeValue(ref IsContinuousCast);
-		serializer.SerializeValue(ref SpawnBiome);
-	}
-}
-
 [CreateAssetMenu(fileName = "New Spell", menuName = "Create Item/New Spell")]
 public class SpellItemSO : ItemSO
 {
@@ -128,13 +54,13 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("Should the spell be continuous cast while holding down cast button")]
 	[field: SerializeField] public bool IsContinuousCast { get; private set; } = false;
 	
-	public SyncSpellData GetSpellDataForLocalClientInstance()
+	public SyncSpellData GetSpellDataForLocalClientInstance(int wandSlotIndex)
 	{
 		InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
 
 		return new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			ManaCost, Damage, Knockback, Speed, Lifetime, HasteMultiplier, 
+			ManaCost, Damage, Knockback, wandSlotIndex, Speed, Lifetime, HasteMultiplier, 
 			IdGenerator.GenerateRandomId(),
 			Player.LocalClientInstance.OwnerClientId,
 			selectedInventoryItem.Id,
@@ -143,13 +69,6 @@ public class SpellItemSO : ItemSO
 			Player.LocalClientInstance.CurrentPlayerBiome.Value);
 	}
 
-	public SyncSpellData LoadSpell(SpellBookItemSO wandSO)
-	{
-		var syncSpellData = GetSpellDataForLocalClientInstance();
-		SpellManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
-		return syncSpellData;
-	}
-	
 	public override InventoryItem CreateInventoryItem(int quantity)
 	{
 		return new InventoryItem(this, quantity);

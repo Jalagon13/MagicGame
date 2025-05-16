@@ -69,7 +69,7 @@ public class InGameMenu : MonoBehaviour
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }
     
-    public void OpenSpellbookInspectorMenu(SpellbookInventoryItem wand)
+    public void OpenSpellbookInspectorMenu(WandInventoryItem wand)
     {
         ClearOldMenu();
         

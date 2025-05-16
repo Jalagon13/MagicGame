@@ -167,7 +167,7 @@ public class ChestNetworkManager : NetworkBehaviour
 		{
 			List<int> magicArray = new();
 
-			if (invItem is SpellbookInventoryItem wandInventoryItem)
+			if (invItem is WandInventoryItem wandInventoryItem)
 			{
 				Debug.Log($"Found a wand to convert {wandInventoryItem.Item.Name}");
 			
@@ -201,9 +201,9 @@ public class ChestNetworkManager : NetworkBehaviour
 		{
 			InventoryItem invItem = new(GameManager.Instance.GetItemSOFromItemId(syncItem.ItemId), syncItem.Quantity);
 			
-			if(invItem.Item is SpellBookItemSO wandItemSO)
+			if(invItem.Item is WandItemSO wandItemSO)
 			{
-				var wandInventoryItem = new SpellbookInventoryItem(GameManager.Instance.GetItemSOFromItemId(syncItem.ItemId), syncItem.Quantity, wandItemSO.Capacity);
+				var wandInventoryItem = new WandInventoryItem(GameManager.Instance.GetItemSOFromItemId(syncItem.ItemId), syncItem.Quantity, wandItemSO.Capacity);
 			
 				Debug.Log($"Found a wand to turn to game data {invItem.Item.Name}");
 			

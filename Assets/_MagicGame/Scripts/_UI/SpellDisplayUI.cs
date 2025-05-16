@@ -10,20 +10,19 @@ public class SpellDisplayUI : MonoBehaviour
 
     private void Start()
     {
-        SpellManager.Instance.OnSpellbookUpdated += UpdateSpellDisplay;
-        SpellManager.Instance.OnSelectedSpellUpdated += UpdateSelectedSpell;
+        SpellManager.Instance.OnSpellArrayUpdated += UpdateSpellDisplay;
     }
 
     private void UpdateSpellDisplay(object sender, EventArgs e)
     {
-        if(SpellManager.Instance.HasEquippedSpellBook)
+        if(SpellManager.Instance.SpellItemArray != null)
         {
-            foreach (SpellItemSO spell in SpellManager.Instance.GetSpells())
+            foreach (SpellItemSO spell in SpellManager.Instance.SpellItemArray)
             {
                 GameObject spellDisplaySlotUI = Instantiate(SpellDisplaySlotUIPrefab, transform);
                 SpellDisplaySlotUI slotUI = spellDisplaySlotUI.GetComponent<SpellDisplaySlotUI>();
                 slotUI.SetSpell(spell);
-                
+
                 int spellId = GameManager.Instance.GetItemIdFromItemSO(spell);
                 _spellSlotDatabase[spellId] = slotUI;
             }
@@ -31,28 +30,6 @@ public class SpellDisplayUI : MonoBehaviour
         else
         {
             ClearSpells();
-        }
-    }
-
-    private void UpdateSelectedSpell(object sender, EventArgs e)
-    {
-        SpellItemSO selectedSpell = SpellManager.Instance.SelectedSpell;
-        
-        if(selectedSpell != null)
-        {
-            int selectedSpellId = GameManager.Instance.GetItemIdFromItemSO(selectedSpell);
-            
-            foreach (var kvp in _spellSlotDatabase)
-            {
-                if (kvp.Key == selectedSpellId)
-                {
-                    kvp.Value.SelectSlot();
-                }
-                else
-                {
-                    kvp.Value.DeselectSlot();
-                }
-            }
         }
     }
 
@@ -67,7 +44,6 @@ public class SpellDisplayUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        SpellManager.Instance.OnSpellbookUpdated -= UpdateSpellDisplay;
-        SpellManager.Instance.OnSelectedSpellUpdated -= UpdateSelectedSpell;
+        SpellManager.Instance.OnSpellArrayUpdated -= UpdateSpellDisplay;
     }
 }

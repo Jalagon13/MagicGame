@@ -184,7 +184,7 @@ public class SaveSystem : MonoBehaviour
 				{
 					List<int> magicArray = new();
 					
-					if(chestData.Value[i] is SpellbookInventoryItem wandInventoryItem)
+					if(chestData.Value[i] is WandInventoryItem wandInventoryItem)
 					{
 						for (int j = 0; j < wandInventoryItem.MagicArray.Length; j++)
 						{
@@ -373,9 +373,9 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 			{
 				ItemSO itemToAdd = GameManager.Instance.GetItemSOFromItemId(item.ItemId);
 				
-				if(itemToAdd is SpellBookItemSO wandItemSO)
+				if(itemToAdd is WandItemSO wandItemSO)
 				{
-					SpellbookInventoryItem wandInventoryItem = new SpellbookInventoryItem(itemToAdd, item.Quantity, wandItemSO.Capacity);
+					WandInventoryItem wandInventoryItem = new WandInventoryItem(itemToAdd, item.Quantity, wandItemSO.Capacity);
 
 					for (int i = 0; i < item.MagicArray.Count; i++)
 					{

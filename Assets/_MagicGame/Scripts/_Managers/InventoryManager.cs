@@ -98,16 +98,16 @@ public class InventoryManager : MonoBehaviour
 		_inventoryModel.UpdateInventory();
 	}
 	
-	public bool SelectedItemExists(out InventoryItem mainHandInventoryItem)
+	public bool SelectedItemExists(out InventoryItem selectedItem)
 	{
 		if(_mouseItemModel.MouseInventoryItem.HasItem)
 		{
-			mainHandInventoryItem = _mouseItemModel.MouseInventoryItem;
+			selectedItem = _mouseItemModel.MouseInventoryItem;
 			return _mouseItemModel.MouseInventoryItem.Item != null;
 		}
 		else
 		{
-			mainHandInventoryItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
+			selectedItem = _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
 			return _inventoryModel.InventoryItems[GameInput.Instance.GetSelectedSlotIndex()].Item != null;
 		}
 	}
@@ -443,9 +443,9 @@ public class InventoryManager : MonoBehaviour
 
 		switch (inventoryItem)
 		{
-			case SpellbookInventoryItem wandInventoryItem:
+			case WandInventoryItem wandInventoryItem:
 				SpellItemSO[] magicArray = wandInventoryItem.MagicArray;
-				Tooltip.WandDisplay(wandInventoryItem.Item as SpellBookItemSO, magicArray, fontSize: 12f);
+				Tooltip.WandDisplay(wandInventoryItem.Item as WandItemSO, magicArray, fontSize: 12f);
 				break;
 			default:	
 				if(inventoryItem.Item is SpellItemSO spellItemSO)

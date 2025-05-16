@@ -21,10 +21,7 @@ public class SpellManager : NetworkBehaviour
 {  
     public static SpellManager Instance { get; private set; }
     
-    public event EventHandler OnSpellbookUpdated;
-    public event EventHandler OnSpellWheelOpened;
-    public event EventHandler OnSpellWheelClosed;
-    public event EventHandler OnSelectedSpellUpdated;
+    public event EventHandler OnSpellArrayUpdated;
     public event EventHandler OnSpellCooldownTimersUpdated;
     public event EventHandler<ExecuteSpellsEventArgs> OnExecuteSpells;
     public class ExecuteSpellsEventArgs : EventArgs
@@ -34,38 +31,91 @@ public class SpellManager : NetworkBehaviour
     }
     public event EventHandler OnCancelSpells;
 
-    public SpellbookInventoryItem EquippedSpellBook { get; private set; }
-    public bool HasEquippedSpellBook => EquippedSpellBook != null;
-    public SpellItemSO SelectedSpell { get; private set; }
     public Timer CastTimeTimer { get; private set; }
     public Dictionary<int, Timer> SpellCooldownTimers { get; private set; } = new(); // Id of the spell on CD and the CD timer associated with it
+    public SpellItemSO[] SpellItemArray { get; private set; } // Holds the array of spells from the wand that is currently selected
     public bool IsContinuouslyCasting { get; set; }
 
-    private bool _isSpellWheelOpen;
     private LoadedSpell _loadedSpell;
-    private List<SpellItemSO> _spellsEquipped = new();
+    private readonly int[] _spellSlotPriority = new int[]
+    {
+        0, // Left Click (Primary)
+        1, // Right Click (Secondary)
+        2, // Shift
+        3  // Space
+    };
 
     private void Awake()
     {
         Instance = this;
         CastTimeTimer = new Timer(0);
+
+        if (NetworkManager != null)
+        {
+            NetworkManager.OnClientConnectedCallback += RegisterSelectedItemIndexChangeFunctionality;
+        }
     }
-    
+
+    private void RegisterSelectedItemIndexChangeFunctionality(ulong clientId)
+    {
+        if (NetworkManager.LocalClientId != clientId) return;
+
+        Player.LocalClientInstance.SelectedItemIndexNetworkVariable.OnValueChanged += HandleItemIndexChanged;
+    }
+
     private void Start()
     {
-        GameInput.Instance.OnSpaceStarted += OpenSpellWheel;
-        GameInput.Instance.OnSpaceCanceled += CloseSpellWheel;
         HotbarManager.Instance.OnFocusSlotUpdated += CheckForSelectedItemChange;
     }
 
     private void Update()
     {
+        if(Player.LocalClientInstance == null) return;
+    
         HandleTimers();
 
-        if (CanCastSelectedSpell())
+        if (SpellItemArray != null && !IsContinuouslyCasting && CastTimeTimer.RemainingSeconds <= 0)
         {
-            LoadSpell();
+            foreach (int slotIndex in _spellSlotPriority)
+            {
+                if (slotIndex < SpellItemArray.Length && IsSpellKeyHeld(slotIndex))
+                {
+                    // Insert spell casting logic here
+                    AttemptToCastSpellAtSlot(slotIndex);
+                    break;
+                }
+            }
         }
+    }
+
+    public bool HasMiningSpell(out MiningSpellItemSO spell, out int slotIndex)
+    {
+        spell = null;
+        slotIndex = -1;
+
+        foreach (SpellItemSO item in SpellItemArray)
+        {
+            if(item is MiningSpellItemSO miningSpellItemSO)
+            {
+                spell = miningSpellItemSO;
+                slotIndex = Array.IndexOf(SpellItemArray, item);
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public bool IsSpellKeyHeld(int slotIndex)
+    {
+        return slotIndex switch
+        {
+            0 => GameInput.Instance.GetPrimaryHeldDown(),
+            1 => GameInput.Instance.GetSecondaryHeldDown(),
+            2 => GameInput.Instance.GetShiftHeldDown(),
+            3 => GameInput.Instance.GetSpaceHeldDown(),
+            _ => false,
+        };
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
@@ -81,19 +131,41 @@ public class SpellManager : NetworkBehaviour
         spell.GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);
     }
 
-    private bool CanCastSelectedSpell()
+    private void AttemptToCastSpellAtSlot(int slotIndex)
     {
-        bool primaryHeldDown = GameInput.Instance.GetPrimaryHeldDown();
-        bool hasSpellbook = HasEquippedSpellBook;
-        bool hasSelectedSpell = SelectedSpell != null;
-        bool selectedItemExists = InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-        bool isStaffItem = selectedItemExists && selectedInventoryItem.Item is WandItemSO;
-        bool isCastTimeOver = CastTimeTimer.RemainingSeconds <= 0;
-        bool hasEnoughMana = SelectedSpell != null && PlayerStats.Instance.CurrentMana >= SelectedSpell.ManaCost;
-        bool selectedSpellOnCooldown = IsSelectedSpellOnCooldown();
+        SpellItemSO spell = SpellItemArray[slotIndex];
+        if (spell != null && CanCastSelectedSpell(spell))
+        {
+            if (spell is not MiningSpellItemSO)
+            {
+                LoadSpell(spell, slotIndex);
+            }
+        }
+    }
 
-        return primaryHeldDown && hasSpellbook && hasSelectedSpell && isStaffItem && isCastTimeOver && !_isSpellWheelOpen && !Pointer.IsOverUI() && 
-        !Pointer.IsOverInteractable() && hasEnoughMana && !selectedSpellOnCooldown && !IsContinuouslyCasting && SelectedSpell is not MiningSpellItemSO;
+    private void HandleItemIndexChanged(int previousValue, int newValue)
+    {
+        if(GameManager.Instance.GetItemSOFromItemId(newValue) is WandItemSO wandItemSO)
+        {
+            InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
+            SpellItemArray = (selectedInventoryItem as WandInventoryItem).MagicArray;
+        }
+        else
+        {
+            SpellItemArray = null;
+        }
+
+        OnSpellArrayUpdated?.Invoke(this, EventArgs.Empty);
+    }
+
+    private bool CanCastSelectedSpell(SpellItemSO spell)
+    {
+        bool isOverUI = Pointer.IsOverUI();
+        bool isOverInteractable = Pointer.IsOverInteractable();
+        bool isOnCooldown = SpellCooldownTimers.ContainsKey(GameManager.Instance.GetItemIdFromItemSO(spell));
+        bool hasEnoughMana = Player.LocalClientInstance.PlayerStats.CurrentMana >= spell.ManaCost;
+
+        return !isOverUI && !isOverInteractable && !isOnCooldown && hasEnoughMana;
     }
 
     private void HandleTimers()
@@ -131,16 +203,17 @@ public class SpellManager : NetworkBehaviour
         }
     }
 
-    private void LoadSpell()
+    private void LoadSpell(SpellItemSO spellToCast, int slotIndex)
     {
-        // Your spell-casting logic here
         InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-        _loadedSpell = new(SelectedSpell, SelectedSpell.LoadSpell(EquippedSpellBook.Item as SpellBookItemSO), selectedInventoryItem);
+        var syncSpellData = spellToCast.GetSpellDataForLocalClientInstance(slotIndex);
+        SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
+        _loadedSpell = new LoadedSpell(spellToCast, syncSpellData, selectedInventoryItem);
 
-        Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(SelectedSpell.HasteMultiplier);
-        Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(_loadedSpell.SpellToCast), SelectedSpell.CastTime);
+        Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(spellToCast.HasteMultiplier);
+        Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(spellToCast), spellToCast.CastTime);
 
-        CastTimeTimer = new(SelectedSpell.CastTime);
+        CastTimeTimer = new Timer(spellToCast.CastTime);
         CastTimeTimer.OnTimerEnd += ExecuteSpell;
     }
 
@@ -195,98 +268,20 @@ public class SpellManager : NetworkBehaviour
         CastTimeTimer = new Timer(0);
     }
 
-    private bool IsSelectedSpellOnCooldown()
-    {
-        int selectedSpellId = GameManager.Instance.GetItemIdFromItemSO(SelectedSpell);
+    // private bool IsSelectedSpellOnCooldown()
+    // {
+    //     int selectedSpellId = GameManager.Instance.GetItemIdFromItemSO(SelectedSpell);
         
-        return SpellCooldownTimers.ContainsKey(selectedSpellId);
-    }
-
-    public List<SpellItemSO> GetSpells()
-    {
-        if (HasEquippedSpellBook)
-        {
-            List<SpellItemSO> spellList = new();
-            
-            foreach (var spell in EquippedSpellBook.MagicArray)
-            {
-                if(spell != null) spellList.Add(spell);
-            }
-            
-            return spellList.Count > 0 ? spellList : null;
-        }
-        
-        return null;
-    }
-
-    #region Setters and Clears
-    
-    private void OpenSpellWheel(object sender, EventArgs e)
-    {
-        _isSpellWheelOpen = true;
-        OnSpellWheelOpened?.Invoke(this, EventArgs.Empty);
-    }
-
-    private void CloseSpellWheel(object sender, EventArgs e)
-    {
-        _isSpellWheelOpen = false;
-        OnSpellWheelClosed?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void SetSelectedSpell(SpellItemSO spell)
-    {
-        SelectedSpell = spell;
-        OnSelectedSpellUpdated?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void ClearSelectedSpell()
-    {
-        SelectedSpell = null;
-        OnSelectedSpellUpdated?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void EquipSpellBook(SpellbookInventoryItem spellbook)
-    {
-        EquippedSpellBook = spellbook;
-        OnSpellbookUpdated?.Invoke(this, EventArgs.Empty);
-
-        _spellsEquipped = GetSpells();
-        if (_spellsEquipped != null && _spellsEquipped.Count > 0)
-        {
-            SetSelectedSpell(_spellsEquipped[0]);
-        }
-        else
-        {
-            ClearSelectedSpell();
-        }
-    }
-
-    public SpellbookInventoryItem RemoveEquippedSpellBook()
-    {
-        ClearSelectedSpell();
-        SpellbookInventoryItem oldSpellbook = EquippedSpellBook;
-        EquippedSpellBook = null;
-        
-        OnSpellbookUpdated?.Invoke(this, EventArgs.Empty);
-        
-        return oldSpellbook;
-    }
-
-    public SpellbookInventoryItem SwapEquippedSpellBook(SpellbookInventoryItem spellbook)
-    {
-        SpellbookInventoryItem oldSpellbook = EquippedSpellBook;
-        EquippedSpellBook = spellbook;
-
-        OnSpellbookUpdated?.Invoke(this, EventArgs.Empty);
-
-        return oldSpellbook;
-    }
-    #endregion
+    //     return SpellCooldownTimers.ContainsKey(selectedSpellId);
+    // }
 
     public override void OnDestroy()
     {
-        GameInput.Instance.OnSpaceStarted -= OpenSpellWheel;
-        GameInput.Instance.OnSpaceCanceled -= CloseSpellWheel;
+        if (NetworkManager != null)
+        {
+            NetworkManager.OnClientConnectedCallback -= RegisterSelectedItemIndexChangeFunctionality;
+        }
+
         HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSelectedItemChange;
     }
 }

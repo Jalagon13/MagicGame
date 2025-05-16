@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public class SpellDisplaySlotUI : MonoBehaviour
 {
-    [field: SerializeField] public Color SelectedColor { get; private set; }
-    [field: SerializeField] public Color DeselectedColor { get; private set; }
     [field: SerializeField] public Image CooldownUI { get; private set; }
 
     private SpellItemSO _spell;
@@ -42,24 +40,9 @@ public class SpellDisplaySlotUI : MonoBehaviour
     public void SetSpell(SpellItemSO spell)
     {
         _spell = spell;
-        _spellIcon.sprite = _spell.SpellUIDisplaySprite;
+        _spellIcon.sprite = _spell != null ? _spell.SpellUIDisplaySprite : null;
+        _spellIcon.enabled = _spell != null;
         _spellId = GameManager.Instance.GetItemIdFromItemSO(_spell);
-    }
-    
-    public void SelectSlot()
-    {
-        _background.color = SelectedColor;
-        Color c = _background.color;
-        c.a = 1f;
-        _background.color = c;
-    }
-    
-    public void DeselectSlot()
-    {
-        _background.color = DeselectedColor;
-        Color c = _background.color;
-        c.a = 0.75f;
-        _background.color = c;
     }
     
     private void OnDestroy()

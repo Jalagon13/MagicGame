@@ -19,7 +19,7 @@ MonoBehaviour:
   <Description>k__BackingField: 
   <SpellProjectilePrefab>k__BackingField: {fileID: 433218415224276779, guid: 7b76a216d688c40859abed843d362a5f, type: 3}
   <SpellUIDisplaySprite>k__BackingField: {fileID: -762693607845688436, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
-  <ChargeVFX>k__BackingField: {fileID: 3235512204744374167, guid: 966ce96a46a0346519d0f2a96c141a22, type: 3}
+  <ChargeVFX>k__BackingField: {fileID: 8285152488836000937, guid: 8175636c29a52422d8069d30cf23c5b6, type: 3}
   <SpellCastSound>k__BackingField:
     Guid:
       Data1: -2115950531

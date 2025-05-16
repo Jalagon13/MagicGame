@@ -10,8 +10,6 @@ using UnityEngine;
 
 public class Spell : NetworkBehaviour
 {
-	public static bool IsContinuouslyCasting;
-	
 	[field: SerializeField] public GameObject Visualization { get; private set; }
 	[field: SerializeField] public float DespawnDelay { get; private set; }
 
@@ -111,7 +109,7 @@ public class Spell : NetworkBehaviour
 		{
 			if(SpellData.Value.IsContinuousCast && IsStarted.Value)
 			{
-			    if(!GameInput.Instance.GetPrimaryHeldDown())
+			    if(!SpellManager.Instance.IsSpellKeyHeld(SpellData.Value.WandSlotIndex))
 			    {
 					OnOwnerSpellEnd();
 				}

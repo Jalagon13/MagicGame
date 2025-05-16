@@ -1,34 +1,23 @@
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using FMODUnity;
 
-[CreateAssetMenu(fileName = "wand_", menuName = "Create Item/New Wand")]
+[CreateAssetMenu(fileName = "New Wand", menuName = "Create Item/New Wand")]
 public class WandItemSO : ItemSO
 {
-	// For custom spell modifiers
-	[field: SerializeField] public int MeleeDamage { get; private set; }
-	[field: SerializeField] public int Knockback { get; private set; }
-	[field: SerializeField] public float SwingCooldown { get; private set; } = 0.25f;
-	[field: SerializeField] public EventReference HitSound { get; private set; }
-
-	public void PlayHitSound()
-	{
-	    SoundManager.Instance.PlayOneShot(HitSound, Player.LocalClientInstance.transform.position);
-	}
+	[field: Tooltip("The number of spells that can be stored in the spell book.")]
+	[field: SerializeField] public int Capacity { get; private set; } = 2;
 
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
 		return _baseActionCooldown;
 	}
 	
-	public override string GetDescription()
-	{
-		return Description;
-	}
-	
 	public override InventoryItem CreateInventoryItem(int quantity)
 	{
-		return new InventoryItem(this, quantity);
+		return new WandInventoryItem(this, quantity, Capacity);
+	}
+
+	public override string GetDescription()
+	{
+		return string.Empty;
 	}
 }

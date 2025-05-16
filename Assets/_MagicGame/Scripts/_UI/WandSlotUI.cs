@@ -22,7 +22,7 @@ public class WandSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 		
 		if(_wandMenuUI.HasWand())
 		{
-			if(mouseItem.HasItem && mouseItem is SpellbookInventoryItem mouseWandInventoryItem)
+			if(mouseItem.HasItem && mouseItem is WandInventoryItem mouseWandInventoryItem)
 			{
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem = _wandMenuUI.SwapWands(mouseWandInventoryItem);
 			}
@@ -40,7 +40,7 @@ public class WandSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 
 			Tooltip.HideUI();
 		}
-		else if(mouseItem.HasItem && mouseItem is SpellbookInventoryItem mouseWandInventoryItem)
+		else if(mouseItem.HasItem && mouseItem is WandInventoryItem mouseWandInventoryItem)
 		{
 			_wandMenuUI.PlaceSelectedWand(mouseWandInventoryItem);
 			InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();

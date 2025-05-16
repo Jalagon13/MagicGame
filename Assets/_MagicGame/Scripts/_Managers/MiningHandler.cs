@@ -80,129 +80,161 @@ public class MiningHandler : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (Player.LocalClientInstance == null || Player.LocalClientInstance.HealthState.IsDead || Pointer.IsOverUI() || 
-        !GameInput.Instance.GetInputsEnabled() || !InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem)) return;
-
-        if(DeployItemSO.PlacedThisFrameFlag)
+        if (!CanMine(out InventoryItem selectedInventoryItem)) return;
+        if (DeployItemSO.PlacedThisFrameFlag)
         {
-            if(!_placeDelayActive)
+            if (!_placeDelayActive)
             {
                 StartCoroutine(SmallPlacementDelay());
             }
-            
             return;
         }
 
         _breakCooldownTimer.Tick(Time.deltaTime);
 
-        if (selectedInventoryItem.Item is WandItemSO wandItem && SpellManager.Instance.SelectedSpell is MiningSpellItemSO miningSpellItemSO)
+        if (IsHoldingMiningWand(selectedInventoryItem, out MiningSpellItemSO miningSpellItemSO, out int miningSpellSlotIndex))
         {
-            _destructableFound = DestructableType.None;
-            _currentBreakTargetPosition = null;
+            DetectTarget(miningSpellItemSO);
+            HandleMiningLogic(miningSpellItemSO, miningSpellSlotIndex);
+        }
+    }
 
-            if (miningSpellItemSO.PlayerWithinMiningRangeOfMouse())
+    private bool CanMine(out InventoryItem selectedInventoryItem)
+    {
+        selectedInventoryItem = default;
+        return Player.LocalClientInstance != null &&
+               !Player.LocalClientInstance.HealthState.IsDead &&
+               !Pointer.IsOverUI() &&
+               GameInput.Instance.GetInputsEnabled() &&
+               InventoryManager.Instance.SelectedItemExists(out selectedInventoryItem);
+    }
+
+    private bool IsHoldingMiningWand(InventoryItem item, out MiningSpellItemSO miningSpell, out int miningSpellSlotIndex)
+    {
+        miningSpell = null;
+        miningSpellSlotIndex = -1;
+
+        if (item.Item is WandItemSO && SpellManager.Instance.HasMiningSpell(out MiningSpellItemSO spell, out int slotIndex))
+        {
+            miningSpell = spell;
+            miningSpellSlotIndex = slotIndex;
+            return true;
+        }
+
+        return false;
+    }
+
+    private void DetectTarget(MiningSpellItemSO miningSpellItemSO)
+    {
+        _destructableFound = DestructableType.None;
+        _currentBreakTargetPosition = null;
+
+        if (!miningSpellItemSO.PlayerWithinMiningRangeOfMouse()) return;
+
+        Vector3Int pos = ActionManager.MouseTilePosition;
+
+        if (OverNpc(ActionManager.MouseWorldPosition, out Npc npc))
+        {
+            _selectedNPC = npc;
+            _destructableFound = DestructableType.Npc;
+            _currentBreakTargetPosition = pos;
+        }
+        else if (ObjectManager.Instance.TryToFindWorldObject((Vector2Int)pos, out WorldObject wo) && wo.CanBeDestroyed)
+        {
+            _worldObjectSelected = wo;
+            _destructableFound = DestructableType.WorldObject;
+            _currentBreakTargetPosition = pos;
+        }
+        else if (FocusingOnWall)
+        {
+            Vector3Int wallPos = Pointer.IsOverTopTile() ? pos + Vector3Int.down : pos;
+            if (TileRenderManager.Instance.WallTm.HasTile(wallPos))
             {
-                if(OverNpc(ActionManager.MouseWorldPosition, out Npc npc))
-                {
-                    _selectedNPC = npc;
-                    _destructableFound = DestructableType.Npc;
-                    _currentBreakTargetPosition = ActionManager.MouseTilePosition;
-                }
-                else if (ObjectManager.Instance.TryToFindWorldObject((Vector2Int)ActionManager.MouseTilePosition, out WorldObject wo) && wo.CanBeDestroyed) // Try to detect a destructable type to destroy
-                {
-                    // Found an object to destroy
-                    _worldObjectSelected = wo;
-                    _destructableFound = DestructableType.WorldObject;
-                    _currentBreakTargetPosition = ActionManager.MouseTilePosition;
-                }
-                else if (FocusingOnWall)
-                {
-                    // Try to find a destructable tile
-                    Vector3Int pos = Pointer.IsOverTopTile() ? ActionManager.MouseTilePosition + Vector3Int.down : ActionManager.MouseTilePosition;
-                    if (TileRenderManager.Instance.WallTm.HasTile(pos))
-                    {
-                        if(TileRenderManager.Instance.OreTm.HasTile(pos))
-                        {
-                            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.OreTm.GetTile(pos));
-                        }
-                        else
-                        {
-                            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.WallTm.GetTile(pos));
-                        }
+                _tileSelected = TileRenderManager.Instance.OreTm.HasTile(wallPos)
+                    ? GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.OreTm.GetTile(wallPos))
+                    : GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.WallTm.GetTile(wallPos));
 
-                        _destructableFound = DestructableType.Tile;
-                        _currentBreakTargetPosition = pos;
-                    }
-                }
-                else if (TileRenderManager.Instance.FloorTm.HasTile(ActionManager.MouseTilePosition))
-                {
-                    _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.FloorTm.GetTile(ActionManager.MouseTilePosition));
-                    _destructableFound = DestructableType.Tile;
-                    _currentBreakTargetPosition = ActionManager.MouseTilePosition;
-                }
+                _destructableFound = DestructableType.Tile;
+                _currentBreakTargetPosition = wallPos;
+            }
+        }
+        else if (TileRenderManager.Instance.FloorTm.HasTile(pos))
+        {
+            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.FloorTm.GetTile(pos));
+            _destructableFound = DestructableType.Tile;
+            _currentBreakTargetPosition = pos;
+        }
+    }
+
+    private void HandleMiningLogic(MiningSpellItemSO miningSpellItemSO, int miningSpellSlotIndex)
+    {
+        bool wasMining = IsMining;
+
+        if (_destructableFound == DestructableType.None || _breakCooldownTimer.RemainingSeconds > 0)
+        {
+            IsMining = false;
+        }
+        else if (SpellManager.Instance.CastTimeTimer.RemainingSeconds <= 0 && !SpellManager.Instance.IsContinuouslyCasting && SpellManager.Instance.IsSpellKeyHeld(miningSpellSlotIndex))
+        {
+            if (!IsMining)
+            {
+                BeginMining(miningSpellItemSO);
             }
 
-            bool wasMining = IsMining;
-
-            if(_destructableFound == DestructableType.None || _breakCooldownTimer.RemainingSeconds > 0)
+            if (IsMining)
             {
-                IsMining = false;
-            }
-            else if (GameInput.Instance.GetPrimaryHeldDown())
-            {
-                if (IsMining == false)
+                if (_currentBreakTargetPosition != _originalBreakTargetPosition)
                 {
-                    IsMining = true;
-                    _originalBreakTargetPosition = _currentBreakTargetPosition;
-
-                    float hardness = _destructableFound switch
-                    {
-                        DestructableType.WorldObject => _worldObjectSelected.Hardness,
-                        DestructableType.Tile => _tileSelected.Hardness,
-                        DestructableType.Npc => 1,
-                        _ => 1f // Default value
-                    };
-
-                    float totalTicks = hardness * 30f / Mathf.Max(miningSpellItemSO.MiningPower, 0.1f);
-                    float totalMiningTime = totalTicks * 0.05f;
-                    _cachedTotalMiningTime = totalMiningTime;
-                    if (totalMiningTime == 0)
-                    {
-                        DestroyResource(null, null);
-                    }
-                    else
-                    {
-                        _miningTimer = new Timer(totalMiningTime);
-                        PlayMiningSound(null, null);
-                        _miningTimer.OnTimerEnd -= DestroyResource;
-                        _miningTimer.OnTimerEnd += DestroyResource;
-                    }
+                    IsMining = false;
+                    _originalBreakTargetPosition = null;
+                    _breakCooldownTimer.RemainingSeconds = BreakCooldownDuration;
+                    OnMiningStateChanged();
+                    return;
                 }
 
-                if (IsMining)
-                {
-                    if (_currentBreakTargetPosition != _originalBreakTargetPosition)
-                    {
-                        IsMining = false;
-                        _originalBreakTargetPosition = null;
-                        _breakCooldownTimer.RemainingSeconds = BreakCooldownDuration;
-                        OnMiningStateChanged();
-                        return;
-                    }
-                    _miningTimer.Tick(Time.deltaTime);
-                    _miningSoundTimer.Tick(Time.deltaTime);
-                }
+                _miningTimer.Tick(Time.deltaTime);
+                _miningSoundTimer.Tick(Time.deltaTime);
             }
-            else
-            {
-                IsMining = false;
-                _originalBreakTargetPosition = null;
-            }
-            
-            if (wasMining != IsMining)
-            {
-                OnMiningStateChanged();
-            }
+        }
+        else
+        {
+            IsMining = false;
+            _originalBreakTargetPosition = null;
+        }
+
+        if (wasMining != IsMining)
+        {
+            OnMiningStateChanged();
+        }
+    }
+
+    private void BeginMining(MiningSpellItemSO miningSpellItemSO)
+    {
+        IsMining = true;
+        _originalBreakTargetPosition = _currentBreakTargetPosition;
+
+        float hardness = _destructableFound switch
+        {
+            DestructableType.WorldObject => _worldObjectSelected.Hardness,
+            DestructableType.Tile => _tileSelected.Hardness,
+            DestructableType.Npc => 1f,
+            _ => 1f
+        };
+
+        float totalTicks = hardness * 30f / Mathf.Max(miningSpellItemSO.MiningPower, 0.1f);
+        float totalMiningTime = totalTicks * 0.05f;
+        _cachedTotalMiningTime = totalMiningTime;
+
+        if (totalMiningTime == 0)
+        {
+            DestroyResource(null, null);
+        }
+        else
+        {
+            _miningTimer = new Timer(totalMiningTime);
+            PlayMiningSound(null, null);
+            _miningTimer.OnTimerEnd -= DestroyResource;
+            _miningTimer.OnTimerEnd += DestroyResource;
         }
     }
 

@@ -18,7 +18,7 @@ public class HotbarSlotsUI : MonoBehaviour
 	{
 		for (int i = 0; i < transform.childCount; i++)
 		{
-			if(i == e.FocusItemSlotIndex)
+			if(i == e.SelectedItemInventorySlotIndex)
 			{
 				HighlightSlot(transform.GetChild(i));
 			}

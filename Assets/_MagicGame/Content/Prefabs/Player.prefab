@@ -283,14 +283,14 @@ MonoBehaviour:
   _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
   _respawnTimerDuration: 2
   _spawnWandItems: 1
-  _startingSpellBookItems:
+  _startWandItems:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: 9641abfbdc9ce4397985eef9216c780d, type: 2}
     - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
-    - {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
+    - {fileID: 11400000, guid: 9641abfbdc9ce4397985eef9216c780d, type: 2}
     - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
+    - {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
     - {fileID: 11400000, guid: 8565452f84d47428ca82aed67cb5ca9e, type: 2}
   _startingItems:
   - Item: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
@@ -300,6 +300,8 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
     Quantity: 12
   - Item: {fileID: 11400000, guid: 7a301bb37deb44535a75d1fb8c9190c3, type: 2}
+    Quantity: 111
+  - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
     Quantity: 111
 --- !u!114 &6270092794415709611
 MonoBehaviour:

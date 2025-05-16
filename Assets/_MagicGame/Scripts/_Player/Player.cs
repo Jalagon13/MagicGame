@@ -37,7 +37,7 @@ public class Player : NetworkBehaviour
 	
 	[SerializeField] private float _respawnTimerDuration;
 	[SerializeField] private bool _spawnWandItems;
-	[SerializeField] private List<SpellbookInventoryItem> _startingSpellBookItems = new();
+	[SerializeField] private List<WandInventoryItem> _startWandItems = new();
 	[SerializeField] private List<InventoryItem> _startingItems = new();
 
 	public Knockback PlayerKnockback { get; private set; }
@@ -93,23 +93,16 @@ public class Player : NetworkBehaviour
 
 			if (_spawnWandItems)
 			{
-				foreach (InventoryItem item in _startingItems)
+				foreach (WandInventoryItem wandInvItem in _startWandItems)
 				{
-					InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
-					InventoryManager.Instance.AddItem(itemToAdd, false);
-					yield return new WaitForEndOfFrame();
-				}
-
-				foreach (SpellbookInventoryItem wandInvItem in _startingSpellBookItems)
-				{
-					if (wandInvItem.Item is not SpellBookItemSO)
+					if (wandInvItem.Item is not WandItemSO)
 					{
 						Debug.LogWarning($"{wandInvItem.Item} is not a wand. skipping it");
 						continue;
 					}
 
-					SpellBookItemSO wandItemSO = wandInvItem.Item as SpellBookItemSO;
-					SpellbookInventoryItem wandItemToAdd = (SpellbookInventoryItem)wandItemSO.CreateInventoryItem(1);
+					WandItemSO wandItemSO = wandInvItem.Item as WandItemSO;
+					WandInventoryItem wandItemToAdd = (WandInventoryItem)wandItemSO.CreateInventoryItem(1);
 
 					for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
 					{
@@ -127,6 +120,13 @@ public class Player : NetworkBehaviour
 					}
 
 					InventoryManager.Instance.AddItem(wandItemToAdd, false);
+					yield return new WaitForEndOfFrame();
+				}
+
+				foreach (InventoryItem item in _startingItems)
+				{
+					InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
+					InventoryManager.Instance.AddItem(itemToAdd, false);
 					yield return new WaitForEndOfFrame();
 				}
 			}
@@ -252,7 +252,7 @@ public class Player : NetworkBehaviour
 	{
 		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromItemId(SelectedItemIndexNetworkVariable.Value);
 		
-		return mainHandItem != null && (mainHandItem is WandItemSO || mainHandItem is SpellBookItemSO);
+		return mainHandItem != null && (mainHandItem is SwordItemSO || mainHandItem is WandItemSO);
 	}
 	
 	public override void OnDestroy()

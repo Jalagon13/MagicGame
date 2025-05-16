@@ -80,25 +80,60 @@ public class PlayerHand : NetworkBehaviour
 		float angle = NormalizeAngle(_angleNetworkVariable.Value);
 		ArmCardinalDirection = DetermineCardinalDirection(angle);
 		
-		if(HeldItem is WandItemSO || HeldItem is MiningSpellItemSO)
+		if(HeldItem is WandItemSO)
 		{
 			if (!IsSwinging)
 			{
 				RotateArmBasedOnAngle();
 			}
-			
-			if(HeldItem is WandItemSO)
-			{
-				TryToSwing();
-			}
+		}
+		else if (HeldItem is SwordItemSO)
+		{
+			TryToSwing();
 		}
 	}
-	
+
+	private void HandleItemIndexChanged(int previousValue, int newValue)
+	{
+		UpdateArmFromItemIndex(newValue);
+	}
+
+	private void UpdateArmFromItemIndex(int newValue)
+	{
+		var tempItem = HeldItem;
+		HeldItem = GameManager.Instance.GetItemSOFromItemId(newValue);
+
+		if ((tempItem is WandItemSO) && (HeldItem is not WandItemSO) && !IsSwinging)
+		{
+			OnHoldingWandEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
+		}
+
+		if (IsSwinging)
+		{
+			_stoppingSwing = true;
+		}
+
+		if (HeldItem is WandItemSO)
+		{
+			ShowArm();
+
+			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
+		}
+		else
+		{
+			HeldItem = null;
+			HideArm();
+		}
+
+		_itemHeldSR.flipX = HeldItem is WandItemSO;
+		_itemHeldSR.sprite = HeldItem?.UiDisplay;
+	}
+
 	private void TryToSwing()
 	{
 		if (IsSwinging || Pointer.IsOverUI() || Pointer.IsOverInteractable() || !IsOwner || _swingCooldownTimer.RemainingSeconds > 0) return;
 		
-		if (GameInput.Instance.GetSecondaryHeldDown())
+		if (GameInput.Instance.GetPrimaryHeldDown())
 		{
 			switch (ArmCardinalDirection)
 			{
@@ -136,46 +171,6 @@ public class PlayerHand : NetworkBehaviour
 		_thisPlayer.SelectedItemIndexNetworkVariable.OnValueChanged -= HandleItemIndexChanged;
 
 		base.OnDestroy();
-	}
-
-	#endregion
-
-	#region Item Handling
-
-	private void HandleItemIndexChanged(int previousValue, int newValue)
-	{
-		UpdateArmFromItemIndex(newValue);
-	}
-	
-	private void UpdateArmFromItemIndex(int newValue)
-	{
-		var tempItem = HeldItem;
-		HeldItem = GameManager.Instance.GetItemSOFromItemId(newValue);
-
-		if ((tempItem is WandItemSO) && (HeldItem is not WandItemSO) && !IsSwinging)
-		{
-			OnHoldingWandEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
-		}
-		
-		if(IsSwinging)
-		{
-			_stoppingSwing = true;
-		}
-
-		if (HeldItem is WandItemSO)
-		{
-			ShowArm();
-			
-			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
-		}
-		else
-		{
-			HeldItem = null;
-			HideArm();
-		}
-
-		_itemHeldSR.flipX = HeldItem is WandItemSO;
-		_itemHeldSR.sprite = HeldItem?.UiDisplay;
 	}
 
 	#endregion
@@ -225,7 +220,7 @@ public class PlayerHand : NetworkBehaviour
 		Quaternion startRotation = Quaternion.Euler(0, 0, startAngle);
 		Quaternion endRotation = Quaternion.Euler(0, 0, endAngle);
 		
-		MeleeCollider.StartSwing(HeldItem as WandItemSO);
+		MeleeCollider.StartSwing(HeldItem as SwordItemSO);
 		
 		float elapsedTime = 0f;
 		while (elapsedTime < duration)
@@ -247,7 +242,7 @@ public class PlayerHand : NetworkBehaviour
 
 	private void HandleSwingStop(CardinalDirection direction, float duration, Quaternion endRotation)
 	{
-		if (HeldItem is MiningSpellItemSO || HeldItem is WandItemSO)
+		if (HeldItem is MiningSpellItemSO || HeldItem is SwordItemSO)
 		{
 			ShowArm();
 		}
@@ -259,7 +254,7 @@ public class PlayerHand : NetworkBehaviour
 
 		MeleeCollider.EndSwing();
 
-		_swingCooldownTimer = new(HeldItem is WandItemSO staffItemSO ? staffItemSO.SwingCooldown : 0.25f);
+		_swingCooldownTimer = new(HeldItem is SwordItemSO staffItemSO ? staffItemSO.SwingCooldown : 0.25f);
 		_armPivotGO.transform.rotation = endRotation;
 		IsSwinging = false;
 		_thisPlayer.IsPerformingSwing = false;

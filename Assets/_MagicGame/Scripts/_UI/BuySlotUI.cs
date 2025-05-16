@@ -56,7 +56,7 @@ public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
 
             switch (_itemToBuy)
             {
-                case SpellBookItemSO wandItemSO:
+                case WandItemSO wandItemSO:
                     SpellItemSO[] magicArray = new SpellItemSO[0];
                     Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);
                     break;

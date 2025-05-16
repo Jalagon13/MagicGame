@@ -13,8 +13,8 @@ public class GameInput : MonoBehaviour
 	public event EventHandler OnSpaceCanceled;
 	public event EventHandler OnSwapHands;
 	public event EventHandler OnSecondaryActionStarted;
-	public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnSecondaryAction;
 	public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnPrimaryAction;
+	public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnSecondaryAction;
 	public class OnPrimaryOrSecondaryActionEventArgs : EventArgs
 	{
 		public bool IsHeldDown;
@@ -37,8 +37,7 @@ public class GameInput : MonoBehaviour
 	public event EventHandler OnMiningFocusToggled;
 	
 	private PlayerInput _playerInput;
-	
-	private bool _inventoryOpen, _primaryHeldDown, _secondaryHeldDown, _shiftHeldDown, _inputsEnabled = true;
+	private bool _inventoryOpen, _primaryHeldDown, _secondaryHeldDown, _shiftHeldDown, _spaceHeldDown, _inputsEnabled = true;
 	private int _selectedSlotIndex = 0;
 	
 	private void Awake()
@@ -100,11 +99,13 @@ public class GameInput : MonoBehaviour
     private void PlayerInput_SpaceStarted(InputAction.CallbackContext context)
 	{
 		OnSpaceStarted?.Invoke(this, EventArgs.Empty);
+		_spaceHeldDown = true;
 	}
 
 	private void PlayerInput_SpaceCanceled(InputAction.CallbackContext context)
 	{
 		OnSpaceCanceled?.Invoke(this, EventArgs.Empty);
+		_spaceHeldDown = false;
 	}
 
 	private void WorldManager_EnableInputs(object sender, EventArgs e)
@@ -230,10 +231,20 @@ public class GameInput : MonoBehaviour
 	{
 		return _primaryHeldDown;
 	}
-	
+
 	public bool GetSecondaryHeldDown()
 	{
 		return _secondaryHeldDown;
+	}
+
+	public bool GetShiftHeldDown()
+	{
+		return _shiftHeldDown;
+	}
+	
+	public bool GetSpaceHeldDown()
+	{
+	    return _spaceHeldDown;
 	}
 	
 	public int GetSelectedSlotIndex()
@@ -241,10 +252,6 @@ public class GameInput : MonoBehaviour
 		return _selectedSlotIndex;
 	}
 	
-	public bool GetShiftHeldDown()
-	{
-		return _shiftHeldDown;
-	}
 	
 	public bool GetInputsEnabled()
 	{
