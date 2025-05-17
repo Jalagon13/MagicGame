@@ -15,21 +15,23 @@ public class SpellDisplayUI : MonoBehaviour
 
     private void UpdateSpellDisplay(object sender, EventArgs e)
     {
-        if(SpellManager.Instance.SpellItemArray != null)
+        ClearSpells();
+
+        if (SpellManager.Instance.SpellItemArray != null)
         {
-            foreach (SpellItemSO spell in SpellManager.Instance.SpellItemArray)
+            for(int i = 0; i < SpellManager.Instance.SpellItemArray.Length; i++)
             {
+                if(SpellManager.Instance.SpellItemArray[i] == null) continue;
+
+                SpellItemSO spell = SpellManager.Instance.SpellItemArray[i];
+
                 GameObject spellDisplaySlotUI = Instantiate(SpellDisplaySlotUIPrefab, transform);
                 SpellDisplaySlotUI slotUI = spellDisplaySlotUI.GetComponent<SpellDisplaySlotUI>();
-                slotUI.SetSpell(spell);
+                slotUI.SetSpell(spell, i);
 
                 int spellId = GameManager.Instance.GetItemIdFromItemSO(spell);
                 _spellSlotDatabase[spellId] = slotUI;
             }
-        }
-        else
-        {
-            ClearSpells();
         }
     }
 

@@ -114,7 +114,7 @@ public class MiningHandler : MonoBehaviour
         miningSpell = null;
         miningSpellSlotIndex = -1;
 
-        if (item.Item is WandItemSO && SpellManager.Instance.HasMiningSpell(out MiningSpellItemSO spell, out int slotIndex))
+        if (SpellManager.Instance.HasMiningSpell(out MiningSpellItemSO spell, out int slotIndex))
         {
             miningSpell = spell;
             miningSpellSlotIndex = slotIndex;

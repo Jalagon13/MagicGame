@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
+using DG.Tweening;
 
 public class PlayerHand : NetworkBehaviour
 {
@@ -42,8 +43,7 @@ public class PlayerHand : NetworkBehaviour
 	);
 
 	public CardinalDirection ArmCardinalDirection { get; private set; }
-
-	#region Unity Callbacks
+	private Tween _currentSwingTween;
 
 	private void Awake()
 	{
@@ -80,7 +80,7 @@ public class PlayerHand : NetworkBehaviour
 		float angle = NormalizeAngle(_angleNetworkVariable.Value);
 		ArmCardinalDirection = DetermineCardinalDirection(angle);
 		
-		if(HeldItem is WandItemSO)
+		if(HeldItem is WandItemSO || HeldItem is SpellItemSO)
 		{
 			if (!IsSwinging)
 			{
@@ -103,7 +103,7 @@ public class PlayerHand : NetworkBehaviour
 		var tempItem = HeldItem;
 		HeldItem = GameManager.Instance.GetItemSOFromItemId(newValue);
 
-		if ((tempItem is WandItemSO) && (HeldItem is not WandItemSO) && !IsSwinging)
+		if ((tempItem is WandItemSO || tempItem is SpellItemSO) && (HeldItem is not WandItemSO || HeldItem is not SpellItemSO) && !IsSwinging)
 		{
 			OnHoldingWandEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 		}
@@ -113,20 +113,29 @@ public class PlayerHand : NetworkBehaviour
 			_stoppingSwing = true;
 		}
 
-		if (HeldItem is WandItemSO)
+		if (HeldItem is WandItemSO || HeldItem is SpellItemSO)
 		{
+			// Set the spellspawnpoint transform.y to a negative version of its current number if helditem is wand, and positive if spell
+			float originalY = Mathf.Abs(SpellSpawnTransform.localPosition.y);
+			float newY = HeldItem is WandItemSO ? -originalY : originalY;
+			SpellSpawnTransform.localPosition = new Vector3(SpellSpawnTransform.localPosition.x, newY, SpellSpawnTransform.localPosition.z);
+
 			ShowArm();
 
 			OnHoldingWandStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 		}
 		else
 		{
-			HeldItem = null;
 			HideArm();
 		}
 
-		_itemHeldSR.flipX = HeldItem is WandItemSO;
-		_itemHeldSR.sprite = HeldItem?.UiDisplay;
+		_itemHeldSR.flipX = HeldItem is WandItemSO || HeldItem is SwordItemSO;
+		_itemHeldSR.sprite = HeldItem switch
+		{
+			WandItemSO wand => wand.UiDisplay,
+			SwordItemSO sword => sword.UiDisplay,
+			_ => null
+		};
 	}
 
 	private void TryToSwing()
@@ -152,7 +161,90 @@ public class PlayerHand : NetworkBehaviour
 			}
 		}
 	}
-	
+
+	private void SwingEast(float duration) => SwingRpc(60, 300, duration, true, CardinalDirection.East, OwnerClientId);
+	private void SwingWest(float duration) => SwingRpc(120, 240, duration, false, CardinalDirection.West, OwnerClientId);
+	private void SwingNorth(float duration) => SwingRpc(150, 30, duration, true, CardinalDirection.North, OwnerClientId);
+	private void SwingSouth(float duration) => SwingRpc(330, 210, duration, false, CardinalDirection.South, OwnerClientId);
+
+	[Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+	private void SwingRpc(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction, ulong clientSenderId)
+	{
+		if (clientSenderId != OwnerClientId) return;
+
+		if (OwnerClientId == NetworkManager.LocalClientId)
+		{
+			if (IsSwinging)
+			{
+				return;
+			}
+		}
+
+		SetPivotPosition(direction);
+
+		ShowArm();
+
+		OnSwingStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
+
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerMeleeSwing, Player.LocalClientInstance.transform.position);
+
+		_thisPlayer.IsPerformingSwing = true;
+		IsSwinging = true;
+
+		startAngle = NormalizeAngle(startAngle);
+		endAngle = NormalizeAngle(endAngle);
+
+		if (clockwise && endAngle > startAngle) startAngle += 360f;
+		else if (!clockwise && startAngle > endAngle) endAngle += 360f;
+
+		Quaternion startRotation = Quaternion.Euler(0, 0, startAngle);
+		Quaternion endRotation = Quaternion.Euler(0, 0, endAngle);
+
+		MeleeCollider.StartSwing(HeldItem as SwordItemSO);
+
+		_armPivotGO.transform.rotation = startRotation;
+
+		float buildUpDuration = duration / 2f;
+		_itemHeldSR.transform.localScale = Vector3.zero;
+
+		_currentSwingTween = _itemHeldSR.transform.DOScale(Vector3.one, buildUpDuration)
+			.SetEase(Ease.OutSine)
+			.OnComplete(() =>
+			{
+				_currentSwingTween = _armPivotGO.transform
+					.DORotateQuaternion(endRotation, duration)
+					.SetEase(Ease.OutSine)
+					.OnComplete(() =>
+					{
+						HandleSwingStop(direction, duration, endRotation);
+						_currentSwingTween = null;
+					});
+			});
+	}
+
+
+
+	private void HandleSwingStop(CardinalDirection direction, float duration, Quaternion endRotation)
+	{
+		if (HeldItem is SpellItemSO || HeldItem is WandItemSO)
+		{
+			ShowArm();
+		}
+		else
+		{
+			HideArm();
+			OnSwingEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
+		}
+
+		MeleeCollider.EndSwing();
+
+		_swingCooldownTimer = new(HeldItem is SwordItemSO swordItemSO ? swordItemSO.SwingCooldown : 0.25f);
+		_armPivotGO.transform.rotation = endRotation;
+		IsSwinging = false;
+		_thisPlayer.IsPerformingSwing = false;
+		_stoppingSwing = false;
+	}
+
 	private void RotateArmBasedOnAngle()
 	{
 		float angle = NormalizeAngle(_angleNetworkVariable.Value);
@@ -165,103 +257,6 @@ public class PlayerHand : NetworkBehaviour
 			OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
 		}
 	}
-
-	public override void OnDestroy()
-	{
-		_thisPlayer.SelectedItemIndexNetworkVariable.OnValueChanged -= HandleItemIndexChanged;
-
-		base.OnDestroy();
-	}
-
-	#endregion
-
-	#region Swing and Wand Handling
-	
-	private void SwingEast(float duration) => SwingRpc(60, 300, duration, true, CardinalDirection.East, OwnerClientId);
-	private void SwingWest(float duration) => SwingRpc(120, 240, duration, false, CardinalDirection.West, OwnerClientId);
-	private void SwingNorth(float duration) => SwingRpc(150, 30, duration, true, CardinalDirection.North, OwnerClientId);
-	private void SwingSouth(float duration) => SwingRpc(330, 210, duration, false, CardinalDirection.South, OwnerClientId);
-	
-	[Rpc(SendTo.Everyone, RequireOwnership = false)]
-	private void SwingRpc(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction, ulong clientSenderId)
-	{
-		if (clientSenderId != OwnerClientId) return;
-		
-		if(OwnerClientId == NetworkManager.LocalClientId)
-		{
-			if(IsSwinging)
-			{
-				return;
-			}
-		}
-		
-		SetPivotPosition(direction);
-		
-		StartCoroutine(SwingCoroutine(startAngle, endAngle, duration, clockwise, direction));
-	}
-
-	private IEnumerator SwingCoroutine(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction)
-	{
-		ShowArm();
-		
-		OnSwingStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
-
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerMeleeSwing, Player.LocalClientInstance.transform.position);
-		
-		_thisPlayer.IsPerformingSwing = true;
-		IsSwinging = true;
-
-		startAngle = NormalizeAngle(startAngle);
-		endAngle = NormalizeAngle(endAngle);
-
-		if (clockwise && endAngle > startAngle) startAngle += 360f;
-		else if (!clockwise && startAngle > endAngle) endAngle += 360f;
-
-		Quaternion startRotation = Quaternion.Euler(0, 0, startAngle);
-		Quaternion endRotation = Quaternion.Euler(0, 0, endAngle);
-		
-		MeleeCollider.StartSwing(HeldItem as SwordItemSO);
-		
-		float elapsedTime = 0f;
-		while (elapsedTime < duration)
-		{
-			_armPivotGO.transform.rotation = Quaternion.Lerp(startRotation, endRotation, elapsedTime / duration);
-			elapsedTime += Time.deltaTime;
-
-			if (_stoppingSwing)
-			{
-				HandleSwingStop(direction, duration, endRotation);
-				yield break;
-			}
-
-			yield return null;
-		}
-
-		HandleSwingStop(direction, duration, endRotation);
-	}
-
-	private void HandleSwingStop(CardinalDirection direction, float duration, Quaternion endRotation)
-	{
-		if (HeldItem is MiningSpellItemSO || HeldItem is SwordItemSO)
-		{
-			ShowArm();
-		}
-		else
-		{
-			HideArm();
-			OnSwingEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
-		}
-
-		MeleeCollider.EndSwing();
-
-		_swingCooldownTimer = new(HeldItem is SwordItemSO staffItemSO ? staffItemSO.SwingCooldown : 0.25f);
-		_armPivotGO.transform.rotation = endRotation;
-		IsSwinging = false;
-		_thisPlayer.IsPerformingSwing = false;
-		_stoppingSwing = false;
-	}
-
-	#endregion
 
 	#region Helpers
 
@@ -312,7 +307,22 @@ public class PlayerHand : NetworkBehaviour
 	}
 
 	public bool IsArmShown() => _armGO.activeInHierarchy;
-	public void StopSwing() => _stoppingSwing = true;
+	public void StopSwing()
+	{
+	    _stoppingSwing = true;
+	    if(_currentSwingTween != null)
+	    {
+	        _currentSwingTween.Kill();
+	        _currentSwingTween = null;
+	    }
+	}
 
 	#endregion
+
+	public override void OnDestroy()
+	{
+		_thisPlayer.SelectedItemIndexNetworkVariable.OnValueChanged -= HandleItemIndexChanged;
+
+		base.OnDestroy();
+	}
 }

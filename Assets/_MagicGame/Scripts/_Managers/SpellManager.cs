@@ -90,6 +90,13 @@ public class SpellManager : NetworkBehaviour
 
     public bool HasMiningSpell(out MiningSpellItemSO spell, out int slotIndex)
     {
+        if (SpellItemArray == null)
+        {
+            spell = null;
+            slotIndex = -1;
+            return false;
+        }
+    
         spell = null;
         slotIndex = -1;
 
@@ -145,7 +152,11 @@ public class SpellManager : NetworkBehaviour
 
     private void HandleItemIndexChanged(int previousValue, int newValue)
     {
-        if(GameManager.Instance.GetItemSOFromItemId(newValue) is WandItemSO wandItemSO)
+        if(GameManager.Instance.GetItemSOFromItemId(newValue) is SpellItemSO spellItemSO)
+        {
+            SpellItemArray = new SpellItemSO[] { spellItemSO };
+        }
+        else if(GameManager.Instance.GetItemSOFromItemId(newValue) is WandItemSO wandItemSO)
         {
             InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
             SpellItemArray = (selectedInventoryItem as WandInventoryItem).MagicArray;
