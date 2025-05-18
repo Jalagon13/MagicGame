@@ -3789,7 +3789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94925e7427004998a47e77a8baaf1e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <TimeBetweenMiningSounds>k__BackingField: 0.175
+  <TimeBetweenMiningSounds>k__BackingField: 0.225
   <DelayBetweenPlacingAndMining>k__BackingField: 0.2
   <BreakCooldownDuration>k__BackingField: 0.075
   <FocusWallSound>k__BackingField:

@@ -3,10 +3,11 @@ using UnityEngine;
 using System.Linq;
 using FMODUnity;
 
-[CreateAssetMenu(fileName = "New Sword", menuName = "Create Item/New Sword")]
-public class SwordItemSO : ItemSO
+[CreateAssetMenu(fileName = "New Tool", menuName = "Create Item/New Tool")]
+public class ToolItemSO : ItemSO
 {
-	// For custom spell modifiers
+	[field: SerializeField] public int MiningPower { get; private set; }
+	[field: SerializeField] public float MiningRange { get; private set; }
 	[field: SerializeField] public int MeleeDamage { get; private set; }
 	[field: SerializeField] public int Knockback { get; private set; }
 	[field: SerializeField] public float SwingCooldown { get; private set; } = 0.25f;
@@ -21,7 +22,12 @@ public class SwordItemSO : ItemSO
 	{
 		return _baseActionCooldown;
 	}
-	
+
+	public bool PlayerWithinMiningRangeOfMouse()
+	{
+		return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= MiningRange;
+	}
+
 	public override string GetDescription()
 	{
 		return Description;

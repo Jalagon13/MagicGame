@@ -149,48 +149,6 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
   spriteSheetImportData:
-  - name: item_scroll_blank
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 0
-      y: 144
-      width: 16
-      height: 16
-    spriteID: 3004ed444a55c4f2eb2a937c0ec0ee63
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: item_scroll_fire_ball
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 16
-      y: 144
-      width: 16
-      height: 16
-    spriteID: 3817185a2f2cb474e81f443ca155cf6a
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
   - name: icon_fire_ball
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -200,7 +158,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 6
-      y: 6
+      y: 22
       width: 16
       height: 16
     spriteID: bc5489c049fe8468fa3608c78f219bd5
@@ -221,7 +179,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 22
-      y: 6
+      y: 22
       width: 16
       height: 16
     spriteID: 20db170a258184d7cb7589123ee34fd9
@@ -242,7 +200,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 38
-      y: 6
+      y: 22
       width: 16
       height: 16
     spriteID: b717c414df5734a93991017bc9e0a84d
@@ -263,7 +221,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 54
-      y: 6
+      y: 22
       width: 16
       height: 16
     spriteID: e672d66fe1ca24bcb8d041d69c4130b1
@@ -284,7 +242,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 22
-      y: 22
+      y: 38
       width: 16
       height: 16
     spriteID: f59a0e50cdf9f44b285c6db00b3b91df
@@ -305,7 +263,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 6
-      y: 22
+      y: 38
       width: 16
       height: 16
     spriteID: c0c2b749a56384a3383d634f823f73ab
@@ -326,7 +284,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 86
-      y: 22
+      y: 38
       width: 16
       height: 16
     spriteID: 80014e1bf00d7401f95bf58138a1b413
@@ -347,7 +305,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 54
-      y: 22
+      y: 38
       width: 16
       height: 16
     spriteID: 4c71d9147f6d247ee9170f5d5b21f699
@@ -368,7 +326,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 38
-      y: 22
+      y: 38
       width: 16
       height: 16
     spriteID: 4c7b37bcae39e4b91b2405a37eb768b9
@@ -389,7 +347,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 70
-      y: 22
+      y: 38
       width: 16
       height: 16
     spriteID: 251aa6ee50f09491890204ea4ff4dcad
@@ -410,7 +368,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 70
-      y: 6
+      y: 22
       width: 16
       height: 16
     spriteID: 188d3f2f9989b45148677c86ab774588
@@ -431,7 +389,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 102
-      y: 22
+      y: 38
       width: 16
       height: 16
     spriteID: 7d1d635a5a8b5446eafc6fbab926025a
@@ -452,7 +410,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 118
-      y: 22
+      y: 38
       width: 16
       height: 16
     spriteID: f4b4af225a55f480486b43e215cba230
@@ -473,7 +431,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 134
-      y: 22
+      y: 38
       width: 16
       height: 16
     spriteID: 833e021428e5f4f85b0f11feb24ec772
@@ -494,10 +452,94 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 150
-      y: 22
+      y: 38
       width: 16
       height: 16
     spriteID: 46e0474602388457cae07802c6113f79
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: item_wood_axe
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 6
+      y: 6
+      width: 16
+      height: 16
+    spriteID: ec4dd7f2858b14dc8a64e6e6ce39d750
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: item_wood_sword
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 22
+      y: 6
+      width: 16
+      height: 16
+    spriteID: 38cbf39fe220c473e9be225dad4e3097
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: item_wood_pickaxe
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 38
+      y: 6
+      width: 16
+      height: 16
+    spriteID: 69d260f2e8b1345fe8330d3d9879cd66
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: item_wood_shovel
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 54
+      y: 6
+      width: 16
+      height: 16
+    spriteID: 2189b70528f8f4cfbbd68056e0fd8514
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -525,9 +567,9 @@ ScriptedImporter:
       additiveSortOrder: 0
       cellRect:
         x: 0
-        y: 128
+        y: 112
         width: 158
-        height: 30
+        height: 46
       spriteId: 2c592773024ba46e4b62c1838b5cf244
     linkedCells: []
     tileCells: []

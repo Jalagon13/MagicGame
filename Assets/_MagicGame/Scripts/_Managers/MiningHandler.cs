@@ -92,10 +92,10 @@ public class MiningHandler : MonoBehaviour
 
         _breakCooldownTimer.Tick(Time.deltaTime);
 
-        if (IsHoldingMiningWand(selectedInventoryItem, out MiningSpellItemSO miningSpellItemSO, out int miningSpellSlotIndex))
+        if(InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedItem) && selectedItem.Item is ToolItemSO toolItemSO)
         {
-            DetectTarget(miningSpellItemSO);
-            HandleMiningLogic(miningSpellItemSO, miningSpellSlotIndex);
+            DetectTarget(toolItemSO);
+            HandleMiningLogic(toolItemSO);
         }
     }
 
@@ -109,27 +109,12 @@ public class MiningHandler : MonoBehaviour
                InventoryManager.Instance.SelectedItemExists(out selectedInventoryItem);
     }
 
-    private bool IsHoldingMiningWand(InventoryItem item, out MiningSpellItemSO miningSpell, out int miningSpellSlotIndex)
-    {
-        miningSpell = null;
-        miningSpellSlotIndex = -1;
-
-        if (SpellManager.Instance.HasMiningSpell(out MiningSpellItemSO spell, out int slotIndex))
-        {
-            miningSpell = spell;
-            miningSpellSlotIndex = slotIndex;
-            return true;
-        }
-
-        return false;
-    }
-
-    private void DetectTarget(MiningSpellItemSO miningSpellItemSO)
+    private void DetectTarget(ToolItemSO toolItemSO)
     {
         _destructableFound = DestructableType.None;
         _currentBreakTargetPosition = null;
 
-        if (!miningSpellItemSO.PlayerWithinMiningRangeOfMouse()) return;
+        if (!toolItemSO.PlayerWithinMiningRangeOfMouse()) return;
 
         Vector3Int pos = ActionManager.MouseTilePosition;
 
@@ -166,7 +151,7 @@ public class MiningHandler : MonoBehaviour
         }
     }
 
-    private void HandleMiningLogic(MiningSpellItemSO miningSpellItemSO, int miningSpellSlotIndex)
+    private void HandleMiningLogic(ToolItemSO toolItemSO)
     {
         bool wasMining = IsMining;
 
@@ -174,11 +159,11 @@ public class MiningHandler : MonoBehaviour
         {
             IsMining = false;
         }
-        else if (SpellManager.Instance.CastTimeTimer.RemainingSeconds <= 0 && !SpellManager.Instance.IsContinuouslyCasting && SpellManager.Instance.IsSpellKeyHeld(miningSpellSlotIndex))
+        else if (GameInput.Instance.GetPrimaryHeldDown())
         {
             if (!IsMining)
             {
-                BeginMining(miningSpellItemSO);
+                BeginMining(toolItemSO);
             }
 
             if (IsMining)
@@ -208,7 +193,7 @@ public class MiningHandler : MonoBehaviour
         }
     }
 
-    private void BeginMining(MiningSpellItemSO miningSpellItemSO)
+    private void BeginMining(ToolItemSO toolItemSO)
     {
         IsMining = true;
         _originalBreakTargetPosition = _currentBreakTargetPosition;
@@ -221,7 +206,7 @@ public class MiningHandler : MonoBehaviour
             _ => 1f
         };
 
-        float totalTicks = hardness * 30f / Mathf.Max(miningSpellItemSO.MiningPower, 0.1f);
+        float totalTicks = hardness * 30f / Mathf.Max(toolItemSO.MiningPower, 0.1f);
         float totalMiningTime = totalTicks * 0.05f;
         _cachedTotalMiningTime = totalMiningTime;
 

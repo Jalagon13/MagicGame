@@ -10,7 +10,7 @@ public class MeleeCollider : NetworkBehaviour
     private List<NetworkHealthState> _targetsFound = new();
     private List<NetworkHealthState> _targetsHit = new();
     private Collider2D _meleeCollider;
-    private SwordItemSO _staffItemSO;
+    private ToolItemSO _staffItemSO;
     
     private void Awake()
     {
@@ -18,7 +18,7 @@ public class MeleeCollider : NetworkBehaviour
         _meleeCollider.enabled = false;
     }
 
-    public void StartSwing(SwordItemSO staffItemSO)
+    public void StartSwing(ToolItemSO staffItemSO)
     {
         if (!IsOwner) return;
         

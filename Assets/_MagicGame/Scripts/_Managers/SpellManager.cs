@@ -88,31 +88,6 @@ public class SpellManager : NetworkBehaviour
         }
     }
 
-    public bool HasMiningSpell(out MiningSpellItemSO spell, out int slotIndex)
-    {
-        if (SpellItemArray == null)
-        {
-            spell = null;
-            slotIndex = -1;
-            return false;
-        }
-    
-        spell = null;
-        slotIndex = -1;
-
-        foreach (SpellItemSO item in SpellItemArray)
-        {
-            if(item is MiningSpellItemSO miningSpellItemSO)
-            {
-                spell = miningSpellItemSO;
-                slotIndex = Array.IndexOf(SpellItemArray, item);
-                return true;
-            }
-        }
-        
-        return false;
-    }
-
     public bool IsSpellKeyHeld(int slotIndex)
     {
         return slotIndex switch
@@ -143,10 +118,7 @@ public class SpellManager : NetworkBehaviour
         SpellItemSO spell = SpellItemArray[slotIndex];
         if (spell != null && CanCastSelectedSpell(spell))
         {
-            if (spell is not MiningSpellItemSO)
-            {
-                LoadSpell(spell, slotIndex);
-            }
+            LoadSpell(spell, slotIndex);
         }
     }
 

@@ -87,7 +87,7 @@ public class PlayerHand : NetworkBehaviour
 				RotateArmBasedOnAngle();
 			}
 		}
-		else if (HeldItem is SwordItemSO)
+		else if (HeldItem is ToolItemSO)
 		{
 			TryToSwing();
 		}
@@ -129,11 +129,11 @@ public class PlayerHand : NetworkBehaviour
 			HideArm();
 		}
 
-		_itemHeldSR.flipX = HeldItem is WandItemSO || HeldItem is SwordItemSO;
+		_itemHeldSR.flipX = HeldItem is WandItemSO || HeldItem is ToolItemSO;
 		_itemHeldSR.sprite = HeldItem switch
 		{
 			WandItemSO wand => wand.UiDisplay,
-			SwordItemSO sword => sword.UiDisplay,
+			ToolItemSO tool => tool.UiDisplay,
 			_ => null
 		};
 	}
@@ -200,7 +200,7 @@ public class PlayerHand : NetworkBehaviour
 		Quaternion startRotation = Quaternion.Euler(0, 0, startAngle);
 		Quaternion endRotation = Quaternion.Euler(0, 0, endAngle);
 
-		MeleeCollider.StartSwing(HeldItem as SwordItemSO);
+		MeleeCollider.StartSwing(HeldItem as ToolItemSO);
 
 		_armPivotGO.transform.rotation = startRotation;
 
@@ -238,7 +238,7 @@ public class PlayerHand : NetworkBehaviour
 
 		MeleeCollider.EndSwing();
 
-		_swingCooldownTimer = new(HeldItem is SwordItemSO swordItemSO ? swordItemSO.SwingCooldown : 0.25f);
+		_swingCooldownTimer = new(HeldItem is ToolItemSO swordItemSO ? swordItemSO.SwingCooldown : 0.25f);
 		_armPivotGO.transform.rotation = endRotation;
 		IsSwinging = false;
 		_thisPlayer.IsPerformingSwing = false;
