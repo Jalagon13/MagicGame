@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9486b8ae30ede473d930ac44d01ec3aa, type: 3}
-  m_Name: SwordWoodItemSO
+  m_Name: WoodShovelItemSO
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Wood Sword
-  <UiDisplay>k__BackingField: {fileID: -1843546812, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <Name>k__BackingField: Wood Shovel
+  <UiDisplay>k__BackingField: {fileID: 5903994013510003650, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
+  <ToolType>k__BackingField: 3
   <MiningPower>k__BackingField: 1
   <MiningRange>k__BackingField: 4
-  <MeleeDamage>k__BackingField: 6
-  <Knockback>k__BackingField: 8
+  <MeleeDamage>k__BackingField: 3
+  <Knockback>k__BackingField: 6
   <SwingCooldown>k__BackingField: 0.1
   <HitSound>k__BackingField:
     Guid:

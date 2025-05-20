@@ -34,8 +34,6 @@ public class GameInput : MonoBehaviour
 		public bool InventoryOpen;
 	}
 	
-	public event EventHandler OnMiningFocusToggled;
-	
 	private PlayerInput _playerInput;
 	private bool _inventoryOpen, _primaryHeldDown, _secondaryHeldDown, _shiftHeldDown, _spaceHeldDown, _inputsEnabled = true;
 	private int _selectedSlotIndex = 0;
@@ -71,7 +69,6 @@ public class GameInput : MonoBehaviour
 		_playerInput.Player.Shift.canceled += PlayerInput_ShiftCanceled;
 		_playerInput.Player.Space.started += PlayerInput_SpaceStarted;
 		_playerInput.Player.Space.canceled += PlayerInput_SpaceCanceled;
-		_playerInput.Player.ToggleMiningFocus.started += PlayerInput_ToggleMiningFocus;
 	}
 
     private void Start()
@@ -79,11 +76,6 @@ public class GameInput : MonoBehaviour
 		WorldManager.Instance.OnBiomeTransitionStart += WorldManager_DisableInputs;
 		WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_EnableInputs;
 		InGameMenu.Instance.OnMenuOpen += InGameMenu_OnMenuOpen;
-	}
-
-	private void PlayerInput_ToggleMiningFocus(InputAction.CallbackContext context)
-	{
-		OnMiningFocusToggled?.Invoke(this, EventArgs.Empty);
 	}
 
 	private void InGameMenu_OnMenuOpen(object sender, EventArgs e)

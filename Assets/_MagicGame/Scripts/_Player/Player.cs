@@ -93,13 +93,6 @@ public class Player : NetworkBehaviour
 
 			if (_spawnWandItems)
 			{
-				foreach (InventoryItem item in _startingItems)
-				{
-					InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
-					InventoryManager.Instance.AddItem(itemToAdd, false);
-					yield return new WaitForEndOfFrame();
-				}
-
 				foreach (WandInventoryItem wandInvItem in _startWandItems)
 				{
 					if (wandInvItem.Item is not WandItemSO)
@@ -129,6 +122,13 @@ public class Player : NetworkBehaviour
 					InventoryManager.Instance.AddItem(wandItemToAdd, false);
 					yield return new WaitForEndOfFrame();
 				}
+			}
+
+			foreach (InventoryItem item in _startingItems)
+			{
+				InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
+				InventoryManager.Instance.AddItem(itemToAdd, false);
+				yield return new WaitForEndOfFrame();
 			}
 		}
 	}

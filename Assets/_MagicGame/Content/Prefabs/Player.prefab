@@ -282,7 +282,7 @@ MonoBehaviour:
   <CollectTag>k__BackingField: {fileID: 6231199994205774343}
   _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
   _respawnTimerDuration: 2
-  _spawnWandItems: 1
+  _spawnWandItems: 0
   _startWandItems:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
@@ -294,6 +294,18 @@ MonoBehaviour:
   _startingItems:
   - Item: {fileID: 11400000, guid: fe217e765840a43b5b9acff0a1269c2f, type: 2}
     Quantity: 1
+  - Item: {fileID: 11400000, guid: ca1b5b14cbb4545468fad1cb43e84ca2, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 15ccc2f5cdc3a4cd590b045c68716bf8, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
+    Quantity: 111
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0

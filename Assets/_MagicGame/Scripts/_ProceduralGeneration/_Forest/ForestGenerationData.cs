@@ -8,10 +8,10 @@ public class ForestGenerationData : BaseGenerationData
     [field: SerializeField] public TileSO GrassTerrainTile { get; private set; }
     [field: SerializeField] public TileSO SandTerrainTile { get; private set; }
     [field: SerializeField] public TileSO WaterTerrainTile { get; private set; }
+    [field: SerializeField] public TileSO TallGrassTile { get; private set; }
 
     [field: Header("World Objects")]
     [field: SerializeField] public WorldObject TreeWorldObject { get; private set; }
-    [field: SerializeField] public WorldObject TallGrassWorldObject { get; private set; }
     [field: SerializeField] public WorldObject CaveEntranceWorldObject { get; private set; }
 
     [field: Header("Noise Maps")]

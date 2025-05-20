@@ -93,7 +93,6 @@ public class ChunkManager : NetworkBehaviour
 
 		if (_chunksToLoad.Count == (BIOME_SIDE_LENGTH / CHUNK_SIZE) * (BIOME_SIDE_LENGTH / CHUNK_SIZE))
 		{
-			TileRenderManager.Instance.ExecuteTopTilePassthrough();
 			Lightmap.Instance.UpdateLightMap();
 			WorldManager.Instance.ExecuteOnBiomeTransitionEnd();
 			Debug.Log($"ChunkManager: OnBiomeDataLoaded for {Player.LocalClientInstance.CurrentPlayerBiome.Value}");
@@ -207,7 +206,7 @@ public class ChunkManager : NetworkBehaviour
 			Pathfinding.Instance.AddPfWallTileServerRpc(position, biomeToAddTileData);
 		}
 		
-		HandleTileVisualClientRpc((Vector3Int)position, tileID, tileType, biomeToAddTileData);
+		TileRenderManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, tileID, tileType, biomeToAddTileData);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
@@ -220,39 +219,7 @@ public class ChunkManager : NetworkBehaviour
 			Pathfinding.Instance.RemovePfWallTileServerRpc(position, biome);
 		}
 
-		HandleTileVisualClientRpc((Vector3Int)position, -1, tileType, biome);
-	}
-
-	[Rpc(SendTo.ClientsAndHost)]
-	private void HandleTileVisualClientRpc(Vector3Int pos, int syncTileId, TileType syncTileType, BiomeType biome)
-	{
-		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != biome) return;
-		
-		TileSO tileToPlace = null;
-		
-		if(syncTileId >= 0)
-		{
-			tileToPlace = GameManager.Instance.GetTileSOFromID(syncTileId);
-		}
-
-		// Chunk is loaded visually, therefore visually update whatever tile wants to be updated
-		switch(syncTileType)
-		{
-			case TileType.Terrain:
-				TileRenderManager.Instance.RenderTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
-				break;
-			case TileType.Floor:
-				TileRenderManager.Instance.RenderTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
-				break;
-			case TileType.Wall:
-				TileRenderManager.Instance.RenderTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
-				Lightmap.Instance.UpdateLightMap();
-				break;
-			case TileType.Ore:
-				TileRenderManager.Instance.RenderTile(pos, tileToPlace == null ? null : tileToPlace, syncTileType);
-				Lightmap.Instance.UpdateLightMap();
-				break;
-		}
+		TileRenderManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, -1, tileType, biome);
 	}
 
 	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType environmentToGetChunkFrom)

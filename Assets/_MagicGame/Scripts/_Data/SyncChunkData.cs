@@ -13,6 +13,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 	public List<GenericGameObjectSyncData> SyncWallTileDataList;
 	public List<GenericGameObjectSyncData> SyncOreTileDataList;
 	public List<GenericGameObjectSyncData> SyncLiquidTileDataList;
+	public List<GenericGameObjectSyncData> SyncFoliageTileDataList;
 	
 	public List<WorldObjectSyncData> SyncObjectAssetDataList;
 	public List<DoorObjectSyncData> SyncDoorObjectDataList;
@@ -25,6 +26,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 			   SyncWallTileDataList.Equals(other.SyncWallTileDataList) && 
 			   SyncOreTileDataList.Equals(other.SyncOreTileDataList) &&
 			   SyncLiquidTileDataList.Equals(other.SyncLiquidTileDataList) &&
+			   SyncFoliageTileDataList.Equals(other.SyncFoliageTileDataList) &&
 			   SyncObjectAssetDataList.Equals(other.SyncObjectAssetDataList) &&
 			   SyncDoorObjectDataList.Equals(other.SyncDoorObjectDataList);
 	}
@@ -38,6 +40,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 		SerializeAgnosticDataList(serializer, ref SyncWallTileDataList);
 		SerializeAgnosticDataList(serializer, ref SyncOreTileDataList);
 		SerializeAgnosticDataList(serializer, ref SyncLiquidTileDataList);
+		SerializeAgnosticDataList(serializer, ref SyncFoliageTileDataList);
 		SerializeWorldObjectDataList(serializer, ref SyncObjectAssetDataList);
 		SerializeDoorDataList(serializer, ref SyncDoorObjectDataList);
 	}

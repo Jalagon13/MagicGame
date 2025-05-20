@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9486b8ae30ede473d930ac44d01ec3aa, type: 3}
+  m_Name: WoodPickaxeItemSO
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Wood Pickaxe
+  <UiDisplay>k__BackingField: {fileID: -7464552079052062756, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
+  <GoldValue>k__BackingField: 5
+  <Stackable>k__BackingField: 0
+  <Description>k__BackingField: 
+  <ToolType>k__BackingField: 0
+  <MiningPower>k__BackingField: 1
+  <MiningRange>k__BackingField: 4
+  <MeleeDamage>k__BackingField: 3
+  <Knockback>k__BackingField: 6
+  <SwingCooldown>k__BackingField: 0.1
+  <HitSound>k__BackingField:
+    Guid:
+      Data1: -321209541
+      Data2: 1119949590
+      Data3: 197467520
+      Data4: 1755672934
+    Path: event:/Player/MeleeHit

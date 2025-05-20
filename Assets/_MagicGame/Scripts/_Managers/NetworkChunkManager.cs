@@ -46,6 +46,7 @@ public class NetworkChunkManager : NetworkBehaviour
 			SyncWallTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.WallTileGameDataList.Count),
 			SyncOreTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.OreTileGameDataList.Count),
 			SyncLiquidTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.LiquidTileGameDataList.Count),
+			SyncFoliageTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.FoliageTileGameDataList.Count),
 			
 			SyncObjectAssetDataList = new List<WorldObjectSyncData>(chunkGameData.WorldObjectGameDataList.Count),
 			SyncDoorObjectDataList = new List<DoorObjectSyncData>(doorCount)
@@ -57,6 +58,7 @@ public class NetworkChunkManager : NetworkBehaviour
 		ConvertTileList(chunkGameData.WallTileGameDataList, syncChunkData.SyncWallTileDataList);
 		ConvertTileList(chunkGameData.OreTileGameDataList, syncChunkData.SyncOreTileDataList);
 		ConvertTileList(chunkGameData.LiquidTileGameDataList, syncChunkData.SyncLiquidTileDataList);
+		ConvertTileList(chunkGameData.FoliageTileGameDataList, syncChunkData.SyncFoliageTileDataList);
 
 		// Convert world asset game data to agnostic sync data
 		foreach (var worldObjectGameData in chunkGameData.WorldObjectGameDataList)
@@ -141,6 +143,13 @@ public class NetworkChunkManager : NetworkBehaviour
 			TileSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
 			return new TileGameData(tileSO, new(syncTile.Position.x, syncTile.Position.y));
 		}, ref chunkGameData.LiquidTileGameDataList);
+
+		// Convert SyncFoliageTileData to TileGameData
+		ConvertSyncDataList(syncChunkData.SyncFoliageTileDataList, (syncTile) =>
+		{
+			TileSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
+			return new TileGameData(tileSO, new(syncTile.Position.x, syncTile.Position.y));
+		}, ref chunkGameData.FoliageTileGameDataList);
 
 		// Convert SyncWorldAssetData to WorldAssetGameData
 		ConvertSyncDataList(syncChunkData.SyncObjectAssetDataList, (syncAsset) =>

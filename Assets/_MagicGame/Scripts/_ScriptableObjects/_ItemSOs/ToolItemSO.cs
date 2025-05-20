@@ -3,9 +3,15 @@ using UnityEngine;
 using System.Linq;
 using FMODUnity;
 
+public enum ToolType
+{
+	Pickaxe, Axe, Sword, Shovel, None
+}
+
 [CreateAssetMenu(fileName = "New Tool", menuName = "Create Item/New Tool")]
 public class ToolItemSO : ItemSO
 {
+	[field: SerializeField] public ToolType ToolType { get; private set; }
 	[field: SerializeField] public int MiningPower { get; private set; }
 	[field: SerializeField] public float MiningRange { get; private set; }
 	[field: SerializeField] public int MeleeDamage { get; private set; }

@@ -13,6 +13,7 @@ public class ChunkGameData
 	public List<TileGameData> FloorTileGameDataList;
 	public List<TileGameData> WallTileGameDataList;
 	public List<TileGameData> OreTileGameDataList;
+	public List<TileGameData> FoliageTileGameDataList;
 	public List<WorldObjectGameData> WorldObjectGameDataList;
 	public int Size { get; private set; }
 
@@ -27,6 +28,7 @@ public class ChunkGameData
 		FloorTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		WallTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		OreTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		FoliageTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		WorldObjectGameDataList = new List<WorldObjectGameData>(chunkSize * chunkSize);
 
 		_tileTypeToList = new Dictionary<TileType, List<TileGameData>>
@@ -36,6 +38,7 @@ public class ChunkGameData
 			{ TileType.Wall, WallTileGameDataList },
 			{ TileType.Ore, OreTileGameDataList },
 			{ TileType.Liquid, LiquidTileGameDataList },
+			{ TileType.Foliage, FoliageTileGameDataList },
 		};
 	}
 	
@@ -75,9 +78,12 @@ public class ChunkGameData
 				{
 					// Delete data and return
 					WallTileGameDataList.Remove(tile);
+					Debug.Log($"Removed wall tile at {position}");
 					return;
 				}
 			}
+			
+			Debug.LogWarning($"Did not find wall to remove at {position}");
 		}
 		else
 		{
@@ -103,9 +109,15 @@ public class ChunkGameData
 		{
 			int existingIndex = list.FindIndex(t => t.TilePosition == position);
 			if (existingIndex >= 0)
+			{
 				list[existingIndex] = tileToAdd;
+				Debug.Log($"1Added {tile.TileType} tile at {position} at chunk {ChunkPosition}");
+			}
 			else
+			{
 				list.Add(tileToAdd);
+				Debug.Log($"2Added {tile.TileType} tile at {position} at chunk {ChunkPosition}");
+			}
 		}
 	}
 	

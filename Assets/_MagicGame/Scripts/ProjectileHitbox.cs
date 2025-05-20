@@ -17,7 +17,20 @@ public class ProjectileHitbox : MonoBehaviour
     {
         _spellCollider = GetComponent<CircleCollider2D>();
     }
-    
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (_spellCollider == null || Spell.SpellData.Value.OwnerPlayerId != Player.LocalClientInstance.OwnerClientId || !Spell.IsStarted.Value) return;
+
+        if (collision.gameObject.layer == 16) // Detecting Foliage tiles
+        {
+            Vector2Int tilePos = new Vector2Int((int)collision.gameObject.transform.position.x, (int)collision.gameObject.transform.position.y);
+            int tileId = GameManager.Instance.GetTileIDFromTilemapTilePosition(TileRenderManager.Instance.FoliageTm, (Vector3Int)tilePos);
+            TileRenderManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+            Destroy(collision.gameObject);
+        }
+    }
+
     private void FixedUpdate()
     {
         if (_spellCollider == null || Spell.SpellData.Value.OwnerPlayerId != Player.LocalClientInstance.OwnerClientId || !Spell.IsStarted.Value) return;

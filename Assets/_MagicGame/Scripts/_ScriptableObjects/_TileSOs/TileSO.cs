@@ -8,11 +8,7 @@ using UnityEngine.Tilemaps;
 [System.Serializable]
 public enum TileType
 {
-	Terrain,
-	Floor,
-	Wall,
-	Ore,
-	Liquid
+	Terrain, Floor, Wall, Ore, Liquid, Foliage
 }
 
 [CreateAssetMenu(fileName = "New TileSO", menuName = "Tiles/TileSO", order = 1)]
@@ -20,6 +16,7 @@ public class TileSO : RuleTile
 {
 	[field: Header("TileSO Properties")]
 	[field: SerializeField] public TileType TileType { get; private set; }
+	[field: SerializeField] public ToolType ToolTypeNeededForHarvest { get; private set; }
 	[field: SerializeField] public float Hardness { get; private set; } = 0.65f;
 	[field: SerializeField] public List<Loot> ItemDropTable { get; private set; }
 	

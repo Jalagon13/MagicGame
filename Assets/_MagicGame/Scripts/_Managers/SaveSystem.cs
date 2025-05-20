@@ -142,7 +142,8 @@ public class SaveSystem : MonoBehaviour
 				(kvp.Value.FloorTileGameDataList, chunkData.FloorTiles),
 				(kvp.Value.WallTileGameDataList, chunkData.WallTiles),
 				(kvp.Value.OreTileGameDataList, chunkData.OreTiles),
-				(kvp.Value.LiquidTileGameDataList, chunkData.LiquidTiles)
+				(kvp.Value.LiquidTileGameDataList, chunkData.LiquidTiles),
+				(kvp.Value.FoliageTileGameDataList, chunkData.FoliageTiles),
 			};
 
 			foreach (var (sourceList, targetList) in tileGroups)
@@ -311,6 +312,7 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 				WallTileGameDataList = ConvertTileFileDataToGameData(data.WallTiles),
 				OreTileGameDataList = ConvertTileFileDataToGameData(data.OreTiles),
 				LiquidTileGameDataList = ConvertTileFileDataToGameData(data.LiquidTiles),
+				FoliageTileGameDataList = ConvertTileFileDataToGameData(data.FoliageTiles),
 			};
 			
 			deserializedChunks.Add(data.ChunkPosition, chunk);

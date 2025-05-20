@@ -20,7 +20,7 @@ public class TallGrassGenerationStep : GenerationStep
 
             if (forestGenData.IsInBounds(point.x, point.y) && forestGenData.MostFrontRenderedTileMatrix[point.x, point.y] == GameManager.Instance.GetTileIdFromTileSO(forestGenData.GrassTerrainTile))
             {
-                forestGenData.SetWorldObjectData(point.x, point.y, forestGenData.TallGrassWorldObject, CardinalDirection.North);
+                forestGenData.SetTileData(point.x, point.y, forestGenData.TallGrassTile);
             }
         }
     }

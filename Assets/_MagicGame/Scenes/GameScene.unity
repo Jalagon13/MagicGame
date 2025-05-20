@@ -1887,7 +1887,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.113385536, g: 0.13177155, b: 0.26415092, a: 1}
+  m_Color: {r: 0.2627451, g: 0.11372549, b: 0.2509804, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3188,7 +3188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.11372549, g: 0.13333334, b: 0.2627451, a: 1}
+  m_Color: {r: 0.2627451, g: 0.11372549, b: 0.2509804, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3247,6 +3247,7 @@ Transform:
   - {fileID: 1170602978}
   - {fileID: 285752937211302053}
   - {fileID: 912824414}
+  - {fileID: 561820066}
   m_Father: {fileID: 429902436}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &359721945
@@ -3265,6 +3266,7 @@ MonoBehaviour:
   <FloorTm>k__BackingField: {fileID: 1170602981}
   <WallTm>k__BackingField: {fileID: 3724763379825386475}
   <OreTm>k__BackingField: {fileID: 912824416}
+  <FoliageTm>k__BackingField: {fileID: 561820071}
   <TerrainTileRenderer>k__BackingField: {fileID: 61712750}
   <UpperWallTm>k__BackingField: {fileID: 1893141008}
 --- !u!1 &366871599
@@ -3622,7 +3624,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.113385536, g: 0.13177155, b: 0.26415092, a: 1}
+  m_Color: {r: 0.2627451, g: 0.11372549, b: 0.2509804, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3792,20 +3794,6 @@ MonoBehaviour:
   <TimeBetweenMiningSounds>k__BackingField: 0.225
   <DelayBetweenPlacingAndMining>k__BackingField: 0.2
   <BreakCooldownDuration>k__BackingField: 0.075
-  <FocusWallSound>k__BackingField:
-    Guid:
-      Data1: 231909717
-      Data2: 1196187336
-      Data3: -672544082
-      Data4: -1828488855
-    Path: event:/Player/FocusWall
-  <FocusFloorSound>k__BackingField:
-    Guid:
-      Data1: -981375326
-      Data2: 1149087574
-      Data3: -164892751
-      Data4: -247913897
-    Path: event:/Player/FocusFloor
 --- !u!224 &467162359 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
@@ -3871,7 +3859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28235295, g: 0.3019608, b: 0.4627451, a: 1}
+  m_Color: {r: 0.4627451, g: 0.28235295, b: 0.4392157, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3944,8 +3932,8 @@ MonoBehaviour:
   <GrassTerrainTile>k__BackingField: {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
   <SandTerrainTile>k__BackingField: {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
   <WaterTerrainTile>k__BackingField: {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
+  <TallGrassTile>k__BackingField: {fileID: 11400000, guid: 3cf6ac136b8b9491680e4b25ad24dc32, type: 2}
   <TreeWorldObject>k__BackingField: {fileID: 1030882037603866735, guid: f4caf4c5091224ab38ce3d21bbffe7bf, type: 3}
-  <TallGrassWorldObject>k__BackingField: {fileID: 1030882037603866735, guid: cda73a4b8f328425a98c66683a6e5abd, type: 3}
   <CaveEntranceWorldObject>k__BackingField: {fileID: 5150323723629226184, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
   <RiverNoiseMap>k__BackingField: {fileID: 11400000, guid: 9903e6dce86c94c10bef89bed861db9f, type: 2}
   <SandNoiseMap>k__BackingField: {fileID: 11400000, guid: e7b13fcb8d79849faa86e090ebc6112c, type: 2}
@@ -4456,7 +4444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28235295, g: 0.3019608, b: 0.4627451, a: 1}
+  m_Color: {r: 0.4627451, g: 0.28235295, b: 0.4392157, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4528,6 +4516,129 @@ MonoBehaviour:
   <Description>k__BackingField: 
   <Width>k__BackingField: 2
   <SandThreshold>k__BackingField: 0.35
+--- !u!1 &561820065
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 561820066}
+  - component: {fileID: 561820071}
+  - component: {fileID: 561820070}
+  m_Layer: 0
+  m_Name: FoliageTm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &561820066
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 561820065}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 359721944}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!483693784 &561820070
+TilemapRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 561820065}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: f47de66c646eeb440bc6b139cb5053d4, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -1478012363
+  m_SortingLayer: 2
+  m_SortingOrder: 0
+  m_ChunkSize: {x: 32, y: 32, z: 32}
+  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
+  m_MaxChunkCount: 16
+  m_MaxFrameAge: 16
+  m_SortOrder: 0
+  m_Mode: 1
+  m_DetectChunkCullingBounds: 0
+  m_MaskInteraction: 0
+--- !u!1839735485 &561820071
+Tilemap:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 561820065}
+  m_Enabled: 1
+  m_Tiles: {}
+  m_AnimatedTiles: {}
+  m_TileAssetArray: []
+  m_TileSpriteArray: []
+  m_TileMatrixArray: []
+  m_TileColorArray: []
+  m_TileObjectToInstantiateArray: []
+  m_AnimationFrameRate: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Origin: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0, y: 0, z: 1}
+  m_TileAnchor: {x: 0, y: 0, z: 0}
+  m_TileOrientation: 0
+  m_TileOrientationMatrix:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
 --- !u!1 &563966734
 GameObject:
   m_ObjectHideFlags: 0
@@ -4999,7 +5110,6 @@ RectTransform:
   - {fileID: 830242655}
   - {fileID: 1945104450}
   - {fileID: 972672485}
-  - {fileID: 1229678022}
   - {fileID: 998176802}
   - {fileID: 849543218}
   m_Father: {fileID: 0}
@@ -5771,7 +5881,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28235295, g: 0.3019608, b: 0.4627451, a: 1}
+  m_Color: {r: 0.4627451, g: 0.28235295, b: 0.4392157, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8223,7 +8333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28235295, g: 0.3019608, b: 0.4627451, a: 1}
+  m_Color: {r: 0.4627451, g: 0.28235295, b: 0.4392157, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8811,7 +8921,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.113385536, g: 0.13177155, b: 0.26415092, a: 1}
+  m_Color: {r: 0.2627451, g: 0.11372548, b: 0.25065187, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9628,96 +9738,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1223386482}
   m_CullTransparentMesh: 1
---- !u!1 &1229678021
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1229678022}
-  - component: {fileID: 1229678024}
-  - component: {fileID: 1229678023}
-  - component: {fileID: 1229678025}
-  m_Layer: 5
-  m_Name: TileFocusUI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1229678022
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1229678021}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 597565687}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -223, y: 22.900146}
-  m_SizeDelta: {x: 55, y: 55}
-  m_Pivot: {x: 0.5, y: 0}
---- !u!114 &1229678023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1229678021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 67440230, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1229678024
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1229678021}
-  m_CullTransparentMesh: 1
---- !u!114 &1229678025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1229678021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5623df43b72ae43be8ba63a5804a6111, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <FocusWallSprite>k__BackingField: {fileID: 67440230, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <FocusFloorSprite>k__BackingField: {fileID: -427256236, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
 --- !u!1 &1276006750
 GameObject:
   m_ObjectHideFlags: 0
@@ -9768,7 +9788,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28235295, g: 0.3019608, b: 0.4627451, a: 1}
+  m_Color: {r: 0.4627451, g: 0.28235295, b: 0.4392157, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10900,7 +10920,7 @@ GameObject:
   - component: {fileID: 1482035253}
   - component: {fileID: 1482035254}
   m_Layer: 5
-  m_Name: GoldUI
+  m_Name: ExperienceUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11274,7 +11294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28235295, g: 0.3019608, b: 0.4627451, a: 1}
+  m_Color: {r: 0.4627451, g: 0.28235295, b: 0.4392157, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -14190,8 +14210,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f488028ef63f4797912a400e72b2517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _highlightedColor: {r: 0.47080812, g: 0.7716555, b: 0.8679245, a: 1}
-  _unHighlightedColor: {r: 0.28235295, g: 0.3019608, b: 0.4627451, a: 1}
+  _highlightedColor: {r: 0.8679245, g: 0.76854867, b: 0, a: 1}
+  _unHighlightedColor: {r: 0.4627451, g: 0.28235295, b: 0.4392157, a: 1}
 --- !u!114 &1923407243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15329,7 +15349,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.113385536, g: 0.13177155, b: 0.26415092, a: 1}
+  m_Color: {r: 0.2627451, g: 0.11372549, b: 0.2509804, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -16076,8 +16096,6 @@ GameObject:
   - component: {fileID: 3724763379825386475}
   - component: {fileID: 8595758921929250133}
   - component: {fileID: 8595758921929250134}
-  - component: {fileID: 8595758921929250136}
-  - component: {fileID: 8595758921929250135}
   m_Layer: 9
   m_Name: WallTm
   m_TagString: Untagged
@@ -16574,86 +16592,12 @@ TilemapCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 1
+  m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
---- !u!66 &8595758921929250135
-CompositeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6347991512982642279}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
-  m_GenerationType: 0
-  m_EdgeRadius: 0
-  m_ColliderPaths:
-  - m_Collider: {fileID: 8595758921929250134}
-    m_ColliderPaths: []
-  m_CompositePaths:
-    m_Paths: []
-  m_VertexDistance: 0.0005
-  m_OffsetDistance: 0.00005
-  m_UseDelaunayMesh: 0
-  m_CompositeGameObject: {fileID: 6347991512982642279}
---- !u!50 &8595758921929250136
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6347991512982642279}
-  m_BodyType: 2
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!1 &8745701027529219794
 GameObject:
   m_ObjectHideFlags: 0

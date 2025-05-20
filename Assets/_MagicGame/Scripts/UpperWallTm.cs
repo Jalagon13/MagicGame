@@ -39,7 +39,7 @@ public class UpperWallTm : MonoBehaviour
     {
         _upperWallTm.GetComponent<TilemapCollider2D>().enabled = v;
     }
-
+    
     public void DeleteUpperWallTile(Vector3Int tilePos)
     {
         Vector3Int upperPosition = new Vector3Int(tilePos.x, tilePos.y + 1, 0);
@@ -52,6 +52,21 @@ public class UpperWallTm : MonoBehaviour
             {
                 if (dx == 0 && dy == 0) continue;
 
+                Vector3Int neighborPos = new Vector3Int(tilePos.x + dx, tilePos.y + dy, 0);
+                if (TileRenderManager.Instance.WallTm.HasTile(neighborPos))
+                {
+                    TryToRenderUpperWallTile(neighborPos.x, neighborPos.y);
+                }
+            }
+        }
+    }
+    
+    public void TryToRenderSurroundingUpperWallTiles(Vector3Int tilePos)
+    {
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
                 Vector3Int neighborPos = new Vector3Int(tilePos.x + dx, tilePos.y + dy, 0);
                 if (TileRenderManager.Instance.WallTm.HasTile(neighborPos))
                 {
@@ -134,6 +149,16 @@ public class UpperWallTm : MonoBehaviour
 
     private void SetUpperWallTile(Vector3Int upperTilePosition, TileSO tileAtPosition, TopTileType topTileType)
     {
+        if(_upperWallTm.HasTile(upperTilePosition + Vector3Int.down))
+        {
+            _upperWallTm.SetTile(upperTilePosition + Vector3Int.down, null);
+        }
+        
+        if(_upperOreWallTm.HasTile(upperTilePosition + Vector3Int.down))
+        {
+            _upperOreWallTm.SetTile(upperTilePosition + Vector3Int.down, null);
+        }
+    
         Tile tile = ScriptableObject.CreateInstance<Tile>();
         switch (topTileType)
         {

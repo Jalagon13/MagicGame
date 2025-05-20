@@ -65,7 +65,7 @@ public class PlayerHand : NetworkBehaviour
 		base.OnNetworkSpawn();
 	}
 
-	private void Update()
+    private void Update()
 	{
 		if (_thisPlayer.HealthState.IsDead) return;
 
