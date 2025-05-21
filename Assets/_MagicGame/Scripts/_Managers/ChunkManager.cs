@@ -144,7 +144,7 @@ public class ChunkManager : NetworkBehaviour
 		
 		ChunkGameData chunk = GetChunkFromAnyWorldPos(doorPos, biome);
 		
-		foreach (WorldObjectGameData worldObject in chunk.WorldObjectGameDataList)
+		foreach (WorldObjectGameData worldObject in chunk.GetWorldObjects())
 		{
 			if(worldObject.Position == doorPos)
 			{
@@ -222,13 +222,18 @@ public class ChunkManager : NetworkBehaviour
 		TileRenderManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, -1, tileType, biome);
 	}
 
-	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType environmentToGetChunkFrom)
+	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType biomeToGetChunkFrom)
 	{
 		Vector2Int chunkCoord = GetChunkCoordFromPosition(anyWorldPos);
 		
-		var chunks = GetChunksFromBiome(environmentToGetChunkFrom);
+		var chunks = GetChunksFromBiome(biomeToGetChunkFrom);
 		chunks.TryGetValue(chunkCoord, out ChunkGameData chunk);
 		
+		if(chunks == null)
+		{
+		    Debug.LogError($"No chunks found for biome: {biomeToGetChunkFrom}");
+		}
+
 		return chunk;
 	}
 	

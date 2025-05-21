@@ -8,7 +8,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 {
 	public Vector2Int SyncChunkPosition;
 	
-	public List<GenericGameObjectSyncData> SyncGroundTileDataList;
+	public List<GenericGameObjectSyncData> SyncTerrainTileDataList;
 	public List<GenericGameObjectSyncData> SyncFloorTileDataList;
 	public List<GenericGameObjectSyncData> SyncWallTileDataList;
 	public List<GenericGameObjectSyncData> SyncOreTileDataList;
@@ -21,7 +21,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 	public bool Equals(SyncChunkData other)
 	{
 		return SyncChunkPosition == other.SyncChunkPosition &&
-			   SyncGroundTileDataList.Equals(other.SyncGroundTileDataList) &&
+			   SyncTerrainTileDataList.Equals(other.SyncTerrainTileDataList) &&
 			   SyncFloorTileDataList.Equals(other.SyncFloorTileDataList) &&
 			   SyncWallTileDataList.Equals(other.SyncWallTileDataList) && 
 			   SyncOreTileDataList.Equals(other.SyncOreTileDataList) &&
@@ -35,7 +35,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 	{
 		serializer.SerializeValue(ref SyncChunkPosition);
 		
-		SerializeAgnosticDataList(serializer, ref SyncGroundTileDataList);
+		SerializeAgnosticDataList(serializer, ref SyncTerrainTileDataList);
 		SerializeAgnosticDataList(serializer, ref SyncFloorTileDataList);
 		SerializeAgnosticDataList(serializer, ref SyncWallTileDataList);
 		SerializeAgnosticDataList(serializer, ref SyncOreTileDataList);

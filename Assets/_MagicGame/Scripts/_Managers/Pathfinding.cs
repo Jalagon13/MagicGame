@@ -161,7 +161,7 @@ public class Pathfinding : NetworkBehaviour
 		BiomeToLoadedPathfindingChunks[biome].Chunks.Add(chunkGameData.ChunkPosition);
 		
 		// Loop through all the wall data and inst a wall tile for it on the tilemap
-		foreach (TileGameData wallTileGameData in chunkGameData.WallTileGameDataList)
+		foreach (TileGameData wallTileGameData in chunkGameData.GetTileList(TileType.Wall))
 		{
 			BiomeToLoadedPathfindingChunks[biome].WallColliderTm.SetTile((Vector3Int)wallTileGameData.TilePosition, _wallTile);
 		}

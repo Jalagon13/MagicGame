@@ -29,7 +29,7 @@ public class ObjectManager : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void DestroyObjectServerRpc(BiomeType biome, Vector2Int objectPos, int id)
 	{
-		foreach (WorldObjectGameData objectGameData in ChunkManager.Instance.GetChunkFromAnyWorldPos(objectPos, biome).WorldObjectGameDataList)
+		foreach (WorldObjectGameData objectGameData in ChunkManager.Instance.GetChunkFromAnyWorldPos(objectPos, biome).GetWorldObjects())
 		{
 			if(objectGameData.Position != objectPos) continue;
 		
@@ -130,9 +130,9 @@ public class ObjectManager : NetworkBehaviour
 
 	private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)
 	{
-		if(e.Chunk.WorldObjectGameDataList.Count <= 0) return;
+		if(e.Chunk.GetWorldObjects().Count <= 0) return;
 		
-		foreach (WorldObjectGameData objectData in e.Chunk.WorldObjectGameDataList)
+		foreach (WorldObjectGameData objectData in e.Chunk.GetWorldObjects())
 		{	
 			// Instantiate the visual asset
 			GameObject assetGO = Instantiate(objectData.WO.gameObject, (Vector2)objectData.Position, Quaternion.identity);
@@ -161,9 +161,9 @@ public class ObjectManager : NetworkBehaviour
 
 	private void ChunkManager_OnUnloadChunk(object sender, ChunkManager.ChunkEventArgs e)
 	{
-		if(e.Chunk.WorldObjectGameDataList.Count <= 0) return;
+		if(e.Chunk.GetWorldObjects().Count <= 0) return;
 		
-		foreach (WorldObjectGameData assetData in e.Chunk.WorldObjectGameDataList)
+		foreach (WorldObjectGameData assetData in e.Chunk.GetWorldObjects())
 		{
 			// If asset visually exists, just delete it
 			if(TryToFindWorldObject(assetData.Position, out WorldObject wo))

@@ -30,7 +30,7 @@ public class NetworkChunkManager : NetworkBehaviour
 	{
 		// Create a new SyncChunkData object, pre-sizing lists for efficiency
 		int doorCount = 0;
-		foreach (var worldObjectGameData in chunkGameData.WorldObjectGameDataList)
+		foreach (var worldObjectGameData in chunkGameData.GetWorldObjects())
 		{
 			if (worldObjectGameData is DoorObjectGameData)
 			{
@@ -41,27 +41,27 @@ public class NetworkChunkManager : NetworkBehaviour
 		{
 			SyncChunkPosition = chunkGameData.ChunkPosition,
 			
-			SyncGroundTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GroundTileGameDataList.Count),
-			SyncFloorTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.FloorTileGameDataList.Count),
-			SyncWallTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.WallTileGameDataList.Count),
-			SyncOreTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.OreTileGameDataList.Count),
-			SyncLiquidTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.LiquidTileGameDataList.Count),
-			SyncFoliageTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.FoliageTileGameDataList.Count),
+			SyncTerrainTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Terrain).Count),
+			SyncFloorTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Floor).Count),
+			SyncWallTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Wall).Count),
+			SyncOreTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Ore).Count),
+			SyncLiquidTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Liquid).Count),
+			SyncFoliageTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Foliage).Count),
 			
-			SyncObjectAssetDataList = new List<WorldObjectSyncData>(chunkGameData.WorldObjectGameDataList.Count),
+			SyncObjectAssetDataList = new List<WorldObjectSyncData>(chunkGameData.GetWorldObjects().Count),
 			SyncDoorObjectDataList = new List<DoorObjectSyncData>(doorCount)
 		};
 
 		// Convert tile game data lists to agnostic sync data using helper
-		ConvertTileList(chunkGameData.GroundTileGameDataList, syncChunkData.SyncGroundTileDataList);
-		ConvertTileList(chunkGameData.FloorTileGameDataList, syncChunkData.SyncFloorTileDataList);
-		ConvertTileList(chunkGameData.WallTileGameDataList, syncChunkData.SyncWallTileDataList);
-		ConvertTileList(chunkGameData.OreTileGameDataList, syncChunkData.SyncOreTileDataList);
-		ConvertTileList(chunkGameData.LiquidTileGameDataList, syncChunkData.SyncLiquidTileDataList);
-		ConvertTileList(chunkGameData.FoliageTileGameDataList, syncChunkData.SyncFoliageTileDataList);
+		ConvertTileList(chunkGameData.GetTileList(TileType.Terrain), syncChunkData.SyncTerrainTileDataList);
+		ConvertTileList(chunkGameData.GetTileList(TileType.Floor), syncChunkData.SyncFloorTileDataList);
+		ConvertTileList(chunkGameData.GetTileList(TileType.Wall), syncChunkData.SyncWallTileDataList);
+		ConvertTileList(chunkGameData.GetTileList(TileType.Ore), syncChunkData.SyncOreTileDataList);
+		ConvertTileList(chunkGameData.GetTileList(TileType.Liquid), syncChunkData.SyncLiquidTileDataList);
+		ConvertTileList(chunkGameData.GetTileList(TileType.Foliage), syncChunkData.SyncFoliageTileDataList);
 
 		// Convert world asset game data to agnostic sync data
-		foreach (var worldObjectGameData in chunkGameData.WorldObjectGameDataList)
+		foreach (var worldObjectGameData in chunkGameData.GetWorldObjects())
 		{
 			byte id = (byte)GameManager.Instance.GetIDFromWorldObject(worldObjectGameData.WO);
 			
@@ -104,72 +104,50 @@ public class NetworkChunkManager : NetworkBehaviour
 		};
 	}
 	
-	private ChunkGameData ConvertToGameChunkData(SyncChunkData syncChunkData)
+private ChunkGameData ConvertToGameChunkData(SyncChunkData syncChunkData)
+{
+	ChunkGameData chunkGameData = new(ChunkManager.CHUNK_SIZE, syncChunkData.SyncChunkPosition);
+
+	// Define mappings between tile types and sync data lists
+	var tileDataMappings = new (TileType type, List<GenericGameObjectSyncData> syncList)[]
 	{
-		// Create a new ChunkGameData object
-		ChunkGameData chunkGameData = new(ChunkManager.CHUNK_SIZE, syncChunkData.SyncChunkPosition);
+		(TileType.Terrain, syncChunkData.SyncTerrainTileDataList),
+		(TileType.Floor, syncChunkData.SyncFloorTileDataList),
+		(TileType.Wall, syncChunkData.SyncWallTileDataList),
+		(TileType.Ore, syncChunkData.SyncOreTileDataList),
+		(TileType.Liquid, syncChunkData.SyncLiquidTileDataList),
+		(TileType.Foliage, syncChunkData.SyncFoliageTileDataList),
+	};
 
-		// Convert SyncGroundTileData to TileGameData
-		ConvertSyncDataList(syncChunkData.SyncGroundTileDataList, (syncTile) =>
+	// Convert all tile types using shared logic
+	foreach (var (type, syncList) in tileDataMappings)
+	{
+		ConvertSyncDataList(syncList, (syncTile) =>
 		{
 			TileSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
-			return new TileGameData(tileSO, new(syncTile.Position.x, syncTile.Position.y));
-		}, ref chunkGameData.GroundTileGameDataList);
-
-		// Convert SyncFloorTileData to TileGameData
-		ConvertSyncDataList(syncChunkData.SyncFloorTileDataList, (syncTile) =>
-		{
-			TileSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
-			return new TileGameData(tileSO, new(syncTile.Position.x, syncTile.Position.y));
-		}, ref chunkGameData.FloorTileGameDataList);
-		
-		// Convert SyncWallTileData to TileGameData
-		ConvertSyncDataList(syncChunkData.SyncWallTileDataList, (syncTile) =>
-		{
-			TileSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
-			return new TileGameData(tileSO, new(syncTile.Position.x, syncTile.Position.y));
-		}, ref chunkGameData.WallTileGameDataList);
-
-		// Convert SyncOreTileData to TileGameData
-		ConvertSyncDataList(syncChunkData.SyncOreTileDataList, (syncTile) =>
-		{
-			TileSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
-			return new TileGameData(tileSO, new(syncTile.Position.x, syncTile.Position.y));
-		}, ref chunkGameData.OreTileGameDataList);
-
-		// Convert SyncLiquidTileData to TileGameData
-		ConvertSyncDataList(syncChunkData.SyncLiquidTileDataList, (syncTile) =>
-		{
-			TileSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
-			return new TileGameData(tileSO, new(syncTile.Position.x, syncTile.Position.y));
-		}, ref chunkGameData.LiquidTileGameDataList);
-
-		// Convert SyncFoliageTileData to TileGameData
-		ConvertSyncDataList(syncChunkData.SyncFoliageTileDataList, (syncTile) =>
-		{
-			TileSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
-			return new TileGameData(tileSO, new(syncTile.Position.x, syncTile.Position.y));
-		}, ref chunkGameData.FoliageTileGameDataList);
-
-		// Convert SyncWorldAssetData to WorldAssetGameData
-		ConvertSyncDataList(syncChunkData.SyncObjectAssetDataList, (syncAsset) =>
-		{
-			WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(syncAsset.ID);
-			return new WorldObjectGameData(worldObject, syncAsset.Position, syncAsset.Orientation);
-		}, ref chunkGameData.WorldObjectGameDataList);
-		
-		// Convert SyncDoorObjectData To DoorObjectGameData
-		ConvertSyncDataList(syncChunkData.SyncDoorObjectDataList, (syncDoor) => 
-		{
-			WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(syncDoor.ID);
-			return new DoorObjectGameData(worldObject, syncDoor.Position, syncDoor.Orientation, syncDoor.IsOpen);
-		}, ref chunkGameData.WorldObjectGameDataList);
-
-		return chunkGameData;
+			return new TileGameData(tileSO, new Vector2Int(syncTile.Position.x, syncTile.Position.y));
+		}, chunkGameData.GetTileList(type));
 	}
 
+	// Convert SyncWorldAssetData to WorldAssetGameData
+	ConvertSyncDataList(syncChunkData.SyncObjectAssetDataList, (syncAsset) =>
+	{
+		WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(syncAsset.ID);
+		return new WorldObjectGameData(worldObject, syncAsset.Position, syncAsset.Orientation);
+	}, chunkGameData.GetWorldObjects());
+
+	// Convert SyncDoorObjectData To DoorObjectGameData
+	ConvertSyncDataList(syncChunkData.SyncDoorObjectDataList, (syncDoor) => 
+	{
+		WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(syncDoor.ID);
+		return new DoorObjectGameData(worldObject, syncDoor.Position, syncDoor.Orientation, syncDoor.IsOpen);
+	}, chunkGameData.GetWorldObjects());
+
+	return chunkGameData;
+}
+
 	// Generic helper function for converting Sync*DataList to *GameDataList
-	private void ConvertSyncDataList<TSyncData, TGameData>(List<TSyncData> syncDataList, Func<TSyncData, TGameData> convertFunction, ref List<TGameData> gameDataList)
+	private void ConvertSyncDataList<TSyncData, TGameData>(List<TSyncData> syncDataList, Func<TSyncData, TGameData> convertFunction, List<TGameData> gameDataList)
 	{
 		if (syncDataList == null || syncDataList.Count == 0)
 		{

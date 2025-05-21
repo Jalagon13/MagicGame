@@ -306,6 +306,8 @@ MonoBehaviour:
     Quantity: 1
   - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
     Quantity: 111
+  - Item: {fileID: 11400000, guid: 82354be89b65443ee81324ffdf38e948, type: 2}
+    Quantity: 111
 --- !u!114 &6270092794415709611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,7 +343,7 @@ MonoBehaviour:
   <BaseMana>k__BackingField: 100
   <ManaRegenPerSecond>k__BackingField: 1
   <HealthRegenPerSecond>k__BackingField: 1
-  <BaseSpeed>k__BackingField: 5
+  <BaseSpeed>k__BackingField: 10
   <TurnSharpness>k__BackingField: 7.5
   <KnockbackResist>k__BackingField: 0
 --- !u!114 &3515157567628285232

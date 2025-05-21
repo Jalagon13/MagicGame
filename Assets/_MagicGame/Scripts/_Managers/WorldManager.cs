@@ -211,8 +211,8 @@ public class WorldManager : NetworkBehaviour
 
 	public void ExecuteOnBiomeTransitionEnd() // Yeah this is scuffed i know
 	{
-		OnBiomeTransitionEnd?.Invoke(this, EventArgs.Empty);
 		IsLoadingBiome = false;
+		OnBiomeTransitionEnd?.Invoke(this, EventArgs.Empty);
 	}
 
 	private void PlacePlayerAt(Vector2 portalPosition)

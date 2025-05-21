@@ -80,11 +80,9 @@ public class SaveSystem : MonoBehaviour
 		// Loop through all assets and push them to _sceneData before serializing it
 		foreach (var chunkPosChunkDataKVP in ChunkManager.Instance.GetChunksFromBiome(biomeToSave))
 		{
-			List<WorldObjectGameData> worldObjectGameDataList = chunkPosChunkDataKVP.Value.WorldObjectGameDataList;
-		
-			if(worldObjectGameDataList.Count > 0)
+			if(chunkPosChunkDataKVP.Value.GetWorldObjects().Count > 0)
 			{
-				foreach (WorldObjectGameData worldObjectGameData in worldObjectGameDataList)
+				foreach (WorldObjectGameData worldObjectGameData in chunkPosChunkDataKVP.Value.GetWorldObjects())
 				{
 					// If so, serialize it
 					if(worldObjectGameData.WO != null)
@@ -138,12 +136,12 @@ public class SaveSystem : MonoBehaviour
 
 			var tileGroups = new List<(List<TileGameData> source, List<TileFileData> target)>
 			{
-				(kvp.Value.GroundTileGameDataList, chunkData.GroundTiles),
-				(kvp.Value.FloorTileGameDataList, chunkData.FloorTiles),
-				(kvp.Value.WallTileGameDataList, chunkData.WallTiles),
-				(kvp.Value.OreTileGameDataList, chunkData.OreTiles),
-				(kvp.Value.LiquidTileGameDataList, chunkData.LiquidTiles),
-				(kvp.Value.FoliageTileGameDataList, chunkData.FoliageTiles),
+				(kvp.Value.GetTileList(TileType.Terrain), chunkData.GroundTiles),
+				(kvp.Value.GetTileList(TileType.Floor), chunkData.FloorTiles),
+				(kvp.Value.GetTileList(TileType.Wall), chunkData.WallTiles),
+				(kvp.Value.GetTileList(TileType.Ore), chunkData.OreTiles),
+				(kvp.Value.GetTileList(TileType.Liquid), chunkData.LiquidTiles),
+				(kvp.Value.GetTileList(TileType.Foliage), chunkData.FoliageTiles),
 			};
 
 			foreach (var (sourceList, targetList) in tileGroups)
@@ -305,16 +303,15 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 		// Convert ChunkData into Chunks, push it to deserializedChunks and send that to ChunkManager
 		foreach (ChunkFileData data in chunkFileData)
 		{
-			ChunkGameData chunk = new(data.Size, data.ChunkPosition)
-			{
-				GroundTileGameDataList = ConvertTileFileDataToGameData(data.GroundTiles),
-				FloorTileGameDataList = ConvertTileFileDataToGameData(data.FloorTiles),
-				WallTileGameDataList = ConvertTileFileDataToGameData(data.WallTiles),
-				OreTileGameDataList = ConvertTileFileDataToGameData(data.OreTiles),
-				LiquidTileGameDataList = ConvertTileFileDataToGameData(data.LiquidTiles),
-				FoliageTileGameDataList = ConvertTileFileDataToGameData(data.FoliageTiles),
-			};
-			
+			ChunkGameData chunk = new(data.Size, data.ChunkPosition);
+			chunk.DeserializeTileLists(
+				ConvertTileFileDataToGameData(data.GroundTiles),
+				ConvertTileFileDataToGameData(data.LiquidTiles),
+				ConvertTileFileDataToGameData(data.FloorTiles),
+				ConvertTileFileDataToGameData(data.WallTiles),
+				ConvertTileFileDataToGameData(data.OreTiles),
+				ConvertTileFileDataToGameData(data.FoliageTiles)
+			);
 			deserializedChunks.Add(data.ChunkPosition, chunk);
 		}
 		
@@ -327,16 +324,15 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 	// Convert tile file data to tile game data
 	private List<TileGameData> ConvertTileFileDataToGameData(List<TileFileData> tileFileData)
 	{
-		List<TileGameData> tileGameData = new();
-		
-		foreach (TileFileData data in tileFileData)
+		int count = tileFileData.Count;
+		List<TileGameData> tileGameData = new(count); // ✅ pre-size list
+
+		for (int i = 0; i < count; i++)
 		{
-			TileSO tileSO = GameManager.Instance.GetTileSOFromID(data.TileId);
-			TileGameData tile = new(tileSO, data.Pos);
-			
-			tileGameData.Add(tile);
+			TileSO tileSO = GameManager.Instance.GetTileSOFromID(tileFileData[i].TileId);
+			tileGameData.Add(new TileGameData(tileSO, tileFileData[i].Pos));
 		}
-		
+
 		return tileGameData;
 	}
 	

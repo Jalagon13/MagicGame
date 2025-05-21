@@ -11,7 +11,7 @@ public class UpperWallTm : MonoBehaviour
     private void Awake()
     {
         _upperWallTm = GetComponent<Tilemap>();
-        _upperOreWallTm = transform.GetChild(0).GetComponent<Tilemap>();
+        _upperOreWallTm = transform.parent.transform.GetChild(1).GetComponent<Tilemap>();
     }
 
     private void Start()
@@ -38,6 +38,7 @@ public class UpperWallTm : MonoBehaviour
     public void EnableTilemapCollider(bool v)
     {
         _upperWallTm.GetComponent<TilemapCollider2D>().enabled = v;
+        _upperOreWallTm.GetComponent<TilemapRenderer>().enabled = v;
     }
     
     public void DeleteUpperWallTile(Vector3Int tilePos)
@@ -79,6 +80,7 @@ public class UpperWallTm : MonoBehaviour
     public void ClearAllTopTiles()
     {
         _upperWallTm.ClearAllTiles();
+        _upperOreWallTm.ClearAllTiles();
     }
 
     private void RefreshUpperWallTiles(object sender, EventArgs e)
@@ -123,25 +125,25 @@ public class UpperWallTm : MonoBehaviour
         Vector3Int rightTilePosition = new Vector3Int(x + 1, y, 0);
         Vector3Int upperTilePosition = new Vector3Int(x, y + 1, 0);
 
-        bool botLeftTileExists = TileRenderManager.Instance.WallTm.HasTile(leftTilePosition) &&
+        bool sameBotLeftTileExists = TileRenderManager.Instance.WallTm.HasTile(leftTilePosition) &&
         (GameManager.Instance.GetTileIdFromTileBase(TileRenderManager.Instance.WallTm.GetTile(leftTilePosition)) == GameManager.Instance.GetTileIdFromTileBase(TileRenderManager.Instance.WallTm.GetTile(tilePosition)));
 
-        bool botRightTileExists = TileRenderManager.Instance.WallTm.HasTile(rightTilePosition) &&
+        bool sameBotRightTileExists = TileRenderManager.Instance.WallTm.HasTile(rightTilePosition) &&
         (GameManager.Instance.GetTileIdFromTileBase(TileRenderManager.Instance.WallTm.GetTile(rightTilePosition)) == GameManager.Instance.GetTileIdFromTileBase(TileRenderManager.Instance.WallTm.GetTile(tilePosition)));
-
-        if (!botLeftTileExists && !botRightTileExists)
+        
+        if (!sameBotLeftTileExists && !sameBotRightTileExists)
         {
             SetUpperWallTile(upperTilePosition, tileAtPosition, TopTileType.Single);
         }
-        else if (botLeftTileExists && !botRightTileExists)
+        else if (sameBotLeftTileExists && !sameBotRightTileExists)
         {
             SetUpperWallTile(upperTilePosition, tileAtPosition, TopTileType.Right);
         }
-        else if (!botLeftTileExists && botRightTileExists)
+        else if (!sameBotLeftTileExists && sameBotRightTileExists)
         {
             SetUpperWallTile(upperTilePosition, tileAtPosition, TopTileType.Left);
         }
-        else if (botLeftTileExists && botRightTileExists)
+        else if (sameBotLeftTileExists && sameBotRightTileExists)
         {
             SetUpperWallTile(upperTilePosition, tileAtPosition, TopTileType.Center);
         }
@@ -149,14 +151,19 @@ public class UpperWallTm : MonoBehaviour
 
     private void SetUpperWallTile(Vector3Int upperTilePosition, TileSO tileAtPosition, TopTileType topTileType)
     {
-        if(_upperWallTm.HasTile(upperTilePosition + Vector3Int.down))
+        Vector3Int baseTilePosition = upperTilePosition + Vector3Int.down;
+
+        if (_upperWallTm.HasTile(baseTilePosition))
         {
-            _upperWallTm.SetTile(upperTilePosition + Vector3Int.down, null);
-        }
-        
-        if(_upperOreWallTm.HasTile(upperTilePosition + Vector3Int.down))
-        {
-            _upperOreWallTm.SetTile(upperTilePosition + Vector3Int.down, null);
+            Vector3Int lowerTilePosition = baseTilePosition + Vector3Int.down;
+            int lowerTileId = GameManager.Instance.GetTileIdFromTileBase(TileRenderManager.Instance.WallTm.GetTile(lowerTilePosition));
+            int baseTileId = GameManager.Instance.GetTileIdFromTileBase(TileRenderManager.Instance.WallTm.GetTile(baseTilePosition));
+            
+            if (baseTileId == lowerTileId)
+            {
+                _upperWallTm.SetTile(baseTilePosition, null);
+                _upperOreWallTm.SetTile(baseTilePosition, null);
+            }
         }
     
         Tile tile = ScriptableObject.CreateInstance<Tile>();

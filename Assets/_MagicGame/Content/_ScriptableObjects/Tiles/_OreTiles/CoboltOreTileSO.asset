@@ -360,29 +360,30 @@ MonoBehaviour:
     - {x: 1, y: 0, z: 0}
     m_RuleTransform: 0
   <TileType>k__BackingField: 3
+  <ToolTypeNeededForHarvest>k__BackingField: 0
   <Hardness>k__BackingField: 0.65
   <ItemDropTable>k__BackingField: []
   <MiningSound>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 249587751
+      Data2: 1169178929
+      Data3: -130389574
+      Data4: -1987048442
+    Path: event:/StoneHit
   <PlaceSound>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 249587751
+      Data2: 1169178929
+      Data3: -130389574
+      Data4: -1987048442
+    Path: event:/StoneHit
   <DestroySound>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -557428352
+      Data2: 1107459471
+      Data3: 2078279570
+      Data4: 643237060
+    Path: event:/StoneDestroyed
   <TopTileSingle>k__BackingField: {fileID: -511455213, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}
   <TopTileLeft>k__BackingField: {fileID: -2134649256, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}
   <TopTileCenter>k__BackingField: {fileID: 1820265310, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}

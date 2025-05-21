@@ -8,13 +8,13 @@ using UnityEngine.Tilemaps;
 public class ChunkGameData
 {
 	public Vector2Int ChunkPosition { get; private set; }
-	public List<TileGameData> GroundTileGameDataList;
-	public List<TileGameData> LiquidTileGameDataList;
-	public List<TileGameData> FloorTileGameDataList;
-	public List<TileGameData> WallTileGameDataList;
-	public List<TileGameData> OreTileGameDataList;
-	public List<TileGameData> FoliageTileGameDataList;
-	public List<WorldObjectGameData> WorldObjectGameDataList;
+	private readonly List<TileGameData> _terrainTileGameDataList;
+	private readonly List<TileGameData> _liquidTileGameDataList;
+	private readonly List<TileGameData> _floorTileGameDataList;
+	private readonly List<TileGameData> _wallTileGameDataList;
+	private readonly List<TileGameData> _oreTileGameDataList;
+	private readonly List<TileGameData> _foliageTileGameDataList;
+	private readonly List<WorldObjectGameData> _worldObjectGameDataList;
 	public int Size { get; private set; }
 
 	private readonly Dictionary<TileType, List<TileGameData>> _tileTypeToList;
@@ -23,81 +23,75 @@ public class ChunkGameData
 	{
 		Size = chunkSize;
 		ChunkPosition = chunkPosition;
-		GroundTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
-		LiquidTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
-		FloorTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
-		WallTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
-		OreTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
-		FoliageTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
-		WorldObjectGameDataList = new List<WorldObjectGameData>(chunkSize * chunkSize);
+		_terrainTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		_liquidTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		_floorTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		_wallTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		_oreTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		_foliageTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
+		_worldObjectGameDataList = new List<WorldObjectGameData>(chunkSize * chunkSize);
 
 		_tileTypeToList = new Dictionary<TileType, List<TileGameData>>
 		{
-			{ TileType.Terrain, GroundTileGameDataList },
-			{ TileType.Floor, FloorTileGameDataList },
-			{ TileType.Wall, WallTileGameDataList },
-			{ TileType.Ore, OreTileGameDataList },
-			{ TileType.Liquid, LiquidTileGameDataList },
-			{ TileType.Foliage, FoliageTileGameDataList },
+			{ TileType.Terrain, _terrainTileGameDataList },
+			{ TileType.Floor, _floorTileGameDataList },
+			{ TileType.Wall, _wallTileGameDataList },
+			{ TileType.Ore, _oreTileGameDataList },
+			{ TileType.Liquid, _liquidTileGameDataList },
+			{ TileType.Foliage, _foliageTileGameDataList },
 		};
 	}
-	
+
+	// Populate all tile lists after construction (e.g., during deserialization)
+	public void DeserializeTileLists(
+		List<TileGameData> terrainTiles,
+		List<TileGameData> liquidTiles,
+		List<TileGameData> floorTiles,
+		List<TileGameData> wallTiles,
+		List<TileGameData> oreTiles,
+		List<TileGameData> foliageTiles)
+	{
+		var incomingData = new Dictionary<TileType, List<TileGameData>>
+		{
+			{ TileType.Terrain, terrainTiles },
+			{ TileType.Liquid, liquidTiles },
+			{ TileType.Floor, floorTiles },
+			{ TileType.Wall, wallTiles },
+			{ TileType.Ore, oreTiles },
+			{ TileType.Foliage, foliageTiles },
+		};
+
+		foreach (var kvp in incomingData)
+		{
+			if (_tileTypeToList.TryGetValue(kvp.Key, out var targetList))
+			{
+				targetList.Clear();
+				targetList.AddRange(kvp.Value);
+			}
+		}
+	}
+
+	public List<TileGameData> GetTileList(TileType type)
+	{
+		if (_tileTypeToList.TryGetValue(type, out var list))
+			return list;
+
+		Debug.LogWarning($"Tried to get tile list for unknown type {type}");
+		return null;
+	}
+
 	// When a tile is destroyed, delete the tile data in chunk
 	public void RemoveTileDataIfExists(Vector2Int position, TileType tileType)
 	{
-		if(tileType == TileType.Ore)
-		{
-			foreach (TileGameData tile in WallTileGameDataList)
-			{
-				// If position is found
-				if (tile.TilePosition == position)
-				{
-					// Delete data and return
-					WallTileGameDataList.Remove(tile);
-					break;
-				}
-			}
-			
-			foreach (TileGameData tile in OreTileGameDataList)
-			{
-				// If position is found
-				if (tile.TilePosition == position)
-				{
-					// Delete data and return
-					OreTileGameDataList.Remove(tile);
-					return;
-				}
-			}
-		}
-		else if(tileType == TileType.Wall)
-		{
-			foreach (TileGameData tile in WallTileGameDataList)
-			{
-				// If position is found
-				if(tile.TilePosition == position)
-				{
-					// Delete data and return
-					WallTileGameDataList.Remove(tile);
-					Debug.Log($"Removed wall tile at {position}");
-					return;
-				}
-			}
-			
-			Debug.LogWarning($"Did not find wall to remove at {position}");
-		}
-		else
-		{
-			foreach (TileGameData tile in FloorTileGameDataList)
-			{
-				// If position is found
-				if(tile.TilePosition == position)
-				{
-					// Delete data and return
-					FloorTileGameDataList.Remove(tile);
-					return;
-				}
-			}
-		}
+	    if (_tileTypeToList.TryGetValue(tileType, out var list))
+	    {
+	        int index = list.FindIndex(t => t.TilePosition == position);
+	        if (index >= 0)
+	        {
+	            list.RemoveAt(index);
+	            return;
+	        }
+	    }
 	}
 	
 	// When a tile is placed, add tile data in chunk
@@ -111,16 +105,19 @@ public class ChunkGameData
 			if (existingIndex >= 0)
 			{
 				list[existingIndex] = tileToAdd;
-				Debug.Log($"1Added {tile.TileType} tile at {position} at chunk {ChunkPosition}");
 			}
 			else
 			{
 				list.Add(tileToAdd);
-				Debug.Log($"2Added {tile.TileType} tile at {position} at chunk {ChunkPosition}");
 			}
 		}
 	}
-	
+
+	public List<WorldObjectGameData> GetWorldObjects()
+	{
+		return _worldObjectGameDataList;
+	}
+
 	public void DeserializeObjectData(WorldObjectFileData worldObjectFileData, WorldObject worldObject, CardinalDirection orientation) // For deserialization
 	{
 		WorldObjectGameData worldObjectToAdd;
@@ -134,7 +131,7 @@ public class ChunkGameData
 			worldObjectToAdd = new WorldObjectGameData(worldObject, worldObjectFileData.Pos, orientation);
 		}
 		
-		WorldObjectGameDataList.Add(worldObjectToAdd);
+		_worldObjectGameDataList.Add(worldObjectToAdd);
 	}
 
 	public void AddObjectData(Vector2Int position, WorldObject worldObject, CardinalDirection orientation) // For run time game play
@@ -150,27 +147,27 @@ public class ChunkGameData
 			worldObjectToAdd = new WorldObjectGameData(worldObject, position, orientation);
 		}
 
-		for (int i = 0; i < WorldObjectGameDataList.Count; i++)
+		for (int i = 0; i < _worldObjectGameDataList.Count; i++)
 		{
-			if (WorldObjectGameDataList[i].Position == position)
+			if (_worldObjectGameDataList[i].Position == position)
 			{
 				// Found something already there
-				Debug.LogWarning($"Found {WorldObjectGameDataList[i].WO} already there at {position}, replacing it with {worldObject}");
-				WorldObjectGameDataList.RemoveAt(i);
+				Debug.LogWarning($"Found {_worldObjectGameDataList[i].WO} already there at {position}, replacing it with {worldObject}");
+				_worldObjectGameDataList.RemoveAt(i);
 				break;
 			}
 		}
 
-		WorldObjectGameDataList.Add(worldObjectToAdd);
+		_worldObjectGameDataList.Add(worldObjectToAdd);
 	}
 
 	public void RemoveObjectData(Vector2Int position)
 	{
-		foreach (WorldObjectGameData assetGameData in WorldObjectGameDataList)
+		foreach (WorldObjectGameData assetGameData in _worldObjectGameDataList)
 		{
 			if(assetGameData.Position == position)
 			{
-				WorldObjectGameDataList.Remove(assetGameData);
+				_worldObjectGameDataList.Remove(assetGameData);
 				return;
 			}
 		}

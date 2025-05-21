@@ -44,6 +44,7 @@ public class TileRenderManager : NetworkBehaviour
 	private void WorldManager_OnBiomeTransitionStart(object sender, EventArgs e)
 	{
 		WallTm.GetComponent<TilemapCollider2D>().enabled = false;
+		OreTm.GetComponent<TilemapRenderer>().enabled = false;
 		UpperWallTm.EnableTilemapCollider(false);
 
 		// Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
@@ -57,6 +58,7 @@ public class TileRenderManager : NetworkBehaviour
 	private void WorldManager_OnBiomeTransitionEnd(object sender, EventArgs e)
     {
 		WallTm.GetComponent<TilemapCollider2D>().enabled = true;
+		OreTm.GetComponent<TilemapRenderer>().enabled = true;
 		UpperWallTm.EnableTilemapCollider(true);
 	}
 
@@ -65,12 +67,12 @@ public class TileRenderManager : NetworkBehaviour
 		// Create a list of lists to hold all the different tile layers
 		var allTileLayers = new List<List<TileGameData>>
 		{
-			e.Chunk.GroundTileGameDataList,
-			e.Chunk.LiquidTileGameDataList,
-			e.Chunk.FloorTileGameDataList,
-			e.Chunk.WallTileGameDataList,
-			e.Chunk.OreTileGameDataList,
-			e.Chunk.FoliageTileGameDataList,
+			e.Chunk.GetTileList(TileType.Terrain),
+			e.Chunk.GetTileList(TileType.Liquid),
+			e.Chunk.GetTileList(TileType.Floor),
+			e.Chunk.GetTileList(TileType.Wall),
+			e.Chunk.GetTileList(TileType.Ore),
+			e.Chunk.GetTileList(TileType.Foliage),
 		};
 
 		// Iterate through each list and set the tiles on the tilemap
@@ -141,7 +143,7 @@ public class TileRenderManager : NetworkBehaviour
 		{
 			UpperWallTm.DeleteUpperWallTile(tilePos);
 		}
-		else if (tileSO != null && (tileType == TileType.Wall || tileType == TileType.Ore))
+		else if (tileSO != null && (tileType == TileType.Wall || tileType == TileType.Ore) && !WorldManager.Instance.IsLoadingBiome)
 		{
 			UpperWallTm.TryToRenderSurroundingUpperWallTiles(tilePos);
 		}
@@ -152,8 +154,9 @@ public class TileRenderManager : NetworkBehaviour
 	{
 		TileSO tileSO = GameManager.Instance.GetTileSOFromID(tileId);
 		var tileList = GetTileListFromType(tileSO.TileType, tilePos, biome);
+		
 		if (tileList == null) return;
-		Debug.Log($"Tilelist: {tileSO.TileType}, count {tileList.Count}");
+		
 		for (int i = tileList.Count - 1; i >= 0; i--)
 		{
 			if (tileList[i].TilePosition == tilePos)
@@ -162,28 +165,15 @@ public class TileRenderManager : NetworkBehaviour
 				LootTable.SpawnLoot(tileSO.ItemDropTable, spawnPos, biome);
 				ChunkManager.Instance.RemoveTileServerRpc(tileSO.TileType, tileList[i].TilePosition, biome);
 				SoundManager.Instance.PlayOneShot(tileSO.DestroySound, spawnPos);
-				Debug.Log($"Found tile to destroy: {tileList[i].TilePosition}");
 				return;
 			}
 		}
-		
-		Debug.LogWarning($"Couldn't find tile to destroy: {tilePos}");
 	}
 
 	private List<TileGameData> GetTileListFromType(TileType tileType, Vector2Int tilePos, BiomeType biome)
 	{
 		var chunk = ChunkManager.Instance.GetChunkFromAnyWorldPos(tilePos, biome);
-		Debug.Log($"Chunk: {chunk.ChunkPosition}");
-		return tileType switch
-		{
-			TileType.Terrain => chunk.GroundTileGameDataList,
-			TileType.Liquid => chunk.LiquidTileGameDataList,
-			TileType.Floor => chunk.FloorTileGameDataList,
-			TileType.Wall => chunk.WallTileGameDataList,
-			TileType.Ore => chunk.OreTileGameDataList,
-			TileType.Foliage => chunk.FoliageTileGameDataList,
-			_ => null
-		};
+		return chunk.GetTileList(tileType);
 	}
 
 	public override void OnDestroy()

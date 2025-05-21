@@ -173,7 +173,6 @@ public class MiningHandler : MonoBehaviour
 
     private void BeginMining(ToolItemSO toolItemSO)
     {
-        Debug.Log($"Begin Mining {_destructableFound} at {_currentBreakTargetPosition}");
         IsMining = true;
         _originalBreakTargetPosition = _currentBreakTargetPosition;
 
@@ -195,7 +194,7 @@ public class MiningHandler : MonoBehaviour
         else
         {
             PlayMiningFeedbacks(null, null);
-            Debug.Log($"Mining {_destructableFound} at {_currentBreakTargetPosition} for {totalMiningTime} seconds");
+            
             _miningTimer = new Timer(totalMiningTime);
             _miningTimer.OnTimerEnd -= DestroyResource;
             _miningTimer.OnTimerEnd += DestroyResource;
@@ -232,11 +231,9 @@ public class MiningHandler : MonoBehaviour
         {
             case DestructableType.WorldObject:
                 ObjectManager.Instance.DestroyObjectServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetIDFromWorldObject(_worldObjectSelected));
-                Debug.Log($"Destroyed {_worldObjectSelected} at {_currentBreakTargetPosition}");
                 break;
             case DestructableType.Tile:
                 TileRenderManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.LocalClientInstance.CurrentPlayerBiome.Value);
-                Debug.Log($"Destroyed {_tileSelected} at {_currentBreakTargetPosition}");
                 break;
         }
         

@@ -76,15 +76,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "ToggleMiningFocus",
-                    "type": "Button",
-                    "id": "d2ac4338-7103-4e43-adbd-ded162d323e6",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -217,17 +208,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Space",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "83b02f44-ca74-42fe-bdde-5a462c618ddc",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ToggleMiningFocus",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
