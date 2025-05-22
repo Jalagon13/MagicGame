@@ -16,9 +16,9 @@ public struct TileVisibility
 	}
 }
 
-public class TileRenderManager : NetworkBehaviour
+public class TileManager : NetworkBehaviour
 {
-	public static TileRenderManager Instance;
+	public static TileManager Instance;
 
 	[field: SerializeField] public Tilemap FloorTm { get; private set; }
 	[field: SerializeField] public Tilemap WallTm { get; private set; }
@@ -86,19 +86,52 @@ public class TileRenderManager : NetworkBehaviour
 		}
 	}
 
-	public bool HasTile(Vector3Int position, TileType tileType)
+	public bool HasTile(Vector3Int position, TileType tileType, out TileSO tileSO)
 	{
-        return tileType switch
-        {
-            TileType.Terrain => TerrainTileRenderer.HasTile(position),
-            TileType.Floor => FloorTm.HasTile(position),
-            TileType.Wall => WallTm.HasTile(position),
-            TileType.Ore => OreTm.HasTile(position),
-            TileType.Liquid => TerrainTileRenderer.HasTile(position),
-            TileType.Foliage => FoliageTm.HasTile(position),
-            _ => false,
-        };
-    }
+		tileSO = null;
+
+		switch (tileType)
+		{
+			case TileType.Terrain:
+			case TileType.Liquid:
+				if (TerrainTileRenderer.HasTile(position))
+				{
+					tileSO = TerrainTileRenderer.GetTileSO(position);
+					return true;
+				}
+				break;
+			case TileType.Floor:
+				if (FloorTm.HasTile(position))
+				{
+					tileSO = FloorTm.GetTile<TileSO>(position);
+					return true;
+				}
+				break;
+			case TileType.Wall:
+				if (WallTm.HasTile(position))
+				{
+					tileSO = WallTm.GetTile<TileSO>(position);
+					return true;
+				}
+				break;
+			case TileType.Ore:
+				if (OreTm.HasTile(position))
+				{
+					tileSO = OreTm.GetTile<TileSO>(position);
+					return true;
+				}
+				break;
+			case TileType.Foliage:
+				if (FoliageTm.HasTile(position))
+				{
+					tileSO = FoliageTm.GetTile<TileSO>(position);
+					return true;
+				}
+				break;
+		}
+
+		return false;
+	}
 
 	[Rpc(SendTo.ClientsAndHost)]
 	public void HandleTileVisualClientRpc(Vector3Int pos, int syncTileId, TileType syncTileType, BiomeType biome)
@@ -155,8 +188,12 @@ public class TileRenderManager : NetworkBehaviour
 		TileSO tileSO = GameManager.Instance.GetTileSOFromID(tileId);
 		var tileList = GetTileListFromType(tileSO.TileType, tilePos, biome);
 		
-		if (tileList == null) return;
-		
+		if (tileList == null)
+		{
+		    Debug.LogError($"tileList for {tileSO.TileType} is null");
+		    return;
+		}
+
 		for (int i = tileList.Count - 1; i >= 0; i--)
 		{
 			if (tileList[i].TilePosition == tilePos)

@@ -8,14 +8,11 @@ public class ForestStairsGenerationStep : GenerationStep
         if (genData is not CaveGenerationData caveGenData) return;
         
         List<(int WorldObjectId, Vector2Int Position)> forestTransitionObjectData = SaveSystem.Instance.RetrieveBiomeTransitionWorldObjectData(BiomeType.Forest);
-        Debug.Log($"Count FROM GEN STEP: {forestTransitionObjectData.Count}");
         
         foreach (var (transitionObjectId, forestTransitionObjectPosition) in forestTransitionObjectData)
         {
-            Debug.Log($"Id of transition object: {transitionObjectId}");
             if(transitionObjectId == GameManager.Instance.GetIDFromWorldObject(caveGenData.StairsToCave))
             {
-                Debug.Log($"Removing walls around {forestTransitionObjectPosition}");
                 DeleteNeighborWallsAroundPoint(forestTransitionObjectPosition);
                 caveGenData.SetWorldObjectData(forestTransitionObjectPosition.x, forestTransitionObjectPosition.y, caveGenData.StairsToForest, CardinalDirection.North);
             }
@@ -31,6 +28,7 @@ public class ForestStairsGenerationStep : GenerationStep
             {
                 Vector2Int neighborPosition = new(centerPosition.x + x, centerPosition.y + y);
                 ChunkManager.Instance.RemoveTileServerRpc(TileType.Wall, neighborPosition, BiomeType.Cave);
+                ChunkManager.Instance.RemoveTileServerRpc(TileType.Ore, neighborPosition, BiomeType.Cave);
             }
         }
     }

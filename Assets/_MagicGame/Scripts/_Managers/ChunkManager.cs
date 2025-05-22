@@ -206,20 +206,20 @@ public class ChunkManager : NetworkBehaviour
 			Pathfinding.Instance.AddPfWallTileServerRpc(position, biomeToAddTileData);
 		}
 		
-		TileRenderManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, tileID, tileType, biomeToAddTileData);
+		TileManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, tileID, tileType, biomeToAddTileData);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void RemoveTileServerRpc(TileType tileType, Vector2Int position, BiomeType biome)
 	{
-		GetChunkFromAnyWorldPos(position, biome).RemoveTileDataIfExists(position, tileType);
+		GetChunkFromAnyWorldPos(position, biome).RemoveTileData(position, tileType);
 
 		if (tileType == TileType.Wall || tileType == TileType.Ore)
 		{
 			Pathfinding.Instance.RemovePfWallTileServerRpc(position, biome);
 		}
 
-		TileRenderManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, -1, tileType, biome);
+		TileManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, -1, tileType, biome);
 	}
 
 	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType biomeToGetChunkFrom)

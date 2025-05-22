@@ -36,8 +36,8 @@ public class NpcItemSO : ItemSO
         if (IgnoreNpcHousingCheck) return true;
     
         // Initialize tilemaps and variables
-        Tilemap wallTilemap = TileRenderManager.Instance.WallTm;
-        Tilemap floorTilemap = TileRenderManager.Instance.FloorTm;
+        Tilemap wallTilemap = TileManager.Instance.WallTm;
+        Tilemap floorTilemap = TileManager.Instance.FloorTm;
         List<Vector3Int> floorTilePositions = new();
         List<Vector3Int> wallTilePositions = new();
         List<Vector3Int> doorPositions = new();

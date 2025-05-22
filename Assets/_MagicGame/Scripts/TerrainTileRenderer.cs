@@ -88,7 +88,19 @@ public class TerrainTileRenderer : MonoBehaviour
         }
         _terrainTilemaps.Clear();
     }
-    
+
+    public TileSO GetTileSO(Vector3Int position)
+    {
+        foreach (var kvp in _terrainTilemaps)
+        {
+            if (kvp.Value.HasTileData(position))
+            {
+                return kvp.Key;
+            }
+        }
+        return null;
+    }
+
     public bool HasTile(Vector3Int position)
     {
         foreach (TerrainTilemap terrainTilemap in _terrainTilemaps.Values)

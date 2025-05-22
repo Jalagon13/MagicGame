@@ -54,7 +54,7 @@ public class UpperWallTm : MonoBehaviour
                 if (dx == 0 && dy == 0) continue;
 
                 Vector3Int neighborPos = new Vector3Int(tilePos.x + dx, tilePos.y + dy, 0);
-                if (TileRenderManager.Instance.WallTm.HasTile(neighborPos))
+                if (TileManager.Instance.WallTm.HasTile(neighborPos))
                 {
                     TryToRenderUpperWallTile(neighborPos.x, neighborPos.y);
                 }
@@ -69,7 +69,7 @@ public class UpperWallTm : MonoBehaviour
             for (int dy = -1; dy <= 1; dy++)
             {
                 Vector3Int neighborPos = new Vector3Int(tilePos.x + dx, tilePos.y + dy, 0);
-                if (TileRenderManager.Instance.WallTm.HasTile(neighborPos))
+                if (TileManager.Instance.WallTm.HasTile(neighborPos))
                 {
                     TryToRenderUpperWallTile(neighborPos.x, neighborPos.y);
                 }
@@ -89,7 +89,7 @@ public class UpperWallTm : MonoBehaviour
         {
             for (int y = 0; y < ChunkManager.BIOME_SIDE_LENGTH; y++)
             {
-                if(TileRenderManager.Instance.WallTm.HasTile(new Vector3Int(x, y, 0)))
+                if(TileManager.Instance.WallTm.HasTile(new Vector3Int(x, y, 0)))
                 {
                     TryToRenderUpperWallTile(x, y);
                 }
@@ -100,12 +100,12 @@ public class UpperWallTm : MonoBehaviour
 
     private void TryToRenderUpperWallTile(int x, int y)
     {
-        TileSO tileAtPosition = GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.WallTm.GetTile(new Vector3Int(x, y, 0)));
-        bool tileExistsAbove = TileRenderManager.Instance.WallTm.HasTile(new Vector3Int(x, y + 1, 0));
+        TileSO tileAtPosition = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(new Vector3Int(x, y, 0)));
+        bool tileExistsAbove = TileManager.Instance.WallTm.HasTile(new Vector3Int(x, y + 1, 0));
         
         if(tileExistsAbove)
         {
-            TileSO aboveTileSO = GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.WallTm.GetTile(new Vector3Int(x, y + 1, 0)));  
+            TileSO aboveTileSO = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(new Vector3Int(x, y + 1, 0)));  
             
             if(GameManager.Instance.GetTileIdFromTileSO(tileAtPosition) != GameManager.Instance.GetTileIdFromTileSO(aboveTileSO))
             {
@@ -125,11 +125,11 @@ public class UpperWallTm : MonoBehaviour
         Vector3Int rightTilePosition = new Vector3Int(x + 1, y, 0);
         Vector3Int upperTilePosition = new Vector3Int(x, y + 1, 0);
 
-        bool sameBotLeftTileExists = TileRenderManager.Instance.WallTm.HasTile(leftTilePosition) &&
-        (GameManager.Instance.GetTileIdFromTileBase(TileRenderManager.Instance.WallTm.GetTile(leftTilePosition)) == GameManager.Instance.GetTileIdFromTileBase(TileRenderManager.Instance.WallTm.GetTile(tilePosition)));
+        bool sameBotLeftTileExists = TileManager.Instance.WallTm.HasTile(leftTilePosition) &&
+        (GameManager.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile(leftTilePosition)) == GameManager.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile(tilePosition)));
 
-        bool sameBotRightTileExists = TileRenderManager.Instance.WallTm.HasTile(rightTilePosition) &&
-        (GameManager.Instance.GetTileIdFromTileBase(TileRenderManager.Instance.WallTm.GetTile(rightTilePosition)) == GameManager.Instance.GetTileIdFromTileBase(TileRenderManager.Instance.WallTm.GetTile(tilePosition)));
+        bool sameBotRightTileExists = TileManager.Instance.WallTm.HasTile(rightTilePosition) &&
+        (GameManager.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile(rightTilePosition)) == GameManager.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile(tilePosition)));
         
         if (!sameBotLeftTileExists && !sameBotRightTileExists)
         {
@@ -156,8 +156,8 @@ public class UpperWallTm : MonoBehaviour
         if (_upperWallTm.HasTile(baseTilePosition))
         {
             Vector3Int lowerTilePosition = baseTilePosition + Vector3Int.down;
-            int lowerTileId = GameManager.Instance.GetTileIdFromTileBase(TileRenderManager.Instance.WallTm.GetTile(lowerTilePosition));
-            int baseTileId = GameManager.Instance.GetTileIdFromTileBase(TileRenderManager.Instance.WallTm.GetTile(baseTilePosition));
+            int lowerTileId = GameManager.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile(lowerTilePosition));
+            int baseTileId = GameManager.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile(baseTilePosition));
             
             if (baseTileId == lowerTileId)
             {
@@ -186,9 +186,9 @@ public class UpperWallTm : MonoBehaviour
         _upperWallTm.SetTile(upperTilePosition, tile);
 
         Vector3Int oreTilePosition = new Vector3Int(upperTilePosition.x, upperTilePosition.y - 1, 0);
-        if (TileRenderManager.Instance.OreTm.HasTile(oreTilePosition))
+        if (TileManager.Instance.OreTm.HasTile(oreTilePosition))
         {
-            TileBase oreBaseTile = TileRenderManager.Instance.OreTm.GetTile(oreTilePosition);
+            TileBase oreBaseTile = TileManager.Instance.OreTm.GetTile(oreTilePosition);
             TileSO oreTileSO = GameManager.Instance.GetTileSOFromTileBase(oreBaseTile);
 
             Tile oreTile = ScriptableObject.CreateInstance<Tile>();

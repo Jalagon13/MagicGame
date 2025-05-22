@@ -50,7 +50,7 @@ public static class Pointer
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         Collider2D[] colliders = Physics2D.OverlapPointAll(mousePosition);
 
-        return TileRenderManager.Instance.UpperWallTm.IsOverTopTile(mousePosition);
+        return TileManager.Instance.UpperWallTm.IsOverTopTile(mousePosition);
     }
 }
 

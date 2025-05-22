@@ -18,15 +18,17 @@ public class MiningHandler : MonoBehaviour
     public event EventHandler<MiningStartedEventArgs> OnMiningStarted;
     public class MiningStartedEventArgs : EventArgs
     {
-        public Vector2Int BreakTargetPosition;
+        public Vector3Int BreakTargetPosition;
         public float TotalMiningTime;
         public BiomeType Biome;
+        public DestructableType DestructableType;
 
-        public MiningStartedEventArgs(float totalMiningTime, Vector2Int breakTargetPosition, BiomeType biome)
+        public MiningStartedEventArgs(float totalMiningTime, Vector3Int breakTargetPosition, BiomeType biome, DestructableType destructableType)
         {
             TotalMiningTime = totalMiningTime;
             BreakTargetPosition = breakTargetPosition;
             Biome = biome;
+            DestructableType = destructableType;
         }
     }
     
@@ -109,19 +111,19 @@ public class MiningHandler : MonoBehaviour
             _selectedResourceToolType = wo.ToolTypeNeededForHarvest;
             _currentBreakTargetPosition = pos;
         }
-        else if (TileRenderManager.Instance.WallTm.HasTile(wallPos))
+        else if (TileManager.Instance.WallTm.HasTile(wallPos))
         {
-            _tileSelected = TileRenderManager.Instance.OreTm.HasTile(wallPos)
-                ? GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.OreTm.GetTile(wallPos))
-                : GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.WallTm.GetTile(wallPos));
+            _tileSelected = TileManager.Instance.OreTm.HasTile(wallPos)
+                ? GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.OreTm.GetTile(wallPos))
+                : GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(wallPos));
 
             _destructableFound = DestructableType.Tile;
             _selectedResourceToolType = _tileSelected.ToolTypeNeededForHarvest;
             _currentBreakTargetPosition = wallPos;
         }
-        else if (TileRenderManager.Instance.FloorTm.HasTile(pos))
+        else if (TileManager.Instance.FloorTm.HasTile(pos))
         {
-            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileRenderManager.Instance.FloorTm.GetTile(pos));
+            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.FloorTm.GetTile(pos));
             
             _destructableFound = DestructableType.Tile;
             _selectedResourceToolType = _tileSelected.ToolTypeNeededForHarvest;
@@ -205,7 +207,7 @@ public class MiningHandler : MonoBehaviour
     {
         if (IsMining)
         {
-            OnMiningStarted?.Invoke(this, new MiningStartedEventArgs(_cachedTotalMiningTime, (Vector2Int)_currentBreakTargetPosition, Player.LocalClientInstance.CurrentPlayerBiome.Value));
+            OnMiningStarted?.Invoke(this, new MiningStartedEventArgs(_cachedTotalMiningTime, (Vector3Int)_currentBreakTargetPosition, Player.LocalClientInstance.CurrentPlayerBiome.Value, _destructableFound));
         }
         else
         {
@@ -233,7 +235,7 @@ public class MiningHandler : MonoBehaviour
                 ObjectManager.Instance.DestroyObjectServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetIDFromWorldObject(_worldObjectSelected));
                 break;
             case DestructableType.Tile:
-                TileRenderManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.LocalClientInstance.CurrentPlayerBiome.Value);
+                TileManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.LocalClientInstance.CurrentPlayerBiome.Value);
                 break;
         }
         

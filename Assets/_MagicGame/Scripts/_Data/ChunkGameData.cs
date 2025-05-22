@@ -81,7 +81,7 @@ public class ChunkGameData
 	}
 
 	// When a tile is destroyed, delete the tile data in chunk
-	public void RemoveTileDataIfExists(Vector2Int position, TileType tileType)
+	public void RemoveTileData(Vector2Int position, TileType tileType)
 	{
 	    if (_tileTypeToList.TryGetValue(tileType, out var list))
 	    {
@@ -89,6 +89,16 @@ public class ChunkGameData
 	        if (index >= 0)
 	        {
 	            list.RemoveAt(index);
+	            
+	            if (tileType == TileType.Ore) // Always remove the wall behind the destroyed ore
+	            {
+	                var wallList = _tileTypeToList[TileType.Wall];
+	                int wallIndex = wallList.FindIndex(t => t.TilePosition == position);
+	                if (wallIndex >= 0)
+	                {
+	                    wallList.RemoveAt(wallIndex);
+	                }
+	            }
 	            return;
 	        }
 	    }

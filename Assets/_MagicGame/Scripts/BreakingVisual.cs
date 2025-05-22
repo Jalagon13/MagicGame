@@ -12,6 +12,7 @@ public class BreakingVisual : NetworkBehaviour
     private NetworkVariable<BiomeType> _ownerBiome = new(BiomeType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private Animator _breakingAnimator;
     private SpriteRenderer _breakingSr;
+    private int _sortingOrder;
     
     private void Awake()
     {
@@ -38,6 +39,7 @@ public class BreakingVisual : NetworkBehaviour
             if (newValue)
             {
                 AnimStateManager.ChangeAnimationState(_breakingAnimator, BreakingClip, _totalMiningTime.Value);
+                _breakingSr.sortingOrder = _sortingOrder;
                 _breakingSr.enabled = true;
             }
             else
@@ -55,7 +57,41 @@ public class BreakingVisual : NetworkBehaviour
 
     private void MiningStarted(object sender, MiningHandler.MiningStartedEventArgs e)
     {
-        transform.position = new Vector3(e.BreakTargetPosition.x, e.BreakTargetPosition.y, 0f);
+        _sortingOrder = 0;
+
+        if (e.DestructableType == DestructableType.Tile)
+        {
+            if(TileManager.Instance.HasTile(e.BreakTargetPosition + Vector3Int.down, TileType.Wall, out TileSO belowWallTile))
+            {
+                // There is a tile below the tile we are breaking
+                int tileIdOfTileBeingBroken = GameManager.Instance.GetTileIdFromTileSO(TileManager.Instance.WallTm.GetTile<TileSO>(e.BreakTargetPosition));
+                int tileIdOfTileBelow = GameManager.Instance.GetTileIdFromTileSO(belowWallTile);
+                
+                if(tileIdOfTileBeingBroken == tileIdOfTileBelow) // Same tile
+                {
+                    transform.position = new Vector3(e.BreakTargetPosition.x, e.BreakTargetPosition.y + 0.5f, 0f);
+                    _sortingOrder = 1;
+                    // Animation 1 tall
+                }
+                else // Different tile
+                {
+                    transform.position = new Vector3(e.BreakTargetPosition.x, e.BreakTargetPosition.y, 0f);
+                    // Animation 1.5 tall
+                }
+            }
+            else
+            {
+                // There is no tile below the tile we are breaking
+                transform.position = new Vector3(e.BreakTargetPosition.x, e.BreakTargetPosition.y, 0f);
+                // Animation 1.5 tall
+            }
+        }
+        else
+        {
+            transform.position = new Vector3(e.BreakTargetPosition.x, e.BreakTargetPosition.y, 0f);
+            // Animation 1 tall
+        }
+
         _totalMiningTime.Value = e.TotalMiningTime;
         _ownerBiome.Value = e.Biome;
         _isVisible.Value = true;
