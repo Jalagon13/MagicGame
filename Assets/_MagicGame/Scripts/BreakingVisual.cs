@@ -31,14 +31,14 @@ public class BreakingVisual : NetworkBehaviour
 
         _isVisible.OnValueChanged += OnVisibleChanged;
     }
-
+    
     private void OnVisibleChanged(bool previousValue, bool newValue)
     {
         if(Player.LocalClientInstance.CurrentPlayerBiome.Value == _ownerBiome.Value)
         {
             if (newValue)
             {
-                AnimStateManager.ChangeAnimationState(_breakingAnimator, BreakingClip, _totalMiningTime.Value);
+                AnimStateManager.ChangeAnimationState(_breakingAnimator, BreakingClip, _totalMiningTime.Value); 
                 _breakingSr.sortingOrder = _sortingOrder;
                 _breakingSr.enabled = true;
             }
@@ -82,7 +82,8 @@ public class BreakingVisual : NetworkBehaviour
             else
             {
                 // There is no tile below the tile we are breaking
-                transform.position = new Vector3(e.BreakTargetPosition.x, e.BreakTargetPosition.y, 0f);
+                transform.position = new Vector3(e.BreakTargetPosition.x, e.BreakTargetPosition.y + 0.25f, 0f);
+                _sortingOrder = 1;
                 // Animation 1.5 tall
             }
         }

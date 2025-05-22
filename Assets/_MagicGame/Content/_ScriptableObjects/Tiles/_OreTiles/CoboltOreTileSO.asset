@@ -359,7 +359,7 @@ MonoBehaviour:
     - {x: -1, y: 0, z: 0}
     - {x: 1, y: 0, z: 0}
     m_RuleTransform: 0
-  <TileType>k__BackingField: 3
+  <TileType>k__BackingField: 2
   <ToolTypeNeededForHarvest>k__BackingField: 0
   <Hardness>k__BackingField: 1
   <ItemDropTable>k__BackingField: []

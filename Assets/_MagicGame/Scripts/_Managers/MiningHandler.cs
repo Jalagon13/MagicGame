@@ -129,6 +129,10 @@ public class MiningHandler : MonoBehaviour
             _selectedResourceToolType = _tileSelected.ToolTypeNeededForHarvest;
             _currentBreakTargetPosition = pos;
         }
+        else
+        {
+            
+        }
     }
 
     private void HandleMiningLogic(ToolItemSO toolItemSO)

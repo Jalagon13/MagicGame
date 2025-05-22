@@ -3494,7 +3494,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _dayDurationInSeconds: 600
   _startingTime: 1
-  _isTicking: 0
+  _isTicking: 1
   _saveAfterGeneration: 1
   _randomSeed: 1
   _customSeed: zotty
@@ -5446,7 +5446,7 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   _lightmapComputeShader: {fileID: 7200000, guid: 26fe7936a0e164328b7f319d2182e7ed, type: 3}
   _lightmapScale: 8
-  _usePointFilter: 1
+  _usePointFilter: 0
   _enableDayNightCycle: 1
 --- !u!1 &639079823
 GameObject:

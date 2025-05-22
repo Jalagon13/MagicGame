@@ -129,7 +129,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: stone_wall_tiles
     originalName: 
-    pivot: {x: 0.51086956, y: 0}
+    pivot: {x: 0.5, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -137,7 +137,7 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 92
+      width: 96
       height: 64
     spriteID: 42f14f707b857422ab92f6a1c8e0d772
     spriteBone: []
@@ -167,9 +167,9 @@ ScriptedImporter:
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 1
+        x: 0
         y: 0
-        width: 92
+        width: 96
         height: 64
       spriteId: 42f14f707b857422ab92f6a1c8e0d772
     linkedCells: []
