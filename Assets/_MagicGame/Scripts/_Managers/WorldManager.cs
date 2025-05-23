@@ -173,12 +173,12 @@ public class WorldManager : NetworkBehaviour
 			}
 			else
 			{
-				GenerateBiome(toBiome);
-				
-				if(_saveAfterGeneration)
+				if (_saveAfterGeneration)
 				{
 					await SaveSystem.Instance.SaveBiome(fromBiome);
 				}
+
+				GenerateBiome(toBiome);
 			}
 			
 			LoadChunksClientRpc(toBiome, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
@@ -190,9 +190,11 @@ public class WorldManager : NetworkBehaviour
 		switch (toBiome)
 		{
 			case BiomeType.Forest:
+				Debug.Log($"Gernerating Forest...");
 				ForestGenerator.GenerateForest();
 				break;
 			case BiomeType.Cave:
+				Debug.Log($"Gernerating Cave...");
 				CaveGenerator.GenerateCave();
 				break;
 		}

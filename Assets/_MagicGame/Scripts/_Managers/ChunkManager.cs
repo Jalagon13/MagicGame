@@ -225,11 +225,9 @@ public class ChunkManager : NetworkBehaviour
 	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType biomeToGetChunkFrom)
 	{
 		Vector2Int chunkCoord = GetChunkCoordFromPosition(anyWorldPos);
+		GetChunksFromBiome(biomeToGetChunkFrom).TryGetValue(chunkCoord, out ChunkGameData chunk);
 		
-		var chunks = GetChunksFromBiome(biomeToGetChunkFrom);
-		chunks.TryGetValue(chunkCoord, out ChunkGameData chunk);
-		
-		if(chunks == null)
+		if(chunk == null)
 		{
 		    Debug.LogError($"No chunks found for biome: {biomeToGetChunkFrom}");
 		}

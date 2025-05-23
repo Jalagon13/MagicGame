@@ -201,7 +201,7 @@ public class ObjectManager : NetworkBehaviour
 	
 	public override void OnDestroy()
 	{
-		ChunkManager.Instance.OnLoadChunk += ChunkManager_OnLoadChunk;
-		ChunkManager.Instance.OnUnloadChunk += ChunkManager_OnUnloadChunk;
+		ChunkManager.Instance.OnLoadChunk -= ChunkManager_OnLoadChunk;
+		ChunkManager.Instance.OnUnloadChunk -= ChunkManager_OnUnloadChunk;
 	}
 }

@@ -27,6 +27,7 @@ public class ForestStairsGenerationStep : GenerationStep
             for (int y = -1; y <= 1; y++)
             {
                 Vector2Int neighborPosition = new(centerPosition.x + x, centerPosition.y + y);
+
                 ChunkManager.Instance.RemoveTileServerRpc(TileType.Wall, neighborPosition, BiomeType.Cave);
                 ChunkManager.Instance.RemoveTileServerRpc(TileType.Ore, neighborPosition, BiomeType.Cave);
             }

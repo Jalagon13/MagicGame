@@ -19,6 +19,7 @@ public class LoadingUI : MonoBehaviour
 
     private void Hide(object sender, EventArgs e)
     {
+        Lightmap.Instance.UpdateLightMap();
         gameObject.SetActive(false);
         Debug.Log($"Hiding loading UI");
     }
