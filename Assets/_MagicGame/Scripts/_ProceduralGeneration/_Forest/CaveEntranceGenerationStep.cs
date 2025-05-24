@@ -18,9 +18,9 @@ public class CaveEntranceGenerationStep : GenerationStep
             float entranceNoiseValue = forestGenData.ForestTallGrassNM.NoiseTexture.GetPixel(point.x, point.y).grayscale;
             if (entranceNoiseValue > CaveEntranceSpawnThreshold) continue;
 
-            if (forestGenData.IsInBounds(point.x, point.y) && forestGenData.MostFrontRenderedTileMatrix[point.x, point.y] == GameManager.Instance.GetTileIdFromTileSO(forestGenData.GrassTerrainTile))
+            if (forestGenData.IsInBounds(point.x, point.y) && 
+            forestGenData.MostFrontRenderedTileMatrix[point.x, point.y] == GameManager.Instance.GetTileIdFromTileSO(forestGenData.GrassTerrainTile))
             {
-                Debug.Log($"Cave Entrance at {point}");
                 forestGenData.SetWorldObjectData(point.x, point.y, forestGenData.CaveEntranceWorldObject, CardinalDirection.North);
             }
         }

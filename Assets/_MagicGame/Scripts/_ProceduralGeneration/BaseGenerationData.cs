@@ -7,6 +7,7 @@ public abstract class BaseGenerationData : MonoBehaviour
     [HideInInspector] public string MapGenerationSeed;
     
     protected abstract BiomeType _biomeType { get; }
+    public BiomeType Biome => _biomeType;
 
     public virtual void ResetData()
     {
@@ -22,6 +23,8 @@ public abstract class BaseGenerationData : MonoBehaviour
                 ChunkManager.Instance.GetChunksFromBiome(_biomeType).Add(chunkCoord, chunkGameData);
             }
         }
+        
+        Debug.Log($"Resetting data for biome: {_biomeType}, count: {ChunkManager.Instance.GetChunksFromBiome(_biomeType).Count}, chunks HashCode: {ChunkManager.Instance.GetChunksFromBiome(_biomeType).GetHashCode()}");
     }
 
     public virtual void SetTileData(int x, int y, TileSO tileSO)

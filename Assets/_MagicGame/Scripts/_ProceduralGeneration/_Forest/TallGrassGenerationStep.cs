@@ -18,7 +18,9 @@ public class TallGrassGenerationStep : GenerationStep
             float tallGrassNoiseValue = forestGenData.ForestTallGrassNM.NoiseTexture.GetPixel(point.x, point.y).grayscale;
             if (tallGrassNoiseValue > TallGrassThreshold) continue;
 
-            if (forestGenData.IsInBounds(point.x, point.y) && forestGenData.MostFrontRenderedTileMatrix[point.x, point.y] == GameManager.Instance.GetTileIdFromTileSO(forestGenData.GrassTerrainTile))
+            if (forestGenData.IsInBounds(point.x, point.y) && 
+            forestGenData.MostFrontRenderedTileMatrix[point.x, point.y] == GameManager.Instance.GetTileIdFromTileSO(forestGenData.GrassTerrainTile) && 
+            !ChunkManager.Instance.GetChunkFromAnyWorldPos(point, forestGenData.Biome).HasWorldObject(point))
             {
                 forestGenData.SetTileData(point.x, point.y, forestGenData.TallGrassTile);
             }

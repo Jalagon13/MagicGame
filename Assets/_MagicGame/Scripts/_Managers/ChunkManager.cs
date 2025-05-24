@@ -116,7 +116,7 @@ public class ChunkManager : NetworkBehaviour
 		{
 			case BiomeType.Forest:
 			
-				if(_forestChunks[chunkPosition] == null)
+				if(!_forestChunks.ContainsKey(chunkPosition) || _forestChunks[chunkPosition] == null)
 				{
 					Debug.LogError($"This should not be playing chunks should exist on requested");
 					return null;
@@ -125,7 +125,7 @@ public class ChunkManager : NetworkBehaviour
 				return _forestChunks[chunkPosition];
 			case BiomeType.Cave:
 			
-				if(_caveChunks[chunkPosition] == null)
+				if(!_caveChunks.ContainsKey(chunkPosition) || _caveChunks[chunkPosition] == null)
 				{
 					Debug.LogError($"This should not be playing chunks should exist on requested");
 					return null;
@@ -225,16 +225,27 @@ public class ChunkManager : NetworkBehaviour
 	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType biomeToGetChunkFrom)
 	{
 		Vector2Int chunkCoord = GetChunkCoordFromPosition(anyWorldPos);
-		GetChunksFromBiome(biomeToGetChunkFrom).TryGetValue(chunkCoord, out ChunkGameData chunk);
-		
-		if(chunk == null)
+
+		// Bounds check
+		if (!IsWorldPosInBounds(anyWorldPos))
 		{
-		    Debug.LogError($"No chunks found for biome: {biomeToGetChunkFrom}");
+			Debug.LogWarning($"GetChunkFromAnyWorldPos: Position {anyWorldPos} maps to invalid chunkCoord {chunkCoord}");
+			return null;
 		}
 
+		if (!GetChunksFromBiome(biomeToGetChunkFrom).TryGetValue(chunkCoord, out ChunkGameData chunk))
+		{
+			Debug.LogWarning($"ChunkCoord {chunkCoord} was in bounds but no chunk was found. Possible desync?");
+		}
 		return chunk;
 	}
-	
+
+	public bool IsWorldPosInBounds(Vector2Int worldPos)
+	{
+		return worldPos.x >= 0 && worldPos.y >= 0 &&
+			   worldPos.x < BIOME_SIDE_LENGTH && worldPos.y < BIOME_SIDE_LENGTH;
+	}
+
 	private Vector2Int GetChunkCoordFromPosition(Vector2 position)
 	{
 		int chunkX = Mathf.FloorToInt(position.x / CHUNK_SIZE);

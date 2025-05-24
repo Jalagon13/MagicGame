@@ -122,6 +122,11 @@ public class ChunkGameData
 			}
 		}
 	}
+	
+	public bool HasWorldObject(Vector2Int position)
+	{
+		return _worldObjectGameDataList.Exists(o => o.Position == position);
+	}
 
 	public List<WorldObjectGameData> GetWorldObjects()
 	{
