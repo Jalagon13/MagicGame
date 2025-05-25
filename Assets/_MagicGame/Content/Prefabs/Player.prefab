@@ -277,7 +277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <MainHand>k__BackingField: {fileID: 4604921083407888490}
+  <PlayerHand>k__BackingField: {fileID: 4604921083407888490}
   <PlayerVisuals>k__BackingField: {fileID: 3416200484414636821}
   <CollectTag>k__BackingField: {fileID: 6231199994205774343}
   _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
@@ -297,6 +297,8 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 410d48c1920864c4ca98981fe28d6561, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
@@ -1407,7 +1409,7 @@ GameObject:
   - component: {fileID: 4604921083407888490}
   - component: {fileID: 7552163614298674993}
   m_Layer: 0
-  m_Name: MainHand
+  m_Name: PlayerHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

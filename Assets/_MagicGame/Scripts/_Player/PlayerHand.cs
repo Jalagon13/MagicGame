@@ -87,9 +87,14 @@ public class PlayerHand : NetworkBehaviour
 				RotateArmBasedOnAngle();
 			}
 		}
-		else if (HeldItem is ToolItemSO)
+		else if (HeldItem is ToolItemSO toolItemSO)
 		{
-			TryToSwing();
+			if (IsSwinging || Pointer.IsOverUI() || Pointer.IsOverInteractable() || !IsOwner || _swingCooldownTimer.RemainingSeconds > 0) return;
+
+			if (GameInput.Instance.GetPrimaryHeldDown())
+			{
+				ExecuteSwing(toolItemSO.SwingDuration);
+			}
 		}
 	}
 
@@ -138,37 +143,32 @@ public class PlayerHand : NetworkBehaviour
 		};
 	}
 
-	private void TryToSwing()
+	public void ExecuteSwing(float duration, int swingSpellId = -1)
 	{
-		if (IsSwinging || Pointer.IsOverUI() || Pointer.IsOverInteractable() || !IsOwner || _swingCooldownTimer.RemainingSeconds > 0) return;
-		
-		if (GameInput.Instance.GetPrimaryHeldDown())
+		switch (ArmCardinalDirection)
 		{
-			switch (ArmCardinalDirection)
-			{
-				case CardinalDirection.North:
-					SwingNorth(0.35f);
-					break;
-				case CardinalDirection.South:
-					SwingSouth(0.35f);
-					break;
-				case CardinalDirection.West:
-					SwingWest(0.35f);
-					break;
-				case CardinalDirection.East:
-					SwingEast(0.35f);
-					break;
-			}
+			case CardinalDirection.North:
+				SwingNorth(duration, swingSpellId);
+				break;
+			case CardinalDirection.South:
+				SwingSouth(duration, swingSpellId);
+				break;
+			case CardinalDirection.West:
+				SwingWest(duration, swingSpellId);
+				break;
+			case CardinalDirection.East:
+				SwingEast(duration, swingSpellId);
+				break;
 		}
 	}
 
-	private void SwingEast(float duration) => SwingRpc(60, 300, duration, true, CardinalDirection.East, OwnerClientId);
-	private void SwingWest(float duration) => SwingRpc(120, 240, duration, false, CardinalDirection.West, OwnerClientId);
-	private void SwingNorth(float duration) => SwingRpc(150, 30, duration, true, CardinalDirection.North, OwnerClientId);
-	private void SwingSouth(float duration) => SwingRpc(330, 210, duration, false, CardinalDirection.South, OwnerClientId);
+	private void SwingEast(float duration, int swingSpellId = -1) => SwingRpc(60, 300, duration, true, CardinalDirection.East, OwnerClientId, swingSpellId);
+	private void SwingWest(float duration, int swingSpellId = -1) => SwingRpc(120, 240, duration, false, CardinalDirection.West, OwnerClientId, swingSpellId);
+	private void SwingNorth(float duration, int swingSpellId = -1) => SwingRpc(150, 30, duration, true, CardinalDirection.North, OwnerClientId, swingSpellId);
+	private void SwingSouth(float duration, int swingSpellId = -1) => SwingRpc(330, 210, duration, false, CardinalDirection.South, OwnerClientId, swingSpellId);
 
 	[Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
-	private void SwingRpc(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction, ulong clientSenderId)
+	private void SwingRpc(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction, ulong clientSenderId, int swingSpellId = -1)
 	{
 		if (clientSenderId != OwnerClientId) return;
 
@@ -186,7 +186,15 @@ public class PlayerHand : NetworkBehaviour
 
 		OnSwingStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
 
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerMeleeSwing, Player.LocalClientInstance.transform.position);
+		if(swingSpellId > -1)
+		{
+		    SwingSpellItemSO spell = (SwingSpellItemSO)GameManager.Instance.GetItemSOFromItemId(swingSpellId);
+			SoundManager.Instance.PlayOneShot(spell.SwingSound, Player.LocalClientInstance.transform.position);
+		}
+		else
+		{
+			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerMeleeSwing, Player.LocalClientInstance.transform.position);
+		}
 
 		_thisPlayer.IsPerformingSwing = true;
 		IsSwinging = true;

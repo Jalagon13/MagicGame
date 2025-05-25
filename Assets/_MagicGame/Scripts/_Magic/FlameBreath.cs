@@ -65,7 +65,7 @@ public class FlameBreath : Spell
 
         if (IsOwner && IsStarted.Value)
         {
-            Vector2 wandPos = Player.LocalClientInstance.MainHand.SpellSpawnTransform.position;
+            Vector2 wandPos = Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position;
             transform.position = wandPos;
 
             Vector2 mousePosition = ActionManager.MouseWorldPosition;

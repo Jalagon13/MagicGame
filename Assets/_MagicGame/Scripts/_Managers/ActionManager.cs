@@ -46,7 +46,7 @@ public class ActionManager : MonoBehaviour
 		{
 			if(_itemActionTimer.RemainingSeconds <= 0)
 			{
-				_itemActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.LocalClientInstance.MainHand);
+				_itemActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.LocalClientInstance.PlayerHand);
 			}
 		}
 	}

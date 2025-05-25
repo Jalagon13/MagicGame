@@ -16,6 +16,7 @@ public class ToolItemSO : ItemSO
 	[field: SerializeField] public float MiningRange { get; private set; }
 	[field: SerializeField] public int MeleeDamage { get; private set; }
 	[field: SerializeField] public int Knockback { get; private set; }
+	[field: SerializeField] public float SwingDuration { get; private set; } = 0.35f;
 	[field: SerializeField] public float SwingCooldown { get; private set; } = 0.25f;
 	[field: SerializeField] public EventReference HitSound { get; private set; }
 

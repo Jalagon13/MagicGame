@@ -68,6 +68,18 @@ public class SpellItemSO : ItemSO
 			IsContinuousCast,
 			Player.LocalClientInstance.CurrentPlayerBiome.Value);
 	}
+	
+	public virtual void StartSpell(int slotIndex) // Default behavior, spawn spell on server, assign it to player
+	{
+		var syncSpellData = GetSpellDataForLocalClientInstance(slotIndex);
+		
+		InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
+		SpellManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position);
+		SpellManager.Instance.LoadSpell(this, new LoadedSpell(this, syncSpellData, selectedInventoryItem));
+
+		Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(HasteMultiplier);
+		Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(this), CastTime);
+	}
 
 	public override InventoryItem CreateInventoryItem(int quantity)
 	{

@@ -118,7 +118,7 @@ public class SpellManager : NetworkBehaviour
         SpellItemSO spell = SpellItemArray[slotIndex];
         if (spell != null && CanCastSelectedSpell(spell))
         {
-            LoadSpell(spell, slotIndex);
+            spell.StartSpell(slotIndex);
         }
     }
 
@@ -186,18 +186,20 @@ public class SpellManager : NetworkBehaviour
         }
     }
 
-    private void LoadSpell(SpellItemSO spellToCast, int slotIndex)
+    public void LoadSpell(SpellItemSO spellToCast, LoadedSpell loadedSpell)
     {
-        InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-        var syncSpellData = spellToCast.GetSpellDataForLocalClientInstance(slotIndex);
-        SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
-        _loadedSpell = new LoadedSpell(spellToCast, syncSpellData, selectedInventoryItem);
-
-        Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(spellToCast.HasteMultiplier);
-        Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(spellToCast), spellToCast.CastTime);
+        _loadedSpell = loadedSpell;
 
         CastTimeTimer = new Timer(spellToCast.CastTime);
         CastTimeTimer.OnTimerEnd += ExecuteSpell;
+    }
+    
+    public void SubtractManaAndSetCooldown(SpellItemSO spellToCast)
+    {
+        PlayerStats.Instance.SubtractMana(spellToCast.ManaCost);
+
+        int selectedSpellId = GameManager.Instance.GetItemIdFromItemSO(spellToCast);
+        SpellCooldownTimers[selectedSpellId] = new Timer(spellToCast.Cooldown);
     }
 
     private void ExecuteSpell(object sender, EventArgs e)
@@ -205,10 +207,10 @@ public class SpellManager : NetworkBehaviour
         Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(1f);
         Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
         
-        Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().MainHand.SpellSpawnTransform.position;
+        Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().PlayerHand.SpellSpawnTransform.position;
         Vector2 baseDirection = (ActionManager.MouseWorldPosition - spawnPoint).normalized;
         Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, _loadedSpell.SpellToCast.Recoil);
-        SoundManager.Instance.PlayOneShot(_loadedSpell.SpellToCast.SpellCastSound, Player.LocalClientInstance.MainHand.SpellSpawnTransform.position);
+        SoundManager.Instance.PlayOneShot(_loadedSpell.SpellToCast.SpellCastSound, Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position);
 
         OnExecuteSpells?.Invoke(this, new ExecuteSpellsEventArgs 
         { 
@@ -224,8 +226,7 @@ public class SpellManager : NetworkBehaviour
         }
         else
         {
-            PlayerStats.Instance.SubtractMana(_loadedSpell.SpellToCast.ManaCost);
-            SpellCooldownTimers[selectedSpellId] = new Timer(_loadedSpell.SpellToCast.Cooldown);
+            SubtractManaAndSetCooldown(_loadedSpell.SpellToCast);
         }
 
         _loadedSpell = new();

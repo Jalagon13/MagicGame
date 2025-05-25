@@ -41,7 +41,7 @@ public class PlayerVisuals : NetworkBehaviour
     {
         GameObject chargeVfx = (GameManager.Instance.GetItemSOFromItemId(spellIndex) as SpellItemSO).ChargeVFX;
         
-        _chargeVfx = Instantiate(chargeVfx, _thisPlayer.MainHand.SpellSpawnTransform);
+        _chargeVfx = Instantiate(chargeVfx, _thisPlayer.PlayerHand.SpellSpawnTransform);
         _chargeVfx.transform.localPosition = Vector3.zero;
         _chargeVfx.GetComponent<MagicCircle>().StartAnimation(castTime);
     }

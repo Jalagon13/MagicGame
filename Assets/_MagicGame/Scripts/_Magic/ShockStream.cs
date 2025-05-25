@@ -62,7 +62,7 @@ public class ShockStream : Spell
                 return;
             }
         
-            Vector2 wandPos = Player.LocalClientInstance.MainHand.SpellSpawnTransform.position;
+            Vector2 wandPos = Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position;
             transform.position = wandPos;
             
             _damageTimer.Tick(Time.deltaTime);
