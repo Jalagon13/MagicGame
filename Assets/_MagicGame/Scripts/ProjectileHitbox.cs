@@ -37,32 +37,27 @@ public class ProjectileHitbox : MonoBehaviour
 
         // First: Handle NPC hits using OverlapCircleAll
         Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _spellCollider.radius, Spell.CollisionMask);
-        for (int i = 0; i < collisions.Length; i++)
+        foreach (var col in collisions)
         {
-            int layerTest = 1 << collisions[i].gameObject.layer;
-            if ((layerTest & Spell.CollisionMask) != 0)
+            if (Spell.IsValidNpcHit(col, out var npcHealth))
             {
-                if (collisions[i].gameObject.layer == Spell.NpcLayer)
+                if (!_damagedNetworkHealthStates.Contains(npcHealth))
                 {
-                    if (collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(Spell.SpellData.Value.SpawnBiome))
+                    npcHealth.TakeDamageRpc(
+                        Spell.SpellData.Value.Damage,
+                        Spell.NetworkManager.ConnectedClients[Spell.SpellData.Value.OwnerPlayerId].PlayerObject.transform.position,
+                        Spell.SpellData.Value.Knockback
+                    );
+                    _damagedNetworkHealthStates.Add(npcHealth);
+
+                    if (_damagedNetworkHealthStates.Count >= PierceCount)
                     {
-                        NetworkHealthState npcHealth = npcNet.gameObject.GetComponent<NetworkHealthState>();
-
-                        if (!_damagedNetworkHealthStates.Contains(npcHealth))
-                        {
-                            npcHealth.TakeDamageRpc(Spell.SpellData.Value.Damage, Spell.NetworkManager.ConnectedClients[Spell.SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, Spell.SpellData.Value.Knockback);
-                            _damagedNetworkHealthStates.Add(npcHealth);
-
-                            if (_damagedNetworkHealthStates.Count >= PierceCount)
-                            {
-                                Debug.Log($"Ending spell on NPC hits");
-                                Spell.OnOwnerSpellEnd();
-                                return;
-                            }
-
-                            break;
-                        }
+                        Debug.Log($"Ending spell on NPC hits");
+                        Spell.OnOwnerSpellEnd();
+                        return;
                     }
+
+                    break;
                 }
             }
         }

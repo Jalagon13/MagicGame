@@ -8,7 +8,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 
-public class Spell : NetworkBehaviour
+public abstract class Spell : NetworkBehaviour
 {
 	[field: SerializeField] public GameObject Visualization { get; private set; }
 	[field: SerializeField] public float DespawnDelay { get; private set; }
@@ -38,7 +38,6 @@ public class Spell : NetworkBehaviour
 		if(IsClient)
 		{
 			ShowVisuals.OnValueChanged += HandleVisuals;
-			IsStarted.OnValueChanged += HandleStarted;
 		}
 		
 		if (IsOwner)
@@ -57,15 +56,83 @@ public class Spell : NetworkBehaviour
 		}
 	}
 
-    private void HandleStarted(bool previousValue, bool newValue)
-    {
-		if(!newValue)
+    protected virtual void Update()
+	{
+		if(IsOwner)
 		{
-			OnStopped();
+			if(SpellData.Value.IsContinuousCast && IsStarted.Value)
+			{
+			    if(!SpellManager.Instance.IsSpellKeyHeld(SpellData.Value.WandSlotIndex))
+			    {
+					OnOwnerSpellEnd();
+				}
+			}
+			else if (SpellLifeTimer != null && SpellLifeTimer.RemainingSeconds > 0)
+			{
+				SpellLifeTimer.Tick(Time.deltaTime);
+			}
 		}
 	}
-    
-    protected virtual void OnStopped() { }
+
+	public override void OnNetworkDespawn()
+	{
+		if(IsOwner)
+		{
+			SpellManager.Instance.OnExecuteSpells -= ExecuteSpellStart;
+			SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
+			HotbarManager.Instance.OnFocusSlotUpdated -= TryToDespawnIfSlotChanged;
+		}
+	
+		if (IsClient)
+		{
+			Debug.Log($"Reattaching visualization before despawning");
+			Visualization.transform.parent = transform;
+		}
+	}
+
+	public void OnOwnerSpellCanceled()
+	{
+		IsStarted.Value = false;
+		
+		if (IsOwner && SpellData.Value.IsContinuousCast)
+		{
+			Debug.Log($"SPELL class: Stopping continuous casting");
+			SpellManager.Instance.IsContinuouslyCasting = false;
+		}
+
+		DespawnSpellServerRpc();
+		OnSpellCanceled();
+	}
+	
+	public void OnOwnerSpellEnd()
+	{
+		IsStarted.Value = false;
+		
+		if(IsOwner && SpellData.Value.IsContinuousCast )
+		{
+		    SpellManager.Instance.IsContinuouslyCasting = false;
+		}
+		
+		StartCoroutine(WaitToDespawnRoutine());
+		OnSpellEnd();
+	}
+
+	public bool IsValidNpcHit(Collider2D collider, out NetworkHealthState health)
+	{
+		health = null;
+
+		if (collider.gameObject.layer != NpcLayer)
+			return false;
+
+		if (!collider.TryGetComponent(out NpcNetworkComponent npcNet))
+			return false;
+
+		if (!npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
+			return false;
+
+		health = npcNet.GetComponent<NetworkHealthState>();
+		return health != null;
+	}
 
     private void TryToDespawnIfSlotChanged(object sender, HotbarManager.OnFocusItemSetEventArgs e)
     {
@@ -103,53 +170,6 @@ public class Spell : NetworkBehaviour
 		OnOwnerSpellCanceled();
 	}
 
-    protected virtual void Update()
-	{
-		if(IsOwner)
-		{
-			if(SpellData.Value.IsContinuousCast && IsStarted.Value)
-			{
-			    if(!SpellManager.Instance.IsSpellKeyHeld(SpellData.Value.WandSlotIndex))
-			    {
-					OnOwnerSpellEnd();
-				}
-			}
-			else if (SpellLifeTimer != null && SpellLifeTimer.RemainingSeconds > 0)
-			{
-				SpellLifeTimer.Tick(Time.deltaTime);
-			}
-		}
-	}
-
-	protected virtual void OnOwnerSpellSpawned() { }
-	protected virtual void OnOwnerExecuteSpellStart() { }
-
-	public virtual void OnOwnerSpellCanceled()
-	{
-		IsStarted.Value = false;
-		
-		if (IsOwner && SpellData.Value.IsContinuousCast)
-		{
-			Debug.Log($"SPELL class: Stopping continuous casting");
-			SpellManager.Instance.IsContinuouslyCasting = false;
-		}
-
-		DespawnSpellServerRpc();
-	}
-	
-	public virtual void OnOwnerSpellEnd()
-	{
-		IsStarted.Value = false;
-		
-		if(IsOwner && SpellData.Value.IsContinuousCast )
-		{
-			Debug.Log($"SPELL class: Stopping continuous casting");
-		    SpellManager.Instance.IsContinuouslyCasting = false;
-		}
-		
-		StartCoroutine(WaitToDespawnRoutine());
-	}
-
 	private IEnumerator WaitToDespawnRoutine()
 	{
 		_despawning = true;
@@ -162,12 +182,6 @@ public class Spell : NetworkBehaviour
 		DespawnSpellServerRpc();
 	}
 
-	private void OnSpellLifeTimerEnd(object sender, EventArgs e)
-	{
-		SpellLifeTimer.OnTimerEnd -= OnSpellLifeTimerEnd;
-		OnOwnerSpellEnd();
-	}
-
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void DespawnSpellServerRpc()
 	{
@@ -176,24 +190,28 @@ public class Spell : NetworkBehaviour
 		Debug.Log($"Despawning spell");
 	}
 
-    private void HandleVisuals(bool previousValue, bool newValue)
+	private void OnSpellLifeTimerEnd(object sender, EventArgs e)
+	{
+		SpellLifeTimer.OnTimerEnd -= OnSpellLifeTimerEnd;
+		OnOwnerSpellEnd();
+	}
+
+	private void HandleVisuals(bool previousValue, bool newValue)
     {
 		Visualization.SetActive(newValue);
     }
 
-	public override void OnNetworkDespawn()
+	private void OnOwnerSpellSpawned()
 	{
-		if(IsOwner)
-		{
-			SpellManager.Instance.OnExecuteSpells -= ExecuteSpellStart;
-			SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
-			HotbarManager.Instance.OnFocusSlotUpdated -= TryToDespawnIfSlotChanged;
-		}
-	
-		if (IsClient)
-		{
-			Debug.Log($"Reattaching visualization before despawning");
-			Visualization.transform.parent = transform;
-		}
+		OnSpellSpawned();
 	}
+	private void OnOwnerExecuteSpellStart()
+	{
+		OnExecuteSpellStart();
+	}
+
+	protected abstract void OnSpellSpawned();
+	protected abstract void OnExecuteSpellStart();
+	protected abstract void OnSpellEnd();
+	protected abstract void OnSpellCanceled();
 }

@@ -28,34 +28,6 @@ public class TeleportBolt : Spell
         _vfx.transform.localPosition = Vector3.zero;
     }
 
-    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
-    private void SpawnTeleportParticlesClientRpc(Vector2 particleSpawnPoint, Vector2 teleportPoint)
-    {
-        if(Player.LocalClientInstance.CurrentPlayerBiome.Value != SpellData.Value.SpawnBiome) return;
-    
-        SoundManager.Instance.PlayOneShot(TeleportSound, transform.position);
-        _vfx.transform.position = particleSpawnPoint;
-        _vfx.transform.parent = null;
-        _vfx.GetComponent<ParticleSystem>().Play();
-
-        if(SpellData.Value.OwnerPlayerId == Player.LocalClientInstance.OwnerClientId)
-        {
-            var playerWhoShotIt = NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject;
-            playerWhoShotIt.transform.position = transform.position;
-            Debug.Log($"Player {playerWhoShotIt} teleported");
-        }
-    }
-
-    protected override void OnOwnerExecuteSpellStart()
-    {
-        _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-
-        if (IsOwner)
-        {
-            Velocity.Value = _finalDirection * SpellData.Value.Speed;
-        }
-    }
-
     private void FixedUpdate()
     {
         if (IsOwner)
@@ -65,7 +37,22 @@ public class TeleportBolt : Spell
         }
     }
 
-    protected override void OnStopped()
+    protected override void OnExecuteSpellStart()
+    {
+        _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
+
+        if (IsOwner)
+        {
+            Velocity.Value = _finalDirection * SpellData.Value.Speed;
+        }
+    }
+
+    protected override void OnSpellSpawned()
+    {
+        // Optional setup logic
+    }
+
+    protected override void OnSpellEnd()
     {
         if (Trail != null)
         {
@@ -75,6 +62,28 @@ public class TeleportBolt : Spell
         if (IsOwner)
         {
             SpawnTeleportParticlesClientRpc(NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, transform.position);
+        }
+    }
+
+    protected override void OnSpellCanceled()
+    {
+        // Optional cancel logic
+    }
+
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    private void SpawnTeleportParticlesClientRpc(Vector2 particleSpawnPoint, Vector2 teleportPoint)
+    {
+        if (Player.LocalClientInstance.CurrentPlayerBiome.Value != SpellData.Value.SpawnBiome) return;
+
+        SoundManager.Instance.PlayOneShot(TeleportSound, transform.position);
+        _vfx.transform.position = particleSpawnPoint;
+        _vfx.transform.parent = null;
+        _vfx.GetComponent<ParticleSystem>().Play();
+
+        if (SpellData.Value.OwnerPlayerId == Player.LocalClientInstance.OwnerClientId)
+        {
+            var playerWhoShotIt = NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject;
+            playerWhoShotIt.transform.position = transform.position;
         }
     }
 }

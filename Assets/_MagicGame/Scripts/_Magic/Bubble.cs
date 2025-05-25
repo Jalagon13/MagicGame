@@ -7,27 +7,23 @@ public class Bubble : Spell
 
     private Transform _playerToOrbit;
 
-    protected override void OnOwnerSpellSpawned()
+    protected override void OnSpellSpawned()
     {
         _playerToOrbit = Player.LocalClientInstance.transform;
     }
 
-    protected override void OnOwnerExecuteSpellStart()
+    protected override void OnExecuteSpellStart()
     {
-
+        // Add logic here if needed
     }
 
-    public override void OnOwnerSpellEnd()
+    protected override void OnSpellEnd()
     {
-        
-
-        base.OnOwnerSpellEnd();
+        // Add logic here if needed
     }
 
-    public override void OnOwnerSpellCanceled()
+    protected override void OnSpellCanceled()
     {
-        
-        
-        base.OnOwnerSpellCanceled();
+        // Add logic here if needed
     }
 }

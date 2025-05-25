@@ -29,7 +29,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4909420609810358321}
   - {fileID: 166573449608164960}
@@ -294,21 +294,13 @@ MonoBehaviour:
   _startingItems:
   - Item: {fileID: 11400000, guid: fe217e765840a43b5b9acff0a1269c2f, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: ca1b5b14cbb4545468fad1cb43e84ca2, type: 2}
-    Quantity: 1
-  - Item: {fileID: 11400000, guid: 15ccc2f5cdc3a4cd590b045c68716bf8, type: 2}
-    Quantity: 1
-  - Item: {fileID: 11400000, guid: 96912e754d7a54711bf2df286fd9747f, type: 2}
-    Quantity: 1
   - Item: {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: 527c22a1429be4c0f9bae9d1719bf938, type: 2}
-    Quantity: 111
-  - Item: {fileID: 11400000, guid: 82354be89b65443ee81324ffdf38e948, type: 2}
-    Quantity: 111
-  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
+  - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
     Quantity: 111
 --- !u!114 &6270092794415709611
 MonoBehaviour:
@@ -345,7 +337,7 @@ MonoBehaviour:
   <BaseMana>k__BackingField: 100
   <ManaRegenPerSecond>k__BackingField: 1
   <HealthRegenPerSecond>k__BackingField: 1
-  <BaseSpeed>k__BackingField: 10
+  <BaseSpeed>k__BackingField: 5
   <TurnSharpness>k__BackingField: 7.5
   <KnockbackResist>k__BackingField: 0
 --- !u!114 &3515157567628285232

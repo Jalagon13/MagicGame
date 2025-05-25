@@ -26,7 +26,12 @@ public class ShockStream : Spell
     private Timer _damageTimer;
     private EventInstance _sustainedElectricitySoundEventInstance;
 
-    protected override void OnOwnerExecuteSpellStart()
+    protected override void OnSpellSpawned()
+    {
+        // Optional spawn-time logic
+    }
+
+    protected override void OnExecuteSpellStart()
     {
         _damageTimer = new Timer(0.1f);
         BeamOn.OnValueChanged += BeamOnChanged;
@@ -34,12 +39,15 @@ public class ShockStream : Spell
         _sustainedElectricitySoundEventInstance = SoundManager.Instance.CreateInstance(SustainedElectricitySound);
     }
 
-    public override void OnOwnerSpellEnd()
+    protected override void OnSpellEnd()
     {
         _sustainedElectricitySoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         LightningStream.Stop();
+    }
 
-        base.OnOwnerSpellEnd();
+    protected override void OnSpellCanceled()
+    {
+        // Optional cancel logic
     }
     
     protected override void Update()
@@ -50,7 +58,7 @@ public class ShockStream : Spell
         {
             if(Player.LocalClientInstance.PlayerStats.CurrentMana < SpellData.Value.ManaCost)
             {
-                OnOwnerSpellEnd();
+                OnSpellEnd();
                 return;
             }
         
