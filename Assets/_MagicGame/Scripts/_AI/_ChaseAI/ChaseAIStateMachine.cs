@@ -46,7 +46,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     public int StrafingDirection { get; private set; } = 1;
     public bool PlayerInSight { get; private set; }
 
-    private Npc _npc;
+    private NetworkLifeState _netLifeState;
     private NpcNetworkComponent _npcNetwork;
     private Vector2 _freshestBreadCrumbPosition = Vector2.zero;
     private Vector2 _closestPlayerPosition = Vector2.zero;
@@ -63,8 +63,8 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
         {
             _healthState = GetComponent<NetworkHealthState>();
             _npcNetwork = GetComponent<NpcNetworkComponent>();
-            _npc = GetComponent<Npc>();
-            _npc.OnServerNpcDamged += OnNpcDamged;
+            _netLifeState = GetComponent<NetworkLifeState>();
+            _netLifeState.OnServerNpcDamged += OnNpcDamged;
 
             _states[ChaseAIState.Idle] = new ChaseAIIdleState(ChaseAIState.Idle, this);
             _states[ChaseAIState.Moving] = new ChaseAIMoveState(ChaseAIState.Moving, this);
@@ -81,7 +81,10 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
 
     protected override void FixedUpdate()
     {
-        base.FixedUpdate();
+        if(_netLifeState.LifeState.Value == LifeState.Alive)
+        {
+            base.FixedUpdate();
+        }
         
         if(_velocityBasedAnimator != null)
         {

@@ -175,11 +175,8 @@ GameObject:
   - component: {fileID: 3885697903487451157}
   - component: {fileID: 8184671317715962605}
   - component: {fileID: 7408233348082829139}
-  - component: {fileID: 5425171341296776662}
   - component: {fileID: 4852144824365540908}
   - component: {fileID: 6692481928224885727}
-  - component: {fileID: 3247729817130226899}
-  - component: {fileID: 3165997416469630793}
   m_Layer: 12
   m_Name: _npc_Base
   m_TagString: Untagged
@@ -327,23 +324,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 0
   SlerpPosition: 0
---- !u!114 &5425171341296776662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5309065195269084554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 0
-  AutoUpdateKinematicState: 1
-  AutoSetKinematicOnDespawn: 1
 --- !u!114 &4852144824365540908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -372,56 +352,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _knockbackEnabled: 1
---- !u!114 &3247729817130226899
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5309065195269084554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec40dc211f639413bbf6a90f7fb89201, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  <NpcSO>k__BackingField: {fileID: 0}
-  _knockbackResist: 0
-  _damage: 0
-  _damageCollider: {fileID: 0}
-  <DamageSound>k__BackingField:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  <DeathSound>k__BackingField:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  Table: []
---- !u!114 &3165997416469630793
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5309065195269084554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c5580f2a973948778c2f8d6b6a5f0c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  <BaseHealth>k__BackingField: 100
-  <BaseDefense>k__BackingField: 0
-  <IFrameDuration>k__BackingField: 0.67
-  <CanDie>k__BackingField: 1
-  <CanTakeDamage>k__BackingField: 1
 --- !u!1 &6641498890121537817
 GameObject:
   m_ObjectHideFlags: 0

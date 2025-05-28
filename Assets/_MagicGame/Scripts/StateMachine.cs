@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public abstract class StateMachine<EState> : NetworkBehaviour where EState : Enum
+public abstract class StateMachine<EState> : NetworkBehaviour, IAIBrain where EState : Enum
 {
     protected Dictionary<EState, BaseState<EState>> _states = new();
     protected BaseState<EState> _currentState;
@@ -18,18 +18,18 @@ public abstract class StateMachine<EState> : NetworkBehaviour where EState : Enu
             _currentState.EnterState();
         }
     }
-	
-    protected virtual void FixedUpdate()
+
+    public void UpdateAI()
     {
-        if(_currentState == null) return;
-    
+        if (_currentState == null) return;
+
         EState nextStateKey = _currentState.GetNextState();
-		
-        if(!_isTransitioningState && nextStateKey.Equals(_currentState.StateKey))
+
+        if (!_isTransitioningState && nextStateKey.Equals(_currentState.StateKey))
         {
             _currentState.FixedUpdate();
         }
-        else if(!_isTransitioningState)
+        else if (!_isTransitioningState)
         {
             TransitionToState(nextStateKey);
         }
