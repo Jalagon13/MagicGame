@@ -121,7 +121,7 @@ TextureImporter:
       name: TX_Flame_Slash_0
       rect:
         serializedVersion: 2
-        x: 14
+        x: 0
         y: 0
         width: 48
         height: 32
@@ -143,9 +143,9 @@ TextureImporter:
       name: TX_Flame_Slash_1
       rect:
         serializedVersion: 2
-        x: 94
+        x: 48
         y: 0
-        width: 49
+        width: 48
         height: 32
       alignment: 2
       pivot: {x: 0.5, y: 1}
@@ -165,7 +165,7 @@ TextureImporter:
       name: TX_Flame_Slash_2
       rect:
         serializedVersion: 2
-        x: 174
+        x: 96
         y: 0
         width: 48
         height: 32
@@ -187,7 +187,7 @@ TextureImporter:
       name: TX_Flame_Slash_3
       rect:
         serializedVersion: 2
-        x: 254
+        x: 144
         y: 0
         width: 48
         height: 32

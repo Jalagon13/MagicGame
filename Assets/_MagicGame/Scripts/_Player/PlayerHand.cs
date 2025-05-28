@@ -183,17 +183,41 @@ public class PlayerHand : NetworkBehaviour
 		SetPivotPosition(direction);
 
 		ShowArm();
-
+		
 		OnSwingStart?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
 
 		if(swingSpellId > -1)
 		{
-		    SwingSpellItemSO spell = (SwingSpellItemSO)GameManager.Instance.GetItemSOFromItemId(swingSpellId);
-			SoundManager.Instance.PlayOneShot(spell.SwingSound, Player.LocalClientInstance.transform.position);
+		    SwingSpellItemSO swingSpell = (SwingSpellItemSO)GameManager.Instance.GetItemSOFromItemId(swingSpellId);
+			SoundManager.Instance.PlayOneShot(swingSpell.SwingSound, _thisPlayer.transform.position);
+
+			MeleeCollider.StartSwing(new MeleeCollider.SwingData
+			{
+			    Damage = swingSpell.Damage,
+			    Knockback = swingSpell.Knockback,
+			    DetectionBetweenHitsDuration = swingSpell.DetectionBetweenHitsDuration,
+			    HitSound = swingSpell.HitSound,
+			    ColliderLength = swingSpell.MeleeColliderLength
+			});
+
+			var swingVFX = Instantiate(swingSpell.SwingSpellVFX, _thisPlayer.transform.position + Vector3.up * 0.5f, Quaternion.identity, _thisPlayer.transform);
+			swingVFX.ExecuteSwingSpellVFX(direction);
 		}
 		else
 		{
-			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerMeleeSwing, Player.LocalClientInstance.transform.position);
+			if (HeldItem is ToolItemSO toolItemSO)
+			{
+				MeleeCollider.StartSwing(new MeleeCollider.SwingData
+				{
+				    Damage = toolItemSO.MeleeDamage,
+				    Knockback = toolItemSO.Knockback,
+				    DetectionBetweenHitsDuration = toolItemSO.DetectionBetweenHitsDuration,
+				    HitSound = toolItemSO.HitSound,
+				    ColliderLength = toolItemSO.MeleeColliderLength
+				});
+			}
+
+			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerMeleeSwing, _thisPlayer.transform.position);
 		}
 
 		_thisPlayer.IsPerformingSwing = true;
@@ -207,8 +231,6 @@ public class PlayerHand : NetworkBehaviour
 
 		Quaternion startRotation = Quaternion.Euler(0, 0, startAngle);
 		Quaternion endRotation = Quaternion.Euler(0, 0, endAngle);
-
-		MeleeCollider.StartSwing(HeldItem as ToolItemSO);
 
 		_armPivotGO.transform.rotation = startRotation;
 
@@ -266,8 +288,6 @@ public class PlayerHand : NetworkBehaviour
 		}
 	}
 
-	#region Helpers
-
 	public Vector3 GetDirectionNormalized()
 	{
 		// Ensure ActionManager.MouseWorldPosition is defined and accessible
@@ -302,7 +322,10 @@ public class PlayerHand : NetworkBehaviour
 		return CardinalDirection.South;
 	}
 
-	private float NormalizeAngle(float angle) => (angle % 360 + 360) % 360;
+	private float NormalizeAngle(float angle)
+	{
+		return (angle % 360 + 360) % 360;
+	}
 
 	private void ShowArm()
 	{
@@ -314,7 +337,10 @@ public class PlayerHand : NetworkBehaviour
 		_armGO.SetActive(false);
 	}
 
-	public bool IsArmShown() => _armGO.activeInHierarchy;
+	public bool IsArmShown()
+	{
+		return _armGO.activeInHierarchy;
+	}
 	public void StopSwing()
 	{
 	    _stoppingSwing = true;
@@ -324,8 +350,6 @@ public class PlayerHand : NetworkBehaviour
 	        _currentSwingTween = null;
 	    }
 	}
-
-	#endregion
 
 	public override void OnDestroy()
 	{

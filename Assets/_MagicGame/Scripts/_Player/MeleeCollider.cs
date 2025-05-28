@@ -1,30 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using Unity.Netcode;
 using UnityEngine;
 
 public class MeleeCollider : NetworkBehaviour
 {
-    [field: SerializeField] public float DetectionBetweenHitsDuration { get; private set; }
-
+    public struct SwingData
+    {
+        public int Damage;
+        public int Knockback;
+        public float DetectionBetweenHitsDuration;
+        public EventReference HitSound;
+        public float ColliderLength;
+    }
     private List<NetworkHealthState> _targetsFound = new();
     private List<NetworkHealthState> _targetsHit = new();
-    private Collider2D _meleeCollider;
-    private ToolItemSO _staffItemSO;
-    
+    private BoxCollider2D _meleeCollider;
+    private SwingData _currentSwingData;
+
     private void Awake()
     {
-        _meleeCollider = GetComponent<Collider2D>();
+        _meleeCollider = GetComponent<BoxCollider2D>();
         _meleeCollider.enabled = false;
     }
 
-    public void StartSwing(ToolItemSO staffItemSO)
+    public void StartSwing(SwingData swingData)
     {
         if (!IsOwner) return;
-        
-        _staffItemSO = staffItemSO;
+
+        _currentSwingData = swingData;
         _targetsFound = new();
         _targetsHit = new();
+
+        if (_meleeCollider is BoxCollider2D box)
+        {
+            Vector2 defaultBoxSize = new(_meleeCollider.size.x, _meleeCollider.size.y);
+            Vector2 defaultBoxOffset = Vector2.zero;
+            
+            float desiredLength = _currentSwingData.ColliderLength;
+            float increasedLength = desiredLength - defaultBoxSize.y;
+            box.offset = new Vector2(defaultBoxOffset.x, (increasedLength / 2f) * -1f);
+            box.size = new Vector2(defaultBoxSize.x, _currentSwingData.ColliderLength);
+        }
+
         _meleeCollider.enabled = true;
 
         StartCoroutine(HitFoundTargets());
@@ -67,12 +86,13 @@ public class MeleeCollider : NetworkBehaviour
             {
                 if(_targetsHit.Contains(targetToDamage)) continue;
                 
-                targetToDamage.TakeDamageRpc(_staffItemSO.MeleeDamage, Player.LocalClientInstance.transform.position, _staffItemSO.Knockback);
+                SoundManager.Instance.PlayOneShot(_currentSwingData.HitSound, Player.LocalClientInstance.transform.position);
+                
+                targetToDamage.TakeDamageRpc(_currentSwingData.Damage, Player.LocalClientInstance.transform.position, _currentSwingData.Knockback);
                 _targetsFound.Remove(targetToDamage);
-                _staffItemSO.PlayHitSound();
                 _targetsHit.Add(targetToDamage);
                 
-                yield return new WaitForSeconds(DetectionBetweenHitsDuration);
+                yield return new WaitForSeconds(_currentSwingData.DetectionBetweenHitsDuration);
             }
         }
         

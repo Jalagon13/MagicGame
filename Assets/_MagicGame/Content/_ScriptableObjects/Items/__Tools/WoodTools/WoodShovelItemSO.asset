@@ -22,6 +22,8 @@ MonoBehaviour:
   <MiningRange>k__BackingField: 4
   <MeleeDamage>k__BackingField: 3
   <Knockback>k__BackingField: 6
+  <DetectionBetweenHitsDuration>k__BackingField: 0.05
+  <SwingDuration>k__BackingField: 0.35
   <SwingCooldown>k__BackingField: 0.1
   <HitSound>k__BackingField:
     Guid:
