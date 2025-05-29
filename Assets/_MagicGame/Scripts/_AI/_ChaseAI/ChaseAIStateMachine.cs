@@ -14,29 +14,7 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
         Moving
     }
 
-    [field: Tooltip("Smaller values = slower transition to desired direction")]
-    [field: SerializeField] public float TurnSharpness { get; private set; } = 5f;
-    [field: SerializeField] public float WanderSpeed { get; private set; } = 3f;
-    [field: SerializeField] public float ChaseSpeed { get; private set; } = 4f;
-    [field: SerializeField] public float KnockbackResist { get; private set; } = 0f;
-    [field: SerializeField] public float MinIdleDuration { get; private set; } = 2.5f;
-    [field: SerializeField] public float MaxIdleDuration { get; private set; } = 5f;
-    [field: Tooltip("Detection radius for breadcrumbs and players")]
-    [field: SerializeField] public float DetectionRadius { get; private set; } = 15f;
-    [field: SerializeField] public float DetectionIntervalDuration { get; private set; } = 0.5f;
-    [field: SerializeField] public float WanderRadius { get; private set; } = 10f;
-    [field: Tooltip("How close the AI will get to a WanderDestination before stopping")]
-    [field: SerializeField] public float StoppingDistance { get; private set; } = 0.25f;
-    [field: SerializeField] public float StrafingDuration { get; private set; } = 0.25f;
-    [field: SerializeField] public float StrafeIntensity { get; private set; } = 0.5f;
-    [field: SerializeField] public bool WillChasePlayer { get; private set; } = true;
-    [field: SerializeField] public bool OnlyChaseWhenProvoked { get; set; } = true;
-    [field: Tooltip("If set to false, keep NPC on idle state")]
-    [field: SerializeField] public bool CanMove { get; set; } = true;
-
-    public Knockback Knockback { get; private set; }
     public NetworkVariable<Vector2> Velocity { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public Rigidbody2D RigidBody2D { get; private set; }
     public Vector2 DesiredDirection { get; set; }
     public bool PlayerPositionFound { get; private set; }
     public bool BreadCrumbPositionFound { get; private set; }
@@ -46,75 +24,72 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     public int StrafingDirection { get; private set; } = 1;
     public bool PlayerInSight { get; private set; }
 
-    private NetworkLifeState _netLifeState;
-    private NpcNetworkComponent _npcNetwork;
     private Vector2 _freshestBreadCrumbPosition = Vector2.zero;
     private Vector2 _closestPlayerPosition = Vector2.zero;
-    private NetworkHealthState _healthState;
     private VelocityBasedAnimator _velocityBasedAnimator;
+    
+    private ServerCharacter _serverCharacter;
+    private ServerActionPlayer _serverActionPlayer;
+    private Timer _breadCrumbDetectionTimer;
+    private Timer _strafeTimer;
 
-    public override void OnNetworkSpawn()
+    public ChaseAIStateMachine(ServerCharacter serverCharacter, ServerActionPlayer serverActionPlayer)
     {
-        base.OnNetworkSpawn();
-
-        _velocityBasedAnimator = transform.GetChild(0).GetChild(1).GetComponent<VelocityBasedAnimator>();
-
-        if (IsServer)
-        {
-            _healthState = GetComponent<NetworkHealthState>();
-            _npcNetwork = GetComponent<NpcNetworkComponent>();
-            _netLifeState = GetComponent<NetworkLifeState>();
-            _netLifeState.OnServerNpcDamged += OnNpcDamged;
-
-            _states[ChaseAIState.Idle] = new ChaseAIIdleState(ChaseAIState.Idle, this);
-            _states[ChaseAIState.Moving] = new ChaseAIMoveState(ChaseAIState.Moving, this);
-            _currentState = _states[ChaseAIState.Idle];
-
-            Knockback = GetComponent<Knockback>();
-
-            RigidBody2D = GetComponent<Rigidbody2D>();
-            RigidBody2D.linearDamping = KnockbackResist;
-
-            InvokeRepeating(nameof(TryToFindBreadcrumb), DetectionIntervalDuration, DetectionIntervalDuration);
-        }
-    }
-
-    protected override void FixedUpdate()
-    {
-        if(_netLifeState.LifeState.Value == LifeState.Alive)
-        {
-            base.FixedUpdate();
-        }
+        _serverCharacter = serverCharacter;
+        _serverActionPlayer = serverActionPlayer;
         
-        if(_velocityBasedAnimator != null)
+        _states[ChaseAIState.Idle] = new ChaseAIIdleState(ChaseAIState.Idle, _serverCharacter);
+        _states[ChaseAIState.Moving] = new ChaseAIMoveState(ChaseAIState.Moving, _serverCharacter);
+        _currentState = _states[ChaseAIState.Idle];
+        
+        if(serverCharacter.CharacterData.IsFriendly)
         {
-            _velocityBasedAnimator.AnimateBasedOnVelocity(Velocity.Value);
+            _breadCrumbDetectionTimer = new Timer(0.5f);
+            _breadCrumbDetectionTimer.OnTimerEnd -= TryToFindBreadcrumb;
+            _breadCrumbDetectionTimer.OnTimerEnd += TryToFindBreadcrumb;
         }
     }
 
-    private void OnNpcDamged(object sender, Npc.OnNpcDamagedEventArgs e)
+    public override void ReceiveHP(ServerCharacter inflicter, int amount)
     {
-        // Try to strafe behavior
-        if(!IsStrafing && WillChasePlayer)
+        if (inflicter != null)
         {
-            StartCoroutine(Strafing());
+            if (amount < 0)
+            {
+                // Damaged
+                // Try to strafe behavior
+                if (!IsStrafing && _serverCharacter.CharacterData.WillChasePlayer)
+                {
+                    _strafeTimer = new Timer(_serverCharacter.CharacterData.StrafingDuration);
+                    _strafeTimer.OnTimerEnd -= EndStrafe;
+                    _strafeTimer.OnTimerEnd += EndStrafe;
+                    StrafingDirection = UnityEngine.Random.value > 0.5f ? 1 : -1;
+                    IsStrafing = true;
+                }
+            }
+            else
+            {
+                // Healed
+            }
         }
     }
 
-    private IEnumerator Strafing()
+    public override void UpdateAI()
     {
-        IsStrafing = true;
-        StrafingDirection = UnityEngine.Random.value > 0.5f ? 1 : -1;
+        base.UpdateAI();
 
-        yield return new WaitForSeconds(StrafingDuration);
+        _breadCrumbDetectionTimer?.Tick(Time.deltaTime);
+        _strafeTimer?.Tick(Time.deltaTime);
+    }
+
+    private void EndStrafe(object sender, EventArgs e)
+    {
         IsStrafing = false;
     }
 
-    private void TryToFindBreadcrumb()
+    private void TryToFindBreadcrumb(object sender, EventArgs e)
     {
-        if(!WillChasePlayer) return;
-
-        if (OnlyChaseWhenProvoked && _healthState.HitPoints.Value >= _healthState.MaxHealth.Value)
+        if (_serverCharacter.CharacterData.OnlyChaseWhenProvoked && _serverCharacter.NetHealthState.HitPoints.Value >= _serverCharacter.CharacterData.BaseHP)
         {
             return;
         }
@@ -124,12 +99,12 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
         PlayerInSight = false;
 
         // Circle cast to find player or breadcrumb in detection radius
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, DetectionRadius, LayerMask.GetMask("Player", "Breadcrumb"));
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(_serverCharacter.transform.position, _serverCharacter.CharacterData.DetectionRadius, LayerMask.GetMask("Player", "Breadcrumb"));
         List<Collider2D> unObstructedColliders = new();
 
         foreach (Collider2D collider in colliders)
         {
-            if(IsPathUnObstructed(collider.transform.position))
+            if (IsPathUnObstructed(collider.transform.position))
             {
                 unObstructedColliders.Add(collider);
             }
@@ -142,9 +117,9 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
         {
             if (unObstructedCollider.transform.root.TryGetComponent(out Player player))
             {
-                if(player.CurrentPlayerBiome.Value == _npcNetwork.NpcBiomeType)
+                if (player.CurrentPlayerBiome.Value == _serverCharacter.NpcVisibility.NpcBiomeType)
                 {
-                    float distance = Vector2.Distance(transform.position, player.transform.position);
+                    float distance = Vector2.Distance(_serverCharacter.transform.position, player.transform.position);
 
                     if (distance < closestDistance)
                     {
@@ -156,9 +131,9 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
             }
             else if (unObstructedCollider.TryGetComponent(out BreadCrumb breadCrumb))
             {
-                if(breadCrumb.Biome == _npcNetwork.NpcBiomeType)
+                if (breadCrumb.Biome == _serverCharacter.NpcVisibility.NpcBiomeType)
                 {
-                    if(breadCrumb.RemainingLifeTime > highestLifetime)
+                    if (breadCrumb.RemainingLifeTime > highestLifetime)
                     {
                         highestLifetime = breadCrumb.RemainingLifeTime;
                         _freshestBreadCrumbPosition = breadCrumb.transform.position;
@@ -171,14 +146,14 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
         if (PlayerPositionFound)
         {
             // Debug.Log("Found closest player! moving towards player");
-            DesiredDirection = (_closestPlayerPosition - (Vector2)transform.position).normalized;
+            DesiredDirection = (_closestPlayerPosition - (Vector2)_serverCharacter.transform.position).normalized;
             IsChasing = true;
             PlayerInSight = true;
         }
-        else if(BreadCrumbPositionFound)
+        else if (BreadCrumbPositionFound)
         {
             // Debug.Log("Found closest breadcrumb! moving towards breadcrumb");
-            DesiredDirection = (_freshestBreadCrumbPosition - (Vector2)transform.position).normalized;
+            DesiredDirection = (_freshestBreadCrumbPosition - (Vector2)_serverCharacter.transform.position).normalized;
             IsChasing = true;
         }
         else
@@ -187,16 +162,24 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
         }
     }
 
+    protected void FixedUpdate()
+    {
+        if(_velocityBasedAnimator != null)
+        {
+            _velocityBasedAnimator.AnimateBasedOnVelocity(Velocity.Value);
+        }
+    }
+
     public bool IsPathUnObstructed(Vector2 desiredEndpoint)
     {
-        Vector2 direction = desiredEndpoint - (Vector2)transform.position;
+        Vector2 direction = desiredEndpoint - (Vector2)_serverCharacter.transform.position;
         float distance = direction.magnitude;
 
-        TilemapCollider2D localBiomePfWallCollider = Pathfinding.Instance.GetPathfindingWallCollider(_npcNetwork.NpcBiomeType);
+        TilemapCollider2D localBiomePfWallCollider = Pathfinding.Instance.GetPathfindingWallCollider(_serverCharacter.NpcVisibility.NpcBiomeType);
 
         if(localBiomePfWallCollider == null) return false;
 
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction.normalized, distance, LayerMask.GetMask("PathfindingWall"));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(_serverCharacter.transform.position, direction.normalized, distance, LayerMask.GetMask("PathfindingWall"));
 
         foreach (var hit in hits)
         {

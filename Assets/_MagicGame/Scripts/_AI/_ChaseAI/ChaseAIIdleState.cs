@@ -10,7 +10,7 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
     private Timer _idleTimer;
     private bool _idleComplete;
 
-    public ChaseAIIdleState(ChaseAIStateMachine.ChaseAIState key, StateMachine<ChaseAIStateMachine.ChaseAIState> context) : base(key, context)
+    public ChaseAIIdleState(ChaseAIStateMachine.ChaseAIState key, ServerCharacter context) : base(key, context)
     {
         _ctx = Context as ChaseAIStateMachine;
     }

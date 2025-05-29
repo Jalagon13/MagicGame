@@ -1,24 +1,37 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 
 using UnityEngine;
 
-[RequireComponent(typeof(NetworkHealthState), typeof(NetworkLifeState))]
+public enum AIType
+{
+    ChaseAI
+}
+
+[RequireComponent(typeof(NetworkHealthState), typeof(NetworkLifeState), typeof(NpcNetworkVisibility))]
 public class ServerCharacter : NetworkBehaviour
 {
     [SerializeField]
+    private AIType _aiType;
+    public AIType AIType => _aiType;
+    
+    [SerializeField]
     private CharacterDataSO _characterData;
     public CharacterDataSO CharacterData => _characterData;
+    
     [SerializeField] 
     private ClientCharacter _clientCharacter;
     public ClientCharacter ClientCharacter => _clientCharacter;
+    
     public NetworkHealthState NetHealthState { get; private set; }
     public int HitPoints
     {
         get => NetHealthState.HitPoints.Value;
         private set => NetHealthState.HitPoints.Value = value;
     }
+    
     public NetworkLifeState NetLifeState { get; private set; }
     public LifeState LifeState
     {
@@ -26,17 +39,30 @@ public class ServerCharacter : NetworkBehaviour
         private set => NetLifeState.LifeState.Value = value;
     }
     
+    public NpcNetworkVisibility NpcVisibility { get; private set; }
+    
     [SerializeField] 
     private DamageReceiver _damageReceiver;
     private IAIBrain _aiBrain;
     
+    [SerializeField] 
+    private ServerCharacterMovement _serverCharacterMovement;
+    public ServerCharacterMovement ServerCharacterMovement => _serverCharacterMovement;
+    
+    private ServerActionPlayer _serverActionPlayer;
+    public ServerActionPlayer ServerActionPlayer => _serverActionPlayer;
+
     private void Awake()
     {
+        _serverActionPlayer = new ServerActionPlayer(this);
+
         NetHealthState = GetComponent<NetworkHealthState>();
         NetLifeState = GetComponent<NetworkLifeState>();
-
-        if (!NetHealthState || !NetLifeState || !_damageReceiver)
+        NpcVisibility = GetComponent<NpcNetworkVisibility>();
+        if (!NetHealthState || !NetLifeState || !NpcVisibility)
+        {
             Debug.LogError("ServerCharacter missing required components.");
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -47,11 +73,15 @@ public class ServerCharacter : NetworkBehaviour
             _damageReceiver.DamagedReceived += ReceiveHP;
             
             HitPoints = _characterData.BaseHP;
-            
-            if(_characterData.IsNpc)
+
+            if (_characterData.IsNpc)
             {
-                _aiBrain = GetComponent<IAIBrain>();
-                if(_aiBrain == null)
+                if(_aiType == AIType.ChaseAI)
+                {
+                    _aiBrain = new ChaseAIStateMachine(this, _serverActionPlayer);
+                }
+                
+                if (_aiBrain == null)
                     Debug.LogWarning($"ServerCharacter {gameObject.name} missing _aiBrain.");
             }
         }
@@ -68,7 +98,8 @@ public class ServerCharacter : NetworkBehaviour
     
     private void Update()
     {
-        if(_characterData.IsNpc && LifeState == LifeState.Alive && _aiBrain != null)
+        _serverActionPlayer.OnUpdateServerActions();
+        if (_characterData.IsNpc && LifeState == LifeState.Alive && _aiBrain != null)
         {
             _aiBrain.UpdateAI();
         }
@@ -105,7 +136,7 @@ public class ServerCharacter : NetworkBehaviour
         
         HitPoints = Mathf.Clamp(HitPoints + hp, 0, _characterData.BaseHP);
         
-        // TODO: AI RecieveHP Reaction
+        _aiBrain?.ReceiveHP(inflicter, hp);
         
         if(HitPoints <= 0)
         {

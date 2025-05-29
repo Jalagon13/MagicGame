@@ -64,7 +64,7 @@ public class MeleeCollider : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        if (collision.TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(Player.LocalClientInstance.CurrentPlayerBiome.Value))
+        if (collision.TryGetComponent(out NpcNetworkVisibility npcNet) && npcNet.SameBiomeAs(Player.LocalClientInstance.CurrentPlayerBiome.Value))
         {
             _targetsFound.Add(npcNet.gameObject.GetComponent<NetworkHealthState>());
         }

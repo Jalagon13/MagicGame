@@ -6,11 +6,11 @@ using UnityEngine;
 public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 {
 	
-	private PlayerStateMachine _ctx;
+	private ServerCharacter _ctx;
 
-	public PlayerIdleState(PlayerStateMachine.PlayerState key, StateMachine<PlayerStateMachine.PlayerState> context) : base(key, context)
+	public PlayerIdleState(PlayerStateMachine.PlayerState key, ServerCharacter context) : base(key, context)
 	{
-		_ctx = Context as PlayerStateMachine;
+		_ctx = Context;
 	}
 
 	public override void EnterState()

@@ -77,7 +77,7 @@ public class ShockStream : Spell
                 {
                     if (collisions[i].gameObject.layer == NpcLayer)
                     {
-                        if (collisions[i].TryGetComponent(out NpcNetworkComponent npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
+                        if (collisions[i].TryGetComponent(out NpcNetworkVisibility npcNet) && npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
                         {
                             NetworkHealthState npc = npcNet.GetComponent<NetworkHealthState>();
                             if (!_potentialTargetsToLockOnTo.Contains(npc))

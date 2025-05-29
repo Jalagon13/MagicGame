@@ -124,7 +124,7 @@ public abstract class Spell : NetworkBehaviour
 		if (collider.gameObject.layer != NpcLayer)
 			return false;
 
-		if (!collider.TryGetComponent(out NpcNetworkComponent npcNet))
+		if (!collider.TryGetComponent(out NpcNetworkVisibility npcNet))
 			return false;
 
 		if (!npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))

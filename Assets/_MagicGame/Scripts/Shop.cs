@@ -45,7 +45,7 @@ public class Shop : NetworkBehaviour
     {
         if (!IsServer || _chaseAI == null || PlayersUsingShop.Count > 0) return;
 
-        Player closestPlayer = MultiplayerManager.Instance.GetClosestPlayer(transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
+        Player closestPlayer = MultiplayerManager.Instance.GetClosestPlayer(transform.position, GetComponent<NpcNetworkVisibility>().NpcBiomeType);
         if (closestPlayer != null)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, closestPlayer.transform.position);

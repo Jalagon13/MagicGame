@@ -101,7 +101,7 @@ public class NpcManager : NetworkBehaviour
 		npcPrefabNetworkObject.SpawnWithObservers = false;
 		npcPrefabNetworkObject.Spawn(true);
 
-		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkComponent>();
+		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkVisibility>();
 		npcNetworkComponent.InitialieNpcNetwork(spawnPlayerId, npcId, spawnBiome);
 	}
 	

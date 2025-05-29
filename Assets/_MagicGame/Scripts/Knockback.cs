@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Knockback : MonoBehaviour
+public class Knockback
 {
 	public event EventHandler<KnockbackEventArgs> OnKnockbackStart;
 	public class KnockbackEventArgs : EventArgs
@@ -12,18 +12,24 @@ public class Knockback : MonoBehaviour
 	public Vector2 Velocity { get; private set; }
 	public bool KnockbackActive => Velocity != Vector2.zero;
 
-	[SerializeField] private bool _knockbackEnabled = true;
+	private bool _knockbackEnabled = true;
 	
 	private float _decayMult = 5f; // Higher = knockback fades out faster
 	private float _minKnockback = 0;
 	private float _maxKnockback = 100;
 	private float _finalKnockback;
+    private ServerCharacter _serverCharacter;
 
-	private void FixedUpdate()
+    public Knockback(ServerCharacter serverCharacter)
+	{
+		_serverCharacter = serverCharacter;
+	}
+
+	public void UpdateKnockback(float fixedDeltaTime)
 	{
 		if(Velocity == Vector2.zero) return;
 		
-		Velocity = Vector2.Lerp(Velocity, Vector2.zero, _decayMult * Time.fixedDeltaTime);
+		Velocity = Vector2.Lerp(Velocity, Vector2.zero, _decayMult * fixedDeltaTime);
 		
 		if (Velocity.magnitude < 0.75f)
 		{
@@ -53,7 +59,7 @@ public class Knockback : MonoBehaviour
 		});
 		if (knockbackForce == -1) knockbackForce = _minKnockback;
 
-		Vector2 direction = ((Vector2)transform.position - knockerSourcePosition).normalized;
+		Vector2 direction = ((Vector2)_serverCharacter.transform.position - knockerSourcePosition).normalized;
 
 		if (inverse) 
 			direction *= -1;

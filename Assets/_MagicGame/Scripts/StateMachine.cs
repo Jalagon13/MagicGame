@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public abstract class StateMachine<EState> : NetworkBehaviour, IAIBrain where EState : Enum
+public abstract class StateMachine<EState> : IAIBrain where EState : Enum
 {
     protected Dictionary<EState, BaseState<EState>> _states = new();
     protected BaseState<EState> _currentState;
@@ -19,7 +19,7 @@ public abstract class StateMachine<EState> : NetworkBehaviour, IAIBrain where ES
         }
     }
 
-    public void UpdateAI()
+    public virtual void UpdateAI()
     {
         if (_currentState == null) return;
 
@@ -34,7 +34,9 @@ public abstract class StateMachine<EState> : NetworkBehaviour, IAIBrain where ES
             TransitionToState(nextStateKey);
         }
     }
-	
+
+    public virtual void ReceiveHP(ServerCharacter inflicter, int amount) { }
+
     public void TransitionToState(EState statekey)
     {
         _isTransitioningState = true;

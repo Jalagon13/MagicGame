@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
 {
-    private ChaseAIStateMachine _ctx;
+    private ServerCharacter _ctx;
     private bool _destinationReached;
     private Vector2 _lastPosition;
     private float _timeNotMoved = 0f;
@@ -16,9 +16,9 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
     private float _distanceToDestination;
     private Vector2 _startingPosition;
 
-    public ChaseAIMoveState(ChaseAIStateMachine.ChaseAIState key, StateMachine<ChaseAIStateMachine.ChaseAIState> context) : base(key, context)
+    public ChaseAIMoveState(ChaseAIStateMachine.ChaseAIState key, ServerCharacter context) : base(key, context)
     {
-        _ctx = Context as ChaseAIStateMachine;
+        _ctx = Context;
     }
 
     public override void EnterState()

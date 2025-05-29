@@ -41,7 +41,7 @@ public class PixieAI : NetworkBehaviour
 	{
 		if (_isFleeing || !IsServer) return; 
 
-		_closestPlayer = MultiplayerManager.Instance.GetClosestPlayer(transform.position, GetComponent<NpcNetworkComponent>().NpcBiomeType);
+		_closestPlayer = MultiplayerManager.Instance.GetClosestPlayer(transform.position, GetComponent<NpcNetworkVisibility>().NpcBiomeType);
 		if (_closestPlayer == null || !_closestPlayer.gameObject.activeInHierarchy)
 		{
 			return;
