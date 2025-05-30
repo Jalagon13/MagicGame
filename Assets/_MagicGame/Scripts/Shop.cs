@@ -10,13 +10,13 @@ public class Shop : NetworkBehaviour
     [field: SerializeField] public List<ItemSO> ItemsToSell { get; private set; }
     
     [HideInInspector] public NetworkList<ulong> PlayersUsingShop { get; private set; }= new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    private ChaseAIStateMachine _chaseAI;
+    private BasicNpcStateMachine _chaseAI;
 
     public override void OnNetworkSpawn()
     {
         if(IsServer)
         {
-            _chaseAI = GetComponent<ChaseAIStateMachine>();
+            _chaseAI = GetComponent<BasicNpcStateMachine>();
             PlayersUsingShop.OnListChanged += HandleMovement;
         }
     }

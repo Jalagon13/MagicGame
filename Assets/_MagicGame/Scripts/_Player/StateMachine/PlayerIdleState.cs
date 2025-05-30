@@ -5,16 +5,16 @@ using UnityEngine;
 
 public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 {
-	
-	private ServerCharacter _ctx;
+	private PlayerStateMachine _ctx;
 
-	public PlayerIdleState(PlayerStateMachine.PlayerState key, ServerCharacter context) : base(key, context)
+	public PlayerIdleState(PlayerStateMachine.PlayerState key, StateMachine<PlayerStateMachine.PlayerState> context) : base(key, context)
 	{
-		_ctx = Context;
+		_ctx = Context as PlayerStateMachine;
 	}
 
 	public override void EnterState()
 	{
+		Debug.Log($"Player entering idle");
 		_ctx.IsMoving = false;
 	}
 
@@ -25,7 +25,7 @@ public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override PlayerStateMachine.PlayerState GetNextState()
 	{
-		if(_ctx.MoveVector != Vector2.zero && !_ctx.IsDead && _ctx.CanMove)
+		if(_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
 			return PlayerStateMachine.PlayerState.Moving;
 			
 		return StateKey;
@@ -33,15 +33,6 @@ public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override void FixedUpdate()
 	{
-		if(_ctx.Knockback.Velocity.magnitude > 0)
-		{
-			_ctx.Velocity = _ctx.Knockback.Velocity;
-		}
-		else
-		{
-			_ctx.Velocity = Vector2.zero;
-		}
 		
-		_ctx.RigidBody2D.linearVelocity = _ctx.Velocity;
 	}
 }

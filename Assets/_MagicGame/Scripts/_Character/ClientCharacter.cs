@@ -1,5 +1,7 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// <see cref="ClientCharacter"/> is responsible for displaying a character on the client's screen based on state information sent by the server.
@@ -13,7 +15,7 @@ public class ClientCharacter : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (!IsClient || transform.parent == null)
+        if (!IsClient)
         {
             return;
         }
@@ -22,8 +24,17 @@ public class ClientCharacter : NetworkBehaviour
         
         if(!_serverCharacter.Data.IsNpc && _serverCharacter.IsOwner)
         {
-            // local player start up code here, maybe input
+            if(_serverCharacter.TryGetComponent(out Player player))
+            {
+                player.OnNetworkSpawnInitializations();
+            }
         }
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void PlayDamageNumbersRpc(int damage)
+    {
+        GameManager.Instance.PlayDamageNumbers(damage, transform.position, _serverCharacter.NpcVisibility.NpcBiomeType, Color.red);
     }
 
     [Rpc(SendTo.ClientsAndHost)]

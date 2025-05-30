@@ -17,6 +17,7 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override void EnterState()
 	{
+		Debug.Log($"Player move state");
 		PlayFootStepSound();
 	
 		_playWalkSoundTimer = new(_walkSoundCooldown);
@@ -34,7 +35,7 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 
 	public override PlayerStateMachine.PlayerState GetNextState()
 	{
-		if(_ctx.MoveVector.magnitude == 0 && _ctx.Velocity.magnitude < 0.25f || _ctx.IsDead || !_ctx.CanMove)
+		if(_ctx.ServerCharacter.MovementState.Value == MovementState.Idle)
 			return PlayerStateMachine.PlayerState.Idle;
 	
 		return StateKey;
@@ -43,19 +44,6 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 	public override void FixedUpdate()
 	{
 		_playWalkSoundTimer.Tick(Time.deltaTime);
-
-		Vector2 desiredDirection = _ctx.MoveVector.normalized; 
-
-		if(_ctx.Knockback.KnockbackActive)
-		{
-			_ctx.Velocity = desiredDirection + _ctx.Knockback.Velocity;
-		}
-		else
-		{
-			_ctx.Velocity = Vector2.Lerp(_ctx.Velocity, desiredDirection * _ctx.PlayerStats.CurrentSpeed, _ctx.PlayerStats.TurnSharpness * Time.fixedDeltaTime);
-		}
-		
-		_ctx.RigidBody2D.linearVelocity = _ctx.Velocity;
 	}
 	
 	private void PlayFootStepSound(object sender, EventArgs e)

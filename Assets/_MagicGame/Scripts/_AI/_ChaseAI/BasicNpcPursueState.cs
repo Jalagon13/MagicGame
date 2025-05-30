@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class ChaseAIPursueState : BaseState<ChaseAIStateMachine.ChaseAIState>
+public class BasicNpcPursueState : BaseState<BasicNpcStateMachine.BasicNpcState>
 {
-    private ChaseAIStateMachine _ctx;
+    private BasicNpcStateMachine _ctx;
 
-    public ChaseAIPursueState(ChaseAIStateMachine.ChaseAIState key, StateMachine<ChaseAIStateMachine.ChaseAIState> context) : base(key, context)
+    public BasicNpcPursueState(BasicNpcStateMachine.BasicNpcState key, StateMachine<BasicNpcStateMachine.BasicNpcState> context) : base(key, context)
     {
-        _ctx = Context as ChaseAIStateMachine;
+        _ctx = Context as BasicNpcStateMachine;
     }
 
     public override void EnterState()
@@ -38,11 +38,11 @@ public class ChaseAIPursueState : BaseState<ChaseAIStateMachine.ChaseAIState>
         }
     }
 
-    public override ChaseAIStateMachine.ChaseAIState GetNextState()
+    public override BasicNpcStateMachine.BasicNpcState GetNextState()
     {
         if (!_ctx.IsChasing)
         {
-            return ChaseAIStateMachine.ChaseAIState.Idle;
+            return BasicNpcStateMachine.BasicNpcState.Idle;
         }
         
         return StateKey;

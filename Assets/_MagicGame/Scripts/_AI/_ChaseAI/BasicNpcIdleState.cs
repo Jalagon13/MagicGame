@@ -1,15 +1,15 @@
 using System;
 using UnityEngine;
 
-public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
+public class BasicNpcIdleState : BaseState<BasicNpcStateMachine.BasicNpcState>
 {
-    private ChaseAIStateMachine _ctx;
+    private BasicNpcStateMachine _ctx;
     private Timer _idleTimer;
     private bool _idleComplete;
 
-    public ChaseAIIdleState(ChaseAIStateMachine.ChaseAIState key, StateMachine<ChaseAIStateMachine.ChaseAIState> context) : base(key, context)
+    public BasicNpcIdleState(BasicNpcStateMachine.BasicNpcState key, StateMachine<BasicNpcStateMachine.BasicNpcState> context) : base(key, context)
     {
-        _ctx = Context as ChaseAIStateMachine;
+        _ctx = Context as BasicNpcStateMachine;
     }
 
     public override void EnterState()
@@ -40,21 +40,21 @@ public class ChaseAIIdleState : BaseState<ChaseAIStateMachine.ChaseAIState>
         _idleTimer.Tick(Time.fixedDeltaTime);
     }
 
-    public override ChaseAIStateMachine.ChaseAIState GetNextState()
+    public override BasicNpcStateMachine.BasicNpcState GetNextState()
     {
         if(_idleComplete)
         {
-            return ChaseAIStateMachine.ChaseAIState.Moving;
+            return BasicNpcStateMachine.BasicNpcState.Moving;
         }
         
         if(_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
         {
-            return ChaseAIStateMachine.ChaseAIState.Knockback;
+            return BasicNpcStateMachine.BasicNpcState.Knockback;
         }
         
         if(_ctx.IsChasing)
         {
-            return ChaseAIStateMachine.ChaseAIState.Pursuing;
+            return BasicNpcStateMachine.BasicNpcState.Pursuing;
         }
 
         return StateKey;

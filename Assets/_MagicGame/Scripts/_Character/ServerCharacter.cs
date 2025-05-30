@@ -5,17 +5,18 @@ using Unity.Netcode;
 
 using UnityEngine;
 
-public enum AIType
+public enum CharacterStateMachine
 {
-    ChaseAI
+    BasicNpc,
+    Player,
 }
 
 [RequireComponent(typeof(NetworkHealthState), typeof(NetworkLifeState), typeof(NpcNetworkVisibility))]
 public class ServerCharacter : NetworkBehaviour
 {
     [SerializeField]
-    private AIType _aiType;
-    public AIType AIType => _aiType;
+    private CharacterStateMachine _aiType;
+    public CharacterStateMachine AIType => _aiType;
     
     [SerializeField]
     private CharacterDataSO _characterData;
@@ -43,7 +44,7 @@ public class ServerCharacter : NetworkBehaviour
     
     [SerializeField] 
     private DamageReceiver _damageReceiver;
-    private IAIBrain _aiBrain;
+    private IAIBrain _stateMachine;
     
     [SerializeField] 
     private ServerCharacterMovement _serverCharacterMovement;
@@ -65,10 +66,6 @@ public class ServerCharacter : NetworkBehaviour
         NetHealthState = GetComponent<NetworkHealthState>();
         NetLifeState = GetComponent<NetworkLifeState>();
         NpcVisibility = GetComponent<NpcNetworkVisibility>();
-        if (!NetHealthState || !NetLifeState || !NpcVisibility)
-        {
-            Debug.LogError("ServerCharacter missing required components.");
-        }
     }
 
     public override void OnNetworkSpawn()
@@ -82,12 +79,22 @@ public class ServerCharacter : NetworkBehaviour
 
             if (_characterData.IsNpc)
             {
-                if(_aiType == AIType.ChaseAI)
+                switch (_aiType)
                 {
-                    _aiBrain = new ChaseAIStateMachine(this, _serverActionPlayer);
+                    case CharacterStateMachine.BasicNpc:
+                        _stateMachine = new BasicNpcStateMachine(this, _serverActionPlayer);
+                        break;
+                    case CharacterStateMachine.Player:
+                        _stateMachine = new PlayerStateMachine(this, _serverActionPlayer);
+                        break;
+                }
+            
+                if(_aiType == CharacterStateMachine.BasicNpc)
+                {
+                    _stateMachine = new BasicNpcStateMachine(this, _serverActionPlayer);
                 }
                 
-                if (_aiBrain == null)
+                if (_stateMachine == null)
                     Debug.LogWarning($"ServerCharacter {gameObject.name} missing _aiBrain.");
             }
         }
@@ -102,29 +109,44 @@ public class ServerCharacter : NetworkBehaviour
         }
     }
     
+    public override void OnDestroy()
+    {
+        _stateMachine?.Dispose();
+    }
+    
     private void FixedUpdate()
     {
-        if (!IsServer) return;
-        
-        _serverCharacterMovement.FixedUpdateMovement();
+        if (IsServer || (!_characterData.IsNpc && IsOwner))
+        {
+            _serverCharacterMovement.FixedUpdateMovement();
+        }
     }
     
     private void Update()
     {
-        if (!IsServer) return;
-
-        _serverActionPlayer.OnUpdateServerActions();
-        if (_characterData.IsNpc && LifeState == LifeState.Alive && _aiBrain != null)
+        if (IsServer || (!_characterData.IsNpc && IsOwner))
         {
-            _aiBrain.UpdateAI();
+            _serverActionPlayer.OnUpdateServerActions();
+            if (_characterData.IsNpc && LifeState == LifeState.Alive && _stateMachine != null)
+            {
+                _stateMachine.UpdateAI();
+            }
         }
     }
 
     private void OnLifeStateChanged(LifeState previousValue, LifeState newValue)
     {
-        if(LifeState != LifeState.Alive)
+        if(LifeState == LifeState.Dead)
         {
             // TODO: Death and IFrame functionality here...
+            if (_characterData.IsNpc)
+            {
+                // Npc Death functionality here
+            }
+            else
+            {
+                // Player Death functionality here
+            }
         }
     }
 
@@ -147,6 +169,8 @@ public class ServerCharacter : NetworkBehaviour
             // Damage reduction mod functionality here
             float damageReduction = 1f;
             hp = (int)(hp * damageReduction);
+            
+            _clientCharacter.PlayDamageNumbersRpc(hp);
         }
         
         HitPoints = Mathf.Clamp(HitPoints + hp, 0, _characterData.BaseHP);
@@ -156,7 +180,7 @@ public class ServerCharacter : NetworkBehaviour
             _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
         }
         
-        _aiBrain?.ReceiveHP(inflicter, hp);
+        _stateMachine?.ReceiveHP(inflicter, hp);
         
         if(HitPoints > 0)
         {
@@ -164,15 +188,6 @@ public class ServerCharacter : NetworkBehaviour
         }
         else if(HitPoints <= 0)
         {
-            if(_characterData.IsNpc)
-            {
-                // Npc Death functionality here
-            }
-            else
-            {
-                // Player Death functionality here
-            }
-        
             LifeState = LifeState.Dead;
         }
     }

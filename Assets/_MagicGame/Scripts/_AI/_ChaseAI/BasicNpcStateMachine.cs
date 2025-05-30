@@ -6,9 +6,9 @@ using System;
 using System.Collections;
 
 // Wanders until it finds a player or breadcrumb to move to
-public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState>
+public class BasicNpcStateMachine : StateMachine<BasicNpcStateMachine.BasicNpcState>
 {
-    public enum ChaseAIState
+    public enum BasicNpcState
     {
         Idle,
         Moving,
@@ -21,7 +21,6 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     public bool PlayerInSight { get; private set; }
     public bool IsAngry { get; private set; }
     public Vector2? PursueDestination { get; private set; } = Vector2.zero;
-    // private VelocityBasedAnimator _velocityBasedAnimator;
     
     private ServerCharacter _serverCharacter;
     public ServerCharacter ServerCharacter => _serverCharacter;
@@ -36,16 +35,16 @@ public class ChaseAIStateMachine : StateMachine<ChaseAIStateMachine.ChaseAIState
     private bool _playerPositionFound, _breadCrumbPositionFound;
     public int StrafingDirection { get; private set; }
 
-    public ChaseAIStateMachine(ServerCharacter serverCharacter, ServerActionPlayer serverActionPlayer)
+    public BasicNpcStateMachine(ServerCharacter serverCharacter, ServerActionPlayer serverActionPlayer)
     {
         _serverCharacter = serverCharacter;
         _serverActionPlayer = serverActionPlayer;
         
-        _states[ChaseAIState.Idle] = new ChaseAIIdleState(ChaseAIState.Idle, this);
-        _states[ChaseAIState.Moving] = new ChaseAIMoveState(ChaseAIState.Moving, this);
-        _states[ChaseAIState.Knockback] = new ChaseAIKnockbackState(ChaseAIState.Knockback, this);
-        _states[ChaseAIState.Pursuing] = new ChaseAIPursueState(ChaseAIState.Pursuing, this);
-        _currentState = _states[ChaseAIState.Idle];
+        _states[BasicNpcState.Idle] = new BasicNpcIdleState(BasicNpcState.Idle, this);
+        _states[BasicNpcState.Moving] = new BasicNpcMoveState(BasicNpcState.Moving, this);
+        _states[BasicNpcState.Knockback] = new BasicNpcKnockbackState(BasicNpcState.Knockback, this);
+        _states[BasicNpcState.Pursuing] = new BasicNpcPursueState(BasicNpcState.Pursuing, this);
+        _currentState = _states[BasicNpcState.Idle];
         
         if(!CharacterData.IsFriendly)
         {

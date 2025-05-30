@@ -34,8 +34,13 @@ public abstract class StateMachine<EState> : IAIBrain where EState : Enum
             TransitionToState(nextStateKey);
         }
     }
+    
+    public virtual void Dispose()
+    {
+        
+    }
 
-    public virtual void ReceiveHP(ServerCharacter inflicter, int amount) { }
+    public abstract void ReceiveHP(ServerCharacter inflicter, int amount);
 
     public void TransitionToState(EState statekey)
     {

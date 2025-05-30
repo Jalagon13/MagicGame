@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : NetworkBehaviour
 {	
@@ -31,7 +32,6 @@ public class Player : NetworkBehaviour
 	[field: SerializeField] public PlayerVisuals PlayerVisuals { get; private set; }
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
 	[SerializeField] private GameObject _breadCrumbPrefab;
-	public PlayerStats PlayerStats { get; private set; }
 	public Collider2D HitCollider { get; private set; }
 	public bool IsPerformingSwing { get; set; }
 	
@@ -49,9 +49,12 @@ public class Player : NetworkBehaviour
 	private BiomeType _spawnBiome;
 	private Vector2Int _lastTilePosition;
 	
+	
+	private ServerCharacter _serverCharacter;
+	
 	private void Awake()
 	{
-		PlayerStats = GetComponent<PlayerStats>();
+		_serverCharacter = GetComponent<ServerCharacter>();
 		HitCollider = GetComponent<Collider2D>();
 		PlayerKnockback = GetComponent<Knockback>();
 		HealthState = GetComponent<NetworkHealthState>();
@@ -59,26 +62,32 @@ public class Player : NetworkBehaviour
 
 		_respawnTimer = new(_respawnTimerDuration);
 	}
-
-	public override void OnNetworkSpawn()
+	
+	public void OnNetworkSpawnInitializations()
 	{
 		gameObject.name = $"Player_{OwnerClientId}";
 		
-		if(IsOwner)
-		{
-			LocalClientInstance = this;
-			
-			CurrentPlayerBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
-			_spawnBiome = BiomeType.Forest;
-			_spawnPoint = transform.position;
-			
-			HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnSelectedItemUpdated;
-		}
-		
+		LocalClientInstance = this;
+		CurrentPlayerBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
+		_spawnBiome = BiomeType.Forest;
+		_spawnPoint = transform.position;
+
 		OnAnyPlayerSpawned?.Invoke(this, new PlayerIdEventArgs
 		{
 			PlayerId = OwnerClientId
 		});
+
+		// local player start up code here, maybe input
+		GameInput.Instance.OnMove += GameInput_OnPlayerMove;
+		HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnSelectedItemUpdated;
+	}
+
+	public override void OnNetworkDespawn()
+	{
+		if (IsClient && !_serverCharacter.Data.IsNpc && _serverCharacter.IsOwner)
+		{
+			GameInput.Instance.OnMove -= GameInput_OnPlayerMove;
+		}
 	}
 
 	private IEnumerator Start()
@@ -151,6 +160,14 @@ public class Player : NetworkBehaviour
 		}
 	}
 
+	private void GameInput_OnPlayerMove(object sender, InputAction.CallbackContext e)
+	{
+		if (_serverCharacter.LifeState == LifeState.Alive)
+		{
+			var desiredDirection = e.ReadValue<Vector2>();
+		}
+	}
+
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void SpawnBreadCrumbServerRpc(Vector2Int spawnPos, RpcParams rpcParams = default)
 	{
@@ -162,7 +179,6 @@ public class Player : NetworkBehaviour
 	private void OnPlayerDamaged(object sender, NetworkHealthState.HitPointsDamagedEventArgs e)
 	{
 		Debug.Log($"Damaging player {OwnerClientId}, knockback force: {e.KnockbackForce}");
-		GameManager.Instance.PlayDamageNumbersClientRpc(e.DamageTaken, transform.position, CurrentPlayerBiome.Value, Color.red);
 
 		if(NetworkManager.LocalClientId == OwnerClientId)
 		{
@@ -175,7 +191,6 @@ public class Player : NetworkBehaviour
 	{
 		Debug.Log($"Knockback force: {knockbackForce}");
 		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerDamaged, transform.position);
-		PlayerKnockback.ApplyKnockback(sourcePosition, PlayerStats.KnockbackResist, knockbackForce);
 
 		OnDamaged?.Invoke(this, new OnDamagedEventArgs
 		{

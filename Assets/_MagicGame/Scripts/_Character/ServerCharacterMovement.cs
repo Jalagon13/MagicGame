@@ -23,6 +23,7 @@ public class ServerCharacterMovement : NetworkBehaviour
     
     private Knockback _knockback;
     private Vector2 _velocity;
+    public Vector2 Velocity => _velocity;
     
     private Vector2 _desiredDirection;
     public Vector2 DesiredDirection => _desiredDirection;

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
+public class BasicNpcMoveState : BaseState<BasicNpcStateMachine.BasicNpcState>
 {
-    private ChaseAIStateMachine _ctx;
+    private BasicNpcStateMachine _ctx;
     private bool _destinationReached;
     private Vector2 _lastPosition;
     private float _timeNotMoved = 0f;
@@ -19,9 +19,9 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
     private bool _hasDestination;
     private Vector2? _destination;
 
-    public ChaseAIMoveState(ChaseAIStateMachine.ChaseAIState key, StateMachine<ChaseAIStateMachine.ChaseAIState> context) : base(key, context)
+    public BasicNpcMoveState(BasicNpcStateMachine.BasicNpcState key, StateMachine<BasicNpcStateMachine.BasicNpcState> context) : base(key, context)
     {
-        _ctx = Context as ChaseAIStateMachine;
+        _ctx = Context as BasicNpcStateMachine;
     }
 
     public override void EnterState()
@@ -77,21 +77,21 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
         }
     }
 
-    public override ChaseAIStateMachine.ChaseAIState GetNextState()
+    public override BasicNpcStateMachine.BasicNpcState GetNextState()
     {
         if(!_hasDestination || _destinationReached || _isStuck)
         {
-            return ChaseAIStateMachine.ChaseAIState.Idle;
+            return BasicNpcStateMachine.BasicNpcState.Idle;
         }
 
         if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
         {
-            return ChaseAIStateMachine.ChaseAIState.Knockback;
+            return BasicNpcStateMachine.BasicNpcState.Knockback;
         }
 
         if (_ctx.IsChasing)
         {
-            return ChaseAIStateMachine.ChaseAIState.Pursuing;
+            return BasicNpcStateMachine.BasicNpcState.Pursuing;
         }
 
         

@@ -269,8 +269,7 @@ public class GameManager : NetworkBehaviour
 	private GradientColorKey[] _colorKey;
 	private GradientAlphaKey[] _alphaKey;
 
-	[Rpc(SendTo.ClientsAndHost)]
-	public void PlayDamageNumbersClientRpc(int amount, Vector2 position, BiomeType biome, Color color)
+	public void PlayDamageNumbers(int amount, Vector2 position, BiomeType biome, Color color)
 	{
 		if (biome == Player.LocalClientInstance.CurrentPlayerBiome.Value)
 		{
