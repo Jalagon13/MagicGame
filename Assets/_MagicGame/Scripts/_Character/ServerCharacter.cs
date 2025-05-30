@@ -19,7 +19,7 @@ public class ServerCharacter : NetworkBehaviour
     
     [SerializeField]
     private CharacterDataSO _characterData;
-    public CharacterDataSO CharacterData => _characterData;
+    public CharacterDataSO Data => _characterData;
     
     [SerializeField] 
     private ClientCharacter _clientCharacter;
@@ -47,10 +47,16 @@ public class ServerCharacter : NetworkBehaviour
     
     [SerializeField] 
     private ServerCharacterMovement _serverCharacterMovement;
-    public ServerCharacterMovement ServerCharacterMovement => _serverCharacterMovement;
+    public ServerCharacterMovement Movement => _serverCharacterMovement;
     
     private ServerActionPlayer _serverActionPlayer;
     public ServerActionPlayer ServerActionPlayer => _serverActionPlayer;
+    
+    [SerializeField] 
+    private ServerAnimationHandler _serverAnimationHandler;
+    public ServerAnimationHandler AnimationHandler => _serverAnimationHandler;
+    
+    public NetworkVariable<MovementState> MovementState = new NetworkVariable<MovementState>();
 
     private void Awake()
     {
@@ -96,8 +102,17 @@ public class ServerCharacter : NetworkBehaviour
         }
     }
     
+    private void FixedUpdate()
+    {
+        if (!IsServer) return;
+        
+        _serverCharacterMovement.FixedUpdateMovement();
+    }
+    
     private void Update()
     {
+        if (!IsServer) return;
+
         _serverActionPlayer.OnUpdateServerActions();
         if (_characterData.IsNpc && LifeState == LifeState.Alive && _aiBrain != null)
         {
@@ -136,9 +151,18 @@ public class ServerCharacter : NetworkBehaviour
         
         HitPoints = Mathf.Clamp(HitPoints + hp, 0, _characterData.BaseHP);
         
+        if(_characterData.CanBeKnockedBack && e.PlayKnockback)
+        {
+            _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
+        }
+        
         _aiBrain?.ReceiveHP(inflicter, hp);
         
-        if(HitPoints <= 0)
+        if(HitPoints > 0)
+        {
+            StartCoroutine(StartIFrameTimer());
+        }
+        else if(HitPoints <= 0)
         {
             if(_characterData.IsNpc)
             {
@@ -150,10 +174,6 @@ public class ServerCharacter : NetworkBehaviour
             }
         
             LifeState = LifeState.Dead;
-        }
-        else
-        {
-            StartCoroutine(StartIFrameTimer());
         }
     }
 

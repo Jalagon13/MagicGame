@@ -2,6 +2,6 @@ using UnityEngine;
 
 public interface IDamageable
 {
-    void ReceiveHP(ServerCharacter inflicter, int HP);
+    void ReceiveHP(ServerCharacter inflicter, int HP, bool playKnockback, float knockback = -1);
     ulong NetworkObjectId { get; }
 }

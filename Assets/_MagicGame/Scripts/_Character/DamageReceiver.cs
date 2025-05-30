@@ -11,18 +11,22 @@ public class DamageReceiver : NetworkBehaviour, IDamageable
     {
         public ServerCharacter Inflicter;
         public int HP;
-        public DamageReceivedEventArgs(ServerCharacter inflicter, int hp)
+        public bool PlayKnockback;
+        public float KnockbackForce;
+        public DamageReceivedEventArgs(ServerCharacter inflicter, int hp, bool playKnockback, float knockbackForce = -1)
         {
             Inflicter = inflicter;
             HP = hp;
+            PlayKnockback = playKnockback;
+            KnockbackForce = knockbackForce;
         }
     }
 
-    public void ReceiveHP(ServerCharacter inflicter, int hp)
+    public void ReceiveHP(ServerCharacter inflicter, int hp, bool playKnockback, float knockback = -1)
     {
         if (IsDamageable())
         {
-            DamagedReceived?.Invoke(this, new DamageReceivedEventArgs(inflicter, hp));
+            DamagedReceived?.Invoke(this, new DamageReceivedEventArgs(inflicter, hp, playKnockback, knockback));
         }
     }
 

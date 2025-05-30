@@ -19,7 +19,9 @@ public class CharacterDataSO : ScriptableObject
     [Tooltip("Smaller values = slower transition to desired direction")]
     public float TurnSharpness = 5f;
     [Tooltip("Speed the character uses when chasing a target")]
-    public float ChaseSpeed = 4f;
+    public float PursueSpeed = 4f;
+    [Tooltip("If true, the NPC can be knocked back")]
+    public bool CanBeKnockedBack = true;
     [Tooltip("Resistance to knockback effects (0 = no resistance)")]
     public float KnockbackResist = 0f;
     [Tooltip("Minimum time the NPC will stay idle before changing state")]

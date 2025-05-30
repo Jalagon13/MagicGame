@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
 {
-    private ServerCharacter _ctx;
+    private ChaseAIStateMachine _ctx;
     private bool _destinationReached;
     private Vector2 _lastPosition;
     private float _timeNotMoved = 0f;
@@ -15,25 +15,31 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
     private bool _isStuck;
     private float _distanceToDestination;
     private Vector2 _startingPosition;
+    
+    private bool _hasDestination;
+    private Vector2? _destination;
 
-    public ChaseAIMoveState(ChaseAIStateMachine.ChaseAIState key, ServerCharacter context) : base(key, context)
+    public ChaseAIMoveState(ChaseAIStateMachine.ChaseAIState key, StateMachine<ChaseAIStateMachine.ChaseAIState> context) : base(key, context)
     {
-        _ctx = Context;
+        _ctx = Context as ChaseAIStateMachine;
     }
 
     public override void EnterState()
     {
-        // Debug.Log("Move State");
-        _isStuck = false;
-        _timeNotMoved = 0f;
-        _lastPosition = _ctx.transform.position;
-        _ctx.IsChasing = _ctx.BreadCrumbPositionFound || _ctx.PlayerPositionFound;
-        _distanceToDestination = Vector2.Distance(_ctx.transform.position, _ctx.WanderDestination);
-        _startingPosition = _ctx.transform.position;
+        Debug.Log("Move State");
+        _destination = GetRandomWanderDestinationBFS();
 
-        if (!_ctx.IsChasing)
+        _hasDestination = _destination.HasValue;
+        if (_destination.HasValue)
         {
-            _destinationReached = false;
+            Vector2 direction = _destination.Value - (Vector2)_ctx.ServerCharacter.transform.position;
+            _ctx.ServerCharacter.Movement.StartMovement(direction);
+
+            _isStuck = false;
+            _timeNotMoved = 0f;
+            _lastPosition = _ctx.ServerCharacter.transform.position;
+            _distanceToDestination = Vector2.Distance(_ctx.ServerCharacter.transform.position, _destination.Value);
+            _startingPosition = _ctx.ServerCharacter.transform.position;
         }
     }
 
@@ -44,47 +50,20 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
     public override void FixedUpdate()
     {
-        if(!_ctx.CanMove) return;
+        if(!_hasDestination) return;
 
-        if (!_ctx.IsChasing)
+        // Check if the destination has been reached
+        float distanceToDestination = Vector2.Distance(_ctx.ServerCharacter.transform.position, _destination.Value);
+        if (distanceToDestination <= _ctx.CharacterData.StoppingDistance || Vector2.Distance(_ctx.ServerCharacter.transform.position, _startingPosition) >= _distanceToDestination)
         {
-            // Check if the destination has been reached
-            float distanceToDestination = Vector2.Distance(_ctx.transform.position, _ctx.WanderDestination);
-            if (distanceToDestination <= _ctx.StoppingDistance || Vector2.Distance(_ctx.transform.position, _startingPosition) >= _distanceToDestination)
-            {
-                _destinationReached = true;
-            }
+            _destinationReached = true;
         }
 
-        Vector2 desiredDirection = _ctx.DesiredDirection.normalized;
-
-        // Strafe while chasing
-        if (_ctx.IsChasing && _ctx.IsStrafing)
-        {
-            // Get a perpendicular vector (left or right)
-            Vector2 perpendicular = new Vector2(-desiredDirection.y, desiredDirection.x) * _ctx.StrafingDirection;
-
-            // Apply strafing effect by blending it into the desired direction
-            desiredDirection += perpendicular * _ctx.StrafeIntensity;
-            desiredDirection = desiredDirection.normalized; // Normalize to maintain consistent speed
-        }
-
-        if (_ctx.Knockback.KnockbackActive)
-        {
-            _ctx.Velocity.Value = /* desiredDirection +  */_ctx.Knockback.Velocity;
-        }
-        else
-        {
-            float speed = _ctx.IsChasing ? _ctx.ChaseSpeed : _ctx.WanderSpeed;
-            _ctx.Velocity.Value = Vector2.Lerp(_ctx.Velocity.Value, desiredDirection * speed, _ctx.TurnSharpness * Time.fixedDeltaTime);
-        }
-
-        _ctx.RigidBody2D.linearVelocity = _ctx.Velocity.Value;
-
+        // Check if the AI is stuck
         _timeNotMoved += Time.fixedDeltaTime;
         if (_timeNotMoved >= _timeThreshold)
         {
-            float distanceMoved = Vector2.Distance(_lastPosition, _ctx.transform.position);
+            float distanceMoved = Vector2.Distance(_lastPosition, _ctx.ServerCharacter.transform.position);
 
             if (distanceMoved < _distanceThreshold)
             {
@@ -94,38 +73,86 @@ public class ChaseAIMoveState : BaseState<ChaseAIStateMachine.ChaseAIState>
 
             // Reset timer and update last known position
             _timeNotMoved = 0f;
-            _lastPosition = _ctx.transform.position;
+            _lastPosition = _ctx.ServerCharacter.transform.position;
         }
     }
 
     public override ChaseAIStateMachine.ChaseAIState GetNextState()
     {
-        if(!_ctx.CanMove)
+        if(!_hasDestination || _destinationReached || _isStuck)
         {
-            return ChaseAIStateMachine.ChaseAIState.Idle;
-        }
-    
-        if (_isStuck)
-        {
-            Debug.Log($"AI is stuck, returning to idle state");
             return ChaseAIStateMachine.ChaseAIState.Idle;
         }
 
-        if(_ctx.IsChasing)
+        if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
         {
-            if (!_ctx.BreadCrumbPositionFound && !_ctx.PlayerPositionFound)
+            return ChaseAIStateMachine.ChaseAIState.Knockback;
+        }
+
+        if (_ctx.IsChasing)
+        {
+            return ChaseAIStateMachine.ChaseAIState.Pursuing;
+        }
+
+        
+
+        return StateKey;
+    }
+
+    private Vector2? GetRandomWanderDestinationBFS()
+    {
+        Queue<Vector2> queue = new Queue<Vector2>();
+        HashSet<Vector2> visited = new HashSet<Vector2>();
+
+        var startTilePos = Vector2Int.FloorToInt(_ctx.ServerCharacter.transform.position);
+        Vector2 centerStartTile = new Vector2(startTilePos.x + 0.5f, startTilePos.y + 0.5f);
+
+        queue.Enqueue(centerStartTile);
+        visited.Add(centerStartTile);
+
+        List<Vector2> validTiles = new List<Vector2>();
+
+        while (queue.Count > 0)
+        {
+            Vector2 current = queue.Dequeue();
+
+            // If the tile is walkable and within the radius, add it as a candidate
+            if (Vector2.Distance(_ctx.ServerCharacter.transform.position, current) <= _ctx.ServerCharacter.Data.WanderRadius && _ctx.IsPathUnObstructed(current))
             {
-                return ChaseAIStateMachine.ChaseAIState.Idle;
+                validTiles.Add(current);
             }
+
+            // Explore neighbors in all 4 directions (or 8 for diagonal movement)
+            foreach (Vector2 neighbor in GetTileNeighbors(current))
+            {
+                if (_ctx.IsPathUnObstructed(neighbor) && !visited.Contains(neighbor) && Vector2.Distance(_ctx.ServerCharacter.transform.position, neighbor) <= _ctx.ServerCharacter.Data.WanderRadius)
+                {
+                    queue.Enqueue(neighbor);
+                    visited.Add(neighbor);
+                }
+            }
+        }
+
+        // Pick a random valid tile if any exist
+        if (validTiles.Count > 0)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, validTiles.Count);
+            return validTiles[randomIndex];
         }
         else
         {
-            if(_destinationReached)
-            {
-                return ChaseAIStateMachine.ChaseAIState.Idle;
-            }
+            return null;
         }
+    }
 
-        return StateKey;
+    private List<Vector2> GetTileNeighbors(Vector2 tilePos)
+    {
+        return new List<Vector2>
+        {
+            tilePos + Vector2.up,
+            tilePos + Vector2.down,
+            tilePos + Vector2.left,
+            tilePos + Vector2.right
+        };
     }
 }
