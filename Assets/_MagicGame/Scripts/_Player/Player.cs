@@ -108,7 +108,7 @@ public class Player : NetworkBehaviour
 
 	private void GameInput_OnPrimaryAction(object sender, GameInput.OnPrimaryOrSecondaryActionEventArgs e)
 	{
-		Debug.Log($"Player {OwnerClientId} is holding primary {e.IsHeldDown}");
+		
 	}
 
 	private void GameInput_OnPlayerMove(object sender, InputAction.CallbackContext e)

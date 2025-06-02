@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class BasicNpcPursueState : BaseState<BasicNpcStateMachine.BasicNpcState>
+public class BasicNpcPursueState : BaseState<AIState>
 {
     private BasicNpcStateMachine _ctx;
 
-    public BasicNpcPursueState(BasicNpcStateMachine.BasicNpcState key, StateMachine<BasicNpcStateMachine.BasicNpcState> context) : base(key, context)
+    public BasicNpcPursueState(AIState key, StateMachine<AIState> context) : base(key, context)
     {
         _ctx = Context as BasicNpcStateMachine;
     }
@@ -38,13 +38,11 @@ public class BasicNpcPursueState : BaseState<BasicNpcStateMachine.BasicNpcState>
         }
     }
 
-    public override BasicNpcStateMachine.BasicNpcState GetNextState()
+    public override void CheckSwitchStates()
     {
         if (!_ctx.IsChasing)
         {
-            return BasicNpcStateMachine.BasicNpcState.Idle;
+            SwitchState(AIState.Idle);
         }
-        
-        return StateKey;
     }
 }

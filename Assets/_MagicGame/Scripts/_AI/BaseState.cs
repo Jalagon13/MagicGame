@@ -5,7 +5,7 @@ using UnityEngine;
 
 public abstract class BaseState<EState> where EState : Enum
 {
-    private BaseState<EState> _currentSubState;
+    protected BaseState<EState> _currentSubState;
     private BaseState<EState> _currentSuperState;
     
     private bool _isRootState = false;
@@ -24,7 +24,6 @@ public abstract class BaseState<EState> where EState : Enum
     public abstract void ExitState();
     public abstract void UpdateState();
     public abstract void CheckSwitchStates();
-    public abstract void InitializeSubState();
 
     protected void SwitchState(EState state)
     {
@@ -43,7 +42,7 @@ public abstract class BaseState<EState> where EState : Enum
         }
         else
         {
-            _currentSuperState?.SetSubState(newState);
+            _currentSuperState?.SetSubState(state);
         }
     }
 
@@ -59,9 +58,12 @@ public abstract class BaseState<EState> where EState : Enum
         _currentSuperState = state;
     }
     
-    protected void SetSubState(BaseState<EState> state)
+    protected void SetSubState(EState aiState)
     {
+        var state = Context.GetState(aiState);
+
         _currentSubState = state;
         state.SetSuperState(this);
+        Debug.Log($"Setting sub state of {StateKey} to {state.StateKey}");
     }
 }

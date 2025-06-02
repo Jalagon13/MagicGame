@@ -11,8 +11,6 @@ public class ClientCharacter : NetworkBehaviour
     [SerializeField] 
     private ServerCharacter _serverCharacter;
 
-    private ClientActionPlayer _clientActionPlayer;
-
     public override void OnNetworkSpawn()
     {
         if (!IsClient)
@@ -20,8 +18,6 @@ public class ClientCharacter : NetworkBehaviour
             return;
         }
 
-        _clientActionPlayer = new ClientActionPlayer(this);
-        
         if(!_serverCharacter.Data.IsNpc && _serverCharacter.IsOwner)
         {
             if(_serverCharacter.TryGetComponent(out Player player))

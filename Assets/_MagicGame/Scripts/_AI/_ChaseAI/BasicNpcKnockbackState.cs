@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class BasicNpcKnockbackState : BaseState<BasicNpcStateMachine.BasicNpcState>
+public class BasicNpcKnockbackState : BaseState<AIState>
 {
     private BasicNpcStateMachine _ctx;
 
-    public BasicNpcKnockbackState(BasicNpcStateMachine.BasicNpcState key, StateMachine<BasicNpcStateMachine.BasicNpcState> context) : base(key, context)
+    public BasicNpcKnockbackState(AIState key, StateMachine<AIState> context) : base(key, context)
     {
         _ctx = Context as BasicNpcStateMachine;
     }
@@ -24,23 +24,22 @@ public class BasicNpcKnockbackState : BaseState<BasicNpcStateMachine.BasicNpcSta
         
     }
 
-    public override BasicNpcStateMachine.BasicNpcState GetNextState()
+    public override void CheckSwitchStates()
     {
         if (_ctx.ServerCharacter.MovementState.Value == MovementState.Idle)
         {
-            if(_ctx.IsAngry)
+            if (_ctx.IsAngry)
             {
-                return BasicNpcStateMachine.BasicNpcState.Pursuing;
+                SwitchState(AIState.Pursuing);
             }
-        
-            return BasicNpcStateMachine.BasicNpcState.Idle;
+
+            SwitchState(AIState.Idle);
+            
         }
 
         if (_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
         {
-            return BasicNpcStateMachine.BasicNpcState.Moving;
+            SwitchState(AIState.Moving);
         }
-        
-        return StateKey;
     }
 }

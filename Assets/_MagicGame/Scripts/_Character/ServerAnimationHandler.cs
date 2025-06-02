@@ -34,7 +34,7 @@ public class ServerAnimationHandler : NetworkBehaviour
     {
         MovementState moveState = _serverCharacter.MovementState.Value;
         CardinalDirection direction = _serverCharacter.CardinalDirection.Value;
-        Debug.Log($"Playing {moveState} {direction}");
+        // Debug.Log($"Playing {moveState} {direction}");
 
         foreach (ServerSpriteAnimHandler handler in _spriteAnimHandlers)
         {

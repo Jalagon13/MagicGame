@@ -1,13 +1,13 @@
 using System;
 using UnityEngine;
 
-public class BasicNpcIdleState : BaseState<BasicNpcStateMachine.BasicNpcState>
+public class BasicNpcIdleState : BaseState<AIState>
 {
     private BasicNpcStateMachine _ctx;
     private Timer _idleTimer;
     private bool _idleComplete;
 
-    public BasicNpcIdleState(BasicNpcStateMachine.BasicNpcState key, StateMachine<BasicNpcStateMachine.BasicNpcState> context) : base(key, context)
+    public BasicNpcIdleState(AIState key, StateMachine<AIState> context) : base(key, context)
     {
         _ctx = Context as BasicNpcStateMachine;
     }
@@ -40,24 +40,22 @@ public class BasicNpcIdleState : BaseState<BasicNpcStateMachine.BasicNpcState>
         _idleTimer.Tick(Time.fixedDeltaTime);
     }
 
-    public override BasicNpcStateMachine.BasicNpcState GetNextState()
+    public override void CheckSwitchStates()
     {
-        if(_idleComplete)
+        if (_idleComplete)
         {
-            return BasicNpcStateMachine.BasicNpcState.Moving;
-        }
-        
-        if(_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
-        {
-            return BasicNpcStateMachine.BasicNpcState.Knockback;
-        }
-        
-        if(_ctx.IsChasing)
-        {
-            return BasicNpcStateMachine.BasicNpcState.Pursuing;
+            SwitchState(AIState.Moving);
         }
 
-        return StateKey;
+        if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
+        {
+            SwitchState(AIState.Knockbacked);
+        }
+
+        if (_ctx.IsChasing)
+        {
+            SwitchState(AIState.Pursuing);
+        }
     }
 
     private void IdleDone(object sender, EventArgs e)

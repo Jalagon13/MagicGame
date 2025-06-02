@@ -50,8 +50,6 @@ public class ServerCharacter : NetworkBehaviour
     private ServerCharacterMovement _serverCharacterMovement;
     public ServerCharacterMovement Movement => _serverCharacterMovement;
     
-    private ServerActionPlayer _serverActionPlayer;
-    public ServerActionPlayer ServerActionPlayer => _serverActionPlayer;
     
     [SerializeField] 
     private ServerAnimationHandler _serverAnimationHandler;
@@ -65,8 +63,6 @@ public class ServerCharacter : NetworkBehaviour
 
     private void Awake()
     {
-        _serverActionPlayer = new ServerActionPlayer(this);
-
         NetHealthState = GetComponent<NetworkHealthState>();
         NetLifeState = GetComponent<NetworkLifeState>();
         
@@ -79,33 +75,26 @@ public class ServerCharacter : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if(IsServer)
+        if(IsOwner)
         {
             NetLifeState.LifeState.OnValueChanged += OnLifeStateChanged;
             _damageReceiver.DamagedReceived += ReceiveHP;
             
             HitPoints = _characterData.BaseHP;
 
-            if (_characterData.IsNpc)
+            switch (_aiType)
             {
-                switch (_aiType)
-                {
-                    case CharacterStateMachine.BasicNpc:
-                        _stateMachine = new BasicNpcStateMachine(this, _serverActionPlayer);
-                        break;
-                    case CharacterStateMachine.Player:
-                        _stateMachine = new PlayerStateMachine(this, _serverActionPlayer);
-                        break;
-                }
-            
-                if(_aiType == CharacterStateMachine.BasicNpc)
-                {
-                    _stateMachine = new BasicNpcStateMachine(this, _serverActionPlayer);
-                }
-                
-                if (_stateMachine == null)
-                    Debug.LogWarning($"ServerCharacter {gameObject.name} missing _aiBrain.");
+                case CharacterStateMachine.BasicNpc:
+                    _stateMachine = new BasicNpcStateMachine(this);
+                    break;
+                case CharacterStateMachine.Player:
+                    Debug.Log($"Creating player state machine");
+                    _stateMachine = new PlayerStateMachine(this);
+                    break;
             }
+
+            if (_stateMachine == null)
+                Debug.LogWarning($"ServerCharacter {gameObject.name} missing _aiBrain.");
         }
     }
 
@@ -135,7 +124,6 @@ public class ServerCharacter : NetworkBehaviour
     {
         if (IsServer || (!_characterData.IsNpc && IsOwner))
         {
-            _serverActionPlayer.OnUpdateServerActions();
             if (_characterData.IsNpc && LifeState == LifeState.Alive && _stateMachine != null)
             {
                 _stateMachine.UpdateAI();

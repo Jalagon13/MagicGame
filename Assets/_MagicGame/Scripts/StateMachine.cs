@@ -5,6 +5,15 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum AIState
+{
+    Grounded,
+    Idle,
+    Moving,
+    Knockbacked,
+    Pursuing
+}
+
 public abstract class StateMachine<EState> : IAIBrain where EState : Enum
 {
     protected Dictionary<EState, BaseState<EState>> _states = new();
@@ -15,6 +24,7 @@ public abstract class StateMachine<EState> : IAIBrain where EState : Enum
     {
         if (_states.TryGetValue(key, out var state))
         {
+            Debug.Log($"State {key} found in state machine.");
             return state;
         }
 
@@ -22,7 +32,7 @@ public abstract class StateMachine<EState> : IAIBrain where EState : Enum
         return null;
     }
 
-    protected virtual void Start()
+    protected virtual void EnterCurrentState()
     {
         _currentState?.EnterState();
     }

@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
+public class PlayerMoveState : BaseState<AIState>
 {
 	private PlayerStateMachine _ctx;
 	private Timer _playWalkSoundTimer;
 	private float _walkSoundCooldown = 0.28f;
 
-	public PlayerMoveState(PlayerStateMachine.PlayerState key, StateMachine<PlayerStateMachine.PlayerState> context) : base(key, context)
+	public PlayerMoveState(AIState key, StateMachine<AIState> context) : base(key, context)
 	{
 		_ctx = Context as PlayerStateMachine;
 	}
@@ -37,13 +37,8 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 	{
 		if (_ctx.ServerCharacter.MovementState.Value == MovementState.Idle)
 		{
-		    SwitchState(PlayerStateMachine.PlayerState.Idle);
+		    SwitchState(AIState.Idle);
 		}
-	}
-
-	public override void InitializeSubState()
-	{
-		
 	}
 
 	public override void UpdateState()

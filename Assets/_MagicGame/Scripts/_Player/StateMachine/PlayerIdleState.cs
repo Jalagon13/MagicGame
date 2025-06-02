@@ -3,16 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
+public class PlayerIdleState : BaseState<AIState>
 {
 	private PlayerStateMachine _ctx;
 
-	public PlayerIdleState(PlayerStateMachine.PlayerState key, StateMachine<PlayerStateMachine.PlayerState> context) : base(key, context)
+	public PlayerIdleState(AIState key, StateMachine<AIState> context) : base(key, context)
 	{
 		_ctx = Context as PlayerStateMachine;
 	}
 
-	public override void EnterState()
+    public override void EnterState()
 	{
 		Debug.Log($"Player entering idle");
 		// _ctx.IsMoving = false;
@@ -23,15 +23,15 @@ public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 		
 	}
 
-	public override PlayerStateMachine.PlayerState GetNextState()
+	public override void CheckSwitchStates()
 	{
-		if(_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
-			return PlayerStateMachine.PlayerState.Moving;
-			
-		return StateKey;
+		if (_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
+		{
+			SwitchState(AIState.Moving);
+		}
 	}
 
-	public override void UpdateState()
+    public override void UpdateState()
 	{
 		
 	}

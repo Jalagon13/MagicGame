@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class BasicNpcMoveState : BaseState<BasicNpcStateMachine.BasicNpcState>
+public class BasicNpcMoveState : BaseState<AIState>
 {
     private BasicNpcStateMachine _ctx;
     private bool _destinationReached;
@@ -19,7 +19,7 @@ public class BasicNpcMoveState : BaseState<BasicNpcStateMachine.BasicNpcState>
     private bool _hasDestination;
     private Vector2? _destination;
 
-    public BasicNpcMoveState(BasicNpcStateMachine.BasicNpcState key, StateMachine<BasicNpcStateMachine.BasicNpcState> context) : base(key, context)
+    public BasicNpcMoveState(AIState key, StateMachine<AIState> context) : base(key, context)
     {
         _ctx = Context as BasicNpcStateMachine;
     }
@@ -77,26 +77,22 @@ public class BasicNpcMoveState : BaseState<BasicNpcStateMachine.BasicNpcState>
         }
     }
 
-    public override BasicNpcStateMachine.BasicNpcState GetNextState()
+    public override void CheckSwitchStates()
     {
-        if(!_hasDestination || _destinationReached || _isStuck)
+        if (!_hasDestination || _destinationReached || _isStuck)
         {
-            return BasicNpcStateMachine.BasicNpcState.Idle;
+            SwitchState(AIState.Idle);
         }
 
         if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
         {
-            return BasicNpcStateMachine.BasicNpcState.Knockback;
+            SwitchState(AIState.Knockbacked);
         }
 
         if (_ctx.IsChasing)
         {
-            return BasicNpcStateMachine.BasicNpcState.Pursuing;
+            SwitchState(AIState.Pursuing);
         }
-
-        
-
-        return StateKey;
     }
 
     private Vector2? GetRandomWanderDestinationBFS()

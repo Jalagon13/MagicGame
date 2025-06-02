@@ -6693,8 +6693,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _spawnWandItems: 0
-  _startWandItems: []
+  _spawnWandItems: 1
+  _startWandItems:
+  - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
+    Quantity: 1
+    <MagicArray>k__BackingField: []
   _startingItems: []
 --- !u!1 &849543217
 GameObject:
