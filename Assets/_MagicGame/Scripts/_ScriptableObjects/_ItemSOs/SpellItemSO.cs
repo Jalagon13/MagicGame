@@ -66,7 +66,7 @@ public class SpellItemSO : ItemSO
 			selectedInventoryItem.Id,
 			DespawnIfFocusSlotChanged,
 			IsContinuousCast,
-			Player.LocalClientInstance.CurrentPlayerBiome.Value);
+			Player.LocalClientInstance.CurrentBiome.Value);
 	}
 	
 	public virtual void StartSpell(int slotIndex) // Default behavior, spawn spell on server, assign it to player
@@ -77,7 +77,7 @@ public class SpellItemSO : ItemSO
 		SpellManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position);
 		SpellManager.Instance.LoadSpell(this, new LoadedSpell(this, syncSpellData, selectedInventoryItem));
 
-		Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(HasteMultiplier);
+		// Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(HasteMultiplier);
 		Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(this), CastTime);
 	}
 

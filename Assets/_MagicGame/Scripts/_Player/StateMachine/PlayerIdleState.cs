@@ -15,7 +15,7 @@ public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 	public override void EnterState()
 	{
 		Debug.Log($"Player entering idle");
-		_ctx.IsMoving = false;
+		// _ctx.IsMoving = false;
 	}
 
 	public override void ExitState()
@@ -31,7 +31,7 @@ public class PlayerIdleState : BaseState<PlayerStateMachine.PlayerState>
 		return StateKey;
 	}
 
-	public override void FixedUpdate()
+	public override void UpdateState()
 	{
 		
 	}

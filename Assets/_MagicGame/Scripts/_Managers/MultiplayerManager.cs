@@ -22,7 +22,7 @@ public class MultiplayerManager : MonoBehaviour
 				var player = client.PlayerObject?.GetComponent<Player>();
 				if (player != null)
 				{
-					if (player.CurrentPlayerBiome.Value != biome) continue;
+					if (player.CurrentBiome.Value != biome) continue;
 					
 					float distance = Vector3.Distance(position, player.transform.position);
 					if (distance < closestDistance)

@@ -10,29 +10,28 @@ public abstract class StateMachine<EState> : IAIBrain where EState : Enum
     protected Dictionary<EState, BaseState<EState>> _states = new();
     protected BaseState<EState> _currentState;
     protected bool _isTransitioningState = false;
-	
+
+    public BaseState<EState> GetState(EState key)
+    {
+        if (_states.TryGetValue(key, out var state))
+        {
+            return state;
+        }
+
+        Debug.LogWarning($"State {key} not found in state machine.");
+        return null;
+    }
+
     protected virtual void Start()
     {
-        if(_currentState != null)
-        {
-            _currentState.EnterState();
-        }
+        _currentState?.EnterState();
     }
 
     public virtual void UpdateAI()
     {
         if (_currentState == null) return;
-
-        EState nextStateKey = _currentState.GetNextState();
-
-        if (!_isTransitioningState && nextStateKey.Equals(_currentState.StateKey))
-        {
-            _currentState.FixedUpdate();
-        }
-        else if (!_isTransitioningState)
-        {
-            TransitionToState(nextStateKey);
-        }
+        
+        _currentState.UpdateAllStates();
     }
     
     public virtual void Dispose()

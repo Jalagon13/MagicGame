@@ -67,7 +67,7 @@ public class SpellNetworkComponent : NetworkBehaviour
 	
 	private bool CheckIfInSameBiome(ulong clientId)
 	{
-		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value == _spellData.SpawnBiome;
+		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value == _spellData.SpawnBiome;
 	}
 	
 	private bool NetworkObjectVisibleTo(ulong clientId)

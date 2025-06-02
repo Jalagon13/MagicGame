@@ -19,7 +19,7 @@ public class BasicNpcKnockbackState : BaseState<BasicNpcStateMachine.BasicNpcSta
         
     }
 
-    public override void FixedUpdate()
+    public override void UpdateState()
     {
         
     }

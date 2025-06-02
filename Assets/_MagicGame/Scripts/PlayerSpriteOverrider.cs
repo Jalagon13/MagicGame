@@ -30,8 +30,8 @@ public class PlayerSpriteOverrider : NetworkBehaviour
     {
         if(_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
         {
-            PlayerStats.Instance.OnArmorEquipped += OnArmorEquipped;
-            PlayerStats.Instance.OnArmorUnEquipped += OnArmorUnEquipped;
+            // PlayerStats.Instance.OnArmorEquipped += OnArmorEquipped;
+            // PlayerStats.Instance.OnArmorUnEquipped += OnArmorUnEquipped;
         }
 
         _armorEquippedId.OnValueChanged += OnArmorEquippedIdChanged;
@@ -114,26 +114,26 @@ public class PlayerSpriteOverrider : NetworkBehaviour
         }
     }
 
-    private void OnArmorEquipped(object sender, PlayerStats.ArmorChangedEventArgs e)
-    {
-        if (e.ArmorItem.ArmorType != ArmorType) return;
+    // private void OnArmorEquipped(object sender, PlayerStats.ArmorChangedEventArgs e)
+    // {
+    //     if (e.ArmorItem.ArmorType != ArmorType) return;
         
-        _armorEquippedId.Value = GameManager.Instance.GetItemIdFromItemSO(e.ArmorItem);
-    }
+    //     _armorEquippedId.Value = GameManager.Instance.GetItemIdFromItemSO(e.ArmorItem);
+    // }
 
-    private void OnArmorUnEquipped(object sender, PlayerStats.ArmorChangedEventArgs e)
-    {
-        if (e.ArmorItem.ArmorType != ArmorType) return;
+    // private void OnArmorUnEquipped(object sender, PlayerStats.ArmorChangedEventArgs e)
+    // {
+    //     if (e.ArmorItem.ArmorType != ArmorType) return;
     
-        _armorEquippedId.Value = -1;
-    }
+    //     _armorEquippedId.Value = -1;
+    // }
 
     public override void OnDestroy()
     {
         if (_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
         {
-            PlayerStats.Instance.OnArmorEquipped -= OnArmorEquipped;
-            PlayerStats.Instance.OnArmorUnEquipped -= OnArmorUnEquipped;
+            // PlayerStats.Instance.OnArmorEquipped -= OnArmorEquipped;
+            // PlayerStats.Instance.OnArmorUnEquipped -= OnArmorUnEquipped;
         }
 
         _armorEquippedId.OnValueChanged -= OnArmorEquippedIdChanged;

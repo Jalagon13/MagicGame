@@ -29,7 +29,7 @@ public class DoorObject : WorldObject
 		if(other.gameObject.layer == 8 && !_isOpen)
 		{
 			OpenDoor();
-			ObjectManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value, true);
+			ObjectManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value, true);
 		}
 	}
 
@@ -38,7 +38,7 @@ public class DoorObject : WorldObject
 		if (other.gameObject.layer == 8 && _isOpen)
 		{
 			CloseDoor();
-			ObjectManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value, false);
+			ObjectManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value, false);
 		}
 	}
 
@@ -51,7 +51,7 @@ public class DoorObject : WorldObject
 		{
 			_isOpen = !_isOpen;
 		
-			ObjectManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value, _isOpen);
+			ObjectManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value, _isOpen);
 			HandlePathfinding();
 		}
 	}
@@ -133,17 +133,17 @@ public class DoorObject : WorldObject
 	{
 		if (_isOpen)
 		{
-			Pathfinding.Instance.RemovePfWallTileServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value);
+			Pathfinding.Instance.RemovePfWallTileServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
 		}
 		else
 		{
-			Pathfinding.Instance.AddPfWallTileServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value);
+			Pathfinding.Instance.AddPfWallTileServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
 		}
 	}
 	
 	private void OnDestroy()
 	{
-		Pathfinding.Instance.RemovePfWallTileServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value);
+		Pathfinding.Instance.RemovePfWallTileServerRpc(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
 	
 		GameInput.Instance.OnSecondaryActionStarted -= GameInput_OnSecondaryActionStarted;
 	}

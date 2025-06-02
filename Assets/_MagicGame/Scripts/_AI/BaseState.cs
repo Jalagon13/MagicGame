@@ -5,17 +5,63 @@ using UnityEngine;
 
 public abstract class BaseState<EState> where EState : Enum
 {
+    private BaseState<EState> _currentSubState;
+    private BaseState<EState> _currentSuperState;
+    
+    private bool _isRootState = false;
+    protected bool IsRootState { set { _isRootState = value; } }
+
+    protected StateMachine<EState> Context { get; private set; }
+    public EState StateKey { get; private set;}
+    
     public BaseState(EState key, StateMachine<EState> context)
     {
         StateKey = key;
         Context = context;
     }
-	
-    protected StateMachine<EState> Context { get; private set; }
-    public EState StateKey { get; private set;}
 
     public abstract void EnterState();
     public abstract void ExitState();
-    public abstract void FixedUpdate();
-    public abstract EState GetNextState();
+    public abstract void UpdateState();
+    public abstract void CheckSwitchStates();
+    public abstract void InitializeSubState();
+
+    protected void SwitchState(EState state)
+    {
+        var newState = Context.GetState(state);
+        
+        if(newState == this) return;
+        
+        Debug.Log($"Switching from {StateKey} to {newState.StateKey}");
+    
+        ExitState();
+        newState.EnterState();
+
+        if (_isRootState)
+        {
+            Context.TransitionToState(newState.StateKey);
+        }
+        else
+        {
+            _currentSuperState?.SetSubState(newState);
+        }
+    }
+
+    public void UpdateAllStates()
+    {
+        UpdateState();
+        CheckSwitchStates();
+        _currentSubState?.UpdateAllStates();
+    }
+    
+    protected void SetSuperState(BaseState<EState> state)
+    {
+        _currentSuperState = state;
+    }
+    
+    protected void SetSubState(BaseState<EState> state)
+    {
+        _currentSubState = state;
+        state.SetSuperState(this);
+    }
 }

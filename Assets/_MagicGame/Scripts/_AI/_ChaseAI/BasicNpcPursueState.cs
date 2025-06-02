@@ -22,7 +22,7 @@ public class BasicNpcPursueState : BaseState<BasicNpcStateMachine.BasicNpcState>
         
     }
 
-    public override void FixedUpdate()
+    public override void UpdateState()
     {
         // Strafe while chasing
         if (_ctx.IsStrafing)

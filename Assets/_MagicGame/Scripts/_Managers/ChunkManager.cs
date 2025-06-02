@@ -77,7 +77,7 @@ public class ChunkManager : NetworkBehaviour
 	
 		foreach (Vector2Int chunkPos in GetChunkPositions())
 		{
-			_chunkNetworkManager.RequestChunkDataServerRpc(Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value, chunkPos);
+			_chunkNetworkManager.RequestChunkDataServerRpc(Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentBiome.Value, chunkPos);
 			yield return new WaitForSeconds(TimeBetweenChunkLoads);
 		}
 	}
@@ -95,13 +95,13 @@ public class ChunkManager : NetworkBehaviour
 		{
 			Lightmap.Instance.UpdateLightMap();
 			WorldManager.Instance.ExecuteOnBiomeTransitionEnd();
-			Debug.Log($"ChunkManager: OnBiomeDataLoaded for {Player.LocalClientInstance.CurrentPlayerBiome.Value}");
+			Debug.Log($"ChunkManager: OnBiomeDataLoaded for {Player.LocalClientInstance.CurrentBiome.Value}");
 		}
 	}
 
 	public void UnloadAllPlayerChunks()
 	{
-		foreach (var item in GetChunksFromBiome(Player.LocalClientInstance.CurrentPlayerBiome.Value))
+		foreach (var item in GetChunksFromBiome(Player.LocalClientInstance.CurrentBiome.Value))
 		{
 			OnUnloadChunk?.Invoke(this, new ChunkEventArgs
 			{
@@ -187,7 +187,7 @@ public class ChunkManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void TryToRemoveObjectClientRpc(Vector2Int position, BiomeType biomeToRemoveObjData)
 	{
-		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != biomeToRemoveObjData) return;
+		if(Player.LocalClientInstance.CurrentBiome.Value != biomeToRemoveObjData) return;
 		
 		if(ObjectManager.Instance.TryToFindWorldObject(position, out WorldObject wo))
 		{

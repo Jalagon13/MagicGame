@@ -136,7 +136,7 @@ public class TileManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	public void HandleTileVisualClientRpc(Vector3Int pos, int syncTileId, TileType syncTileType, BiomeType biome)
 	{
-	    if (Player.LocalClientInstance.CurrentPlayerBiome.Value != biome) return;
+	    if (Player.LocalClientInstance.CurrentBiome.Value != biome) return;
 
 	    TileSO tileToPlace = syncTileId >= 0 ? GameManager.Instance.GetTileSOFromID(syncTileId) : null;
 	    RenderTile(pos, tileToPlace, syncTileType);

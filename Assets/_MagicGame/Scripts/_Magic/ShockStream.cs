@@ -56,11 +56,11 @@ public class ShockStream : Spell
 
         if (IsOwner && IsStarted.Value)
         {
-            if(Player.LocalClientInstance.PlayerStats.CurrentMana < SpellData.Value.ManaCost)
-            {
-                OnSpellEnd();
-                return;
-            }
+            // if(Player.LocalClientInstance.PlayerStats.CurrentMana < SpellData.Value.ManaCost)
+            // {
+            //     OnSpellEnd();
+            //     return;
+            // }
         
             Vector2 wandPos = Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position;
             transform.position = wandPos;
@@ -112,8 +112,8 @@ public class ShockStream : Spell
                 {
                     _damageTimer.RemainingSeconds = TimeBetweenDamage;
 
-                    PlayerStats.Instance.SubtractMana(SpellData.Value.ManaCost);
-                    closestTarget.TakeDamageRpc(SpellData.Value.Damage, NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, SpellData.Value.Knockback);
+                    // PlayerStats.Instance.SubtractMana(SpellData.Value.ManaCost);
+                    // closestTarget.TakeDamageRpc(SpellData.Value.Damage, NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, SpellData.Value.Knockback);
                     SoundManager.Instance.PlayOneShot(DamageSound, transform.position);
                 }
 

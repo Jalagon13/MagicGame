@@ -271,7 +271,7 @@ public class GameManager : NetworkBehaviour
 
 	public void PlayDamageNumbers(int amount, Vector2 position, BiomeType biome, Color color)
 	{
-		if (biome == Player.LocalClientInstance.CurrentPlayerBiome.Value)
+		if (biome == Player.LocalClientInstance.CurrentBiome.Value)
 		{
 			MMF_Player damageNumberFeedbacks = transform.GetChild(0).GetComponent<MMF_Player>();
 			MMF_FloatingText floatingText = damageNumberFeedbacks.GetFeedbackOfType<MMF_FloatingText>();

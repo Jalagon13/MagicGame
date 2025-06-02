@@ -24,7 +24,7 @@ public class TileItemSO : ItemSO
 			case TileType.Floor:
 				if(!floorTmHasTile && !wallTmHasTile)
 				{
-					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.LocalClientInstance.CurrentPlayerBiome.Value, TileToPlace.TileType);
+					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.LocalClientInstance.CurrentBiome.Value, TileToPlace.TileType);
 					InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 					SoundManager.Instance.PlayOneShot(TileToPlace.MiningSound, pos);
 				}
@@ -32,8 +32,8 @@ public class TileItemSO : ItemSO
 			case TileType.Wall:
 				if (!wallTmHasTile && IsClear(new(pos.x, pos.y)))
 				{
-					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.LocalClientInstance.CurrentPlayerBiome.Value, TileToPlace.TileType);
-					Pathfinding.Instance.AddPfWallTileServerRpc((Vector2Int)pos, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.LocalClientInstance.CurrentBiome.Value, TileToPlace.TileType);
+					Pathfinding.Instance.AddPfWallTileServerRpc((Vector2Int)pos, Player.LocalClientInstance.CurrentBiome.Value);
 					InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 					SoundManager.Instance.PlayOneShot(TileToPlace.MiningSound, pos);
 				}
@@ -72,8 +72,8 @@ public class TileItemSO : ItemSO
 
 		foreach(Collider2D col in colliders)
 		{
-			if(col.TryGetComponent(out WorldObject clickable) || col.TryGetComponent(out Npc npc)) 
-				return false;
+			// if(col.TryGetComponent(out WorldObject clickable) || col.TryGetComponent(out Npc npc)) 
+			// 	return false;
 		}
 
 		return true;

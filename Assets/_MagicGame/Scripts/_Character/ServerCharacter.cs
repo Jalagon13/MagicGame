@@ -11,7 +11,7 @@ public enum CharacterStateMachine
     Player,
 }
 
-[RequireComponent(typeof(NetworkHealthState), typeof(NetworkLifeState), typeof(NpcNetworkVisibility))]
+[RequireComponent(typeof(NetworkHealthState), typeof(NetworkLifeState))]
 public class ServerCharacter : NetworkBehaviour
 {
     [SerializeField]
@@ -57,7 +57,11 @@ public class ServerCharacter : NetworkBehaviour
     private ServerAnimationHandler _serverAnimationHandler;
     public ServerAnimationHandler AnimationHandler => _serverAnimationHandler;
     
-    public NetworkVariable<MovementState> MovementState = new NetworkVariable<MovementState>();
+    [HideInInspector]
+    public NetworkVariable<MovementState> MovementState = new NetworkVariable<MovementState>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    
+    [HideInInspector]
+    public NetworkVariable<CardinalDirection> CardinalDirection = new NetworkVariable<CardinalDirection>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private void Awake()
     {
@@ -65,7 +69,12 @@ public class ServerCharacter : NetworkBehaviour
 
         NetHealthState = GetComponent<NetworkHealthState>();
         NetLifeState = GetComponent<NetworkLifeState>();
-        NpcVisibility = GetComponent<NpcNetworkVisibility>();
+        
+        if(_characterData.IsNpc)
+        {
+            NpcVisibility = GetComponent<NpcNetworkVisibility>();
+            if(NpcVisibility == null) Debug.LogWarning($"ServerCharacter {gameObject.name} missing NpcVisibility.");
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -142,6 +151,7 @@ public class ServerCharacter : NetworkBehaviour
             if (_characterData.IsNpc)
             {
                 // Npc Death functionality here
+                NpcVisibility.KillNpcServerRpc();
             }
             else
             {

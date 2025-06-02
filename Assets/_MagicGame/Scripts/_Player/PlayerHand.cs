@@ -67,7 +67,7 @@ public class PlayerHand : NetworkBehaviour
 
     private void Update()
 	{
-		if (_thisPlayer.HealthState.IsDead) return;
+		// if (_thisPlayer.HealthState.IsDead) return;
 
 		if (IsOwner)
 		{
@@ -282,10 +282,10 @@ public class PlayerHand : NetworkBehaviour
 		
 		SetPivotPosition(ArmCardinalDirection);
 
-		if (_thisPlayer.GetComponent<PlayerStateMachine>().FacingDirection != ArmCardinalDirection)
-		{
-			OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
-		}
+		// if (_thisPlayer.GetComponent<PlayerStateMachine>().FacingDirection != ArmCardinalDirection)
+		// {
+		// 	OnCastingArmDirectionChanged?.Invoke(this, new CardinalDirectionEventArgs { Direction = ArmCardinalDirection });
+		// }
 	}
 
 	public Vector3 GetDirectionNormalized()

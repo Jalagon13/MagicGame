@@ -73,7 +73,7 @@ public class TeleportBolt : Spell
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
     private void SpawnTeleportParticlesClientRpc(Vector2 particleSpawnPoint, Vector2 teleportPoint)
     {
-        if (Player.LocalClientInstance.CurrentPlayerBiome.Value != SpellData.Value.SpawnBiome) return;
+        if (Player.LocalClientInstance.CurrentBiome.Value != SpellData.Value.SpawnBiome) return;
 
         SoundManager.Instance.PlayOneShot(TeleportSound, transform.position);
         _vfx.transform.position = particleSpawnPoint;

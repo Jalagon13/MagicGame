@@ -38,9 +38,9 @@ public class ClientCharacter : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    public void ClientPlayActionRpc(ActionSO action)
+    public void ClientPlayActionRpc(/* ActionSO action */)
     {
         // TODO: Data unpacking
-        _clientActionPlayer.PlayAction(action);
+        // _clientActionPlayer.PlayAction(action);
     }
 }

@@ -48,7 +48,7 @@ public class Lightmap : MonoBehaviour
 		
 		if(_enableDayNightCycle)
 		{
-			_lightMapRawImage.color = Player.LocalClientInstance.CurrentPlayerBiome.Value == BiomeType.Forest ? SetColorBasedOnBrightness(dayLightColor) : Color.white;
+			_lightMapRawImage.color = Player.LocalClientInstance.CurrentBiome.Value == BiomeType.Forest ? SetColorBasedOnBrightness(dayLightColor) : Color.white;
 		}
 	}
 	
@@ -203,7 +203,7 @@ public class Lightmap : MonoBehaviour
 	private Vector3 GetBaseLight()
 	{
 		// For now, hard code base environment for forest to be slightly dark and cave to be completely dark
-		switch(Player.LocalClientInstance.CurrentPlayerBiome.Value)
+		switch(Player.LocalClientInstance.CurrentBiome.Value)
 		{
 			case BiomeType.Forest:
 				return new Vector3(0.01f, 0.01f, 0.01f);

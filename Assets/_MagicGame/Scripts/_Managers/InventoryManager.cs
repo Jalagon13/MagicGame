@@ -91,7 +91,7 @@ public class InventoryManager : MonoBehaviour
 
 		GameManager.Instance.SpawnItem(_mouseItemModel.MouseInventoryItem, 
         Player.LocalClientInstance.transform.position, 
-        Player.LocalClientInstance.CurrentPlayerBiome.Value, 
+        Player.LocalClientInstance.CurrentBiome.Value, 
         ActionManager.PlayerToMouseDirNormalized);
         
 		_mouseItemModel.MouseInventoryItem = new();

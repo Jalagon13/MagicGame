@@ -30,14 +30,14 @@ public class FlameBreath : Spell
     {
         _sustainedFireSoundEventInstance = SoundManager.Instance.CreateInstance(SustainedFireSound);
         _sustainedFireSoundEventInstance.start();
-        Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(SpellData.Value.HasteMultiplier);
+        // Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(SpellData.Value.HasteMultiplier);
     }
 
     protected override void OnSpellEnd()
     {
         _sustainedFireSoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         StopAllParticleSystems(Visualization.transform);
-        Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(1);
+        // Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(1);
     }
 
     protected override void OnSpellCanceled()
@@ -127,11 +127,11 @@ public class FlameBreath : Spell
     {
         foreach (var target in _queuedTargetsToDamage)
         {
-            target.TakeDamageRpc(
-                SpellData.Value.Damage,
-                NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position,
-                SpellData.Value.Knockback
-            );
+            // target.TakeDamageRpc(
+            //     SpellData.Value.Damage,
+            //     NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position,
+            //     SpellData.Value.Knockback
+            // );
 
             yield return new WaitForSeconds(TimeBetweenDamage);
         }
@@ -158,7 +158,7 @@ public class FlameBreath : Spell
                 foliage.DestroyFoliage();
             }
             
-            TileManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+            TileManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.LocalClientInstance.CurrentBiome.Value);
 
             // Final null check before calling method
             

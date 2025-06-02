@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
@@ -6,14 +7,12 @@ using UnityEngine;
 public class ServerAnimationHandler : NetworkBehaviour
 {
     [SerializeField] 
-    private AnimationConfigSO _animConfig;
-    public AnimationConfigSO AnimationConfig => _animConfig;
-
-    [SerializeField] 
-    private NetworkAnimator _netcodeAnimator;
+    private ServerCharacter _serverCharacter;
 
     [SerializeField]
-    NetworkLifeState _networkLifeState;
+    private NetworkLifeState _networkLifeState;
+    [SerializeField] 
+    private List<ServerSpriteAnimHandler> _spriteAnimHandlers = new List<ServerSpriteAnimHandler>();
 
     public override void OnNetworkSpawn()
     {
@@ -31,9 +30,16 @@ public class ServerAnimationHandler : NetworkBehaviour
         }
     }
     
-    public void PlayAnimation(AnimationClip clip)
+    public void PlayCurrentMoveState()
     {
-        AnimStateManager.ChangeAnimationState(_netcodeAnimator.Animator, clip);
+        MovementState moveState = _serverCharacter.MovementState.Value;
+        CardinalDirection direction = _serverCharacter.CardinalDirection.Value;
+        Debug.Log($"Playing {moveState} {direction}");
+
+        foreach (ServerSpriteAnimHandler handler in _spriteAnimHandlers)
+        {
+            handler.PlayAnimation(moveState, direction);
+        }
     }
 
     private void OnLifeStateChanged(LifeState previousValue, LifeState newValue)

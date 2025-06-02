@@ -35,7 +35,7 @@ public class BasicNpcIdleState : BaseState<BasicNpcStateMachine.BasicNpcState>
         _idleTimer.OnTimerEnd -= IdleDone;
     }
 
-    public override void FixedUpdate()
+    public override void UpdateState()
     {
         _idleTimer.Tick(Time.fixedDeltaTime);
     }

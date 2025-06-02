@@ -8,12 +8,12 @@ public abstract class ActionSO : ScriptableObject
     
     public abstract bool OnUpdateServer(ServerCharacter serverCharacter);
     
-    public virtual void End(ServerCharacter serverCharacter)
+    public virtual void EndServer(ServerCharacter serverCharacter)
     {
-        Cancel(serverCharacter);
+        CancelServer(serverCharacter);
     }
     
-    public virtual void Cancel(ServerCharacter serverCharacter) { }
+    public virtual void CancelServer(ServerCharacter serverCharacter) { }
     
     public virtual void OnStartClient(ClientCharacter clientCharacter) { }
     public virtual bool OnUpdateClient(ClientCharacter clientCharacter) 

@@ -58,7 +58,7 @@ public class Pathfinding : NetworkBehaviour
 
 	private void CacheCurrentPlayerBiome(object sender, EventArgs e)
 	{
-		_currentPlayerBiome = Player.LocalClientInstance.CurrentPlayerBiome.Value;
+		_currentPlayerBiome = Player.LocalClientInstance.CurrentBiome.Value;
 	}
 
 	public void OnClientConnected(ulong clientId)
@@ -185,7 +185,7 @@ public class Pathfinding : NetworkBehaviour
 
 	private void RequestUnlockPfChunk(object sender, ChunkManager.ChunkEventArgs e)
 	{
-		RequestUnloadChunkServerRpc(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+		RequestUnloadChunkServerRpc(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentBiome.Value);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
@@ -240,7 +240,7 @@ public class Pathfinding : NetworkBehaviour
 			if(kvp.Key == clientId) continue; // Only process other players need the chunk in use
 
 			// Loop through only players in the same environment being tested
-			if(NetworkManager.ConnectedClients[kvp.Key].PlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value != biome) continue;
+			if(NetworkManager.ConnectedClients[kvp.Key].PlayerObject.GetComponent<Player>().CurrentBiome.Value != biome) continue;
 		
 			var chunksLoaded = kvp.Value;
 			

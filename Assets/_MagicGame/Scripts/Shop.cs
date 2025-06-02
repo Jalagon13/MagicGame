@@ -27,12 +27,12 @@ public class Shop : NetworkBehaviour
         if(PlayersUsingShop.Count > 0)
         {
             Debug.Log($"AI not moving");
-            _chaseAI.CanMove = false;
+            // _chaseAI.CanMove = false;
         }
         else
         {
             Debug.Log($"AI can move again");
-            _chaseAI.CanMove = true;
+            // _chaseAI.CanMove = true;
         }
     }
 
@@ -49,11 +49,11 @@ public class Shop : NetworkBehaviour
         if (closestPlayer != null)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, closestPlayer.transform.position);
-            _chaseAI.CanMove = distanceToPlayer <= PlayerDetectionRange;
+            // _chaseAI.CanMove = distanceToPlayer <= PlayerDetectionRange;
         }
         else
         {
-            _chaseAI.CanMove = false;
+            // _chaseAI.CanMove = false;
         }
     }
 

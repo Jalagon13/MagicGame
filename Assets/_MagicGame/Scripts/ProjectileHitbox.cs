@@ -26,7 +26,7 @@ public class ProjectileHitbox : MonoBehaviour
         {
             Vector2Int tilePos = new Vector2Int((int)collision.gameObject.transform.position.x, (int)collision.gameObject.transform.position.y);
             int tileId = GameManager.Instance.GetTileIDFromTilemapTilePosition(TileManager.Instance.FoliageTm, (Vector3Int)tilePos);
-            TileManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.LocalClientInstance.CurrentPlayerBiome.Value);
+            TileManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.LocalClientInstance.CurrentBiome.Value);
             collision.gameObject.GetComponent<FoliageCollider>().DestroyFoliage();
         }
     }
@@ -43,11 +43,11 @@ public class ProjectileHitbox : MonoBehaviour
             {
                 if (!_damagedNetworkHealthStates.Contains(npcHealth))
                 {
-                    npcHealth.TakeDamageRpc(
-                        Spell.SpellData.Value.Damage,
-                        Spell.NetworkManager.ConnectedClients[Spell.SpellData.Value.OwnerPlayerId].PlayerObject.transform.position,
-                        Spell.SpellData.Value.Knockback
-                    );
+                    // npcHealth.TakeDamageRpc(
+                    //     Spell.SpellData.Value.Damage,
+                    //     Spell.NetworkManager.ConnectedClients[Spell.SpellData.Value.OwnerPlayerId].PlayerObject.transform.position,
+                    //     Spell.SpellData.Value.Knockback
+                    // );
                     _damagedNetworkHealthStates.Add(npcHealth);
 
                     if (_damagedNetworkHealthStates.Count >= PierceCount)

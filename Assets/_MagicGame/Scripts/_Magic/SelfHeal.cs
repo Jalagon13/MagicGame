@@ -33,6 +33,6 @@ public class SelfHeal : Spell
     [Rpc(SendTo.SpecifiedInParams)]
     private void SelfCastStartClientRpc(RpcParams rpcParams = default)
     {
-        Player.LocalClientInstance.HealthState.HealRpc(HealAmount);
+        // Player.LocalClientInstance.HealthState.HealRpc(HealAmount);
     }
 }

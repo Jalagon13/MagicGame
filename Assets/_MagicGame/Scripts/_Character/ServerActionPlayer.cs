@@ -30,7 +30,7 @@ public class ServerActionPlayer
 
             if (!UpdateAction(runningActionSO, timer))
             {
-                runningActionSO.End(_serverCharacter);
+                runningActionSO.EndServer(_serverCharacter);
                 _actionList.RemoveAt(i);
             }
         }

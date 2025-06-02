@@ -15,7 +15,7 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 		_ctx = Context as PlayerStateMachine;
 	}
 
-	public override void EnterState()
+    public override void EnterState()
 	{
 		Debug.Log($"Player move state");
 		PlayFootStepSound();
@@ -23,7 +23,7 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 		_playWalkSoundTimer = new(_walkSoundCooldown);
 		_playWalkSoundTimer.OnTimerEnd += PlayFootStepSound;
 		
-		_ctx.IsMoving = true;
+		// _ctx.IsMoving = true;
 	}
 
 	public override void ExitState()
@@ -33,15 +33,20 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 		_playWalkSoundTimer = null;
 	}
 
-	public override PlayerStateMachine.PlayerState GetNextState()
+	public override void CheckSwitchStates()
 	{
-		if(_ctx.ServerCharacter.MovementState.Value == MovementState.Idle)
-			return PlayerStateMachine.PlayerState.Idle;
-	
-		return StateKey;
+		if (_ctx.ServerCharacter.MovementState.Value == MovementState.Idle)
+		{
+		    SwitchState(PlayerStateMachine.PlayerState.Idle);
+		}
 	}
-	
-	public override void FixedUpdate()
+
+	public override void InitializeSubState()
+	{
+		
+	}
+
+	public override void UpdateState()
 	{
 		_playWalkSoundTimer.Tick(Time.deltaTime);
 	}
@@ -55,9 +60,9 @@ public class PlayerMoveState : BaseState<PlayerStateMachine.PlayerState>
 	
 	private void PlayFootStepSound()
 	{
-		if(!_ctx.IsDead)
-		{
-			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerFootsteps, Player.LocalClientInstance.transform.position);
-		}
+		// if(!_ctx.IsDead)
+		// {
+		// 	SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerFootsteps, Player.LocalClientInstance.transform.position);
+		// }
 	}
 }

@@ -10,7 +10,7 @@ public class ChestObject : WorldObject
 	{
 		if(Player.LocalClientInstance.IsHost)
 		{
-			ChestManager.Instance.TryToCreateEmptyChestData(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value);
+			ChestManager.Instance.TryToCreateEmptyChestData(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value);
 		}
 		
 		GameInput.Instance.OnSecondaryActionStarted += GameInput_OnSecondaryActionStarted;
@@ -22,7 +22,7 @@ public class ChestObject : WorldObject
 		
 		if(WorldInput.IsMouseOverIndputDetector() && PlayerInRangeOfPosition(centerOfChestPosition))
 		{
-			ChestManager.Instance.RequestChestData(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentPlayerBiome.Value, gameObject);
+			ChestManager.Instance.RequestChestData(Vector2Int.FloorToInt(transform.position), Player.LocalClientInstance.CurrentBiome.Value, gameObject);
 		}
 	}
 	

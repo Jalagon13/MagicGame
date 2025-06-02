@@ -86,7 +86,7 @@ public class NpcManager : NetworkBehaviour
 		_npcSlots += npcToSpawn.SlotAmount;
 		Debug.Log($"Increasing NPC Slots by {npcToSpawn.SlotAmount}, current amount: {_npcSlots}");
 		int npcId = GameManager.Instance.GetNpcIdFromNpcSO(npcToSpawn);
-		SpawnNpcServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, npcId, NetworkManager.LocalClientId, spawnPosition, npcToSpawn.SlotAmount);
+		SpawnNpcServerRpc(Player.LocalClientInstance.CurrentBiome.Value, npcId, NetworkManager.LocalClientId, spawnPosition, npcToSpawn.SlotAmount);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
@@ -110,25 +110,25 @@ public class NpcManager : NetworkBehaviour
 	{
 		// Either kill or despawn npc depending on the conditional
 		npcToRemoveNetworkObjectReference.TryGet(out NetworkObject npcNetworkObject);
-		Npc npc = npcNetworkObject.GetComponent<Npc>();
+		// Npc npc = npcNetworkObject.GetComponent<Npc>();
 
 		if (killNpc)
 		{
 			// NTFS: Handle other death stuff here
-			npc.DropLoot();
+			// npc.DropLoot();
 		}
 		
-		npc.DestroySelf();
+		// npc.DestroySelf();
 		
-		DecrementNpcSlotsClientRpc(npc.NpcSO.SlotAmount, RpcTarget.Single(spawningClientId, RpcTargetUse.Persistent));
+		// DecrementNpcSlotsClientRpc(npc.NpcSO.SlotAmount, RpcTarget.Single(spawningClientId, RpcTargetUse.Persistent));
 	}
 
-	[Rpc(SendTo.SpecifiedInParams, RequireOwnership = false)]
-    private void DecrementNpcSlotsClientRpc(float slotAmount, RpcParams rpcParams = default)
-    {
-        _npcSlots -= slotAmount;
-		Debug.Log($"Decreasing NPC Slots by {slotAmount}, current amount: {_npcSlots}");
-    }
+	// [Rpc(SendTo.SpecifiedInParams, RequireOwnership = false)]
+    // private void DecrementNpcSlotsClientRpc(float slotAmount, RpcParams rpcParams = default)
+    // {
+    //     _npcSlots -= slotAmount;
+	// 	Debug.Log($"Decreasing NPC Slots by {slotAmount}, current amount: {_npcSlots}");
+    // }
 
     private bool SpawnSpotIsValid(Vector2 potentialSpawnPoint)
 	{
@@ -151,8 +151,8 @@ public class NpcManager : NetworkBehaviour
 
 		foreach (Collider2D col in colliders)
 		{
-			if (col.TryGetComponent(out WorldObject clickable) || col.TryGetComponent(out Npc npc))
-				return false;
+			// if (col.TryGetComponent(out WorldObject clickable) || col.TryGetComponent(out Npc npc))
+			// 	return false;
 		}
 
 		return true;

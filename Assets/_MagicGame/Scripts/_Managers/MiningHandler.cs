@@ -87,7 +87,7 @@ public class MiningHandler : MonoBehaviour
     private bool CanMine()
     {
         return Player.LocalClientInstance != null &&
-               !Player.LocalClientInstance.HealthState.IsDead &&
+            //    !Player.LocalClientInstance.HealthState.IsDead &&
                !Pointer.IsOverUI() &&
                GameInput.Instance.GetInputsEnabled() &&
                InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
@@ -211,7 +211,7 @@ public class MiningHandler : MonoBehaviour
     {
         if (IsMining)
         {
-            OnMiningStarted?.Invoke(this, new MiningStartedEventArgs(_cachedTotalMiningTime, (Vector3Int)_currentBreakTargetPosition, Player.LocalClientInstance.CurrentPlayerBiome.Value, _destructableFound));
+            OnMiningStarted?.Invoke(this, new MiningStartedEventArgs(_cachedTotalMiningTime, (Vector3Int)_currentBreakTargetPosition, Player.LocalClientInstance.CurrentBiome.Value, _destructableFound));
         }
         else
         {
@@ -236,10 +236,10 @@ public class MiningHandler : MonoBehaviour
         switch (_destructableFound)
         {
             case DestructableType.WorldObject:
-                ObjectManager.Instance.DestroyObjectServerRpc(Player.LocalClientInstance.CurrentPlayerBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetIDFromWorldObject(_worldObjectSelected));
+                ObjectManager.Instance.DestroyObjectServerRpc(Player.LocalClientInstance.CurrentBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetIDFromWorldObject(_worldObjectSelected));
                 break;
             case DestructableType.Tile:
-                TileManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.LocalClientInstance.CurrentPlayerBiome.Value);
+                TileManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.LocalClientInstance.CurrentBiome.Value);
                 break;
         }
         

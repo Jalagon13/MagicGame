@@ -44,7 +44,7 @@ public class NpcItemSO : ItemSO
         Stack<Vector3Int> tilesToCheck = new();
         
         // Check if the player is in the correct biome
-        if(Player.LocalClientInstance.CurrentPlayerBiome.Value != BiomeType.Forest)
+        if(Player.LocalClientInstance.CurrentBiome.Value != BiomeType.Forest)
         {
             Debug.LogWarning("Npc can only be spawned in the forest biome");
             return false;
@@ -250,8 +250,8 @@ public class NpcItemSO : ItemSO
 
         foreach (Collider2D col in colliders)
         {
-            if (col.TryGetComponent(out WorldObject clickable) || col.TryGetComponent(out Npc npc))
-                return false;
+            // if (col.TryGetComponent(out WorldObject clickable) || col.TryGetComponent(out Npc npc))
+            //     return false;
         }
 
         return true;

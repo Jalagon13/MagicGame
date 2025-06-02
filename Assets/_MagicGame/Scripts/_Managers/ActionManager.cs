@@ -40,7 +40,7 @@ public class ActionManager : MonoBehaviour
 
 	private void HandleItemActionExecutions()
 	{
-		if(Player.LocalClientInstance.HealthState.IsDead || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled()) return;
+		if(Player.LocalClientInstance.ServerCharacter.LifeState == LifeState.Dead || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled()) return;
 
 		if (GameInput.Instance.GetPrimaryHeldDown() && InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem))
 		{

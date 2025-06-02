@@ -22,19 +22,6 @@ public class PlayerArmSprite : NetworkBehaviour
 		_mainHand.OnCastingArmDirectionChanged += MainHandOnCastingArmDirectionChanged;
 	}
 
-	public override void OnNetworkSpawn()
-	{
-		if(_thisPlayer.IsHoldingAWand())
-		{
-			
-		}
-		else
-		{
-			
-		}
-	
-		base.OnNetworkSpawn();
-	}
 	
 	private void MainHandOnCastingArmDirectionChanged(object sender, PlayerHand.CardinalDirectionEventArgs e)
 	{

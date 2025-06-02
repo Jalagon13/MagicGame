@@ -13,7 +13,6 @@ public class NpcNetworkVisibility : NetworkBehaviour
 	private ulong _spawningClientId;
 	private Timer _despawnTimer;
 	private bool _npcIsBeingRemoved;
-	private Npc _npc;
 	private int _npcId;
 	public BiomeType NpcBiomeType { get; private set; }
 	private GameObject _npcGameObject;
@@ -24,8 +23,6 @@ public class NpcNetworkVisibility : NetworkBehaviour
 		if (IsServer)
 		{
 			_npcGameObject = transform.GetChild(0).gameObject;
-			_npc = GetComponent<Npc>();
-			_npc.OnServerNpcKilled += Npc_OnNpcKilled;
 		
 			_despawnTimer = new Timer(DESPAWN_TIMER_DURATION);
 			_despawnTimer.OnTimerEnd += HandleDespawnTimerEnd;
@@ -45,10 +42,6 @@ public class NpcNetworkVisibility : NetworkBehaviour
 	    return NpcBiomeType == biome;
 	}
 
-	private void Npc_OnNpcKilled(object sender, EventArgs e)
-	{
-		KillNpcServerRpc();
-	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void KillNpcServerRpc()
@@ -174,7 +167,7 @@ public class NpcNetworkVisibility : NetworkBehaviour
 
 	private bool CheckIfInSameEnvironment(ulong clientId)
 	{
-		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value == NpcBiomeType;
+		return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value == NpcBiomeType;
 	}
 
 	private void UpdateDespawnTimer()
@@ -262,7 +255,6 @@ public class NpcNetworkVisibility : NetworkBehaviour
 		{
 			NetworkObject.CheckObjectVisibility -= CheckIfInSameEnvironment;
 			NetworkManager.NetworkTickSystem.Tick -= NpcNetworkTick;
-			_npc.OnServerNpcKilled -= Npc_OnNpcKilled;
 		}
 
 		// Debug.Log($"OnNetworkDespawn callback on {gameObject.name} for client: {NetworkManager.LocalClientId}");

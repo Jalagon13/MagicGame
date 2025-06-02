@@ -20,33 +20,17 @@ public class HealthBarUI : MonoBehaviour
 	
 	private void Start()
 	{
-		NetworkHealthState.OnHitPointsDamaged += OnHitPointsDamaged;
-		NetworkHealthState.OnHitPointsReplenished += OnHitPointsReplenished;
-		NetworkHealthState.OnHitPointsDepleted += OnHitPointsDepleted;
+		NetworkHealthState.HitPointsDepleted += UpdateHealthBar;
+		NetworkHealthState.HitPointsReplenished += UpdateHealthBar;
 
 		Hide();
 	}
 
-    private void OnHitPointsDamaged(object sender, NetworkHealthState.HitPointsDamagedEventArgs e)
+    private void UpdateHealthBar(object sender, EventArgs e)
     {
-		UpdateHealthBarVisibility();
-	}
+		_progressBar.UpdateBar(NetworkHealthState.HitPoints.Value, 0, Player.LocalClientInstance.ServerCharacter.Data.BaseHP);
 
-    private void OnHitPointsReplenished(object sender, EventArgs e)
-    {
-		UpdateHealthBarVisibility();
-	}
-
-    private void OnHitPointsDepleted(object sender, EventArgs e)
-    {
-		UpdateHealthBarVisibility();
-	}
-    
-    private void UpdateHealthBarVisibility()
-    {
-		_progressBar.UpdateBar(NetworkHealthState.HitPoints.Value, 0, NetworkHealthState.MaxHealth.Value);
-
-		if (NetworkHealthState.HitPoints.Value <= 0 || NetworkHealthState.HitPoints.Value >= NetworkHealthState.MaxHealth.Value)
+		if (NetworkHealthState.HitPoints.Value <= 0 || NetworkHealthState.HitPoints.Value >= Player.LocalClientInstance.ServerCharacter.Data.BaseHP)
 		{
 			Hide();
 		}
@@ -70,8 +54,7 @@ public class HealthBarUI : MonoBehaviour
 	
 	private void OnDestroy()
 	{
-		NetworkHealthState.OnHitPointsDamaged -= OnHitPointsDamaged;
-		NetworkHealthState.OnHitPointsReplenished -= OnHitPointsReplenished;
-		NetworkHealthState.OnHitPointsDepleted -= OnHitPointsDepleted;
+		NetworkHealthState.HitPointsDepleted -= UpdateHealthBar;
+		NetworkHealthState.HitPointsReplenished -= UpdateHealthBar;
 	}
 }

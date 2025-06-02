@@ -46,7 +46,7 @@ public class SaveSystem : MonoBehaviour
 	[Button("Save current player environment data")]
 	public async void SavePlayerBiome()
 	{
-		await SerializeDataAndWriteToFile(Player.LocalClientInstance.CurrentPlayerBiome.Value);
+		await SerializeDataAndWriteToFile(Player.LocalClientInstance.CurrentBiome.Value);
 	}
 	
 	public async Task SaveBiome(BiomeType biome)
@@ -213,11 +213,11 @@ public class SaveSystem : MonoBehaviour
 	{
 		string json = JsonUtility.ToJson(_biomeFileDataForSaving);
 		
-		Debug.Log($"<color=orange>Writing Biome Data of: </color>{Player.LocalClientInstance.CurrentPlayerBiome.Value}<color=orange> to file...</color>");
+		Debug.Log($"<color=orange>Writing Biome Data of: </color>{Player.LocalClientInstance.CurrentBiome.Value}<color=orange> to file...</color>");
 		
 		await File.WriteAllTextAsync(_path, json);
 		
-		Debug.Log($"<color=orange>Biome: </color>{Player.LocalClientInstance.CurrentPlayerBiome.Value}<color=orange> writing data to file complete!</color>");
+		Debug.Log($"<color=orange>Biome: </color>{Player.LocalClientInstance.CurrentBiome.Value}<color=orange> writing data to file complete!</color>");
 		Debug.Log($"<color=orange>=====================SAVING========================</color>");
 	}
 

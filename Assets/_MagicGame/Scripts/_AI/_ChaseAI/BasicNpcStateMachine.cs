@@ -126,7 +126,7 @@ public class BasicNpcStateMachine : StateMachine<BasicNpcStateMachine.BasicNpcSt
         {
             if (unObstructedCollider.transform.root.TryGetComponent(out Player player))
             {
-                if (player.CurrentPlayerBiome.Value == _serverCharacter.NpcVisibility.NpcBiomeType)
+                if (player.CurrentBiome.Value == _serverCharacter.NpcVisibility.NpcBiomeType)
                 {
                     float distance = Vector2.Distance(_serverCharacter.transform.position, player.transform.position);
 

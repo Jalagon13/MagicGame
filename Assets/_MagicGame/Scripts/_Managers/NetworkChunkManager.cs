@@ -20,7 +20,7 @@ public class NetworkChunkManager : NetworkBehaviour
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void SendChunkDataToClientRpc(BiomeType requestBiome, SyncChunkData syncChunkData, RpcParams rpcParams)
 	{
-		if(Player.LocalClientInstance.CurrentPlayerBiome.Value != requestBiome) return;
+		if(Player.LocalClientInstance.CurrentBiome.Value != requestBiome) return;
 	
 		ChunkGameData chunkGameData = ConvertToGameChunkData(syncChunkData);
 		ChunkManager.Instance.LoadChunk(chunkGameData);

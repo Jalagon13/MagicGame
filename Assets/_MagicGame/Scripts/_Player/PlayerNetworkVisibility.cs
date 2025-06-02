@@ -2,7 +2,7 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerNetworkComponent : NetworkBehaviour
+public class PlayerNetworkVisibility : NetworkBehaviour
 {
 	private GameObject _playerGameObject;
 	private Collider2D _playerCollider;
@@ -30,10 +30,10 @@ public class PlayerNetworkComponent : NetworkBehaviour
 		if(clientId == OwnerClientId) return true;
 		
 		var nonClientIdPlayerObject = NetworkManager.ConnectedClients[clientId].PlayerObject;
-		var nonClientIdPlayerBiome = nonClientIdPlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value;
-		var ownerClientBiome = NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().CurrentPlayerBiome.Value;
+		var nonClientIdPlayerBiome = nonClientIdPlayerObject.GetComponent<Player>().CurrentBiome.Value;
+		var ownerClientBiome = NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().CurrentBiome.Value;
 
-		if(NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().HealthState.IsDead)
+		if(NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<Player>().ServerCharacter.LifeState == LifeState.Dead)
 		{
 			return false;
 		}

@@ -26,7 +26,7 @@ public class Player : NetworkBehaviour
 	}
 	
 	public NetworkVariable<int> SelectedItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	public NetworkVariable<BiomeType> CurrentPlayerBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public NetworkVariable<BiomeType> CurrentBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	
 	[field: SerializeField] public PlayerHand PlayerHand { get; private set; }
 	[field: SerializeField] public PlayerVisuals PlayerVisuals { get; private set; }
@@ -36,31 +36,23 @@ public class Player : NetworkBehaviour
 	public bool IsPerformingSwing { get; set; }
 	
 	[SerializeField] private float _respawnTimerDuration;
-	[SerializeField] private bool _spawnWandItems;
-	[SerializeField] private List<WandInventoryItem> _startWandItems = new();
-	[SerializeField] private List<InventoryItem> _startingItems = new();
 
-	public Knockback PlayerKnockback { get; private set; }
-	public NetworkHealthState HealthState { get; private set; }
-	public PlayerStateMachine StateMachine { get; private set; }
 
-	private Timer _respawnTimer;
 	private Vector2 _spawnPoint;
 	private BiomeType _spawnBiome;
 	private Vector2Int _lastTilePosition;
 	
 	
 	private ServerCharacter _serverCharacter;
+	public ServerCharacter ServerCharacter => _serverCharacter;
+	private PlayerNetworkVisibility _playerNetworkVisibility;
+	public PlayerNetworkVisibility PlayerNetworkVisibility => _playerNetworkVisibility;
 	
 	private void Awake()
 	{
 		_serverCharacter = GetComponent<ServerCharacter>();
+		_playerNetworkVisibility = GetComponent<PlayerNetworkVisibility>();
 		HitCollider = GetComponent<Collider2D>();
-		PlayerKnockback = GetComponent<Knockback>();
-		HealthState = GetComponent<NetworkHealthState>();
-		StateMachine = GetComponent<PlayerStateMachine>();
-
-		_respawnTimer = new(_respawnTimerDuration);
 	}
 	
 	public void OnNetworkSpawnInitializations()
@@ -68,7 +60,7 @@ public class Player : NetworkBehaviour
 		gameObject.name = $"Player_{OwnerClientId}";
 		
 		LocalClientInstance = this;
-		CurrentPlayerBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
+		CurrentBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
 		_spawnBiome = BiomeType.Forest;
 		_spawnPoint = transform.position;
 
@@ -79,6 +71,7 @@ public class Player : NetworkBehaviour
 
 		// local player start up code here, maybe input
 		GameInput.Instance.OnMove += GameInput_OnPlayerMove;
+		GameInput.Instance.OnPrimaryAction += GameInput_OnPrimaryAction;
 		HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnSelectedItemUpdated;
 	}
 
@@ -87,68 +80,13 @@ public class Player : NetworkBehaviour
 		if (IsClient && !_serverCharacter.Data.IsNpc && _serverCharacter.IsOwner)
 		{
 			GameInput.Instance.OnMove -= GameInput_OnPlayerMove;
-		}
-	}
-
-	private IEnumerator Start()
-	{
-		yield return new WaitForEndOfFrame();
-	
-		if (IsOwner)
-		{
-			HealthState.OnHitPointsDamaged += OnPlayerDamaged;
-			HealthState.OnHitPointsDepleted += OnPlayerDeath;
-			HealthState.OnHitPointsReplenished += OnPlayerRecovery;
-
-			if (_spawnWandItems)
-			{
-				foreach (WandInventoryItem wandInvItem in _startWandItems)
-				{
-					if (wandInvItem.Item is not WandItemSO)
-					{
-						Debug.LogWarning($"{wandInvItem.Item} is not a wand. skipping it");
-						continue;
-					}
-
-					WandItemSO wandItemSO = wandInvItem.Item as WandItemSO;
-					WandInventoryItem wandItemToAdd = (WandInventoryItem)wandItemSO.CreateInventoryItem(1);
-
-					for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
-					{
-						if (wandInvItem.MagicArray[i] is SpellItemSO)
-						{
-							if (i < wandItemSO.Capacity)
-							{
-								wandItemToAdd.MagicArray[i] = wandInvItem.MagicArray[i];
-							}
-							else
-							{
-								Debug.LogWarning($"{wandInvItem.MagicArray[i].Name} being skipped because it is out of the index of {wandItemSO.Name}'s Capacity ({wandItemSO.Capacity})");
-							}
-						}
-					}
-
-					InventoryManager.Instance.AddItem(wandItemToAdd, false);
-					yield return new WaitForEndOfFrame();
-				}
-			}
-
-			foreach (InventoryItem item in _startingItems)
-			{
-				InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
-				InventoryManager.Instance.AddItem(itemToAdd, false);
-				yield return new WaitForEndOfFrame();
-			}
+			GameInput.Instance.OnPrimaryAction -= GameInput_OnPrimaryAction;
+			HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnSelectedItemUpdated;
 		}
 	}
 
 	private void Update()
 	{
-		if (HealthState.IsDead && NetworkManager.LocalClientId == OwnerClientId)
-		{
-			_respawnTimer.Tick(Time.deltaTime);
-		}
-
 		if (IsOwner)
 		{
 			Vector2Int newTilePosition = new(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
@@ -160,75 +98,42 @@ public class Player : NetworkBehaviour
 		}
 	}
 
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	private void SpawnBreadCrumbServerRpc(Vector2Int spawnPos, RpcParams rpcParams = default)
+	{
+		GameObject breadCrumb = Instantiate(_breadCrumbPrefab, new Vector2(spawnPos.x + 0.5f, spawnPos.y + 0.5f), Quaternion.identity);
+		breadCrumb.GetComponent<BreadCrumb>().InitializeBreadCrumb(CurrentBiome.Value);
+		GameManager.Instance.InvokeSpawnBreadCrumbEvent(breadCrumb);
+	}
+
+	private void GameInput_OnPrimaryAction(object sender, GameInput.OnPrimaryOrSecondaryActionEventArgs e)
+	{
+		Debug.Log($"Player {OwnerClientId} is holding primary {e.IsHeldDown}");
+	}
+
 	private void GameInput_OnPlayerMove(object sender, InputAction.CallbackContext e)
 	{
 		if (_serverCharacter.LifeState == LifeState.Alive)
 		{
 			var desiredDirection = e.ReadValue<Vector2>();
+			if(desiredDirection == Vector2.zero)
+			{
+				_serverCharacter.Movement.StartIdle();
+			}
+			else
+			{
+				_serverCharacter.Movement.StartMovement(desiredDirection);
+			}
 		}
 	}
 
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnBreadCrumbServerRpc(Vector2Int spawnPos, RpcParams rpcParams = default)
+	private void HotbarManager_OnSelectedItemUpdated(object sender, HotbarManager.OnFocusItemSetEventArgs e)
 	{
-		GameObject breadCrumb = Instantiate(_breadCrumbPrefab, new Vector2(spawnPos.x + 0.5f, spawnPos.y + 0.5f), Quaternion.identity);
-		breadCrumb.GetComponent<BreadCrumb>().InitializeBreadCrumb(CurrentPlayerBiome.Value);
-		GameManager.Instance.InvokeSpawnBreadCrumbEvent(breadCrumb);
-	}
-
-	private void OnPlayerDamaged(object sender, NetworkHealthState.HitPointsDamagedEventArgs e)
-	{
-		Debug.Log($"Damaging player {OwnerClientId}, knockback force: {e.KnockbackForce}");
-
-		if(NetworkManager.LocalClientId == OwnerClientId)
+		if (IsOwner)
 		{
-			OnPlayerDamagedClientRpc(e.DamageTaken, e.SourcePosition, e.KnockbackForce, RpcTarget.Single(OwnerClientId, RpcTargetUse.Temp));
+			// NTFS: Network variables onvaluechanged is only executed if the value is different from the current value
+			SelectedItemIndexNetworkVariable.Value = e.SelectedItemIndex;
 		}
-	}
-
-	[Rpc(SendTo.SpecifiedInParams)]
-	private void OnPlayerDamagedClientRpc(int damageTaken, Vector3 sourcePosition, float knockbackForce, RpcParams rpcParams = default)
-	{
-		Debug.Log($"Knockback force: {knockbackForce}");
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerDamaged, transform.position);
-
-		OnDamaged?.Invoke(this, new OnDamagedEventArgs
-		{
-			DamagerPosition = sourcePosition,
-			DamageAmount = damageTaken
-		});
-	}
-
-	private void OnPlayerDeath(object sender, EventArgs e)
-	{
-		Debug.Log($"Player {OwnerClientId} is dead!");
-		OnPlayerDeathClientRpc(RpcTarget.Single(OwnerClientId, RpcTargetUse.Persistent));
-	}
-
-	[Rpc(SendTo.SpecifiedInParams)]
-	private void OnPlayerDeathClientRpc(RpcParams rpcParams = default)
-	{
-		Debug.Log($"[Client {NetworkManager.LocalClientId}] {gameObject.name} is dead!");
-
-		_respawnTimer.Reset();
-		_respawnTimer.OnTimerEnd += RespawnPlayer;
-
-		OnDeath?.Invoke(this, new PlayerIdEventArgs
-		{
-			PlayerId = OwnerClientId
-		});
-	}
-
-	private void RespawnPlayer(object sender, EventArgs e)
-	{
-		_respawnTimer.OnTimerEnd -= RespawnPlayer;
-
-		HealthState.HealToFullRpc();
-	}
-
-	private void OnPlayerRecovery(object sender, EventArgs e)
-	{
-		RespawnPlayerClientRpc(RpcTarget.Single(OwnerClientId, RpcTargetUse.Persistent));
 	}
 
 	[Rpc(SendTo.SpecifiedInParams)]
@@ -236,7 +141,7 @@ public class Player : NetworkBehaviour
 	{
 		transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
 
-		if (CurrentPlayerBiome.Value != _spawnBiome)
+		if (CurrentBiome.Value != _spawnBiome)
 		{
 			WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint);
 		}
@@ -245,42 +150,5 @@ public class Player : NetworkBehaviour
 		{
 			PlayerId = OwnerClientId
 		});
-	}
-
-	private void HotbarManager_OnSelectedItemUpdated(object sender, HotbarManager.OnFocusItemSetEventArgs e)
-	{
-		if(IsOwner)
-		{
-			// NTFS: network variables onvaluechanged is only executed if the value is different
-			if(e.SelectedItemIndex == -1)
-			{
-				SelectedItemIndexNetworkVariable.Value = -1;
-			}
-			else
-			{
-				SelectedItemIndexNetworkVariable.Value = e.SelectedItemIndex;
-			}
-		}
-	}
-	
-	public bool IsHoldingAWand()
-	{
-		ItemSO mainHandItem = GameManager.Instance.GetItemSOFromItemId(SelectedItemIndexNetworkVariable.Value);
-		
-		return mainHandItem != null && (mainHandItem is SpellItemSO || mainHandItem is WandItemSO);
-	}
-	
-	public override void OnDestroy()
-	{
-		base.OnDestroy();
-
-		HealthState.OnHitPointsDamaged -= OnPlayerDamaged;
-		HealthState.OnHitPointsDepleted -= OnPlayerDeath;
-		HealthState.OnHitPointsReplenished -= OnPlayerRecovery;
-
-		if (IsOwner)
-		{
-			HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnSelectedItemUpdated;
-		}
 	}
 }

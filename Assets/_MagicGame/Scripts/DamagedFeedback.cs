@@ -4,31 +4,27 @@ using UnityEngine;
 
 public class DamagedFeedback : MonoBehaviour
 {
-    private Npc _npc;
+    private DamageReceiver _damageReceiver;
     private MMF_Player _damagedFeedback;
     
     private void Awake()
     {
         _damagedFeedback = GetComponent<MMF_Player>();
-        _npc = transform.root.gameObject.GetComponent<Npc>();
-        if(_npc == null)
+        _damageReceiver = transform.root.gameObject.GetComponent<DamageReceiver>();
+        if(_damageReceiver == null)
         {
             Debug.LogError($"Npc script not found on root game object");
         }
+        _damageReceiver.DamagedReceived += PlayDamageFeedbacks;
     }
 
-    private void Start()
-    {
-        _npc.OnClientNpcDamged += PlayFeedbacks;
-    }
-
-    private void PlayFeedbacks(object sender, Npc.OnNpcDamagedEventArgs e)
+    private void PlayDamageFeedbacks(object sender, DamageReceiver.DamageReceivedEventArgs e)
     {
         _damagedFeedback.PlayFeedbacks();
     }
     
     private void OnDestroy()
     {
-        _npc.OnClientNpcDamged -= PlayFeedbacks;
+        _damageReceiver.DamagedReceived -= PlayDamageFeedbacks;
     }
 }

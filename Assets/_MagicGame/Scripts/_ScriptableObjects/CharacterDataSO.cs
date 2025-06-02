@@ -11,19 +11,19 @@ public class CharacterDataSO : ScriptableObject
     public float BaseSpeed;
     [Tooltip("Duration of invincibility frames when character is hit")]
     public float IFrameDuration { get; internal set; }
+    [Tooltip("Smaller values = slower transition to desired direction")]
+    public float TurnSharpness = 5f;
+    [Tooltip("Resistance to knockback effects (0 = no resistance)")]
+    public float KnockbackResist = 0f;
+    [Tooltip("If true, the NPC can be knocked back")]
+    public bool CanBeKnockedBack = true;
     [Tooltip("Indicates whether the character is an NPC")]
     public bool IsNpc;
     
     [Header("Npc Parameters")]
     public bool IsFriendly;
-    [Tooltip("Smaller values = slower transition to desired direction")]
-    public float TurnSharpness = 5f;
     [Tooltip("Speed the character uses when chasing a target")]
     public float PursueSpeed = 4f;
-    [Tooltip("If true, the NPC can be knocked back")]
-    public bool CanBeKnockedBack = true;
-    [Tooltip("Resistance to knockback effects (0 = no resistance)")]
-    public float KnockbackResist = 0f;
     [Tooltip("Minimum time the NPC will stay idle before changing state")]
     public float MinIdleDuration = 2.5f;
     [Tooltip("Maximum time the NPC will stay idle before changing state")]

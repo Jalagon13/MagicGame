@@ -44,7 +44,10 @@ public class ServerCharacterMovement : NetworkBehaviour
     public void FixedUpdateMovement()
     {
         if (_serverCharacter.MovementState.Value == MovementState.Idle)
+        {
+            _velocity = Vector2.zero;
             return;
+        }
 
         // Movement is handled here
         _knockback.UpdateKnockback(Time.fixedDeltaTime);
@@ -63,26 +66,41 @@ public class ServerCharacterMovement : NetworkBehaviour
     
     public void StartIdle()
     {
+        _desiredDirection = Vector2.zero;
         _serverCharacter.MovementState.Value = MovementState.Idle;
-        _serverCharacter.AnimationHandler.PlayAnimation(_serverCharacter.AnimationHandler.AnimationConfig.SideIdleClip);
+        _serverCharacter.AnimationHandler.PlayCurrentMoveState();
     }
     
     public void StartPursue(Vector2 desiredDirection)
     {
-        _serverCharacter.MovementState.Value = MovementState.Pursuing;
         _desiredDirection = desiredDirection;
         _speed = _serverCharacter.Data.PursueSpeed;
-        _serverCharacter.AnimationHandler.PlayAnimation(_serverCharacter.AnimationHandler.AnimationConfig.SideMoveClip);
+        _serverCharacter.MovementState.Value = MovementState.Pursuing;
+        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection();
+        _serverCharacter.AnimationHandler.PlayCurrentMoveState();
     }
     
     public void StartMovement(Vector2 desiredDirection)
     {
-        _serverCharacter.MovementState.Value = MovementState.Moving;
         _desiredDirection = desiredDirection;
         _speed = _serverCharacter.Data.BaseSpeed;
-        _serverCharacter.AnimationHandler.PlayAnimation(_serverCharacter.AnimationHandler.AnimationConfig.SideMoveClip);
+        _serverCharacter.MovementState.Value = MovementState.Moving;
+        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection();
+        _serverCharacter.AnimationHandler.PlayCurrentMoveState();
     }
-    
+
+    private CardinalDirection CardinalDirectionFromDesiredDirection()
+    {
+        if (Math.Abs(_desiredDirection.x) > Math.Abs(_desiredDirection.y))
+        {
+            return _desiredDirection.x > 0 ? CardinalDirection.East : CardinalDirection.West;
+        }
+        else
+        {
+            return _desiredDirection.y > 0 ? CardinalDirection.North : CardinalDirection.South;
+        }
+    }
+
     public void StartKnockback(Vector2 knockerPosition, float knockbackForce, bool inverse = false)
     {
         _serverCharacter.MovementState.Value = MovementState.Knockback;

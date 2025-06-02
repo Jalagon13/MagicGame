@@ -66,7 +66,7 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 		_armorEquipped = armorItem;
 
 		// Optionally, apply stats or effects from the armor to the player
-		Player.LocalClientInstance.PlayerStats.EquipArmor(_armorEquipped);
+		// Player.LocalClientInstance.PlayerStats.EquipArmor(_armorEquipped);
 		InventoryManager.Instance.PlayClickFeedbacks();
 
 		UpdateSlotUI();
@@ -79,7 +79,7 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 		_armorEquipped = null;
 
 		// Optionally, remove stats or effects from the armor
-		Player.LocalClientInstance.PlayerStats.UnequipArmor(unequippedArmor);
+		// Player.LocalClientInstance.PlayerStats.UnequipArmor(unequippedArmor);
 		InventoryManager.Instance.PlayClickFeedbacks();
 
 		UpdateSlotUI();

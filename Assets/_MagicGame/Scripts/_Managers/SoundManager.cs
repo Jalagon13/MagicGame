@@ -40,7 +40,7 @@ public class SoundManager : NetworkBehaviour
         {
             Ambience ambience;
 
-            switch (Player.LocalClientInstance.CurrentPlayerBiome.Value)
+            switch (Player.LocalClientInstance.CurrentBiome.Value)
             {
                 case BiomeType.Forest:
                     ambience = Ambience.ForestAmbience;
