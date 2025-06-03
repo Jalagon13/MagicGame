@@ -1,18 +1,18 @@
 using System;
 using UnityEngine;
 
-public class BasicNpcIdleState : BaseState<AIState>
+public class BasicNpcIdleState : BaseState
 {
     private BasicNpcStateMachine _ctx;
     private Timer _idleTimer;
     private bool _idleComplete;
 
-    public BasicNpcIdleState(AIState key, StateMachine<AIState> context) : base(key, context)
+    public BasicNpcIdleState(AIState key, StateMachine context) : base(key, context)
     {
         _ctx = Context as BasicNpcStateMachine;
     }
 
-    public override void EnterState()
+    protected override void EnterState()
     {  
         Debug.Log($"Idle State");
         _idleComplete = false;

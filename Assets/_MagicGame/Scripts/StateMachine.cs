@@ -7,24 +7,34 @@ using UnityEngine.InputSystem;
 
 public enum AIState
 {
+    None,
+
+    // Root States
     Grounded,
+    Attacking,
+    SpellCasting,
+    
+    // Sub States
     Idle,
     Moving,
     Knockbacked,
-    Pursuing
+    Pursuing,
 }
 
-public abstract class StateMachine<EState> : IAIBrain where EState : Enum
+public abstract class StateMachine
 {
-    protected Dictionary<EState, BaseState<EState>> _states = new();
-    protected BaseState<EState> _currentState;
+    protected Dictionary<AIState, BaseState> _states = new();
+    protected BaseState _currentState;
     protected bool _isTransitioningState = false;
 
-    public BaseState<EState> GetState(EState key)
+    protected ServerCharacter _serverCharacter;
+    public ServerCharacter ServerCharacter => _serverCharacter;
+    public CharacterDataSO CharacterData => _serverCharacter.Data;
+
+    public BaseState GetState(AIState key)
     {
         if (_states.TryGetValue(key, out var state))
         {
-            Debug.Log($"State {key} found in state machine.");
             return state;
         }
 
@@ -32,9 +42,10 @@ public abstract class StateMachine<EState> : IAIBrain where EState : Enum
         return null;
     }
 
-    protected virtual void EnterCurrentState()
+    public void StartStateMachine()
     {
-        _currentState?.EnterState();
+        _currentState?.EnterStateWithNetworkSync();
+        _currentState.CurrentSubState?.EnterStateWithNetworkSync();
     }
 
     public virtual void UpdateAI()
@@ -44,19 +55,17 @@ public abstract class StateMachine<EState> : IAIBrain where EState : Enum
         _currentState.UpdateAllStates();
     }
     
-    public virtual void Dispose()
-    {
-        
-    }
+    public virtual void OwnerInitialization() { }
+    public virtual void Dispose() { }
 
     public abstract void ReceiveHP(ServerCharacter inflicter, int amount);
 
-    public void TransitionToState(EState statekey)
+    public void TransitionToState(AIState statekey)
     {
         _isTransitioningState = true;
         _currentState.ExitState();
         _currentState = _states[statekey];
-        _currentState.EnterState();
+        _currentState.EnterStateWithNetworkSync();
         _isTransitioningState = false;
     }
 }

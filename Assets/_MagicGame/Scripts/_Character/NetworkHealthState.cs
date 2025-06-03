@@ -5,7 +5,7 @@ using UnityEngine;
 public class NetworkHealthState : NetworkBehaviour
 {
     [HideInInspector]
-    public NetworkVariable<int> HitPoints = new NetworkVariable<int>();
+    public NetworkVariable<int> HitPoints = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     
     public event EventHandler HitPointsDepleted;
     public event EventHandler HitPointsReplenished;

@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class PlayerMoveState : BaseState<AIState>
+public class PlayerMoveState : BaseState
 {
 	private PlayerStateMachine _ctx;
 	private Timer _playWalkSoundTimer;
 	private float _walkSoundCooldown = 0.28f;
 
-	public PlayerMoveState(AIState key, StateMachine<AIState> context) : base(key, context)
+	public PlayerMoveState(AIState key, StateMachine context) : base(key, context)
 	{
 		_ctx = Context as PlayerStateMachine;
 	}
 
-    public override void EnterState()
+	protected override void EnterState()
 	{
 		Debug.Log($"Player move state");
 		PlayFootStepSound();
@@ -59,5 +59,20 @@ public class PlayerMoveState : BaseState<AIState>
 		// {
 		// 	SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerFootsteps, Player.LocalClientInstance.transform.position);
 		// }
+	}
+
+	public override void ClientEnterState()
+	{
+		Debug.Log($"[Client {_ctx.ServerCharacter.OwnerClientId}] Player entering move");
+	}
+
+	public override void ClientExitState()
+	{
+		Debug.Log($"[Client {_ctx.ServerCharacter.OwnerClientId}] Player exiting move");
+	}
+
+	public override void ClientUpdateState()
+	{
+		
 	}
 }

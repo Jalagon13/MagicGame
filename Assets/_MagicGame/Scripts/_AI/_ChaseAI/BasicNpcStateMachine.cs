@@ -6,17 +6,13 @@ using System;
 using System.Collections;
 
 // Wanders until it finds a player or breadcrumb to move to
-public class BasicNpcStateMachine : StateMachine<AIState>
+public class BasicNpcStateMachine : StateMachine
 {
     public bool IsChasing { get; private set; }
     public bool IsStrafing { get; private set; }
     public bool PlayerInSight { get; private set; }
     public bool IsAngry { get; private set; }
     public Vector2? PursueDestination { get; private set; } = Vector2.zero;
-    
-    private ServerCharacter _serverCharacter;
-    public ServerCharacter ServerCharacter => _serverCharacter;
-    public CharacterDataSO CharacterData => _serverCharacter.Data;
     
     private Timer _breadCrumbDetectionTimer;
     private Timer _strafeTimer;
@@ -33,8 +29,11 @@ public class BasicNpcStateMachine : StateMachine<AIState>
         _states[AIState.Knockbacked] = new BasicNpcKnockbackState(AIState.Knockbacked, this);
         _states[AIState.Pursuing] = new BasicNpcPursueState(AIState.Pursuing, this);
         _currentState = _states[AIState.Idle];
-        
-        if(!CharacterData.IsFriendly)
+    }
+
+    public override void OwnerInitialization()
+    {
+        if (!CharacterData.IsFriendly)
         {
             _breadCrumbDetectionTimer = new Timer(0.5f);
             _breadCrumbDetectionTimer.OnTimerEnd -= TryToFindBreadcrumb;

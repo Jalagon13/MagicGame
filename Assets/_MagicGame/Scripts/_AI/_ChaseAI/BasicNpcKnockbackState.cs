@@ -1,15 +1,15 @@
 using UnityEngine;
 
-public class BasicNpcKnockbackState : BaseState<AIState>
+public class BasicNpcKnockbackState : BaseState
 {
     private BasicNpcStateMachine _ctx;
 
-    public BasicNpcKnockbackState(AIState key, StateMachine<AIState> context) : base(key, context)
+    public BasicNpcKnockbackState(AIState key, StateMachine context) : base(key, context)
     {
         _ctx = Context as BasicNpcStateMachine;
     }
 
-    public override void EnterState()
+    protected override void EnterState()
     {
         Debug.Log($"Knockback state");
     }

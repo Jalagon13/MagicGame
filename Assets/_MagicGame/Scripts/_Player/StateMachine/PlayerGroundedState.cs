@@ -1,21 +1,20 @@
 using UnityEngine;
 
-public class PlayerGroundedState : BaseState<AIState>
+public class PlayerGroundedState : BaseState
 {
     private PlayerStateMachine _ctx;
 
-    public PlayerGroundedState(AIState key, StateMachine<AIState> context) : base(key, context)
+    public PlayerGroundedState(AIState key, StateMachine context) : base(key, context)
     {
         _ctx = Context as PlayerStateMachine;
-        IsRootState = true;
+        IsSuperState = true;
         SetSubState(AIState.Idle);
     }
 
-    public override void EnterState()
+    protected override void EnterState()
     {
         Debug.Log("Player entering grounded");
 
-        _currentSubState.EnterState();
     }
 
     public override void UpdateState()
@@ -25,7 +24,10 @@ public class PlayerGroundedState : BaseState<AIState>
 
     public override void CheckSwitchStates()
     {
-        
+        if(GameInput.Instance.GetPrimaryHeldDown())
+        {
+            SwitchState(AIState.Attacking);
+        }
     }
 
     public override void ExitState()

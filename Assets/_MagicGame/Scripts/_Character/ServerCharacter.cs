@@ -44,7 +44,9 @@ public class ServerCharacter : NetworkBehaviour
     
     [SerializeField] 
     private DamageReceiver _damageReceiver;
-    private IAIBrain _stateMachine;
+    
+    private StateMachine _stateMachine;
+    public StateMachine StateMachine => _stateMachine;
     
     [SerializeField] 
     private ServerCharacterMovement _serverCharacterMovement;
@@ -56,10 +58,16 @@ public class ServerCharacter : NetworkBehaviour
     public ServerAnimationHandler AnimationHandler => _serverAnimationHandler;
     
     [HideInInspector]
-    public NetworkVariable<MovementState> MovementState = new NetworkVariable<MovementState>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<MovementState> MovementState = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     
     [HideInInspector]
-    public NetworkVariable<CardinalDirection> CardinalDirection = new NetworkVariable<CardinalDirection>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<CardinalDirection> CardinalDirection = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+    [HideInInspector]
+    public NetworkVariable<AIState> SuperAIState = new(AIState.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+    [HideInInspector]
+    public NetworkVariable<AIState> SubAIState = new(AIState.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private void Awake()
     {
@@ -71,6 +79,19 @@ public class ServerCharacter : NetworkBehaviour
             NpcVisibility = GetComponent<NpcNetworkVisibility>();
             if(NpcVisibility == null) Debug.LogWarning($"ServerCharacter {gameObject.name} missing NpcVisibility.");
         }
+
+        switch (_aiType)
+        {
+            case CharacterStateMachine.BasicNpc:
+                _stateMachine = new BasicNpcStateMachine(this);
+                break;
+            case CharacterStateMachine.Player:
+                _stateMachine = new PlayerStateMachine(this);
+                break;
+        }
+
+        if (_stateMachine == null)
+            Debug.LogWarning($"ServerCharacter {gameObject.name} missing _aiBrain.");
     }
 
     public override void OnNetworkSpawn()
@@ -81,26 +102,21 @@ public class ServerCharacter : NetworkBehaviour
             _damageReceiver.DamagedReceived += ReceiveHP;
             
             HitPoints = _characterData.BaseHP;
+            _stateMachine?.OwnerInitialization();
+        }
+    }
 
-            switch (_aiType)
-            {
-                case CharacterStateMachine.BasicNpc:
-                    _stateMachine = new BasicNpcStateMachine(this);
-                    break;
-                case CharacterStateMachine.Player:
-                    Debug.Log($"Creating player state machine");
-                    _stateMachine = new PlayerStateMachine(this);
-                    break;
-            }
-
-            if (_stateMachine == null)
-                Debug.LogWarning($"ServerCharacter {gameObject.name} missing _aiBrain.");
+    protected override void OnNetworkPostSpawn()
+    {
+        if(IsOwner)
+        {
+            _stateMachine?.StartStateMachine();
         }
     }
 
     public override void OnNetworkDespawn()
     {
-        if(IsServer)
+        if(IsOwner)
         {
             NetLifeState.LifeState.OnValueChanged -= OnLifeStateChanged;
             _damageReceiver.DamagedReceived -= ReceiveHP;
@@ -114,7 +130,7 @@ public class ServerCharacter : NetworkBehaviour
     
     private void FixedUpdate()
     {
-        if (IsServer || (!_characterData.IsNpc && IsOwner))
+        if (IsOwner || (_characterData.IsNpc && IsServer))
         {
             _serverCharacterMovement.FixedUpdateMovement();
         }
@@ -122,9 +138,9 @@ public class ServerCharacter : NetworkBehaviour
     
     private void Update()
     {
-        if (IsServer || (!_characterData.IsNpc && IsOwner))
+        if (IsOwner || (_characterData.IsNpc && IsServer))
         {
-            if (_characterData.IsNpc && LifeState == LifeState.Alive && _stateMachine != null)
+            if (_stateMachine != null && LifeState == LifeState.Alive)
             {
                 _stateMachine.UpdateAI();
             }

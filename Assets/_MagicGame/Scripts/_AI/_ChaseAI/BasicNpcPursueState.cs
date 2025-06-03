@@ -1,15 +1,15 @@
 using UnityEngine;
 
-public class BasicNpcPursueState : BaseState<AIState>
+public class BasicNpcPursueState : BaseState
 {
     private BasicNpcStateMachine _ctx;
 
-    public BasicNpcPursueState(AIState key, StateMachine<AIState> context) : base(key, context)
+    public BasicNpcPursueState(AIState key, StateMachine context) : base(key, context)
     {
         _ctx = Context as BasicNpcStateMachine;
     }
 
-    public override void EnterState()
+    protected override void EnterState()
     {
         Debug.Log($"Pursuing state");
 

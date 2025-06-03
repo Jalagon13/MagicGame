@@ -3,16 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerIdleState : BaseState<AIState>
+public class PlayerIdleState : BaseState
 {
 	private PlayerStateMachine _ctx;
 
-	public PlayerIdleState(AIState key, StateMachine<AIState> context) : base(key, context)
+	public PlayerIdleState(AIState key, StateMachine context) : base(key, context)
 	{
 		_ctx = Context as PlayerStateMachine;
 	}
 
-    public override void EnterState()
+	protected override void EnterState()
 	{
 		Debug.Log($"Player entering idle");
 		// _ctx.IsMoving = false;
@@ -32,6 +32,21 @@ public class PlayerIdleState : BaseState<AIState>
 	}
 
     public override void UpdateState()
+	{
+		
+	}
+
+    public override void ClientEnterState()
+    {
+        Debug.Log($"[Client {_ctx.ServerCharacter.OwnerClientId}] Player entering idle");
+    }
+    
+	public override void ClientExitState()
+	{
+		Debug.Log($"[Client {_ctx.ServerCharacter.OwnerClientId}] Player exiting idle");
+	}
+	
+	public override void ClientUpdateState()
 	{
 		
 	}

@@ -14,12 +14,8 @@ public enum CardinalDirection
 	East
 }
 
-public class PlayerStateMachine : StateMachine<AIState>
+public class PlayerStateMachine : StateMachine
 {
-	private ServerCharacter _serverCharacter;
-	public ServerCharacter ServerCharacter => _serverCharacter;
-	public CharacterDataSO CharacterData => _serverCharacter.Data;
-
 	public PlayerStateMachine(ServerCharacter serverCharacter)
 	{
 		_serverCharacter = serverCharacter;
@@ -27,9 +23,14 @@ public class PlayerStateMachine : StateMachine<AIState>
 		_states[AIState.Idle] = new PlayerIdleState(AIState.Idle, this);
 		_states[AIState.Moving] = new PlayerMoveState(AIState.Moving, this);
 		_states[AIState.Grounded] = new PlayerGroundedState(AIState.Grounded, this);
+		_states[AIState.Attacking] = new PlayerAttackState(AIState.Attacking, this);
+		_states[AIState.Knockbacked] = new PlayerKnockbackedState(AIState.Knockbacked, this);
+		_states[AIState.SpellCasting] = new PlayerSpellCastingState(AIState.SpellCasting, this);
 		_currentState = _states[AIState.Grounded];
-		EnterCurrentState();
-		
+	}
+
+    public override void OwnerInitialization()
+    {
 		WorldManager.Instance.OnBiomeTransitionStart += WorldManager_RestrictMovement;
 		WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_AllowMovement;
 	}

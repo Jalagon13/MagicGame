@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class BasicNpcMoveState : BaseState<AIState>
+public class BasicNpcMoveState : BaseState
 {
     private BasicNpcStateMachine _ctx;
     private bool _destinationReached;
@@ -19,12 +19,12 @@ public class BasicNpcMoveState : BaseState<AIState>
     private bool _hasDestination;
     private Vector2? _destination;
 
-    public BasicNpcMoveState(AIState key, StateMachine<AIState> context) : base(key, context)
+    public BasicNpcMoveState(AIState key, StateMachine context) : base(key, context)
     {
         _ctx = Context as BasicNpcStateMachine;
     }
 
-    public override void EnterState()
+    protected override void EnterState()
     {
         Debug.Log("Move State");
         _destination = GetRandomWanderDestinationBFS();
