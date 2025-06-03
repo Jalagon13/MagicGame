@@ -58,7 +58,6 @@ public class ClientCharacter : NetworkBehaviour
     private void OnSuperAIStateChanged(AIState previousValue, AIState newValue)
     {
         // Take the previousValue and run the exit function, take the new value, and run the enter function somehow
-        Debug.Log($"{_serverCharacter.StateMachine == null} {OwnerClientId}");
         BaseState previousSuperState = _serverCharacter.StateMachine.GetState(previousValue);
         previousSuperState?.ClientExitState();
 

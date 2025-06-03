@@ -54,13 +54,13 @@ public class PlayerHand : NetworkBehaviour
 		{
 			_thisPlayer = transform.root.GetComponent<Player>();
 
-			_thisPlayer.SelectedItemIndexNetworkVariable.OnValueChanged += HandleItemIndexChanged;
+			_thisPlayer.SelectedItemIdNetworkVariable.OnValueChanged += HandleItemIndexChanged;
 		}
 	}
 
 	public override void OnNetworkSpawn()
 	{
-		UpdateArmFromItemIndex(_thisPlayer.SelectedItemIndexNetworkVariable.Value);
+		// UpdateArmFromItemIndex(_thisPlayer.SelectedItemIdNetworkVariable.Value);
 		
 		base.OnNetworkSpawn();
 	}
@@ -93,7 +93,7 @@ public class PlayerHand : NetworkBehaviour
 
 			if (GameInput.Instance.GetPrimaryHeldDown())
 			{
-				ExecuteSwing(toolItemSO.SwingDuration);
+				// ExecuteSwing(toolItemSO.SwingDuration);
 			}
 		}
 	}
@@ -148,24 +148,19 @@ public class PlayerHand : NetworkBehaviour
 		switch (ArmCardinalDirection)
 		{
 			case CardinalDirection.North:
-				SwingNorth(duration, swingSpellId);
+				SwingRpc(150, 30, duration, true, CardinalDirection.North, OwnerClientId, swingSpellId);
 				break;
 			case CardinalDirection.South:
-				SwingSouth(duration, swingSpellId);
+				SwingRpc(330, 210, duration, false, CardinalDirection.South, OwnerClientId, swingSpellId);
 				break;
 			case CardinalDirection.West:
-				SwingWest(duration, swingSpellId);
+				SwingRpc(120, 240, duration, false, CardinalDirection.West, OwnerClientId, swingSpellId);
 				break;
 			case CardinalDirection.East:
-				SwingEast(duration, swingSpellId);
+				SwingRpc(60, 300, duration, true, CardinalDirection.East, OwnerClientId, swingSpellId);
 				break;
 		}
 	}
-
-	private void SwingEast(float duration, int swingSpellId = -1) => SwingRpc(60, 300, duration, true, CardinalDirection.East, OwnerClientId, swingSpellId);
-	private void SwingWest(float duration, int swingSpellId = -1) => SwingRpc(120, 240, duration, false, CardinalDirection.West, OwnerClientId, swingSpellId);
-	private void SwingNorth(float duration, int swingSpellId = -1) => SwingRpc(150, 30, duration, true, CardinalDirection.North, OwnerClientId, swingSpellId);
-	private void SwingSouth(float duration, int swingSpellId = -1) => SwingRpc(330, 210, duration, false, CardinalDirection.South, OwnerClientId, swingSpellId);
 
 	[Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
 	private void SwingRpc(float startAngle, float endAngle, float duration, bool clockwise, CardinalDirection direction, ulong clientSenderId, int swingSpellId = -1)
@@ -353,7 +348,7 @@ public class PlayerHand : NetworkBehaviour
 
 	public override void OnDestroy()
 	{
-		_thisPlayer.SelectedItemIndexNetworkVariable.OnValueChanged -= HandleItemIndexChanged;
+		_thisPlayer.SelectedItemIdNetworkVariable.OnValueChanged -= HandleItemIndexChanged;
 
 		base.OnDestroy();
 	}

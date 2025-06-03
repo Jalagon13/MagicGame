@@ -6698,7 +6698,9 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField: []
-  _startingItems: []
+  _startingItems:
+  - Item: {fileID: 11400000, guid: fe217e765840a43b5b9acff0a1269c2f, type: 2}
+    Quantity: 1
 --- !u!1 &849543217
 GameObject:
   m_ObjectHideFlags: 0

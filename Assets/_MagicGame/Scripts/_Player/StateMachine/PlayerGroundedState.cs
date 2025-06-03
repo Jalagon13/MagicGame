@@ -24,7 +24,7 @@ public class PlayerGroundedState : BaseState
 
     public override void CheckSwitchStates()
     {
-        if(GameInput.Instance.GetPrimaryHeldDown())
+        if(_ctx.HeldItem is ToolItemSO && _ctx.SwingCooldownTimer.PercentRemaining <= 0 && GameInput.Instance.GetPrimaryHeldDown() && !Pointer.IsOverUI() && !Pointer.IsOverInteractable())
         {
             SwitchState(AIState.Attacking);
         }

@@ -25,7 +25,7 @@ public class Player : NetworkBehaviour
 		public Vector2 DamagerPosition;
 	}
 	
-	public NetworkVariable<int> SelectedItemIndexNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public NetworkVariable<int> SelectedItemIdNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<BiomeType> CurrentBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	
 	[field: SerializeField] public PlayerHand PlayerHand { get; private set; }
@@ -132,7 +132,7 @@ public class Player : NetworkBehaviour
 		if (IsOwner)
 		{
 			// NTFS: Network variables onvaluechanged is only executed if the value is different from the current value
-			SelectedItemIndexNetworkVariable.Value = e.SelectedItemIndex;
+			SelectedItemIdNetworkVariable.Value = e.SelectedItemId;
 		}
 	}
 

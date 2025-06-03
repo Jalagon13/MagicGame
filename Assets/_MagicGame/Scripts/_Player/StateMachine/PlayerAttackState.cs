@@ -4,7 +4,8 @@ using UnityEngine;
 public class PlayerAttackState : BaseState
 {
     private PlayerStateMachine _ctx;
-    private Timer _swingTimer;
+    private Timer _tempTImer;
+    private float _swingCd;
 
     public PlayerAttackState(AIState key, StateMachine context) : base(key, context)
     {
@@ -15,17 +16,18 @@ public class PlayerAttackState : BaseState
     protected override void EnterState()
     {
         Debug.Log("Player entering swing");
-        _swingTimer = new(1f);
+        _swingCd = (_ctx.HeldItem as ToolItemSO).SwingCooldown;
+        _tempTImer = new((_ctx.HeldItem as ToolItemSO).SwingDuration);
     }
 
     public override void UpdateState()
     {
-        _swingTimer.Tick(Time.deltaTime);
+        _tempTImer.Tick(Time.deltaTime);
     }
 
     public override void CheckSwitchStates()
     {
-        if (_swingTimer.RemainingSeconds <= 0)
+        if (_tempTImer.RemainingSeconds <= 0)
         {
             SwitchState(AIState.Grounded);
         }
@@ -33,6 +35,6 @@ public class PlayerAttackState : BaseState
 
     public override void ExitState()
     {
-        
+        _ctx.SwingCooldownTimer.AddTime(_swingCd);
     }
 }

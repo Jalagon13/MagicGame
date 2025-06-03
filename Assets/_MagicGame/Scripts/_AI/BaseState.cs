@@ -25,7 +25,6 @@ public abstract class BaseState
     {
         if(_isSuperState)
         {
-            Debug.Log($"{Context.ServerCharacter.OwnerClientId} setting super state to {StateKey}");
             Context.ServerCharacter.SuperAIState.Value = StateKey;
         }
         else

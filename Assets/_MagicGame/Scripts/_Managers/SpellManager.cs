@@ -60,7 +60,7 @@ public class SpellManager : NetworkBehaviour
     {
         if (NetworkManager.LocalClientId != clientId) return;
 
-        Player.LocalClientInstance.SelectedItemIndexNetworkVariable.OnValueChanged += HandleItemIndexChanged;
+        Player.LocalClientInstance.SelectedItemIdNetworkVariable.OnValueChanged += HandleItemIndexChanged;
     }
 
     private void Start()

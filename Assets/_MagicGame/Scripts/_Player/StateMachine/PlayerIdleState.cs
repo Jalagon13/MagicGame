@@ -35,19 +35,4 @@ public class PlayerIdleState : BaseState
 	{
 		
 	}
-
-    public override void ClientEnterState()
-    {
-        Debug.Log($"[Client {_ctx.ServerCharacter.OwnerClientId}] Player entering idle");
-    }
-    
-	public override void ClientExitState()
-	{
-		Debug.Log($"[Client {_ctx.ServerCharacter.OwnerClientId}] Player exiting idle");
-	}
-	
-	public override void ClientUpdateState()
-	{
-		
-	}
 }

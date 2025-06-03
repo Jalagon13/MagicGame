@@ -16,17 +16,30 @@ public enum CardinalDirection
 
 public class PlayerStateMachine : StateMachine
 {
+	private ItemSO _heldItem;
+	public ItemSO HeldItem => _heldItem;
+	
+	private Timer _swingCdTimer;
+	public Timer SwingCooldownTimer => _swingCdTimer;
+
 	public PlayerStateMachine(ServerCharacter serverCharacter)
 	{
+		// Gets played on all client machines
 		_serverCharacter = serverCharacter;
+		_swingCdTimer = new(0f);
 
 		_states[AIState.Idle] = new PlayerIdleState(AIState.Idle, this);
 		_states[AIState.Moving] = new PlayerMoveState(AIState.Moving, this);
+		_states[AIState.Knockbacked] = new PlayerKnockbackedState(AIState.Knockbacked, this);
 		_states[AIState.Grounded] = new PlayerGroundedState(AIState.Grounded, this);
 		_states[AIState.Attacking] = new PlayerAttackState(AIState.Attacking, this);
-		_states[AIState.Knockbacked] = new PlayerKnockbackedState(AIState.Knockbacked, this);
 		_states[AIState.SpellCasting] = new PlayerSpellCastingState(AIState.SpellCasting, this);
 		_currentState = _states[AIState.Grounded];
+
+		if (_serverCharacter.TryGetComponent(out Player player))
+		{
+			player.SelectedItemIdNetworkVariable.OnValueChanged += OnSelectedItemIdChanged;
+		}
 	}
 
     public override void OwnerInitialization()
@@ -39,9 +52,26 @@ public class PlayerStateMachine : StateMachine
 	{
 		WorldManager.Instance.OnBiomeTransitionStart -= WorldManager_RestrictMovement;
 		WorldManager.Instance.OnBiomeTransitionEnd -= WorldManager_AllowMovement;
+		if (_serverCharacter.TryGetComponent(out Player player))
+		{
+			player.SelectedItemIdNetworkVariable.OnValueChanged -= OnSelectedItemIdChanged;
+		}
 	}
 
-	public override void ReceiveHP(ServerCharacter inflicter, int amount)
+    public override void UpdateAI()
+    {
+        base.UpdateAI();
+
+		_swingCdTimer?.Tick(Time.deltaTime);
+	}
+
+    private void OnSelectedItemIdChanged(int previousValue, int newValue)
+    {
+		// Played on all client machines for this player instance
+		_heldItem = GameManager.Instance.GetItemSOFromItemId(newValue);
+    }
+
+    public override void ReceiveHP(ServerCharacter inflicter, int amount)
 	{
 		if (inflicter != null)
 		{

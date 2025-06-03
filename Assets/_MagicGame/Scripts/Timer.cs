@@ -32,6 +32,11 @@ using UnityEngine;
     {
         get { return _duration; }
     }
+    
+    public void AddTime(float time)
+    {
+        _remainingSeconds += time;
+    }
 	
     public void Reset()
     {

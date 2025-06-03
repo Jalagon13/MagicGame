@@ -60,19 +60,4 @@ public class PlayerMoveState : BaseState
 		// 	SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerFootsteps, Player.LocalClientInstance.transform.position);
 		// }
 	}
-
-	public override void ClientEnterState()
-	{
-		Debug.Log($"[Client {_ctx.ServerCharacter.OwnerClientId}] Player entering move");
-	}
-
-	public override void ClientExitState()
-	{
-		Debug.Log($"[Client {_ctx.ServerCharacter.OwnerClientId}] Player exiting move");
-	}
-
-	public override void ClientUpdateState()
-	{
-		
-	}
 }
