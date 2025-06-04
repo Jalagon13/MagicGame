@@ -14,10 +14,10 @@ public class ToolItemSO : ItemSO
 	[field: SerializeField] public ToolType ToolType { get; private set; }
 	[field: SerializeField] public int MiningPower { get; private set; }
 	[field: SerializeField] public float MiningRange { get; private set; }
-	[field: SerializeField] public int MeleeDamage { get; private set; }
+	[field: SerializeField] public int Damage { get; private set; }
 	[field: SerializeField] public int Knockback { get; private set; }
 	[field: SerializeField] public float DetectionBetweenHitsDuration { get; private set; } = 0.05f;
-	[field: SerializeField] public float MeleeColliderLength { get; private set; } = 1f;
+	[field: SerializeField] public float ColliderLength { get; private set; } = 1f;
 	[field: SerializeField] public float SwingDuration { get; private set; } = 0.35f;
 	[field: SerializeField] public float SwingCooldown { get; private set; } = 0.25f;
 	[field: SerializeField] public EventReference HitSound { get; private set; }

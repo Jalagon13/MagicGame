@@ -25,10 +25,7 @@ public class Player : NetworkBehaviour
 		public Vector2 DamagerPosition;
 	}
 	
-	public NetworkVariable<int> SelectedItemIdNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-	public NetworkVariable<BiomeType> CurrentBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	
-	[field: SerializeField] public PlayerHand PlayerHand { get; private set; }
 	[field: SerializeField] public PlayerVisuals PlayerVisuals { get; private set; }
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
 	[SerializeField] private GameObject _breadCrumbPrefab;
@@ -43,8 +40,17 @@ public class Player : NetworkBehaviour
 	private Vector2Int _lastTilePosition;
 	
 	
+	
+	
+	[SerializeField] private PlayerHand _playerHand;
+	public PlayerHand PlayerHand => _playerHand;
+	
+	public NetworkVariable<int> SelectedItemIdNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public NetworkVariable<BiomeType> CurrentBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	
 	private ServerCharacter _serverCharacter;
 	public ServerCharacter ServerCharacter => _serverCharacter;
+	
 	private PlayerNetworkVisibility _playerNetworkVisibility;
 	public PlayerNetworkVisibility PlayerNetworkVisibility => _playerNetworkVisibility;
 	

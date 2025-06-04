@@ -328,6 +328,10 @@ MonoBehaviour:
     m_InternalValue: 0
   CardinalDirection:
     m_InternalValue: 0
+  SuperAIState:
+    m_InternalValue: 0
+  SubAIState:
+    m_InternalValue: 0
 --- !u!114 &1645875197371293612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,11 +345,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <PlayerHand>k__BackingField: {fileID: 4604921083407888490}
   <PlayerVisuals>k__BackingField: {fileID: 3416200484414636821}
   <CollectTag>k__BackingField: {fileID: 6231199994205774343}
   _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
   _respawnTimerDuration: 2
+  _playerHand: {fileID: 4604921083407888490}
 --- !u!114 &598476479702786246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1486,9 +1490,9 @@ MonoBehaviour:
   _southPivot: {fileID: 3951572965716743613}
   _eastPivot: {fileID: 5690394868646927140}
   _westPivot: {fileID: 4860324121513958072}
-  _itemHeldSR: {fileID: 2336160045276987048}
   _armPivotGO: {fileID: 6010529099300971215}
   _armGO: {fileID: 6449608859788415041}
+  _itemHeldSR: {fileID: 2336160045276987048}
   SpellSpawnTransform: {fileID: 4196058989623954390}
   MeleeCollider: {fileID: 3620228785507582295}
 --- !u!114 &7552163614298674993

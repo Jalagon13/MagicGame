@@ -13,12 +13,20 @@ public class ServerAnimationHandler : NetworkBehaviour
     private NetworkLifeState _networkLifeState;
     [SerializeField] 
     private List<ServerSpriteAnimHandler> _spriteAnimHandlers = new List<ServerSpriteAnimHandler>();
+    
+    private CardinalDirection _swingDirection = CardinalDirection.None;
 
     public override void OnNetworkSpawn()
     {
         if (IsServer)
         {
             _networkLifeState.LifeState.OnValueChanged += OnLifeStateChanged;
+            _serverCharacter.MovementState.OnValueChanged += PlayCurrentMoveState;
+            _serverCharacter.CardinalDirection.OnValueChanged += OnCardinalDirectionChanged;
+            if(_serverCharacter.TryGetComponent(out Player player))
+            {
+                player.PlayerHand.SwingDirection.OnValueChanged += OnSwingDirectionChanged;
+            }
         }
     }
 
@@ -27,18 +35,40 @@ public class ServerAnimationHandler : NetworkBehaviour
         if (IsServer && _networkLifeState != null)
         {
             _networkLifeState.LifeState.OnValueChanged -= OnLifeStateChanged;
+            _serverCharacter.MovementState.OnValueChanged -= PlayCurrentMoveState;
+            _serverCharacter.CardinalDirection.OnValueChanged -= OnCardinalDirectionChanged;
+            if (_serverCharacter.TryGetComponent(out Player player))
+            {
+                player.PlayerHand.SwingDirection.OnValueChanged -= OnSwingDirectionChanged;
+            }
         }
     }
-    
-    public void PlayCurrentMoveState()
+
+    private void OnSwingDirectionChanged(CardinalDirection previousValue, CardinalDirection newValue)
     {
-        MovementState moveState = _serverCharacter.MovementState.Value;
-        CardinalDirection direction = _serverCharacter.CardinalDirection.Value;
-        // Debug.Log($"Playing {moveState} {direction}");
+        _swingDirection = newValue;
 
         foreach (ServerSpriteAnimHandler handler in _spriteAnimHandlers)
         {
-            handler.PlayAnimation(moveState, direction);
+            handler.PlayAnimation(_serverCharacter.MovementState.Value, _swingDirection == CardinalDirection.None ? _serverCharacter.CardinalDirection.Value : _swingDirection);
+        }
+    }
+
+    private void OnCardinalDirectionChanged(CardinalDirection previousValue, CardinalDirection newValue)
+    {
+        foreach (ServerSpriteAnimHandler handler in _spriteAnimHandlers)
+        {
+            handler.PlayAnimation(_serverCharacter.MovementState.Value, _swingDirection == CardinalDirection.None ? newValue : _swingDirection);
+        }
+    }
+
+    private void PlayCurrentMoveState(MovementState previousMovementState, MovementState newMovementState)
+    {
+        CardinalDirection direction = _serverCharacter.CardinalDirection.Value;
+
+        foreach (ServerSpriteAnimHandler handler in _spriteAnimHandlers)
+        {
+            handler.PlayAnimation(newMovementState, _swingDirection == CardinalDirection.None ? direction : _swingDirection);
         }
     }
 

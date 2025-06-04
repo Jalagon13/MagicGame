@@ -8,6 +8,7 @@ using UnityEditor.ShaderGraph.Internal;
 
 public enum CardinalDirection
 {
+	None,
 	North,
 	South,
 	West,
@@ -21,6 +22,9 @@ public class PlayerStateMachine : StateMachine
 	
 	private Timer _swingCdTimer;
 	public Timer SwingCooldownTimer => _swingCdTimer;
+	
+	private Player _playerRef;
+	public Player PlayerRef => _playerRef;
 
 	public PlayerStateMachine(ServerCharacter serverCharacter)
 	{
@@ -38,7 +42,8 @@ public class PlayerStateMachine : StateMachine
 
 		if (_serverCharacter.TryGetComponent(out Player player))
 		{
-			player.SelectedItemIdNetworkVariable.OnValueChanged += OnSelectedItemIdChanged;
+			_playerRef = player;
+			_playerRef.SelectedItemIdNetworkVariable.OnValueChanged += OnSelectedItemIdChanged;
 		}
 	}
 
