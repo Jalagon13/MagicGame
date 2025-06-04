@@ -117,14 +117,12 @@ public class PlayerHand : NetworkBehaviour
 		}
 	}
 
-	public void PerformSwing(Quaternion startRotation, Quaternion endRotation, float duration, CardinalDirection direction, MeleeCollider.SwingData swingData)
+	[Rpc(SendTo.ClientsAndHost)]
+	public void PerformSwingClientRpc(Quaternion startRotation, Quaternion endRotation, float duration, CardinalDirection direction, ulong senderClientId)
 	{
 		ShowArm();
 
-		MeleeCollider.StartSwing(swingData);
-
 		IsSwinging = true;
-		SwingDirection.Value = direction;
 		float buildUpDuration = duration / 2f;
 		_armPivotGO.transform.rotation = startRotation;
 		_itemHeldSR.transform.localScale = Vector3.zero;
@@ -141,7 +139,6 @@ public class PlayerHand : NetworkBehaviour
 					.OnComplete(() =>
 					{
 						HandleSwingStop(direction, duration, endRotation);
-
 					});
 			});
 	}
@@ -159,9 +156,8 @@ public class PlayerHand : NetworkBehaviour
 		}
 
 		MeleeCollider.EndSwing();
-		_armPivotGO.transform.rotation = endRotation;
-		SwingDirection.Value = CardinalDirection.None;
 		IsSwinging = false;
+		_armPivotGO.transform.rotation = endRotation;
 		// _swingCooldownTimer = new(HeldItem is ToolItemSO swordItemSO ? swordItemSO.SwingCooldown : 0.25f);
 		// _thisPlayer.IsPerformingSwing = false;
 		// _stoppingSwing = false;

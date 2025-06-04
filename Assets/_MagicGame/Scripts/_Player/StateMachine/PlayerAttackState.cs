@@ -59,8 +59,10 @@ public class PlayerAttackState : BaseState
               HitSound = _toolItemSO.HitSound,
               ColliderLength = _toolItemSO.ColliderLength
         };
-        
-        _ctx.PlayerRef.PlayerHand.PerformSwing(startRotation, endRotation, duration, swingDirection, swingData);
+
+        _ctx.PlayerRef.PlayerHand.MeleeCollider.StartSwing(swingData);
+        _ctx.PlayerRef.PlayerHand.SwingDirection.Value = swingDirection;
+        _ctx.PlayerRef.PlayerHand.PerformSwingClientRpc(startRotation, endRotation, duration, swingDirection, _ctx.ServerCharacter.OwnerClientId);
     }
 
     public override void UpdateState()
@@ -79,5 +81,16 @@ public class PlayerAttackState : BaseState
     public override void ExitState()
     {
         _ctx.SwingCooldownTimer.AddTime(_swingCd);
+        _ctx.PlayerRef.PlayerHand.SwingDirection.Value = CardinalDirection.None;
+    }
+
+    public override void ClientEnterState()
+    {
+        
+    }
+    
+    public override void ClientExitState()
+    {
+        
     }
 }

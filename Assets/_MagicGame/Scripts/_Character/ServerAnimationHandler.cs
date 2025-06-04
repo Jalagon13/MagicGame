@@ -18,7 +18,7 @@ public class ServerAnimationHandler : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
+        if (IsOwner)
         {
             _networkLifeState.LifeState.OnValueChanged += OnLifeStateChanged;
             _serverCharacter.MovementState.OnValueChanged += PlayCurrentMoveState;
@@ -32,7 +32,7 @@ public class ServerAnimationHandler : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        if (IsServer && _networkLifeState != null)
+        if (IsOwner && _networkLifeState != null)
         {
             _networkLifeState.LifeState.OnValueChanged -= OnLifeStateChanged;
             _serverCharacter.MovementState.OnValueChanged -= PlayCurrentMoveState;
