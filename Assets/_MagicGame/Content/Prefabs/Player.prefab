@@ -36,6 +36,8 @@ Transform:
   - {fileID: 1474419281066781438}
   - {fileID: 1668921152149292333}
   - {fileID: 5430783778306472901}
+  - {fileID: 4302369951305684658}
+  - {fileID: 7789935702021618490}
   - {fileID: 5908567600357599322}
   m_Father: {fileID: 6140821753101560951}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1507,8 +1509,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 972fc713e72794c019201d6a4a4fa642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isMainHand: 1
-  _mainHand: {fileID: 4604921083407888490}
   _armPivotGO: {fileID: 6010529099300971215}
 --- !u!1 &5942745410432643869
 GameObject:
@@ -2317,7 +2317,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5430783778306472901}
+  m_Father: {fileID: 1332535597681020578}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!331 &8785629131345501009
 SpriteMask:
@@ -2408,9 +2408,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4302369951305684658}
-  - {fileID: 7789935702021618490}
+  m_Children: []
   m_Father: {fileID: 1332535597681020578}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &5634837695378114960
@@ -2538,7 +2536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _mainHand: {fileID: 4604921083407888490}
+  _playerHand: {fileID: 4604921083407888490}
   _rightSideSpriteMask: {fileID: 8785629131345501009}
   _leftSideSpriteMask: {fileID: 8207740533627687385}
 --- !u!114 &4276618735467231427
@@ -2657,7 +2655,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5430783778306472901}
+  m_Father: {fileID: 1332535597681020578}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!331 &8207740533627687385
 SpriteMask:

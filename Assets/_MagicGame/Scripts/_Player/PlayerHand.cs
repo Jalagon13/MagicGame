@@ -11,8 +11,6 @@ public class PlayerHand : NetworkBehaviour
 	// Events
 	public event EventHandler<CardinalDirectionEventArgs> OnHoldingWandEnd;
 	public event EventHandler<CardinalDirectionEventArgs> OnHoldingWandStart;
-	public event EventHandler<CardinalDirectionEventArgs> OnSwingStart;
-	public event EventHandler<CardinalDirectionEventArgs> OnSwingEnd;
 	public event EventHandler<CardinalDirectionEventArgs> OnCastingArmDirectionChanged;
 
 	public class CardinalDirectionEventArgs : EventArgs
@@ -120,6 +118,7 @@ public class PlayerHand : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	public void PerformSwingClientRpc(Quaternion startRotation, Quaternion endRotation, float duration, CardinalDirection direction, ulong senderClientId)
 	{
+		SetPivotPosition(direction);
 		ShowArm();
 
 		IsSwinging = true;
@@ -152,7 +151,6 @@ public class PlayerHand : NetworkBehaviour
 		else
 		{
 			HideArm();
-			OnSwingEnd?.Invoke(this, new CardinalDirectionEventArgs { Direction = direction });
 		}
 
 		MeleeCollider.EndSwing();

@@ -16,7 +16,7 @@ public class PlayerAttackState : BaseState
 
     protected override void EnterState()
     {
-        Debug.Log("Player entering swing");
+        // Debug.Log("Player entering swing");
         _toolItemSO = _ctx.HeldItem as ToolItemSO;
         _swingCd = _toolItemSO.SwingCooldown;
         float duration = _toolItemSO.SwingDuration;
@@ -24,19 +24,15 @@ public class PlayerAttackState : BaseState
         switch (_ctx.PlayerRef.PlayerHand.AimDirection.Value)
         {
             case CardinalDirection.North:
-                _ctx.PlayerRef.PlayerHand.SetPivotPosition(CardinalDirection.North);
                 Swing(150, 30, duration, true, CardinalDirection.North);
                 break;
             case CardinalDirection.South:
-                _ctx.PlayerRef.PlayerHand.SetPivotPosition(CardinalDirection.South);
                 Swing(330, 210, duration, false, CardinalDirection.South);
                 break;
             case CardinalDirection.West:
-                _ctx.PlayerRef.PlayerHand.SetPivotPosition(CardinalDirection.West);
                 Swing(120, 240, duration, false, CardinalDirection.West);
                 break;
             case CardinalDirection.East:
-                _ctx.PlayerRef.PlayerHand.SetPivotPosition(CardinalDirection.East);
                 Swing(60, 300, duration, true, CardinalDirection.East);
                 break;
         }
@@ -62,6 +58,7 @@ public class PlayerAttackState : BaseState
 
         _ctx.PlayerRef.PlayerHand.MeleeCollider.StartSwing(swingData);
         _ctx.PlayerRef.PlayerHand.SwingDirection.Value = swingDirection;
+        _ctx.ServerCharacter.CardinalDirection.Value = swingDirection;
         _ctx.PlayerRef.PlayerHand.PerformSwingClientRpc(startRotation, endRotation, duration, swingDirection, _ctx.ServerCharacter.OwnerClientId);
     }
 
