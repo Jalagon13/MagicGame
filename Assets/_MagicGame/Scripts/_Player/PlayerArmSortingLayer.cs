@@ -14,16 +14,62 @@ public class PlayerArmSortingLayer : MonoBehaviour
 		_sortingGroup = GetComponent<SortingGroup>();
 		_playerHand = GetComponent<PlayerHand>();
 		_playerHand.SwingDirection.OnValueChanged += OnSwingChanged;
-		_playerHand.OnHoldingWandStart += MainHandOnHoldingWandStart;
-		_playerHand.OnCastingArmDirectionChanged += MainHandOnCastingArmDirectionChanged;
+		_playerHand.CastingDirection.OnValueChanged += OnCastingDirectionChanged;
 	}
 
 	private void OnDestroy()
 	{
 		_playerHand.SwingDirection.OnValueChanged += OnSwingChanged;
-		_playerHand.OnHoldingWandStart -= MainHandOnHoldingWandStart;
-		_playerHand.OnCastingArmDirectionChanged -= MainHandOnCastingArmDirectionChanged;
+		_playerHand.CastingDirection.OnValueChanged -= OnCastingDirectionChanged;
 	}
+
+    private void OnCastingDirectionChanged(CardinalDirection previousValue, CardinalDirection newValue)
+    {
+		if(previousValue == CardinalDirection.None && newValue != CardinalDirection.None)
+		{
+			switch (newValue)
+			{
+				case CardinalDirection.North:
+					PutSpriteBack();
+					PivotYToPositive();
+					break;
+				case CardinalDirection.South:
+					PutSpriteFront();
+					PivotYToPositive();
+					break;
+				case CardinalDirection.West:
+					PutSpriteFront();
+					PivotYToNegative();
+					break;
+				case CardinalDirection.East:
+					PutSpriteFront();
+					PivotYToPositive();
+					break;
+			}
+		}
+		else if(previousValue != CardinalDirection.None && newValue != CardinalDirection.None)
+		{
+			switch (newValue)
+			{
+				case CardinalDirection.North:
+					PutSpriteBack();
+					PivotYToPositive();
+					break;
+				case CardinalDirection.South:
+					PutSpriteFront();
+					PivotYToPositive();
+					break;
+				case CardinalDirection.West:
+					PutSpriteFront();
+					PivotYToNegative();
+					break;
+				case CardinalDirection.East:
+					PutSpriteFront();
+					PivotYToPositive();
+					break;
+			}
+		}
+    }
 
     private void OnSwingChanged(CardinalDirection previousValue, CardinalDirection newValue)
     {
@@ -50,121 +96,6 @@ public class PlayerArmSortingLayer : MonoBehaviour
 		}
 	}
 
-    private void OffHandOnCastingArmDirectionChanged(object sender, PlayerHand.CardinalDirectionEventArgs e)
-	{
-		switch (e.Direction)
-		{
-			case CardinalDirection.North:
-				PutSpriteBack();
-				PivotYToNegative();
-				break;
-			case CardinalDirection.South:
-				PutSpriteFront();
-				PivotYToNegative();
-				break;
-			case CardinalDirection.West:
-				PutSpriteBack();
-				PivotYToNegative();
-				break;
-			case CardinalDirection.East:
-				PutSpriteBack();
-				PivotYToPositive();
-				break;
-		}
-	}
-
-	private void OffHandOnHoldingWandStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
-	{
-		switch (e.Direction)
-		{
-			case CardinalDirection.North:
-				PutSpriteBack();
-				PivotYToNegative();
-				break;
-			case CardinalDirection.South:
-				PutSpriteFront();
-				PivotYToNegative();
-				break;
-			case CardinalDirection.West:
-				PutSpriteBack();
-				PivotYToNegative();
-				break;
-			case CardinalDirection.East:
-				PutSpriteBack();
-				PivotYToPositive();
-				break;
-		}
-	}
-
-	private void OffHandOnSwingStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
-	{
-		switch (e.Direction)
-		{
-			case CardinalDirection.North:
-				PutSpriteBack();
-				PivotYToNegative();
-				break;
-			case CardinalDirection.South:
-				PutSpriteFront();
-				PivotYToNegative();
-				break;
-			case CardinalDirection.West:
-				PutSpriteBack();
-				PivotYToNegative();
-				break;
-			case CardinalDirection.East:
-				PutSpriteBack();
-				PivotYToPositive();
-				break;
-		}
-	}
-
-	private void MainHandOnCastingArmDirectionChanged(object sender, PlayerHand.CardinalDirectionEventArgs e)
-	{
-		switch (e.Direction)
-		{
-			case CardinalDirection.North:
-				PutSpriteBack();
-				PivotYToPositive();
-				break;
-			case CardinalDirection.South:
-				PutSpriteFront();
-				PivotYToPositive();
-				break;
-			case CardinalDirection.West:
-				PutSpriteFront();
-				PivotYToNegative();
-				break;
-			case CardinalDirection.East:
-				PutSpriteFront();
-				PivotYToPositive();
-				break;
-		}
-	}
-
-	private void MainHandOnHoldingWandStart(object sender, PlayerHand.CardinalDirectionEventArgs e)
-	{
-		switch (e.Direction)
-		{
-			case CardinalDirection.North:
-				PutSpriteBack();
-				PivotYToPositive();
-				break;
-			case CardinalDirection.South:
-				PutSpriteFront();
-				PivotYToPositive();
-				break;
-			case CardinalDirection.West:
-				PutSpriteFront();
-				PivotYToNegative();
-				break;
-			case CardinalDirection.East:
-				PutSpriteFront();
-				PivotYToPositive();
-				break;
-		}
-	}
-	
 	private void PutSpriteFront()
 	{
 		_sortingGroup.sortingOrder = 1;

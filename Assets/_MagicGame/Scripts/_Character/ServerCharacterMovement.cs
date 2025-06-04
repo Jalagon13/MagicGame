@@ -68,7 +68,6 @@ public class ServerCharacterMovement : NetworkBehaviour
     {
         _desiredDirection = Vector2.zero;
         _serverCharacter.MovementState.Value = MovementState.Idle;
-        // _serverCharacter.AnimationHandler.PlayCurrentMoveState(); // TODO: make it so the animators just observe the movementstate change and set the correct animation from there
     }
     
     public void StartPursue(Vector2 desiredDirection)
@@ -77,7 +76,6 @@ public class ServerCharacterMovement : NetworkBehaviour
         _speed = _serverCharacter.Data.PursueSpeed;
         _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection();
         _serverCharacter.MovementState.Value = MovementState.Pursuing;
-        // _serverCharacter.AnimationHandler.PlayCurrentMoveState();
     }
     
     public void StartMovement(Vector2 desiredDirection)
@@ -86,7 +84,6 @@ public class ServerCharacterMovement : NetworkBehaviour
         _speed = _serverCharacter.Data.BaseSpeed;
         _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection();
         _serverCharacter.MovementState.Value = MovementState.Moving;
-        // _serverCharacter.AnimationHandler.PlayCurrentMoveState();
     }
 
     private CardinalDirection CardinalDirectionFromDesiredDirection()

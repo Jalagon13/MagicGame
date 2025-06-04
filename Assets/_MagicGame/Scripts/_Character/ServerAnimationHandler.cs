@@ -14,7 +14,7 @@ public class ServerAnimationHandler : NetworkBehaviour
     [SerializeField] 
     private List<ServerSpriteAnimHandler> _spriteAnimHandlers = new List<ServerSpriteAnimHandler>();
     
-    private CardinalDirection _swingDirection = CardinalDirection.None;
+    private CardinalDirection _actionDirection = CardinalDirection.None; // Used for casting direction and swing direction
 
     public override void OnNetworkSpawn()
     {
@@ -25,7 +25,8 @@ public class ServerAnimationHandler : NetworkBehaviour
             _serverCharacter.CardinalDirection.OnValueChanged += OnCardinalDirectionChanged;
             if(_serverCharacter.TryGetComponent(out Player player))
             {
-                player.PlayerHand.SwingDirection.OnValueChanged += OnSwingDirectionChanged;
+                player.PlayerHand.SwingDirection.OnValueChanged += OnActionDirectionChanged;
+                player.PlayerHand.CastingDirection.OnValueChanged += OnActionDirectionChanged;
             }
         }
     }
@@ -39,18 +40,19 @@ public class ServerAnimationHandler : NetworkBehaviour
             _serverCharacter.CardinalDirection.OnValueChanged -= OnCardinalDirectionChanged;
             if (_serverCharacter.TryGetComponent(out Player player))
             {
-                player.PlayerHand.SwingDirection.OnValueChanged -= OnSwingDirectionChanged;
+                player.PlayerHand.SwingDirection.OnValueChanged -= OnActionDirectionChanged;
+                player.PlayerHand.CastingDirection.OnValueChanged -= OnActionDirectionChanged;
             }
         }
     }
 
-    private void OnSwingDirectionChanged(CardinalDirection previousValue, CardinalDirection newValue)
+    private void OnActionDirectionChanged(CardinalDirection previousValue, CardinalDirection newValue)
     {
-        _swingDirection = newValue;
-
+        _actionDirection = newValue;
+        
         foreach (ServerSpriteAnimHandler handler in _spriteAnimHandlers)
         {
-            handler.PlayAnimation(_serverCharacter.MovementState.Value, _swingDirection == CardinalDirection.None ? _serverCharacter.CardinalDirection.Value : _swingDirection);
+            handler.PlayAnimation(_serverCharacter.MovementState.Value, _actionDirection == CardinalDirection.None ? _serverCharacter.CardinalDirection.Value : _actionDirection);
         }
     }
 
@@ -58,7 +60,7 @@ public class ServerAnimationHandler : NetworkBehaviour
     {
         foreach (ServerSpriteAnimHandler handler in _spriteAnimHandlers)
         {
-            handler.PlayAnimation(_serverCharacter.MovementState.Value, _swingDirection == CardinalDirection.None ? newValue : _swingDirection);
+            handler.PlayAnimation(_serverCharacter.MovementState.Value, _actionDirection == CardinalDirection.None ? newValue : _actionDirection);
         }
     }
 
@@ -68,7 +70,7 @@ public class ServerAnimationHandler : NetworkBehaviour
 
         foreach (ServerSpriteAnimHandler handler in _spriteAnimHandlers)
         {
-            handler.PlayAnimation(newMovementState, _swingDirection == CardinalDirection.None ? direction : _swingDirection);
+            handler.PlayAnimation(newMovementState, _actionDirection == CardinalDirection.None ? direction : _actionDirection);
         }
     }
 
