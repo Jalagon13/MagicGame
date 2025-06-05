@@ -61,7 +61,7 @@ public class PlayerAttackState : BaseState
 
         _ctx.PlayerRef.PlayerHand.MeleeCollider.StartSwing(swingData);
         _ctx.PlayerRef.PlayerHand.SwingDirection.Value = swingDirection;
-        _ctx.PlayerRef.PlayerHand.PerformSwingClientRpc(startRotation, endRotation, duration, swingDirection, _ctx.ServerCharacter.OwnerClientId);
+        _ctx.PlayerRef.PlayerHand.PerformSwingClientRpc(startRotation, endRotation, duration, swingDirection);
     }
 
     public override void UpdateState()

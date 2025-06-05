@@ -91,6 +91,7 @@ public class PlayerArmSprite : NetworkBehaviour
 		if(newValue == CardinalDirection.None)
 		{
 			// Swing done
+			Debug.Log($"Swing no value");
 			switch (previousValue)
 			{
 				case CardinalDirection.North:
@@ -109,6 +110,7 @@ public class PlayerArmSprite : NetworkBehaviour
 		}
 		else
 		{
+			Debug.Log($"Swing started with value");
 			// Swing started
 			switch (newValue)
 			{
@@ -131,12 +133,10 @@ public class PlayerArmSprite : NetworkBehaviour
 	private void ShowRightSide(bool show)
 	{
 		_rightSideSpriteMask.enabled = !show;
-		Debug.Log($"Showing right side: {show}");
 	}
 	
 	private void ShowLeftSide(bool show)
 	{
 		_leftSideSpriteMask.enabled = !show;
-		Debug.Log($"Showing left side: {show}");
 	}
 }

@@ -88,7 +88,11 @@ public class PlayerHand : NetworkBehaviour
 		else
 		{
 			HideArm();
-			if(IsOwner) CastingDirection.Value = CardinalDirection.None;
+			if (_thisPlayer.ServerCharacter.MovementState.Value == MovementState.Idle)
+			{
+				_thisPlayer.ServerCharacter.CardinalDirection.Value = CastingDirection.Value;
+			}
+			if (IsOwner) CastingDirection.Value = CardinalDirection.None;
 		}
 		
 		if(!IsSwinging)
@@ -128,7 +132,7 @@ public class PlayerHand : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.ClientsAndHost)]
-	public void PerformSwingClientRpc(Quaternion startRotation, Quaternion endRotation, float duration, CardinalDirection direction, ulong senderClientId)
+	public void PerformSwingClientRpc(Quaternion startRotation, Quaternion endRotation, float duration, CardinalDirection direction)
 	{
 		SetPivotPosition(direction);
 		ShowArm();
@@ -140,6 +144,7 @@ public class PlayerHand : NetworkBehaviour
 
 		_itemHeldSR.transform.DOScale(Vector3.one, buildUpDuration).SetEase(Ease.OutSine).OnComplete(() =>
 		{
+			// On swing done
 			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerMeleeSwing, transform.root.transform.position);
 			_armPivotGO.transform.DORotateQuaternion(endRotation, duration).SetEase(Ease.OutSine).OnComplete(() =>
 			{
@@ -147,7 +152,7 @@ public class PlayerHand : NetworkBehaviour
 				{	
 					if(IsOwner)
 					{
-						CastingDirection.Value = CardinalDirection.None;
+						SwingDirection.Value = CardinalDirection.None;
 						CastingDirection.Value = DetermineCardinalDirection(AngleToMouse.Value);
 						if(_thisPlayer.ServerCharacter.MovementState.Value == MovementState.Idle)
 						{
@@ -162,7 +167,7 @@ public class PlayerHand : NetworkBehaviour
 					SwingDirection.Value = CardinalDirection.None;
 					HideArm();
 				}
-
+				
 				MeleeCollider.EndSwing();
 				IsSwinging = false;
 				_armPivotGO.transform.rotation = endRotation;
