@@ -80,12 +80,9 @@ public class PlayerHand : NetworkBehaviour
 		_isHoldingWandOrSpell = _heldItem is WandItemSO || _heldItem is SpellItemSO;
 		if(_isHoldingWandOrSpell)
 		{
-			if(IsOwner)
-			{
-				float originalY = Mathf.Abs(SpellSpawnTransform.localPosition.y);
-				float newY = _heldItem is WandItemSO ? -originalY : originalY;
-				SpellSpawnTransform.localPosition = new Vector3(SpellSpawnTransform.localPosition.x, newY, SpellSpawnTransform.localPosition.z);
-			}
+			float originalY = Mathf.Abs(SpellSpawnTransform.localPosition.y);
+			float newY = _heldItem is WandItemSO ? -originalY : originalY;
+			SpellSpawnTransform.localPosition = new Vector3(SpellSpawnTransform.localPosition.x, newY, SpellSpawnTransform.localPosition.z);
 			ShowArm();
 		}
 		else

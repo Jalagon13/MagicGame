@@ -38,8 +38,8 @@ public class PlayerSpellCastingState : BaseState
 
     public override void ClientEnterState(AIStateData stateData)
     {
-        Debug.Log($"Playing on client{_ctx.ServerCharacter.NetworkManager.LocalClientId}, GO Id this state belongs to: {_ctx.ServerCharacter.OwnerClientId}, SpellId for this GO: {stateData.SpellId}");
-        SpellItemSO spellToCast = GameManager.Instance.GetItemSOFromItemId(stateData.SpellId) as SpellItemSO;
+        Debug.Log($"Playing on client{_ctx.ServerCharacter.NetworkManager.LocalClientId}, GO Id this state belongs to: {_ctx.ServerCharacter.OwnerClientId}, SpellId for this GO: {stateData.Amount}");
+        SpellItemSO spellToCast = GameManager.Instance.GetItemSOFromItemId(stateData.Amount) as SpellItemSO;
         // Debug.Log($"OnClient Spell id: {_ctx.ServerCharacter.CurrentSpellId.Value} {_ctx.ServerCharacter.gameObject.name}, {_ctx.ServerCharacter.OwnerClientId}");
         // Debug.Log($"OnCLient Spell to cast: {spellToCast.Name}");
 

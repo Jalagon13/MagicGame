@@ -23,6 +23,7 @@ public class MagicCircle : MonoBehaviour
 
     public void StartAnimation(float castTime)
     {
+        _magicCircleSr = GetComponent<SpriteRenderer>();
         _magicCircleSr.enabled = true;
         transform.localScale = Vector3.zero;
         transform.DOScale(Vector3.one, castTime);

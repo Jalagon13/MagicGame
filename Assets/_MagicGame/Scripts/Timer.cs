@@ -23,10 +23,7 @@ using UnityEngine;
         }
     }
 	
-    public float ElapsedSeconds
-    {
-        get { return _duration - _remainingSeconds; }
-    }
+    public bool IsDone => _remainingSeconds <= 0f;
     
     public float Duration
     {

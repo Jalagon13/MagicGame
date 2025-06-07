@@ -5,28 +5,28 @@ using UnityEngine;
 public struct AIStateData : IEquatable<AIStateData>, INetworkSerializable
 {
     public AIState CurrentState;
-    public int SpellId;
+    public int Amount; // Can be anything, spell id, damage, speed, whatever the fuck
 
     public AIStateData(AIState currentState)
     {
         CurrentState = currentState;
-        SpellId = 0;
+        Amount = 0;
     }
 
     public AIStateData(AIState currentState, int spellId)
     {
         CurrentState = currentState;
-        SpellId = spellId;
+        Amount = spellId;
     }
     
     public bool Equals(AIStateData other)
     {
-        return CurrentState == other.CurrentState && SpellId == other.SpellId;
+        return CurrentState == other.CurrentState && Amount == other.Amount;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref CurrentState);
-        serializer.SerializeValue(ref SpellId);
+        serializer.SerializeValue(ref Amount);
     }
 }

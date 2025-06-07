@@ -59,8 +59,6 @@ public class ServerCharacter : NetworkBehaviour
     
     public NetworkVariable<MovementState> MovementState { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<CardinalDirection> CardinalDirection { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    
-    // TODO: Replace AIState a custom network variable that holds AIState and any other data i decide i want to pass through to the clients.
     public NetworkVariable<AIStateData> SuperAIState { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<AIStateData> SubAIState { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
@@ -180,14 +178,14 @@ public class ServerCharacter : NetworkBehaviour
             hp = (int)(hp * damageReduction);
             
             _clientCharacter.PlayDamageNumbersRpc(hp);
+            
+            if (_characterData.CanBeKnockedBack && e.PlayKnockback)
+            {
+                _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
+            }
         }
         
         HitPoints = Mathf.Clamp(HitPoints + hp, 0, _characterData.BaseHP);
-        
-        if(_characterData.CanBeKnockedBack && e.PlayKnockback)
-        {
-            _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
-        }
         
         _stateMachine?.ReceiveHP(inflicter, hp);
         
