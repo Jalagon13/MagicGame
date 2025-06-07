@@ -80,19 +80,25 @@ public class PlayerHand : NetworkBehaviour
 		_isHoldingWandOrSpell = _heldItem is WandItemSO || _heldItem is SpellItemSO;
 		if(_isHoldingWandOrSpell)
 		{
-			float originalY = Mathf.Abs(SpellSpawnTransform.localPosition.y);
-			float newY = _heldItem is WandItemSO ? -originalY : originalY;
-			SpellSpawnTransform.localPosition = new Vector3(SpellSpawnTransform.localPosition.x, newY, SpellSpawnTransform.localPosition.z);
+			if(IsOwner)
+			{
+				float originalY = Mathf.Abs(SpellSpawnTransform.localPosition.y);
+				float newY = _heldItem is WandItemSO ? -originalY : originalY;
+				SpellSpawnTransform.localPosition = new Vector3(SpellSpawnTransform.localPosition.x, newY, SpellSpawnTransform.localPosition.z);
+			}
 			ShowArm();
 		}
 		else
 		{
 			HideArm();
-			if (_thisPlayer.ServerCharacter.MovementState.Value == MovementState.Idle)
+			if (IsOwner)
 			{
-				_thisPlayer.ServerCharacter.CardinalDirection.Value = CastingDirection.Value;
+				CastingDirection.Value = CardinalDirection.None;
+				if (_thisPlayer.ServerCharacter.MovementState.Value == MovementState.Idle)
+				{
+					_thisPlayer.ServerCharacter.CardinalDirection.Value = CastingDirection.Value;
+				}
 			}
-			if (IsOwner) CastingDirection.Value = CardinalDirection.None;
 		}
 		
 		if(!IsSwinging)

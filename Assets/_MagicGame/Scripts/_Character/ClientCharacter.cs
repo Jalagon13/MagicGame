@@ -13,6 +13,8 @@ public class ClientCharacter : NetworkBehaviour
     
     private BaseState _currentSuperState;
     private BaseState _currentSubState;
+    private AIStateData _currentSuperStateData;
+    private AIStateData _currentSubStateData;
 
     public override void OnNetworkSpawn()
     {
@@ -24,11 +26,13 @@ public class ClientCharacter : NetworkBehaviour
         _serverCharacter.SuperAIState.OnValueChanged += OnSuperAIStateChanged;
         _serverCharacter.SubAIState.OnValueChanged += OnSubAIStateChanged;
 
-        if(!_serverCharacter.Data.IsNpc && _serverCharacter.IsOwner)
+        if(!_serverCharacter.Data.IsNpc)
         {
-            if(_serverCharacter.TryGetComponent(out Player player))
+            gameObject.name = $"Player_{OwnerClientId}";
+            
+            if(_serverCharacter.IsOwner && _serverCharacter.TryGetComponent(out Player player))
             {
-                player.OnNetworkSpawnInitializations();
+                player.OnNetworkSpawnLocalClientInitializations();
             }
         }
     }
@@ -43,7 +47,7 @@ public class ClientCharacter : NetworkBehaviour
         _serverCharacter.SuperAIState.OnValueChanged -= OnSuperAIStateChanged;
         _serverCharacter.SubAIState.OnValueChanged -= OnSubAIStateChanged;
     }
-    
+
     private void Update()
     {
         if (!IsClient)
@@ -51,27 +55,29 @@ public class ClientCharacter : NetworkBehaviour
             return;
         }
         
-        _currentSuperState?.ClientUpdateState();
-        _currentSubState?.ClientUpdateState();
+        _currentSuperState?.ClientUpdateState(_currentSuperStateData);
+        _currentSubState?.ClientUpdateState(_currentSubStateData);
     }
 
-    private void OnSuperAIStateChanged(AIState previousValue, AIState newValue)
+    private void OnSuperAIStateChanged(AIStateData previousValue, AIStateData newValue)
     {
         // Take the previousValue and run the exit function, take the new value, and run the enter function somehow
-        BaseState previousSuperState = _serverCharacter.StateMachine.GetState(previousValue);
-        previousSuperState?.ClientExitState();
+        BaseState previousSuperState = _serverCharacter.StateMachine.GetState(previousValue.CurrentState);
+        previousSuperState?.ClientExitState(previousValue);
 
-        _currentSuperState = _serverCharacter.StateMachine.GetState(newValue);
-        _currentSuperState?.ClientEnterState();
+        _currentSuperState = _serverCharacter.StateMachine.GetState(newValue.CurrentState);
+        _currentSuperState?.ClientEnterState(newValue);
+        _currentSuperStateData = newValue;
     }
 
-    private void OnSubAIStateChanged(AIState previousValue, AIState newValue)
+    private void OnSubAIStateChanged(AIStateData previousValue, AIStateData newValue)
     {
-        BaseState previousSubState = _serverCharacter.StateMachine.GetState(previousValue);
-        previousSubState?.ClientExitState();
+        BaseState previousSubState = _serverCharacter.StateMachine.GetState(previousValue.CurrentState);
+        previousSubState?.ClientExitState(previousValue);
 
-        _currentSubState = _serverCharacter.StateMachine.GetState(newValue);
-        _currentSubState?.ClientEnterState();
+        _currentSubState = _serverCharacter.StateMachine.GetState(newValue.CurrentState);
+        _currentSubState?.ClientEnterState(newValue);
+        _currentSubStateData = newValue;
     }
 
     [Rpc(SendTo.ClientsAndHost)]

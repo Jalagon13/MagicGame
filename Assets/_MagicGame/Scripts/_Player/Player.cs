@@ -16,17 +16,6 @@ public class Player : NetworkBehaviour
 
 	public static Player LocalClientInstance { get; private set; }
 	
-	public event EventHandler<PlayerIdEventArgs> OnRespawn;
-	public event EventHandler<PlayerIdEventArgs> OnDeath;
-	public event EventHandler<OnDamagedEventArgs> OnDamaged;
-	public class OnDamagedEventArgs : EventArgs
-	{
-		public int DamageAmount;
-		public Vector2 DamagerPosition;
-	}
-	
-	
-	[field: SerializeField] public PlayerVisuals PlayerVisuals { get; private set; }
 	[field: SerializeField] public CollectTag CollectTag { get; private set; }
 	[SerializeField] private GameObject _breadCrumbPrefab;
 	public Collider2D HitCollider { get; private set; }
@@ -38,9 +27,6 @@ public class Player : NetworkBehaviour
 	private Vector2 _spawnPoint;
 	private BiomeType _spawnBiome;
 	private Vector2Int _lastTilePosition;
-	
-	
-	
 	
 	[SerializeField] private PlayerHand _playerHand;
 	public PlayerHand PlayerHand => _playerHand;
@@ -61,10 +47,8 @@ public class Player : NetworkBehaviour
 		HitCollider = GetComponent<Collider2D>();
 	}
 	
-	public void OnNetworkSpawnInitializations()
+	public void OnNetworkSpawnLocalClientInitializations()
 	{
-		gameObject.name = $"Player_{OwnerClientId}";
-		
 		LocalClientInstance = this;
 		CurrentBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
 		_spawnBiome = BiomeType.Forest;
@@ -75,6 +59,7 @@ public class Player : NetworkBehaviour
 			PlayerId = OwnerClientId
 		});
 
+		Debug.Log($"{gameObject.name} spawned and initialized");
 		// local player start up code here, maybe input
 		GameInput.Instance.OnMove += GameInput_OnPlayerMove;
 		GameInput.Instance.OnPrimaryAction += GameInput_OnPrimaryAction;
@@ -152,9 +137,9 @@ public class Player : NetworkBehaviour
 			WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint);
 		}
 
-		OnRespawn?.Invoke(this, new PlayerIdEventArgs
-		{
-			PlayerId = OwnerClientId
-		});
+		// OnRespawn?.Invoke(this, new PlayerIdEventArgs
+		// {
+		// 	PlayerId = OwnerClientId
+		// });
 	}
 }

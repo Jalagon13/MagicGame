@@ -44,8 +44,8 @@ public abstract class StateMachine
 
     public void StartStateMachine()
     {
-        _currentState?.EnterStateWithNetworkSync();
-        _currentState.CurrentSubState?.EnterStateWithNetworkSync();
+        _currentState?.EnterStateWithNetworkSync(new AIStateData(_currentState.StateKey, 0));
+        _currentState.CurrentSubState?.EnterStateWithNetworkSync(new AIStateData(_currentState.CurrentSubState.StateKey, 0));
     }
 
     public virtual void UpdateAI()
@@ -60,12 +60,12 @@ public abstract class StateMachine
 
     public abstract void ReceiveHP(ServerCharacter inflicter, int amount);
 
-    public void TransitionToState(AIState statekey)
+    public void TransitionToState(AIStateData stateData)
     {
         _isTransitioningState = true;
         _currentState.ExitState();
-        _currentState = _states[statekey];
-        _currentState.EnterStateWithNetworkSync();
+        _currentState = _states[stateData.CurrentState];
+        _currentState.EnterStateWithNetworkSync(stateData);
         _isTransitioningState = false;
     }
 }

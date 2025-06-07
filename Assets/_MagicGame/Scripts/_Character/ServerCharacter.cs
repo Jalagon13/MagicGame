@@ -57,17 +57,12 @@ public class ServerCharacter : NetworkBehaviour
     private ServerAnimationHandler _serverAnimationHandler;
     public ServerAnimationHandler AnimationHandler => _serverAnimationHandler;
     
-    [HideInInspector]
-    public NetworkVariable<MovementState> MovementState = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<MovementState> MovementState { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<CardinalDirection> CardinalDirection { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     
-    [HideInInspector]
-    public NetworkVariable<CardinalDirection> CardinalDirection = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
-    [HideInInspector]
-    public NetworkVariable<AIState> SuperAIState = new(AIState.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
-    [HideInInspector]
-    public NetworkVariable<AIState> SubAIState = new(AIState.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    // TODO: Replace AIState a custom network variable that holds AIState and any other data i decide i want to pass through to the clients.
+    public NetworkVariable<AIStateData> SuperAIState { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<AIStateData> SubAIState { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private void Awake()
     {

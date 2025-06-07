@@ -28,7 +28,7 @@ public class PlayerStateMachine : StateMachine
 
 	public PlayerStateMachine(ServerCharacter serverCharacter)
 	{
-		// Gets played on all client machines
+		// This constructor gets played on all client machines
 		_serverCharacter = serverCharacter;
 		_swingCdTimer = new(0f);
 
@@ -39,11 +39,11 @@ public class PlayerStateMachine : StateMachine
 		_states[AIState.Attacking] = new PlayerAttackState(AIState.Attacking, this);
 		_states[AIState.SpellCasting] = new PlayerSpellCastingState(AIState.SpellCasting, this);
 		_currentState = _states[AIState.Grounded];
-
+		Debug.Log($"{_serverCharacter.gameObject.name} player state machine initialized");
 		if (_serverCharacter.TryGetComponent(out Player player))
 		{
 			_playerRef = player;
-			_playerRef.SelectedItemIdNetworkVariable.OnValueChanged += OnSelectedItemIdChanged;
+			_playerRef.SelectedItemIdNetworkVariable.OnValueChanged += OnSelectedItemIdChanged; 
 		}
 	}
 

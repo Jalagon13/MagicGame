@@ -21,44 +21,44 @@ public abstract class BaseState
         Context = context;
     }
 
-    public void EnterStateWithNetworkSync()
+    public void EnterStateWithNetworkSync(AIStateData stateData)
     {
+        EnterState();
+        
         if(_isSuperState)
         {
-            Context.ServerCharacter.SuperAIState.Value = StateKey;
+            Context.ServerCharacter.SuperAIState.Value = stateData;
         }
         else
         {
-            Context.ServerCharacter.SubAIState.Value = StateKey;
+            Context.ServerCharacter.SubAIState.Value = stateData;
         }
-        
-        EnterState();
     }
     
-    public virtual void ClientEnterState(){}
-    public virtual void ClientUpdateState(){}
-    public virtual void ClientExitState(){}
+    public virtual void ClientEnterState(AIStateData stateData) {}
+    public virtual void ClientUpdateState(AIStateData stateData) {}
+    public virtual void ClientExitState(AIStateData stateData){}
 
     protected abstract void EnterState();
     public abstract void UpdateState();
     public abstract void CheckSwitchStates();
     public abstract void ExitState();
 
-    protected void SwitchState(AIState state)
+    protected void SwitchState(AIStateData stateData)
     {
-        var newState = Context.GetState(state);
+        var newState = Context.GetState(stateData.CurrentState);
         if (newState == this) return;
 
         ExitState();
 
         if (_isSuperState)
         {
-            Context.TransitionToState(newState.StateKey); // This handles EnterState
+            Context.TransitionToState(stateData); // This handles EnterState
         }
         else
         {
-            newState.EnterStateWithNetworkSync(); // Only call EnterState directly for substates
-            _currentSuperState?.SetSubState(state);
+            newState.EnterStateWithNetworkSync(stateData); // Only call EnterState directly for substates
+            _currentSuperState?.SetSubState(stateData.CurrentState);
         }
     }
 

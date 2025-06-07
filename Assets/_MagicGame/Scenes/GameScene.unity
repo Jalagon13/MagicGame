@@ -3558,13 +3558,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 704164455}
+  - {fileID: 832159822}
   - {fileID: 2018757677}
   - {fileID: 876396786}
-  - {fileID: 1616656745}
-  - {fileID: 832159822}
-  - {fileID: 1655249452}
   - {fileID: 462286018}
+  - {fileID: 1616656745}
+  - {fileID: 1655249452}
   - {fileID: 1007229085}
   - {fileID: 121676585}
   - {fileID: 333420534}
@@ -3572,6 +3571,7 @@ Transform:
   - {fileID: 1883046596}
   - {fileID: 1917302445}
   - {fileID: 1091366767}
+  - {fileID: 704164455}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &437544570
@@ -6700,6 +6700,10 @@ MonoBehaviour:
     <MagicArray>k__BackingField: []
   _startingItems:
   - Item: {fileID: 11400000, guid: fe217e765840a43b5b9acff0a1269c2f, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 8565452f84d47428ca82aed67cb5ca9e, type: 2}
     Quantity: 1
 --- !u!1 &849543217
 GameObject:

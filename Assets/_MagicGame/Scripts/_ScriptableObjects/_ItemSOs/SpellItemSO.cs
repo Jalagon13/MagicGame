@@ -76,11 +76,8 @@ public class SpellItemSO : ItemSO
 		InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
 		SpellManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position);
 		SpellManager.Instance.LoadSpell(this, new LoadedSpell(this, syncSpellData, selectedInventoryItem));
-
-		// Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(HasteMultiplier);
-		Player.LocalClientInstance.PlayerVisuals.PlayChargeVFXClientRpc(GameManager.Instance.GetItemIdFromItemSO(this), CastTime);
 	}
-
+	
 	public override InventoryItem CreateInventoryItem(int quantity)
 	{
 		return new InventoryItem(this, quantity);

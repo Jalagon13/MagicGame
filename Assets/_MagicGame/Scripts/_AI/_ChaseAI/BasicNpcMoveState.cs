@@ -81,17 +81,17 @@ public class BasicNpcMoveState : BaseState
     {
         if (!_hasDestination || _destinationReached || _isStuck)
         {
-            SwitchState(AIState.Idle);
+            SwitchState(new AIStateData(AIState.Idle));
         }
 
         if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
         {
-            SwitchState(AIState.Knockbacked);
+            SwitchState(new AIStateData(AIState.Knockbacked));
         }
 
         if (_ctx.IsChasing)
         {
-            SwitchState(AIState.Pursuing);
+            SwitchState(new AIStateData(AIState.Pursuing));
         }
     }
 

@@ -73,7 +73,7 @@ public class PlayerAttackState : BaseState
     {
         if (!_ctx.PlayerRef.PlayerHand.IsSwinging)
         {
-            SwitchState(AIState.Grounded);
+            SwitchState(new AIStateData(AIState.Grounded, 0));
         }
     }
 
@@ -84,15 +84,5 @@ public class PlayerAttackState : BaseState
         {
             _ctx.ServerCharacter.CardinalDirection.Value = _swingDirection;
         }
-    }
-
-    public override void ClientEnterState()
-    {
-        
-    }
-    
-    public override void ClientExitState()
-    {
-        
     }
 }

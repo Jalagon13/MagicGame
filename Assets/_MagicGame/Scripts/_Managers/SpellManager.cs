@@ -35,8 +35,11 @@ public class SpellManager : NetworkBehaviour
     public Dictionary<int, Timer> SpellCooldownTimers { get; private set; } = new(); // Id of the spell on CD and the CD timer associated with it
     public SpellItemSO[] SpellItemArray { get; private set; } // Holds the array of spells from the wand that is currently selected
     public bool IsContinuouslyCasting { get; set; }
+    public bool IsCasting { get; private set; }
 
     private LoadedSpell _loadedSpell;
+    public LoadedSpell LoadedSpell => _loadedSpell;
+    
     private readonly int[] _spellSlotPriority = new int[]
     {
         0, // Left Click (Primary)
@@ -56,16 +59,19 @@ public class SpellManager : NetworkBehaviour
         }
     }
 
-    private void RegisterSelectedItemIndexChangeFunctionality(ulong clientId)
-    {
-        if (NetworkManager.LocalClientId != clientId) return;
-
-        Player.LocalClientInstance.SelectedItemIdNetworkVariable.OnValueChanged += HandleItemIndexChanged;
-    }
-
     private void Start()
     {
         HotbarManager.Instance.OnFocusSlotUpdated += CheckForSelectedItemChange;
+    }
+
+    public override void OnDestroy()
+    {
+        if (NetworkManager != null)
+        {
+            NetworkManager.OnClientConnectedCallback -= RegisterSelectedItemIndexChangeFunctionality;
+        }
+
+        HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSelectedItemChange;
     }
 
     private void Update()
@@ -81,11 +87,23 @@ public class SpellManager : NetworkBehaviour
                 if (slotIndex < SpellItemArray.Length && IsSpellKeyHeld(slotIndex))
                 {
                     // Insert spell casting logic here
-                    AttemptToCastSpellAtSlot(slotIndex);
+                    SpellItemSO spell = SpellItemArray[slotIndex];
+                    if (spell != null && CanCastSelectedSpell(spell))
+                    {
+                        Debug.Log($"Setting {Player.LocalClientInstance.ServerCharacter.gameObject.name}'s current spell id to {GameManager.Instance.GetItemIdFromItemSO(spell)}");
+                        spell.StartSpell(slotIndex);
+                    }
                     break;
                 }
             }
         }
+    }
+
+    private void RegisterSelectedItemIndexChangeFunctionality(ulong clientId)
+    {
+        if (NetworkManager.LocalClientId != clientId) return;
+
+        Player.LocalClientInstance.SelectedItemIdNetworkVariable.OnValueChanged += OnItemIdChanged;
     }
 
     public bool IsSpellKeyHeld(int slotIndex)
@@ -113,16 +131,17 @@ public class SpellManager : NetworkBehaviour
         spell.GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);
     }
 
-    private void AttemptToCastSpellAtSlot(int slotIndex)
+    public void LoadSpell(SpellItemSO spellToCast, LoadedSpell loadedSpell)
     {
-        SpellItemSO spell = SpellItemArray[slotIndex];
-        if (spell != null && CanCastSelectedSpell(spell))
-        {
-            spell.StartSpell(slotIndex);
-        }
+        Debug.Log($"Loading spell: {spellToCast.Name}");
+        
+        _loadedSpell = loadedSpell;
+        CastTimeTimer = new Timer(spellToCast.CastTime);
+        CastTimeTimer.OnTimerEnd += ExecuteSpell;
+        IsCasting = true;
     }
 
-    private void HandleItemIndexChanged(int previousValue, int newValue)
+    private void OnItemIdChanged(int previousValue, int newValue)
     {
         if(GameManager.Instance.GetItemSOFromItemId(newValue) is SpellItemSO spellItemSO)
         {
@@ -186,14 +205,6 @@ public class SpellManager : NetworkBehaviour
         }
     }
 
-    public void LoadSpell(SpellItemSO spellToCast, LoadedSpell loadedSpell)
-    {
-        _loadedSpell = loadedSpell;
-
-        CastTimeTimer = new Timer(spellToCast.CastTime);
-        CastTimeTimer.OnTimerEnd += ExecuteSpell;
-    }
-    
     public void SubtractManaAndSetCooldown(SpellItemSO spellToCast)
     {
         // PlayerStats.Instance.SubtractMana(spellToCast.ManaCost);
@@ -204,12 +215,8 @@ public class SpellManager : NetworkBehaviour
 
     private void ExecuteSpell(object sender, EventArgs e)
     {
-        // Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(1f);
-        Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
-        
         Vector2 spawnPoint = NetworkManager.Singleton.ConnectedClients[Player.LocalClientInstance.OwnerClientId].PlayerObject.GetComponent<Player>().PlayerHand.SpellSpawnTransform.position;
         Vector2 baseDirection = (ActionManager.MouseWorldPosition - spawnPoint).normalized;
-        // Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, _loadedSpell.SpellToCast.Recoil);
         SoundManager.Instance.PlayOneShot(_loadedSpell.SpellToCast.SpellCastSound, Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position);
 
         OnExecuteSpells?.Invoke(this, new ExecuteSpellsEventArgs 
@@ -217,8 +224,6 @@ public class SpellManager : NetworkBehaviour
             SpawnPoint = spawnPoint, 
             Direction = baseDirection 
         });
-        
-        int selectedSpellId = GameManager.Instance.GetItemIdFromItemSO(_loadedSpell.SpellToCast);
         
         if(_loadedSpell.SpellToCast.IsContinuousCast)
         {
@@ -230,7 +235,8 @@ public class SpellManager : NetworkBehaviour
         }
 
         _loadedSpell = new();
-
+        
+        IsCasting = false;
         CastTimeTimer.OnTimerEnd -= ExecuteSpell;
     }
 
@@ -243,11 +249,8 @@ public class SpellManager : NetworkBehaviour
 
         _loadedSpell = new();
 
-        // Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(1f);
-        Player.LocalClientInstance.PlayerVisuals.StopChargeVfxClientRpc();
-
+        IsCasting = false;
         OnCancelSpells?.Invoke(this, EventArgs.Empty);
-
         CastTimeTimer.OnTimerEnd -= ExecuteSpell;
         CastTimeTimer = new Timer(0);
     }
@@ -258,14 +261,4 @@ public class SpellManager : NetworkBehaviour
         
     //     return SpellCooldownTimers.ContainsKey(selectedSpellId);
     // }
-
-    public override void OnDestroy()
-    {
-        if (NetworkManager != null)
-        {
-            NetworkManager.OnClientConnectedCallback -= RegisterSelectedItemIndexChangeFunctionality;
-        }
-
-        HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSelectedItemChange;
-    }
 }

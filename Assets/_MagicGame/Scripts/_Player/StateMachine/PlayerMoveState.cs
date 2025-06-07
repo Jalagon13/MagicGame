@@ -37,7 +37,7 @@ public class PlayerMoveState : BaseState
 	{
 		if (_ctx.ServerCharacter.MovementState.Value == MovementState.Idle)
 		{
-		    SwitchState(AIState.Idle);
+		    SwitchState(new AIStateData(AIState.Idle));
 		}
 	}
 

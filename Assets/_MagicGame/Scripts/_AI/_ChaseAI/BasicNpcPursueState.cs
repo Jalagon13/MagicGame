@@ -42,7 +42,7 @@ public class BasicNpcPursueState : BaseState
     {
         if (!_ctx.IsChasing)
         {
-            SwitchState(AIState.Idle);
+            SwitchState(new AIStateData(AIState.Idle));
         }
     }
 }

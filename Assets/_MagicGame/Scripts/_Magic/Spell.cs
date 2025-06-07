@@ -85,7 +85,6 @@ public abstract class Spell : NetworkBehaviour
 	
 		if (IsClient)
 		{
-			Debug.Log($"Reattaching visualization before despawning");
 			Visualization.transform.parent = transform;
 		}
 	}
@@ -187,7 +186,6 @@ public abstract class Spell : NetworkBehaviour
 	{
 		NetworkObject.DontDestroyWithOwner = true;
 		NetworkObject.Despawn();
-		Debug.Log($"Despawning spell");
 	}
 
 	private void OnSpellLifeTimerEnd(object sender, EventArgs e)

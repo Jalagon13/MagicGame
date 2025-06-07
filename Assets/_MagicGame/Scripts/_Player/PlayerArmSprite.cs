@@ -91,7 +91,6 @@ public class PlayerArmSprite : NetworkBehaviour
 		if(newValue == CardinalDirection.None)
 		{
 			// Swing done
-			Debug.Log($"Swing no value");
 			switch (previousValue)
 			{
 				case CardinalDirection.North:
@@ -110,7 +109,6 @@ public class PlayerArmSprite : NetworkBehaviour
 		}
 		else
 		{
-			Debug.Log($"Swing started with value");
 			// Swing started
 			switch (newValue)
 			{

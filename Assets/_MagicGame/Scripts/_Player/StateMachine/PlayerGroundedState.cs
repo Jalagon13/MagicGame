@@ -13,7 +13,7 @@ public class PlayerGroundedState : BaseState
 
     protected override void EnterState()
     {
-        // Debug.Log("Player entering grounded");
+        Debug.Log("Player entering grounded");
 
     }
 
@@ -26,7 +26,12 @@ public class PlayerGroundedState : BaseState
     {
         if(_ctx.HeldItem is ToolItemSO && _ctx.SwingCooldownTimer.PercentRemaining <= 0 && GameInput.Instance.GetPrimaryHeldDown() && !Pointer.IsOverUI() && !Pointer.IsOverInteractable())
         {
-            SwitchState(AIState.Attacking);
+            SwitchState(new AIStateData(AIState.Attacking));
+        }
+        
+        if(SpellManager.Instance.IsCasting)
+        {
+            SwitchState(new AIStateData(AIState.SpellCasting, SpellManager.Instance.LoadedSpell.SpellData.SpellIndex));
         }
     }
 

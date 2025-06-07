@@ -30,16 +30,16 @@ public class BasicNpcKnockbackState : BaseState
         {
             if (_ctx.IsAngry)
             {
-                SwitchState(AIState.Pursuing);
+                SwitchState(new AIStateData(AIState.Pursuing));
             }
 
-            SwitchState(AIState.Idle);
+            SwitchState(new AIStateData(AIState.Idle));
             
         }
 
         if (_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
         {
-            SwitchState(AIState.Moving);
+            SwitchState(new AIStateData(AIState.Moving));
         }
     }
 }

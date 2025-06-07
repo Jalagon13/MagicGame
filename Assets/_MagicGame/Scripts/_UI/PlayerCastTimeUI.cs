@@ -48,9 +48,9 @@ public class PlayerCastTimeUI : MonoBehaviour
         }
         
         // Debug.Log($"Current Amount: {currentAmount} Max Amount: {maxAmount}");
-        float curr = (currentAmount / maxAmount) * _manaStatUI.MaxMana;
+        float curr = (currentAmount / maxAmount) * 100;
         
-        _castTimeBar.UpdateBar(curr, 0, _manaStatUI.MaxMana);
+        _castTimeBar.UpdateBar(curr, 0, 100);
         // _border.sizeDelta = new Vector2(_manaStatUI.MaxMana * 2, _border.sizeDelta.y);
         // _amountText.text = $"{Mathf.RoundToInt(curr)}/{_manaStatUI.MaxMana}";
     }
