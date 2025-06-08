@@ -12,7 +12,7 @@ public class PlayerIdleState : BaseState
 		_ctx = Context as PlayerStateMachine;
 	}
 
-	protected override void EnterState()
+	protected override void EnterState(AIStateData stateData)
 	{
 		Debug.Log($"Player entering idle");
 		// _ctx.IsMoving = false;

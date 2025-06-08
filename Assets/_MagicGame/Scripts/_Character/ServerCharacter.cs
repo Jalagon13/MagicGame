@@ -52,10 +52,12 @@ public class ServerCharacter : NetworkBehaviour
     private ServerCharacterMovement _serverCharacterMovement;
     public ServerCharacterMovement Movement => _serverCharacterMovement;
     
-    
     [SerializeField] 
     private ServerAnimationHandler _serverAnimationHandler;
     public ServerAnimationHandler AnimationHandler => _serverAnimationHandler;
+    
+    private CharacterStats _characterStats;
+    public CharacterStats Stats => _characterStats;
     
     public NetworkVariable<MovementState> MovementState { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<CardinalDirection> CardinalDirection { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -64,6 +66,8 @@ public class ServerCharacter : NetworkBehaviour
 
     private void Awake()
     {
+        _characterStats = new CharacterStats(_characterData);
+        
         NetHealthState = GetComponent<NetworkHealthState>();
         NetLifeState = GetComponent<NetworkLifeState>();
         
@@ -135,6 +139,7 @@ public class ServerCharacter : NetworkBehaviour
         {
             if (_stateMachine != null && LifeState == LifeState.Alive)
             {
+                _characterStats.TickBuffs(Time.deltaTime);
                 _stateMachine.UpdateAI();
             }
         }

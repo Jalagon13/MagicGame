@@ -28,8 +28,6 @@ public class ServerCharacterMovement : NetworkBehaviour
     private Vector2 _desiredDirection;
     public Vector2 DesiredDirection => _desiredDirection;
     
-    private float _speed;
-    
     private void Awake()
     {
         _knockback = new(_serverCharacter);
@@ -58,7 +56,8 @@ public class ServerCharacterMovement : NetworkBehaviour
         }
         else
         {
-            _velocity = Vector2.Lerp(_velocity, _desiredDirection * _speed, _serverCharacter.Data.TurnSharpness * Time.fixedDeltaTime);
+            float currentSpeed = _serverCharacter.Stats.MovementSpeed.GetValue();
+            _velocity = Vector2.Lerp(_velocity, _desiredDirection * currentSpeed, _serverCharacter.Data.TurnSharpness * Time.fixedDeltaTime);
         }
         
         _rigidbody2D.linearVelocity = _velocity;
@@ -73,7 +72,7 @@ public class ServerCharacterMovement : NetworkBehaviour
     public void StartPursue(Vector2 desiredDirection)
     {
         _desiredDirection = desiredDirection;
-        _speed = _serverCharacter.Data.PursueSpeed;
+        // _speed = _serverCharacter.Data.PursueSpeed; // NTFS: Maybe just make this a buff or something
         _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection();
         _serverCharacter.MovementState.Value = MovementState.Pursuing;
     }
@@ -81,7 +80,6 @@ public class ServerCharacterMovement : NetworkBehaviour
     public void StartMovement(Vector2 desiredDirection)
     {
         _desiredDirection = desiredDirection;
-        _speed = _serverCharacter.Data.BaseSpeed;
         _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection();
         _serverCharacter.MovementState.Value = MovementState.Moving;
     }

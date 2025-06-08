@@ -11,7 +11,7 @@ public class PlayerGroundedState : BaseState
         SetSubState(AIState.Idle);
     }
 
-    protected override void EnterState()
+    protected override void EnterState(AIStateData stateData)
     {
         Debug.Log("Player entering grounded");
 

@@ -12,7 +12,7 @@ public class BasicNpcIdleState : BaseState
         _ctx = Context as BasicNpcStateMachine;
     }
 
-    protected override void EnterState()
+    protected override void EnterState(AIStateData stateData)
     {  
         Debug.Log($"Idle State");
         _idleComplete = false;

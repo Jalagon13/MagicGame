@@ -4,6 +4,7 @@ public class PlayerSpellCastingState : BaseState
 {
     private PlayerStateMachine _ctx;
     private GameObject _clientChargeVfx;
+    private SpellItemSO _spellToCast;
 
     public PlayerSpellCastingState(AIState key, StateMachine context) : base(key, context)
     {
@@ -11,10 +12,17 @@ public class PlayerSpellCastingState : BaseState
         _ctx = Context as PlayerStateMachine;
     }
 
-    protected override void EnterState()
+    protected override void EnterState(AIStateData stateData)
     {
         Debug.Log($"OnClient Player entering spell casting");
-        // Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(HasteMultiplier);
+        _spellToCast = GameManager.Instance.GetItemSOFromItemId(stateData.Amount) as SpellItemSO;
+        
+        Buff castingMoveBuff = new Buff(
+            _ctx.ServerCharacter.Stats.MovementSpeed, 
+            new StatModifier(_spellToCast.HasteMultiplier, StatModifierType.Percent, _spellToCast)/* ,
+            _spellToCast.CastTime */);
+        
+        _ctx.ServerCharacter.Stats.AddBuff(castingMoveBuff);
     }
 
     public override void UpdateState()
@@ -32,16 +40,13 @@ public class PlayerSpellCastingState : BaseState
 
     public override void ExitState()
     {
-        // Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(1f);
+        _ctx.ServerCharacter.Stats.RemoveBuffsFromSource(_spellToCast);
         // Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, _loadedSpell.SpellToCast.Recoil);
     }
 
     public override void ClientEnterState(AIStateData stateData)
     {
-        Debug.Log($"Playing on client{_ctx.ServerCharacter.NetworkManager.LocalClientId}, GO Id this state belongs to: {_ctx.ServerCharacter.OwnerClientId}, SpellId for this GO: {stateData.Amount}");
         SpellItemSO spellToCast = GameManager.Instance.GetItemSOFromItemId(stateData.Amount) as SpellItemSO;
-        // Debug.Log($"OnClient Spell id: {_ctx.ServerCharacter.CurrentSpellId.Value} {_ctx.ServerCharacter.gameObject.name}, {_ctx.ServerCharacter.OwnerClientId}");
-        // Debug.Log($"OnCLient Spell to cast: {spellToCast.Name}");
 
         _clientChargeVfx = Object.Instantiate(spellToCast.ChargeVFX, _ctx.PlayerRef.PlayerHand.SpellSpawnTransform);
         _clientChargeVfx.transform.localPosition = Vector3.zero;

@@ -24,7 +24,7 @@ public class BasicNpcMoveState : BaseState
         _ctx = Context as BasicNpcStateMachine;
     }
 
-    protected override void EnterState()
+    protected override void EnterState(AIStateData stateData)
     {
         Debug.Log("Move State");
         _destination = GetRandomWanderDestinationBFS();

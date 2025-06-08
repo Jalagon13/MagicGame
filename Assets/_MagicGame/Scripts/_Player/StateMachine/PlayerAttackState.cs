@@ -15,7 +15,7 @@ public class PlayerAttackState : BaseState
         _ctx = Context as PlayerStateMachine;
     }
 
-    protected override void EnterState()
+    protected override void EnterState(AIStateData stateData)
     {
         // Debug.Log("Player entering swing");
         _toolItemSO = _ctx.HeldItem as ToolItemSO;

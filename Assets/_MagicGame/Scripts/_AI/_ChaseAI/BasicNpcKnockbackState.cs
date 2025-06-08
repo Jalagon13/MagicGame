@@ -9,7 +9,7 @@ public class BasicNpcKnockbackState : BaseState
         _ctx = Context as BasicNpcStateMachine;
     }
 
-    protected override void EnterState()
+    protected override void EnterState(AIStateData stateData)
     {
         Debug.Log($"Knockback state");
     }

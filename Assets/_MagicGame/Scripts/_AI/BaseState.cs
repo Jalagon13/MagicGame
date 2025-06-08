@@ -21,17 +21,17 @@ public abstract class BaseState
         Context = context;
     }
 
-    public void EnterStateWithNetworkSync(AIStateData stateData)
+    public void EnterStateWithNetworkSync(AIStateData newStateData)
     {
-        EnterState();
+        EnterState(newStateData);
         
         if(_isSuperState)
         {
-            Context.ServerCharacter.SuperAIState.Value = stateData;
+            Context.ServerCharacter.SuperAIState.Value = newStateData;
         }
         else
         {
-            Context.ServerCharacter.SubAIState.Value = stateData;
+            Context.ServerCharacter.SubAIState.Value = newStateData;
         }
     }
     
@@ -39,26 +39,26 @@ public abstract class BaseState
     public virtual void ClientUpdateState(AIStateData stateData) {}
     public virtual void ClientExitState(AIStateData stateData){}
 
-    protected abstract void EnterState();
+    protected abstract void EnterState(AIStateData stateData);
     public abstract void UpdateState();
-    public abstract void CheckSwitchStates();
     public abstract void ExitState();
+    public abstract void CheckSwitchStates();
 
-    protected void SwitchState(AIStateData stateData)
+    protected void SwitchState(AIStateData newStateData)
     {
-        var newState = Context.GetState(stateData.CurrentState);
+        var newState = Context.GetState(newStateData.CurrentState);
         if (newState == this) return;
 
         ExitState();
 
         if (_isSuperState)
         {
-            Context.TransitionToState(stateData); // This handles EnterState
+            Context.TransitionToState(newStateData); // This handles EnterState
         }
         else
         {
-            newState.EnterStateWithNetworkSync(stateData); // Only call EnterState directly for substates
-            _currentSuperState?.SetSubState(stateData.CurrentState);
+            newState.EnterStateWithNetworkSync(newStateData); // Only call EnterState directly for substates
+            _currentSuperState?.SetSubState(newStateData.CurrentState);
         }
     }
 

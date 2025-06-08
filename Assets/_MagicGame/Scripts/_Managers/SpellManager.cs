@@ -90,7 +90,6 @@ public class SpellManager : NetworkBehaviour
                     SpellItemSO spell = SpellItemArray[slotIndex];
                     if (spell != null && CanCastSelectedSpell(spell))
                     {
-                        Debug.Log($"Setting {Player.LocalClientInstance.ServerCharacter.gameObject.name}'s current spell id to {GameManager.Instance.GetItemIdFromItemSO(spell)}");
                         spell.StartSpell(slotIndex);
                     }
                     break;
