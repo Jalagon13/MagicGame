@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1332535597681020578}
   - component: {fileID: 2584946997130559442}
-  - component: {fileID: 3416200484414636821}
   m_Layer: 0
   m_Name: Visuals
   m_TagString: Untagged
@@ -53,19 +52,6 @@ SortingGroup:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_SortAtRoot: 0
---- !u!114 &3416200484414636821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 65483329398898238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19313cd4c90d8493bb96b51dc01f33b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &815970926421098775
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,14 +312,6 @@ MonoBehaviour:
   _damageReceiver: {fileID: 2603237591562411052}
   _serverCharacterMovement: {fileID: 3930061559417755682}
   _serverAnimationHandler: {fileID: 598476479702786246}
-  MovementState:
-    m_InternalValue: 0
-  CardinalDirection:
-    m_InternalValue: 0
-  SuperAIState:
-    m_InternalValue: 0
-  SubAIState:
-    m_InternalValue: 0
 --- !u!114 &1645875197371293612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,7 +325,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <PlayerVisuals>k__BackingField: {fileID: 3416200484414636821}
   <CollectTag>k__BackingField: {fileID: 6231199994205774343}
   _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
   _respawnTimerDuration: 2

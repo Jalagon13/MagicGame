@@ -18,7 +18,6 @@ public class CharacterStats
 
     public void AddBuff(Buff buff)
     {
-        Debug.Log($"Applying buff: {buff.Source}");
         buff.Apply();
         _activeBuffs.Add(buff);
     }
@@ -31,7 +30,6 @@ public class CharacterStats
 
             if (buff.Source == source)
             {
-                Debug.Log($"Found buff to remove: {buff.Source}");
                 buff.Remove();
                 _activeBuffs.RemoveAt(i);
             }

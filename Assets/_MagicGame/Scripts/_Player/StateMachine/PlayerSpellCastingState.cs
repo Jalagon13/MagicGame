@@ -14,7 +14,6 @@ public class PlayerSpellCastingState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        Debug.Log($"OnClient Player entering spell casting");
         _spellToCast = GameManager.Instance.GetItemSOFromItemId(stateData.Amount) as SpellItemSO;
         
         Buff castingMoveBuff = new Buff(
@@ -41,7 +40,7 @@ public class PlayerSpellCastingState : BaseState
     public override void ExitState()
     {
         _ctx.ServerCharacter.Stats.RemoveBuffsFromSource(_spellToCast);
-        // Player.LocalClientInstance.PlayerKnockback.ApplyKnockback(ActionManager.MouseWorldPosition, 0, _loadedSpell.SpellToCast.Recoil);
+        _ctx.ServerCharacter.Movement.StartKnockback(ActionManager.MouseWorldPosition, _spellToCast.Recoil);
     }
 
     public override void ClientEnterState(AIStateData stateData)
@@ -60,7 +59,6 @@ public class PlayerSpellCastingState : BaseState
     
     public override void ClientExitState(AIStateData stateData)
     {
-        Debug.Log($"OnClient exiting spell casting");
         _clientChargeVfx?.GetComponent<MagicCircle>().StopAnimation();
     }
 }

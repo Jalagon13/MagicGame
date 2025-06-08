@@ -21,11 +21,23 @@ public class PlayerKnockbackedState : BaseState
 
     public override void CheckSwitchStates()
     {
-        
+        if (_ctx.ServerCharacter.MovementState.Value == MovementState.Idle)
+        {
+            SwitchState(new AIStateData(AIState.Idle));
+        }
+        else if (_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
+        {
+            SwitchState(new AIStateData(AIState.Moving));
+        }
     }
 
     public override void ExitState()
     {
         
+    }
+
+    public override void ClientEnterState(AIStateData stateData)
+    {
+        // NTFS: Maybe add client side wind particles here
     }
 }

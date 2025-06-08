@@ -29,6 +29,10 @@ public class PlayerIdleState : BaseState
 		{
 			SwitchState(new AIStateData(AIState.Moving));
 		}
+		else if(_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
+		{
+			SwitchState(new AIStateData(AIState.Knockbacked));
+		}
 	}
 
     public override void UpdateState()

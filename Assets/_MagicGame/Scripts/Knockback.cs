@@ -11,7 +11,7 @@ public class Knockback
 	}
 	
 	public Vector2 Velocity { get; private set; }
-	public bool KnockbackActive => Velocity != Vector2.zero;
+	public bool KnockbackActive => Velocity != Vector2.one * 0.25f;
 
 	private bool _knockbackEnabled = true;
 	private float _decayMult = 5f; // Higher = knockback fades out faster
@@ -27,13 +27,13 @@ public class Knockback
 
 	public void UpdateKnockback(float fixedDeltaTime)
 	{
-		if(Velocity == Vector2.zero) return;
+		if(Velocity == Vector2.one * 0.25f) return;
 		
 		Velocity = Vector2.Lerp(Velocity, Vector2.zero, _decayMult * fixedDeltaTime);
 		
 		if (Velocity.magnitude < 0.75f)
 		{
-			Velocity = Vector2.zero;
+			Velocity = Vector2.one * 0.25f;
 			OnKnockbackEnd?.Invoke(this, EventArgs.Empty);
 		}
 	}

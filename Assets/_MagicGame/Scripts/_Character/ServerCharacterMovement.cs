@@ -31,12 +31,6 @@ public class ServerCharacterMovement : NetworkBehaviour
     private void Awake()
     {
         _knockback = new(_serverCharacter);
-        _knockback.OnKnockbackEnd += OnKnockbackEnd;
-    }
-
-    private void OnKnockbackEnd(object sender, EventArgs e)
-    {
-        _serverCharacter.MovementState.Value = MovementState.Idle;
     }
 
     public void FixedUpdateMovement()
@@ -53,6 +47,11 @@ public class ServerCharacterMovement : NetworkBehaviour
         if(_serverCharacter.MovementState.Value == MovementState.Knockback)
         {
             _velocity = _knockback.Velocity;
+            if(!_knockback.KnockbackActive)
+            {
+                _serverCharacter.MovementState.Value = _desiredDirection == Vector2.zero ? MovementState.Idle : MovementState.Moving;
+                return;
+            }
         }
         else
         {

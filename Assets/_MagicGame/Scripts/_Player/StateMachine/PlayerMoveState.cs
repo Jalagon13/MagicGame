@@ -22,8 +22,6 @@ public class PlayerMoveState : BaseState
 	
 		_playWalkSoundTimer = new(_walkSoundCooldown);
 		_playWalkSoundTimer.OnTimerEnd += PlayFootStepSound;
-		
-		// _ctx.IsMoving = true;
 	}
 
 	public override void ExitState()
@@ -38,6 +36,10 @@ public class PlayerMoveState : BaseState
 		if (_ctx.ServerCharacter.MovementState.Value == MovementState.Idle)
 		{
 		    SwitchState(new AIStateData(AIState.Idle));
+		}
+		else if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
+		{
+			SwitchState(new AIStateData(AIState.Knockbacked));
 		}
 	}
 
