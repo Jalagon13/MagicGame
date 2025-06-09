@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45bf45ce95db148eb957e731034dd7fb, type: 3}
+  m_Name: TargetDummyData
+  m_EditorClassIdentifier: 
+  BaseHP: 100
+  BaseMP: 100
+  BaseSpeed: 0
+  IFrameDuration: 0.2
+  TurnSharpness: 8
+  KnockbackResist: 0
+  RespawnTimerDuration: 3
+  CanBeKnockedBack: 0
+  CanDie: 0
+  IsNpc: 1
+  IsFriendly: 1
+  WillChasePlayer: 1
+  OnlyChaseWhenProvoked: 1
+  CanMove: 0
+  BaseAttack: 0
+  BaseDefense: 0
+  PursueSpeed: 4
+  MinIdleDuration: 2.5
+  MaxIdleDuration: 5
+  DetectionRadius: 15
+  DetectionIntervalDuration: 0.5
+  WanderRadius: 10
+  StoppingDistance: 0.25
+  StrafingDuration: 0.25
+  StrafeIntensity: 0.5

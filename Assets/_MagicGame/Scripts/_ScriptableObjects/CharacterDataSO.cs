@@ -19,11 +19,31 @@ public class CharacterDataSO : ScriptableObject
     public float RespawnTimerDuration = 0f;
     [Tooltip("If true, the NPC can be knocked back")]
     public bool CanBeKnockedBack = true;
-    [Tooltip("Indicates whether the character is an NPC")]
-    public bool IsNpc;
+    [Tooltip("If true, character can die")]
+    public bool CanDie = true;
     
     [Header("Npc Parameters")]
+    [Tooltip("Indicates whether the character is an NPC")]
+    public bool IsNpc;
+    [Tooltip("The amount of 'npc space' the NPC take up when spawned")]
+    public float SlotAmount;
+    [Tooltip("The ID of the NPC")]
+    public string ID;
+    [Tooltip("Prefab for the NPC")]
+    public GameObject NpcPrefab;
+
+    [Header("AI Parameters")]
     public bool IsFriendly;
+    [Tooltip("If true, the NPC will chase the player when detected")]
+    public bool WillChasePlayer = true;
+    [Tooltip("If true, the NPC only chases the player after being provoked")]
+    public bool OnlyChaseWhenProvoked = true;
+    [Tooltip("If false, the NPC will remain idle and not move")]
+    public bool CanMove = true;
+    [Tooltip("Base attack stat for the character")]
+    public int BaseAttack;
+    [Tooltip("Base defense stat for the character")]
+    public int BaseDefense;
     [Tooltip("Speed the character uses when chasing a target")]
     public float PursueSpeed = 4f;
     [Tooltip("Minimum time the NPC will stay idle before changing state")]
@@ -42,16 +62,4 @@ public class CharacterDataSO : ScriptableObject
     public float StrafingDuration = 0.25f;
     [Tooltip("Intensity of the strafing movement")]
     public float StrafeIntensity = 0.5f;
-    [Tooltip("If true, the NPC will chase the player when detected")]
-    public bool WillChasePlayer = true;
-    [Tooltip("If true, the NPC only chases the player after being provoked")]
-    public bool OnlyChaseWhenProvoked = true;
-    [Tooltip("If false, the NPC will remain idle and not move")]
-    public bool CanMove = true;
-
-    [Tooltip("Base attack stat for the character")]
-    public int BaseAttack;
-
-    [Tooltip("Base defense stat for the character")]
-    public int BaseDefense;
 }

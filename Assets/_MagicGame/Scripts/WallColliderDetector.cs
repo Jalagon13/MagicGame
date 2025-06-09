@@ -6,13 +6,6 @@ using UnityEngine.Tilemaps;
 
 public class WallColliderDetector : MonoBehaviour
 {
-	// Define the event
-	public event EventHandler<WallCollisionEventArgs> OnTouchingWall;
-	public class WallCollisionEventArgs : EventArgs
-	{
-		public ContactPoint2D[] ContactPoints;
-	} 
-	
 	private BiomeType _colliderBiome;
 	private Collider2D _wallDetectorCollider;
 
@@ -24,6 +17,12 @@ public class WallColliderDetector : MonoBehaviour
 	private void Start()
 	{
 		Pathfinding.Instance.OnPathfindingTilemapCreated += UpdateCollisions;
+	}
+
+
+	private void OnDestroy()
+	{
+		Pathfinding.Instance.OnPathfindingTilemapCreated -= UpdateCollisions;
 	}
 
 	private void UpdateCollisions(object sender, Pathfinding.PathfindingTilemapEventArgs e)
@@ -52,15 +51,10 @@ public class WallColliderDetector : MonoBehaviour
 			if (other.gameObject.layer == 9) return; // Ignore local walls for the server
 		}
 
-		// Trigger the bounce/knockback effect immediately
-		OnTouchingWall?.Invoke(this, new WallCollisionEventArgs()
-		{
-			ContactPoints = other.contacts
-		});
-	}
-
-	private void OnDestroy()
-	{
-		Pathfinding.Instance.OnPathfindingTilemapCreated -= UpdateCollisions;
+		// // Trigger the bounce/knockback effect immediately
+		// OnTouchingWall?.Invoke(this, new WallCollisionEventArgs()
+		// {
+		// 	ContactPoints = other.contacts
+		// });
 	}
 }

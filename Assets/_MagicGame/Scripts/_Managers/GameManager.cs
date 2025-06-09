@@ -30,7 +30,6 @@ public class GameManager : NetworkBehaviour
 	[SerializeField] private ItemDataBaseSO _itemDataBaseSO;
 	[SerializeField] private WorldObjectDataBaseSO _worldObjectDataBaseSO;
 	[SerializeField] private TileDataBaseSO _tileDataBaseSO;
-	[field: SerializeField] public NpcDataBaseSO NpcDataBaseSO { get; private set; }
 	
 	private void Awake()
 	{
@@ -114,23 +113,23 @@ public class GameManager : NetworkBehaviour
 		}
 	}
 	
-	public NpcSO GetNpcSOFromNpcId(int index)
-	{
-		if(index >= 0 && index < NpcDataBaseSO.NpcDataBase.Count)
-		{
-			return NpcDataBaseSO.NpcDataBase[index];
-		}
-		else
-		{
-			// Debug.LogWarning($"NpcSO for index: {index} can't be found, returning null");
-			return null;
-		}
-	}
+	// public NpcSO GetNpcSOFromNpcId(int index)
+	// {
+	// 	if(index >= 0 && index < NpcDataBaseSO.NpcDataBase.Count)
+	// 	{
+	// 		return NpcDataBaseSO.NpcDataBase[index];
+	// 	}
+	// 	else
+	// 	{
+	// 		// Debug.LogWarning($"NpcSO for index: {index} can't be found, returning null");
+	// 		return null;
+	// 	}
+	// }
 	
-	public int GetNpcIdFromNpcSO(NpcSO npcSO)
-	{
-		return NpcDataBaseSO.NpcDataBase.IndexOf(npcSO);
-	}
+	// public int GetNpcIdFromNpcSO(NpcSO npcSO)
+	// {
+	// 	return NpcDataBaseSO.NpcDataBase.IndexOf(npcSO);
+	// }
 	
 	public byte GetTileIdFromTileSO(TileSO tileSO)
 	{

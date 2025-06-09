@@ -9,7 +9,7 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu(fileName = "New Npc Item", menuName = "Create Item/New NPC Item")]
 public class NpcItemSO : ItemSO
 {
-    [field: SerializeField] public NpcSO NpcToSpawn { get; private set; }
+    [SerializeField] private CharacterDataSO _npcToSpawn;
     [Tooltip("For debugging purposes")]
     [field: SerializeField] public bool IgnoreNpcHousingCheck { get; private set; } = false;
 
@@ -24,7 +24,7 @@ public class NpcItemSO : ItemSO
         if (IsClear(pos) && PlayerInRangeOfMouse() && NpcHousingCheck())
         {
             Vector2 spawnPosition = new(Mathf.FloorToInt(pos.x) + 0.5f, Mathf.FloorToInt(pos.y) + 0.5f);
-            NpcManager.Instance.SpawnNpc(spawnPosition, NpcToSpawn); // NTFS: There is no check for npc slot limit, right now it is assumed this will spawn 0 npc slot NPCs like mercahnts and training dummies
+            NpcManager.Instance.SpawnNpc(spawnPosition, _npcToSpawn); // NTFS: There is no check for npc slot limit, right now it is assumed this will spawn 0 npc slot NPCs like mercahnts and training dummies
             InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
         }
 

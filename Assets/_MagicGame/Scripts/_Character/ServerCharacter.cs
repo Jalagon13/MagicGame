@@ -58,7 +58,6 @@ public class ServerCharacter : NetworkBehaviour
         } 
     }
     
-    [SerializeField] 
     private DamageReceiver _damageReceiver;
     
     private StateMachine _stateMachine;
@@ -82,6 +81,7 @@ public class ServerCharacter : NetworkBehaviour
 
     private void Awake()
     {
+        _damageReceiver = GetComponent<DamageReceiver>();
         _characterStats = new CharacterStats(_characterData);
         
         NetHealthState = GetComponent<NetworkHealthState>();
@@ -214,7 +214,7 @@ public class ServerCharacter : NetworkBehaviour
         {
             StartCoroutine(StartIFrameTimer());
         }
-        else if(HitPoints <= 0)
+        else if(HitPoints <= 0 && _characterData.CanDie)
         {
             LifeState = LifeState.Dead;
         }

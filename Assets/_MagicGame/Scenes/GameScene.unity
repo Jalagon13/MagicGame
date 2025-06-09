@@ -3696,6 +3696,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 832159822}
+  - {fileID: 1813096623}
   - {fileID: 2018757677}
   - {fileID: 876396786}
   - {fileID: 462286018}
@@ -6934,6 +6935,8 @@ MonoBehaviour:
     Quantity: 1
   - Item: {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
     Quantity: 1
+  - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
+    Quantity: 11
 --- !u!1 &849543217
 GameObject:
   m_ObjectHideFlags: 0
@@ -12107,7 +12110,6 @@ MonoBehaviour:
   _itemDataBaseSO: {fileID: 11400000, guid: f8a736388b2c44969af16475866a4801, type: 2}
   _worldObjectDataBaseSO: {fileID: 11400000, guid: de04e42d3d1784c50ae37924da4d8a99, type: 2}
   _tileDataBaseSO: {fileID: 11400000, guid: 86b92227f4ff84b0a9aee415c11b1cbe, type: 2}
-  <NpcDataBaseSO>k__BackingField: {fileID: 11400000, guid: 6e34f745bef3742e3ae03b45e8a124d7, type: 2}
 --- !u!1001 &1655304322
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13724,6 +13726,52 @@ MonoBehaviour:
   <ToggleInventorySlotsGO>k__BackingField: {fileID: 693466340}
   <HotbarSlotsUITransform>k__BackingField: {fileID: 1923407241}
   <InventorySlotsUITransform>k__BackingField: {fileID: 503539641}
+--- !u!1 &1813096622
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1813096623}
+  - component: {fileID: 1813096624}
+  m_Layer: 0
+  m_Name: GameDB
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1813096623
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813096622}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 435010858}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1813096624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813096622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22f972b46f6d646c5884ea985132e0d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _characterData:
+  - {fileID: 11400000, guid: ca073285d8eb64ffd826140a23769401, type: 2}
 --- !u!224 &1842260543 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}

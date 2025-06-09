@@ -103,7 +103,7 @@ public class BiomeSpawnRule
 [Serializable]
 public class NpcSpawnData
 {
-	public NpcSO NpcData;
+	// public NpcSO NpcData;
 	
 	[Tooltip("Higher values mean higher spawn chances.")]
 	[Range(0.01f, 100.0f)]
