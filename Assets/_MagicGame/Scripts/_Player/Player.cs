@@ -108,17 +108,27 @@ public class Player : NetworkBehaviour
 		}
 		else if (previousValue == LifeState.Dead && newValue == LifeState.Alive)
 		{
-			_damageReceiver.ReceiveHP(_serverCharacter, _serverCharacter.Data.BaseHP, false);
-			transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
-
 			if (CurrentBiome.Value != _spawnBiome)
 			{
+				WorldManager.Instance.OnBiomeTransitionEnd += HandleRespawn;
 				WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint);
+				return;
 			}
+
+			_damageReceiver.ReceiveHP(_serverCharacter, _serverCharacter.Data.BaseHP, false);
+			transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
 		}
 	}
-	
-	private IEnumerator RespawnTimer()
+
+    private void HandleRespawn(object sender, EventArgs e)
+    {
+		WorldManager.Instance.OnBiomeTransitionEnd -= HandleRespawn;
+
+		_damageReceiver.ReceiveHP(_serverCharacter, _serverCharacter.Data.BaseHP, false);
+		transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
+	}
+
+    private IEnumerator RespawnTimer()
 	{
 		yield return new WaitForSeconds(_serverCharacter.Data.RespawnTimerDuration);
 		_serverCharacter.NetLifeState.LifeState.Value = LifeState.Alive;

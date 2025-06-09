@@ -211,7 +211,7 @@ public class WorldManager : NetworkBehaviour
 		OnBiomeDataLoaded?.Invoke(this, EventArgs.Empty);
 	}
 
-	public void ExecuteOnBiomeTransitionEnd() // Yeah this is scuffed i know
+	public void ExecuteOnBiomeChunksDoneLoading() // Yeah this is scuffed i know
 	{
 		IsLoadingBiome = false;
 		OnBiomeTransitionEnd?.Invoke(this, EventArgs.Empty);

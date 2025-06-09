@@ -45,7 +45,12 @@ public class ChunkManager : NetworkBehaviour
 	
 	private void Start()
 	{
-		WorldManager.Instance.OnBiomeDataLoaded += OnBiomeDataLoaded;
+		WorldManager.Instance.OnBiomeDataLoaded += StaggerChunkRequests;
+	}
+	
+	public override void OnDestroy()
+	{
+		WorldManager.Instance.OnBiomeDataLoaded -= StaggerChunkRequests;
 	}
 	
 	private List<Vector2Int> GetChunkPositions()
@@ -66,7 +71,7 @@ public class ChunkManager : NetworkBehaviour
 	    return chunkPositions;
 	}
 	
-	private void OnBiomeDataLoaded(object sender, EventArgs e)
+	private void StaggerChunkRequests(object sender, EventArgs e)
 	{
 		StartCoroutine(StaggerChunkRequests());
 	}
@@ -94,7 +99,7 @@ public class ChunkManager : NetworkBehaviour
 		if (_chunksToLoad.Count == (BIOME_SIDE_LENGTH / CHUNK_SIZE) * (BIOME_SIDE_LENGTH / CHUNK_SIZE))
 		{
 			Lightmap.Instance.UpdateLightMap();
-			WorldManager.Instance.ExecuteOnBiomeTransitionEnd();
+			WorldManager.Instance.ExecuteOnBiomeChunksDoneLoading();
 			Debug.Log($"ChunkManager: OnBiomeDataLoaded for {Player.LocalClientInstance.CurrentBiome.Value}");
 		}
 	}
