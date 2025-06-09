@@ -40,7 +40,23 @@ public class ServerCharacter : NetworkBehaviour
         private set => NetLifeState.LifeState.Value = value;
     }
     
-    public NpcNetworkVisibility NpcVisibility { get; private set; }
+    public BiomeType CurrentBiome 
+    { 
+        get 
+        { 
+            if(_characterData.IsNpc && TryGetComponent(out NpcNetworkVisibility npcVisibility))
+            {
+                return npcVisibility.NpcBiomeType;
+            }
+            else if(TryGetComponent(out Player player))
+            {
+                return player.CurrentBiome.Value;
+            }
+            
+            Debug.LogError($"No Player or NpcNetworkVisibility script found");
+            return BiomeType.Forest;
+        } 
+    }
     
     [SerializeField] 
     private DamageReceiver _damageReceiver;
@@ -70,12 +86,6 @@ public class ServerCharacter : NetworkBehaviour
         
         NetHealthState = GetComponent<NetworkHealthState>();
         NetLifeState = GetComponent<NetworkLifeState>();
-        
-        if(_characterData.IsNpc)
-        {
-            NpcVisibility = GetComponent<NpcNetworkVisibility>();
-            if(NpcVisibility == null) Debug.LogWarning($"ServerCharacter {gameObject.name} missing NpcVisibility.");
-        }
 
         switch (_aiType)
         {
@@ -96,7 +106,7 @@ public class ServerCharacter : NetworkBehaviour
         if(IsOwner)
         {
             NetLifeState.LifeState.OnValueChanged += OnLifeStateChanged;
-            _damageReceiver.DamagedReceived += ReceiveHP;
+            _damageReceiver.HpReceived += ReceiveHP;
             
             HitPoints = _characterData.BaseHP;
             _stateMachine?.OwnerInitialization();
@@ -116,7 +126,7 @@ public class ServerCharacter : NetworkBehaviour
         if(IsOwner)
         {
             NetLifeState.LifeState.OnValueChanged -= OnLifeStateChanged;
-            _damageReceiver.DamagedReceived -= ReceiveHP;
+            _damageReceiver.HpReceived -= ReceiveHP;
         }
     }
     
@@ -137,7 +147,7 @@ public class ServerCharacter : NetworkBehaviour
     {
         if (IsOwner || (_characterData.IsNpc && IsServer))
         {
-            if (_stateMachine != null && LifeState == LifeState.Alive)
+            if (_stateMachine != null)
             {
                 _characterStats.TickBuffs(Time.deltaTime);
                 _stateMachine.UpdateAI();
@@ -149,16 +159,22 @@ public class ServerCharacter : NetworkBehaviour
     {
         if(LifeState == LifeState.Dead)
         {
-            // TODO: Death and IFrame functionality here...
             if (_characterData.IsNpc)
             {
                 // Npc Death functionality here
-                NpcVisibility.KillNpcServerRpc();
+                if(TryGetComponent(out NpcNetworkVisibility npcVisibility))
+                {
+                    npcVisibility.KillNpcServerRpc();
+                }
+                else
+                {
+                    Debug.LogError($"ServerCharacter {gameObject.name} missing NpcVisibility.");
+                }
             }
-            else
-            {
-                // Player Death functionality here
-            }
+        }
+        else if(LifeState == LifeState.IFrame)
+        {
+            // TODO: IFrame functionality for all servercharacters here...
         }
     }
 
@@ -182,7 +198,7 @@ public class ServerCharacter : NetworkBehaviour
             float damageReduction = 1f;
             hp = (int)(hp * damageReduction);
             
-            _clientCharacter.PlayDamageNumbersRpc(hp);
+            _clientCharacter.PlayGameFeelRpc(hp);
             
             if (_characterData.CanBeKnockedBack && e.PlayKnockback)
             {

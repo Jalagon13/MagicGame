@@ -70,7 +70,13 @@ public class SpellManager : NetworkBehaviour
         {
             NetworkManager.OnClientConnectedCallback -= RegisterSelectedItemIndexChangeFunctionality;
         }
-
+        
+        if(Player.LocalClientInstance != null)
+        {
+            Player.LocalClientInstance.SelectedItemIdNetworkVariable.OnValueChanged -= OnItemIdChanged;
+            Player.LocalClientInstance.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
+        }
+        
         HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSelectedItemChange;
     }
 
@@ -80,7 +86,7 @@ public class SpellManager : NetworkBehaviour
     
         HandleTimers();
 
-        if (SpellItemArray != null && !IsContinuouslyCasting && CastTimeTimer.RemainingSeconds <= 0)
+        if (Player.LocalClientInstance.ServerCharacter.LifeState == LifeState.Alive && SpellItemArray != null && !IsContinuouslyCasting && CastTimeTimer.RemainingSeconds <= 0)
         {
             foreach (int slotIndex in _spellSlotPriority)
             {
@@ -103,6 +109,15 @@ public class SpellManager : NetworkBehaviour
         if (NetworkManager.LocalClientId != clientId) return;
 
         Player.LocalClientInstance.SelectedItemIdNetworkVariable.OnValueChanged += OnItemIdChanged;
+        Player.LocalClientInstance.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
+    }
+
+    private void OnPlayerLifeStateChanged(LifeState previousValue, LifeState newValue)
+    {
+        if(previousValue == LifeState.Alive && newValue == LifeState.Dead)
+        {
+            CancelSpellCharge();
+        }
     }
 
     public bool IsSpellKeyHeld(int slotIndex)
@@ -241,7 +256,9 @@ public class SpellManager : NetworkBehaviour
 
     private void CancelSpellCharge()
     {
-        if(_loadedSpell.SpellToCast.IsContinuousCast)
+        if(!IsCasting) return;
+        Debug.Log($"Player died, cancelling spell charge");
+        if (_loadedSpell.SpellToCast.IsContinuousCast)
         {
             IsContinuouslyCasting = false;
         }

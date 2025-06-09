@@ -17,34 +17,33 @@ public class PlayerHealthStatUI : MonoBehaviour
 	{
 		Player.OnAnyPlayerSpawned += Player_OnAnyPlayerSpawned;
 	}
-	
-	private void Player_OnAnyPlayerSpawned(object sender, Player.PlayerIdEventArgs e)
+
+	private void OnDestroy()
 	{
-		// if(Player.LocalClientInstance != null)
-		// {
-		// 	Player.LocalClientInstance.HealthState.HitPoints.OnValueChanged += Player_OnPlayerHealthUpdated;
-		// }
+		Player.OnAnyPlayerSpawned -= Player_OnAnyPlayerSpawned;
+		if(Player.LocalClientInstance != null)
+		{
+			Player.LocalClientInstance.ServerCharacter.NetHealthState.OnHitPointsChanged -= Player_OnPlayerHealthUpdated;
+		}
 	}
 
-    private void Player_OnPlayerHealthUpdated(int previousValue, int newValue)
-    {
-		// UpdateView(newValue, Player.LocalClientInstance.HealthState.BaseHealth);
+	private void Player_OnAnyPlayerSpawned(object sender, Player.PlayerIdEventArgs e)
+	{
+		if(Player.LocalClientInstance != null)
+		{
+			Player.LocalClientInstance.ServerCharacter.NetHealthState.OnHitPointsChanged += Player_OnPlayerHealthUpdated;
+		}
 	}
+
+    private void Player_OnPlayerHealthUpdated(object sender, NetworkHealthState.HitPointsChangedEventArgs e)
+    {
+		UpdateView(e.CurrentHitPoints, e.MaxHitPoints);
+    }
 
 	private void UpdateView(int currentAmount, int maxAmount)
 	{
 		_healthBar.UpdateBar(currentAmount, 0, maxAmount);
 		// _border.sizeDelta = new Vector2(maxAmount * 2, _border.sizeDelta.y);
 		_amountText.text = $"{currentAmount}/{maxAmount}";
-	}
-	
-	private void OnDestroy()
-	{
-		Player.OnAnyPlayerSpawned -= Player_OnAnyPlayerSpawned;
-		
-		// if(Player.LocalClientInstance != null)
-		// {
-		// 	Player.LocalClientInstance.HealthState.HitPoints.OnValueChanged -= Player_OnPlayerHealthUpdated;
-		// }
 	}
 }

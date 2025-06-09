@@ -5,6 +5,7 @@ public class PlayerSpellCastingState : BaseState
     private PlayerStateMachine _ctx;
     private GameObject _clientChargeVfx;
     private SpellItemSO _spellToCast;
+    private bool _performSpellStateCleanup;
 
     public PlayerSpellCastingState(AIState key, StateMachine context) : base(key, context)
     {
@@ -14,6 +15,7 @@ public class PlayerSpellCastingState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
+        _performSpellStateCleanup = true;
         _spellToCast = GameManager.Instance.GetItemSOFromItemId(stateData.Amount) as SpellItemSO;
         
         Buff castingMoveBuff = new Buff(
@@ -35,12 +37,21 @@ public class PlayerSpellCastingState : BaseState
         {
             SwitchState(new AIStateData(AIState.Grounded));
         }
+        else if(_ctx.ServerCharacter.LifeState == LifeState.Dead)
+        {
+            _performSpellStateCleanup = false;
+            SwitchState(new AIStateData(AIState.Dead));
+        }
     }
 
     public override void ExitState()
     {
+        if(_performSpellStateCleanup)
+        {
+            _ctx.ServerCharacter.Movement.StartKnockback(ActionManager.MouseWorldPosition, _spellToCast.Recoil);
+        }
+
         _ctx.ServerCharacter.Stats.RemoveBuffsFromSource(_spellToCast);
-        _ctx.ServerCharacter.Movement.StartKnockback(ActionManager.MouseWorldPosition, _spellToCast.Recoil);
     }
 
     public override void ClientEnterState(AIStateData stateData)

@@ -20,17 +20,21 @@ public class HealthBarUI : MonoBehaviour
 	
 	private void Start()
 	{
-		NetworkHealthState.HitPointsDepleted += UpdateHealthBar;
-		NetworkHealthState.HitPointsReplenished += UpdateHealthBar;
+		NetworkHealthState.OnHitPointsChanged += UpdateHealthBar;
 
 		Hide();
 	}
 
-    private void UpdateHealthBar(object sender, EventArgs e)
+    private void OnDestroy()
     {
-		_progressBar.UpdateBar(NetworkHealthState.HitPoints.Value, 0, Player.LocalClientInstance.ServerCharacter.Data.BaseHP);
+		NetworkHealthState.OnHitPointsChanged -= UpdateHealthBar;
+	}
 
-		if (NetworkHealthState.HitPoints.Value <= 0 || NetworkHealthState.HitPoints.Value >= Player.LocalClientInstance.ServerCharacter.Data.BaseHP)
+    private void UpdateHealthBar(object sender, NetworkHealthState.HitPointsChangedEventArgs e)
+    {
+		_progressBar.UpdateBar(e.CurrentHitPoints, 0, e.MaxHitPoints);
+
+		if (e.CurrentHitPoints <= 0 || e.CurrentHitPoints >= e.MaxHitPoints)
 		{
 			Hide();
 		}
@@ -50,11 +54,5 @@ public class HealthBarUI : MonoBehaviour
 	{
 		Debug.Log($"Hiding health bar for {transform.root.gameObject.name}");
 		gameObject.SetActive(false);
-	}
-	
-	private void OnDestroy()
-	{
-		NetworkHealthState.HitPointsDepleted -= UpdateHealthBar;
-		NetworkHealthState.HitPointsReplenished -= UpdateHealthBar;
 	}
 }

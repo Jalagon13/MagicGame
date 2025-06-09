@@ -41,6 +41,14 @@ public class PlayerCamera : NetworkBehaviour
 		}
 	}
 
+	public override void OnDestroy()
+	{
+		if (NetworkManager != null)
+		{
+			NetworkManager.OnClientConnectedCallback -= RegisterCameraToPlayer;
+		}
+	}
+
 	// NTFS: Change this dynamically when camera is widened or narrowed
 	private void Start()
 	{
@@ -113,15 +121,5 @@ public class PlayerCamera : NetworkBehaviour
 			}
 		};
 		RuntimeManager.StudioSystem.setListenerAttributes(0, attributes);
-	}
-	
-	public override void OnDestroy() 
-	{
-		if(NetworkManager != null)
-		{
-			NetworkManager.OnClientConnectedCallback -= RegisterCameraToPlayer;
-		}
-		
-		base.OnDestroy();
 	}
 }

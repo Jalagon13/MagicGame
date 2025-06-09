@@ -10,11 +10,13 @@ public class CharacterDataSO : ScriptableObject
     [Tooltip("Base Speed for character")]
     public float BaseSpeed;
     [Tooltip("Duration of invincibility frames when character is hit")]
-    public float IFrameDuration { get; internal set; }
+    public float IFrameDuration = 0.2f;
     [Tooltip("Smaller values = slower transition to desired direction")]
     public float TurnSharpness = 5f;
     [Tooltip("Resistance to knockback effects (0 = no resistance)")]
     public float KnockbackResist = 0f;
+    [Tooltip("Respawn Timer")]
+    public float RespawnTimerDuration = 0f;
     [Tooltip("If true, the NPC can be knocked back")]
     public bool CanBeKnockedBack = true;
     [Tooltip("Indicates whether the character is an NPC")]

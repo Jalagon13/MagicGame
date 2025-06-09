@@ -15,7 +15,7 @@ public class DamagedFeedback : MonoBehaviour
         {
             Debug.LogError($"Npc script not found on root game object");
         }
-        _damageReceiver.DamagedReceived += PlayDamageFeedbacks;
+        _damageReceiver.HpReceived += PlayDamageFeedbacks;
     }
 
     private void PlayDamageFeedbacks(object sender, DamageReceiver.DamageReceivedEventArgs e)
@@ -25,6 +25,6 @@ public class DamagedFeedback : MonoBehaviour
     
     private void OnDestroy()
     {
-        _damageReceiver.DamagedReceived -= PlayDamageFeedbacks;
+        _damageReceiver.HpReceived -= PlayDamageFeedbacks;
     }
 }

@@ -3,10 +3,12 @@ using UnityEngine;
 
 public class Stat
 {
-    public float BaseValue { get; }
     private List<StatModifier> _modifiers = new();
     private bool _dirty = true;
     private float _finalValue;
+
+    public float BaseValue { get; }
+    public int AsIntValue => Mathf.RoundToInt(GetValue());
 
     public Stat(float baseValue)
     {

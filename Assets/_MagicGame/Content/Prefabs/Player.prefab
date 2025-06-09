@@ -327,7 +327,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   <CollectTag>k__BackingField: {fileID: 6231199994205774343}
   _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
-  _respawnTimerDuration: 2
   _playerHand: {fileID: 4604921083407888490}
 --- !u!114 &598476479702786246
 MonoBehaviour:
@@ -627,6 +626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _serverCharacter: {fileID: 8141412508225569808}
+  _visuals: {fileID: 65483329398898238}
 --- !u!1 &2765158062458086928
 GameObject:
   m_ObjectHideFlags: 0

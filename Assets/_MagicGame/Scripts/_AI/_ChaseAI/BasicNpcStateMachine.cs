@@ -113,7 +113,7 @@ public class BasicNpcStateMachine : StateMachine
         {
             if (unObstructedCollider.transform.root.TryGetComponent(out Player player))
             {
-                if (player.CurrentBiome.Value == _serverCharacter.NpcVisibility.NpcBiomeType)
+                if (player.CurrentBiome.Value == _serverCharacter.CurrentBiome)
                 {
                     float distance = Vector2.Distance(_serverCharacter.transform.position, player.transform.position);
 
@@ -127,7 +127,7 @@ public class BasicNpcStateMachine : StateMachine
             }
             else if (unObstructedCollider.TryGetComponent(out BreadCrumb breadCrumb))
             {
-                if (breadCrumb.Biome == _serverCharacter.NpcVisibility.NpcBiomeType)
+                if (breadCrumb.Biome == _serverCharacter.CurrentBiome)
                 {
                     if (breadCrumb.RemainingLifeTime > highestLifetime)
                     {
@@ -163,7 +163,7 @@ public class BasicNpcStateMachine : StateMachine
         Vector2 direction = desiredEndpoint - (Vector2)_serverCharacter.transform.position;
         float distance = direction.magnitude;
 
-        TilemapCollider2D localBiomePfWallCollider = Pathfinding.Instance.GetPathfindingWallCollider(_serverCharacter.NpcVisibility.NpcBiomeType);
+        TilemapCollider2D localBiomePfWallCollider = Pathfinding.Instance.GetPathfindingWallCollider(_serverCharacter.CurrentBiome);
 
         if (localBiomePfWallCollider == null) return false;
 

@@ -6,31 +6,38 @@ public class NetworkHealthState : NetworkBehaviour
 {
     [HideInInspector]
     public NetworkVariable<int> HitPoints = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public event EventHandler<HitPointsChangedEventArgs> OnHitPointsChanged;
+    public class HitPointsChangedEventArgs : EventArgs
+    {
+        public int MaxHitPoints { get; }
+        public int CurrentHitPoints { get; }
+        
+        public HitPointsChangedEventArgs(int maxHitPoints, int currentHitPoints)
+        {
+            MaxHitPoints = maxHitPoints;
+            CurrentHitPoints = currentHitPoints;
+        }
+    }
     
-    public event EventHandler HitPointsDepleted;
-    public event EventHandler HitPointsReplenished;
+    private ServerCharacter _serverCharacter;
 
-    void OnEnable()
+    private void Awake()
+    {
+        _serverCharacter = GetComponent<ServerCharacter>();
+    }
+
+    private void OnEnable()
     {
         HitPoints.OnValueChanged += HitPointsChanged;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         HitPoints.OnValueChanged -= HitPointsChanged;
     }
 
-    void HitPointsChanged(int previousValue, int newValue)
+    private void HitPointsChanged(int previousValue, int newValue)
     {
-        if (previousValue > 0 && newValue <= 0)
-        {
-            // Newly reached 0 HP
-            HitPointsDepleted?.Invoke(this, EventArgs.Empty);
-        }
-        else if (previousValue <= 0 && newValue > 0)
-        {
-            // Newly revived
-            HitPointsReplenished?.Invoke(this, EventArgs.Empty);
-        }
+        OnHitPointsChanged?.Invoke(this, new HitPointsChangedEventArgs(_serverCharacter.Stats.MaxHealth.AsIntValue, HitPoints.Value));
     }
 }

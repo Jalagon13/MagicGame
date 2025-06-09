@@ -17,6 +17,7 @@ MonoBehaviour:
   BaseSpeed: 5
   TurnSharpness: 8
   KnockbackResist: 0
+  RespawnTimerDuration: 3
   CanBeKnockedBack: 1
   IsNpc: 0
   IsFriendly: 0

@@ -4,14 +4,14 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GameInput : MonoBehaviour
+public class GameInput : NetworkBehaviour
 {
 	public static GameInput Instance { get; private set; }
 
 	public event EventHandler OnShiftStarted;
 	public event EventHandler OnSpaceStarted;
 	public event EventHandler OnSpaceCanceled;
-	public event EventHandler OnSwapHands;
+	public event EventHandler OnFKeyPressed;
 	public event EventHandler OnSecondaryActionStarted;
 	public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnPrimaryAction;
 	public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnSecondaryAction;
@@ -64,7 +64,7 @@ public class GameInput : MonoBehaviour
 		_playerInput.Player.SecondaryAction.started += PlayerInput_SecondaryActionStarted; 
 		_playerInput.Player.SecondaryAction.performed += PlayerInput_SecondaryAction; 
 		_playerInput.Player.SecondaryAction.canceled += PlayerInput_SecondaryActionCanceled; 
-		_playerInput.Player.SwapHands.started += PlayerInput_SwapHands;
+		_playerInput.Player.SwapHands.started += PlayerInput_FKeyPressed;
 		_playerInput.Player.Shift.started += PlayerInput_ShiftStart;
 		_playerInput.Player.Shift.canceled += PlayerInput_ShiftCanceled;
 		_playerInput.Player.Space.started += PlayerInput_SpaceStarted;
@@ -76,6 +76,44 @@ public class GameInput : MonoBehaviour
 		WorldManager.Instance.OnBiomeTransitionStart += WorldManager_DisableInputs;
 		WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_EnableInputs;
 		InGameMenu.Instance.OnMenuOpen += InGameMenu_OnMenuOpen;
+		Player.OnAnyPlayerSpawned += RegisterOnPlayerLifeStateChanged;
+	}
+
+    public override void OnDestroy()
+	{
+		_playerInput.Disable();
+		_playerInput.Dispose();
+
+		WorldManager.Instance.OnBiomeTransitionStart -= WorldManager_DisableInputs;
+		WorldManager.Instance.OnBiomeTransitionEnd -= WorldManager_EnableInputs;
+		InGameMenu.Instance.OnMenuOpen -= InGameMenu_OnMenuOpen;
+		Player.OnAnyPlayerSpawned -= RegisterOnPlayerLifeStateChanged;
+		
+		if (Player.LocalClientInstance != null)
+		{
+			Player.LocalClientInstance.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
+		}
+	}
+
+    private void RegisterOnPlayerLifeStateChanged(object sender, Player.PlayerIdEventArgs e)
+    {
+		if (NetworkManager.LocalClientId != e.PlayerId) return;
+
+		Player.LocalClientInstance.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
+	}
+
+	private void OnPlayerLifeStateChanged(LifeState previousValue, LifeState newValue)
+	{
+		if (previousValue == LifeState.Alive && newValue == LifeState.Dead)
+		{
+			Debug.Log($"Player died, inputs disabled");
+			_inputsEnabled = false;
+		}
+		else if (previousValue == LifeState.Dead && newValue == LifeState.Alive)
+		{
+			Debug.Log($"Player respawned, inputs enabled");
+			_inputsEnabled = true;
+		}
 	}
 
 	private void InGameMenu_OnMenuOpen(object sender, EventArgs e)
@@ -122,9 +160,9 @@ public class GameInput : MonoBehaviour
 		_shiftHeldDown = false;
 	}
 
-	private void PlayerInput_SwapHands(InputAction.CallbackContext context)
+	private void PlayerInput_FKeyPressed(InputAction.CallbackContext context)
 	{
-		OnSwapHands?.Invoke(this, EventArgs.Empty);
+		OnFKeyPressed?.Invoke(this, EventArgs.Empty);
 	}
 
 	private void PlayerInput_SecondaryActionStarted(InputAction.CallbackContext context)
@@ -248,15 +286,5 @@ public class GameInput : MonoBehaviour
 	public bool GetInputsEnabled()
 	{
 		return _inputsEnabled;
-	}
-
-	private void OnDestroy()
-	{
-		_playerInput.Disable();
-		_playerInput.Dispose();	
-		
-		WorldManager.Instance.OnBiomeTransitionStart -= WorldManager_DisableInputs;
-		WorldManager.Instance.OnBiomeTransitionEnd -= WorldManager_EnableInputs;
-		InGameMenu.Instance.OnMenuOpen -= InGameMenu_OnMenuOpen;
 	}
 }

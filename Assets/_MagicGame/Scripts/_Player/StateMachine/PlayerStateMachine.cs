@@ -38,8 +38,9 @@ public class PlayerStateMachine : StateMachine
 		_states[AIState.Grounded] = new PlayerGroundedState(AIState.Grounded, this);
 		_states[AIState.Attacking] = new PlayerAttackState(AIState.Attacking, this);
 		_states[AIState.SpellCasting] = new PlayerSpellCastingState(AIState.SpellCasting, this);
+		_states[AIState.Dead] = new PlayerDeadState(AIState.Dead, this);
 		_currentState = _states[AIState.Grounded];
-		Debug.Log($"{_serverCharacter.gameObject.name} player state machine initialized");
+		
 		if (_serverCharacter.TryGetComponent(out Player player))
 		{
 			_playerRef = player;

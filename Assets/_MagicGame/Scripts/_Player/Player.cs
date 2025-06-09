@@ -20,8 +20,6 @@ public class Player : NetworkBehaviour
 	[SerializeField] private GameObject _breadCrumbPrefab;
 	public Collider2D HitCollider { get; private set; }
 	public bool IsPerformingSwing { get; set; }
-	
-	[SerializeField] private float _respawnTimerDuration;
 
 
 	private Vector2 _spawnPoint;
@@ -40,8 +38,11 @@ public class Player : NetworkBehaviour
 	private PlayerNetworkVisibility _playerNetworkVisibility;
 	public PlayerNetworkVisibility PlayerNetworkVisibility => _playerNetworkVisibility;
 	
+	private DamageReceiver _damageReceiver;
+	
 	private void Awake()
 	{
+		_damageReceiver = GetComponent<DamageReceiver>();
 		_serverCharacter = GetComponent<ServerCharacter>();
 		_playerNetworkVisibility = GetComponent<PlayerNetworkVisibility>();
 		HitCollider = GetComponent<Collider2D>();
@@ -59,11 +60,11 @@ public class Player : NetworkBehaviour
 			PlayerId = OwnerClientId
 		});
 
-		Debug.Log($"{gameObject.name} spawned and initialized");
 		// local player start up code here, maybe input
 		GameInput.Instance.OnMove += GameInput_OnPlayerMove;
-		GameInput.Instance.OnPrimaryAction += GameInput_OnPrimaryAction;
+		GameInput.Instance.OnFKeyPressed += GameInput_OnFKeyPressed;
 		HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnSelectedItemUpdated;
+		_serverCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
 	}
 
 	public override void OnNetworkDespawn()
@@ -71,12 +72,22 @@ public class Player : NetworkBehaviour
 		if (IsClient && !_serverCharacter.Data.IsNpc && _serverCharacter.IsOwner)
 		{
 			GameInput.Instance.OnMove -= GameInput_OnPlayerMove;
-			GameInput.Instance.OnPrimaryAction -= GameInput_OnPrimaryAction;
+			GameInput.Instance.OnFKeyPressed -= GameInput_OnFKeyPressed;
 			HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnSelectedItemUpdated;
+			_serverCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
 		}
 	}
 
-	private void Update()
+    private void GameInput_OnFKeyPressed(object sender, EventArgs e)
+    {
+        if(TryGetComponent(out DamageReceiver damageReceiver))
+        {
+			Debug.Log($"Player took damage");
+			damageReceiver.ReceiveHP(_serverCharacter, -25, false);
+		}
+    }
+
+    private void Update()
 	{
 		if (IsOwner)
 		{
@@ -89,17 +100,36 @@ public class Player : NetworkBehaviour
 		}
 	}
 
+	private void OnPlayerLifeStateChanged(LifeState previousValue, LifeState newValue)
+	{
+		if (previousValue == LifeState.Alive && newValue == LifeState.Dead)
+		{
+			StartCoroutine(RespawnTimer());
+		}
+		else if (previousValue == LifeState.Dead && newValue == LifeState.Alive)
+		{
+			_damageReceiver.ReceiveHP(_serverCharacter, _serverCharacter.Data.BaseHP, false);
+			transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
+
+			if (CurrentBiome.Value != _spawnBiome)
+			{
+				WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint);
+			}
+		}
+	}
+	
+	private IEnumerator RespawnTimer()
+	{
+		yield return new WaitForSeconds(_serverCharacter.Data.RespawnTimerDuration);
+		_serverCharacter.NetLifeState.LifeState.Value = LifeState.Alive;
+	}
+
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	private void SpawnBreadCrumbServerRpc(Vector2Int spawnPos, RpcParams rpcParams = default)
 	{
 		GameObject breadCrumb = Instantiate(_breadCrumbPrefab, new Vector2(spawnPos.x + 0.5f, spawnPos.y + 0.5f), Quaternion.identity);
 		breadCrumb.GetComponent<BreadCrumb>().InitializeBreadCrumb(CurrentBiome.Value);
 		GameManager.Instance.InvokeSpawnBreadCrumbEvent(breadCrumb);
-	}
-
-	private void GameInput_OnPrimaryAction(object sender, GameInput.OnPrimaryOrSecondaryActionEventArgs e)
-	{
-		
 	}
 
 	private void GameInput_OnPlayerMove(object sender, InputAction.CallbackContext e)
@@ -125,21 +155,5 @@ public class Player : NetworkBehaviour
 			// NTFS: Network variables onvaluechanged is only executed if the value is different from the current value
 			SelectedItemIdNetworkVariable.Value = e.SelectedItemId;
 		}
-	}
-
-	[Rpc(SendTo.SpecifiedInParams)]
-	private void RespawnPlayerClientRpc(RpcParams rpcParams = default)
-	{
-		transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
-
-		if (CurrentBiome.Value != _spawnBiome)
-		{
-			WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint);
-		}
-
-		// OnRespawn?.Invoke(this, new PlayerIdEventArgs
-		// {
-		// 	PlayerId = OwnerClientId
-		// });
 	}
 }

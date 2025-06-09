@@ -28,10 +28,13 @@ public class PlayerGroundedState : BaseState
         {
             SwitchState(new AIStateData(AIState.Attacking));
         }
-        
-        if(SpellManager.Instance.IsCasting)
+        else if(SpellManager.Instance.IsCasting)
         {
             SwitchState(new AIStateData(AIState.SpellCasting, SpellManager.Instance.LoadedSpell.SpellData.SpellIndex));
+        }
+        else if(_ctx.ServerCharacter.LifeState == LifeState.Dead)
+        {
+            SwitchState(new AIStateData(AIState.Dead));
         }
     }
 
