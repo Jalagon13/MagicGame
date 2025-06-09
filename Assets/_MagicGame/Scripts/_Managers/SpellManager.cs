@@ -147,8 +147,6 @@ public class SpellManager : NetworkBehaviour
 
     public void LoadSpell(SpellItemSO spellToCast, LoadedSpell loadedSpell)
     {
-        Debug.Log($"Loading spell: {spellToCast.Name}");
-        
         _loadedSpell = loadedSpell;
         CastTimeTimer = new Timer(spellToCast.CastTime);
         CastTimeTimer.OnTimerEnd += ExecuteSpell;

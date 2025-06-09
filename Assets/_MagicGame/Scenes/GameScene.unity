@@ -13737,7 +13737,7 @@ GameObject:
   - component: {fileID: 1813096623}
   - component: {fileID: 1813096624}
   m_Layer: 0
-  m_Name: GameDB
+  m_Name: GameDataRegistry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

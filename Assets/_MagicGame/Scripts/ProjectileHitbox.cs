@@ -43,11 +43,11 @@ public class ProjectileHitbox : MonoBehaviour
             {
                 if (!_damagedNetworkHealthStates.Contains(npcHealth))
                 {
-                    // npcHealth.TakeDamageRpc(
-                    //     Spell.SpellData.Value.Damage,
-                    //     Spell.NetworkManager.ConnectedClients[Spell.SpellData.Value.OwnerPlayerId].PlayerObject.transform.position,
-                    //     Spell.SpellData.Value.Knockback
-                    // );
+                    npcHealth.TakeDamageRpc(
+                        Spell.SpellData.Value.Damage,
+                        Spell.NetworkManager.ConnectedClients[Spell.SpellData.Value.OwnerPlayerId].PlayerObject.transform.position,
+                        Spell.SpellData.Value.Knockback
+                    );
                     _damagedNetworkHealthStates.Add(npcHealth);
 
                     if (_damagedNetworkHealthStates.Count >= PierceCount)

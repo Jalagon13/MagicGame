@@ -137,7 +137,7 @@ public class ServerCharacter : NetworkBehaviour
     
     private void FixedUpdate()
     {
-        if (IsOwner || (_characterData.IsNpc && IsServer))
+        if ((IsOwner || (_characterData.IsNpc && IsServer)) && _characterData.CanMove)
         {
             _serverCharacterMovement.FixedUpdateMovement();
         }

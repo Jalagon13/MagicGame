@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
+using UnityEditor.U2D.Animation;
 using UnityEngine;
 
 public class NpcManager : NetworkBehaviour
@@ -84,25 +85,24 @@ public class NpcManager : NetworkBehaviour
 	public void SpawnNpc(Vector2 spawnPosition, CharacterDataSO npcData)
 	{
 		_npcSlots += npcData.SlotAmount;
-		Debug.Log($"Increasing NPC Slots by {npcData.SlotAmount}, current amount: {_npcSlots}");
-		int npcId = GameDB.Instance.GetNpcIdFromNpcSO(npcToSpawn);
-		SpawnNpcServerRpc(Player.LocalClientInstance.CurrentBiome.Value, npcId, NetworkManager.LocalClientId, spawnPosition, npcData.SlotAmount);
+		short id = GameDataRegistry.Instance.GetShortIdFromCharacterData(npcData);
+		SpawnNpcServerRpc(Player.LocalClientInstance.CurrentBiome.Value, id, NetworkManager.LocalClientId, spawnPosition, npcData.SlotAmount);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnNpcServerRpc(BiomeType spawnBiome, int npcId, ulong spawnPlayerId, Vector2 position, float slotAmount)
+	private void SpawnNpcServerRpc(BiomeType spawnBiome, short npcId, ulong spawnPlayerId, Vector2 position, float slotAmount)
 	{
-		// NpcSO npcSO = GameManager.Instance.GetNpcSOFromNpcId(npcId);
+		CharacterDataSO npcData = GameDataRegistry.Instance.GetCharacterDataFromShortId(npcId);
 		
-		// var spawnPosition = new Vector2(Mathf.FloorToInt(position.x) + 0.5f, Mathf.FloorToInt(position.y) + 0.5f);
-		// GameObject npcPrefab = Instantiate(npcSO.NpcPrefab, spawnPosition, Quaternion.identity);
+		var spawnPosition = new Vector2(Mathf.FloorToInt(position.x) + 0.5f, Mathf.FloorToInt(position.y) + 0.5f);
+		GameObject npcPrefab = Instantiate(npcData.NpcPrefab, spawnPosition, Quaternion.identity);
 		
-		// NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
-		// npcPrefabNetworkObject.SpawnWithObservers = false;
-		// npcPrefabNetworkObject.Spawn(true);
+		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
+		npcPrefabNetworkObject.SpawnWithObservers = false;
+		npcPrefabNetworkObject.Spawn(true);
 
-		// var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkVisibility>();
-		// npcNetworkComponent.InitialieNpcNetwork(spawnPlayerId, npcId, spawnBiome);
+		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkVisibility>();
+		npcNetworkComponent.InitialieNpcNetwork(spawnPlayerId, npcId, spawnBiome);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]

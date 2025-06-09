@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Character Data", menuName = "CharacterData")]
@@ -21,7 +22,10 @@ public class CharacterDataSO : ScriptableObject
     public bool CanBeKnockedBack = true;
     [Tooltip("If true, character can die")]
     public bool CanDie = true;
-    
+
+    [Header("Sounds")]
+    public EventReference HurtSound;
+
     [Header("Npc Parameters")]
     [Tooltip("Indicates whether the character is an NPC")]
     public bool IsNpc;
@@ -31,7 +35,7 @@ public class CharacterDataSO : ScriptableObject
     public string ID;
     [Tooltip("Prefab for the NPC")]
     public GameObject NpcPrefab;
-
+    
     [Header("AI Parameters")]
     public bool IsFriendly;
     [Tooltip("If true, the NPC will chase the player when detected")]

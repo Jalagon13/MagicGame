@@ -113,24 +113,6 @@ public class GameManager : NetworkBehaviour
 		}
 	}
 	
-	// public NpcSO GetNpcSOFromNpcId(int index)
-	// {
-	// 	if(index >= 0 && index < NpcDataBaseSO.NpcDataBase.Count)
-	// 	{
-	// 		return NpcDataBaseSO.NpcDataBase[index];
-	// 	}
-	// 	else
-	// 	{
-	// 		// Debug.LogWarning($"NpcSO for index: {index} can't be found, returning null");
-	// 		return null;
-	// 	}
-	// }
-	
-	// public int GetNpcIdFromNpcSO(NpcSO npcSO)
-	// {
-	// 	return NpcDataBaseSO.NpcDataBase.IndexOf(npcSO);
-	// }
-	
 	public byte GetTileIdFromTileSO(TileSO tileSO)
 	{
 		return (byte)_tileDataBaseSO.TileObjectSOList.IndexOf(tileSO);

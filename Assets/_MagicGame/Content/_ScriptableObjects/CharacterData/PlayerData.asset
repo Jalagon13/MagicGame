@@ -15,12 +15,29 @@ MonoBehaviour:
   BaseHP: 100
   BaseMP: 100
   BaseSpeed: 5
+  IFrameDuration: 0.2
   TurnSharpness: 8
   KnockbackResist: 0
   RespawnTimerDuration: 3
   CanBeKnockedBack: 1
+  CanDie: 1
+  HurtSound:
+    Guid:
+      Data1: 1908936704
+      Data2: 1218061417
+      Data3: -617592154
+      Data4: 2092223634
+    Path: event:/Player/PlayerHurt
   IsNpc: 0
+  SlotAmount: 0
+  ID: 
+  NpcPrefab: {fileID: 0}
   IsFriendly: 0
+  WillChasePlayer: 1
+  OnlyChaseWhenProvoked: 1
+  CanMove: 1
+  BaseAttack: 0
+  BaseDefense: 0
   PursueSpeed: 4
   MinIdleDuration: 2.5
   MaxIdleDuration: 5
@@ -30,8 +47,3 @@ MonoBehaviour:
   StoppingDistance: 0.25
   StrafingDuration: 0.25
   StrafeIntensity: 0.5
-  WillChasePlayer: 1
-  OnlyChaseWhenProvoked: 1
-  CanMove: 1
-  BaseAttack: 0
-  BaseDefense: 0

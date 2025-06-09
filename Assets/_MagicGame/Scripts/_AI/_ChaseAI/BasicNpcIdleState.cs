@@ -42,7 +42,7 @@ public class BasicNpcIdleState : BaseState
 
     public override void CheckSwitchStates()
     {
-        if (_idleComplete)
+        if (_idleComplete && _ctx.CharacterData.CanMove)
         {
             SwitchState(new AIStateData(AIState.Moving));
         }

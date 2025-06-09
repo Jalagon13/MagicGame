@@ -196,8 +196,9 @@ GameObject:
   - component: {fileID: 4852144824365540908}
   - component: {fileID: 6530109159927746889}
   - component: {fileID: 3071604933630529982}
-  - component: {fileID: 1803180478442400679}
+  - component: {fileID: 1878813097214358459}
   - component: {fileID: 647902995146852404}
+  - component: {fileID: 1803180478442400679}
   - component: {fileID: 2695284593721968707}
   m_Layer: 12
   m_Name: _BaseNpc
@@ -391,6 +392,36 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _lifeState:
     m_InternalValue: 0
+--- !u!114 &1878813097214358459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5309065195269084554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019138e6a9f1d4bb3a8991ed240a84e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _lifeState: {fileID: 3071604933630529982}
+--- !u!114 &647902995146852404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5309065195269084554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12422b363967840d4b5527882fad6de2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _serverCharacter: {fileID: 1803180478442400679}
+  _networkLifeState: {fileID: 3071604933630529982}
+  _spriteAnimHandlers: []
 --- !u!114 &1803180478442400679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -409,22 +440,6 @@ MonoBehaviour:
   _clientCharacter: {fileID: 8062380513095129463}
   _serverCharacterMovement: {fileID: 2695284593721968707}
   _serverAnimationHandler: {fileID: 647902995146852404}
---- !u!114 &647902995146852404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5309065195269084554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12422b363967840d4b5527882fad6de2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  _serverCharacter: {fileID: 1803180478442400679}
-  _networkLifeState: {fileID: 3071604933630529982}
-  _spriteAnimHandlers: []
 --- !u!114 &2695284593721968707
 MonoBehaviour:
   m_ObjectHideFlags: 0

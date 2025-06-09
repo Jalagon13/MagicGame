@@ -88,7 +88,6 @@ public class ClientCharacter : NetworkBehaviour
     public void PlayGameFeelRpc(int damage)
     {
         GameManager.Instance.PlayDamageNumbers(damage, transform.position, _serverCharacter.CurrentBiome, Color.red);
-        if(!_serverCharacter.Data.IsNpc)
-            SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerDamaged, transform.position);
+        SoundManager.Instance.PlayOneShot(_serverCharacter.Data.HurtSound, transform.position);
     }
 }

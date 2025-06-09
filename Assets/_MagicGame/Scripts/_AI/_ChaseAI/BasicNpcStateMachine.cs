@@ -29,6 +29,8 @@ public class BasicNpcStateMachine : StateMachine
         _states[AIState.Knockbacked] = new BasicNpcKnockbackState(AIState.Knockbacked, this);
         _states[AIState.Pursuing] = new BasicNpcPursueState(AIState.Pursuing, this);
         _currentState = _states[AIState.Idle];
+        
+        StartStateMachine();
     }
 
     public override void OwnerInitialization()
