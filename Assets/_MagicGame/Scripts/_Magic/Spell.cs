@@ -1,11 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using FMODUnity;
-using MoreMountains.Tools;
-using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 
 public abstract class Spell : NetworkBehaviour
@@ -26,6 +22,19 @@ public abstract class Spell : NetworkBehaviour
 	protected GameObject _spellGameObject;
 	protected Vector2 _finalDirection;
 	private bool _despawning;
+
+	public NetworkObject SpellCasterNetworkObject
+	{
+		get
+		{
+			if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(SpellData.Value.CasterNetworkObjectId, out NetworkObject inflicterNetworkObj))
+			{
+				return inflicterNetworkObj;
+			}
+
+			return null;
+		}
+	}
 
 	protected virtual void Awake()
     {
@@ -56,7 +65,23 @@ public abstract class Spell : NetworkBehaviour
 		}
 	}
 
-    protected virtual void Update()
+	public override void OnNetworkDespawn()
+	{
+		if (IsOwner)
+		{
+			SpellManager.Instance.OnExecuteSpells -= ExecuteSpellStart;
+			SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
+			HotbarManager.Instance.OnFocusSlotUpdated -= TryToDespawnIfSlotChanged;
+		}
+
+		if (IsClient)
+		{
+			Visualization.transform.parent = transform;
+			ShowVisuals.OnValueChanged -= HandleVisuals;
+		}
+	}
+
+	protected virtual void Update()
 	{
 		if(IsOwner)
 		{
@@ -73,22 +98,7 @@ public abstract class Spell : NetworkBehaviour
 			}
 		}
 	}
-
-	public override void OnNetworkDespawn()
-	{
-		if(IsOwner)
-		{
-			SpellManager.Instance.OnExecuteSpells -= ExecuteSpellStart;
-			SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
-			HotbarManager.Instance.OnFocusSlotUpdated -= TryToDespawnIfSlotChanged;
-		}
 	
-		if (IsClient)
-		{
-			Visualization.transform.parent = transform;
-		}
-	}
-
 	public void OnOwnerSpellCanceled()
 	{
 		IsStarted.Value = false;

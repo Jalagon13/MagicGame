@@ -135,14 +135,14 @@ public class SpellManager : NetworkBehaviour
     [Rpc(SendTo.Server, RequireOwnership = false)]
     public void SpawnSpellServerRpc(SyncSpellData spellData, Vector2 loadPoint, RpcParams rpcParams = default)
     {
-        Spell spell = Instantiate((GameManager.Instance.GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO).SpellProjectilePrefab, loadPoint, Quaternion.identity);
+        ServerSpell spell = Instantiate((GameManager.Instance.GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO).SpellPrefab, loadPoint, Quaternion.identity);
 
         NetworkObject no = spell.GetComponent<NetworkObject>();
-        NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(spellData.CasterNetworkObjectId, out NetworkObject player);
+        NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(spellData.CasterNetworkObjectId, out NetworkObject casterNetObj);
         no.SpawnWithObservers = false;
-        no.SpawnWithOwnership(player.OwnerClientId, true);
+        no.SpawnWithOwnership(casterNetObj.OwnerClientId, true);
 
-        spell.SpellData.Value = spellData;
+        spell.Initialize(spellData);
         spell.GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);
     }
 

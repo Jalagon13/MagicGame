@@ -134,12 +134,9 @@ public class FlameBreath : Spell
     {
         foreach (DamageReceiver target in _queuedTargetsToDamage)
         {
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(SpellData.Value.CasterNetworkObjectId, out NetworkObject inflicterNetworkObj))
+            if (SpellCasterNetworkObject.TryGetComponent(out ServerCharacter inflicter))
             {
-                if (inflicterNetworkObj.TryGetComponent(out ServerCharacter inflicter))
-                {
-                    target.ReceiveHP(inflicter, -SpellData.Value.Damage, true, SpellData.Value.Knockback);
-                }
+                target.ReceiveHP(inflicter, -SpellData.Value.Damage, true, SpellData.Value.Knockback);
             }
 
             yield return new WaitForSeconds(TimeBetweenDamage);

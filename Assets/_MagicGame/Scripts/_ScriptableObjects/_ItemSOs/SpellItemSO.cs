@@ -10,7 +10,7 @@ public class SpellItemSO : ItemSO
 {
 	[field: Header("Visuals")]
 	[field: Tooltip("Actual Prefab for the projectile.")]
-	[field: SerializeField] public Spell SpellProjectilePrefab { get; private set; }
+	[field: SerializeField] public ServerSpell SpellPrefab { get; private set; }
 	
 	[field: Tooltip("Spell Icon that will be displayed as the actual spell when equipped")]
 	[field: SerializeField] public Sprite SpellUIDisplaySprite { get; private set; }

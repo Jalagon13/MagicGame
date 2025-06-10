@@ -34,7 +34,6 @@ public class ProjectileHitbox : MonoBehaviour
     private void FixedUpdate()
     {
         if (_spellCollider == null || Spell.SpellData.Value.CasterNetworkObjectId != Player.LocalClientInstance.NetworkObjectId || !Spell.IsStarted.Value) return;
-
         
         // First: Handle NPC hits using OverlapCircleAll
         Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _spellCollider.radius, Spell.CollisionMask);
@@ -44,12 +43,9 @@ public class ProjectileHitbox : MonoBehaviour
             {
                 if (!_damagedNetworkHealthStates.Contains(damageReceiver))
                 {
-                    if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(Spell.SpellData.Value.CasterNetworkObjectId, out NetworkObject inflicterNetworkObj))
+                    if (Spell.SpellCasterNetworkObject.TryGetComponent(out ServerCharacter inflicter))
                     {
-                        if(inflicterNetworkObj.TryGetComponent(out ServerCharacter inflicter))
-                        {
-                            damageReceiver.ReceiveHP(inflicter, -Spell.SpellData.Value.Damage, true, Spell.SpellData.Value.Knockback);
-                        }
+                        damageReceiver.ReceiveHP(inflicter, -Spell.SpellData.Value.Damage, true, Spell.SpellData.Value.Knockback);
                     }
                     
                     _damagedNetworkHealthStates.Add(damageReceiver);

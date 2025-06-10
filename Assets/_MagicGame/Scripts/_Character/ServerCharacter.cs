@@ -102,10 +102,6 @@ public class ServerCharacter : NetworkBehaviour
         if (_stateMachine == null)
             Debug.LogWarning($"ServerCharacter {gameObject.name} missing _aiBrain.");
     }
-    
-    private void Start()
-    {
-    }
 
     public override void OnNetworkSpawn()
     {
@@ -189,10 +185,6 @@ public class ServerCharacter : NetworkBehaviour
                     Debug.LogError($"ServerCharacter {gameObject.name} missing NpcVisibility.");
                 }
             }
-            else
-            {
-                // Player logic:
-            }
         }
         else if(newValue == LifeState.IFrame)
         {
@@ -232,7 +224,6 @@ public class ServerCharacter : NetworkBehaviour
                 StartCoroutine(StartIFrameTimer());
             }
         }
-        
         HitPoints = Mathf.Clamp(HitPoints + hpReceived, 0, _characterData.BaseHP);
         _stateMachine?.ReceiveHP(inflicter, hpReceived);
         
