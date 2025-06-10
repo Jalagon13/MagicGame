@@ -100,4 +100,9 @@ public class SoundManager : NetworkBehaviour
 
 		base.OnDestroy();
 	}
+
+    internal void PlayOneShot(object value, Vector3 position)
+    {
+        throw new NotImplementedException();
+    }
 }

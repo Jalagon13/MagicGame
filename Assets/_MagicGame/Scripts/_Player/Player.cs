@@ -82,7 +82,8 @@ public class Player : NetworkBehaviour
     {
         if(TryGetComponent(out DamageReceiver damageReceiver))
         {
-			Debug.Log($"Player took damage");
+			if(ServerCharacter.LifeState != LifeState.Alive) return;
+			Debug.Log($"Player took damage TEST");
 			damageReceiver.ReceiveHP(_serverCharacter, -25, false);
 		}
     }
@@ -144,7 +145,7 @@ public class Player : NetworkBehaviour
 
 	private void GameInput_OnPlayerMove(object sender, InputAction.CallbackContext e)
 	{
-		if (_serverCharacter.LifeState == LifeState.Alive)
+		if (_serverCharacter.LifeState != LifeState.Dead)
 		{
 			var desiredDirection = e.ReadValue<Vector2>();
 			if(desiredDirection == Vector2.zero)

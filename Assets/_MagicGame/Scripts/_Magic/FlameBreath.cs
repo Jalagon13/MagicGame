@@ -3,6 +3,7 @@ using FMOD.Studio;
 using FMODUnity;
 using System.Collections.Generic;
 using System.Collections;
+using Unity.Netcode;
 
 public class FlameBreath : Spell
 {
@@ -15,7 +16,7 @@ public class FlameBreath : Spell
 
     private EventInstance _sustainedFireSoundEventInstance;
     private Timer _damageTimer;
-    private List<NetworkHealthState> _queuedTargetsToDamage = new();
+    private List<DamageReceiver> _queuedTargetsToDamage = new();
     private Coroutine _damageSequenceCoroutine;
 
     private List<FoliageCollider> _queuedFoliageToDestroy = new();
@@ -30,19 +31,25 @@ public class FlameBreath : Spell
     {
         _sustainedFireSoundEventInstance = SoundManager.Instance.CreateInstance(SustainedFireSound);
         _sustainedFireSoundEventInstance.start();
-        // Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(SpellData.Value.HasteMultiplier);
+        
+        Buff castingMoveBuff = new(
+            Player.LocalClientInstance.ServerCharacter.Stats.MovementSpeed, 
+            new StatModifier(SpellData.Value.HasteMultiplier, StatModifierType.Percent, this)
+        );
+        
+        Player.LocalClientInstance.ServerCharacter.Stats.AddBuff(castingMoveBuff);
     }
 
     protected override void OnSpellEnd()
     {
+        Player.LocalClientInstance.ServerCharacter.Stats.RemoveBuffsFromSource(this);
         _sustainedFireSoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         StopAllParticleSystems(Visualization.transform);
-        // Player.LocalClientInstance.PlayerStats.ApplySpeedModifier(1);
     }
 
     protected override void OnSpellCanceled()
     {
-        
+        Player.LocalClientInstance.ServerCharacter.Stats.RemoveBuffsFromSource(this);
     }
 
     private void StopAllParticleSystems(Transform parent)
@@ -75,7 +82,7 @@ public class FlameBreath : Spell
 
             if (_queuedTargetsToDamage.Count == 0 && _damageSequenceCoroutine == null)
             {
-                HashSet<NetworkHealthState> uniqueTargets = new();
+                HashSet<DamageReceiver> uniqueTargets = new();
                 var particles = new ParticleSystem.Particle[FlameBreathParticles.particleCount];
                 FlameBreathParticles.GetParticles(particles);
 
@@ -84,9 +91,9 @@ public class FlameBreath : Spell
                     var colliders = Physics2D.OverlapPointAll(particle.position);
                     foreach (var collider in colliders)
                     {
-                        if (IsValidNpcHit(collider, out NetworkHealthState npcHealth)) // Detect NPCs
+                        if (IsValidNpcHit(collider, out DamageReceiver damageReciever)) // Detect NPCs
                         {
-                            uniqueTargets.Add(npcHealth);
+                            uniqueTargets.Add(damageReciever);
                             if (uniqueTargets.Count >= MaxSimultaneousDamagedNPCs)
                                 break;
                         }
@@ -125,13 +132,15 @@ public class FlameBreath : Spell
 
     private IEnumerator DamageTargetsInSequence()
     {
-        foreach (var target in _queuedTargetsToDamage)
+        foreach (DamageReceiver target in _queuedTargetsToDamage)
         {
-            // target.TakeDamageRpc(
-            //     SpellData.Value.Damage,
-            //     NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position,
-            //     SpellData.Value.Knockback
-            // );
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(SpellData.Value.CasterNetworkObjectId, out NetworkObject inflicterNetworkObj))
+            {
+                if (inflicterNetworkObj.TryGetComponent(out ServerCharacter inflicter))
+                {
+                    target.ReceiveHP(inflicter, -SpellData.Value.Damage, true, SpellData.Value.Knockback);
+                }
+            }
 
             yield return new WaitForSeconds(TimeBetweenDamage);
         }

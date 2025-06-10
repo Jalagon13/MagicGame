@@ -61,7 +61,7 @@ public class TeleportBolt : Spell
 
         if (IsOwner)
         {
-            SpawnTeleportParticlesClientRpc(NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject.transform.position, transform.position);
+            SpawnTeleportParticlesClientRpc(NetworkManager.ConnectedClients[SpellData.Value.CasterNetworkObjectId].PlayerObject.transform.position, transform.position);
         }
     }
 
@@ -80,9 +80,9 @@ public class TeleportBolt : Spell
         _vfx.transform.parent = null;
         _vfx.GetComponent<ParticleSystem>().Play();
 
-        if (SpellData.Value.OwnerPlayerId == Player.LocalClientInstance.OwnerClientId)
+        if (SpellData.Value.CasterNetworkObjectId == Player.LocalClientInstance.OwnerClientId)
         {
-            var playerWhoShotIt = NetworkManager.ConnectedClients[SpellData.Value.OwnerPlayerId].PlayerObject;
+            var playerWhoShotIt = NetworkManager.ConnectedClients[SpellData.Value.CasterNetworkObjectId].PlayerObject;
             playerWhoShotIt.transform.position = transform.position;
         }
     }

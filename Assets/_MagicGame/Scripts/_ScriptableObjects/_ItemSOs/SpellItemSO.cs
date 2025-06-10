@@ -62,7 +62,7 @@ public class SpellItemSO : ItemSO
 			GameManager.Instance.GetItemIdFromItemSO(this),
 			ManaCost, Damage, Knockback, wandSlotIndex, Speed, Lifetime, HasteMultiplier, 
 			IdGenerator.GenerateRandomId(),
-			Player.LocalClientInstance.OwnerClientId,
+			Player.LocalClientInstance.NetworkObjectId,
 			selectedInventoryItem.Id,
 			DespawnIfFocusSlotChanged,
 			IsContinuousCast,

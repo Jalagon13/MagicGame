@@ -18,6 +18,10 @@ public class CharacterDataSO : ScriptableObject
     public float KnockbackResist = 0f;
     [Tooltip("Respawn Timer")]
     public float RespawnTimerDuration = 0f;
+    [Tooltip("Base Health Regen Interval")]
+    public float BaseHealthRegenTimeInterval = 0.25f;
+    [Tooltip("Base Health Regen Amount")]
+    public int BaseHealthRegenAmount = 1;
     [Tooltip("If true, the NPC can be knocked back")]
     public bool CanBeKnockedBack = true;
     [Tooltip("If true, character can die")]
@@ -25,14 +29,15 @@ public class CharacterDataSO : ScriptableObject
 
     [Header("Sounds")]
     public EventReference HurtSound;
+    public EventReference WalkSound;
 
     [Header("Npc Parameters")]
     [Tooltip("Indicates whether the character is an NPC")]
     public bool IsNpc;
     [Tooltip("The amount of 'npc space' the NPC take up when spawned")]
     public float SlotAmount;
-    [Tooltip("The ID of the NPC")]
-    public string ID;
+    [Tooltip("The String ID of the NPC used for serialization not runtime lookups and networksyncing")]
+    public string StringID;
     [Tooltip("Prefab for the NPC")]
     public GameObject NpcPrefab;
     

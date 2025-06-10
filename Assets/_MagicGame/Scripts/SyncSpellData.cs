@@ -12,13 +12,13 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
     public float Lifetime;
     public float HasteMultiplier;
     public ulong SpellId;
-    public ulong OwnerPlayerId;
+    public ulong CasterNetworkObjectId;
     public ulong InventorySlotId;
     public bool DespawnIfFocusSlotChanged;
     public bool IsContinuousCast;
     public BiomeType SpawnBiome;
 
-    public SyncSpellData(int spellIndex, int manaCost, int damage, int knockback, int wandSlotIndex, float speed, float lifetime, float hasteMultiplier, ulong spellId, ulong ownerPlayerId, ulong inventorySlotId, bool despawnIfFocusSlotChanged, bool isContinuousCast, BiomeType spawnBiome)
+    public SyncSpellData(int spellIndex, int manaCost, int damage, int knockback, int wandSlotIndex, float speed, float lifetime, float hasteMultiplier, ulong spellId, ulong casterNetworkObjectId, ulong inventorySlotId, bool despawnIfFocusSlotChanged, bool isContinuousCast, BiomeType spawnBiome)
     {
         SpellIndex = spellIndex;
         ManaCost = manaCost;
@@ -29,7 +29,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         Lifetime = lifetime;
         HasteMultiplier = hasteMultiplier;
         SpellId = spellId;
-        OwnerPlayerId = ownerPlayerId;
+        CasterNetworkObjectId = casterNetworkObjectId;
         InventorySlotId = inventorySlotId;
         DespawnIfFocusSlotChanged = despawnIfFocusSlotChanged;
         IsContinuousCast = isContinuousCast;
@@ -48,7 +48,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
             Lifetime != other.Lifetime ||
             HasteMultiplier != other.HasteMultiplier ||
             SpellId != other.SpellId ||
-            OwnerPlayerId != other.OwnerPlayerId ||
+            CasterNetworkObjectId != other.CasterNetworkObjectId ||
             InventorySlotId != other.InventorySlotId ||
             DespawnIfFocusSlotChanged != other.DespawnIfFocusSlotChanged ||
             IsContinuousCast != other.IsContinuousCast ||
@@ -71,7 +71,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         serializer.SerializeValue(ref Lifetime);
         serializer.SerializeValue(ref HasteMultiplier);
         serializer.SerializeValue(ref SpellId);
-        serializer.SerializeValue(ref OwnerPlayerId);
+        serializer.SerializeValue(ref CasterNetworkObjectId);
         serializer.SerializeValue(ref InventorySlotId);
         serializer.SerializeValue(ref DespawnIfFocusSlotChanged);
         serializer.SerializeValue(ref IsContinuousCast);

@@ -10,7 +10,7 @@ public class ProjectileHitbox : MonoBehaviour
     
     private CircleCollider2D _spellCollider;
     private int _bounces;
-    private List<NetworkHealthState> _damagedNetworkHealthStates = new List<NetworkHealthState>();
+    private List<DamageReceiver> _damagedNetworkHealthStates = new();
 
 
     private void Awake()
@@ -20,7 +20,7 @@ public class ProjectileHitbox : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (_spellCollider == null || Spell.SpellData.Value.OwnerPlayerId != Player.LocalClientInstance.OwnerClientId || !Spell.IsStarted.Value) return;
+        if (_spellCollider == null || Spell.SpellData.Value.CasterNetworkObjectId != Player.LocalClientInstance.NetworkObjectId || !Spell.IsStarted.Value) return;
 
         if (collision.gameObject.layer == 16) // Detecting Foliage tiles
         {
@@ -33,26 +33,29 @@ public class ProjectileHitbox : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_spellCollider == null || Spell.SpellData.Value.OwnerPlayerId != Player.LocalClientInstance.OwnerClientId || !Spell.IsStarted.Value) return;
+        if (_spellCollider == null || Spell.SpellData.Value.CasterNetworkObjectId != Player.LocalClientInstance.NetworkObjectId || !Spell.IsStarted.Value) return;
 
+        
         // First: Handle NPC hits using OverlapCircleAll
         Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _spellCollider.radius, Spell.CollisionMask);
         foreach (var col in collisions)
         {
-            if (Spell.IsValidNpcHit(col, out var npcHealth))
+            if (Spell.IsValidNpcHit(col, out DamageReceiver damageReceiver))
             {
-                if (!_damagedNetworkHealthStates.Contains(npcHealth))
+                if (!_damagedNetworkHealthStates.Contains(damageReceiver))
                 {
-                    npcHealth.TakeDamageRpc(
-                        Spell.SpellData.Value.Damage,
-                        Spell.NetworkManager.ConnectedClients[Spell.SpellData.Value.OwnerPlayerId].PlayerObject.transform.position,
-                        Spell.SpellData.Value.Knockback
-                    );
-                    _damagedNetworkHealthStates.Add(npcHealth);
+                    if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(Spell.SpellData.Value.CasterNetworkObjectId, out NetworkObject inflicterNetworkObj))
+                    {
+                        if(inflicterNetworkObj.TryGetComponent(out ServerCharacter inflicter))
+                        {
+                            damageReceiver.ReceiveHP(inflicter, -Spell.SpellData.Value.Damage, true, Spell.SpellData.Value.Knockback);
+                        }
+                    }
+                    
+                    _damagedNetworkHealthStates.Add(damageReceiver);
 
                     if (_damagedNetworkHealthStates.Count >= PierceCount)
                     {
-                        Debug.Log($"Ending spell on NPC hits");
                         Spell.OnOwnerSpellEnd();
                         return;
                     }

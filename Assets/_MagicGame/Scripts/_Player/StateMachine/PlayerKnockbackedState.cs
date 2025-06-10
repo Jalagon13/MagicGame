@@ -11,7 +11,7 @@ public class PlayerKnockbackedState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        Debug.Log("Player entering knockbacked");
+        // Debug.Log("Player entering knockbacked");
     }
 
     public override void UpdateState()

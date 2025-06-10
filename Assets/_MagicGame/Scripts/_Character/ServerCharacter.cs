@@ -14,6 +14,8 @@ public enum CharacterStateMachine
 [RequireComponent(typeof(NetworkHealthState), typeof(NetworkLifeState))]
 public class ServerCharacter : NetworkBehaviour
 {
+    private Timer _hpRegenTimer;
+
     [SerializeField]
     private CharacterStateMachine _aiType;
     public CharacterStateMachine AIType => _aiType;
@@ -100,6 +102,10 @@ public class ServerCharacter : NetworkBehaviour
         if (_stateMachine == null)
             Debug.LogWarning($"ServerCharacter {gameObject.name} missing _aiBrain.");
     }
+    
+    private void Start()
+    {
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -110,6 +116,9 @@ public class ServerCharacter : NetworkBehaviour
             
             HitPoints = _characterData.BaseHP;
             _stateMachine?.OwnerInitialization();
+
+            _hpRegenTimer = new Timer(_characterData.BaseHealthRegenTimeInterval <= 0 ? 1f : _characterData.BaseHealthRegenTimeInterval);
+            _hpRegenTimer.OnTimerEnd += OnHealthRegenTimerEnd;
         }
     }
 
@@ -127,6 +136,11 @@ public class ServerCharacter : NetworkBehaviour
         {
             NetLifeState.LifeState.OnValueChanged -= OnLifeStateChanged;
             _damageReceiver.HpReceived -= ReceiveHP;
+            if (_hpRegenTimer != null)
+            {
+                _hpRegenTimer.OnTimerEnd -= OnHealthRegenTimerEnd;
+                _hpRegenTimer = null;
+            }
         }
     }
     
@@ -152,12 +166,16 @@ public class ServerCharacter : NetworkBehaviour
                 _characterStats.TickBuffs(Time.deltaTime);
                 _stateMachine.UpdateAI();
             }
+            if (_hpRegenTimer != null && LifeState != LifeState.Dead && !NetHealthState.IsFullHp())
+            {
+                _hpRegenTimer.Tick(Time.deltaTime);
+            }
         }
     }
 
     private void OnLifeStateChanged(LifeState previousValue, LifeState newValue)
     {
-        if(LifeState == LifeState.Dead)
+        if(previousValue == LifeState.Alive && newValue == LifeState.Dead)
         {
             if (_characterData.IsNpc)
             {
@@ -171,8 +189,12 @@ public class ServerCharacter : NetworkBehaviour
                     Debug.LogError($"ServerCharacter {gameObject.name} missing NpcVisibility.");
                 }
             }
+            else
+            {
+                // Player logic:
+            }
         }
-        else if(LifeState == LifeState.IFrame)
+        else if(newValue == LifeState.IFrame)
         {
             // TODO: IFrame functionality for all servercharacters here...
         }
@@ -181,13 +203,13 @@ public class ServerCharacter : NetworkBehaviour
     private void ReceiveHP(object sender, DamageReceiver.DamageReceivedEventArgs e)
     {
         ServerCharacter inflicter = e.Inflicter;
-        int hp = e.HP;
+        int hpReceived = e.HP;
         
-        if(hp > 0)
+        if(hpReceived > 0)
         {
             // HP healing mod functionality here
             float healingMod = 1f;
-            hp = (int)(hp * healingMod);
+            hpReceived = (int)(hpReceived * healingMod);
         }
         else
         {
@@ -196,25 +218,25 @@ public class ServerCharacter : NetworkBehaviour
                 
             // Damage reduction mod functionality here
             float damageReduction = 1f;
-            hp = (int)(hp * damageReduction);
+            hpReceived = (int)(hpReceived * damageReduction);
             
-            _clientCharacter.PlayGameFeelRpc(hp);
+            _clientCharacter.PlayGameFeelRpc(hpReceived);
             
             if (_characterData.CanBeKnockedBack && e.PlayKnockback)
             {
                 _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
             }
+
+            if(HitPoints + hpReceived > 0)
+            {
+                StartCoroutine(StartIFrameTimer());
+            }
         }
         
-        HitPoints = Mathf.Clamp(HitPoints + hp, 0, _characterData.BaseHP);
+        HitPoints = Mathf.Clamp(HitPoints + hpReceived, 0, _characterData.BaseHP);
+        _stateMachine?.ReceiveHP(inflicter, hpReceived);
         
-        _stateMachine?.ReceiveHP(inflicter, hp);
-        
-        if(HitPoints > 0)
-        {
-            StartCoroutine(StartIFrameTimer());
-        }
-        else if(HitPoints <= 0 && _characterData.CanDie)
+        if(HitPoints <= 0 && _characterData.CanDie)
         {
             LifeState = LifeState.Dead;
         }
@@ -225,5 +247,16 @@ public class ServerCharacter : NetworkBehaviour
         LifeState = LifeState.IFrame;
         yield return new WaitForSeconds(_characterData.IFrameDuration);
         LifeState = LifeState.Alive;
+    }
+
+    private void OnHealthRegenTimerEnd(object sender, EventArgs e)
+    {
+        if (LifeState != LifeState.Dead)
+        {
+            int healAmount = _characterData.BaseHealthRegenAmount <= 0 ? 1 : _characterData.BaseHealthRegenAmount;
+            _damageReceiver.ReceiveHP(this, healAmount, false);
+        }
+        
+        _hpRegenTimer.Reset();
     }
 }

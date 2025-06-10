@@ -13,7 +13,7 @@ public class SelfHeal : Spell
 
     protected override void OnExecuteSpellStart()
     {
-        SelfCastStartClientRpc(RpcTarget.Single(SpellData.Value.OwnerPlayerId, RpcTargetUse.Persistent));
+        SelfCastStartClientRpc(RpcTarget.Single(SpellData.Value.CasterNetworkObjectId, RpcTargetUse.Persistent));
     }
 
     protected override void OnSpellEnd()

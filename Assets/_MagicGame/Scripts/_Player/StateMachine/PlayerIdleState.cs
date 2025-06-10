@@ -14,8 +14,7 @@ public class PlayerIdleState : BaseState
 
 	protected override void EnterState(AIStateData stateData)
 	{
-		Debug.Log($"Player entering idle");
-		// _ctx.IsMoving = false;
+		// Debug.Log($"Player entering idle");
 	}
 
 	public override void ExitState()

@@ -34,7 +34,7 @@ public class HealthBarUI : MonoBehaviour
     {
 		_progressBar.UpdateBar(e.CurrentHitPoints, 0, e.MaxHitPoints);
 
-		if (e.CurrentHitPoints <= 0 || e.CurrentHitPoints >= e.MaxHitPoints)
+		if (e.CurrentHitPoints >= e.MaxHitPoints)
 		{
 			Hide();
 		}
@@ -46,13 +46,11 @@ public class HealthBarUI : MonoBehaviour
 
     private void Show()
 	{
-		Debug.Log($"Showing health bar for {transform.root.gameObject.name}");
 		gameObject.SetActive(true);
 	}
 	
 	private void Hide()
 	{
-		Debug.Log($"Hiding health bar for {transform.root.gameObject.name}");
 		gameObject.SetActive(false);
 	}
 }

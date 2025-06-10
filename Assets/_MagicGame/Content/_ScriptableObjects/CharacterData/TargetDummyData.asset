@@ -19,6 +19,8 @@ MonoBehaviour:
   TurnSharpness: 8
   KnockbackResist: 0
   RespawnTimerDuration: 3
+  BaseHealthRegenTimeInterval: 2
+  BaseHealthRegenAmount: 15
   CanBeKnockedBack: 0
   CanDie: 0
   HurtSound:
@@ -28,9 +30,16 @@ MonoBehaviour:
       Data3: 1013332110
       Data4: -2033662663
     Path: event:/WoodHit
+  WalkSound:
+    Guid:
+      Data1: 1812228115
+      Data2: 1207244471
+      Data3: 1013332110
+      Data4: -2033662663
+    Path: event:/WoodHit
   IsNpc: 1
   SlotAmount: 0
-  ID: targetdummy
+  StringID: targetdummy
   NpcPrefab: {fileID: 532044041320650086, guid: c87107d07ca65446598c8fdd66eaeab4, type: 3}
   IsFriendly: 1
   WillChasePlayer: 1

@@ -35,6 +35,6 @@ MonoBehaviour:
   <Lifetime>k__BackingField: 0.75
   <Speed>k__BackingField: 15
   <Recoil>k__BackingField: 0
-  <HasteMultiplier>k__BackingField: 0.6
+  <HasteMultiplier>k__BackingField: -0.8
   <DespawnIfFocusSlotChanged>k__BackingField: 1
   <IsContinuousCast>k__BackingField: 1

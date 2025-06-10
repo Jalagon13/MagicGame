@@ -51,8 +51,8 @@ public abstract class Spell : NetworkBehaviour
 			SpellManager.Instance.OnExecuteSpells += ExecuteSpellStart;
 			SpellManager.Instance.OnCancelSpells += CancelSpellCharge;
 			HotbarManager.Instance.OnFocusSlotUpdated += TryToDespawnIfSlotChanged;
-			
-			OnOwnerSpellSpawned();
+
+			OnSpellSpawned();
 		}
 	}
 
@@ -116,9 +116,9 @@ public abstract class Spell : NetworkBehaviour
 		OnSpellEnd();
 	}
 
-	public bool IsValidNpcHit(Collider2D collider, out NetworkHealthState health)
+	public bool IsValidNpcHit(Collider2D collider, out DamageReceiver damageReceiver)
 	{
-		health = null;
+		damageReceiver = null;
 
 		if (collider.gameObject.layer != NpcLayer)
 			return false;
@@ -129,8 +129,8 @@ public abstract class Spell : NetworkBehaviour
 		if (!npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
 			return false;
 
-		health = npcNet.GetComponent<NetworkHealthState>();
-		return health != null;
+		damageReceiver = npcNet.GetComponent<DamageReceiver>();
+		return damageReceiver != null;
 	}
 
     private void TryToDespawnIfSlotChanged(object sender, HotbarManager.OnFocusItemSetEventArgs e)
@@ -161,7 +161,7 @@ public abstract class Spell : NetworkBehaviour
 		SpellLifeTimer = new Timer(SpellData.Value.Lifetime);
 		SpellLifeTimer.OnTimerEnd += OnSpellLifeTimerEnd;
 
-		OnOwnerExecuteSpellStart();
+		OnExecuteSpellStart();
 	}
 
 	private void CancelSpellCharge(object sender, EventArgs e)
@@ -198,15 +198,6 @@ public abstract class Spell : NetworkBehaviour
     {
 		Visualization.SetActive(newValue);
     }
-
-	private void OnOwnerSpellSpawned()
-	{
-		OnSpellSpawned();
-	}
-	private void OnOwnerExecuteSpellStart()
-	{
-		OnExecuteSpellStart();
-	}
 
 	protected abstract void OnSpellSpawned();
 	protected abstract void OnExecuteSpellStart();

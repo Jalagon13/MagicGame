@@ -17,7 +17,7 @@ public class PlayerMoveState : BaseState
 
 	protected override void EnterState(AIStateData stateData)
 	{
-		Debug.Log($"Player move state");
+		// Debug.Log($"Player move state");
 		PlayFootStepSound();
 	
 		_playWalkSoundTimer = new(_walkSoundCooldown);
@@ -57,9 +57,8 @@ public class PlayerMoveState : BaseState
 	
 	private void PlayFootStepSound()
 	{
-		// if(!_ctx.IsDead)
-		// {
-		// 	SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerFootsteps, Player.LocalClientInstance.transform.position);
-		// }
+		if(_ctx.CharacterData.WalkSound.IsNull) return;
+	
+		SoundManager.Instance.PlayOneShot(_ctx.CharacterData.WalkSound, Player.LocalClientInstance.transform.position);
 	}
 }

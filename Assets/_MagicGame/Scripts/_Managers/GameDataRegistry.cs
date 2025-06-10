@@ -18,7 +18,7 @@ public class GameDataRegistry : MonoBehaviour
     {
         for (int i = 0; i < _characterData.Count; i++)
         {
-            if (_characterData[i].ID == characterData.ID)
+            if (_characterData[i].StringID == characterData.StringID)
             {
                 return (short)i;
             }

@@ -138,8 +138,9 @@ public class SpellManager : NetworkBehaviour
         Spell spell = Instantiate((GameManager.Instance.GetItemSOFromItemId(spellData.SpellIndex) as SpellItemSO).SpellProjectilePrefab, loadPoint, Quaternion.identity);
 
         NetworkObject no = spell.GetComponent<NetworkObject>();
+        NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(spellData.CasterNetworkObjectId, out NetworkObject player);
         no.SpawnWithObservers = false;
-        no.SpawnWithOwnership(spellData.OwnerPlayerId, true);
+        no.SpawnWithOwnership(player.OwnerClientId, true);
 
         spell.SpellData.Value = spellData;
         spell.GetComponent<SpellNetworkComponent>().InitializeSpellNetwork(spellData);

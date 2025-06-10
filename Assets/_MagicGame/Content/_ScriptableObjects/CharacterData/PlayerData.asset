@@ -15,10 +15,12 @@ MonoBehaviour:
   BaseHP: 100
   BaseMP: 100
   BaseSpeed: 5
-  IFrameDuration: 0.2
+  IFrameDuration: 2
   TurnSharpness: 8
   KnockbackResist: 0
   RespawnTimerDuration: 3
+  BaseHealthRegenTimeInterval: 0.5
+  BaseHealthRegenAmount: 1
   CanBeKnockedBack: 1
   CanDie: 1
   HurtSound:
@@ -28,9 +30,16 @@ MonoBehaviour:
       Data3: -617592154
       Data4: 2092223634
     Path: event:/Player/PlayerHurt
+  WalkSound:
+    Guid:
+      Data1: 1689472473
+      Data2: 1191771207
+      Data3: 255401399
+      Data4: -184975247
+    Path: event:/Player/PlayerFootsteps
   IsNpc: 0
   SlotAmount: 0
-  ID: 
+  StringID: 
   NpcPrefab: {fileID: 0}
   IsFriendly: 0
   WillChasePlayer: 1

@@ -32,6 +32,6 @@ public class DamageReceiver : NetworkBehaviour, IDamageable
 
     public bool IsAlive()
     {
-        return _lifeState.LifeState.Value == LifeState.Alive;
+        return _lifeState.LifeState.Value != LifeState.Dead;
     }
 }
