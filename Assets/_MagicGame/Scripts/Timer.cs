@@ -23,7 +23,7 @@ using UnityEngine;
         }
     }
 	
-    public bool IsDone => _remainingSeconds <= 0f;
+    public bool IsRunning => RemainingSeconds > 0f || this == null;
     
     public float Duration
     {

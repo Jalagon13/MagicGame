@@ -44,31 +44,14 @@ public abstract class ServerSpell : NetworkBehaviour
             CollisionMask = LayerMask.GetMask(new[] { "LocalWall", "Npc" });
             WallMask = LayerMask.NameToLayer("LocalWall");
             NpcLayer = LayerMask.NameToLayer("Npc");
-
-            SpellManager.Instance.OnExecuteSpells += ExecuteSpellStart;
-            SpellManager.Instance.OnCancelSpells += CancelSpellCharge;
         }
     }
 
-    public override void OnNetworkDespawn()
-    {
-        if (IsOwner)
-        {
-            SpellManager.Instance.OnExecuteSpells -= ExecuteSpellStart;
-            SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
-        }   
-    }
-
-    public override void OnDestroy()
-    {
-        
-    }
-
-    private void CancelSpellCharge(object sender, EventArgs e)
+    public void CancelSpellCharge()
     {
         if (_spellData.Value.IsContinuousCast)
         {
-            SpellManager.Instance.IsContinuouslyCasting = false;
+            // SpellManager.Instance.IsContinuouslyCasting = false;
         }
         
         SpellCanceled();
@@ -77,10 +60,10 @@ public abstract class ServerSpell : NetworkBehaviour
         NetworkObject.Despawn();
     }
 
-    public void ExecuteSpellStart(object sender, SpellManager.ExecuteSpellsEventArgs e)
+    public void ExecuteSpellStart(Vector3 spawnPoint, Vector2 finalDireciton)
     {
-        transform.position = e.SpawnPoint;
-        _finalDirection = e.Direction;
+        transform.position = spawnPoint;
+        _finalDirection = finalDireciton;
         
         StartCoroutine(SpellLifetimeRoutine());
     }

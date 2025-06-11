@@ -39,9 +39,14 @@ public class Player : NetworkBehaviour
 	public PlayerNetworkVisibility PlayerNetworkVisibility => _playerNetworkVisibility;
 	
 	private DamageReceiver _damageReceiver;
+	private SpellInputHandler _spellInputHandler;
+	
+	private SpellCaster _spellCaster;
+	public SpellCaster SpellCaster => _spellCaster;
 	
 	private void Awake()
 	{
+		_spellCaster = GetComponent<SpellCaster>();
 		_damageReceiver = GetComponent<DamageReceiver>();
 		_serverCharacter = GetComponent<ServerCharacter>();
 		_playerNetworkVisibility = GetComponent<PlayerNetworkVisibility>();
@@ -51,9 +56,11 @@ public class Player : NetworkBehaviour
 	public void OnNetworkSpawnLocalClientInitializations()
 	{
 		LocalClientInstance = this;
+		
 		CurrentBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
 		_spawnBiome = BiomeType.Forest;
 		_spawnPoint = transform.position;
+		_spellInputHandler = new(this);
 
 		OnAnyPlayerSpawned?.Invoke(this, new PlayerIdEventArgs
 		{
@@ -75,6 +82,7 @@ public class Player : NetworkBehaviour
 			GameInput.Instance.OnFKeyPressed -= GameInput_OnFKeyPressed;
 			HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnSelectedItemUpdated;
 			_serverCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
+			_spellInputHandler.Dispose();
 		}
 	}
 
@@ -92,6 +100,9 @@ public class Player : NetworkBehaviour
 	{
 		if (IsOwner)
 		{
+			_spellInputHandler.DetectSpellInputs();
+		
+			// Breadcrumb stuff
 			Vector2Int newTilePosition = new(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
 			if (newTilePosition != _lastTilePosition)
 			{

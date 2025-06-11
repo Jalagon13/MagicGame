@@ -54,28 +54,26 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("Should the spell be continuous cast while holding down cast button")]
 	[field: SerializeField] public bool IsContinuousCast { get; private set; } = false;
 	
-	public SyncSpellData GetSpellDataForLocalClientInstance(int wandSlotIndex)
+	public SyncSpellData GetSpellDataForLocalClientInstance(ulong casterNetObjId, BiomeType spawnBiome)
 	{
-		InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-
+		
 		return new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			ManaCost, Damage, Knockback, wandSlotIndex, Speed, Lifetime, HasteMultiplier, 
-			IdGenerator.GenerateRandomId(),
-			Player.LocalClientInstance.NetworkObjectId,
-			selectedInventoryItem.Id,
-			DespawnIfFocusSlotChanged,
-			IsContinuousCast,
-			Player.LocalClientInstance.CurrentBiome.Value);
+			ManaCost, Damage, Knockback, Speed, Lifetime, HasteMultiplier, casterNetObjId, DespawnIfFocusSlotChanged, IsContinuousCast,spawnBiome);
+	}
+	
+	public virtual void StartSpell(SpellCaster spellCaster)
+	{
+		// var syncSpellData = GetSpellDataForLocalClientInstance();
 	}
 	
 	public virtual void StartSpell(int slotIndex) // Default behavior, spawn spell on server, assign it to player
 	{
-		var syncSpellData = GetSpellDataForLocalClientInstance(slotIndex);
+		// var syncSpellData = GetSpellDataForLocalClientInstance();
 		
 		InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-		SpellManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position);
-		SpellManager.Instance.LoadSpell(this, new LoadedSpell(this, syncSpellData, selectedInventoryItem));
+		// SpellManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position);
+		// SpellManager.Instance.LoadSpell(this, new LoadedSpell(this, syncSpellData, selectedInventoryItem));
 	}
 	
 	public override InventoryItem CreateInventoryItem(int quantity)

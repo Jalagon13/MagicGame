@@ -2,7 +2,7 @@
 public class Buff
 {
     public bool IsPermanent => _timer == null;
-    public bool IsExpired => _timer != null && _timer.IsDone;
+    public bool IsExpired => _timer != null && !_timer.IsRunning;
     public object Source => _modifier.Source;
     public Stat Stat => _stat;
 

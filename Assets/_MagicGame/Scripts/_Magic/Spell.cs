@@ -85,10 +85,10 @@ public abstract class Spell : NetworkBehaviour
 		{
 			if(SpellData.Value.IsContinuousCast && IsStarted.Value)
 			{
-			    if(!SpellManager.Instance.IsSpellKeyHeld(SpellData.Value.WandSlotIndex))
-			    {
-					OnOwnerSpellEnd();
-				}
+			    // if(!SpellManager.Instance.IsSpellKeyHeld(SpellData.Value.WandSlotIndex))
+			    // {
+				// 	OnOwnerSpellEnd();
+				// }
 			}
 			else if (SpellLifeTimer != null && SpellLifeTimer.RemainingSeconds > 0)
 			{

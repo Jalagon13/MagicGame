@@ -50,14 +50,11 @@ public class PlayerStateMachine : StateMachine
 
     public override void OwnerInitialization()
     {
-		WorldManager.Instance.OnBiomeTransitionStart += WorldManager_RestrictMovement;
-		WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_AllowMovement;
+
 	}
 	
 	public override void Dispose()
 	{
-		WorldManager.Instance.OnBiomeTransitionStart -= WorldManager_RestrictMovement;
-		WorldManager.Instance.OnBiomeTransitionEnd -= WorldManager_AllowMovement;
 		if (_serverCharacter.TryGetComponent(out Player player))
 		{
 			player.SelectedItemIdNetworkVariable.OnValueChanged -= OnSelectedItemIdChanged;
@@ -89,29 +86,6 @@ public class PlayerStateMachine : StateMachine
 			{
 				// Healed
 			}
-		}
-	}
-
-	private void WorldManager_AllowMovement(object sender, EventArgs e)
-	{
-		// CanMove = true;
-	}
-
-	private void WorldManager_RestrictMovement(object sender, EventArgs e)
-	{
-		// CanMove = false;
-	}
-
-	// This method returns a cardinal direction based on the velocity.
-	private CardinalDirection GetCardinalDirection(Vector3 velocity)
-	{
-		if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.y))
-		{
-			return (velocity.x > 0) ? CardinalDirection.East : CardinalDirection.West;
-		}
-		else
-		{
-			return (velocity.y > 0) ? CardinalDirection.North : CardinalDirection.South;
 		}
 	}
 }

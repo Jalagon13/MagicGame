@@ -73,6 +73,7 @@ GameObject:
   - component: {fileID: 8141412508225569808}
   - component: {fileID: 1645875197371293612}
   - component: {fileID: 598476479702786246}
+  - component: {fileID: 7639844761049611922}
   m_Layer: 11
   m_Name: Player
   m_TagString: Untagged
@@ -309,7 +310,6 @@ MonoBehaviour:
   _aiType: 1
   _characterData: {fileID: 11400000, guid: 9720263fd0d0e4e21ad416d3d8caedf4, type: 2}
   _clientCharacter: {fileID: 8333186287527618759}
-  _damageReceiver: {fileID: 2603237591562411052}
   _serverCharacterMovement: {fileID: 3930061559417755682}
   _serverAnimationHandler: {fileID: 598476479702786246}
 --- !u!114 &1645875197371293612
@@ -348,6 +348,20 @@ MonoBehaviour:
   - {fileID: 7721777825053776820}
   - {fileID: 1299341961821722642}
   - {fileID: 8195383011194485763}
+--- !u!114 &7639844761049611922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815970926421098775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9476b8d871eb54a09865773ff33c93fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _serverCharacter: {fileID: 8141412508225569808}
 --- !u!1 &1334120334475979508
 GameObject:
   m_ObjectHideFlags: 0
