@@ -59,7 +59,6 @@ public abstract class Spell : NetworkBehaviour
 
 			SpellManager.Instance.OnExecuteSpells += ExecuteSpellStart;
 			SpellManager.Instance.OnCancelSpells += CancelSpellCharge;
-			HotbarManager.Instance.OnFocusSlotUpdated += TryToDespawnIfSlotChanged;
 
 			OnSpellSpawned();
 		}
@@ -71,7 +70,6 @@ public abstract class Spell : NetworkBehaviour
 		{
 			SpellManager.Instance.OnExecuteSpells -= ExecuteSpellStart;
 			SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
-			HotbarManager.Instance.OnFocusSlotUpdated -= TryToDespawnIfSlotChanged;
 		}
 
 		if (IsClient)
@@ -142,19 +140,6 @@ public abstract class Spell : NetworkBehaviour
 		damageReceiver = npcNet.GetComponent<DamageReceiver>();
 		return damageReceiver != null;
 	}
-
-    private void TryToDespawnIfSlotChanged(object sender, HotbarManager.OnFocusItemSetEventArgs e)
-    {
-        if(SpellData.Value.DespawnIfFocusSlotChanged)
-        {
-			InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-			
-			if(selectedInventoryItem.Id != SpellData.Value.InventorySlotId)
-			{
-				OnOwnerSpellEnd();
-			}
-		}
-    }
 
     private void ExecuteSpellStart(object sender, SpellManager.ExecuteSpellsEventArgs e)
 	{

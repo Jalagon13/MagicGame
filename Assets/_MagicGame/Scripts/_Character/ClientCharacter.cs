@@ -22,11 +22,8 @@ public class ClientCharacter : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (!IsClient)
-        {
-            return;
-        }
-        
+        if (!IsClient) return;
+
         _serverCharacter.SuperAIState.OnValueChanged += OnSuperAIStateChanged;
         _serverCharacter.SubAIState.OnValueChanged += OnSubAIStateChanged;
 
@@ -43,22 +40,16 @@ public class ClientCharacter : NetworkBehaviour
     
     public override void OnNetworkDespawn()
     {
-        if (!IsClient)
-        {
-            return;
-        }
-        
+        if (!IsClient) return;
+
         _serverCharacter.SuperAIState.OnValueChanged -= OnSuperAIStateChanged;
         _serverCharacter.SubAIState.OnValueChanged -= OnSubAIStateChanged;
     }
 
     private void Update()
     {
-        if (!IsClient)
-        {
-            return;
-        }
-        
+        if (!IsClient) return;
+
         _currentSuperState?.ClientUpdateState(_currentSuperStateData);
         _currentSubState?.ClientUpdateState(_currentSubStateData);
     }
