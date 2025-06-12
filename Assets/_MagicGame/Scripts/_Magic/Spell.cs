@@ -57,8 +57,8 @@ public abstract class Spell : NetworkBehaviour
 			
 			Visualization.SetActive(false);	
 
-			SpellManager.Instance.OnExecuteSpells += ExecuteSpellStart;
-			SpellManager.Instance.OnCancelSpells += CancelSpellCharge;
+			// SpellManager.Instance.OnExecuteSpells += ExecuteSpellStart;
+			// SpellManager.Instance.OnCancelSpells += CancelSpellCharge;
 
 			OnSpellSpawned();
 		}
@@ -68,8 +68,8 @@ public abstract class Spell : NetworkBehaviour
 	{
 		if (IsOwner)
 		{
-			SpellManager.Instance.OnExecuteSpells -= ExecuteSpellStart;
-			SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
+			// SpellManager.Instance.OnExecuteSpells -= ExecuteSpellStart;
+			// SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
 		}
 
 		if (IsClient)
@@ -104,7 +104,7 @@ public abstract class Spell : NetworkBehaviour
 		if (IsOwner && SpellData.Value.IsContinuousCast)
 		{
 			Debug.Log($"SPELL class: Stopping continuous casting");
-			SpellManager.Instance.IsContinuouslyCasting = false;
+			// SpellManager.Instance.IsContinuouslyCasting = false;
 		}
 
 		DespawnSpellServerRpc();
@@ -117,7 +117,7 @@ public abstract class Spell : NetworkBehaviour
 		
 		if(IsOwner && SpellData.Value.IsContinuousCast )
 		{
-		    SpellManager.Instance.IsContinuouslyCasting = false;
+		    // SpellManager.Instance.IsContinuouslyCasting = false;
 		}
 		
 		StartCoroutine(WaitToDespawnRoutine());
@@ -141,23 +141,23 @@ public abstract class Spell : NetworkBehaviour
 		return damageReceiver != null;
 	}
 
-    private void ExecuteSpellStart(object sender, SpellManager.ExecuteSpellsEventArgs e)
-	{
-		if(IsStarted.Value || _despawning) return;
+    // private void ExecuteSpellStart(object sender, SpellManager.ExecuteSpellsEventArgs e)
+	// {
+	// 	if(IsStarted.Value || _despawning) return;
 
-		SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
+	// 	SpellManager.Instance.OnCancelSpells -= CancelSpellCharge;
 
-		transform.position = e.SpawnPoint;
-		_finalDirection = e.Direction;
+	// 	transform.position = e.SpawnPoint;
+	// 	_finalDirection = e.Direction;
 
-		IsStarted.Value = true;
-		ShowVisuals.Value = true;
+	// 	IsStarted.Value = true;
+	// 	ShowVisuals.Value = true;
 
-		SpellLifeTimer = new Timer(SpellData.Value.Lifetime);
-		SpellLifeTimer.OnTimerEnd += OnSpellLifeTimerEnd;
+	// 	SpellLifeTimer = new Timer(SpellData.Value.Lifetime);
+	// 	SpellLifeTimer.OnTimerEnd += OnSpellLifeTimerEnd;
 
-		OnExecuteSpellStart();
-	}
+	// 	OnExecuteSpellStart();
+	// }
 
 	private void CancelSpellCharge(object sender, EventArgs e)
     {

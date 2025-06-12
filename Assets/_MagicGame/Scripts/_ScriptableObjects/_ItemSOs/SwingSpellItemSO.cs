@@ -14,7 +14,7 @@ public class SwingSpellItemSO : SpellItemSO
 
     public override void StartSpell(int slotIndex)
     {
-        SpellManager.Instance.SubtractManaAndSetCooldown(this);
+        // SpellManager.Instance.SubtractManaAndSetCooldown(this);
         // Player.LocalClientInstance.PlayerHand.ExecuteSwing(SwingDuration, GameManager.Instance.GetItemIdFromItemSO(this));
     }
 }

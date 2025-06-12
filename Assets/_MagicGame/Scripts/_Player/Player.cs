@@ -40,9 +40,11 @@ public class Player : NetworkBehaviour
 	
 	private DamageReceiver _damageReceiver;
 	private SpellInputHandler _spellInputHandler;
+	public SpellInputHandler SpellInputHandler => _spellInputHandler;
 	
 	private SpellCaster _spellCaster;
 	public SpellCaster SpellCaster => _spellCaster;
+	
 	
 	private void Awake()
 	{

@@ -15,6 +15,12 @@ public class PlayerCastTimeUI : MonoBehaviour
         HotbarManager.Instance.OnFocusSlotUpdated += HandleUI;
     }
 
+
+    private void OnDestroy()
+    {
+        HotbarManager.Instance.OnFocusSlotUpdated -= HandleUI;
+    }
+
     private void HandleUI(object sender, HotbarManager.OnFocusItemSetEventArgs e)
     {
         // HideBar();
@@ -22,8 +28,10 @@ public class PlayerCastTimeUI : MonoBehaviour
 
     private void Update()
     {
-        float maxAmount = SpellManager.Instance.CastTimeTimer.Duration;
-        float currentAmount = maxAmount - SpellManager.Instance.CastTimeTimer.RemainingSeconds;
+        if(Player.LocalClientInstance == null) return;
+    
+        float maxAmount = Player.LocalClientInstance.SpellCaster.CastTimer.Duration;
+        float currentAmount = maxAmount - Player.LocalClientInstance.SpellCaster.CastTimer.RemainingSeconds;
 
         if (currentAmount >= maxAmount)
         {
@@ -63,10 +71,5 @@ public class PlayerCastTimeUI : MonoBehaviour
     private void HideBar()
     {
         gameObject.transform.GetChild(0).gameObject.SetActive(false);
-    }
-
-    private void OnDestroy()
-    {
-        HotbarManager.Instance.OnFocusSlotUpdated -= HandleUI;
     }
 }

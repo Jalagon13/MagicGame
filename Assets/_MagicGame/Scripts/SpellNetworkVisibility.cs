@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class SpellNetworkComponent : NetworkBehaviour
+public class SpellNetworkVisibility : NetworkBehaviour
 {
 	private SyncSpellData _spellData;
 	private GameObject _spellGameObject;

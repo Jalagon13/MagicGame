@@ -71,7 +71,7 @@ public class SpellItemSO : ItemSO
 	{
 		// var syncSpellData = GetSpellDataForLocalClientInstance();
 		
-		InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
+		// InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
 		// SpellManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position);
 		// SpellManager.Instance.LoadSpell(this, new LoadedSpell(this, syncSpellData, selectedInventoryItem));
 	}

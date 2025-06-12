@@ -15,7 +15,7 @@ public class PlayerSpellCastingState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        // Debug.Log($"Player entering spell casting");
+        Debug.Log($"Player entering spell casting");
         _performSpellStateCleanup = true;
         _spellToCast = GameManager.Instance.GetItemSOFromItemId(stateData.Amount) as SpellItemSO;
         
@@ -34,7 +34,7 @@ public class PlayerSpellCastingState : BaseState
 
     public override void CheckSwitchStates()
     {
-        if(!SpellManager.Instance.IsCasting)
+        if(!_ctx.SpellCaster.IsCasting)
         {
             SwitchState(new AIStateData(AIState.Grounded));
         }

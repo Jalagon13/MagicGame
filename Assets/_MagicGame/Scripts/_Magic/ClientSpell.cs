@@ -6,6 +6,10 @@ public class ClientSpell : NetworkBehaviour
 {
     [SerializeField] 
     private ServerSpell _serverSpell;
+    
+    [SerializeField] 
+    private GameObject _visualization;
+    public GameObject Visualization => _visualization;
 
     public override void OnNetworkSpawn()
     {
@@ -27,7 +31,7 @@ public class ClientSpell : NetworkBehaviour
 
         if(_serverSpell.SpellStateNV.Value == SpellState.Casting)
         {
-            _serverSpell?.ClientSpellUpdate();
+            _serverSpell?.ClientSpellUpdate(this);
         }
     }
 
@@ -35,11 +39,11 @@ public class ClientSpell : NetworkBehaviour
     {
         if(previousValue == SpellState.Charging && newValue == SpellState.Casting)
         {
-            _serverSpell.ClientSpellStart();
+            _serverSpell.ClientSpellStart(this);
         }
         else if(previousValue == SpellState.Casting && newValue == SpellState.Stopping)
         {
-            _serverSpell.ClientSpellStop();
+            _serverSpell.ClientSpellStop(this);
         }
     }
 }

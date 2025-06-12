@@ -81,7 +81,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _serverSpell: {fileID: 0}
+  _serverSpell: {fileID: 4388535776764661370}
+  _visualization: {fileID: 1896378920223993688}
 --- !u!1 &4358861403539396870
 GameObject:
   m_ObjectHideFlags: 0
@@ -163,7 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e90d782a3bff04e95bd156c83014765b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Spell>k__BackingField: {fileID: 8641276432891663383}
+  <Spell>k__BackingField: {fileID: 0}
   <BounceCount>k__BackingField: 0
   <PierceCount>k__BackingField: 0
 --- !u!1 &5938426825082082942
@@ -178,11 +179,10 @@ GameObject:
   - component: {fileID: 8967916949087621197}
   - component: {fileID: 5612118583235381416}
   - component: {fileID: 8104886496655576445}
-  - component: {fileID: 1792131143885239907}
   - component: {fileID: 8269354046363732758}
-  - component: {fileID: 8641276432891663383}
+  - component: {fileID: 4388535776764661370}
   m_Layer: 15
-  m_Name: spell_FireBall
+  m_Name: FireBoltSpell
   m_TagString: Untagged
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -292,23 +292,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 0
   SlerpPosition: 0
---- !u!114 &1792131143885239907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5938426825082082942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 1
-  AutoUpdateKinematicState: 1
-  AutoSetKinematicOnDespawn: 1
 --- !u!114 &8269354046363732758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,7 +305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
---- !u!114 &8641276432891663383
+--- !u!114 &4388535776764661370
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -331,13 +314,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5938426825082082942}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1074a237c1a25495f9c6ff9e5bafebef, type: 3}
+  m_Script: {fileID: 11500000, guid: 1b5b5ecf0c96f484a87d76d1f7890d5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <Visualization>k__BackingField: {fileID: 1896378920223993688}
-  <DespawnDelay>k__BackingField: 1.5
-  <VelocityDecay>k__BackingField: 1
+  _clientSpell: {fileID: 3831362845038874084}
+  _velocityDecay: 1
 --- !u!1001 &2421964918929114433
 PrefabInstance:
   m_ObjectHideFlags: 0

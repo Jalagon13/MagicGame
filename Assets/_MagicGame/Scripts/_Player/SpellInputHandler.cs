@@ -6,6 +6,8 @@ public class SpellInputHandler
     public event EventHandler OnSpellArrayUpdated;
 
     private SpellItemSO[] _equippedSpells;
+    public SpellItemSO[] EquippedSpells => _equippedSpells;
+    
     private Player _player;
     
     public SpellInputHandler(Player player)
@@ -26,6 +28,8 @@ public class SpellInputHandler
     private void CheckForSelectedItemChange(object sender, HotbarManager.OnFocusItemSetEventArgs e)
     {
         // If an invetnory slot was selected, cancel spell casting
+        if(_player.SpellCaster.CastTimer == null) return;
+        
         if (_player.SpellCaster.CastTimer.IsRunning)
         {
             _player.SpellCaster.TryToCancelCast();
@@ -60,12 +64,20 @@ public class SpellInputHandler
                     SpellItemSO spell = _equippedSpells[slotIndex];
                     if (spell != null && CanCastSelectedSpell(spell))
                     {
-                        _player.SpellCaster.TryCastSpell(spell);
+                        _player.SpellCaster.TryCastSpell(spell, GetExecutionParams);
                     }
                     break;
                 }
             }
         }
+    }
+
+    private (Vector3 spawnPoint, Vector3 direction) GetExecutionParams()
+    {
+        Vector2 point = _player.PlayerHand.SpellSpawnTransform.position;
+        Vector2 direction = (ActionManager.MouseWorldPosition - point).normalized;
+        
+        return (point, direction);
     }
 
     private bool CanCastSelectedSpell(SpellItemSO spell)
@@ -91,7 +103,6 @@ public class SpellInputHandler
 
     private void OnItemIdChanged(int previousValue, int newValue)
     {
-        Debug.Log($"SpellInputHandler New item id: {newValue}");
         if (GameManager.Instance.GetItemSOFromItemId(newValue) is SpellItemSO spellItemSO)
         {
             _equippedSpells = new SpellItemSO[] { spellItemSO };

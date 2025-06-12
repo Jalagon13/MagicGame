@@ -25,6 +25,9 @@ public class PlayerStateMachine : StateMachine
 	
 	private Player _playerRef;
 	public Player PlayerRef => _playerRef;
+	
+	private SpellCaster _spellCaster;
+	public SpellCaster SpellCaster => _spellCaster;
 
 	public PlayerStateMachine(ServerCharacter serverCharacter)
 	{
@@ -45,6 +48,11 @@ public class PlayerStateMachine : StateMachine
 		{
 			_playerRef = player;
 			_playerRef.SelectedItemIdNetworkVariable.OnValueChanged += OnSelectedItemIdChanged; 
+		}
+		
+		if(_serverCharacter.TryGetComponent(out SpellCaster spellCaster))
+		{
+		    _spellCaster = spellCaster;
 		}
 	}
 

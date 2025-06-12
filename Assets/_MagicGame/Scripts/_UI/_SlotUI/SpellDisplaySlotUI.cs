@@ -42,14 +42,20 @@ public class SpellDisplaySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerE
     private void Start()
     {
         CooldownUI.enabled = false;
-        SpellManager.Instance.OnSpellCooldownTimersUpdated += UpdateCooldownDisplay;
+        Player.LocalClientInstance.SpellCaster.OnSpellCooldownTimersUpdated += UpdateCooldownDisplay;
+    }
+
+
+    private void OnDestroy()
+    {
+        Player.LocalClientInstance.SpellCaster.OnSpellCooldownTimersUpdated -= UpdateCooldownDisplay;
     }
 
     private void UpdateCooldownDisplay(object sender, EventArgs e)
     {
-        if(SpellManager.Instance.SpellCooldownTimers.ContainsKey(_spellId))
+        if(Player.LocalClientInstance.SpellCaster.SpellCoolDownTimers.ContainsKey(_spellId))
         {
-            Timer spellCdTimer = SpellManager.Instance.SpellCooldownTimers[_spellId];
+            Timer spellCdTimer = Player.LocalClientInstance.SpellCaster.SpellCoolDownTimers[_spellId];
             CooldownUI.enabled = true;
             CooldownUI.fillAmount = spellCdTimer.RemainingSeconds / spellCdTimer.Duration;
         }
@@ -79,10 +85,5 @@ public class SpellDisplaySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerE
     public void OnPointerExit(PointerEventData eventData)
     {
         Tooltip.HideUI();
-    }
-
-    private void OnDestroy()
-    {
-        SpellManager.Instance.OnSpellCooldownTimersUpdated -= UpdateCooldownDisplay;
     }
 }

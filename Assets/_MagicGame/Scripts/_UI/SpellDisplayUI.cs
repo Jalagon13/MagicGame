@@ -1,29 +1,53 @@
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class SpellDisplayUI : MonoBehaviour
+public class SpellDisplayUI : NetworkBehaviour
 {
     [field: SerializeField] public GameObject SpellDisplaySlotUIPrefab { get; private set; }
     
     private Dictionary<int, SpellDisplaySlotUI> _spellSlotDatabase = new Dictionary<int, SpellDisplaySlotUI>();
 
-    private void Start()
+    private void Awake()
     {
-        SpellManager.Instance.OnSpellArrayUpdated += UpdateSpellDisplay;
+        if(NetworkManager != null)
+        {
+            NetworkManager.OnClientConnectedCallback += RegisterUpdateSpellDisplayCallback;
+        }
+    }
+
+    public override void OnDestroy()
+    {
+        if (NetworkManager != null)
+        {
+            NetworkManager.OnClientConnectedCallback -= RegisterUpdateSpellDisplayCallback;
+        }
+
+        if (Player.LocalClientInstance != null)
+        {
+            Player.LocalClientInstance.SpellInputHandler.OnSpellArrayUpdated -= UpdateSpellDisplay;
+        }
+    }
+
+    private void RegisterUpdateSpellDisplayCallback(ulong obj)
+    {
+        if(NetworkManager.LocalClientId != obj) return;
+
+        Player.LocalClientInstance.SpellInputHandler.OnSpellArrayUpdated += UpdateSpellDisplay;
     }
 
     private void UpdateSpellDisplay(object sender, EventArgs e)
     {
         ClearSpells();
 
-        if (SpellManager.Instance.SpellItemArray != null)
+        if (Player.LocalClientInstance.SpellInputHandler.EquippedSpells != null)
         {
-            for(int i = 0; i < SpellManager.Instance.SpellItemArray.Length; i++)
+            for(int i = 0; i < Player.LocalClientInstance.SpellInputHandler.EquippedSpells.Length; i++)
             {
-                if(SpellManager.Instance.SpellItemArray[i] == null) continue;
+                if(Player.LocalClientInstance.SpellInputHandler.EquippedSpells[i] == null) continue;
 
-                SpellItemSO spell = SpellManager.Instance.SpellItemArray[i];
+                SpellItemSO spell = Player.LocalClientInstance.SpellInputHandler.EquippedSpells[i];
 
                 GameObject spellDisplaySlotUI = Instantiate(SpellDisplaySlotUIPrefab, transform);
                 SpellDisplaySlotUI slotUI = spellDisplaySlotUI.GetComponent<SpellDisplaySlotUI>();
@@ -42,10 +66,5 @@ public class SpellDisplayUI : MonoBehaviour
             Destroy(child.gameObject);
         }
         _spellSlotDatabase.Clear();
-    }
-
-    private void OnDestroy()
-    {
-        SpellManager.Instance.OnSpellArrayUpdated -= UpdateSpellDisplay;
     }
 }
