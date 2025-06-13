@@ -68,10 +68,10 @@ public class SpellCaster : NetworkBehaviour
         {
             return; // If spell is on cooldown || cast timer still going
         }
+        Reset();
 
         _currentSpellData = spellItemSO.GetSpellDataForLocalClientInstance(NetworkObjectId, _serverCharacter.CurrentBiome);
-        SpawnSpellServerRpc(_currentSpellData, OwnerClientId);
-        Reset();
+        SpawnSpellServerRpc(_currentSpellData);
         
         _getExecutionParams = getExecutionParams;
         _isCasting = true;
@@ -128,8 +128,8 @@ public class SpellCaster : NetworkBehaviour
                 
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
                 // Set spell cooldown
-                SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(serverSpell.SpellData.SpellItemId) as SpellItemSO;
-                _spellCoolDownTimers[serverSpell.SpellData.SpellItemId] = new Timer(spellItemSO.Cooldown);
+                SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(serverSpell.SpellData.Value.SpellItemId) as SpellItemSO;
+                _spellCoolDownTimers[serverSpell.SpellData.Value.SpellItemId] = new Timer(spellItemSO.Cooldown);
                 
                 _isCasting = false;
             }
@@ -145,7 +145,7 @@ public class SpellCaster : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    private void SpawnSpellServerRpc(SyncSpellData spellData, ulong senderOwnerId)
+    private void SpawnSpellServerRpc(SyncSpellData spellData, RpcParams rpcParams = default)
     {
         var spellPrefab = (GameManager.Instance.GetItemSOFromItemId(spellData.SpellItemId) as SpellItemSO).SpellPrefab;
         NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(spellData.CasterNetworkObjectId, out NetworkObject casterNetObj);
@@ -155,14 +155,16 @@ public class SpellCaster : NetworkBehaviour
         spellNetObj.SpawnWithObservers = false;
         spellNetObj.SpawnWithOwnership(casterNetObj.OwnerClientId, true);
 
-        spell.Initialize(spellData);
+        spell.SpellData.Value = spellData;
+        spell.SpellStateNV.Value = SpellState.Charging;
+        spell.OnSpellInitialize();
         spell.GetComponent<SpellNetworkVisibility>().InitializeSpellNetwork(spellData);
         
-        SendSpellRefToCasterRpc(spellNetObj, RpcTarget.Single(senderOwnerId, RpcTargetUse.Persistent));
+        SendSpellRefToCasterRpc(spellNetObj, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
     }
 
-    [Rpc(SendTo.SpecifiedInParams, RequireOwnership = false)]
-    private void SendSpellRefToCasterRpc(NetworkObjectReference spellNetObj, RpcParams rpcParams = default)
+    [Rpc(SendTo.SpecifiedInParams)]
+    private void SendSpellRefToCasterRpc(NetworkObjectReference spellNetObj, RpcParams rpcParams)
     {
         _spellNetObj = spellNetObj;
         
@@ -182,10 +184,11 @@ public class SpellCaster : NetworkBehaviour
     private void Reset()
     {
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
-        _castTimer = null;
+        
         _spellSpawnPoint = null;
         _spellExecuteDirection = null;
         _spellNetObj = null;
+        
         _pendingCast = false;
         _cancelCast = false;
     }

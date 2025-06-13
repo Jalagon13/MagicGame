@@ -14,7 +14,7 @@ public class ClientSpell : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if (!IsClient) return;
-
+        
         _serverSpell.SpellStateNV.OnValueChanged += HandleSpellStateChange;
     }
 

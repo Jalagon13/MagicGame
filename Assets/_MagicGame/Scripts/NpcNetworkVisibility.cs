@@ -34,7 +34,6 @@ public class NpcNetworkVisibility : NetworkBehaviour
 			NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;
 			NetworkManager.NetworkTickSystem.Tick += NpcNetworkTick;
 		}
-		base.OnNetworkSpawn();
 	}
 	
 	public bool SameBiomeAs(BiomeType biome)

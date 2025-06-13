@@ -17,14 +17,15 @@ public class SpellNetworkVisibility : NetworkBehaviour
 		{
 			_spellGameObject = transform.GetChild(0).gameObject;
 			_spellCollider = GetComponent<Collider2D>();
-
-			HideSpell(NetworkManager.ServerClientId);
 			
 			NetworkObject.CheckObjectVisibility += InitialVisCheck;
 			NetworkManager.NetworkTickSystem.Tick += SpellNetworkTick;
 		}
-		
-		base.OnNetworkSpawn();
+	}
+
+    protected override void OnNetworkPostSpawn()
+    {
+		HideSpell(NetworkManager.ServerClientId);
 	}
 	
 	public void InitializeSpellNetwork(SyncSpellData syncSpellData)
@@ -35,8 +36,6 @@ public class SpellNetworkVisibility : NetworkBehaviour
 
 	private void SpellNetworkTick()
 	{
-		// if(!_spell.Started) return;
-	
 		HandleBiomeVisibility();
 	}
 

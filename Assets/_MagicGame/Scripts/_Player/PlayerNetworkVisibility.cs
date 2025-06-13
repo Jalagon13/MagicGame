@@ -17,7 +17,6 @@ public class PlayerNetworkVisibility : NetworkBehaviour
 			NetworkObject.CheckObjectVisibility += CheckVisibility;
 			NetworkManager.NetworkTickSystem.Tick += HandleOtherPlayerVisibility;
 		}
-		base.OnNetworkSpawn();
 	}
 	
 	private bool CheckVisibility(ulong clientId)

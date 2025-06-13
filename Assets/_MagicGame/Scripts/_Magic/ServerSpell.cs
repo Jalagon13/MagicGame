@@ -16,10 +16,8 @@ public abstract class ServerSpell : NetworkBehaviour
     private ClientSpell _clientSpell;
     public ClientSpell ClientSpell => _clientSpell;
 
-    protected NetworkVariable<SyncSpellData> _spellData = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public SyncSpellData SpellData => _spellData.Value;
-    
-    public NetworkVariable<SpellState> SpellStateNV { get; private set; } = new(SpellState.Charging, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<SyncSpellData> SpellData { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<SpellState> SpellStateNV { get; set; } = new(SpellState.Charging, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     public int CollisionMask { get; private set; }
     public int NpcLayer { get; private set; }
@@ -31,7 +29,7 @@ public abstract class ServerSpell : NetworkBehaviour
     {
         get
         {
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(_spellData.Value.CasterNetworkObjectId, out NetworkObject inflicterNetworkObj))
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(SpellData.Value.CasterNetworkObjectId, out NetworkObject inflicterNetworkObj))
             {
                 return inflicterNetworkObj;
             }
@@ -80,7 +78,7 @@ public abstract class ServerSpell : NetworkBehaviour
         
         OnSpellExecute();
         
-        yield return new WaitForSeconds(_spellData.Value.Lifetime);
+        yield return new WaitForSeconds(SpellData.Value.Lifetime);
         
         SpellStateNV.Value = SpellState.Stopping;
         
@@ -91,7 +89,7 @@ public abstract class ServerSpell : NetworkBehaviour
 
     public void CancelSpellCharge()
     {
-        if (_spellData.Value.IsContinuousCast)
+        if (SpellData.Value.IsContinuousCast)
         {
             // SpellManager.Instance.IsContinuouslyCasting = false;
         }
@@ -100,13 +98,6 @@ public abstract class ServerSpell : NetworkBehaviour
         SpellStateNV.Value = SpellState.Stopping;
         NetworkObject.Despawn();
     }
-
-    public void Initialize(SyncSpellData spellData)
-    {
-        _spellData.Value = spellData;
-        SpellStateNV.Value = SpellState.Charging;
-        OnSpellInitialize();
-    }
     
     // Owner Methods
     protected abstract void OnSpellExecute();
@@ -114,7 +105,7 @@ public abstract class ServerSpell : NetworkBehaviour
 
     protected virtual void OnUpdateSpell() { }
     protected virtual void OnFixedUpdateSpell() { }
-    protected virtual void OnSpellInitialize() { }
+    public virtual void OnSpellInitialize() { }
     protected virtual void OnSpellCanceled() { }
     
     // Client Methods

@@ -9,7 +9,7 @@ public class FireBolt : ServerSpell
     private Rigidbody2D _rigidbody2D;
     private Vector2 _velocity;
 
-    protected override void OnSpellInitialize()
+    public override void OnSpellInitialize()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         ClientSpell.Visualization.SetActive(false);
@@ -18,7 +18,7 @@ public class FireBolt : ServerSpell
     protected override void OnSpellExecute()
     {
         _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-        _velocity = _finalDirection * SpellData.Speed;
+        _velocity = _finalDirection * SpellData.Value.Speed;
         ClientSpell.Visualization.SetActive(true);
     }
 
@@ -30,11 +30,24 @@ public class FireBolt : ServerSpell
 
     protected override IEnumerator OnSpellEnd()
     {
-        yield return null;
+        float longestParticleLifetime = 0;
+    
+        foreach (Transform child in ClientSpell.Visualization.transform)
+        {
+            ParticleSystem ps = child.GetComponent<ParticleSystem>();
+            if (ps != null)
+            {
+                longestParticleLifetime = Mathf.Max(longestParticleLifetime, ps.main.startLifetime.constant);
+            }
+        }
+
+        yield return new WaitForSeconds(longestParticleLifetime);
     }
 
     public override void ClientSpellStart(ClientSpell clientSpell)
     {
+        SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
+        SoundManager.Instance.PlayOneShot(spellItemSO.SpellCastSound, transform.position);
         clientSpell.Visualization.SetActive(true);
     }
     

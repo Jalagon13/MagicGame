@@ -164,9 +164,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e90d782a3bff04e95bd156c83014765b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Spell>k__BackingField: {fileID: 0}
-  <BounceCount>k__BackingField: 0
-  <PierceCount>k__BackingField: 0
 --- !u!1 &5938426825082082942
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,6 +367,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6816347435489174216, guid: b50dfc1a768304c78bddeb6be336e5f6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7667179753420663057, guid: b50dfc1a768304c78bddeb6be336e5f6, type: 3}
+      propertyPath: looping
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7667179753420663057, guid: b50dfc1a768304c78bddeb6be336e5f6, type: 3}
