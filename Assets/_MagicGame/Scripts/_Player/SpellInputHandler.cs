@@ -9,6 +9,8 @@ public class SpellInputHandler
     public SpellItemSO[] EquippedSpells => _equippedSpells;
     
     private Player _player;
+    private int? _currentEquippedSpellIndexCasting = null;
+    public int? CurrentEquippedSpellIndexCasting => _currentEquippedSpellIndexCasting;
     
     public SpellInputHandler(Player player)
     {
@@ -27,10 +29,14 @@ public class SpellInputHandler
 
     private void CheckForSelectedItemChange(object sender, HotbarManager.OnFocusItemSetEventArgs e)
     {
+        if(e.SelectedItemId == _player.SpellCaster.CurrentSpellData.SpellItemId)
+        {
+            Debug.Log($"Cannot cancel if the spell is the same spell that is currently being cast.");
+            return;
+        }
+    
         // If an invetnory slot was selected, cancel spell casting
-        if(_player.SpellCaster.CastTimer == null) return;
-        
-        if (_player.SpellCaster.CastTimer.IsRunning)
+        if (_player.SpellCaster.IsCasting.Value)
         {
             _player.SpellCaster.TryToCancelCast();
         }
@@ -64,7 +70,13 @@ public class SpellInputHandler
                     SpellItemSO spell = _equippedSpells[slotIndex];
                     if (spell != null && CanCastSelectedSpell(spell))
                     {
+                        _currentEquippedSpellIndexCasting = slotIndex;
                         _player.SpellCaster.TryCastSpell(spell, GetExecutionParams);
+                    }
+                    else
+                    {
+                        // If the spell is not valid or cannot be cast, reset the casting index
+                        _currentEquippedSpellIndexCasting = null;
                     }
                     break;
                 }

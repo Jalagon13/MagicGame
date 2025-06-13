@@ -22,6 +22,7 @@ public abstract class ServerSpell : NetworkBehaviour
     public int CollisionMask { get; private set; }
     public int NpcLayer { get; private set; }
     public int WallMask { get; private set; }
+    public int FoliageLayer { get; private set; } 
 
     protected Vector2 _finalDirection;
 
@@ -45,6 +46,7 @@ public abstract class ServerSpell : NetworkBehaviour
             CollisionMask = LayerMask.GetMask(new[] { "LocalWall", "Npc" }); // Bitmask
             WallMask = LayerMask.NameToLayer("LocalWall"); // Layer int
             NpcLayer = LayerMask.NameToLayer("Npc"); // Layer int
+            FoliageLayer = LayerMask.NameToLayer("Foliage"); // Layer int
         }
     }
 
@@ -74,11 +76,22 @@ public abstract class ServerSpell : NetworkBehaviour
 
     private IEnumerator SpellLifetimeRoutine()
     {
+        ClientSpell.Visualization.SetActive(true);
         SpellStateNV.Value = SpellState.Casting;
         
         OnSpellExecute();
         
-        yield return new WaitForSeconds(SpellData.Value.Lifetime);
+        if(SpellData.Value.IsContinuousCast)
+        {
+            while(SpellCasterNetworkObject.GetComponent<SpellCaster>().IsCasting.Value)
+            {
+                yield return null;
+            }
+        }
+        else
+        {
+            yield return new WaitForSeconds(SpellData.Value.Lifetime);
+        }
         
         SpellStateNV.Value = SpellState.Stopping;
         
@@ -91,14 +104,20 @@ public abstract class ServerSpell : NetworkBehaviour
     {
         if (SpellData.Value.IsContinuousCast)
         {
-            // SpellManager.Instance.IsContinuouslyCasting = false;
+            SpellCasterNetworkObject.GetComponent<SpellCaster>().IsCasting.Value = false;
         }
 
         OnSpellCanceled();
         SpellStateNV.Value = SpellState.Stopping;
         NetworkObject.Despawn();
     }
-    
+
+    public void InitializeSpell()
+    {
+        ClientSpell.Visualization.SetActive(false);
+        OnSpellInitialize();
+    }
+
     // Owner Methods
     protected abstract void OnSpellExecute();
     protected abstract IEnumerator OnSpellEnd();
@@ -112,4 +131,22 @@ public abstract class ServerSpell : NetworkBehaviour
     public virtual void ClientSpellStart(ClientSpell clientSpell) { }
     public virtual void ClientSpellUpdate(ClientSpell clientSpell) { }
     public virtual void ClientSpellStop(ClientSpell clientSpell) { }
+
+    // NTFS: *maybe* put this in a util class idk we'll see
+    public bool IsValidNpcHit(Collider2D collider, out DamageReceiver damageReceiver)
+    {
+        damageReceiver = null;
+
+        if (collider.gameObject.layer != NpcLayer)
+            return false;
+
+        if (!collider.TryGetComponent(out NpcNetworkVisibility npcNet))
+            return false;
+
+        if (!npcNet.SameBiomeAs(SpellData.Value.SpawnBiome))
+            return false;
+
+        damageReceiver = npcNet.GetComponent<DamageReceiver>();
+        return damageReceiver != null;
+    }
 }

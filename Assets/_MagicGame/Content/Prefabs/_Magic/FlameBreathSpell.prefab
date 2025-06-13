@@ -41,6 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5451029968161981885}
+  - component: {fileID: 8165467848602706398}
   m_Layer: 0
   m_Name: Spell
   m_TagString: Untagged
@@ -64,6 +65,21 @@ Transform:
   - {fileID: 1024601303226958326}
   m_Father: {fileID: 1664726614770931062}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8165467848602706398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3860777997302945373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 531229d9788234d52a9d80c0e7bad91f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _serverSpell: {fileID: 8273380025569757591}
+  _visualization: {fileID: 1896378920223993688}
 --- !u!1 &5938426825082082942
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,9 +93,9 @@ GameObject:
   - component: {fileID: 5612118583235381416}
   - component: {fileID: 8104886496655576445}
   - component: {fileID: 8269354046363732758}
-  - component: {fileID: 6050699276467075424}
+  - component: {fileID: 8273380025569757591}
   m_Layer: 15
-  m_Name: spell_FlameBreath
+  m_Name: FlameBreathSpell
   m_TagString: Untagged
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -211,7 +227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
---- !u!114 &6050699276467075424
+--- !u!114 &8273380025569757591
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -220,24 +236,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 5938426825082082942}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f17cf11b6f58244f6b4ae736817ecf3e, type: 3}
+  m_Script: {fileID: 11500000, guid: af46a7c45469b4b959aa013247675c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <Visualization>k__BackingField: {fileID: 1896378920223993688}
-  <DespawnDelay>k__BackingField: 1.6
-  <TimeBetweenDamage>k__BackingField: 0.075
-  <CooldownBetweenPasses>k__BackingField: 0.2
-  <MaxSimultaneousDamagedNPCs>k__BackingField: 5
-  <TimeBetweenFoliageHits>k__BackingField: 0.125
-  <FlameBreathParticles>k__BackingField: {fileID: 2258063264293897275}
-  <SustainedFireSound>k__BackingField:
+  _clientSpell: {fileID: 8165467848602706398}
+  _sustainedFireSound:
     Guid:
       Data1: 1992327741
       Data2: 1322513875
       Data3: 195266464
       Data4: 349084553
     Path: event:/Magic/SustainedFire
+  _flameBreathParticles: {fileID: 2258063264293897275}
+  _maxNpcsThatCanBeDamaged: 5
+  _timeBetweenDamage: 0.075
+  <CooldownBetweenPasses>k__BackingField: 0.175
 --- !u!1001 &8444543763256995114
 PrefabInstance:
   m_ObjectHideFlags: 0

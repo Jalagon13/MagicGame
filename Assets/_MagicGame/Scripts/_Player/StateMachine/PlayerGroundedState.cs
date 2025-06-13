@@ -28,7 +28,7 @@ public class PlayerGroundedState : BaseState
         {
             SwitchState(new AIStateData(AIState.Attacking));
         }
-        else if(_ctx.SpellCaster.IsCasting)
+        else if(_ctx.SpellCaster.IsCasting.Value)
         {
             SwitchState(new AIStateData(AIState.SpellCasting, _ctx.SpellCaster.CurrentSpellData.SpellItemId));
         }

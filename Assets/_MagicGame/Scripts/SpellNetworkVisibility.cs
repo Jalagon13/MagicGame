@@ -9,7 +9,7 @@ public class SpellNetworkVisibility : NetworkBehaviour
 	private SyncSpellData _spellData;
 	private GameObject _spellGameObject;
 	private Collider2D _spellCollider;
-	private Spell _spell;
+	private ServerSpell _spell;
 
 	public override void OnNetworkSpawn()
 	{
@@ -30,7 +30,7 @@ public class SpellNetworkVisibility : NetworkBehaviour
 	
 	public void InitializeSpellNetwork(SyncSpellData syncSpellData)
 	{
-		_spell = GetComponent<Spell>();
+		_spell = GetComponent<ServerSpell>();
 		_spellData = syncSpellData;
 	}
 

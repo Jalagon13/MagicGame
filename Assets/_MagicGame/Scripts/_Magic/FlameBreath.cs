@@ -1,131 +1,91 @@
-using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
-using System.Collections.Generic;
-using System.Collections;
-using Unity.Netcode;
+using UnityEngine;
 
-public class FlameBreath : Spell
+public class FlameBreath : ServerSpell
 {
-    [field: SerializeField] public float TimeBetweenDamage { get; private set; } = 0.25f;
+    [SerializeField] 
+    private EventReference _sustainedFireSound;
+    
+    [SerializeField] 
+    private ParticleSystem _flameBreathParticles;
+    
+    [SerializeField] 
+    private int _maxNpcsThatCanBeDamaged = 5;
+
+    [SerializeField]
+    private float _timeBetweenDamage = 0.25f;
+
     [field: SerializeField] public float CooldownBetweenPasses { get; private set; } = 0.5f;
-    [field: SerializeField] public int MaxSimultaneousDamagedNPCs { get; private set; } = 5;
-    [field: SerializeField] public float TimeBetweenFoliageHits { get; private set; } = 0.2f;
-    [field: SerializeField] public ParticleSystem FlameBreathParticles { get; private set; }
-    [field: SerializeField] public EventReference SustainedFireSound { get; private set; }
 
     private EventInstance _sustainedFireSoundEventInstance;
-    private Timer _damageTimer;
     private List<DamageReceiver> _queuedTargetsToDamage = new();
     private Coroutine _damageSequenceCoroutine;
-
     private List<FoliageCollider> _queuedFoliageToDestroy = new();
     private Coroutine _foliageSequenceCoroutine;
 
-    protected override void OnSpellSpawned()
+    protected override void OnSpellExecute()
     {
-        
+
     }
 
-    protected override void OnExecuteSpellStart()
+    protected override void OnUpdateSpell()
     {
-        _sustainedFireSoundEventInstance = SoundManager.Instance.CreateInstance(SustainedFireSound);
-        _sustainedFireSoundEventInstance.start();
-        
-        Buff castingMoveBuff = new(
-            Player.LocalClientInstance.ServerCharacter.Stats.MovementSpeed, 
-            new StatModifier(SpellData.Value.HasteMultiplier, StatModifierType.Percent, this)
-        );
-        
-        Player.LocalClientInstance.ServerCharacter.Stats.AddBuff(castingMoveBuff);
-    }
+        Vector2 wandPos = Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position; // NTFS: Change this for general servercharacter usability later
+        transform.position = wandPos;
 
-    protected override void OnSpellEnd()
-    {
-        Player.LocalClientInstance.ServerCharacter.Stats.RemoveBuffsFromSource(this);
-        _sustainedFireSoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        StopAllParticleSystems(Visualization.transform);
-    }
+        Vector2 mousePosition = ActionManager.MouseWorldPosition; // NTFS: Change this for general servercharacter usability later
+        Vector2 direction = mousePosition - wandPos;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
-    protected override void OnSpellCanceled()
-    {
-        Player.LocalClientInstance.ServerCharacter.Stats.RemoveBuffsFromSource(this);
-    }
-
-    private void StopAllParticleSystems(Transform parent)
-    {
-        ParticleSystem ps = parent.GetComponent<ParticleSystem>();
-        if (ps != null)
+        if (_queuedTargetsToDamage.Count == 0 && _damageSequenceCoroutine == null)
         {
-            ps.Stop(false, ParticleSystemStopBehavior.StopEmitting);
-        }
+            HashSet<DamageReceiver> uniqueTargets = new();
+            var particles = new ParticleSystem.Particle[_flameBreathParticles.particleCount];
+            _flameBreathParticles.GetParticles(particles);
 
-        foreach (Transform child in parent)
-        {
-            StopAllParticleSystems(child);
-        }
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-
-        if (IsOwner && IsStarted.Value)
-        {
-            Vector2 wandPos = Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position;
-            transform.position = wandPos;
-
-            Vector2 mousePosition = ActionManager.MouseWorldPosition;
-            Vector2 direction = mousePosition - wandPos;
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0f, 0f, angle);
-
-            if (_queuedTargetsToDamage.Count == 0 && _damageSequenceCoroutine == null)
+            foreach (var particle in particles)
             {
-                HashSet<DamageReceiver> uniqueTargets = new();
-                var particles = new ParticleSystem.Particle[FlameBreathParticles.particleCount];
-                FlameBreathParticles.GetParticles(particles);
-
-                foreach (var particle in particles)
+                var colliders = Physics2D.OverlapPointAll(particle.position);
+                foreach (var collider in colliders)
                 {
-                    var colliders = Physics2D.OverlapPointAll(particle.position);
-                    foreach (var collider in colliders)
+                    if (IsValidNpcHit(collider, out DamageReceiver damageReciever)) // Detect NPCs
                     {
-                        if (IsValidNpcHit(collider, out DamageReceiver damageReciever)) // Detect NPCs
-                        {
-                            uniqueTargets.Add(damageReciever);
-                            if (uniqueTargets.Count >= MaxSimultaneousDamagedNPCs)
-                                break;
-                        }
-
-                        if (collider.gameObject.layer == 16) // Detect Foliage
-                        {
-                            var foliage = collider.GetComponent<FoliageCollider>();
-                            if (foliage != null && !_queuedFoliageToDestroy.Contains(foliage))
-                            {
-                                _queuedFoliageToDestroy.Add(foliage);
-                            }
-                        }
+                        uniqueTargets.Add(damageReciever);
+                        if (uniqueTargets.Count >= _maxNpcsThatCanBeDamaged)
+                            break;
                     }
 
-                    if (uniqueTargets.Count >= MaxSimultaneousDamagedNPCs)
-                        break;
+                    if (collider.gameObject.layer == 16) // Detect Foliage
+                    {
+                        var foliage = collider.GetComponent<FoliageCollider>();
+                        if (foliage != null && !_queuedFoliageToDestroy.Contains(foliage))
+                        {
+                            _queuedFoliageToDestroy.Add(foliage);
+                        }
+                    }
                 }
 
-                _queuedTargetsToDamage.AddRange(uniqueTargets);
+                if (uniqueTargets.Count >= _maxNpcsThatCanBeDamaged)
+                    break;
+            }
 
-                if (_queuedTargetsToDamage.Count > 0)
-                {
-                    _damageSequenceCoroutine = StartCoroutine(DamageTargetsInSequence());
-                }
+            _queuedTargetsToDamage.AddRange(uniqueTargets);
 
-                if (_queuedFoliageToDestroy.Count > 0 && _foliageSequenceCoroutine == null)
-                {
-                    var foliageToProcess = new List<FoliageCollider>(_queuedFoliageToDestroy);
-                    _queuedFoliageToDestroy.Clear();
+            if (_queuedTargetsToDamage.Count > 0)
+            {
+                _damageSequenceCoroutine = StartCoroutine(DamageTargetsInSequence());
+            }
 
-                    _foliageSequenceCoroutine = StartCoroutine(DestroyFoliageSequence(foliageToProcess));
-                }
+            if (_queuedFoliageToDestroy.Count > 0 && _foliageSequenceCoroutine == null)
+            {
+                var foliageToProcess = new List<FoliageCollider>(_queuedFoliageToDestroy);
+                _queuedFoliageToDestroy.Clear();
+
+                _foliageSequenceCoroutine = StartCoroutine(DestroyFoliageSequence(foliageToProcess));
             }
         }
     }
@@ -139,7 +99,7 @@ public class FlameBreath : Spell
                 target.ReceiveHP(inflicter, -SpellData.Value.Damage, true, SpellData.Value.Knockback);
             }
 
-            yield return new WaitForSeconds(TimeBetweenDamage);
+            yield return new WaitForSeconds(_timeBetweenDamage);
         }
 
         yield return new WaitForSeconds(CooldownBetweenPasses);
@@ -163,16 +123,81 @@ public class FlameBreath : Spell
             {
                 foliage.DestroyFoliage();
             }
-            
+
             TileManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.LocalClientInstance.CurrentBiome.Value);
 
             // Final null check before calling method
-            
 
-            yield return new WaitForSeconds(TimeBetweenFoliageHits);
+
+            yield return new WaitForSeconds(_timeBetweenDamage);
         }
 
         _queuedFoliageToDestroy.Clear();
         _foliageSequenceCoroutine = null;
+    }
+
+    protected override IEnumerator OnSpellEnd()
+    {
+        if (_damageSequenceCoroutine != null)
+        {
+            StopCoroutine(_damageSequenceCoroutine);
+            _damageSequenceCoroutine = null;
+        }
+        if (_foliageSequenceCoroutine != null)
+        {
+            StopCoroutine(_foliageSequenceCoroutine);
+            _foliageSequenceCoroutine = null;
+        }
+
+        // Find the longest particle system duration under the visualization GameObject
+        float maxDuration = 0f;
+        if (ClientSpell != null && ClientSpell.Visualization != null)
+        {
+            var particleSystems = ClientSpell.Visualization.GetComponentsInChildren<ParticleSystem>();
+            foreach (var ps in particleSystems)
+            {
+                // Duration = startLifetime (can be a curve, so take the max) + duration (looping particles may need special handling)
+                float lifetime = ps.main.startLifetime.constantMax;
+                float duration = ps.main.duration;
+                float totalDuration = ps.main.loop ? lifetime : duration + lifetime;
+                if (totalDuration > maxDuration)
+                    maxDuration = totalDuration;
+            }
+        }
+
+        if (maxDuration > 0f)
+            yield return new WaitForSeconds(maxDuration);
+        else
+            yield return null;
+    }
+
+    public override void ClientSpellStart(ClientSpell clientSpell)
+    {
+        _sustainedFireSoundEventInstance = SoundManager.Instance.CreateInstance(_sustainedFireSound);
+        _sustainedFireSoundEventInstance.start();
+
+        SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
+        SoundManager.Instance.PlayOneShot(spellItemSO.SpellCastSound, transform.position);
+    }
+
+    public override void ClientSpellStop(ClientSpell clientSpell)
+    {
+        _sustainedFireSoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+
+        StopAllParticleSystems(clientSpell.Visualization.transform);
+    }
+
+    private void StopAllParticleSystems(Transform parent)
+    {
+        ParticleSystem ps = parent.GetComponent<ParticleSystem>();
+        if (ps != null)
+        {
+            ps.Stop(false, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        foreach (Transform child in parent)
+        {
+            StopAllParticleSystems(child);
+        }
     }
 }

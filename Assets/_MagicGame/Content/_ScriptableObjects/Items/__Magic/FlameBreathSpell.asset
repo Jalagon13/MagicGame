@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
-  m_Name: Spell_FlameBreath
+  m_Name: FlameBreathSpell
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Flame Breath
   <UiDisplay>k__BackingField: {fileID: 1348140596, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <GoldValue>k__BackingField: 70
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Shoots a single bolt of mana.
-  <SpellProjectilePrefab>k__BackingField: {fileID: 6050699276467075424, guid: cc58c89ad65c049e9a5991ce772f0085, type: 3}
+  <SpellPrefab>k__BackingField: {fileID: 8273380025569757591, guid: cc58c89ad65c049e9a5991ce772f0085, type: 3}
   <SpellUIDisplaySprite>k__BackingField: {fileID: 1348140596, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 8285152488836000937, guid: 8175636c29a52422d8069d30cf23c5b6, type: 3}
   <SpellCastSound>k__BackingField:
@@ -27,7 +27,7 @@ MonoBehaviour:
       Data3: -1885222999
       Data4: 915117413
     Path: event:/Magic/FireBurst
-  <CastTime>k__BackingField: 0.5
+  <CastTime>k__BackingField: 1
   <Cooldown>k__BackingField: 0.35
   <ManaCost>k__BackingField: 1
   <Damage>k__BackingField: 14
@@ -36,5 +36,4 @@ MonoBehaviour:
   <Speed>k__BackingField: 15
   <Recoil>k__BackingField: 0
   <HasteMultiplier>k__BackingField: -0.8
-  <DespawnIfFocusSlotChanged>k__BackingField: 1
   <IsContinuousCast>k__BackingField: 1

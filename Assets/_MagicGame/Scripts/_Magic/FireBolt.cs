@@ -12,14 +12,12 @@ public class FireBolt : ServerSpell
     public override void OnSpellInitialize()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
-        ClientSpell.Visualization.SetActive(false);
     }
 
     protected override void OnSpellExecute()
     {
         _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
         _velocity = _finalDirection * SpellData.Value.Speed;
-        ClientSpell.Visualization.SetActive(true);
     }
 
     protected override void OnFixedUpdateSpell()

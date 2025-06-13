@@ -48,9 +48,6 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("Multiplier on fast the player moves when casting this spell")]
 	[field: SerializeField] public float HasteMultiplier { get; private set; } = 0.5f;
 	
-	[field: Tooltip("Should the spell be despawned if the slot it was cast from changes during spell lifetime")]
-	[field: SerializeField] public bool DespawnIfFocusSlotChanged { get; private set; }
-	
 	[field: Tooltip("Should the spell be continuous cast while holding down cast button")]
 	[field: SerializeField] public bool IsContinuousCast { get; private set; } = false;
 	
@@ -59,7 +56,7 @@ public class SpellItemSO : ItemSO
 		
 		return new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			ManaCost, Damage, Knockback, Speed, Lifetime, HasteMultiplier, casterNetObjId, DespawnIfFocusSlotChanged, IsContinuousCast,spawnBiome);
+			ManaCost, Damage, Knockback, Speed, Lifetime, HasteMultiplier, casterNetObjId, IsContinuousCast,spawnBiome);
 	}
 	
 	public virtual void StartSpell(SpellCaster spellCaster)

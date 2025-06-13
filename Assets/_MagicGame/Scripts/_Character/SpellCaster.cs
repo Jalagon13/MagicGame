@@ -18,11 +18,10 @@ public class SpellCaster : NetworkBehaviour
     
     private NetworkObject _spellNetObj;
     
-    private bool _pendingCast, _cancelCast, _isCasting;
-    public bool IsCasting => _isCasting;
+    private bool _pendingCast, _cancelCast;
     
-    private Vector2? _spellSpawnPoint;
-    private Vector2? _spellExecuteDirection;
+    private NetworkVariable<bool> _isCasting = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> IsCasting => _isCasting; // Exposes the NetworkVariable itself
     
     private SyncSpellData _currentSpellData;
     public SyncSpellData CurrentSpellData => _currentSpellData;
@@ -54,36 +53,29 @@ public class SpellCaster : NetworkBehaviour
             OnSpellCooldownTimersUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
-
-    // Play this from external source while cast time is running
-    public void SetSpellExecuteParameters(Vector2 spawnPoint, Vector2 executeDirection)
-    {
-        _spellSpawnPoint = spawnPoint;
-        _spellExecuteDirection = executeDirection;
-    }
     
     public void TryCastSpell(SpellItemSO spellItemSO, Func<(Vector3 spawnPoint, Vector3 direction)> getExecutionParams)
     {
-        if (_spellCoolDownTimers.ContainsKey(GameManager.Instance.GetItemIdFromItemSO(spellItemSO)) || _castTimer.IsRunning)
-        {
-            return; // If spell is on cooldown || cast timer still going
-        }
+        // If spell is on cooldown || cast timer still going || still casting a spell
+        if (_spellCoolDownTimers.ContainsKey(GameManager.Instance.GetItemIdFromItemSO(spellItemSO)) || _castTimer.IsRunning || _isCasting.Value) return;
+
         Reset();
 
         _currentSpellData = spellItemSO.GetSpellDataForLocalClientInstance(NetworkObjectId, _serverCharacter.CurrentBiome);
+        
         SpawnSpellServerRpc(_currentSpellData);
         
         _getExecutionParams = getExecutionParams;
-        _isCasting = true;
+        _isCasting.Value = true;
         _castTimer = new Timer(spellItemSO.CastTime);
         _castTimer.OnTimerEnd += OnCastTimerEnd;
     }
     
     public void TryToCancelCast()
     {
-        if(_castTimer.IsRunning)
+        if(_isCasting.Value)
         {
-            _isCasting = false;
+            _isCasting.Value = false;
             _cancelCast = _spellNetObj == null; // if it equals null, then RTT isn't done yet, set it to true so when it arrives, it is canceled not executed
             if(_spellNetObj != null)
             {
@@ -122,16 +114,23 @@ public class SpellCaster : NetworkBehaviour
         {
             if (actualSpell.TryGetComponent<ServerSpell>(out var serverSpell))
             {
+                // Get the final spawn point and direction
                 var (finalSpawnPoint, finalDirection) = _getExecutionParams != null
                 ? _getExecutionParams.Invoke()
                 : (transform.position, transform.forward);
                 
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
+                
                 // Set spell cooldown
                 SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(serverSpell.SpellData.Value.SpellItemId) as SpellItemSO;
                 _spellCoolDownTimers[serverSpell.SpellData.Value.SpellItemId] = new Timer(spellItemSO.Cooldown);
-                
-                _isCasting = false;
+
+                // Reset casting state here if not a continuous cast
+                if (!serverSpell.SpellData.Value.IsContinuousCast)
+                {
+                    Debug.Log($"Spell {serverSpell.SpellData.Value.SpellItemId} will continue to cast until stopped or finished.");
+                    _isCasting.Value = false;
+                }
             }
             else
             {
@@ -157,7 +156,7 @@ public class SpellCaster : NetworkBehaviour
 
         spell.SpellData.Value = spellData;
         spell.SpellStateNV.Value = SpellState.Charging;
-        spell.OnSpellInitialize();
+        spell.InitializeSpell();
         spell.GetComponent<SpellNetworkVisibility>().InitializeSpellNetwork(spellData);
         
         SendSpellRefToCasterRpc(spellNetObj, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
@@ -185,10 +184,7 @@ public class SpellCaster : NetworkBehaviour
     {
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
         
-        _spellSpawnPoint = null;
-        _spellExecuteDirection = null;
         _spellNetObj = null;
-        
         _pendingCast = false;
         _cancelCast = false;
     }
