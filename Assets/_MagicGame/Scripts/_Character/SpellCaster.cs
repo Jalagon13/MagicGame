@@ -93,7 +93,7 @@ public class SpellCaster : NetworkBehaviour
     private void OnCastTimerEnd(object sender, EventArgs e)
     {
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
-        Debug.Log($"Cast timer ended SpellNetObj is null? {_spellNetObj == null}, on client {NetworkManager.Singleton.LocalClientId}");
+        
         TryExecuteSpell();
     }
     
@@ -107,7 +107,6 @@ public class SpellCaster : NetworkBehaviour
         }
         else
         {
-            Debug.Log($"Spell caster is waiting for NetworkObjectReference to be resolved before executing spell.");
             _pendingCast = true; // Wait for SendSpellRefToCasterRpc to retry
         }
     }
@@ -122,7 +121,7 @@ public class SpellCaster : NetworkBehaviour
                 var (finalSpawnPoint, finalDirection) = _getExecutionParams != null
                 ? _getExecutionParams.Invoke()
                 : (transform.position, transform.forward);
-                Debug.Log($"Executing spell at spawn point: {finalSpawnPoint}, direction: {finalDirection}");
+                
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
                 
                 // Set spell cooldown
@@ -132,7 +131,6 @@ public class SpellCaster : NetworkBehaviour
                 // Reset casting state here if not a continuous cast
                 if (!serverSpell.SpellData.Value.IsContinuousCast)
                 {
-                    Debug.Log($"Spell {serverSpell.SpellData.Value.SpellItemId} will continue to cast until stopped or finished.");
                     _isCasting.Value = false;
                 }
             }
@@ -150,7 +148,6 @@ public class SpellCaster : NetworkBehaviour
     [Rpc(SendTo.Server, RequireOwnership = false)]
     private void SpawnSpellServerRpc(SyncSpellData spellData, RpcParams rpcParams = default)
     {
-        Debug.Log($"SpawnSpellServerRpc called with spellData: {spellData.SpellItemId}, CasterNetworkObjectId: {spellData.CasterNetworkObjectId}");
         var spellPrefab = (GameManager.Instance.GetItemSOFromItemId(spellData.SpellItemId) as SpellItemSO).SpellPrefab;
         NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(spellData.CasterNetworkObjectId, out NetworkObject casterNetObj);
         ServerSpell spell = Instantiate(spellPrefab, casterNetObj.transform.position, Quaternion.identity);
