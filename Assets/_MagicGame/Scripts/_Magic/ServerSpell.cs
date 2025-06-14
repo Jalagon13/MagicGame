@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public enum SpellState
@@ -16,7 +18,7 @@ public abstract class ServerSpell : NetworkBehaviour
     private ClientSpell _clientSpell;
     public ClientSpell ClientSpell => _clientSpell;
 
-    public NetworkVariable<SyncSpellData> SpellData { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<SyncSpellData> SpellData { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<SpellState> SpellStateNV { get; set; } = new(SpellState.Charging, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     public int CollisionMask { get; private set; }
@@ -41,18 +43,22 @@ public abstract class ServerSpell : NetworkBehaviour
     
     public override void OnNetworkSpawn()
     {
-        if(IsOwner)
+        ClientSpell.Visualization.SetActive(false);
+
+        if (IsOwner)
         {
             CollisionMask = LayerMask.GetMask(new[] { "LocalWall", "Npc" }); // Bitmask
             WallMask = LayerMask.NameToLayer("LocalWall"); // Layer int
             NpcLayer = LayerMask.NameToLayer("Npc"); // Layer int
             FoliageLayer = LayerMask.NameToLayer("Foliage"); // Layer int
         }
+
+        OnSpellInitialize();
     }
 
     private void Update()
     {
-        if(IsOwner && SpellStateNV.Value == SpellState.Casting)
+        if (IsOwner && SpellStateNV.Value == SpellState.Casting)
         {
             OnUpdateSpell();
         }
@@ -70,6 +76,13 @@ public abstract class ServerSpell : NetworkBehaviour
     {
         transform.position = spawnPoint;
         _finalDirection = finalDirection;
+        
+        // NTFS: Non-owner clients spell will look jittery for now, need to figure out later
+        // if(TryGetComponent(out NetworkTransform clientNetworkTransform))
+        // {
+        //     Debug.Log($"Enabling interpolation for on {gameObject.name}");
+        //     clientNetworkTransform.Interpolate = true;
+        // }
         
         StartCoroutine(SpellLifetimeRoutine());
     }
@@ -96,9 +109,12 @@ public abstract class ServerSpell : NetworkBehaviour
         SpellStateNV.Value = SpellState.Stopping;
         
         yield return OnSpellEnd(); // yield any cleanup animations
-        
-        NetworkObject.Despawn();
+
+        SpellCasterNetworkObject.GetComponent<SpellCaster>().DespawnSpellServerRpc(NetworkObject);
+        gameObject.SetActive(false); // Disable after RPC
     }
+
+    
 
     public void CancelSpellCharge()
     {
@@ -108,14 +124,11 @@ public abstract class ServerSpell : NetworkBehaviour
         }
 
         OnSpellCanceled();
+        
         SpellStateNV.Value = SpellState.Stopping;
-        NetworkObject.Despawn();
-    }
 
-    public void InitializeSpell()
-    {
-        ClientSpell.Visualization.SetActive(false);
-        OnSpellInitialize();
+        SpellCasterNetworkObject.GetComponent<SpellCaster>().DespawnSpellServerRpc(NetworkObject);
+        gameObject.SetActive(false); // Disable after RPC
     }
 
     // Owner Methods

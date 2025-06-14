@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
+using Unity.Netcode;
 using UnityEngine;
 
 public class FlameBreath : ServerSpell
@@ -18,13 +19,17 @@ public class FlameBreath : ServerSpell
     [SerializeField]
     private float _timeBetweenDamage = 0.25f;
 
-    [field: SerializeField] public float CooldownBetweenPasses { get; private set; } = 0.5f;
+    [SerializeField]
+    private float _cooldownBetweenPasses = 0.175f;
 
     private EventInstance _sustainedFireSoundEventInstance;
     private List<DamageReceiver> _queuedTargetsToDamage = new();
     private Coroutine _damageSequenceCoroutine;
     private List<FoliageCollider> _queuedFoliageToDestroy = new();
     private Coroutine _foliageSequenceCoroutine;
+    
+    private NetworkVariable<Vector2> _direction = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<Vector2> Direction => _direction;
 
     protected override void OnSpellExecute()
     {
@@ -37,8 +42,9 @@ public class FlameBreath : ServerSpell
         transform.position = wandPos;
 
         Vector2 mousePosition = ActionManager.MouseWorldPosition; // NTFS: Change this for general servercharacter usability later
-        Vector2 direction = mousePosition - wandPos;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        _direction.Value = mousePosition - wandPos;
+        
+        float angle = Mathf.Atan2(_direction.Value.y, _direction.Value.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
         if (_queuedTargetsToDamage.Count == 0 && _damageSequenceCoroutine == null)
@@ -59,7 +65,7 @@ public class FlameBreath : ServerSpell
                             break;
                     }
 
-                    if (collider.gameObject.layer == 16) // Detect Foliage
+                    if (collider.gameObject.layer == FoliageLayer) // Detect Foliage
                     {
                         var foliage = collider.GetComponent<FoliageCollider>();
                         if (foliage != null && !_queuedFoliageToDestroy.Contains(foliage))
@@ -102,7 +108,7 @@ public class FlameBreath : ServerSpell
             yield return new WaitForSeconds(_timeBetweenDamage);
         }
 
-        yield return new WaitForSeconds(CooldownBetweenPasses);
+        yield return new WaitForSeconds(_cooldownBetweenPasses);
         _queuedTargetsToDamage.Clear();
         _damageSequenceCoroutine = null;
     }
@@ -173,11 +179,21 @@ public class FlameBreath : ServerSpell
 
     public override void ClientSpellStart(ClientSpell clientSpell)
     {
+        clientSpell.Visualization.SetActive(true);
+    
         _sustainedFireSoundEventInstance = SoundManager.Instance.CreateInstance(_sustainedFireSound);
         _sustainedFireSoundEventInstance.start();
 
         SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
         SoundManager.Instance.PlayOneShot(spellItemSO.SpellCastSound, transform.position);
+    }
+    
+    public override void ClientSpellUpdate(ClientSpell clientSpell)
+    {
+        // Update the position and rotation of the flame breath visualization
+
+        // float angle = Mathf.Atan2(Direction.Value.y, Direction.Value.x) * Mathf.Rad2Deg;
+        // transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
     public override void ClientSpellStop(ClientSpell clientSpell)

@@ -8298,6 +8298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87b54ca5771b3437b83a0f5ad266c68d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   <SpellDisplaySlotUIPrefab>k__BackingField: {fileID: 511894610554134981, guid: efc0f0afab02c439dbcb8768d1a40dfb, type: 3}
 --- !u!1 &1006424801
 GameObject:

@@ -25,7 +25,10 @@ public class SpellNetworkVisibility : NetworkBehaviour
 
     protected override void OnNetworkPostSpawn()
     {
-		HideSpell(NetworkManager.ServerClientId);
+		if(IsServer)
+		{
+			HideSpell(NetworkManager.ServerClientId);
+		}
 	}
 	
 	public void InitializeSpellNetwork(SyncSpellData syncSpellData)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -35,6 +36,8 @@ public class SpellCaster : NetworkBehaviour
 
     private void Update()
     {
+        if (!IsOwner) return; // Only the owner should update the casting state and cooldowns
+    
         _castTimer?.Tick(Time.deltaTime);
         
         foreach (int key in new List<int>(_spellCoolDownTimers.Keys)) // To avoid modifying the collection while iterating
@@ -90,7 +93,7 @@ public class SpellCaster : NetworkBehaviour
     private void OnCastTimerEnd(object sender, EventArgs e)
     {
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
-        
+        Debug.Log($"Cast timer ended SpellNetObj is null? {_spellNetObj == null}, on client {NetworkManager.Singleton.LocalClientId}");
         TryExecuteSpell();
     }
     
@@ -104,6 +107,7 @@ public class SpellCaster : NetworkBehaviour
         }
         else
         {
+            Debug.Log($"Spell caster is waiting for NetworkObjectReference to be resolved before executing spell.");
             _pendingCast = true; // Wait for SendSpellRefToCasterRpc to retry
         }
     }
@@ -118,7 +122,7 @@ public class SpellCaster : NetworkBehaviour
                 var (finalSpawnPoint, finalDirection) = _getExecutionParams != null
                 ? _getExecutionParams.Invoke()
                 : (transform.position, transform.forward);
-                
+                Debug.Log($"Executing spell at spawn point: {finalSpawnPoint}, direction: {finalDirection}");
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
                 
                 // Set spell cooldown
@@ -146,6 +150,7 @@ public class SpellCaster : NetworkBehaviour
     [Rpc(SendTo.Server, RequireOwnership = false)]
     private void SpawnSpellServerRpc(SyncSpellData spellData, RpcParams rpcParams = default)
     {
+        Debug.Log($"SpawnSpellServerRpc called with spellData: {spellData.SpellItemId}, CasterNetworkObjectId: {spellData.CasterNetworkObjectId}");
         var spellPrefab = (GameManager.Instance.GetItemSOFromItemId(spellData.SpellItemId) as SpellItemSO).SpellPrefab;
         NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(spellData.CasterNetworkObjectId, out NetworkObject casterNetObj);
         ServerSpell spell = Instantiate(spellPrefab, casterNetObj.transform.position, Quaternion.identity);
@@ -155,29 +160,54 @@ public class SpellCaster : NetworkBehaviour
         spellNetObj.SpawnWithOwnership(casterNetObj.OwnerClientId, true);
 
         spell.SpellData.Value = spellData;
-        spell.SpellStateNV.Value = SpellState.Charging;
-        spell.InitializeSpell();
         spell.GetComponent<SpellNetworkVisibility>().InitializeSpellNetwork(spellData);
         
-        SendSpellRefToCasterRpc(spellNetObj, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+        SendSpellRefToCasterRpc(spellNetObj.NetworkObjectId, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
     }
 
     [Rpc(SendTo.SpecifiedInParams)]
-    private void SendSpellRefToCasterRpc(NetworkObjectReference spellNetObj, RpcParams rpcParams)
+    private void SendSpellRefToCasterRpc(ulong spellNetObjId, RpcParams rpcParams)
     {
-        _spellNetObj = spellNetObj;
-        
-        if(_cancelCast)
+        StartCoroutine(WaitForSpellNetObjAndHandle(spellNetObjId));
+    }
+    
+    private IEnumerator WaitForSpellNetObjAndHandle(ulong spellNetObjId)
+    {
+        float timeout = 2f; // seconds, adjust as needed
+        float elapsed = 0f;
+        while (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(spellNetObjId, out _spellNetObj))
+        {
+            if (elapsed > timeout)
+            {
+                Debug.LogError($"Timeout waiting for SpellNetObj with ID {spellNetObjId} on client {NetworkManager.Singleton.LocalClientId}.");
+                yield break;
+            }
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        Debug.Log($"SpellNetObj is null? {_spellNetObj == null}, on client {NetworkManager.Singleton.LocalClientId}, Elapsed time: {elapsed}s");
+
+        if (_cancelCast)
         {
             _spellNetObj.GetComponent<ServerSpell>().CancelSpellCharge();
             Reset();
-            return;
+            yield break;
         }
-        
-        if(_pendingCast)
+
+        if (_pendingCast)
         {
+            Debug.Log($"Casting spell from pending cast with NetworkObjectReference: {_spellNetObj}");
             TryExecuteSpell(); // Delayed shoot now that the object exists
         }
+    }
+
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    public void DespawnSpellServerRpc(NetworkObjectReference spellNetObjRef)
+    {
+        NetworkObject spellNetObj = spellNetObjRef;
+        Debug.Log($"DespawnSpellServerRpc called on server caster with spellNetObjRef: {spellNetObj.gameObject.name}");
+        spellNetObj.Despawn();
     }
 
     private void Reset()

@@ -44,9 +44,10 @@ public class FireBolt : ServerSpell
 
     public override void ClientSpellStart(ClientSpell clientSpell)
     {
+        clientSpell.Visualization.SetActive(true);
+        
         SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
         SoundManager.Instance.PlayOneShot(spellItemSO.SpellCastSound, transform.position);
-        clientSpell.Visualization.SetActive(true);
     }
     
     public override void ClientSpellUpdate(ClientSpell clientSpell)
