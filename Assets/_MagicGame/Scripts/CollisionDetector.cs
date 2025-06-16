@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class WallColliderDetector : MonoBehaviour
+public class CollisionDetector : NetworkBehaviour
 {
 	private BiomeType _colliderBiome;
 	private Collider2D _wallDetectorCollider;
@@ -16,12 +16,15 @@ public class WallColliderDetector : MonoBehaviour
 	
 	private void Start()
 	{
+		if (!IsServer) return;
+		
 		Pathfinding.Instance.OnPathfindingTilemapCreated += UpdateCollisions;
 	}
 
-
-	private void OnDestroy()
+	public override void OnDestroy()
 	{
+		if (!IsServer) return;
+	
 		Pathfinding.Instance.OnPathfindingTilemapCreated -= UpdateCollisions;
 	}
 
@@ -33,28 +36,16 @@ public class WallColliderDetector : MonoBehaviour
 		}
 	}
 
-	public void SetEnvironment(BiomeType spawnBiome, Dictionary<BiomeType, TilemapCollider2D> registeredPfBiomes)
+	public void SetBiome(BiomeType spawnBiome)
 	{
 		_colliderBiome = spawnBiome;
 
-		foreach (var biome in registeredPfBiomes)
+		if(!IsServer) return;
+
+		foreach (var biome in Pathfinding.Instance.GetExistingPathfindingBiomes())
 		{
 			bool ignore = biome.Key != _colliderBiome;
 			Physics2D.IgnoreCollision(_wallDetectorCollider, biome.Value, ignore);
 		}
-	}
-
-	private void OnCollisionEnter2D(Collision2D other)
-	{
-		if (Player.LocalClientInstance.OwnerClientId == NetworkManager.ServerClientId)
-		{
-			if (other.gameObject.layer == 9) return; // Ignore local walls for the server
-		}
-
-		// // Trigger the bounce/knockback effect immediately
-		// OnTouchingWall?.Invoke(this, new WallCollisionEventArgs()
-		// {
-		// 	ContactPoints = other.contacts
-		// });
 	}
 }

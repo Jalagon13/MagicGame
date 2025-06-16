@@ -32,9 +32,8 @@ MonoBehaviour:
   <ManaCost>k__BackingField: 1
   <Damage>k__BackingField: 14
   <Knockback>k__BackingField: 15
-  <Lifetime>k__BackingField: 0.75
-  <Speed>k__BackingField: 15
+  <Lifetime>k__BackingField: 1.25
+  <Speed>k__BackingField: 10
   <Recoil>k__BackingField: 6
-  <HasteMultiplier>k__BackingField: -0.5
-  <DespawnIfFocusSlotChanged>k__BackingField: 0
+  <HasteMultiplier>k__BackingField: -0.25
   <IsContinuousCast>k__BackingField: 0

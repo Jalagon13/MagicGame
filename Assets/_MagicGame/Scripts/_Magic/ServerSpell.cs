@@ -47,8 +47,8 @@ public abstract class ServerSpell : NetworkBehaviour
 
         if (IsOwner)
         {
-            CollisionMask = LayerMask.GetMask(new[] { "LocalWall", "Npc" }); // Bitmask
-            WallMask = LayerMask.NameToLayer("LocalWall"); // Layer int
+            CollisionMask = LayerMask.GetMask(new[] { "WallCollider", "Npc" }); // Bitmask
+            WallMask = LayerMask.NameToLayer("WallCollider"); // Layer int
             NpcLayer = LayerMask.NameToLayer("Npc"); // Layer int
             FoliageLayer = LayerMask.NameToLayer("Foliage"); // Layer int
         }
@@ -76,13 +76,6 @@ public abstract class ServerSpell : NetworkBehaviour
     {
         transform.position = spawnPoint;
         _finalDirection = finalDirection;
-        
-        // NTFS: Non-owner clients spell will look jittery for now, need to figure out later
-        // if(TryGetComponent(out NetworkTransform clientNetworkTransform))
-        // {
-        //     Debug.Log($"Enabling interpolation for on {gameObject.name}");
-        //     clientNetworkTransform.Interpolate = true;
-        // }
         
         StartCoroutine(SpellLifetimeRoutine());
     }

@@ -18,6 +18,7 @@ public class InGameMenu : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        
         _menuReferenceHolder = GetComponent<InGameMenuReferenceHolder>();
         _instantiateHandler = GetComponent<InGameMenuInstantiateHandler>();
     }
@@ -51,7 +52,6 @@ public class InGameMenu : MonoBehaviour
         craftingMenuUI.PopulateCraftingMenuUI(recipeDataBase);
 
         _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
-        Debug.Log("Closing default menu");
         DefaultCraftingMenu.SetActive(false);
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }
@@ -64,7 +64,6 @@ public class InGameMenu : MonoBehaviour
         chestMenuUI.PopulateChestMenuUI(localChestItemData, chestPosition);
 
         _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
-        Debug.Log("Closing default menu");
         DefaultCraftingMenu.SetActive(false);
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }
@@ -77,7 +76,6 @@ public class InGameMenu : MonoBehaviour
         spellbookInspectorMenuUI.PlaceSelectedWand(wand);
 
         _menuReferenceHolder.SetMenuSourceGO(Player.LocalClientInstance.gameObject);
-        Debug.Log("Closing default menu");
         DefaultCraftingMenu.SetActive(false);
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }
@@ -91,7 +89,6 @@ public class InGameMenu : MonoBehaviour
         npcMenuUI.InitializeSellSlots();
 
         _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
-        Debug.Log("Closing default menu");
         DefaultCraftingMenu.SetActive(false);
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }

@@ -11,13 +11,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - PathfindingWall
+  - WallCollider
   - Water
   - UI
   - Border
-  - WallDetectorCollider
-  - PlayerFeetCollider
-  - LocalWall
+  - CollisionDetector
   - Breadcrumb
   - Player
   - Npc
@@ -25,6 +23,8 @@ TagManager:
   - MouseTrigger
   - Spell
   - Foliage
+  - 
+  - 
   - 
   - 
   - 

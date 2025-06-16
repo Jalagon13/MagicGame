@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2919604229832645754}
   - component: {fileID: 8801118926072753746}
   - component: {fileID: 2208648388512866279}
-  m_Layer: 16
+  m_Layer: 14
   m_Name: FoliageCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

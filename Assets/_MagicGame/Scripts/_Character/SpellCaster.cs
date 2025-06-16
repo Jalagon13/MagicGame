@@ -183,7 +183,7 @@ public class SpellCaster : NetworkBehaviour
             yield return null;
         }
 
-        Debug.Log($"SpellNetObj is null? {_spellNetObj == null}, on client {NetworkManager.Singleton.LocalClientId}, Elapsed time: {elapsed}s");
+        // Debug.Log($"SpellNetObj is null? {_spellNetObj == null}, on client {NetworkManager.Singleton.LocalClientId}, Elapsed time: {elapsed}s");
 
         if (_cancelCast)
         {
@@ -194,7 +194,6 @@ public class SpellCaster : NetworkBehaviour
 
         if (_pendingCast)
         {
-            Debug.Log($"Casting spell from pending cast with NetworkObjectReference: {_spellNetObj}");
             TryExecuteSpell(); // Delayed shoot now that the object exists
         }
     }
@@ -203,7 +202,6 @@ public class SpellCaster : NetworkBehaviour
     public void DespawnSpellServerRpc(NetworkObjectReference spellNetObjRef)
     {
         NetworkObject spellNetObj = spellNetObjRef;
-        Debug.Log($"DespawnSpellServerRpc called on server caster with spellNetObjRef: {spellNetObj.gameObject.name}");
         spellNetObj.Despawn();
     }
 

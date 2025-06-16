@@ -16,18 +16,26 @@ public class Player : NetworkBehaviour
 
 	public static Player LocalClientInstance { get; private set; }
 	
-	[field: SerializeField] public CollectTag CollectTag { get; private set; }
-	[SerializeField] private GameObject _breadCrumbPrefab;
-	public Collider2D HitCollider { get; private set; }
-	public bool IsPerformingSwing { get; set; }
+	[SerializeField] 
+	private CollectTag _collectTag;
+	public CollectTag CollectTag => _collectTag;
 
+	[SerializeField]
+	private PlayerHand _playerHand;
+	public PlayerHand PlayerHand => _playerHand;
+	
+	[SerializeField] 
+	private CollisionDetector _playerCollisionDetector;
+	public CollisionDetector PlayerCollisionDetector => _playerCollisionDetector;
+
+	[SerializeField] 
+	private GameObject _breadCrumbPrefab;
+
+	public Collider2D HitCollider { get; private set; }
 
 	private Vector2 _spawnPoint;
 	private BiomeType _spawnBiome;
 	private Vector2Int _lastTilePosition;
-	
-	[SerializeField] private PlayerHand _playerHand;
-	public PlayerHand PlayerHand => _playerHand;
 	
 	public NetworkVariable<int> SelectedItemIdNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<BiomeType> CurrentBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -58,8 +66,8 @@ public class Player : NetworkBehaviour
 	public void OnNetworkSpawnLocalClientInitializations()
 	{
 		LocalClientInstance = this;
-		
 		CurrentBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
+		
 		_spawnBiome = BiomeType.Forest;
 		_spawnPoint = transform.position;
 		_spellInputHandler = new(this);
@@ -73,6 +81,8 @@ public class Player : NetworkBehaviour
 		GameInput.Instance.OnMove += GameInput_OnPlayerMove;
 		GameInput.Instance.OnFKeyPressed += GameInput_OnFKeyPressed;
 		HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnSelectedItemUpdated;
+		CurrentBiome.OnValueChanged += UpdateCollisionDetection;
+		
 		_serverCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
 	}
 
@@ -83,10 +93,17 @@ public class Player : NetworkBehaviour
 			GameInput.Instance.OnMove -= GameInput_OnPlayerMove;
 			GameInput.Instance.OnFKeyPressed -= GameInput_OnFKeyPressed;
 			HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnSelectedItemUpdated;
+			CurrentBiome.OnValueChanged -= UpdateCollisionDetection;
+			
 			_serverCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
 			_spellInputHandler.Dispose();
 		}
 	}
+
+    private void UpdateCollisionDetection(BiomeType previousValue, BiomeType newValue)
+    {
+        _playerCollisionDetector.SetBiome(newValue);
+    }
 
     private void GameInput_OnFKeyPressed(object sender, EventArgs e)
     {

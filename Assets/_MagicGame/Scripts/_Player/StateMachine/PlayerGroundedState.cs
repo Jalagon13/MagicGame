@@ -13,7 +13,7 @@ public class PlayerGroundedState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        Debug.Log("Player entering grounded");
+        // Debug.Log("Player entering grounded");
 
     }
 

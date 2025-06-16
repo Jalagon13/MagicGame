@@ -5,7 +5,7 @@ using UnityEngine;
 // Holds logic for dynamic client visibility
 public class NpcNetworkVisibility : NetworkBehaviour
 {
-	[SerializeField] private WallColliderDetector _wallColliderDetector;
+	[SerializeField] private CollisionDetector _wallColliderDetector;
 	// NTFS: This just makes it so it cannot despawn, it does nothing to alter AI behavior. Can potentially find an NPC in a wall if NPC is allowed to move around while no player (no pathfinding walls available) is around
 	[field: SerializeField] public bool CanDespawn { get; private set; } = true; 
 
@@ -58,7 +58,7 @@ public class NpcNetworkVisibility : NetworkBehaviour
 		
 		if(_wallColliderDetector != null)
 		{
-			_wallColliderDetector.SetEnvironment(NpcBiomeType, Pathfinding.Instance.GetExistingPathfindingBiomes());
+			_wallColliderDetector.SetBiome(NpcBiomeType);
 		}
 	}
 

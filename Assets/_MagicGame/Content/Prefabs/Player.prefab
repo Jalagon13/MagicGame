@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1332535597681020578}
   - component: {fileID: 2584946997130559442}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 1645875197371293612}
   - component: {fileID: 598476479702786246}
   - component: {fileID: 7639844761049611922}
-  m_Layer: 11
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -325,9 +325,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <CollectTag>k__BackingField: {fileID: 6231199994205774343}
-  _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
+  _collectTag: {fileID: 6231199994205774343}
   _playerHand: {fileID: 4604921083407888490}
+  _playerCollisionDetector: {fileID: 6597357669524105707}
+  _breadCrumbPrefab: {fileID: 71793655126677208, guid: 86353966c62b84f3b87c5be888ef9af8, type: 3}
 --- !u!114 &598476479702786246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,7 +372,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8349826057026788039}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Feedbacks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -409,7 +410,7 @@ GameObject:
   - component: {fileID: 2444411065130310972}
   - component: {fileID: 7721777825053776820}
   - component: {fileID: 3103375567926513560}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: Torso
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -569,7 +570,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3951572965716743613}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SouthPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -601,7 +602,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6140821753101560951}
   - component: {fileID: 8333186287527618759}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -650,7 +651,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6506483468140200177}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MainHandPivots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -685,7 +686,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3775953093180886463}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: NorthPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -716,7 +717,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5690394868646927140}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: EastPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -749,7 +750,7 @@ GameObject:
   - component: {fileID: 2031883194194926167}
   - component: {fileID: 637037446151219202}
   - component: {fileID: 3620228785507582295}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MeleeCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -840,7 +841,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4909420609810358321}
   - component: {fileID: 5074516900606222843}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -927,7 +928,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4696072277401487669}
   - component: {fileID: 2653561700246223758}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1014,7 +1015,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1055328892276776184}
   - component: {fileID: 4547543063265359016}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: HurtFeedback
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1341,7 +1342,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7464507677893368954}
   - component: {fileID: 2336160045276987048}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ItemInHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1430,7 +1431,7 @@ GameObject:
   - component: {fileID: 5148406131904805326}
   - component: {fileID: 4604921083407888490}
   - component: {fileID: 7552163614298674993}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PlayerHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1511,7 +1512,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2655659969855729899}
   - component: {fileID: 1111931286613386806}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: DeathFeedback
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1837,7 +1838,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4063995504710540096}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1869,7 +1870,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4196058989623954390}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SpellSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1902,7 +1903,7 @@ GameObject:
   - component: {fileID: 3137753485887550457}
   - component: {fileID: 8170007643158540964}
   - component: {fileID: 285421941734170131}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2009,7 +2010,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4860324121513958072}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: WestPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2045,7 +2046,7 @@ GameObject:
   - component: {fileID: 3475095693591121536}
   - component: {fileID: 1299341961821722642}
   - component: {fileID: 6425095934245654601}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2207,7 +2208,7 @@ GameObject:
   - component: {fileID: 8767046272765041259}
   - component: {fileID: 7849655712372076988}
   - component: {fileID: 6231199994205774343}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CollectCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2288,7 +2289,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4302369951305684658}
   - component: {fileID: 8785629131345501009}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: RightSideSpriteMask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2380,7 +2381,7 @@ GameObject:
   - component: {fileID: 8195383011194485763}
   - component: {fileID: 2437390641338216097}
   - component: {fileID: 4276618735467231427}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: Arms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2557,7 +2558,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9006510000384411042}
   - component: {fileID: 3780080136181159089}
-  m_Layer: 8
+  - component: {fileID: 6597357669524105707}
+  m_Layer: 7
   m_Name: FeetCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2616,6 +2618,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.6, y: 0.1}
   m_Direction: 1
+--- !u!114 &6597357669524105707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8309369520875900938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3b15608eccbc4cabbae559c4ceab4b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &8439818422324346428
 GameObject:
   m_ObjectHideFlags: 0
@@ -2626,7 +2641,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7789935702021618490}
   - component: {fileID: 8207740533627687385}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: LeftSideSpriteMask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2717,7 +2732,7 @@ GameObject:
   - component: {fileID: 5137825302037799411}
   - component: {fileID: 616114512210210345}
   - component: {fileID: 5856038982714238704}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2877,7 +2892,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4572527030133494615}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Colliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5696403362127379611}
   - component: {fileID: 8002613548793757500}
   m_Layer: 3
-  m_Name: PathfindingWallTm
+  m_Name: WallColliderTm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
