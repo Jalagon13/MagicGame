@@ -28,6 +28,8 @@ public abstract class ServerSpell : NetworkBehaviour
 
     protected Vector2 _finalDirection;
 
+    private bool _hasEnded = false;
+
     public NetworkObject SpellCasterNetworkObject
     {
         get
@@ -98,16 +100,30 @@ public abstract class ServerSpell : NetworkBehaviour
         {
             yield return new WaitForSeconds(SpellData.Value.Lifetime);
         }
+
+        yield return EndSpellRoutine();
+    }
+
+    public void EndSpellExternally()
+    {
+        if (!IsOwner || SpellStateNV.Value != SpellState.Casting)
+            return;
         
+        StartCoroutine(EndSpellRoutine());
+    }
+
+    private IEnumerator EndSpellRoutine()
+    {
+        if (_hasEnded) yield break;
+        _hasEnded = true;
+
         SpellStateNV.Value = SpellState.Stopping;
-        
-        yield return OnSpellEnd(); // yield any cleanup animations
+
+        yield return OnSpellEnd(); // Cleanup visuals, sounds, etc.
 
         SpellCasterNetworkObject.GetComponent<SpellCaster>().DespawnSpellServerRpc(NetworkObject);
         gameObject.SetActive(false); // Disable after RPC
     }
-
-    
 
     public void CancelSpellCharge()
     {

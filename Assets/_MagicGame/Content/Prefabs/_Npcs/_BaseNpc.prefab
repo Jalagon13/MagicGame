@@ -200,7 +200,7 @@ GameObject:
   - component: {fileID: 647902995146852404}
   - component: {fileID: 1803180478442400679}
   - component: {fileID: 2695284593721968707}
-  m_Layer: 12
+  m_Layer: 10
   m_Name: _BaseNpc
   m_TagString: Untagged
   m_Icon: {fileID: 0}

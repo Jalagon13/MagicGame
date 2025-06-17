@@ -7,7 +7,7 @@ public class FireBolt : ServerSpell
     private float _velocityDecay = 5f;
 
     private Rigidbody2D _rigidbody2D;
-    private Vector2 _velocity;
+    public Vector2 _velocity;
 
     public override void OnSpellInitialize()
     {
