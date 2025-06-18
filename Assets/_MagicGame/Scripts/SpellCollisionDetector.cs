@@ -54,19 +54,21 @@ public class SpellCollisionDetector : NetworkBehaviour
 
         if (_spellCollider == null || !IsOwner || _serverSpell.SpellStateNV.Value != SpellState.Casting) return;
 
-        if (transform.root.TryGetComponent(out FireBolt fireBolt))
+
+        // NTFS: Need to get rid of this explicit temporary FireBolt velocity stuff and use something more generic, AS WELL as test this shit on multiplayer
+        if (transform.root.TryGetComponent(out ProjectileSpell projectileSpell))
         {
             ContactPoint2D contact = collision.GetContact(0);
             Vector2 hitNormal = contact.normal;
-            float speed = fireBolt._velocity.magnitude;
-            Vector2 reflected = Vector2.Reflect(fireBolt._velocity.normalized, hitNormal);
-            fireBolt._velocity = reflected * speed;
+            float speed = projectileSpell.Velocity.magnitude;
+            Vector2 reflected = Vector2.Reflect(projectileSpell.Velocity.normalized, hitNormal);
+            projectileSpell.Velocity = reflected * speed;
 
-            if (float.IsNaN(fireBolt._velocity.x) || float.IsNaN(fireBolt._velocity.y) ||
-                float.IsInfinity(fireBolt._velocity.x) || float.IsInfinity(fireBolt._velocity.y))
+            if (float.IsNaN(projectileSpell.Velocity.x) || float.IsNaN(projectileSpell.Velocity.y) ||
+                float.IsInfinity(projectileSpell.Velocity.x) || float.IsInfinity(projectileSpell.Velocity.y))
             {
                 Debug.LogError("Velocity became invalid after reflection!");
-                fireBolt._velocity = Vector2.zero;
+                projectileSpell.Velocity = Vector2.zero;
             }
 
             _bounceAmount--;
@@ -77,7 +79,7 @@ public class SpellCollisionDetector : NetworkBehaviour
                 return;
             }
 
-            Debug.Log($"[OnCollisionEnter2D] Bounced! New velocity: {fireBolt._velocity} from {collision.gameObject.name}");
+            Debug.Log($"[OnCollisionEnter2D] Bounced! New velocity: {projectileSpell.Velocity} from {collision.gameObject.name}");
         }
 
         Debug.Log($"{gameObject.transform.root.gameObject.name} Collision detected with {collision.gameObject.name}");

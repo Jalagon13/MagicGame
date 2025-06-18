@@ -24,7 +24,7 @@ public abstract class ServerSpell : NetworkBehaviour
     public int CollisionMask { get; private set; }
     public int NpcLayer { get; private set; }
     public int WallMask { get; private set; }
-    public int FoliageLayer { get; private set; } 
+    public int FoliageLayer { get; private set; }
 
     protected Vector2 _finalDirection;
 
