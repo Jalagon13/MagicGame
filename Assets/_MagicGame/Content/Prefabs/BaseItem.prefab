@@ -496,7 +496,6 @@ GameObject:
   - component: {fileID: -4435627704649687351}
   - component: {fileID: 986181079108452694}
   - component: {fileID: 9010913743860930186}
-  - component: {fileID: -5578531025387803636}
   - component: {fileID: 3804742926177971078}
   m_Layer: 0
   m_Name: BaseItem
@@ -662,19 +661,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 0
   SlerpPosition: 1
---- !u!114 &-5578531025387803636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4324714860010554649}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e8c3f68c454d43c589ca83e21e8d4ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _knockbackEnabled: 1
 --- !u!114 &3804742926177971078
 MonoBehaviour:
   m_ObjectHideFlags: 0

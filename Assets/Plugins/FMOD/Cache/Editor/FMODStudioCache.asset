@@ -149,7 +149,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/UI.bank
   Name: UI
   StudioPath: bank:/UI
-  lastModified: 638727874700914830
+  lastModified: 638728486700914830
   FileSizes:
   - Name: Desktop
     Value: 21696
@@ -304,7 +304,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638830671670695835
+  lastModified: 638831247670695835
   FileSizes:
   - Name: Desktop
     Value: 3104640
@@ -433,7 +433,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Magic.bank
   Name: Magic
   StudioPath: bank:/Magic
-  lastModified: 638839265306918985
+  lastModified: 638839841306918985
   FileSizes:
   - Name: Desktop
     Value: 409280
@@ -716,7 +716,7 @@ MonoBehaviour:
   - {fileID: 6702288669578411488}
   StringsBanks:
   - {fileID: 5574528013551363316}
-  cacheTime: 638839265306918985
+  cacheTime: 638839841306918985
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:
@@ -868,7 +868,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Tiles.bank
   Name: Tiles
   StudioPath: bank:/Tiles
-  lastModified: 638833312497466887
+  lastModified: 638833888497466887
   FileSizes:
   - Name: Desktop
     Value: 61760
@@ -996,7 +996,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638838488398092545
+  lastModified: 638839064398092545
   FileSizes:
   - Name: Desktop
     Value: 2652
@@ -1097,7 +1097,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638838488398061276
+  lastModified: 638839064398061276
   FileSizes:
   - Name: Desktop
     Value: 3619520
