@@ -11,9 +11,6 @@ public class SpellCaster : NetworkBehaviour
     [SerializeField] 
     private ServerCharacter _serverCharacter;
     
-    private Dictionary<int, Timer> _spellCoolDownTimers = new();
-    public Dictionary<int, Timer> SpellCoolDownTimers => _spellCoolDownTimers;
-    
     private Timer _castTimer;
     public Timer CastTimer => _castTimer;
     
@@ -39,38 +36,22 @@ public class SpellCaster : NetworkBehaviour
         if (!IsOwner) return; // Only the owner should update the casting state and cooldowns
     
         _castTimer?.Tick(Time.deltaTime);
-        
-        foreach (int key in new List<int>(_spellCoolDownTimers.Keys)) // To avoid modifying the collection while iterating
-        {
-            Timer spellCdTimer = _spellCoolDownTimers[key];
-            spellCdTimer.Tick(Time.deltaTime);
-
-            if (spellCdTimer.RemainingSeconds <= 0)
-            {
-                _spellCoolDownTimers.Remove(key);
-            }
-        }
-
-        if (_spellCoolDownTimers.Count > 0)
-        {
-            OnSpellCooldownTimersUpdated?.Invoke(this, EventArgs.Empty);
-        }
     }
     
-    public void TryCastSpell(SpellItemSO spellItemSO, Func<(Vector3 spawnPoint, Vector3 direction)> getExecutionParams)
+    public void TryCastSpell(SpellMetaData spellMetaData, Func<(Vector3 spawnPoint, Vector3 direction)> getExecutionParams)
     {
-        // If spell is on cooldown || cast timer still going || still casting a spell
-        if (_spellCoolDownTimers.ContainsKey(GameManager.Instance.GetItemIdFromItemSO(spellItemSO)) || _castTimer.IsRunning || _isCasting.Value) return;
+        // cast timer still going || still casting a spell
+        if (_castTimer.IsRunning || _isCasting.Value) return;
 
         Reset();
 
-        _currentSpellData = spellItemSO.GetSpellDataForLocalClientInstance(NetworkObjectId, _serverCharacter.CurrentBiome);
-        
+        _currentSpellData = spellMetaData.SpellItem.GetSpellDataForLocalClientInstance(NetworkObjectId, _serverCharacter.CurrentBiome, spellMetaData.SpellMods);
+
         SpawnSpellServerRpc(_currentSpellData);
         
         _getExecutionParams = getExecutionParams;
         _isCasting.Value = true;
-        _castTimer = new Timer(spellItemSO.CastTime);
+        _castTimer = new Timer(spellMetaData.SpellItem.CastTime);
         _castTimer.OnTimerEnd += OnCastTimerEnd;
     }
     
@@ -118,16 +99,10 @@ public class SpellCaster : NetworkBehaviour
             if (actualSpell.TryGetComponent<ServerSpell>(out var serverSpell))
             {
                 // Get the final spawn point and direction
-                var (finalSpawnPoint, finalDirection) = _getExecutionParams != null
-                ? _getExecutionParams.Invoke()
-                : (transform.position, transform.forward);
-                
+                var (finalSpawnPoint, finalDirection) = _getExecutionParams != null ? _getExecutionParams.Invoke() : (transform.position, transform.forward);
+
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
                 
-                // Set spell cooldown
-                SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(serverSpell.SpellData.Value.SpellItemId) as SpellItemSO;
-                _spellCoolDownTimers[serverSpell.SpellData.Value.SpellItemId] = new Timer(spellItemSO.Cooldown);
-
                 // Reset casting state here if not a continuous cast
                 if (!serverSpell.SpellData.Value.IsContinuousCast)
                 {

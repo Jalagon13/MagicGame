@@ -1,50 +1,102 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct SpellMetaData
+{
+    public SpellItemSO SpellItem;
+    public List<SpellModItemSO> SpellMods;
+
+    public SpellMetaData(SpellItemSO spellItem, List<SpellModItemSO> spellMods)
+    {
+        SpellItem = spellItem;
+        SpellMods = spellMods;
+    }
+}
+
 public class SpellCastController
 {
+    private static readonly float _postCastDelayTimerDuration = 0.15f; // Duration after casting a spell before the next can be cast
+    
     private Player _player;
     private int _currentSpellIndex;
-    private List<SpellMetaData> _spellMetaDataList = new List<SpellMetaData>();
-    
-    private struct SpellMetaData
-    {
-        public SpellItemSO SpellItem;
-        public List<SpellModItemSO> SpellMods;
-
-        public SpellMetaData(SpellItemSO spellItem, List<SpellModItemSO> spellMods)
-        {
-            SpellItem = spellItem;
-            SpellMods = spellMods;
-        }
-        
-        
-    }
+    private List<SpellMetaData> _spellMetaDataList = new();
+    private Dictionary<ulong, Timer> _rechargeTimers = new();
+    private Timer _postCastDelayTimer;
 
     public SpellCastController(Player player)
     {
         _player = player;
+        
         _player.SelectedItemIdNetworkVariable.OnValueChanged += OnItemIdChanged;
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
+        _player.SpellCaster.IsCasting.OnValueChanged += OnIsCastingChanged;
         HotbarManager.Instance.OnFocusSlotUpdated += CheckForSelectedItemChange;
+
+        _postCastDelayTimer = new(_postCastDelayTimerDuration);
     }
     
     public void Dispose()
     {
         _player.SelectedItemIdNetworkVariable.OnValueChanged -= OnItemIdChanged;
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
+        _player.SpellCaster.IsCasting.OnValueChanged -= OnIsCastingChanged;
         HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSelectedItemChange;
     }
 
-    public void DetectSpellInputs()
+    private void OnIsCastingChanged(bool previousValue, bool newValue)
     {
+        if(previousValue && !newValue)
+        {
+            _postCastDelayTimer.Reset();
+
+            // If _currentSpellIndex is the last spell, get the inventoryitem Id
+            if (_currentSpellIndex >= _spellMetaDataList.Count - 1)
+            {
+                if (InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem))
+                {
+                    _rechargeTimers.Add(selectedInventoryItem.Id, new Timer((selectedInventoryItem.Item as WandItemSO).RechargeTime));
+                }
+            }
+
+            _currentSpellIndex = (_currentSpellIndex + 1) % _spellMetaDataList.Count; // Cycle through spells
+        }
+    }
+
+    public void SpellCastControllerUpdate()
+    {
+        UpdateRechargeTimes();
+    
         if(CanCast())
         {
-            SpellItemSO spell = _spellMetaDataList[_currentSpellIndex].SpellItem;
-            Debug.Log($"Casting spell: {spell.name} at index {_currentSpellIndex} with mods: {_spellMetaDataList[_currentSpellIndex].SpellMods.Count}");
-            _player.SpellCaster.TryCastSpell(spell, GetExecutionParams);
-            _currentSpellIndex = (_currentSpellIndex + 1) % _spellMetaDataList.Count; // Cycle through spells
+            Debug.Log($"Casting spell: {_spellMetaDataList[_currentSpellIndex].SpellItem.name} at index {_currentSpellIndex} with mods: {_spellMetaDataList[_currentSpellIndex].SpellMods.Count}, iscasting: {_player.SpellCaster.IsCasting.Value}");
+            _player.SpellCaster.TryCastSpell(_spellMetaDataList[_currentSpellIndex], GetExecutionParams);
+        }
+    }
+
+    private void UpdateRechargeTimes()
+    {
+        _postCastDelayTimer.Tick(Time.deltaTime);
+
+        List<ulong> timersToRemove = new();
+
+        foreach (var kvp in _rechargeTimers)
+        {
+            if (kvp.Value.IsRunning)
+            {
+                kvp.Value.Tick(Time.deltaTime);
+                if (!kvp.Value.IsRunning)
+                {
+                    timersToRemove.Add(kvp.Key);
+                }
+            }
+        }
+
+        foreach (var key in timersToRemove)
+        {
+            _rechargeTimers.Remove(key);
+            Debug.Log($"Recharge timer for item {key} has ended.");
         }
     }
 
@@ -63,9 +115,12 @@ public class SpellCastController
         bool playerIsAlive = _player.ServerCharacter.LifeState == LifeState.Alive;
         bool primaryHeldDown = GameInput.Instance.GetPrimaryHeldDown();
         bool isCasting = _player.SpellCaster.IsCasting.Value;
+        InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
+        bool wandOnCooldown = _rechargeTimers.ContainsKey(selectedInventoryItem.Id);
+        bool postCastDelayTimerRunning = _postCastDelayTimer.IsRunning;
         // bool hasEnoughMana = Player.LocalClientInstance.PlayerStats.CurrentMana >= spell.ManaCost;
 
-        return !isOverUI && !isOverInteractable /* && hasEnoughMana */ && playerIsAlive && primaryHeldDown && !isCasting;
+        return !isOverUI && !isOverInteractable /* && hasEnoughMana */ && playerIsAlive && primaryHeldDown && !isCasting && !wandOnCooldown && !postCastDelayTimerRunning;
     }
 
     private void OnItemIdChanged(int previousValue, int newValue)

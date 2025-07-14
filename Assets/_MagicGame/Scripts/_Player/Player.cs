@@ -57,7 +57,6 @@ public class Player : NetworkBehaviour
 	
 	private void Awake()
 	{
-		_spellCastController = new SpellCastController(this);
 		_spellCaster = GetComponent<SpellCaster>();
 		_damageReceiver = GetComponent<DamageReceiver>();
 		_serverCharacter = GetComponent<ServerCharacter>();
@@ -77,6 +76,8 @@ public class Player : NetworkBehaviour
 		{
 			PlayerId = OwnerClientId
 		});
+
+		_spellCastController = new SpellCastController(this);
 
 		// local player start up code here, maybe input
 		GameInput.Instance.OnMove += GameInput_OnPlayerMove;
@@ -120,7 +121,7 @@ public class Player : NetworkBehaviour
 	{
 		if (!IsOwner) return;
 
-		_spellCastController.DetectSpellInputs();
+		_spellCastController.SpellCastControllerUpdate();
 
 		// Breadcrumb stuff
 		Vector2Int newTilePosition = new(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));

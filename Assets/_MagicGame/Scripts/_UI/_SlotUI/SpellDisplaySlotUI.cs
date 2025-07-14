@@ -53,16 +53,16 @@ public class SpellDisplaySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     private void UpdateCooldownDisplay(object sender, EventArgs e)
     {
-        if(Player.LocalClientInstance.SpellCaster.SpellCoolDownTimers.ContainsKey(_spellId))
-        {
-            Timer spellCdTimer = Player.LocalClientInstance.SpellCaster.SpellCoolDownTimers[_spellId];
-            CooldownUI.enabled = true;
-            CooldownUI.fillAmount = spellCdTimer.RemainingSeconds / spellCdTimer.Duration;
-        }
-        else
-        {
-            CooldownUI.enabled = false;
-        }
+        // if(Player.LocalClientInstance.SpellCaster.SpellCoolDownTimers.ContainsKey(_spellId))
+        // {
+        //     Timer spellCdTimer = Player.LocalClientInstance.SpellCaster.SpellCoolDownTimers[_spellId];
+        //     CooldownUI.enabled = true;
+        //     CooldownUI.fillAmount = spellCdTimer.RemainingSeconds / spellCdTimer.Duration;
+        // }
+        // else
+        // {
+        //     CooldownUI.enabled = false;
+        // }
     }
 
     public void SetSpell(SpellItemSO spell, int controlIndex)

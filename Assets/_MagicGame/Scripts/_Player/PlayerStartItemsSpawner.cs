@@ -45,7 +45,7 @@ public class PlayerStartItemsSpawner : NetworkBehaviour
 
                 for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
                 {
-                    if (wandInvItem.MagicArray[i] is SpellItemSO)
+                    if (wandInvItem.MagicArray[i] is MagicItemSO)
                     {
                         if (i < wandItemSO.Capacity)
                         {

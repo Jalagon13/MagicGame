@@ -22,9 +22,9 @@ using UnityEngine;
             _remainingSeconds = value;
         }
     }
-	
-    public bool IsRunning => RemainingSeconds > 0f || this == null;
-    
+
+    public bool IsRunning => RemainingSeconds > 0f;
+
     public float Duration
     {
         get { return _duration; }

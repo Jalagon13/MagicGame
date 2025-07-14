@@ -51,17 +51,11 @@ public class SpellItemSO : MagicItemSO
 	[field: Tooltip("Should the spell be continuous cast while holding down cast button")]
 	[field: SerializeField] public bool IsContinuousCast { get; private set; } = false;
 	
-	public SyncSpellData GetSpellDataForLocalClientInstance(ulong casterNetObjId, BiomeType spawnBiome)
+	public SyncSpellData GetSpellDataForLocalClientInstance(ulong casterNetObjId, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
 	{
-		
 		return new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			ManaCost, Damage, Knockback, Speed, Lifetime, HasteMultiplier, casterNetObjId, IsContinuousCast,spawnBiome);
-	}
-	
-	public virtual void StartSpell(SpellCaster spellCaster)
-	{
-		// var syncSpellData = GetSpellDataForLocalClientInstance();
+			ManaCost, Damage, Knockback, Speed, Lifetime, HasteMultiplier, casterNetObjId, IsContinuousCast, spawnBiome, spellMods);
 	}
 	
 	public virtual void StartSpell(int slotIndex) // Default behavior, spawn spell on server, assign it to player
