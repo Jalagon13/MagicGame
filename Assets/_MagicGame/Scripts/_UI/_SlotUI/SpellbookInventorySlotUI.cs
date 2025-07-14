@@ -88,7 +88,7 @@ public class SpellbookInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPo
 	{
 		if(WandInventorySlotIsOccupied())
 		{
-			SpellIcon.sprite = _spellbookInvItem.MagicArray[_spellIndex].SpellUIDisplaySprite;
+			SpellIcon.sprite = _spellbookInvItem.MagicArray[_spellIndex].UiDisplay;
 			SpellIcon.color = new(1,1,1,1);
 		}
 		else

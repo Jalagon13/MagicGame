@@ -6879,7 +6879,10 @@ MonoBehaviour:
   _startWandItems:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
-    <MagicArray>k__BackingField: []
+    <MagicArray>k__BackingField:
+    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+    - {fileID: 11400000, guid: fa0df19b8bc2f409c88d5a5155a4de06, type: 2}
+    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
   _startingItems:
   - Item: {fileID: 11400000, guid: fe217e765840a43b5b9acff0a1269c2f, type: 2}
     Quantity: 1

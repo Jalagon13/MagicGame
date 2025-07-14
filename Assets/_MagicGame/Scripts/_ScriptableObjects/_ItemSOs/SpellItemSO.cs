@@ -6,7 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Spell", menuName = "Create Item/New Spell")]
-public class SpellItemSO : ItemSO
+public class SpellItemSO : MagicItemSO
 {
 	[field: Header("Visuals")]
 	[field: Tooltip("Actual Prefab for the projectile.")]
@@ -27,7 +27,7 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("The cooldown time (in seconds) before this spell can be cast again. A lower value means the spell can be reused more quickly.")]
 	[field: SerializeField] public float Cooldown { get; private set; } = 0.1f;
 	
-	[field: Tooltip("The mana cost required to cast this projectile.")]
+	[field: Tooltip("The mana cost required to cast this spell.")]
 	[field: SerializeField] public int ManaCost { get; private set; } = 5;
 	
 	[field: Tooltip("The amount of damage this projectile deals upon hitting an enemy.")]
@@ -71,24 +71,5 @@ public class SpellItemSO : ItemSO
 		// InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
 		// SpellManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position);
 		// SpellManager.Instance.LoadSpell(this, new LoadedSpell(this, syncSpellData, selectedInventoryItem));
-	}
-	
-	public override InventoryItem CreateInventoryItem(int quantity)
-	{
-		return new InventoryItem(this, quantity);
-	}
-
-	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
-	{
-		return _baseActionCooldown;
-	}
-
-	public override string GetDescription()
-	{
-		StringBuilder description = new();
-		description.Append($"Can be placed in a wand slot<br>");
-		description.Append($"{GetDescriptionBreak()}");
-
-		return description.ToString();
 	}
 }

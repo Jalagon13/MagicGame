@@ -6,11 +6,11 @@ public class WandInventoryItem : InventoryItem
 {
 	public event EventHandler OnWandContentsUpdated;
 	
-	[field: SerializeField] public SpellItemSO[] MagicArray { get; private set; }
+	[field: SerializeField] public MagicItemSO[] MagicArray { get; private set; }
 
 	public WandInventoryItem(ItemSO itemSO, int quantity, int capacity) : base(itemSO, quantity)
 	{
-		MagicArray = new SpellItemSO[capacity];
+		MagicArray = new MagicItemSO[capacity];
 	}
 	
 	public void ClearWandContentsUpdatedListeners()
@@ -29,8 +29,8 @@ public class WandInventoryItem : InventoryItem
 		MagicArray[magicIndex] = MagicItem;
 		OnWandContentsUpdated?.Invoke(this, EventArgs.Empty);
 	}
-	
-	public SpellItemSO RemoveMagic(int magicIndex)
+
+	public MagicItemSO RemoveMagic(int magicIndex)
 	{
 		if(magicIndex < 0 || magicIndex >= MagicArray.Length)
 		{
@@ -38,15 +38,15 @@ public class WandInventoryItem : InventoryItem
 			return null;
 		}
 
-		SpellItemSO removedMagic = MagicArray[magicIndex];
+		MagicItemSO removedMagic = MagicArray[magicIndex];
 		MagicArray[magicIndex] = null;
 		
 		OnWandContentsUpdated?.Invoke(this, EventArgs.Empty);
 		
 		return removedMagic;
 	}
-	
-	public SpellItemSO SwapMagic(SpellItemSO magic, int magicIndex)
+
+	public MagicItemSO SwapMagic(MagicItemSO magic, int magicIndex)
 	{
 		if(magicIndex < 0 || magicIndex >= MagicArray.Length)
 		{
@@ -54,7 +54,7 @@ public class WandInventoryItem : InventoryItem
 			return null;
 		}
 
-		SpellItemSO swappedMagic = MagicArray[magicIndex];
+		MagicItemSO swappedMagic = MagicArray[magicIndex];
 		MagicArray[magicIndex] = magic;
 		
 		OnWandContentsUpdated?.Invoke(this, EventArgs.Empty);

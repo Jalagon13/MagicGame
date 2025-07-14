@@ -120,7 +120,7 @@ namespace AdvancedTooltips.Core
 			}
 		}
 		
-		public static void WandDisplay(WandItemSO wand, SpellItemSO[] spellArray, Transform customLayout = null, float fontSize = 10)
+		public static void WandDisplay(WandItemSO wand, MagicItemSO[] magicArray, Transform customLayout = null, float fontSize = 10)
 		{
 			WandTooltipDisplayHandlerUI script = _instantiateHandler.InstantiateWandTooltipDisplay(customLayout);
 			script.WandName.text = wand.Name;
@@ -129,13 +129,13 @@ namespace AdvancedTooltips.Core
 			JustText($"<br>Value: {wand.GoldValue} Gold"
 			+ $"<br>{wand.Capacity}   capacity", Color.white, fontSize: fontSize, customLayout: script.StatLayout);
 			
-			for (int i = 0; i < spellArray.Length; i++)
+			for (int i = 0; i < magicArray.Length; i++)
 			{
 				SpellbookInventorySlotUI wandSlot = _instantiateHandler.InstantiateWandInvSlotUI(customLayout: script.MagicLayout);
 				
-				if(spellArray[i] != null)
+				if(magicArray[i] != null)
 				{
-					wandSlot.SpellIcon.sprite = spellArray[i].SpellUIDisplaySprite;
+					wandSlot.SpellIcon.sprite = magicArray[i].UiDisplay;
 				}
 				else
 				{

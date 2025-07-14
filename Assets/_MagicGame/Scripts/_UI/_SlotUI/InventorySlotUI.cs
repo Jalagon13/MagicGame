@@ -83,7 +83,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 			{
 				
 				case WandItemSO wandItemSO:
-					SpellItemSO[] magicArray = (_inventoryAssociatedWith[_inventoryIndex] as WandInventoryItem).MagicArray;
+					MagicItemSO[] magicArray = (_inventoryAssociatedWith[_inventoryIndex] as WandInventoryItem).MagicArray;
 					Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);
 					break;
 				case SpellItemSO spellItemSO:

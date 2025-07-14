@@ -30,13 +30,13 @@ public class PlayerSpellCastingState : BaseState
     public override void UpdateState()
     {
         // If player lets go of the spell key, stop casting
-        if(_ctx.SpellCaster.CurrentSpellData.IsContinuousCast && _ctx.PlayerRef.SpellInputHandler.CurrentEquippedSpellIndexCasting != null)
-        {
-            if (!_ctx.PlayerRef.SpellInputHandler.IsSpellKeyHeld(_ctx.PlayerRef.SpellInputHandler.CurrentEquippedSpellIndexCasting.Value))
-            {
-                _ctx.SpellCaster.IsCasting.Value = false;
-            }
-        }
+        // if(_ctx.SpellCaster.CurrentSpellData.IsContinuousCast && _ctx.PlayerRef.SpellInputHandler.CurrentEquippedSpellIndexCasting != null)
+        // {
+        //     if (!_ctx.PlayerRef.SpellInputHandler.IsSpellKeyHeld(_ctx.PlayerRef.SpellInputHandler.CurrentEquippedSpellIndexCasting.Value))
+        //     {
+        //         _ctx.SpellCaster.IsCasting.Value = false;
+        //     }
+        // }
     }
 
     public override void CheckSwitchStates()

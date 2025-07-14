@@ -47,8 +47,9 @@ public class Player : NetworkBehaviour
 	public PlayerNetworkVisibility PlayerNetworkVisibility => _playerNetworkVisibility;
 	
 	private DamageReceiver _damageReceiver;
-	private SpellInputHandler _spellInputHandler;
-	public SpellInputHandler SpellInputHandler => _spellInputHandler;
+	
+	private SpellCastController _spellCastController;
+	public SpellCastController SpellCastController => _spellCastController;
 	
 	private SpellCaster _spellCaster;
 	public SpellCaster SpellCaster => _spellCaster;
@@ -56,6 +57,7 @@ public class Player : NetworkBehaviour
 	
 	private void Awake()
 	{
+		_spellCastController = new SpellCastController(this);
 		_spellCaster = GetComponent<SpellCaster>();
 		_damageReceiver = GetComponent<DamageReceiver>();
 		_serverCharacter = GetComponent<ServerCharacter>();
@@ -70,7 +72,6 @@ public class Player : NetworkBehaviour
 		
 		_spawnBiome = BiomeType.Forest;
 		_spawnPoint = transform.position;
-		_spellInputHandler = new(this);
 
 		OnAnyPlayerSpawned?.Invoke(this, new PlayerIdEventArgs
 		{
@@ -96,7 +97,7 @@ public class Player : NetworkBehaviour
 			CurrentBiome.OnValueChanged -= UpdateCollisionDetection;
 			
 			_serverCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
-			_spellInputHandler.Dispose();
+			_spellCastController.Dispose();
 		}
 	}
 
@@ -117,17 +118,16 @@ public class Player : NetworkBehaviour
 
     private void Update()
 	{
-		if (IsOwner)
+		if (!IsOwner) return;
+
+		_spellCastController.DetectSpellInputs();
+
+		// Breadcrumb stuff
+		Vector2Int newTilePosition = new(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
+		if (newTilePosition != _lastTilePosition)
 		{
-			_spellInputHandler.DetectSpellInputs();
-		
-			// Breadcrumb stuff
-			Vector2Int newTilePosition = new(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
-			if (newTilePosition != _lastTilePosition)
-			{
-				_lastTilePosition = newTilePosition;
-				SpawnBreadCrumbServerRpc(_lastTilePosition);
-			}
+			_lastTilePosition = newTilePosition;
+			SpawnBreadCrumbServerRpc(_lastTilePosition);
 		}
 	}
 
