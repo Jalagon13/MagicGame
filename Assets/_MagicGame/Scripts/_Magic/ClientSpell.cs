@@ -10,12 +10,16 @@ public class ClientSpell : NetworkBehaviour
     [SerializeField] 
     private GameObject _visualization;
     public GameObject Visualization => _visualization;
+    
+    [SerializeField] 
+    private GameObject _modifiersContainer;
 
     public override void OnNetworkSpawn()
     {
         if (!IsClient) return;
         
         _serverSpell.SpellStateNV.OnValueChanged += HandleSpellStateChange;
+        _serverSpell.SpellData.OnValueChanged += OnSpellDataInitialized;
     }
 
     public override void OnNetworkDespawn()
@@ -44,6 +48,21 @@ public class ClientSpell : NetworkBehaviour
         else if(previousValue == SpellState.Casting && newValue == SpellState.Stopping)
         {
             _serverSpell.ClientSpellStop(this);
+        }
+    }
+
+    private void OnSpellDataInitialized(SyncSpellData oldData, SyncSpellData newData)
+    {
+        _serverSpell.SpellData.OnValueChanged -= OnSpellDataInitialized;
+
+        foreach (var item in _serverSpell.SpellData.Value.SpellMods)
+        {
+            if (GameManager.Instance.GetItemSOFromItemId(item) is SpellModItemSO spellMod)
+            {
+                Debug.Log($"[ClientSpell] Applying visual mod: {spellMod.Name}");
+                // TODO: Add any visual effect or logic specific to this mod here
+                Instantiate(spellMod.SpellModPrefab, _modifiersContainer.transform);
+            }
         }
     }
 }

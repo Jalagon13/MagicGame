@@ -17,5 +17,5 @@ MonoBehaviour:
   <GoldValue>k__BackingField: 0
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <SpellModPrefab>k__BackingField: {fileID: 0}
+  <SpellModPrefab>k__BackingField: {fileID: 4532376575911826281, guid: 02c8d3845783a41d98c14d510cee865b, type: 3}
   <ManaCost>k__BackingField: 5

@@ -56,6 +56,27 @@ public abstract class ServerSpell : NetworkBehaviour
         }
 
         OnSpellInitialize();
+
+        if (IsClient)
+        {
+            SpellData.OnValueChanged += OnSpellDataInitialized;
+        }
+    }
+
+    private void OnSpellDataInitialized(SyncSpellData oldData, SyncSpellData newData)
+    {
+        SpellData.OnValueChanged -= OnSpellDataInitialized;
+
+        // Initialize spell mods for this spell
+        foreach (var item in SpellData.Value.SpellMods)
+        {
+            if (GameManager.Instance.GetItemSOFromItemId(item) is SpellModItemSO spellMod)
+            {
+                // Apply internal ownerside logic for this spell mod
+                Debug.Log($"Internal Spell Mod Handling: {spellMod.Name}");
+                SpellData.Value = spellMod.SpellModPrefab.ModifiySpellData(newData);
+            }
+        }
     }
 
     private void Update()
@@ -79,14 +100,6 @@ public abstract class ServerSpell : NetworkBehaviour
         transform.position = spawnPoint;
         _finalDirection = finalDirection;
         
-        // TODO: Figure out the best way to handle spell mods and instantiating them on the spell for each client
-        foreach (var item in SpellData.Value.SpellMods)
-        {
-            if (GameManager.Instance.GetItemSOFromItemId(item) is SpellModItemSO spellMod)
-            {
-                Debug.Log($"Adding mod {spellMod.Name} to spell {name}");
-            }
-        }
         
         StartCoroutine(SpellLifetimeRoutine());
     }

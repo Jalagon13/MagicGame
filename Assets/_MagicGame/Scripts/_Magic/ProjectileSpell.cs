@@ -4,6 +4,8 @@ using UnityEngine;
 public abstract class ProjectileSpell : ServerSpell
 {
     protected Rigidbody2D _rigidbody2D;
+    
+    [HideInInspector]
     public Vector2 Velocity;
 
     public override void OnSpellInitialize()

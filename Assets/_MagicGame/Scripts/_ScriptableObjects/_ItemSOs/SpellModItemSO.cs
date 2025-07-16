@@ -4,7 +4,7 @@ using UnityEngine;
 public class SpellModItemSO : MagicItemSO
 {
     [field: Tooltip("Actual Prefab for the modifier.")]
-    [field: SerializeField] public ServerSpell SpellModPrefab { get; private set; } // Change this to a SpellMod class
+    [field: SerializeField] public SpellModifier SpellModPrefab { get; private set; }
 
     [field: Tooltip("The mana cost required to cast this mod.")]
     [field: SerializeField] public int ManaCost { get; private set; } = 5;
