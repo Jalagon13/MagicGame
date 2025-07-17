@@ -36,6 +36,12 @@ public class SpellItemSO : MagicItemSO
 	[field: Tooltip("The amount of knockback this projectile deals upon hitting an enemy.")]
 	[field: SerializeField] public int Knockback { get; private set; } = 3;
 
+	[field: Tooltip("How many times this projectile can bounce.")]
+	[field: SerializeField] public int BounceCount { get; private set; } = 0;
+
+	[field: Tooltip("How many times this projectile can pierce through enemies.")]
+	[field: SerializeField] public int PierceCount { get; private set; } = 0;
+
 	[field: Tooltip("The lifetime in seconds of the projectile.")]
 	[field: SerializeField] public float Lifetime { get; private set; } = 2f;
 
@@ -55,7 +61,7 @@ public class SpellItemSO : MagicItemSO
 	{
 		return new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			ManaCost, Damage, Knockback, Speed, Lifetime, HasteMultiplier, casterNetObjId, IsContinuousCast, spawnBiome, spellMods);
+			ManaCost, Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime, HasteMultiplier, casterNetObjId, IsContinuousCast, spawnBiome, spellMods);
 	}
 	
 	public virtual void StartSpell(int slotIndex) // Default behavior, spawn spell on server, assign it to player

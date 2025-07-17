@@ -8,6 +8,8 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
     public int ManaCost;
     public int Damage;
     public int Knockback;
+    public int BounceCount;
+    public int PierceCount;
     public float Speed;
     public float Lifetime;
     public float HasteMultiplier;
@@ -16,7 +18,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
     public BiomeType SpawnBiome;
     public List<int> SpellMods; // Assuming SpellModItemSO is serializable or can be converted to int for network transmission
 
-    public SyncSpellData(int spellItemId, int manaCost, int damage, int knockback, float speed, float lifetime, float hasteMultiplier, 
+    public SyncSpellData(int spellItemId, int manaCost, int damage, int knockback, int bounceCount, int pierceCount, float speed, float lifetime, float hasteMultiplier, 
     ulong casterNetworkObjectId, bool isContinuousCast, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
     {
         SpellItemId = spellItemId;
@@ -29,6 +31,8 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         CasterNetworkObjectId = casterNetworkObjectId;
         IsContinuousCast = isContinuousCast;
         SpawnBiome = spawnBiome;
+        BounceCount = bounceCount;
+        PierceCount = pierceCount;
         SpellMods = new List<int>();
         if (spellMods != null)
         {
@@ -46,6 +50,8 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
             ManaCost != other.ManaCost ||
             Damage != other.Damage ||
             Knockback != other.Knockback ||
+            BounceCount != other.BounceCount ||
+            PierceCount != other.PierceCount ||
             Speed != other.Speed ||
             Lifetime != other.Lifetime ||
             HasteMultiplier != other.HasteMultiplier ||
@@ -81,6 +87,8 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         serializer.SerializeValue(ref ManaCost);
         serializer.SerializeValue(ref Damage);
         serializer.SerializeValue(ref Knockback);
+        serializer.SerializeValue(ref BounceCount);
+        serializer.SerializeValue(ref PierceCount);
         serializer.SerializeValue(ref Speed);
         serializer.SerializeValue(ref Lifetime);
         serializer.SerializeValue(ref HasteMultiplier);

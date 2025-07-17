@@ -32,6 +32,8 @@ MonoBehaviour:
   <ManaCost>k__BackingField: 1
   <Damage>k__BackingField: 14
   <Knockback>k__BackingField: 15
+  <BounceCount>k__BackingField: 1
+  <PierceCount>k__BackingField: 1
   <Lifetime>k__BackingField: 1.25
   <Speed>k__BackingField: 10
   <Recoil>k__BackingField: 6

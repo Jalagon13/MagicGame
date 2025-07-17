@@ -8,12 +8,10 @@ public class ProjectileHitbox : NetworkBehaviour
     [SerializeField] 
     private ServerSpell _serverSpell;
     
-    [SerializeField] 
-    private int _pierceAmount; // Number of NPC pierces allowed before the spell is destroyed
-    
     private CircleCollider2D _spellCollider;
-    
     private List<DamageReceiver> _damagedNetworkHealthStates = new();
+    private int _remainingPierces; 
+    private bool _pierceInitialized = false;
 
     private void Awake()
     {
@@ -23,6 +21,12 @@ public class ProjectileHitbox : NetworkBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (_spellCollider == null || !IsOwner || _serverSpell.SpellStateNV.Value != SpellState.Casting) return;
+        
+        if (!_pierceInitialized)
+        {
+            _remainingPierces = _serverSpell.SpellData.Value.PierceCount + 1;
+            _pierceInitialized = true;
+        }
 
         if (collision.gameObject.layer == _serverSpell.FoliageLayer) // Detecting Foliage tiles
         {
@@ -49,9 +53,9 @@ public class ProjectileHitbox : NetworkBehaviour
                     }
 
                     _damagedNetworkHealthStates.Add(damageReceiver);
+                    _remainingPierces--;
 
-                    _pierceAmount--;
-                    if (_pierceAmount < 0)
+                    if (_remainingPierces <= 0)
                     {
                         // TODO: Destroy or deactivate the spell
                         _serverSpell.EndSpellExternally();

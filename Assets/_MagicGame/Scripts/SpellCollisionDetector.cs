@@ -7,11 +7,10 @@ public class SpellCollisionDetector : NetworkBehaviour
     [SerializeField]
     private ServerSpell _serverSpell;
     
-    [SerializeField] 
-    private int _bounceAmount; // Number of bounces allowed before the spell is destroyed
-
     private CircleCollider2D _spellCollider;
     private CollisionDetector _collisionDetector;
+    private int _remainingBounces; // Number of bounces allowed before the spell is destroyed
+    private bool _bounceInitialized = false;
 
     private void Awake()
     {
@@ -54,6 +53,11 @@ public class SpellCollisionDetector : NetworkBehaviour
 
         if (_spellCollider == null || !IsOwner || _serverSpell.SpellStateNV.Value != SpellState.Casting) return;
 
+        if (!_bounceInitialized)
+        {
+            _remainingBounces = _serverSpell.SpellData.Value.BounceCount;
+            _bounceInitialized = true;
+        }
 
         // NTFS: Need to get rid of this explicit temporary FireBolt velocity stuff and use something more generic, AS WELL as test this shit on multiplayer
         if (transform.root.TryGetComponent(out ProjectileSpell projectileSpell))
@@ -71,8 +75,8 @@ public class SpellCollisionDetector : NetworkBehaviour
                 projectileSpell.Velocity = Vector2.zero;
             }
 
-            _bounceAmount--;
-            if (_bounceAmount < 0)
+            _remainingBounces--;
+            if (_remainingBounces < 0)
             {
                 // TODO: Destroy or deactivate the spell after final bounce
                 _serverSpell.EndSpellExternally();
