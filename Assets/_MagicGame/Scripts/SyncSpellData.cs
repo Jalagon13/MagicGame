@@ -13,13 +13,14 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
     public float Speed;
     public float Lifetime;
     public float HasteMultiplier;
+    public float Accuracy;
     public ulong CasterNetworkObjectId;
     public bool IsContinuousCast;
     public BiomeType SpawnBiome;
     public List<int> SpellMods; // Assuming SpellModItemSO is serializable or can be converted to int for network transmission
 
     public SyncSpellData(int spellItemId, int manaCost, int damage, int knockback, int bounceCount, int pierceCount, float speed, float lifetime, float hasteMultiplier, 
-    ulong casterNetworkObjectId, bool isContinuousCast, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
+    float accuracy, ulong casterNetworkObjectId, bool isContinuousCast, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
     {
         SpellItemId = spellItemId;
         ManaCost = manaCost;
@@ -28,6 +29,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         Speed = speed;
         Lifetime = lifetime;
         HasteMultiplier = hasteMultiplier;
+        Accuracy = accuracy;
         CasterNetworkObjectId = casterNetworkObjectId;
         IsContinuousCast = isContinuousCast;
         SpawnBiome = spawnBiome;
@@ -55,6 +57,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
             Speed != other.Speed ||
             Lifetime != other.Lifetime ||
             HasteMultiplier != other.HasteMultiplier ||
+            Accuracy != other.Accuracy ||
             CasterNetworkObjectId != other.CasterNetworkObjectId ||
             IsContinuousCast != other.IsContinuousCast ||
             SpawnBiome != other.SpawnBiome)
@@ -92,6 +95,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         serializer.SerializeValue(ref Speed);
         serializer.SerializeValue(ref Lifetime);
         serializer.SerializeValue(ref HasteMultiplier);
+        serializer.SerializeValue(ref Accuracy);
         serializer.SerializeValue(ref CasterNetworkObjectId);
         serializer.SerializeValue(ref IsContinuousCast);
         serializer.SerializeValue(ref SpawnBiome);

@@ -21,6 +21,7 @@ public class SpellCastController
     
     private Player _player;
     private int _currentSpellIndex;
+    private WandItemSO _currentWandItemSO;
     private List<SpellMetaData> _spellMetaDataList = new();
     private Dictionary<ulong, Timer> _rechargeTimers = new();
     private Timer _postCastDelayTimer;
@@ -102,8 +103,25 @@ public class SpellCastController
 
     private (Vector3 spawnPoint, Vector3 direction) GetExecutionParams()
     {
+        float wandAccuracy = _currentWandItemSO?.Accuracy ?? 0f;
+        float spellAccuracy = _spellMetaDataList[_currentSpellIndex].SpellItem.Accuracy;
+        float totalSpellModAccuracy = 0;
+
+        foreach (var mod in _spellMetaDataList[_currentSpellIndex].SpellMods)
+        {
+            totalSpellModAccuracy += mod.Accuracy;
+        }
+
+        float totalAccuracy = Mathf.Max(0f, wandAccuracy + spellAccuracy + totalSpellModAccuracy);
+
         Vector2 point = _player.PlayerHand.SpellSpawnTransform.position;
-        Vector2 direction = (ActionManager.MouseWorldPosition - point).normalized;
+        
+        // Calculate base direction
+        Vector2 baseDirection = (ActionManager.MouseWorldPosition - point).normalized;
+        
+        // Apply random angle offset within ±accuracy degrees
+        float angleOffset = UnityEngine.Random.Range(-totalAccuracy, totalAccuracy);
+        Vector2 direction = Quaternion.Euler(0, 0, angleOffset) * baseDirection;
 
         return (point, direction);
     }
@@ -153,9 +171,11 @@ public class SpellCastController
             }
 
             _currentSpellIndex = 0; // Reset to the first spell
+            _currentWandItemSO = wandItemSO;
         }
         else
         {
+            _currentWandItemSO = null;
             _spellMetaDataList = null;
         }
     }

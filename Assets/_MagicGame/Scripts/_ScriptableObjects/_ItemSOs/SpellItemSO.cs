@@ -54,6 +54,9 @@ public class SpellItemSO : MagicItemSO
 	[field: Tooltip("Multiplier on fast the player moves when casting this spell")]
 	[field: SerializeField] public float HasteMultiplier { get; private set; } = 0.5f;
 	
+	[field: Tooltip("How accurate the spell is being shot from")]
+	[field: SerializeField] public float Accuracy { get; private set; } = 0f;
+	
 	[field: Tooltip("Should the spell be continuous cast while holding down cast button")]
 	[field: SerializeField] public bool IsContinuousCast { get; private set; } = false;
 	
@@ -61,7 +64,7 @@ public class SpellItemSO : MagicItemSO
 	{
 		return new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			ManaCost, Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime, HasteMultiplier, casterNetObjId, IsContinuousCast, spawnBiome, spellMods);
+			ManaCost, Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime, HasteMultiplier, Accuracy, casterNetObjId, IsContinuousCast, spawnBiome, spellMods);
 	}
 	
 	public virtual void StartSpell(int slotIndex) // Default behavior, spawn spell on server, assign it to player

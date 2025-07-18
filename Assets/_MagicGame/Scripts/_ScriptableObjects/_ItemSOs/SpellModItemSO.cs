@@ -8,4 +8,7 @@ public class SpellModItemSO : MagicItemSO
 
     [field: Tooltip("The mana cost required to cast this mod.")]
     [field: SerializeField] public int ManaCost { get; private set; } = 5;
+
+    [field: Tooltip("The contributed accuracy of the spell modifier.")]
+    [field: SerializeField] public int Accuracy { get; private set; } = 5;
 }

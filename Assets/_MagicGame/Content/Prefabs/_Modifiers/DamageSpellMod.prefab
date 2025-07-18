@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acd349e87dadd4e73a5e3294021cd488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damageAmount: 10
+  _spellStatToEdit: 5
+  _amount: 10
 --- !u!212 &215380882810318614
 SpriteRenderer:
   m_ObjectHideFlags: 0
