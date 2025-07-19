@@ -9,7 +9,7 @@ public class SpellbookInspectorMenuUI : MonoBehaviour
 	public WandInventoryItem SelectedWand { get; private set; } 
 	
 	[field: SerializeField] public TextMeshProUGUI InspectorTitleText;
-	[SerializeField] private SpellbookInventorySlotUI _wandInvSlotPrefab;
+	[SerializeField] private WandInventorySlotUI _wandInvSlotPrefab;
 	[SerializeField] private Transform _spellBookSlotsHolder;
 	[SerializeField] private WandSlotUI _spellBookSlotUI;
 	
@@ -51,13 +51,13 @@ public class SpellbookInspectorMenuUI : MonoBehaviour
 		{
 			if(HasWand())
 			{
-				SpellbookInventorySlotUI firstEmptySpellBookInventorySlotUI = null;
+				WandInventorySlotUI firstEmptySpellBookInventorySlotUI = null;
 			
 				foreach (Transform child in _spellBookSlotsHolder)
 				{
-					if(!child.GetComponent<SpellbookInventorySlotUI>().WandInventorySlotIsOccupied())
+					if(!child.GetComponent<WandInventorySlotUI>().WandInventorySlotIsOccupied())
 					{
-						firstEmptySpellBookInventorySlotUI = child.GetComponent<SpellbookInventorySlotUI>();
+						firstEmptySpellBookInventorySlotUI = child.GetComponent<WandInventorySlotUI>();
 						break;
 					}
 				}
@@ -138,7 +138,7 @@ public class SpellbookInspectorMenuUI : MonoBehaviour
 		{
 			for (int i = 0; i < SelectedWand.MagicArray.Length; i++)
 			{
-				SpellbookInventorySlotUI wandInvSlotUI = Instantiate(_wandInvSlotPrefab, _spellBookSlotsHolder);
+				WandInventorySlotUI wandInvSlotUI = Instantiate(_wandInvSlotPrefab, _spellBookSlotsHolder);
 				wandInvSlotUI.Initialize(SelectedWand, i);
 			}
 		}

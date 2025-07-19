@@ -4,16 +4,16 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SpellbookInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class WandInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
 	public Image SpellIcon;
 
-	private WandInventoryItem _spellbookInvItem;
+	private WandInventoryItem _wandInvItem;
 	private int _spellIndex;
 
 	public void Initialize(WandInventoryItem selectedWand, int spellIndex)
 	{
-		_spellbookInvItem = selectedWand;
+		_wandInvItem = selectedWand;
 		_spellIndex = spellIndex;
 		
 		UpdateSlotUI();
@@ -27,27 +27,27 @@ public class SpellbookInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPo
 		{
 			if(GameInput.Instance.GetShiftHeldDown())
 			{
-				InventoryManager.Instance.AddItem(_spellbookInvItem.RemoveMagic(_spellIndex), 1);
+				InventoryManager.Instance.AddItem(_wandInvItem.RemoveMagic(_spellIndex), 1);
 			}
-			else if(mouseItem.HasItem && mouseItem.Item is SpellItemSO mouseMagicItemSO)
+			else if(mouseItem.HasItem && mouseItem.Item is MagicItemSO mouseMagicItemSO)
 			{
-				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _spellbookInvItem.SwapMagic(mouseMagicItemSO, _spellIndex);
+				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _wandInvItem.SwapMagic(mouseMagicItemSO, _spellIndex);
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = 1;
 			}
 			else
 			{
-				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _spellbookInvItem.RemoveMagic(_spellIndex);
+				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _wandInvItem.RemoveMagic(_spellIndex);
 				InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity = 1;
 			}
 
 			Tooltip.HideUI();
 		}
-		else if(mouseItem.HasItem && mouseItem.Item is SpellItemSO mouseMagicItemSO)
+		else if(mouseItem.HasItem && mouseItem.Item is MagicItemSO mouseMagicItemSO)
 		{
-			_spellbookInvItem.SetMagic(mouseMagicItemSO, _spellIndex);
+			_wandInvItem.SetMagic(mouseMagicItemSO, _spellIndex);
 			InventoryManager.Instance.GetMouseItem().MouseInventoryItem = new();
 			Tooltip.ShowNew();
-			InventoryManager.Instance.ShowInventoryItemTooltip(_spellbookInvItem);
+			InventoryManager.Instance.ShowInventoryItemTooltip(_wandInvItem);
 		}
 		
 		UpdateSlotUI();
@@ -55,18 +55,18 @@ public class SpellbookInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPo
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}
 	
-	public void SetMagic(SpellItemSO magicItem)
+	public void SetMagic(MagicItemSO magicItem)
 	{
-		_spellbookInvItem.SetMagic(magicItem, _spellIndex);
+		_wandInvItem.SetMagic(magicItem, _spellIndex);
 		UpdateSlotUI();
 	}
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		if(_spellbookInvItem.MagicArray[_spellIndex] != null)
+		if(_wandInvItem.MagicArray[_spellIndex] != null)
 		{
 			Tooltip.ShowNew();
-			InventoryManager.Instance.ShowInventoryItemTooltip(_spellbookInvItem.MagicArray[_spellIndex].CreateInventoryItem(1));
+			InventoryManager.Instance.ShowInventoryItemTooltip(_wandInvItem.MagicArray[_spellIndex].CreateInventoryItem(1));
 		}
 		else
 		{
@@ -81,14 +81,14 @@ public class SpellbookInventorySlotUI : MonoBehaviour, IPointerClickHandler, IPo
 	
 	public bool WandInventorySlotIsOccupied()
 	{
-		return _spellbookInvItem.MagicArray[_spellIndex] != null;
+		return _wandInvItem.MagicArray[_spellIndex] != null;
 	}
 	
 	public void UpdateSlotUI()
 	{
 		if(WandInventorySlotIsOccupied())
 		{
-			SpellIcon.sprite = _spellbookInvItem.MagicArray[_spellIndex].UiDisplay;
+			SpellIcon.sprite = _wandInvItem.MagicArray[_spellIndex].UiDisplay;
 			SpellIcon.color = new(1,1,1,1);
 		}
 		else

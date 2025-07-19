@@ -65,9 +65,7 @@ public class SpellCastController
             _currentSpellIndex = (_currentSpellIndex + 1) % _spellMetaDataList.Count; // Cycle through spells
             
             // Subtract Mana
-            int totalMana = CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]);
-            
-            _player.PlayerManaSystem.TrySpendMana(totalMana);
+            _player.PlayerManaSystem.TrySpendMana(CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]));
         }
     }
 
@@ -77,9 +75,40 @@ public class SpellCastController
     
         if(CanCast())
         {
-            Debug.Log($"Casting spell: {_spellMetaDataList[_currentSpellIndex].SpellItem.name} at index {_currentSpellIndex} with mods: {_spellMetaDataList[_currentSpellIndex].SpellMods.Count}, iscasting: {_player.SpellCaster.IsCasting.Value}");
             _player.SpellCaster.TryCastSpell(_spellMetaDataList[_currentSpellIndex], GetExecutionParams);
         }
+    }
+
+    private bool CanCast()
+    {
+        if (_spellMetaDataList == null) return false;
+
+        bool isOverUI = Pointer.IsOverUI();
+        bool isOverInteractable = Pointer.IsOverInteractable();
+        bool playerIsAlive = _player.ServerCharacter.LifeState == LifeState.Alive;
+        bool primaryHeldDown = GameInput.Instance.GetPrimaryHeldDown();
+        bool isCasting = _player.SpellCaster.IsCasting.Value;
+        bool postCastDelayTimerRunning = _postCastDelayTimer.IsRunning;
+        bool hasEnoughMana = Player.Instance.PlayerManaSystem.HasEnoughMana(CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]));
+        bool isWandRecharging = IsWandRecharging(out Timer rechargeTimer);
+
+        return !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && primaryHeldDown && !isCasting && !isWandRecharging && !postCastDelayTimerRunning;
+    }
+    
+    public bool IsWandRecharging(out Timer rechargeTimer)
+    {
+        InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
+        
+        if(_rechargeTimers.TryGetValue(selectedInventoryItem.Id, out Timer timer))
+        {
+            rechargeTimer = timer;
+        }
+        else
+        {
+            rechargeTimer = null;
+        }
+
+        return _rechargeTimers.ContainsKey(selectedInventoryItem.Id);
     }
 
     private void UpdateRechargeTimes()
@@ -132,25 +161,6 @@ public class SpellCastController
         return (point, direction);
     }
 
-    private bool CanCast()
-    {
-        bool isHoldingWand = _spellMetaDataList != null;
-        bool isOverUI = Pointer.IsOverUI();
-        bool isOverInteractable = Pointer.IsOverInteractable();
-        bool playerIsAlive = _player.ServerCharacter.LifeState == LifeState.Alive;
-        bool primaryHeldDown = GameInput.Instance.GetPrimaryHeldDown();
-        bool isCasting = _player.SpellCaster.IsCasting.Value;
-        bool postCastDelayTimerRunning = _postCastDelayTimer.IsRunning;
-        
-        InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-        bool wandOnCooldown = _rechargeTimers.ContainsKey(selectedInventoryItem.Id);
-        
-        int totalMana = CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]);
-        bool hasEnoughMana = Player.Instance.PlayerManaSystem.HasEnoughMana(totalMana);
-
-        return isHoldingWand && !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && primaryHeldDown && !isCasting && !wandOnCooldown && !postCastDelayTimerRunning;
-    }
-
     private void OnItemIdChanged(int previousValue, int newValue)
     {
         if (GameManager.Instance.GetItemSOFromItemId(newValue) is WandItemSO wandItemSO)
@@ -163,7 +173,7 @@ public class SpellCastController
                 return;
             }
 
-            _spellMetaDataList.Clear();
+            _spellMetaDataList = new();
             List<SpellModItemSO> currentMods = new();
 
             foreach (var item in currentMagicArray)

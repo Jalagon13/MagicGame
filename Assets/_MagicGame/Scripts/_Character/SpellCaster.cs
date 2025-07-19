@@ -51,7 +51,14 @@ public class SpellCaster : NetworkBehaviour
         
         _getExecutionParams = getExecutionParams;
         _isCasting.Value = true;
-        _castTimer = new Timer(spellMetaData.SpellItem.CastTime);
+        
+        float totalCastTime = spellMetaData.SpellItem.CastTime;
+        foreach (var mod in spellMetaData.SpellMods)
+        {
+            totalCastTime += mod.CastTime;
+        }
+
+        _castTimer = new Timer(totalCastTime);
         _castTimer.OnTimerEnd += OnCastTimerEnd;
     }
     

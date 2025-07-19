@@ -39,7 +39,7 @@ public class NetworkHealthState : NetworkBehaviour
 
     private void HitPointsChanged(int previousValue, int newValue)
     {
-        OnHitPointsChanged?.Invoke(this, new PointsChangedEventArgs(_serverCharacter.Stats.MaxHealth.AsIntValue, HitPoints.Value));
+        OnHitPointsChanged?.Invoke(this, new PointsChangedEventArgs(HitPoints.Value, _serverCharacter.Stats.MaxHealth.AsIntValue));
     }
     
     public bool IsFullHp()

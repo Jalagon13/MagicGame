@@ -32,6 +32,7 @@ public class PlayerHealthStatUI : MonoBehaviour
 		if(Player.Instance != null)
 		{
 			Player.Instance.ServerCharacter.NetHealthState.OnHitPointsChanged += Player_OnPlayerHealthUpdated;
+			UpdateView(Player.Instance.ServerCharacter.Stats.MaxHealth.AsIntValue, Player.Instance.ServerCharacter.Stats.MaxHealth.AsIntValue);
 		}
 	}
 

@@ -60,9 +60,9 @@ public class SpellItemSO : MagicItemSO
 	
 	public SyncSpellData GetSpellDataForLocalClientInstance(ulong casterNetObjId, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
 	{
-		return new SyncSpellData(
-			GameManager.Instance.GetItemIdFromItemSO(this),
-			ManaCost, Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime, HasteMultiplier, Accuracy, casterNetObjId, spawnBiome, spellMods);
+		return new SyncSpellData(GameManager.Instance.GetItemIdFromItemSO(this),
+			ManaCost, Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime,
+			HasteMultiplier, Accuracy, casterNetObjId, spawnBiome, spellMods);
 	}
 	
 	public virtual void StartSpell(int slotIndex) // Default behavior, spawn spell on server, assign it to player

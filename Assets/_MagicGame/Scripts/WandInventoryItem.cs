@@ -18,7 +18,7 @@ public class WandInventoryItem : InventoryItem
 		OnWandContentsUpdated = null;
 	}
 	
-	public void SetMagic(SpellItemSO MagicItem, int magicIndex)
+	public void SetMagic(MagicItemSO magicItem, int magicIndex)
 	{
 		if(magicIndex < 0 || magicIndex >= MagicArray.Length)
 		{
@@ -26,7 +26,7 @@ public class WandInventoryItem : InventoryItem
 			return;
 		}
 		
-		MagicArray[magicIndex] = MagicItem;
+		MagicArray[magicIndex] = magicItem;
 		OnWandContentsUpdated?.Invoke(this, EventArgs.Empty);
 	}
 

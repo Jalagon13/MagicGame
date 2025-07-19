@@ -131,7 +131,7 @@ namespace AdvancedTooltips.Core
 			
 			for (int i = 0; i < magicArray.Length; i++)
 			{
-				SpellbookInventorySlotUI wandSlot = _instantiateHandler.InstantiateWandInvSlotUI(customLayout: script.MagicLayout);
+				WandInventorySlotUI wandSlot = _instantiateHandler.InstantiateWandInvSlotUI(customLayout: script.MagicLayout);
 				
 				if(magicArray[i] != null)
 				{

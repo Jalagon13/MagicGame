@@ -5,8 +5,9 @@ using System;
 
 public class PlayerCastTimeUI : MonoBehaviour
 {
-    [SerializeField] private PlayerManaStatUI _manaStatUI;
-    [SerializeField] private MMProgressBar _castTimeBar;
+    // [SerializeField] private PlayerManaStatUI _manaStatUI;
+    [SerializeField] 
+    private MMProgressBar _castTimeBar;
     // [SerializeField] private RectTransform _border; // Set width to max mana dynamically
     // [SerializeField] private TextMeshProUGUI _amountText;
 
@@ -30,21 +31,26 @@ public class PlayerCastTimeUI : MonoBehaviour
     {
         if(Player.Instance == null) return;
     
-        float maxAmount = Player.Instance.SpellCaster.CastTimer.Duration;
-        float currentAmount = maxAmount - Player.Instance.SpellCaster.CastTimer.RemainingSeconds;
-
-        if (currentAmount >= maxAmount)
+        if(Player.Instance.SpellCastController.IsWandRecharging(out Timer rechargeTimer))
         {
-            HideBar();
+            float maxAmount = rechargeTimer.Duration;
+            float currentAmount = maxAmount - rechargeTimer.RemainingSeconds;
+
+            if (currentAmount >= maxAmount)
+            {
+                HideBar();
+            }
+            else
+            {
+                ShowBar();
+            }
+
+            UpdateBarFill(currentAmount, maxAmount);
         }
         else
         {
-            ShowBar();
+            HideBar();
         }
-
-        // _border.sizeDelta = new Vector2(e.MaxAmount, _border.sizeDelta.y);
-
-        UpdateBarFill(currentAmount, maxAmount);
     }
 
     public void UpdateBarFill(float currentAmount, float maxAmount)

@@ -112,18 +112,12 @@ public class Player : NetworkBehaviour
 
     private void GameInput_OnFKeyPressed(object sender, EventArgs e)
     {
-		if (TryGetComponent(out PlayerManaSystem playerManaSystem))
-		{
-			Debug.Log($"Player pressed F key, trying to spend mana...");
-		    playerManaSystem.TrySpendMana(10);
+        if(TryGetComponent(out DamageReceiver damageReceiver))
+        {
+			if(ServerCharacter.LifeState != LifeState.Alive) return;
+			Debug.Log($"Player took damage TEST");
+			damageReceiver.ReceiveHP(_serverCharacter, -25, false);
 		}
-    
-        // if(TryGetComponent(out DamageReceiver damageReceiver))
-        // {
-		// 	if(ServerCharacter.LifeState != LifeState.Alive) return;
-		// 	Debug.Log($"Player took damage TEST");
-		// 	damageReceiver.ReceiveHP(_serverCharacter, -25, false);
-		// }
     }
 
     private void Update()

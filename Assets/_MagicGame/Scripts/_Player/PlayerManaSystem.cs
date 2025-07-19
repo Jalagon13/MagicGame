@@ -58,7 +58,7 @@ public class PlayerManaSystem : MonoBehaviour
     {
         if (_currentMana < amount)
             return false;
-        Debug.Log($"Spending mana: {amount}, Current Mana: {_currentMana}");
+        
         _currentMana = Mathf.Clamp(_currentMana - amount, 0, Mathf.FloorToInt(_characterStats.MaxMana.GetValue()));
         OnManaChanged?.Invoke(this, new PointsChangedEventArgs(_currentMana, Mathf.FloorToInt(_characterStats.MaxMana.GetValue())));
         return true;
