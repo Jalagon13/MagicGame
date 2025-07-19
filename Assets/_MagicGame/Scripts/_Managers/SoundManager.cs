@@ -36,11 +36,11 @@ public class SoundManager : NetworkBehaviour
 
     private void ChangeAmbience(object sender, EventArgs e)
     {
-        if (Player.LocalClientInstance != null)
+        if (Player.Instance != null)
         {
             Ambience ambience;
 
-            switch (Player.LocalClientInstance.CurrentBiome.Value)
+            switch (Player.Instance.CurrentBiome.Value)
             {
                 case BiomeType.Forest:
                     ambience = Ambience.ForestAmbience;

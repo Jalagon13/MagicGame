@@ -21,23 +21,23 @@ public class PlayerHealthStatUI : MonoBehaviour
 	private void OnDestroy()
 	{
 		Player.OnAnyPlayerSpawned -= Player_OnAnyPlayerSpawned;
-		if(Player.LocalClientInstance != null)
+		if(Player.Instance != null)
 		{
-			Player.LocalClientInstance.ServerCharacter.NetHealthState.OnHitPointsChanged -= Player_OnPlayerHealthUpdated;
+			Player.Instance.ServerCharacter.NetHealthState.OnHitPointsChanged -= Player_OnPlayerHealthUpdated;
 		}
 	}
 
 	private void Player_OnAnyPlayerSpawned(object sender, Player.PlayerIdEventArgs e)
 	{
-		if(Player.LocalClientInstance != null)
+		if(Player.Instance != null)
 		{
-			Player.LocalClientInstance.ServerCharacter.NetHealthState.OnHitPointsChanged += Player_OnPlayerHealthUpdated;
+			Player.Instance.ServerCharacter.NetHealthState.OnHitPointsChanged += Player_OnPlayerHealthUpdated;
 		}
 	}
 
-    private void Player_OnPlayerHealthUpdated(object sender, NetworkHealthState.HitPointsChangedEventArgs e)
+    private void Player_OnPlayerHealthUpdated(object sender, PointsChangedEventArgs e)
     {
-		UpdateView(e.CurrentHitPoints, e.MaxHitPoints);
+		UpdateView(e.CurrentPoints, e.MaxPoints);
     }
 
 	private void UpdateView(int currentAmount, int maxAmount)

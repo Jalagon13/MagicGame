@@ -48,6 +48,7 @@ public class SpellCastController
 
     private void OnIsCastingChanged(bool previousValue, bool newValue)
     {
+        // Right after the spell has been cast
         if(previousValue && !newValue)
         {
             _postCastDelayTimer.Reset();
@@ -62,6 +63,11 @@ public class SpellCastController
             }
 
             _currentSpellIndex = (_currentSpellIndex + 1) % _spellMetaDataList.Count; // Cycle through spells
+            
+            // Subtract Mana
+            int totalMana = CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]);
+            
+            _player.PlayerManaSystem.TrySpendMana(totalMana);
         }
     }
 
@@ -134,12 +140,15 @@ public class SpellCastController
         bool playerIsAlive = _player.ServerCharacter.LifeState == LifeState.Alive;
         bool primaryHeldDown = GameInput.Instance.GetPrimaryHeldDown();
         bool isCasting = _player.SpellCaster.IsCasting.Value;
+        bool postCastDelayTimerRunning = _postCastDelayTimer.IsRunning;
+        
         InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
         bool wandOnCooldown = _rechargeTimers.ContainsKey(selectedInventoryItem.Id);
-        bool postCastDelayTimerRunning = _postCastDelayTimer.IsRunning;
-        // bool hasEnoughMana = Player.LocalClientInstance.PlayerStats.CurrentMana >= spell.ManaCost;
+        
+        int totalMana = CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]);
+        bool hasEnoughMana = Player.Instance.PlayerManaSystem.HasEnoughMana(totalMana);
 
-        return isHoldingWand && !isOverUI && !isOverInteractable /* && hasEnoughMana */ && playerIsAlive && primaryHeldDown && !isCasting && !wandOnCooldown && !postCastDelayTimerRunning;
+        return isHoldingWand && !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && primaryHeldDown && !isCasting && !wandOnCooldown && !postCastDelayTimerRunning;
     }
 
     private void OnItemIdChanged(int previousValue, int newValue)
@@ -201,5 +210,15 @@ public class SpellCastController
         {
             _player.SpellCaster.TryToCancelCast();
         }
+    }
+
+    private int CalculateTotalManaCost(SpellMetaData spellMeta)
+    {
+        int totalMana = spellMeta.SpellItem.ManaCost;
+        foreach (var mod in spellMeta.SpellMods)
+        {
+            totalMana += mod.ManaCost;
+        }
+        return totalMana;
     }
 }

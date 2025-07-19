@@ -86,7 +86,7 @@ public class NpcManager : NetworkBehaviour
 	{
 		_npcSlots += npcData.SlotAmount;
 		short id = GameDataRegistry.Instance.GetShortIdFromCharacterData(npcData);
-		SpawnNpcServerRpc(Player.LocalClientInstance.CurrentBiome.Value, id, NetworkManager.LocalClientId, spawnPosition, npcData.SlotAmount);
+		SpawnNpcServerRpc(Player.Instance.CurrentBiome.Value, id, NetworkManager.LocalClientId, spawnPosition, npcData.SlotAmount);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]

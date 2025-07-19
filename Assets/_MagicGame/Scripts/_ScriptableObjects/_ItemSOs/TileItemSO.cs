@@ -24,7 +24,7 @@ public class TileItemSO : ItemSO
 			case TileType.Floor:
 				if(!floorTmHasTile && !wallTmHasTile)
 				{
-					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.LocalClientInstance.CurrentBiome.Value, TileToPlace.TileType);
+					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.Instance.CurrentBiome.Value, TileToPlace.TileType);
 					InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 					SoundManager.Instance.PlayOneShot(TileToPlace.MiningSound, pos);
 				}
@@ -32,8 +32,8 @@ public class TileItemSO : ItemSO
 			case TileType.Wall:
 				if (!wallTmHasTile && IsClear(new(pos.x, pos.y)))
 				{
-					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.LocalClientInstance.CurrentBiome.Value, TileToPlace.TileType);
-					Pathfinding.Instance.AddPfWallTileServerRpc((Vector2Int)pos, Player.LocalClientInstance.CurrentBiome.Value);
+					ChunkManager.Instance.PlaceTileServerRpc((Vector2Int)pos, syncTileId, Player.Instance.CurrentBiome.Value, TileToPlace.TileType);
+					Pathfinding.Instance.AddPfWallTileServerRpc((Vector2Int)pos, Player.Instance.CurrentBiome.Value);
 					InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
 					SoundManager.Instance.PlayOneShot(TileToPlace.MiningSound, pos);
 				}
@@ -46,7 +46,7 @@ public class TileItemSO : ItemSO
 
 	public bool PlayerInRangeOfMouse()
 	{
-		return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= 3;
+		return Vector2.Distance(Player.Instance.transform.position, ActionManager.MouseWorldPosition) <= 3;
 	}
 
 	public override string GetDescription()

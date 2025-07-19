@@ -86,7 +86,7 @@ public class MiningHandler : MonoBehaviour
 
     private bool CanMine()
     {
-        return Player.LocalClientInstance != null &&
+        return Player.Instance != null &&
             //    !Player.LocalClientInstance.HealthState.IsDead &&
                !Pointer.IsOverUI() &&
                GameInput.Instance.GetInputsEnabled() &&
@@ -211,7 +211,7 @@ public class MiningHandler : MonoBehaviour
     {
         if (IsMining)
         {
-            OnMiningStarted?.Invoke(this, new MiningStartedEventArgs(_cachedTotalMiningTime, (Vector3Int)_currentBreakTargetPosition, Player.LocalClientInstance.CurrentBiome.Value, _destructableFound));
+            OnMiningStarted?.Invoke(this, new MiningStartedEventArgs(_cachedTotalMiningTime, (Vector3Int)_currentBreakTargetPosition, Player.Instance.CurrentBiome.Value, _destructableFound));
         }
         else
         {
@@ -236,10 +236,10 @@ public class MiningHandler : MonoBehaviour
         switch (_destructableFound)
         {
             case DestructableType.WorldObject:
-                ObjectManager.Instance.DestroyObjectServerRpc(Player.LocalClientInstance.CurrentBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetIDFromWorldObject(_worldObjectSelected));
+                ObjectManager.Instance.DestroyObjectServerRpc(Player.Instance.CurrentBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetIDFromWorldObject(_worldObjectSelected));
                 break;
             case DestructableType.Tile:
-                TileManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.LocalClientInstance.CurrentBiome.Value);
+                TileManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.Instance.CurrentBiome.Value);
                 break;
         }
         

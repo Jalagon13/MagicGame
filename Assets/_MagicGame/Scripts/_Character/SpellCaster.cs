@@ -102,12 +102,8 @@ public class SpellCaster : NetworkBehaviour
                 var (finalSpawnPoint, finalDirection) = _getExecutionParams != null ? _getExecutionParams.Invoke() : (transform.position, transform.forward);
 
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
-                
-                // Reset casting state here if not a continuous cast
-                if (!serverSpell.SpellData.Value.IsContinuousCast)
-                {
-                    _isCasting.Value = false;
-                }
+
+                _isCasting.Value = false;
             }
             else
             {

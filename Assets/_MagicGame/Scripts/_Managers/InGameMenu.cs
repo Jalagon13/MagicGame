@@ -75,7 +75,7 @@ public class InGameMenu : MonoBehaviour
         SpellbookInspectorMenuUI spellbookInspectorMenuUI = _instantiateHandler.InstantiateWandInspectorMenu();
         spellbookInspectorMenuUI.PlaceSelectedWand(wand);
 
-        _menuReferenceHolder.SetMenuSourceGO(Player.LocalClientInstance.gameObject);
+        _menuReferenceHolder.SetMenuSourceGO(Player.Instance.gameObject);
         DefaultCraftingMenu.SetActive(false);
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }

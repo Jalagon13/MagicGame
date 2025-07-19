@@ -110,7 +110,7 @@ public class ServerCharacter : NetworkBehaviour
             NetLifeState.LifeState.OnValueChanged += OnLifeStateChanged;
             _damageReceiver.HpReceived += ReceiveHP;
             
-            HitPoints = _characterData.BaseHP;
+            HitPoints = _characterData.BaseHealth;
             _stateMachine?.OwnerInitialization();
 
             _hpRegenTimer = new Timer(_characterData.BaseHealthRegenTimeInterval <= 0 ? 1f : _characterData.BaseHealthRegenTimeInterval);
@@ -224,7 +224,7 @@ public class ServerCharacter : NetworkBehaviour
                 StartCoroutine(StartIFrameTimer());
             }
         }
-        HitPoints = Mathf.Clamp(HitPoints + hpReceived, 0, _characterData.BaseHP);
+        HitPoints = Mathf.Clamp(HitPoints + hpReceived, 0, _characterData.BaseHealth);
         _stateMachine?.ReceiveHP(inflicter, hpReceived);
         
         if(HitPoints <= 0 && _characterData.CanDie)

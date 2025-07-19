@@ -2,22 +2,23 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
+public class PointsChangedEventArgs : EventArgs
+{
+    public int MaxPoints { get; }
+    public int CurrentPoints { get; }
+
+    public PointsChangedEventArgs(int currentPoints, int maxPoints)
+    {
+        MaxPoints = maxPoints;
+        CurrentPoints = currentPoints;
+    }
+}
+
 public class NetworkHealthState : NetworkBehaviour
 {
     [HideInInspector]
     public NetworkVariable<int> HitPoints = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public event EventHandler<HitPointsChangedEventArgs> OnHitPointsChanged;
-    public class HitPointsChangedEventArgs : EventArgs
-    {
-        public int MaxHitPoints { get; }
-        public int CurrentHitPoints { get; }
-        
-        public HitPointsChangedEventArgs(int maxHitPoints, int currentHitPoints)
-        {
-            MaxHitPoints = maxHitPoints;
-            CurrentHitPoints = currentHitPoints;
-        }
-    }
+    public event EventHandler<PointsChangedEventArgs> OnHitPointsChanged;
     
     private ServerCharacter _serverCharacter;
 
@@ -38,7 +39,7 @@ public class NetworkHealthState : NetworkBehaviour
 
     private void HitPointsChanged(int previousValue, int newValue)
     {
-        OnHitPointsChanged?.Invoke(this, new HitPointsChangedEventArgs(_serverCharacter.Stats.MaxHealth.AsIntValue, HitPoints.Value));
+        OnHitPointsChanged?.Invoke(this, new PointsChangedEventArgs(_serverCharacter.Stats.MaxHealth.AsIntValue, HitPoints.Value));
     }
     
     public bool IsFullHp()

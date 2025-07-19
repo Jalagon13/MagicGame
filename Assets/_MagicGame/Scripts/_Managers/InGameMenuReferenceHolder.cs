@@ -23,7 +23,7 @@ public class InGameMenuReferenceHolder : MonoBehaviour
         if (_currentMenuGO != null)
         {
             // While the menuGO still exists, check proximity
-            Vector2 playerPosition = Player.LocalClientInstance.transform.position;
+            Vector2 playerPosition = Player.Instance.transform.position;
             Vector2 offSetPosition = new Vector2(_currentMenuGO.transform.position.x + 0.5f, _currentMenuGO.transform.position.y + 0.5f);
             float distanceToPlayer = Vector2.Distance(playerPosition, offSetPosition);
 

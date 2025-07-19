@@ -10,30 +10,42 @@ public class PlayerManaStatUI : MonoBehaviour
 	[SerializeField] private RectTransform _border; // Set width to max mana dynamically
 	[SerializeField] private TextMeshProUGUI _amountText;
 
-    private void Update()
-    {
-		// if(PlayerStats.Instance == null) return;
-    
-		// // _border.sizeDelta = new Vector2(PlayerStats.Instance.BaseMana, _border.sizeDelta.y);
-		// _manaBar.UpdateBar(PlayerStats.Instance.CurrentMana, 0, PlayerStats.Instance.BaseMana);
-		// // _border.sizeDelta = new Vector2(PlayerStats.Instance.BaseMana * 2, _border.sizeDelta.y);
-		// _amountText.text = $"{Mathf.RoundToInt(PlayerStats.Instance.CurrentMana)}/{PlayerStats.Instance.BaseMana}";
-
-		// MaxMana = PlayerStats.Instance.BaseMana;
+	private void Awake()
+	{
+		Player.OnAnyPlayerSpawned += Player_OnAnyPlayerSpawned;
 	}
 
-	public void UpdateBarFill(float currentAmount, float maxAmount)
+	private void OnDestroy()
 	{
-		
+		Player.OnAnyPlayerSpawned -= Player_OnAnyPlayerSpawned;
+		if (Player.Instance != null)
+		{
+			Player.Instance.PlayerManaSystem.OnManaChanged -= Player_OnPlayerManaUpdated;
+		}
 	}
-	
-	private void ShowBar()
+
+	private void Player_OnAnyPlayerSpawned(object sender, Player.PlayerIdEventArgs e)
 	{
-		gameObject.SetActive(true);
+		if (Player.Instance != null)
+		{
+			Player.Instance.PlayerManaSystem.OnManaChanged += Player_OnPlayerManaUpdated;
+			UpdateView(
+				Mathf.FloorToInt(Player.Instance.ServerCharacter.Stats.MaxMana.GetValue()),
+				Mathf.FloorToInt(Player.Instance.ServerCharacter.Stats.MaxMana.GetValue())
+			);
+		}
 	}
-	
-	private void HideBar()
+
+	private void Player_OnPlayerManaUpdated(object sender, PointsChangedEventArgs e)
 	{
-		gameObject.SetActive(false);
+		UpdateView(e.CurrentPoints, e.MaxPoints);
+	}
+
+	private void UpdateView(int currentAmount, int maxAmount)
+	{
+		// Debug.Log($"Updating Mana UI: Current={currentAmount}, Max={maxAmount}");
+		_manaBar.UpdateBar(currentAmount, 0, maxAmount);
+		// _border.sizeDelta = new Vector2(maxAmount * 2, _border.sizeDelta.y);
+		_amountText.text = $"{currentAmount}/{maxAmount}";
 	}
 }

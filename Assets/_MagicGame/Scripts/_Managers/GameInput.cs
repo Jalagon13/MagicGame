@@ -89,9 +89,9 @@ public class GameInput : NetworkBehaviour
 		InGameMenu.Instance.OnMenuOpen -= InGameMenu_OnMenuOpen;
 		Player.OnAnyPlayerSpawned -= RegisterOnPlayerLifeStateChanged;
 		
-		if (Player.LocalClientInstance != null)
+		if (Player.Instance != null)
 		{
-			Player.LocalClientInstance.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
+			Player.Instance.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
 		}
 	}
 
@@ -99,7 +99,7 @@ public class GameInput : NetworkBehaviour
     {
 		if (NetworkManager.LocalClientId != e.PlayerId) return;
 
-		Player.LocalClientInstance.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
+		Player.Instance.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
 	}
 
 	private void OnPlayerLifeStateChanged(LifeState previousValue, LifeState newValue)
@@ -205,7 +205,7 @@ public class GameInput : NetworkBehaviour
 	{
 		_selectedSlotIndex = Int32.Parse(context.action.name) - 1;
 
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.LocalClientInstance.transform.position);
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.Instance.transform.position);
 
 		OnSlotSelected?.Invoke(this, new SlotSelectedEventArgs
 		{
@@ -239,7 +239,7 @@ public class GameInput : NetworkBehaviour
 			Context = context
 		});
 
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.LocalClientInstance.transform.position);
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.FocusSlotChanged, Player.Instance.transform.position);
 	}
 	
 	private void PlayerInput_OnToggleInventory(InputAction.CallbackContext context)

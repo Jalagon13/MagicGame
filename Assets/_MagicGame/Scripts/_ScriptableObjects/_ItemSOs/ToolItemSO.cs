@@ -29,7 +29,7 @@ public class ToolItemSO : ItemSO
 
 	public bool PlayerWithinMiningRangeOfMouse()
 	{
-		return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= MiningRange;
+		return Vector2.Distance(Player.Instance.transform.position, ActionManager.MouseWorldPosition) <= MiningRange;
 	}
 
 	public override string GetDescription()

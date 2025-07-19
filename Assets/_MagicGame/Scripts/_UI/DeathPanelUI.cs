@@ -12,17 +12,17 @@ public class DeathPanelUI : MonoBehaviour
     private void OnDestroy()
     {
         Player.OnAnyPlayerSpawned -= RegisterDeathPanelLogic;
-        if (Player.LocalClientInstance != null)
+        if (Player.Instance != null)
         {
-            Player.LocalClientInstance.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
+            Player.Instance.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
         }
     }
 
     private void RegisterDeathPanelLogic(object sender, Player.PlayerIdEventArgs e)
     {
-        if (Player.LocalClientInstance != null)
+        if (Player.Instance != null)
         {
-            Player.LocalClientInstance.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
+            Player.Instance.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
         }
     }
 

@@ -38,7 +38,7 @@ public class FlameBreath : ServerSpell
 
     protected override void OnUpdateSpell()
     {
-        Vector2 wandPos = Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position; // NTFS: Change this for general servercharacter usability later
+        Vector2 wandPos = Player.Instance.PlayerHand.SpellSpawnTransform.position; // NTFS: Change this for general servercharacter usability later
         transform.position = wandPos;
 
         Vector2 mousePosition = ActionManager.MouseWorldPosition; // NTFS: Change this for general servercharacter usability later
@@ -130,7 +130,7 @@ public class FlameBreath : ServerSpell
                 foliage.DestroyFoliage();
             }
 
-            TileManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.LocalClientInstance.CurrentBiome.Value);
+            TileManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.Instance.CurrentBiome.Value);
 
             // Final null check before calling method
 

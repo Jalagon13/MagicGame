@@ -27,11 +27,11 @@ public class ActionManager : MonoBehaviour
 
 	private void Update()
 	{
-		if (Player.LocalClientInstance == null) return;
+		if (Player.Instance == null) return;
 
 		MouseWorldPosition = (Vector2)Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 		MouseTilePosition = Vector3Int.FloorToInt(MouseWorldPosition);
-		PlayerToMouseDirNormalized = (MouseWorldPosition - (Vector2)Player.LocalClientInstance.transform.position).normalized;
+		PlayerToMouseDirNormalized = (MouseWorldPosition - (Vector2)Player.Instance.transform.position).normalized;
 		_mouseTriggerTf.position = MouseWorldPosition;
 
 		TickTimers(Time.deltaTime);
@@ -40,13 +40,13 @@ public class ActionManager : MonoBehaviour
 
 	private void HandleItemActionExecutions()
 	{
-		if(Player.LocalClientInstance == null || Player.LocalClientInstance.ServerCharacter.LifeState == LifeState.Dead || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled()) return;
+		if(Player.Instance == null || Player.Instance.ServerCharacter.LifeState == LifeState.Dead || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled()) return;
 
 		if (GameInput.Instance.GetPrimaryHeldDown() && InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem))
 		{
 			if(_itemActionTimer.RemainingSeconds <= 0)
 			{
-				_itemActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.LocalClientInstance.PlayerHand);
+				_itemActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.Instance.PlayerHand);
 			}
 		}
 	}

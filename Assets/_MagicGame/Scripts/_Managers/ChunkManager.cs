@@ -55,7 +55,7 @@ public class ChunkManager : NetworkBehaviour
 	
 	private List<Vector2Int> GetChunkPositions()
 	{
-		Vector2Int playerChunkPos = GetChunkCoordFromPosition(Player.LocalClientInstance.transform.position);
+		Vector2Int playerChunkPos = GetChunkCoordFromPosition(Player.Instance.transform.position);
 	    List<Vector2Int> chunkPositions = new();
 	    int numChunks = BIOME_SIDE_LENGTH / CHUNK_SIZE;
 	
@@ -82,7 +82,7 @@ public class ChunkManager : NetworkBehaviour
 	
 		foreach (Vector2Int chunkPos in GetChunkPositions())
 		{
-			_chunkNetworkManager.RequestChunkDataServerRpc(Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentBiome.Value, chunkPos);
+			_chunkNetworkManager.RequestChunkDataServerRpc(Player.Instance.OwnerClientId, Player.Instance.CurrentBiome.Value, chunkPos);
 			yield return new WaitForSeconds(TimeBetweenChunkLoads);
 		}
 	}
@@ -100,13 +100,13 @@ public class ChunkManager : NetworkBehaviour
 		{
 			Lightmap.Instance.UpdateLightMap();
 			WorldManager.Instance.ExecuteOnBiomeChunksDoneLoading();
-			Debug.Log($"ChunkManager: OnBiomeDataLoaded for {Player.LocalClientInstance.CurrentBiome.Value}");
+			Debug.Log($"ChunkManager: OnBiomeDataLoaded for {Player.Instance.CurrentBiome.Value}");
 		}
 	}
 
 	public void UnloadAllPlayerChunks()
 	{
-		foreach (var item in GetChunksFromBiome(Player.LocalClientInstance.CurrentBiome.Value))
+		foreach (var item in GetChunksFromBiome(Player.Instance.CurrentBiome.Value))
 		{
 			OnUnloadChunk?.Invoke(this, new ChunkEventArgs
 			{
@@ -192,7 +192,7 @@ public class ChunkManager : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	private void TryToRemoveObjectClientRpc(Vector2Int position, BiomeType biomeToRemoveObjData)
 	{
-		if(Player.LocalClientInstance.CurrentBiome.Value != biomeToRemoveObjData) return;
+		if(Player.Instance.CurrentBiome.Value != biomeToRemoveObjData) return;
 		
 		if(ObjectManager.Instance.TryToFindWorldObject(position, out WorldObject wo))
 		{

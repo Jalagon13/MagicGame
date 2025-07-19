@@ -34,7 +34,7 @@ public class BreakingVisual : NetworkBehaviour
     
     private void OnVisibleChanged(bool previousValue, bool newValue)
     {
-        if(Player.LocalClientInstance.CurrentBiome.Value == _ownerBiome.Value)
+        if(Player.Instance.CurrentBiome.Value == _ownerBiome.Value)
         {
             if (newValue)
             {

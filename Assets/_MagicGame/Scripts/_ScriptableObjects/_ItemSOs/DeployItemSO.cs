@@ -37,7 +37,7 @@ public class DeployItemSO : ItemSO
 
     private bool PlayerInRangeOfMouse()
 	{
-		return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= 3;
+		return Vector2.Distance(Player.Instance.transform.position, ActionManager.MouseWorldPosition) <= 3;
 	}
 	
 	public override string GetDescription()

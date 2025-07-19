@@ -41,7 +41,7 @@ public class NpcMenuUI : MonoBehaviour
 
         if(totalSellValue > 0)
         {
-            SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.LocalClientInstance.transform.position);
+            SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.Instance.transform.position);
             GoldManager.Instance.AddGold(totalSellValue);
         }
 

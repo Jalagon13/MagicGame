@@ -28,10 +28,10 @@ public class PlayerCastTimeUI : MonoBehaviour
 
     private void Update()
     {
-        if(Player.LocalClientInstance == null) return;
+        if(Player.Instance == null) return;
     
-        float maxAmount = Player.LocalClientInstance.SpellCaster.CastTimer.Duration;
-        float currentAmount = maxAmount - Player.LocalClientInstance.SpellCaster.CastTimer.RemainingSeconds;
+        float maxAmount = Player.Instance.SpellCaster.CastTimer.Duration;
+        float currentAmount = maxAmount - Player.Instance.SpellCaster.CastTimer.RemainingSeconds;
 
         if (currentAmount >= maxAmount)
         {

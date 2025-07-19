@@ -90,8 +90,8 @@ public class InventoryManager : MonoBehaviour
         if(Pointer.IsOverUI() || Pointer.IsOverInteractable() || !_mouseItemModel.MouseInventoryItem.HasItem) return;
 
 		GameManager.Instance.SpawnItem(_mouseItemModel.MouseInventoryItem, 
-        Player.LocalClientInstance.transform.position, 
-        Player.LocalClientInstance.CurrentBiome.Value, 
+        Player.Instance.transform.position, 
+        Player.Instance.CurrentBiome.Value, 
         ActionManager.PlayerToMouseDirNormalized);
         
 		_mouseItemModel.MouseInventoryItem = new();
@@ -180,7 +180,7 @@ public class InventoryManager : MonoBehaviour
 				GoldManager.Instance.AddGold(itemToCollect.Quantity);
 				if (playCollectSound)
 				{
-					SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.LocalClientInstance.transform.position);
+					SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.Instance.transform.position);
 				}
 			}
 			else
@@ -188,7 +188,7 @@ public class InventoryManager : MonoBehaviour
 				_inventoryModel.AddItem(itemToCollect);
 				if (playCollectSound)
 				{
-					SoundManager.Instance.PlayOneShot(FMODEvents.Instance.ItemPickup, Player.LocalClientInstance.transform.position);
+					SoundManager.Instance.PlayOneShot(FMODEvents.Instance.ItemPickup, Player.Instance.transform.position);
 				}
 			}
 			
@@ -222,7 +222,7 @@ public class InventoryManager : MonoBehaviour
 	private void SpawnItemCollectPlate(InventoryItem itemToCollect)
 	{
 		string itemName = itemToCollect.Item.Name;
-		ItemCollectWorldUI itemPlate = Instantiate(_itemCollectPlatePrefab, Player.LocalClientInstance.transform.position, Quaternion.identity);
+		ItemCollectWorldUI itemPlate = Instantiate(_itemCollectPlatePrefab, Player.Instance.transform.position, Quaternion.identity);
 		itemPlate.DisplayedItem = itemToCollect;
 		itemPlate.OnAnimationComplete += () => 
 		{
@@ -465,7 +465,7 @@ public class InventoryManager : MonoBehaviour
 	
 	public void PlayClickFeedbacks()
 	{
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.InventorySlotClicked, Player.LocalClientInstance.transform.position);
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.InventorySlotClicked, Player.Instance.transform.position);
 	}
 	
 	public InventoryModel GetInventoryModel()

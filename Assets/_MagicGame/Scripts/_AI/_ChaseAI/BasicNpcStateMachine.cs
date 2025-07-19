@@ -87,7 +87,7 @@ public class BasicNpcStateMachine : StateMachine
 
     private void TryToFindBreadcrumb(object sender, EventArgs e)
     {
-        if (CharacterData.OnlyChaseWhenProvoked && _serverCharacter.NetHealthState.HitPoints.Value >= CharacterData.BaseHP)
+        if (CharacterData.OnlyChaseWhenProvoked && _serverCharacter.NetHealthState.HitPoints.Value >= CharacterData.BaseHealth)
         {
             return;
         }

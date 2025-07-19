@@ -30,7 +30,7 @@ public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
                 if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item.Name == _itemToBuy.Name)
                 {
                     InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity++;
-                    SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.LocalClientInstance.transform.position);
+                    SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.Instance.transform.position);
                     GoldManager.Instance.RemoveGold(_itemToBuy.GoldValue);
                     InventoryManager.Instance.GetInventoryModel().UpdateInventory();
                 }
@@ -39,7 +39,7 @@ public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
             {
                 InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _itemToBuy;
                 InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity++;
-                SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.LocalClientInstance.transform.position);
+                SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.Instance.transform.position);
                 GoldManager.Instance.RemoveGold(_itemToBuy.GoldValue);
                 InventoryManager.Instance.GetInventoryModel().UpdateInventory();
             }

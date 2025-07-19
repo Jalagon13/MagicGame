@@ -19,7 +19,7 @@ public class PlayerSpellCastingState : BaseState
         _performSpellStateCleanup = true;
         _spellToCast = GameManager.Instance.GetItemSOFromItemId(stateData.Amount) as SpellItemSO;
         
-        Buff castingMoveBuff = new Buff(
+        Buff castingMoveBuff = new(
             _ctx.ServerCharacter.Stats.MovementSpeed, 
             new StatModifier(_spellToCast.HasteMultiplier, StatModifierType.Percent, _spellToCast)/* ,
             _spellToCast.CastTime */);

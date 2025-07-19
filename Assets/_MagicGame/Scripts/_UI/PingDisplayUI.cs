@@ -8,7 +8,7 @@ public class PingDisplay : MonoBehaviour
 
     void Update()
     {
-        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsConnectedClient && Player.LocalClientInstance != null)
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsConnectedClient && Player.Instance != null)
         {
             _pingText.text = $"{Mathf.RoundToInt(NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetCurrentRtt(NetworkManager.ServerClientId))} ms";
         }

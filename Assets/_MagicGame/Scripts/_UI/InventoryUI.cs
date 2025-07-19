@@ -37,7 +37,7 @@ public class InventoryUI : MonoBehaviour
 	{
 		ToggleInventorySlotsGO.SetActive(true);
 
-		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.InventoryOpen, Player.LocalClientInstance.transform.position);
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.InventoryOpen, Player.Instance.transform.position);
 	}
 
 	private void Hide()
@@ -45,9 +45,9 @@ public class InventoryUI : MonoBehaviour
 		Tooltip.HideUI();
 		ToggleInventorySlotsGO.SetActive(false);
 
-		if (Player.LocalClientInstance != null)
+		if (Player.Instance != null)
 		{
-			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.InventoryClose, Player.LocalClientInstance.transform.position);
+			SoundManager.Instance.PlayOneShot(FMODEvents.Instance.InventoryClose, Player.Instance.transform.position);
 		}
 	}
 

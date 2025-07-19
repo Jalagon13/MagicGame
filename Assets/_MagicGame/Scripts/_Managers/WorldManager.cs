@@ -141,7 +141,7 @@ public class WorldManager : NetworkBehaviour
 		ChunkManager.Instance.UnloadAllPlayerChunks();
 		ObjectManager.Instance.ClearAllBiomeObjectVisuals();
 		
-		LoadBiomeServerRpc(Player.LocalClientInstance.CurrentBiome.Value, targetBiome);
+		LoadBiomeServerRpc(Player.Instance.CurrentBiome.Value, targetBiome);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
@@ -204,7 +204,7 @@ public class WorldManager : NetworkBehaviour
 	private void LoadChunksClientRpc(BiomeType toBiome, RpcParams rpcParams)
 	{
 		Debug.Log($"Player biome: {toBiome} Allowing client to load chunks");
-		Player.LocalClientInstance.CurrentBiome.Value = toBiome;
+		Player.Instance.CurrentBiome.Value = toBiome;
 		
 		// Invoke it first to prep the last chunk position to garentee a new set of chunks to generate, then set loadingbiome to true to resume the update method
 		TileManager.Instance.UpperWallTm.ClearAllTopTiles();
@@ -219,7 +219,7 @@ public class WorldManager : NetworkBehaviour
 
 	private void PlacePlayerAt(Vector2 portalPosition)
 	{
-		Player.LocalClientInstance.transform.SetPositionAndRotation(new(portalPosition.x + 0.5f, portalPosition.y + 0.5f), Quaternion.identity);
+		Player.Instance.transform.SetPositionAndRotation(new(portalPosition.x + 0.5f, portalPosition.y + 0.5f), Quaternion.identity);
 	}
 	
 	

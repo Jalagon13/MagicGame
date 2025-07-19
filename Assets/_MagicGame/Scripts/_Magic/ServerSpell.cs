@@ -110,18 +110,8 @@ public abstract class ServerSpell : NetworkBehaviour
         SpellStateNV.Value = SpellState.Casting;
         
         OnSpellExecute();
-        
-        if(SpellData.Value.IsContinuousCast)
-        {
-            while(SpellCasterNetworkObject.GetComponent<SpellCaster>().IsCasting.Value)
-            {
-                yield return null;
-            }
-        }
-        else
-        {
-            yield return new WaitForSeconds(SpellData.Value.Lifetime);
-        }
+
+        yield return new WaitForSeconds(SpellData.Value.Lifetime);
 
         yield return EndSpellRoutine();
     }
@@ -149,11 +139,6 @@ public abstract class ServerSpell : NetworkBehaviour
 
     public void CancelSpellCharge()
     {
-        if (SpellData.Value.IsContinuousCast)
-        {
-            SpellCasterNetworkObject.GetComponent<SpellCaster>().IsCasting.Value = false;
-        }
-
         OnSpellCanceled();
         
         SpellStateNV.Value = SpellState.Stopping;

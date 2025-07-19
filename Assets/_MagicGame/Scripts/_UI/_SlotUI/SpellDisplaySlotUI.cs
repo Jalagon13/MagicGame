@@ -42,13 +42,13 @@ public class SpellDisplaySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerE
     private void Start()
     {
         CooldownUI.enabled = false;
-        Player.LocalClientInstance.SpellCaster.OnSpellCooldownTimersUpdated += UpdateCooldownDisplay;
+        Player.Instance.SpellCaster.OnSpellCooldownTimersUpdated += UpdateCooldownDisplay;
     }
 
 
     private void OnDestroy()
     {
-        Player.LocalClientInstance.SpellCaster.OnSpellCooldownTimersUpdated -= UpdateCooldownDisplay;
+        Player.Instance.SpellCaster.OnSpellCooldownTimersUpdated -= UpdateCooldownDisplay;
     }
 
     private void UpdateCooldownDisplay(object sender, EventArgs e)

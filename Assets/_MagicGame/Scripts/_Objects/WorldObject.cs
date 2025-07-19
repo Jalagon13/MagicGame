@@ -35,7 +35,7 @@ public class WorldObject : MonoBehaviour // Base class for every "physical" asse
 	
 	protected bool PlayerInRangeOfPosition(Vector2 position)
 	{
-		return Vector2.Distance(Player.LocalClientInstance.transform.position, position) <= InteractDistance;
+		return Vector2.Distance(Player.Instance.transform.position, position) <= InteractDistance;
 	}
 	
 	public void PlayHitFeedback()

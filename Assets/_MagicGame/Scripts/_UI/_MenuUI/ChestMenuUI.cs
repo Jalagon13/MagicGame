@@ -19,7 +19,7 @@ public class ChestMenuUI : MonoBehaviour
         ChestManager.Instance.OpenChestPosition = null;
         ChestManager.Instance.LocalChestItemData = null;
         ChestManager.Instance.IsChestOpen = false;
-        ChestManager.Instance.CloseChest(_chestPosition, Player.LocalClientInstance.CurrentBiome.Value, _localChestItemData);
+        ChestManager.Instance.CloseChest(_chestPosition, Player.Instance.CurrentBiome.Value, _localChestItemData);
         ChestManager.Instance.OnChestUpdated -= ChestManager_OnChestUpdated;
     }
 
@@ -36,7 +36,7 @@ public class ChestMenuUI : MonoBehaviour
         ChestManager.Instance.LocalChestItemData = localChestItemData;
         ChestManager.Instance.IsChestOpen = true;
         ChestManager.Instance.OpenChestPosition = chestPosition;
-        ChestManager.Instance.AddChestIdServerRpc(chestPosition, Player.LocalClientInstance.CurrentBiome.Value);
+        ChestManager.Instance.AddChestIdServerRpc(chestPosition, Player.Instance.CurrentBiome.Value);
 
         foreach (Transform child in ChestSlotsUITransform)
         {

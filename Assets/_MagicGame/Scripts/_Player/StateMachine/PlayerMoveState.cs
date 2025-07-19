@@ -59,6 +59,6 @@ public class PlayerMoveState : BaseState
 	{
 		if(_ctx.CharacterData.WalkSound.IsNull) return;
 	
-		SoundManager.Instance.PlayOneShot(_ctx.CharacterData.WalkSound, Player.LocalClientInstance.transform.position);
+		SoundManager.Instance.PlayOneShot(_ctx.CharacterData.WalkSound, Player.Instance.transform.position);
 	}
 }

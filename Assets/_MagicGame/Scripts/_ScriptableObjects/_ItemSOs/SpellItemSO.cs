@@ -57,14 +57,12 @@ public class SpellItemSO : MagicItemSO
 	[field: Tooltip("How accurate the spell is being shot from")]
 	[field: SerializeField] public float Accuracy { get; private set; } = 0f;
 	
-	[field: Tooltip("Should the spell be continuous cast while holding down cast button")]
-	[field: SerializeField] public bool IsContinuousCast { get; private set; } = false;
 	
 	public SyncSpellData GetSpellDataForLocalClientInstance(ulong casterNetObjId, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
 	{
 		return new SyncSpellData(
 			GameManager.Instance.GetItemIdFromItemSO(this),
-			ManaCost, Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime, HasteMultiplier, Accuracy, casterNetObjId, IsContinuousCast, spawnBiome, spellMods);
+			ManaCost, Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime, HasteMultiplier, Accuracy, casterNetObjId, spawnBiome, spellMods);
 	}
 	
 	public virtual void StartSpell(int slotIndex) // Default behavior, spawn spell on server, assign it to player

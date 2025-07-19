@@ -64,7 +64,7 @@ public class MeleeCollider : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        if (collision.TryGetComponent(out NpcNetworkVisibility npcNet) && npcNet.SameBiomeAs(Player.LocalClientInstance.CurrentBiome.Value))
+        if (collision.TryGetComponent(out NpcNetworkVisibility npcNet) && npcNet.SameBiomeAs(Player.Instance.CurrentBiome.Value))
         {
             _targetsFound.Add(npcNet.gameObject.GetComponent<NetworkHealthState>());
         }
@@ -73,7 +73,7 @@ public class MeleeCollider : NetworkBehaviour
         {
             Vector2Int tilePos = new Vector2Int((int)collision.gameObject.transform.position.x, (int)collision.gameObject.transform.position.y);
             int tileId = GameManager.Instance.GetTileIDFromTilemapTilePosition(TileManager.Instance.FoliageTm, (Vector3Int)tilePos);
-            TileManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.LocalClientInstance.CurrentBiome.Value);
+            TileManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.Instance.CurrentBiome.Value);
             collision.gameObject.GetComponent<FoliageCollider>().DestroyFoliage();
         }
     }
@@ -86,7 +86,7 @@ public class MeleeCollider : NetworkBehaviour
             {
                 if(_targetsHit.Contains(targetToDamage)) continue;
                 
-                SoundManager.Instance.PlayOneShot(_currentSwingData.HitSound, Player.LocalClientInstance.transform.position);
+                SoundManager.Instance.PlayOneShot(_currentSwingData.HitSound, Player.Instance.transform.position);
                 
                 // targetToDamage.TakeDamageRpc(_currentSwingData.Damage, Player.LocalClientInstance.transform.position, _currentSwingData.Knockback);
                 _targetsFound.Remove(targetToDamage);

@@ -44,7 +44,7 @@ public class NpcItemSO : ItemSO
         Stack<Vector3Int> tilesToCheck = new();
         
         // Check if the player is in the correct biome
-        if(Player.LocalClientInstance.CurrentBiome.Value != BiomeType.Forest)
+        if(Player.Instance.CurrentBiome.Value != BiomeType.Forest)
         {
             Debug.LogWarning("Npc can only be spawned in the forest biome");
             return false;
@@ -240,7 +240,7 @@ public class NpcItemSO : ItemSO
 
     private bool PlayerInRangeOfMouse()
     {
-        return Vector2.Distance(Player.LocalClientInstance.transform.position, ActionManager.MouseWorldPosition) <= 3;
+        return Vector2.Distance(Player.Instance.transform.position, ActionManager.MouseWorldPosition) <= 3;
     }
 
     private bool IsClear(Vector2 position)

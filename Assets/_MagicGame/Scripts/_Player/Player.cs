@@ -14,7 +14,7 @@ public class Player : NetworkBehaviour
 		public ulong PlayerId;
 	}
 
-	public static Player LocalClientInstance { get; private set; }
+	public static Player Instance { get; private set; }
 	
 	[SerializeField] 
 	private CollectTag _collectTag;
@@ -54,6 +54,8 @@ public class Player : NetworkBehaviour
 	private SpellCaster _spellCaster;
 	public SpellCaster SpellCaster => _spellCaster;
 	
+	private PlayerManaSystem _playerManaSystem;
+	public PlayerManaSystem PlayerManaSystem => _playerManaSystem;
 	
 	private void Awake()
 	{
@@ -61,12 +63,13 @@ public class Player : NetworkBehaviour
 		_damageReceiver = GetComponent<DamageReceiver>();
 		_serverCharacter = GetComponent<ServerCharacter>();
 		_playerNetworkVisibility = GetComponent<PlayerNetworkVisibility>();
+		_playerManaSystem = GetComponent<PlayerManaSystem>();
 		HitCollider = GetComponent<Collider2D>();
 	}
 	
 	public void OnNetworkSpawnLocalClientInitializations()
 	{
-		LocalClientInstance = this;
+		Instance = this;
 		CurrentBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
 		
 		_spawnBiome = BiomeType.Forest;
@@ -109,12 +112,18 @@ public class Player : NetworkBehaviour
 
     private void GameInput_OnFKeyPressed(object sender, EventArgs e)
     {
-        if(TryGetComponent(out DamageReceiver damageReceiver))
-        {
-			if(ServerCharacter.LifeState != LifeState.Alive) return;
-			Debug.Log($"Player took damage TEST");
-			damageReceiver.ReceiveHP(_serverCharacter, -25, false);
+		if (TryGetComponent(out PlayerManaSystem playerManaSystem))
+		{
+			Debug.Log($"Player pressed F key, trying to spend mana...");
+		    playerManaSystem.TrySpendMana(10);
 		}
+    
+        // if(TryGetComponent(out DamageReceiver damageReceiver))
+        // {
+		// 	if(ServerCharacter.LifeState != LifeState.Alive) return;
+		// 	Debug.Log($"Player took damage TEST");
+		// 	damageReceiver.ReceiveHP(_serverCharacter, -25, false);
+		// }
     }
 
     private void Update()
@@ -122,6 +131,7 @@ public class Player : NetworkBehaviour
 		if (!IsOwner) return;
 
 		_spellCastController.SpellCastControllerUpdate();
+		_playerManaSystem.UpdateManaRegen(Time.deltaTime);
 
 		// Breadcrumb stuff
 		Vector2Int newTilePosition = new(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
@@ -147,7 +157,7 @@ public class Player : NetworkBehaviour
 				return;
 			}
 
-			_damageReceiver.ReceiveHP(_serverCharacter, _serverCharacter.Data.BaseHP, false);
+			_damageReceiver.ReceiveHP(_serverCharacter, _serverCharacter.Data.BaseHealth, false);
 			transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
 		}
 	}
@@ -156,7 +166,7 @@ public class Player : NetworkBehaviour
     {
 		WorldManager.Instance.OnBiomeTransitionEnd -= HandleRespawn;
 
-		_damageReceiver.ReceiveHP(_serverCharacter, _serverCharacter.Data.BaseHP, false);
+		_damageReceiver.ReceiveHP(_serverCharacter, _serverCharacter.Data.BaseHealth, false);
 		transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
 	}
 

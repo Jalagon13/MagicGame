@@ -58,7 +58,7 @@ public class Pathfinding : NetworkBehaviour
 
 	private void CacheCurrentPlayerBiome(object sender, EventArgs e)
 	{
-		_currentPlayerBiome = Player.LocalClientInstance.CurrentBiome.Value;
+		_currentPlayerBiome = Player.Instance.CurrentBiome.Value;
 	}
 
 	public void OnClientConnected(ulong clientId)
@@ -185,7 +185,7 @@ public class Pathfinding : NetworkBehaviour
 
 	private void RequestUnlockPfChunk(object sender, ChunkManager.ChunkEventArgs e)
 	{
-		RequestUnloadChunkServerRpc(e.Chunk.ChunkPosition, Player.LocalClientInstance.OwnerClientId, Player.LocalClientInstance.CurrentBiome.Value);
+		RequestUnloadChunkServerRpc(e.Chunk.ChunkPosition, Player.Instance.OwnerClientId, Player.Instance.CurrentBiome.Value);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]

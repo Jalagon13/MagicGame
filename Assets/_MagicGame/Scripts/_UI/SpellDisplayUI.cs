@@ -24,7 +24,7 @@ public class SpellDisplayUI : NetworkBehaviour
             NetworkManager.OnClientConnectedCallback -= RegisterUpdateSpellDisplayCallback;
         }
 
-        if (Player.LocalClientInstance != null)
+        if (Player.Instance != null)
         {
             // Player.LocalClientInstance.SpellInputHandler.OnSpellArrayUpdated -= UpdateSpellDisplay;
         }

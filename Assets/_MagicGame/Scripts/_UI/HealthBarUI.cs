@@ -30,11 +30,11 @@ public class HealthBarUI : MonoBehaviour
 		NetworkHealthState.OnHitPointsChanged -= UpdateHealthBar;
 	}
 
-    private void UpdateHealthBar(object sender, NetworkHealthState.HitPointsChangedEventArgs e)
+    private void UpdateHealthBar(object sender, PointsChangedEventArgs e)
     {
-		_progressBar.UpdateBar(e.CurrentHitPoints, 0, e.MaxHitPoints);
+		_progressBar.UpdateBar(e.CurrentPoints, 0, e.MaxPoints);
 
-		if (e.CurrentHitPoints >= e.MaxHitPoints)
+		if (e.CurrentPoints >= e.MaxPoints)
 		{
 			Hide();
 		}
