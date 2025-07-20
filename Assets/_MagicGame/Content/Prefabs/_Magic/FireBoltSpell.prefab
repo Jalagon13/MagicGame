@@ -214,7 +214,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _serverSpell: {fileID: 4388535776764661370}
-  _bounceAmount: 1
 --- !u!1 &5067954515696259468
 GameObject:
   m_ObjectHideFlags: 0
@@ -298,7 +297,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _serverSpell: {fileID: 4388535776764661370}
-  _pierceAmount: 1
 --- !u!1 &5938426825082082942
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,6 +449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _clientSpell: {fileID: 3831362845038874084}
+  _projectileHitbox: {fileID: 5676838617553136297}
   Velocity: {x: 0, y: 0}
   _velocityDecay: 1
 --- !u!1001 &2421964918929114433

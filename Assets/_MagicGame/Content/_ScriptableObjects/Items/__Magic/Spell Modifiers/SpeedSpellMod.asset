@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f96813a724294f2da8fec3be8ec5b77, type: 3}
-  m_Name: DamageSpellMod
+  m_Name: SpeedSpellMod
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Damage Modifier
+  <Name>k__BackingField: Speed Modifier
   <UiDisplay>k__BackingField: {fileID: 21300012, guid: 358b5d9f23bc9413e87c9948acc67ee1, type: 3}
   <GoldValue>k__BackingField: 0
   <Stackable>k__BackingField: 0

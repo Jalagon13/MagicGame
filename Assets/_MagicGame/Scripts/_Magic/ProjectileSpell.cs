@@ -3,6 +3,10 @@ using UnityEngine;
 
 public abstract class ProjectileSpell : ServerSpell
 {
+    [SerializeField] 
+    private ProjectileHitbox _projectileHitbox;
+    public ProjectileHitbox ProjectileHitbox => _projectileHitbox;
+
     protected Rigidbody2D _rigidbody2D;
     
     [HideInInspector]

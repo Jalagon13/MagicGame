@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f96813a724294f2da8fec3be8ec5b77, type: 3}
-  m_Name: DamageSpellMod
+  m_Name: KnockbackSpellMod
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Damage Modifier
+  <Name>k__BackingField: Knockback Modifier
   <UiDisplay>k__BackingField: {fileID: 21300012, guid: 358b5d9f23bc9413e87c9948acc67ee1, type: 3}
   <GoldValue>k__BackingField: 0
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <SpellModPrefab>k__BackingField: {fileID: 4532376575911826281, guid: eb42bc5ae38a0422bbc1c21d3eec2e88, type: 3}
+  <SpellModPrefab>k__BackingField: {fileID: 4532376575911826281, guid: 9254703fb6665497ab2777e6450e4fa8, type: 3}
   <ManaCost>k__BackingField: 5
   <Scatter>k__BackingField: 5
   <CastTime>k__BackingField: 0.25

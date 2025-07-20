@@ -13,13 +13,13 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
     public float Speed;
     public float Lifetime;
     public float HasteMultiplier;
-    public float Accuracy;
+    public float Scatter;
     public ulong CasterNetworkObjectId;
     public BiomeType SpawnBiome;
     public List<int> SpellMods; // Assuming SpellModItemSO is serializable or can be converted to int for network transmission
 
     public SyncSpellData(int spellItemId, int manaCost, int damage, int knockback, int bounceCount, int pierceCount, float speed, float lifetime, float hasteMultiplier, 
-    float accuracy, ulong casterNetworkObjectId, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
+    float scatter, ulong casterNetworkObjectId, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
     {
         SpellItemId = spellItemId;
         ManaCost = manaCost;
@@ -28,7 +28,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         Speed = speed;
         Lifetime = lifetime;
         HasteMultiplier = hasteMultiplier;
-        Accuracy = accuracy;
+        Scatter = scatter;
         CasterNetworkObjectId = casterNetworkObjectId;
         SpawnBiome = spawnBiome;
         BounceCount = bounceCount;
@@ -55,7 +55,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
             Speed != other.Speed ||
             Lifetime != other.Lifetime ||
             HasteMultiplier != other.HasteMultiplier ||
-            Accuracy != other.Accuracy ||
+            Scatter != other.Scatter ||
             CasterNetworkObjectId != other.CasterNetworkObjectId ||
             SpawnBiome != other.SpawnBiome)
         {
@@ -92,7 +92,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         serializer.SerializeValue(ref Speed);
         serializer.SerializeValue(ref Lifetime);
         serializer.SerializeValue(ref HasteMultiplier);
-        serializer.SerializeValue(ref Accuracy);
+        serializer.SerializeValue(ref Scatter);
         serializer.SerializeValue(ref CasterNetworkObjectId);
         serializer.SerializeValue(ref SpawnBiome);
 

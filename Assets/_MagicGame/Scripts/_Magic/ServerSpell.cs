@@ -74,7 +74,7 @@ public abstract class ServerSpell : NetworkBehaviour
             {
                 // Apply internal ownerside logic for this spell mod
                 Debug.Log($"Internal Spell Mod Handling: {spellMod.Name}");
-                SpellData.Value = spellMod.SpellModPrefab.ModifiySpellData(newData);
+                SpellData.Value = spellMod.SpellModPrefab.ModifiySpellData(newData, this);
             }
         }
     }

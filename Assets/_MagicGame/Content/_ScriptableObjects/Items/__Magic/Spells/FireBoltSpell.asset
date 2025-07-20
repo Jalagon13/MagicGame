@@ -34,8 +34,8 @@ MonoBehaviour:
   <Knockback>k__BackingField: 15
   <BounceCount>k__BackingField: 0
   <PierceCount>k__BackingField: 0
-  <Lifetime>k__BackingField: 1.25
-  <Speed>k__BackingField: 10
+  <Lifetime>k__BackingField: 0.75
+  <Speed>k__BackingField: 8
   <Recoil>k__BackingField: 6
   <HasteMultiplier>k__BackingField: -0.25
-  <Accuracy>k__BackingField: 0
+  <Accuracy>k__BackingField: 5

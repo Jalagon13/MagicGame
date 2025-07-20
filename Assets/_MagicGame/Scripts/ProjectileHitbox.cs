@@ -9,7 +9,10 @@ public class ProjectileHitbox : NetworkBehaviour
     private ServerSpell _serverSpell;
     
     private CircleCollider2D _spellCollider;
+    
     private List<DamageReceiver> _damagedNetworkHealthStates = new();
+    public List<DamageReceiver> DamagedNetworkHealthStates => _damagedNetworkHealthStates;
+    
     private int _remainingPierces; 
     private bool _pierceInitialized = false;
 
@@ -41,26 +44,23 @@ public class ProjectileHitbox : NetworkBehaviour
         }
 
         // Handle NPC collision
-        if (collision.gameObject.layer == _serverSpell.NpcLayer)
+        if (_serverSpell.IsValidNpcHit(collision, out DamageReceiver damageReceiver))
         {
-            if (_serverSpell.IsValidNpcHit(collision, out DamageReceiver damageReceiver))
+            if (!_damagedNetworkHealthStates.Contains(damageReceiver))
             {
-                if (!_damagedNetworkHealthStates.Contains(damageReceiver))
+                if (_serverSpell.SpellCasterNetworkObject.TryGetComponent(out ServerCharacter inflicter))
                 {
-                    if (_serverSpell.SpellCasterNetworkObject.TryGetComponent(out ServerCharacter inflicter))
-                    {
-                        damageReceiver.ReceiveHP(inflicter, -_serverSpell.SpellData.Value.Damage, true, _serverSpell.SpellData.Value.Knockback);
-                    }
+                    damageReceiver.ReceiveHP(inflicter, -_serverSpell.SpellData.Value.Damage, true, _serverSpell.SpellData.Value.Knockback);
+                }
 
-                    _damagedNetworkHealthStates.Add(damageReceiver);
-                    _remainingPierces--;
+                _damagedNetworkHealthStates.Add(damageReceiver);
+                _remainingPierces--;
 
-                    if (_remainingPierces <= 0)
-                    {
-                        // TODO: Destroy or deactivate the spell
-                        _serverSpell.EndSpellExternally();
-                        return;
-                    }
+                if (_remainingPierces <= 0)
+                {
+                    // TODO: Destroy or deactivate the spell
+                    _serverSpell.EndSpellExternally();
+                    return;
                 }
             }
         }

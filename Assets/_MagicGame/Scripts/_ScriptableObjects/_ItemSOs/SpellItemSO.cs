@@ -55,14 +55,14 @@ public class SpellItemSO : MagicItemSO
 	[field: SerializeField] public float HasteMultiplier { get; private set; } = 0.5f;
 	
 	[field: Tooltip("How accurate the spell is being shot from")]
-	[field: SerializeField] public float Accuracy { get; private set; } = 0f;
+	[field: SerializeField] public float Scatter { get; private set; } = 0f;
 	
 	
 	public SyncSpellData GetSpellDataForLocalClientInstance(ulong casterNetObjId, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
 	{
 		return new SyncSpellData(GameManager.Instance.GetItemIdFromItemSO(this),
 			ManaCost, Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime,
-			HasteMultiplier, Accuracy, casterNetObjId, spawnBiome, spellMods);
+			HasteMultiplier, Scatter, casterNetObjId, spawnBiome, spellMods);
 	}
 	
 	public virtual void StartSpell(int slotIndex) // Default behavior, spawn spell on server, assign it to player

@@ -132,19 +132,18 @@ public class SpellCastController
         foreach (var key in timersToRemove)
         {
             _rechargeTimers.Remove(key);
-            Debug.Log($"Recharge timer for item {key} has ended.");
         }
     }
 
     private (Vector3 spawnPoint, Vector3 direction) GetExecutionParams()
     {
         float wandAccuracy = _currentWandItemSO?.Accuracy ?? 0f;
-        float spellAccuracy = _spellMetaDataList[_currentSpellIndex].SpellItem.Accuracy;
+        float spellAccuracy = _spellMetaDataList[_currentSpellIndex].SpellItem.Scatter;
         float totalSpellModAccuracy = 0;
 
         foreach (var mod in _spellMetaDataList[_currentSpellIndex].SpellMods)
         {
-            totalSpellModAccuracy += mod.Accuracy;
+            totalSpellModAccuracy += mod.Scatter;
         }
 
         float totalAccuracy = Mathf.Max(0f, wandAccuracy + spellAccuracy + totalSpellModAccuracy);

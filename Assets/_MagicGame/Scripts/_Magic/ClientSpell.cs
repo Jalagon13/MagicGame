@@ -54,8 +54,8 @@ public class ClientSpell : NetworkBehaviour
     private void OnSpellDataInitialized(SyncSpellData oldData, SyncSpellData newData)
     {
         _serverSpell.SpellData.OnValueChanged -= OnSpellDataInitialized;
-
-        foreach (var item in _serverSpell.SpellData.Value.SpellMods)
+        Debug.Log($"spell mod amount: {newData.SpellMods.Count}");
+        foreach (var item in newData.SpellMods)
         {
             if (GameManager.Instance.GetItemSOFromItemId(item) is SpellModItemSO spellMod)
             {

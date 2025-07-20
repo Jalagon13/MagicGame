@@ -21,7 +21,7 @@ public class SpellStatMod : SpellModifier
     [SerializeField] 
     private int _amount = 0;
 
-    public override SyncSpellData ModifiySpellData(SyncSpellData original)
+    public override SyncSpellData ModifiySpellData(SyncSpellData original, ServerSpell serverSpell = null)
     {
         SyncSpellData modifiedSyncSpellData = original;
         
