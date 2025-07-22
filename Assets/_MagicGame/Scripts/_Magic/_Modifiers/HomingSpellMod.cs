@@ -27,10 +27,9 @@ public class HomingSpellMod : SpellModifier
 
     private void FixedUpdate()
     {
-        Debug.Log($"HomingSpellMod FixedUpdate");
-        if (_projSpell == null || !IsOwner || _projSpell.SpellStateNV.Value != SpellState.Casting) return;
+        if (_projSpell == null || !_projSpell.IsOwner || _projSpell.SpellStateNV.Value != SpellState.Casting) return;
+        
         _potentialTargetsToHomeTo.Clear();
-
         Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, _detectionRadius, _projSpell.CollisionMask);
         
         for (int i = 0; i < collisions.Length; i++)

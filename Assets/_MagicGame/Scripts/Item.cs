@@ -26,10 +26,11 @@ public class Item : NetworkBehaviour
 	
 	private void Awake()
 	{
+		_knockback = new Knockback(null);
+
 		_itemGameObject = transform.GetChild(0).gameObject;
 		_sr = transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
 		_rb = GetComponent<Rigidbody2D>();
-		_knockback = GetComponent<Knockback>();
 		_wallCollider = transform.GetChild(0).GetChild(2).GetComponent<Collider2D>();
 	}
 	
@@ -45,8 +46,6 @@ public class Item : NetworkBehaviour
 		{
 			UpdateItemDataAndVisuals();
 		}
-
-		base.OnNetworkSpawn();
 	}
 	
 	private void FixedUpdate()
@@ -94,14 +93,18 @@ public class Item : NetworkBehaviour
 			_wallCollider.enabled = true;
 		}
 
-		if (_knockback.KnockbackActive)
+		_knockback.UpdateKnockback(Time.fixedDeltaTime);
+
+		if (closestPlayerCollectTag == null)
 		{
-			_velocity = _direction + _knockback.Velocity;
+			_velocity = Vector2.Lerp(_velocity, Vector2.zero, _turnSharpness * Time.fixedDeltaTime);
 		}
-		
-		if(!_knockback.KnockbackActive && closestPlayerCollectTag == null)
+		else
 		{
-			_velocity = Vector2.zero;
+			if (_knockback.KnockbackActive)
+			{
+				_velocity = _direction + _knockback.Velocity;
+			}
 		}
 
 		_rb.linearVelocity = _velocity;
@@ -118,7 +121,7 @@ public class Item : NetworkBehaviour
 
 		if (_velocity != Vector2.zero)
 		{
-			// _knockback.ApplyKnockbackCustomDirection(_velocity, 0, _velocity.magnitude);
+			_knockback.ApplyKnockbackCustomDirection(_velocity, 0);
 		}
 
 		NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;

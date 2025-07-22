@@ -91,8 +91,9 @@ public class SpellCastController
         bool postCastDelayTimerRunning = _postCastDelayTimer.IsRunning;
         bool hasEnoughMana = Player.Instance.PlayerManaSystem.HasEnoughMana(CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]));
         bool isWandRecharging = IsWandRecharging(out Timer rechargeTimer);
+        bool isLoadingBiome = WorldManager.Instance.IsLoadingBiome;
 
-        return !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && primaryHeldDown && !isCasting && !isWandRecharging && !postCastDelayTimerRunning;
+        return !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && primaryHeldDown && !isCasting && !isWandRecharging && !postCastDelayTimerRunning && !isLoadingBiome;
     }
     
     public bool IsWandRecharging(out Timer rechargeTimer)

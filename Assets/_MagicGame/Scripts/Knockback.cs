@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class Knockback
 {
+	private const float DefaultDecayMult = 5f;
+	private const float MinKnockbackForce = 0f;
+	private const float MaxKnockbackForce = 100f;
+	private const float KnockbackEndThreshold = 0.75f;
+
 	public event EventHandler<KnockbackEventArgs> OnKnockbackStart;
 	public event EventHandler OnKnockbackEnd;
 	public class KnockbackEventArgs : EventArgs
@@ -11,14 +16,16 @@ public class Knockback
 	}
 	
 	public Vector2 Velocity { get; private set; }
-	public bool KnockbackActive => Velocity != Vector2.one * 0.25f;
 
 	private bool _knockbackEnabled = true;
-	private float _decayMult = 5f; // Higher = knockback fades out faster
-	private float _minKnockback = 0;
-	private float _maxKnockback = 100;
+	private float _decayMult = DefaultDecayMult; // Higher = knockback fades out faster
+	private float _minKnockback = MinKnockbackForce;
+	private float _maxKnockback = MaxKnockbackForce;
 	private float _finalKnockback;
     private ServerCharacter _serverCharacter;
+    
+	private bool _isKnockbackActive;
+	public bool KnockbackActive => _isKnockbackActive;
 
     public Knockback(ServerCharacter serverCharacter)
 	{
@@ -27,13 +34,14 @@ public class Knockback
 
 	public void UpdateKnockback(float fixedDeltaTime)
 	{
-		if(Velocity == Vector2.one * 0.25f) return;
+		if (!_isKnockbackActive) return;
 		
 		Velocity = Vector2.Lerp(Velocity, Vector2.zero, _decayMult * fixedDeltaTime);
 		
-		if (Velocity.magnitude < 0.75f)
+		if (Velocity.magnitude < KnockbackEndThreshold)
 		{
-			Velocity = Vector2.one * 0.25f;
+			Velocity = Vector2.zero;
+			_isKnockbackActive = false;
 			OnKnockbackEnd?.Invoke(this, EventArgs.Empty);
 		}
 	}
@@ -44,15 +52,17 @@ public class Knockback
 
 		OnKnockbackStart?.Invoke(this, new KnockbackEventArgs { } );
 
-		float finalKnockback = knockbackForce * (1 - _serverCharacter.Data.KnockbackResist);
+		float finalKnockback = knockbackForce * (1 - (_serverCharacter != null ? _serverCharacter.Data.KnockbackResist : 0));
 		_finalKnockback = Mathf.Clamp(finalKnockback, _minKnockback, _maxKnockback);
 
+		_isKnockbackActive = true;
 		Velocity = direction * _finalKnockback;
 	}
 	
+	// ServerCharacter must be set before calling this method
 	public void ApplyKnockback(Vector2 knockerSourcePosition, float knockbackForce = -1, bool inverse = false)
 	{
-		if (!_knockbackEnabled) return;
+		if (!_knockbackEnabled || _serverCharacter == null) return;
 
 		OnKnockbackStart?.Invoke(this, new KnockbackEventArgs
 		{
@@ -70,6 +80,7 @@ public class Knockback
 		_finalKnockback = Mathf.Clamp(finalKnockback, _minKnockback, _maxKnockback);
 		_decayMult = Mathf.Lerp(10, 1, _finalKnockback / _maxKnockback);
 
+		_isKnockbackActive = true;
 		Velocity = direction * _finalKnockback;
 	}
 }
