@@ -23,19 +23,26 @@ public class SpellCastController
     private int _currentSpellIndex;
     private WandItemSO _currentWandItemSO;
     private List<SpellMetaData> _spellMetaDataList = new();
-    private Dictionary<ulong, Timer> _rechargeTimers = new();
     private Timer _postCastDelayTimer;
+    
+    private WandManaSystem _wandManaSystem;
+    public WandManaSystem WandManaSystem => _wandManaSystem;
+    
+    private InventoryItem _currentWandInventoryItem;
 
     public SpellCastController(Player player)
     {
+        _postCastDelayTimer = new(_postCastDelayTimerDuration);
         _player = player;
+        _wandManaSystem = new();
         
         _player.SelectedItemIdNetworkVariable.OnValueChanged += OnItemIdChanged;
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
         _player.SpellCaster.IsCasting.OnValueChanged += OnIsCastingChanged;
+        
         HotbarManager.Instance.OnFocusSlotUpdated += CheckForSelectedItemChange;
+        InventoryManager.Instance.OnInventoryUpdated += CheckForWand;
 
-        _postCastDelayTimer = new(_postCastDelayTimerDuration);
     }
     
     public void Dispose()
@@ -43,7 +50,21 @@ public class SpellCastController
         _player.SelectedItemIdNetworkVariable.OnValueChanged -= OnItemIdChanged;
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
         _player.SpellCaster.IsCasting.OnValueChanged -= OnIsCastingChanged;
+        
         HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSelectedItemChange;
+        InventoryManager.Instance.OnInventoryUpdated -= CheckForWand;
+    }
+
+    private void CheckForWand(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
+    {
+        // Whenever the inventory is updated, gather all the wands in the inventory and create 
+        foreach (InventoryItem item in e.InventoryItems)
+        {
+            if (item.Item is WandItemSO wandItemSO)
+            {
+                _wandManaSystem.AddOrUpdateWand(wandItemSO, item.Id);
+            }
+        }
     }
 
     private void OnIsCastingChanged(bool previousValue, bool newValue)
@@ -53,26 +74,27 @@ public class SpellCastController
         {
             _postCastDelayTimer.Reset();
 
-            // If _currentSpellIndex is the last spell, get the inventoryitem Id
-            if (_currentSpellIndex >= _spellMetaDataList.Count - 1)
+            if (InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem) && selectedInventoryItem.Item is WandItemSO wandItemSO)
             {
-                if (InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem) && selectedInventoryItem.Item is WandItemSO wandItemSO)
+                // If _currentSpellIndex is the last spell, get the inventoryitem Id
+                if (_currentSpellIndex >= _spellMetaDataList.Count - 1)
                 {
-                    _rechargeTimers.Add(selectedInventoryItem.Id, new Timer(wandItemSO.RechargeTime));
+                    _wandManaSystem.StartWandRecharge(selectedInventoryItem.Id, wandItemSO.RechargeTime);
                 }
-            }
 
-            _currentSpellIndex = (_currentSpellIndex + 1) % _spellMetaDataList.Count; // Cycle through spells
-            
-            // Subtract Mana
-            _player.PlayerManaSystem.TrySpendMana(CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]));
+                _currentSpellIndex = (_currentSpellIndex + 1) % _spellMetaDataList.Count; // Cycle through spells
+
+                // Subtract Mana
+                _wandManaSystem.TrySpendMana(selectedInventoryItem.Id, CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]));
+            }
         }
     }
 
     public void SpellCastControllerUpdate()
     {
-        UpdateRechargeTimes();
-    
+        _wandManaSystem.Tick(Time.deltaTime, _currentWandInventoryItem);
+        _postCastDelayTimer.Tick(Time.deltaTime);
+
         if(CanCast())
         {
             _player.SpellCaster.TryCastSpell(_spellMetaDataList[_currentSpellIndex], GetExecutionParams);
@@ -89,51 +111,28 @@ public class SpellCastController
         bool primaryHeldDown = GameInput.Instance.GetPrimaryHeldDown();
         bool isCasting = _player.SpellCaster.IsCasting.Value;
         bool postCastDelayTimerRunning = _postCastDelayTimer.IsRunning;
-        bool hasEnoughMana = Player.Instance.PlayerManaSystem.HasEnoughMana(CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]));
-        bool isWandRecharging = IsWandRecharging(out Timer rechargeTimer);
         bool isLoadingBiome = WorldManager.Instance.IsLoadingBiome;
+        bool isWandRecharging = IsWandRecharging(out Timer rechargeTimer);
+        bool hasEnoughMana = false;
+
+        if (InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem))
+        {
+            hasEnoughMana = _wandManaSystem.GetCurrentMana(selectedInventoryItem.Id) >= CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]);
+        }
 
         return !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && primaryHeldDown && !isCasting && !isWandRecharging && !postCastDelayTimerRunning && !isLoadingBiome;
     }
     
     public bool IsWandRecharging(out Timer rechargeTimer)
     {
-        InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-        
-        if(_rechargeTimers.TryGetValue(selectedInventoryItem.Id, out Timer timer))
+        if (InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem))
         {
-            rechargeTimer = timer;
-        }
-        else
-        {
-            rechargeTimer = null;
+            bool isRecharging = _wandManaSystem.IsWandRecharging(selectedInventoryItem.Id, out rechargeTimer);
+            return isRecharging;
         }
 
-        return _rechargeTimers.ContainsKey(selectedInventoryItem.Id);
-    }
-
-    private void UpdateRechargeTimes()
-    {
-        _postCastDelayTimer.Tick(Time.deltaTime);
-
-        List<ulong> timersToRemove = new();
-
-        foreach (var kvp in _rechargeTimers)
-        {
-            if (kvp.Value.IsRunning)
-            {
-                kvp.Value.Tick(Time.deltaTime);
-                if (!kvp.Value.IsRunning)
-                {
-                    timersToRemove.Add(kvp.Key);
-                }
-            }
-        }
-
-        foreach (var key in timersToRemove)
-        {
-            _rechargeTimers.Remove(key);
-        }
+        rechargeTimer = null;
+        return false;
     }
 
     private (Vector3 spawnPoint, Vector3 direction) GetExecutionParams()
@@ -166,7 +165,8 @@ public class SpellCastController
         if (GameManager.Instance.GetItemSOFromItemId(newValue) is WandItemSO wandItemSO)
         {
             InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-            MagicItemSO[] currentMagicArray = (selectedInventoryItem as WandInventoryItem).MagicArray;
+            _currentWandInventoryItem = selectedInventoryItem;
+            MagicItemSO[] currentMagicArray = (_currentWandInventoryItem as WandInventoryItem).MagicArray;
 
             if (currentMagicArray == null || currentMagicArray.Length == 0)
             {
@@ -194,6 +194,7 @@ public class SpellCastController
         }
         else
         {
+            _currentWandInventoryItem = null;
             _currentWandItemSO = null;
             _spellMetaDataList = null;
         }

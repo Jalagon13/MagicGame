@@ -12,62 +12,57 @@ public class PlayerStartItemsSpawner : NetworkBehaviour
 
     private void Awake()
     {
-        if (NetworkManager != null)
-        {
-            NetworkManager.OnClientConnectedCallback += SpawnStartingItems;
-        }
+        Player.OnAnyPlayerSpawned += Player_OnAnyPlayerSpawned;
     }
-    
+
     public override void OnDestroy()
     {
-        if (NetworkManager != null)
-        {
-            NetworkManager.OnClientConnectedCallback -= SpawnStartingItems;
-        }
+        Player.OnAnyPlayerSpawned -= Player_OnAnyPlayerSpawned;
     }
 
-    private void SpawnStartingItems(ulong clientId)
+    private void Player_OnAnyPlayerSpawned(object sender, Player.PlayerIdEventArgs e)
     {
-        if (NetworkManager.LocalClientId != clientId) return;
-
-        if (_spawnWandItems)
+        if (Player.Instance != null && e.PlayerId == Player.Instance.OwnerClientId)
         {
-            foreach (WandInventoryItem wandInvItem in _startWandItems)
+            if (_spawnWandItems)
             {
-                if (wandInvItem.Item is not WandItemSO)
+                foreach (WandInventoryItem wandInvItem in _startWandItems)
                 {
-                    Debug.LogWarning($"{wandInvItem.Item} is not a wand. skipping it");
-                    continue;
-                }
-
-                WandItemSO wandItemSO = wandInvItem.Item as WandItemSO;
-                WandInventoryItem wandItemToAdd = (WandInventoryItem)wandItemSO.CreateInventoryItem(1);
-
-                for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
-                {
-                    if (wandInvItem.MagicArray[i] is MagicItemSO)
+                    if (wandInvItem.Item is not WandItemSO)
                     {
-                        if (i < wandItemSO.Capacity)
+                        Debug.LogWarning($"{wandInvItem.Item} is not a wand. skipping it");
+                        continue;
+                    }
+
+                    WandItemSO wandItemSO = wandInvItem.Item as WandItemSO;
+                    WandInventoryItem wandItemToAdd = (WandInventoryItem)wandItemSO.CreateInventoryItem(1);
+
+                    for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
+                    {
+                        if (wandInvItem.MagicArray[i] is MagicItemSO)
                         {
-                            wandItemToAdd.MagicArray[i] = wandInvItem.MagicArray[i];
-                        }
-                        else
-                        {
-                            Debug.LogWarning($"{wandInvItem.MagicArray[i].Name} being skipped because it is out of the index of {wandItemSO.Name}'s Capacity ({wandItemSO.Capacity})");
+                            if (i < wandItemSO.Capacity)
+                            {
+                                wandItemToAdd.MagicArray[i] = wandInvItem.MagicArray[i];
+                            }
+                            else
+                            {
+                                Debug.LogWarning($"{wandInvItem.MagicArray[i].Name} being skipped because it is out of the index of {wandItemSO.Name}'s Capacity ({wandItemSO.Capacity})");
+                            }
                         }
                     }
-                }
 
-                InventoryManager.Instance.AddItem(wandItemToAdd, false);
+                    InventoryManager.Instance.AddItem(wandItemToAdd, false);
+                    // yield return new WaitForEndOfFrame();
+                }
+            }
+
+            foreach (InventoryItem item in _startingItems)
+            {
+                InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
+                InventoryManager.Instance.AddItem(itemToAdd, false);
                 // yield return new WaitForEndOfFrame();
             }
-        }
-
-        foreach (InventoryItem item in _startingItems)
-        {
-            InventoryItem itemToAdd = item.Item.CreateInventoryItem(item.Quantity);
-            InventoryManager.Instance.AddItem(itemToAdd, false);
-            // yield return new WaitForEndOfFrame();
         }
     }
 }

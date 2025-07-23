@@ -11,6 +11,12 @@ public class WandItemSO : ItemSO
 	
 	[field: Tooltip("Base Accuracy +- degrees of the spell casted by the wand.")]
 	[field: SerializeField] public float Accuracy { get; private set; } = 3;
+	
+	[field: Tooltip("Base Mana held in this wand.")]
+	[field: SerializeField] public int BaseMana { get; private set; } = 100;
+	
+	[field: Tooltip("Base Mana Regeneration per second of the wand.")]
+	[field: SerializeField] public int BaseManaRegen { get; private set; } = 5;
 
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{

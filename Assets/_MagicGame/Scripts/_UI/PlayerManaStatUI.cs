@@ -1,51 +1,71 @@
 using MoreMountains.Tools;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class PlayerManaStatUI : MonoBehaviour
 {
-	public float MaxMana { get; private set; }
-
 	[SerializeField] private MMProgressBar _manaBar;
 	[SerializeField] private RectTransform _border; // Set width to max mana dynamically
 	[SerializeField] private TextMeshProUGUI _amountText;
 
 	private void Awake()
 	{
+		Debug.Log($"PlayerManaStatUI Awake: {gameObject.name}");
 		Player.OnAnyPlayerSpawned += Player_OnAnyPlayerSpawned;
 	}
 
 	private void OnDestroy()
 	{
-		Player.OnAnyPlayerSpawned -= Player_OnAnyPlayerSpawned;
 		if (Player.Instance != null)
 		{
-			Player.Instance.PlayerManaSystem.OnManaChanged -= Player_OnPlayerManaUpdated;
+			Player.OnAnyPlayerSpawned -= Player_OnAnyPlayerSpawned;
+			Player.Instance.SpellCastController.WandManaSystem.OnManaChanged -= Player_OnPlayerManaUpdated;
+		}
+	}
+	
+	private void Update()
+	{
+		if (Player.Instance == null || Player.Instance.SpellCastController == null) return;
+		
+		if(Player.Instance.SpellCastController.WandManaSystem.IsSelectingWand)
+		{
+		    ShowBar();
+		}
+		else
+		{
+		    HideBar();
 		}
 	}
 
-	private void Player_OnAnyPlayerSpawned(object sender, Player.PlayerIdEventArgs e)
+    private void Player_OnAnyPlayerSpawned(object sender, Player.PlayerIdEventArgs e)
 	{
-		if (Player.Instance != null)
+		if (Player.Instance != null && e.PlayerId == Player.Instance.OwnerClientId)
 		{
-			Player.Instance.PlayerManaSystem.OnManaChanged += Player_OnPlayerManaUpdated;
-			UpdateView(
-				Mathf.FloorToInt(Player.Instance.ServerCharacter.Stats.MaxMana.GetValue()),
-				Mathf.FloorToInt(Player.Instance.ServerCharacter.Stats.MaxMana.GetValue())
-			);
+			Player.Instance.SpellCastController.WandManaSystem.OnManaChanged += Player_OnPlayerManaUpdated;
 		}
 	}
 
-	private void Player_OnPlayerManaUpdated(object sender, PointsChangedEventArgs e)
-	{
-		UpdateView(e.CurrentPoints, e.MaxPoints);
-	}
+    private void Player_OnPlayerManaUpdated(object sender, WandManaSystem.ManaChangedEventArgs e)
+    {
+        UpdateView(e.CurrentMana, e.MaxMana);
+    }
 
 	private void UpdateView(int currentAmount, int maxAmount)
 	{
-		// Debug.Log($"Updating Mana UI: Current={currentAmount}, Max={maxAmount}");
-		_manaBar.UpdateBar(currentAmount, 0, maxAmount);
-		// _border.sizeDelta = new Vector2(maxAmount * 2, _border.sizeDelta.y);
-		_amountText.text = $"{currentAmount}/{maxAmount}";
+	    if (!_manaBar || !_amountText) return;
+
+	    _manaBar.UpdateBar(currentAmount, 0, maxAmount);
+	    _amountText.text = $"{currentAmount}/{maxAmount}";
+	}
+
+	private void ShowBar()
+	{
+		gameObject.transform.GetChild(0).gameObject.SetActive(true);
+	}
+
+	private void HideBar()
+	{
+		gameObject.transform.GetChild(0).gameObject.SetActive(false);
 	}
 }

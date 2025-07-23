@@ -11,26 +11,10 @@ public class PlayerCastTimeUI : MonoBehaviour
     // [SerializeField] private RectTransform _border; // Set width to max mana dynamically
     // [SerializeField] private TextMeshProUGUI _amountText;
 
-    private void Start()
-    {
-        HotbarManager.Instance.OnFocusSlotUpdated += HandleUI;
-    }
-
-
-    private void OnDestroy()
-    {
-        HotbarManager.Instance.OnFocusSlotUpdated -= HandleUI;
-    }
-
-    private void HandleUI(object sender, HotbarManager.OnFocusItemSetEventArgs e)
-    {
-        // HideBar();
-    }
-
     private void Update()
     {
-        if(Player.Instance == null) return;
-    
+        if(Player.Instance == null || Player.Instance.SpellCastController == null) return;
+
         if(Player.Instance.SpellCastController.IsWandRecharging(out Timer rechargeTimer))
         {
             float maxAmount = rechargeTimer.Duration;

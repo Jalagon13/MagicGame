@@ -6,8 +6,6 @@ public class CharacterStats
     public Stat MaxHealth { get; }
     public Stat Defense { get; }
     public Stat MovementSpeed { get; }
-    public Stat MaxMana { get; }
-    public Stat ManaRegen { get; }
 
     private List<Buff> _activeBuffs = new();
 
@@ -16,8 +14,6 @@ public class CharacterStats
         MaxHealth = new Stat(data.BaseHealth);
         Defense = new Stat(data.BaseDefense);
         MovementSpeed = new Stat(data.BaseSpeed);
-        MaxMana = new Stat(data.BaseMana);
-        ManaRegen = new Stat(data.BaseManaRegen);
     }
 
     public void AddBuff(Buff buff)

@@ -17,4 +17,8 @@ MonoBehaviour:
   <GoldValue>k__BackingField: 35
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <Capacity>k__BackingField: 4
+  <Capacity>k__BackingField: 5
+  <RechargeTime>k__BackingField: 5
+  <Accuracy>k__BackingField: 3
+  <BaseMana>k__BackingField: 35
+  <BaseManaRegen>k__BackingField: 2

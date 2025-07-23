@@ -59,7 +59,6 @@ public class ClientSpell : NetworkBehaviour
         if(_spellModsInstantiated) return;
         _spellModsInstantiated = true;
         
-        Debug.Log($"spell mod amount: {newData.SpellMods.Count}");
         foreach (var item in newData.SpellMods)
         {
             if (GameManager.Instance.GetItemSOFromItemId(item) is SpellModItemSO spellMod)

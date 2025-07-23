@@ -6,10 +6,6 @@ public class CharacterDataSO : ScriptableObject
 {
     [Tooltip("Base HP for character")]
     public int BaseHealth;
-    [Tooltip("Base MP for character")]
-    public int BaseMana;
-    [Tooltip("Base MP Regen per second for character")]
-    public int BaseManaRegen;
     [Tooltip("Base Speed for character")]
     public float BaseSpeed;
     [Tooltip("Duration of invincibility frames when character is hit")]

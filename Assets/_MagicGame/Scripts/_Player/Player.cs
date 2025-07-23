@@ -54,16 +54,12 @@ public class Player : NetworkBehaviour
 	private SpellCaster _spellCaster;
 	public SpellCaster SpellCaster => _spellCaster;
 	
-	private PlayerManaSystem _playerManaSystem;
-	public PlayerManaSystem PlayerManaSystem => _playerManaSystem;
-	
 	private void Awake()
 	{
 		_spellCaster = GetComponent<SpellCaster>();
 		_damageReceiver = GetComponent<DamageReceiver>();
 		_serverCharacter = GetComponent<ServerCharacter>();
 		_playerNetworkVisibility = GetComponent<PlayerNetworkVisibility>();
-		_playerManaSystem = GetComponent<PlayerManaSystem>();
 		HitCollider = GetComponent<Collider2D>();
 	}
 	
@@ -72,6 +68,7 @@ public class Player : NetworkBehaviour
 		Instance = this;
 		CurrentBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
 		
+		_spellCastController = new SpellCastController(this);
 		_spawnBiome = BiomeType.Forest;
 		_spawnPoint = transform.position;
 
@@ -79,8 +76,6 @@ public class Player : NetworkBehaviour
 		{
 			PlayerId = OwnerClientId
 		});
-
-		_spellCastController = new SpellCastController(this);
 
 		// local player start up code here, maybe input
 		GameInput.Instance.OnMove += GameInput_OnPlayerMove;
@@ -124,9 +119,8 @@ public class Player : NetworkBehaviour
 	{
 		if (!IsOwner) return;
 
-		_spellCastController.SpellCastControllerUpdate();
-		_playerManaSystem.UpdateManaRegen(Time.deltaTime);
-
+		_spellCastController?.SpellCastControllerUpdate();
+		
 		// Breadcrumb stuff
 		Vector2Int newTilePosition = new(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
 		if (newTilePosition != _lastTilePosition)
