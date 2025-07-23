@@ -58,7 +58,7 @@ public class SpellItemSO : MagicItemSO
 	[field: SerializeField] public float Scatter { get; private set; } = 0f;
 	
 	
-	public SyncSpellData GetSpellDataForLocalClientInstance(ulong casterNetObjId, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
+	public SyncSpellData GetSyncSpellData(ulong casterNetObjId, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
 	{
 		return new SyncSpellData(GameManager.Instance.GetItemIdFromItemSO(this),
 			ManaCost, Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime,

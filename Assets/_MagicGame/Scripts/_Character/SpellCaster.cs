@@ -23,6 +23,10 @@ public class SpellCaster : NetworkBehaviour
     
     private SyncSpellData _currentSpellData;
     public SyncSpellData CurrentSpellData => _currentSpellData;
+    
+    [SerializeField] 
+    private Transform _spellSpawnTransform;
+    public Transform SpellSpawnTransform => _spellSpawnTransform;
 
     private Func<(Vector3 spawnPoint, Vector3 direction)> _getExecutionParams;
 
@@ -45,7 +49,7 @@ public class SpellCaster : NetworkBehaviour
 
         Reset();
 
-        _currentSpellData = spellMetaData.SpellItem.GetSpellDataForLocalClientInstance(NetworkObjectId, _serverCharacter.CurrentBiome, spellMetaData.SpellMods);
+        _currentSpellData = spellMetaData.SpellItem.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome, spellMetaData.SpellMods);
 
         SpawnSpellServerRpc(_currentSpellData);
         
@@ -89,7 +93,6 @@ public class SpellCaster : NetworkBehaviour
     {
         if (_spellNetObj != null)
         {
-            // ShootSpell
             ExecuteSpell(_spellNetObj);
             Reset();
         }

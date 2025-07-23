@@ -33,15 +33,17 @@ public class FlameBreath : ServerSpell
 
     protected override void OnSpellExecute()
     {
-
+        // TODO: Get the SpellCaster Component from whomever shot this via the Caster Id
     }
 
     protected override void OnUpdateSpell()
     {
-        Vector2 wandPos = Player.Instance.PlayerHand.SpellSpawnTransform.position; // NTFS: Change this for general servercharacter usability later
+        // NTFS: MaybeChange this for general servercharacter usability later if I decide other entities to use this spell.
+        Vector2 wandPos = Player.Instance.PlayerHand.SpellSpawnTransform.position; 
         transform.position = wandPos;
 
-        Vector2 mousePosition = ActionManager.MouseWorldPosition; // NTFS: Change this for general servercharacter usability later
+        // NTFS: MAYBE Change this for general servercharacter usability later if I decide other entities to use this spell
+        Vector2 mousePosition = ActionManager.MouseWorldPosition; 
         _direction.Value = mousePosition - wandPos;
         
         float angle = Mathf.Atan2(_direction.Value.y, _direction.Value.x) * Mathf.Rad2Deg;

@@ -13,7 +13,7 @@ public class Relay : MonoBehaviour
 	private bool _createdRelay;
 	private bool _joinedRelay;
 
-	private async void Start()
+	private async void Start() // TODO: Make this game work offline so I can work on train
 	{
 		await UnityServices.InitializeAsync();
 

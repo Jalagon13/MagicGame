@@ -63,12 +63,10 @@ public class ClientSpell : NetworkBehaviour
         {
             if (GameManager.Instance.GetItemSOFromItemId(item) is SpellModItemSO spellMod)
             {
-                // Debug.Log($"[ClientSpell] Applying visual mod: {spellMod.Name}");
                 // TODO: Add any visual effect or logic specific to this mod here
                 SpellModifier modGO = Instantiate(spellMod.SpellModPrefab, _modifiersContainer.transform);
                 if (IsOwner)
                 {
-                    // Debug.Log($"Internal Spell Mod Handling: {spellMod.Name}");
                     _serverSpell.SpellData.Value = modGO.ModifiySpellData(newData, _serverSpell);
                 }
             }

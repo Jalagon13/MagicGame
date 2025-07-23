@@ -82,7 +82,8 @@ public class SpellCastController
                     _wandManaSystem.StartWandRecharge(selectedInventoryItem.Id, wandItemSO.RechargeTime);
                 }
 
-                _currentSpellIndex = (_currentSpellIndex + 1) % _spellMetaDataList.Count; // Cycle through spells
+                // Cycle through spells
+                _currentSpellIndex = (_currentSpellIndex + 1) % _spellMetaDataList.Count; 
 
                 // Subtract Mana
                 _wandManaSystem.TrySpendMana(selectedInventoryItem.Id, CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]));
