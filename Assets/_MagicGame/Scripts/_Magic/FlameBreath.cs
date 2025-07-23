@@ -30,21 +30,30 @@ public class FlameBreath : ServerSpell
     
     private NetworkVariable<Vector2> _direction = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Vector2> Direction => _direction;
+    
+    private SpellCaster _spellCaster;
 
     protected override void OnSpellExecute()
     {
         // TODO: Get the SpellCaster Component from whomever shot this via the Caster Id
+        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(SpellData.Value.CasterNetworkObjectId, out NetworkObject casterNetworkObject) && casterNetworkObject != null)
+        {
+            _spellCaster = casterNetworkObject.GetComponent<SpellCaster>();
+        }
+        else
+        {
+            Debug.LogError($"Did not find the NetworkObject for the caster of this spell");
+        }
     }
 
+    // TODO: TEST THIS TOMORROW
     protected override void OnUpdateSpell()
     {
-        // NTFS: MaybeChange this for general servercharacter usability later if I decide other entities to use this spell.
-        Vector2 wandPos = Player.Instance.PlayerHand.SpellSpawnTransform.position; 
+        Vector2 wandPos = _spellCaster.SpellSpawnTransform.position;
         transform.position = wandPos;
 
-        // NTFS: MAYBE Change this for general servercharacter usability later if I decide other entities to use this spell
-        Vector2 mousePosition = ActionManager.MouseWorldPosition; 
-        _direction.Value = mousePosition - wandPos;
+        // _direction.Value = ActionManager.MouseWorldPosition - wandPos;
+        _direction.Value = _spellCaster.CastingPoint - wandPos;
         
         float angle = Mathf.Atan2(_direction.Value.y, _direction.Value.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
@@ -134,9 +143,6 @@ public class FlameBreath : ServerSpell
 
             TileManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.Instance.CurrentBiome.Value);
 
-            // Final null check before calling method
-
-
             yield return new WaitForSeconds(_timeBetweenDamage);
         }
 
@@ -192,10 +198,7 @@ public class FlameBreath : ServerSpell
     
     public override void ClientSpellUpdate(ClientSpell clientSpell)
     {
-        // Update the position and rotation of the flame breath visualization
 
-        // float angle = Mathf.Atan2(Direction.Value.y, Direction.Value.x) * Mathf.Rad2Deg;
-        // transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
     public override void ClientSpellStop(ClientSpell clientSpell)

@@ -11,7 +11,6 @@ public class PlayerManaStatUI : MonoBehaviour
 
 	private void Awake()
 	{
-		Debug.Log($"PlayerManaStatUI Awake: {gameObject.name}");
 		Player.OnAnyPlayerSpawned += Player_OnAnyPlayerSpawned;
 	}
 

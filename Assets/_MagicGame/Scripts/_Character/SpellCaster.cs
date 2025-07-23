@@ -29,6 +29,9 @@ public class SpellCaster : NetworkBehaviour
     public Transform SpellSpawnTransform => _spellSpawnTransform;
 
     private Func<(Vector3 spawnPoint, Vector3 direction)> _getExecutionParams;
+    
+    private Vector2 _castingPoint;
+    public Vector2 CastingPoint => _castingPoint;
 
     private void Awake()
     {
@@ -40,6 +43,11 @@ public class SpellCaster : NetworkBehaviour
         if (!IsOwner) return; // Only the owner should update the casting state and cooldowns
     
         _castTimer?.Tick(Time.deltaTime);
+    }
+    
+    public void SetCastingPoint(Vector2 castPoint)
+    {
+        _castingPoint = castPoint;
     }
     
     public void TryCastSpell(SpellMetaData spellMetaData, Func<(Vector3 spawnPoint, Vector3 direction)> getExecutionParams)

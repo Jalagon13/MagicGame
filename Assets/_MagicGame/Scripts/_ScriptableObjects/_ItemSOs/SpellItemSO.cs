@@ -57,6 +57,9 @@ public class SpellItemSO : MagicItemSO
 	[field: Tooltip("How accurate the spell is being shot from")]
 	[field: SerializeField] public float Scatter { get; private set; } = 0f;
 	
+	[field: Tooltip("If true, only continue spell sequence after this spell ends")] 
+	[field: SerializeField] public bool ContinueNextSpellAfterEnd { get; private set; } = false;
+	
 	
 	public SyncSpellData GetSyncSpellData(ulong casterNetObjId, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
 	{

@@ -363,6 +363,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _serverCharacter: {fileID: 8141412508225569808}
+  _spellSpawnTransform: {fileID: 4196058989623954390}
 --- !u!1 &1334120334475979508
 GameObject:
   m_ObjectHideFlags: 0

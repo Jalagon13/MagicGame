@@ -32,8 +32,10 @@ MonoBehaviour:
   <ManaCost>k__BackingField: 1
   <Damage>k__BackingField: 14
   <Knockback>k__BackingField: 15
-  <Lifetime>k__BackingField: 0.75
+  <BounceCount>k__BackingField: 0
+  <PierceCount>k__BackingField: 0
+  <Lifetime>k__BackingField: 1
   <Speed>k__BackingField: 15
   <Recoil>k__BackingField: 0
   <HasteMultiplier>k__BackingField: -0.8
-  <IsContinuousCast>k__BackingField: 1
+  <Scatter>k__BackingField: 0

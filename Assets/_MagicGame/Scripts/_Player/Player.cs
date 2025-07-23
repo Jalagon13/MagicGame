@@ -119,6 +119,7 @@ public class Player : NetworkBehaviour
 	{
 		if (!IsOwner) return;
 
+		_spellCaster.SetCastingPoint(ActionManager.MouseWorldPosition);
 		_spellCastController?.SpellCastControllerUpdate();
 		
 		// Breadcrumb stuff

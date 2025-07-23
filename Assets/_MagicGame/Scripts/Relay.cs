@@ -21,7 +21,7 @@ public class Relay : MonoBehaviour
 		{
 			Debug.Log("Signed in " + AuthenticationService.Instance.PlayerId);
 		};
-		await AuthenticationService.Instance.SignInAnonymouslyAsync();
+		await AuthenticationService.Instance.SignInAnonymouslyAsync(); // NEED TO FIGURE OUT HOW TO BE ABLE TO PLAY MY GAME WITHOUT INTERNET!!!!
 	}
 
 	public async void CreateRelay()
