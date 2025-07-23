@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: HomingSpellMod
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Homing Modifier
-  <UiDisplay>k__BackingField: {fileID: 21300012, guid: 358b5d9f23bc9413e87c9948acc67ee1, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -1822252437, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <GoldValue>k__BackingField: 0
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <SpellModPrefab>k__BackingField: {fileID: 4532376575911826281, guid: 6e380f13bfb55484bb9da590c7dab247, type: 3}
+  <SpellModPrefab>k__BackingField: {fileID: -6065696750744517946, guid: 6e380f13bfb55484bb9da590c7dab247, type: 3}
   <ManaCost>k__BackingField: 5
   <Scatter>k__BackingField: 5
   <CastTime>k__BackingField: 0.25
