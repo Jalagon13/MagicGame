@@ -233,7 +233,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_rune_air
+  - name: item_essence_air
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -254,7 +254,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_rune_fire
+  - name: item_essence_fire
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -275,7 +275,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_rune_chaos
+  - name: item_essence_chaos
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -296,7 +296,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_rune_nature
+  - name: item_essence_nature
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -317,7 +317,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_rune_water
+  - name: item_essence_water
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -338,7 +338,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_rune_order
+  - name: item_essence_order
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -380,7 +380,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_rune_life
+  - name: item_essence_life
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -401,7 +401,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_rune_destruction
+  - name: item_essence_destruction
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -422,7 +422,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_rune_motion
+  - name: item_essence_motion
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -443,7 +443,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: item_rune_navigation
+  - name: item_essence_navigation
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0

@@ -35,7 +35,6 @@ public class FlameBreath : ServerSpell
 
     protected override void OnSpellExecute()
     {
-        // TODO: Get the SpellCaster Component from whomever shot this via the Caster Id
         if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(SpellData.Value.CasterNetworkObjectId, out NetworkObject casterNetworkObject) && casterNetworkObject != null)
         {
             _spellCaster = casterNetworkObject.GetComponent<SpellCaster>();
@@ -46,13 +45,11 @@ public class FlameBreath : ServerSpell
         }
     }
 
-    // TODO: TEST THIS TOMORROW
     protected override void OnUpdateSpell()
     {
         Vector2 wandPos = _spellCaster.SpellSpawnTransform.position;
         transform.position = wandPos;
 
-        // _direction.Value = ActionManager.MouseWorldPosition - wandPos;
         _direction.Value = _spellCaster.CastingPoint - wandPos;
         
         float angle = Mathf.Atan2(_direction.Value.y, _direction.Value.x) * Mathf.Rad2Deg;
