@@ -57,15 +57,15 @@ public class SpellItemSO : MagicItemSO
 	[field: Tooltip("How accurate the spell is being shot from")]
 	[field: SerializeField] public float Scatter { get; private set; } = 0f;
 	
-	[field: Tooltip("If true, only continue spell sequence after this spell ends")] 
-	[field: SerializeField] public bool ContinueNextSpellAfterEnd { get; private set; } = false;
+	[field: Tooltip("If true, only continue spell sequence after this spell ends or like it despawns")] 
+	[field: SerializeField] public bool OnlyContinueAfterSpellEnds { get; private set; } = false;
 	
 	
 	public SyncSpellData GetSyncSpellData(ulong casterNetObjId, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
 	{
 		return new SyncSpellData(GameManager.Instance.GetItemIdFromItemSO(this),
 			ManaCost, Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime,
-			HasteMultiplier, Scatter, casterNetObjId, spawnBiome, spellMods);
+			HasteMultiplier, Scatter, casterNetObjId, OnlyContinueAfterSpellEnds, spawnBiome, spellMods);
 	}
 	
 	public virtual void StartSpell(int slotIndex) // Default behavior, spawn spell on server, assign it to player

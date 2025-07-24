@@ -102,7 +102,6 @@ public class SpellCaster : NetworkBehaviour
         if (_spellNetObj != null)
         {
             ExecuteSpell(_spellNetObj);
-            Reset();
         }
         else
         {
@@ -114,14 +113,26 @@ public class SpellCaster : NetworkBehaviour
     {
         if (spellNetObj.TryGet(out NetworkObject actualSpell))
         {
-            if (actualSpell.TryGetComponent<ServerSpell>(out var serverSpell))
+            if (actualSpell.TryGetComponent(out ServerSpell serverSpell))
             {
                 // Get the final spawn point and direction
                 var (finalSpawnPoint, finalDirection) = _getExecutionParams != null ? _getExecutionParams.Invoke() : (transform.position, transform.forward);
 
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
 
-                _isCasting.Value = false;
+                if(serverSpell.SpellData.Value.OnlyContinueAfterSpellEnds)
+                {
+                    // Delay it until the spell ends
+                    Debug.Log($"Spell {serverSpell.name} is set to only continue after it ends, waiting for end event.");
+                    serverSpell.SpellStateNV.OnValueChanged += CheckForSpellEnd;
+                }
+                else
+                {
+                    Debug.Log($"Spell {serverSpell.name} is not set to wait for end, continuing casting immediately.");
+                    _isCasting.Value = false; // Continue casting for the next spell
+                    Reset();
+                }
+                
             }
             else
             {
@@ -131,6 +142,17 @@ public class SpellCaster : NetworkBehaviour
         else
         {
             Debug.LogWarning("Failed to resolve NetworkObjectReference to shoot spell.");
+        }
+    }
+
+    private void CheckForSpellEnd(SpellState previousValue, SpellState newValue)
+    {
+        if(previousValue == SpellState.Casting && newValue == SpellState.Stopping)
+        {
+            Debug.Log($"Spell ended, continuing casting for the next spell.");
+            _isCasting.Value = false; // Reset casting state
+            _spellNetObj.GetComponent<ServerSpell>().SpellStateNV.OnValueChanged -= CheckForSpellEnd;
+            Reset();
         }
     }
 

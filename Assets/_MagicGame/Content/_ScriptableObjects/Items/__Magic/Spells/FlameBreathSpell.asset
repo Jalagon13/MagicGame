@@ -34,8 +34,9 @@ MonoBehaviour:
   <Knockback>k__BackingField: 15
   <BounceCount>k__BackingField: 0
   <PierceCount>k__BackingField: 0
-  <Lifetime>k__BackingField: 1
+  <Lifetime>k__BackingField: 2
   <Speed>k__BackingField: 15
   <Recoil>k__BackingField: 0
   <HasteMultiplier>k__BackingField: -0.8
   <Scatter>k__BackingField: 0
+  <OnlyContinueAfterSpellEnds>k__BackingField: 1

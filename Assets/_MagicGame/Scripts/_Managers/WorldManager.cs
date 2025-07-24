@@ -41,9 +41,9 @@ public class WorldManager : NetworkBehaviour
 	[Title("World Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private bool _randomSeed = false;
 	[SerializeField] private string _customSeed = 123.ToString();
-	[SerializeField] private float _portalSearchRadius = 10f;
-	[SerializeField] private float _portalSearchDelayOnBiomeLoad = 0.75f;
-	[SerializeField] private float _endBiomeTransitionDelay = 1f;
+	// [SerializeField] private float _portalSearchRadius = 10f;
+	// [SerializeField] private float _portalSearchDelayOnBiomeLoad = 0.75f;
+	// [SerializeField] private float _endBiomeTransitionDelay = 1f;
 	[field: SerializeField] public ForestGenerator ForestGenerator { get; private set; }
 	[field: SerializeField] public CaveGenerator CaveGenerator { get; private set; }
 	

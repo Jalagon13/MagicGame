@@ -15,11 +15,12 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
     public float HasteMultiplier;
     public float Scatter;
     public ulong CasterNetworkObjectId;
+    public bool OnlyContinueAfterSpellEnds;
     public BiomeType SpawnBiome;
     public List<int> SpellMods; // Assuming SpellModItemSO is serializable or can be converted to int for network transmission
 
     public SyncSpellData(int spellItemId, int manaCost, int damage, int knockback, int bounceCount, int pierceCount, float speed, float lifetime, float hasteMultiplier, 
-    float scatter, ulong casterNetworkObjectId, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
+    float scatter, ulong casterNetworkObjectId, bool onlyContinueAfterSpellEnds, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
     {
         SpellItemId = spellItemId;
         ManaCost = manaCost;
@@ -30,6 +31,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         HasteMultiplier = hasteMultiplier;
         Scatter = scatter;
         CasterNetworkObjectId = casterNetworkObjectId;
+        OnlyContinueAfterSpellEnds = onlyContinueAfterSpellEnds;
         SpawnBiome = spawnBiome;
         BounceCount = bounceCount;
         PierceCount = pierceCount;
@@ -61,6 +63,9 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         {
             return false;
         }
+
+        if (OnlyContinueAfterSpellEnds != other.OnlyContinueAfterSpellEnds)
+            return false;
 
         if ((SpellMods == null && other.SpellMods != null) ||
             (SpellMods != null && other.SpellMods == null) ||
@@ -95,6 +100,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         serializer.SerializeValue(ref Scatter);
         serializer.SerializeValue(ref CasterNetworkObjectId);
         serializer.SerializeValue(ref SpawnBiome);
+        serializer.SerializeValue(ref OnlyContinueAfterSpellEnds);
 
         int spellModsCount = SpellMods != null ? SpellMods.Count : 0;
         serializer.SerializeValue(ref spellModsCount);
