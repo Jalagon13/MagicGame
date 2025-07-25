@@ -28,7 +28,7 @@ public class PlayerStateMachine : StateMachine
 	
 	private SpellCaster _spellCaster;
 	public SpellCaster SpellCaster => _spellCaster;
-
+	
 	public PlayerStateMachine(ServerCharacter serverCharacter)
 	{
 		// This constructor gets played on all client machines

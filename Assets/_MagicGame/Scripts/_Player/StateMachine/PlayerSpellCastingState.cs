@@ -5,7 +5,6 @@ public class PlayerSpellCastingState : BaseState
     private PlayerStateMachine _ctx;
     private GameObject _clientChargeVfx;
     private SpellItemSO _spellToCast;
-    private bool _performSpellStateCleanup;
 
     public PlayerSpellCastingState(AIState key, StateMachine context) : base(key, context)
     {
@@ -16,7 +15,6 @@ public class PlayerSpellCastingState : BaseState
     protected override void EnterState(AIStateData stateData)
     {
         // Debug.Log($"Player entering spell casting");
-        _performSpellStateCleanup = true;
         _spellToCast = GameManager.Instance.GetItemSOFromItemId(stateData.Amount) as SpellItemSO;
         
         Buff castingMoveBuff = new(
@@ -29,14 +27,7 @@ public class PlayerSpellCastingState : BaseState
 
     public override void UpdateState()
     {
-        // If player lets go of the spell key, stop casting
-        // if(_ctx.SpellCaster.CurrentSpellData.IsContinuousCast && _ctx.PlayerRef.SpellInputHandler.CurrentEquippedSpellIndexCasting != null)
-        // {
-        //     if (!_ctx.PlayerRef.SpellInputHandler.IsSpellKeyHeld(_ctx.PlayerRef.SpellInputHandler.CurrentEquippedSpellIndexCasting.Value))
-        //     {
-        //         _ctx.SpellCaster.IsCasting.Value = false;
-        //     }
-        // }
+
     }
 
     public override void CheckSwitchStates()
@@ -47,14 +38,13 @@ public class PlayerSpellCastingState : BaseState
         }
         else if(_ctx.ServerCharacter.LifeState == LifeState.Dead)
         {
-            _performSpellStateCleanup = false;
             SwitchState(new AIStateData(AIState.Dead));
         }
     }
 
     public override void ExitState()
     {
-        if(_performSpellStateCleanup)
+        if(_ctx.SpellCaster.SuccessfullSpellCast) 
         {
             _ctx.ServerCharacter.Movement.StartKnockback(ActionManager.MouseWorldPosition, _spellToCast.Recoil);
         }

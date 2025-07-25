@@ -144,7 +144,7 @@ public class SpellCastController
     private (Vector3 spawnPoint, Vector3 direction) GetExecutionParams()
     {
         var group = _spellCastGroups[_currentSpellIndex];
-        var firstSpell = group.SpellsToCast[0];
+        var firstSpell = group.SpellsToCast[0]; // Does this only work on the first spell in the group? How does it work in Noita? does it take the whole average of scatter in the payload?
 
         float wandAccuracy = _currentWandItemSO?.Accuracy ?? 0f;
         float spellAccuracy = firstSpell.SpellItem.Scatter;
@@ -257,20 +257,10 @@ public class SpellCastController
         //     return;
         // }
 
-        // if (_player.SpellCaster.IsCasting.Value)
-        // {
-        //     _player.SpellCaster.TryToCancelCast();
-        // }
-    }
-
-    private int CalculateTotalManaCost(SpellMetaData spellMeta)
-    {
-        int total = spellMeta.SpellItem.ManaCost;
-        foreach (var mod in spellMeta.SpellMods)
+        if (_player.SpellCaster.IsCasting.Value)
         {
-            total += mod.ManaCost;
+            _player.SpellCaster.TryToCancelCast();
         }
-        return total;
     }
 
     private int CalculateGroupManaCost(SpellCastGroup group)
@@ -279,6 +269,16 @@ public class SpellCastController
         foreach (var spell in group.SpellsToCast)
         {
             total += CalculateTotalManaCost(spell);
+        }
+        return total;
+    }
+
+    private int CalculateTotalManaCost(SpellMetaData spellMeta)
+    {
+        int total = spellMeta.SpellItem.ManaCost;
+        foreach (var mod in spellMeta.SpellMods)
+        {
+            total += mod.ManaCost;
         }
         return total;
     }

@@ -16,13 +16,10 @@ public class SpellCaster : NetworkBehaviour
 
     private NetworkObject _spellNetObj;
 
-    private bool _pendingCast, _cancelCast;
+    private bool _cancelCast;
 
     private NetworkVariable<bool> _isCasting = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<bool> IsCasting => _isCasting;
-
-    // private SyncSpellData _currentSpellData;
-    // public SyncSpellData CurrentSpellData => _currentSpellData;
 
     [SerializeField]
     private Transform _spellSpawnTransform;
@@ -38,6 +35,9 @@ public class SpellCaster : NetworkBehaviour
     
     private List<NetworkObjectReference> _pendingSpellsToExecute = new();
     private int _waitingForEndCount = 0;
+
+    private bool _successfullSpellCast; // Use GPT to confirm this logic actually works
+    public bool SuccessfullSpellCast => _successfullSpellCast;
 
     private void Awake()
     {
@@ -71,7 +71,7 @@ public class SpellCaster : NetworkBehaviour
         foreach (var spellMetaData in spellGroup.SpellsToCast)
         {
             var syncData = spellMetaData.SpellItem.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome, spellMetaData.SpellMods);
-            SpawnSpellServerRpc(syncData); // spawn all spells now
+            SpawnSpellServerRpc(syncData); // spawns all spells now
 
             totalCastTime += spellMetaData.SpellItem.CastTime;
             foreach (var mod in spellMetaData.SpellMods)
@@ -109,6 +109,7 @@ public class SpellCaster : NetworkBehaviour
 
         if (_waitingForEndCount == 0)
         {
+            _successfullSpellCast = true;
             _isCasting.Value = false;
             Reset();
         }
@@ -153,6 +154,7 @@ public class SpellCaster : NetworkBehaviour
             _waitingForEndCount--;
             if (_waitingForEndCount <= 0)
             {
+                _successfullSpellCast = true;
                 _isCasting.Value = false;
                 Reset();
             }
@@ -222,6 +224,6 @@ public class SpellCaster : NetworkBehaviour
         _pendingSpellsToExecute.Clear();
         _waitingForEndCount = 0;
         _cancelCast = false;
-        _pendingCast = false;
+        _successfullSpellCast = false;
     }
 }
