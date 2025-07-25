@@ -38,4 +38,5 @@ MonoBehaviour:
   <Speed>k__BackingField: 8
   <Recoil>k__BackingField: 6
   <HasteMultiplier>k__BackingField: -0.25
-  <Accuracy>k__BackingField: 5
+  <Scatter>k__BackingField: 35
+  <OnlyContinueAfterSpellEnds>k__BackingField: 0

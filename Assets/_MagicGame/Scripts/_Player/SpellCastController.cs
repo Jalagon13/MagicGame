@@ -15,19 +15,31 @@ public struct SpellMetaData
     }
 }
 
+public struct SpellCastGroup
+{
+    public List<SpellMetaData> SpellsToCast;
+
+    public bool IsMultiCast => SpellsToCast.Count > 1;
+
+    public SpellCastGroup(List<SpellMetaData> spells)
+    {
+        SpellsToCast = spells;
+    }
+}
+
 public class SpellCastController
 {
-    private static readonly float _postCastDelayTimerDuration = 0.15f; // Duration after casting a spell before the next can be cast
-    
+    private static readonly float _postCastDelayTimerDuration = 0.15f;
+
     private Player _player;
     private int _currentSpellIndex;
     private WandItemSO _currentWandItemSO;
-    private List<SpellMetaData> _spellMetaDataList = new();
+    private List<SpellCastGroup> _spellCastGroups = new();
     private Timer _postCastDelayTimer;
-    
+
     private WandManaSystem _wandManaSystem;
     public WandManaSystem WandManaSystem => _wandManaSystem;
-    
+
     private InventoryItem _currentWandInventoryItem;
 
     public SpellCastController(Player player)
@@ -35,29 +47,27 @@ public class SpellCastController
         _postCastDelayTimer = new(_postCastDelayTimerDuration);
         _player = player;
         _wandManaSystem = new();
-        
+
         _player.SelectedItemIdNetworkVariable.OnValueChanged += OnItemIdChanged;
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
         _player.SpellCaster.IsCasting.OnValueChanged += OnIsCastingChanged;
-        
+
         HotbarManager.Instance.OnFocusSlotUpdated += CheckForSelectedItemChange;
         InventoryManager.Instance.OnInventoryUpdated += CheckForWand;
-
     }
-    
+
     public void Dispose()
     {
         _player.SelectedItemIdNetworkVariable.OnValueChanged -= OnItemIdChanged;
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
         _player.SpellCaster.IsCasting.OnValueChanged -= OnIsCastingChanged;
-        
+
         HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSelectedItemChange;
         InventoryManager.Instance.OnInventoryUpdated -= CheckForWand;
     }
 
     private void CheckForWand(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
     {
-        // Whenever the inventory is updated, gather all the wands in the inventory and create 
         foreach (InventoryItem item in e.InventoryItems)
         {
             if (item.Item is WandItemSO wandItemSO)
@@ -69,24 +79,20 @@ public class SpellCastController
 
     private void OnIsCastingChanged(bool previousValue, bool newValue)
     {
-        // Right after the spell has been cast
-        if(previousValue && !newValue)
+        if (previousValue && !newValue)
         {
             _postCastDelayTimer.Reset();
 
             if (InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem) && selectedInventoryItem.Item is WandItemSO wandItemSO)
             {
-                // If _currentSpellIndex is the last spell, get the inventoryitem Id
-                if (_currentSpellIndex >= _spellMetaDataList.Count - 1)
+                if (_currentSpellIndex >= _spellCastGroups.Count - 1)
                 {
                     _wandManaSystem.StartWandRecharge(selectedInventoryItem.Id, wandItemSO.RechargeTime);
                 }
 
-                // Cycle through spells
-                _currentSpellIndex = (_currentSpellIndex + 1) % _spellMetaDataList.Count; 
+                _currentSpellIndex = (_currentSpellIndex + 1) % _spellCastGroups.Count;
 
-                // Subtract Mana
-                _wandManaSystem.TrySpendMana(selectedInventoryItem.Id, CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]));
+                _wandManaSystem.TrySpendMana(selectedInventoryItem.Id, CalculateGroupManaCost(_spellCastGroups[_currentSpellIndex]));
             }
         }
     }
@@ -96,15 +102,15 @@ public class SpellCastController
         _wandManaSystem.Tick(Time.deltaTime, _currentWandInventoryItem);
         _postCastDelayTimer.Tick(Time.deltaTime);
 
-        if(CanCast())
+        if (CanCast())
         {
-            _player.SpellCaster.TryCastSpell(_spellMetaDataList[_currentSpellIndex], GetExecutionParams);
+            _player.SpellCaster.TryCastSpell(_spellCastGroups[_currentSpellIndex], GetExecutionParams);
         }
     }
 
     private bool CanCast()
     {
-        if (_spellMetaDataList == null) return false;
+        if (_spellCastGroups == null || _spellCastGroups.Count == 0) return false;
 
         bool isOverUI = Pointer.IsOverUI();
         bool isOverInteractable = Pointer.IsOverInteractable();
@@ -118,18 +124,17 @@ public class SpellCastController
 
         if (InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem))
         {
-            hasEnoughMana = _wandManaSystem.GetCurrentMana(selectedInventoryItem.Id) >= CalculateTotalManaCost(_spellMetaDataList[_currentSpellIndex]);
+            hasEnoughMana = _wandManaSystem.GetCurrentMana(selectedInventoryItem.Id) >= CalculateGroupManaCost(_spellCastGroups[_currentSpellIndex]);
         }
 
         return !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && primaryHeldDown && !isCasting && !isWandRecharging && !postCastDelayTimerRunning && !isLoadingBiome;
     }
-    
+
     public bool IsWandRecharging(out Timer rechargeTimer)
     {
         if (InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem))
         {
-            bool isRecharging = _wandManaSystem.IsWandRecharging(selectedInventoryItem.Id, out rechargeTimer);
-            return isRecharging;
+            return _wandManaSystem.IsWandRecharging(selectedInventoryItem.Id, out rechargeTimer);
         }
 
         rechargeTimer = null;
@@ -138,23 +143,21 @@ public class SpellCastController
 
     private (Vector3 spawnPoint, Vector3 direction) GetExecutionParams()
     {
+        var group = _spellCastGroups[_currentSpellIndex];
+        var firstSpell = group.SpellsToCast[0];
+
         float wandAccuracy = _currentWandItemSO?.Accuracy ?? 0f;
-        float spellAccuracy = _spellMetaDataList[_currentSpellIndex].SpellItem.Scatter;
+        float spellAccuracy = firstSpell.SpellItem.Scatter;
         float totalSpellModAccuracy = 0;
 
-        foreach (var mod in _spellMetaDataList[_currentSpellIndex].SpellMods)
+        foreach (var mod in firstSpell.SpellMods)
         {
             totalSpellModAccuracy += mod.Scatter;
         }
 
         float totalAccuracy = Mathf.Max(0f, wandAccuracy + spellAccuracy + totalSpellModAccuracy);
-
         Vector2 point = _player.PlayerHand.SpellSpawnTransform.position;
-        
-        // Calculate base direction
         Vector2 baseDirection = (ActionManager.MouseWorldPosition - point).normalized;
-        
-        // Apply random angle offset within ±accuracy degrees
         float angleOffset = UnityEngine.Random.Range(-totalAccuracy, totalAccuracy);
         Vector2 direction = Quaternion.Euler(0, 0, angleOffset) * baseDirection;
 
@@ -167,37 +170,74 @@ public class SpellCastController
         {
             InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
             _currentWandInventoryItem = selectedInventoryItem;
-            MagicItemSO[] currentMagicArray = (_currentWandInventoryItem as WandInventoryItem).MagicArray;
+            _currentWandItemSO = wandItemSO;
+            MagicItemSO[] magicArray = (_currentWandInventoryItem as WandInventoryItem).MagicArray;
 
-            if (currentMagicArray == null || currentMagicArray.Length == 0)
-            {
-                return;
-            }
-
-            _spellMetaDataList = new();
+            _spellCastGroups = new();
             List<SpellModItemSO> currentMods = new();
 
-            foreach (var item in currentMagicArray)
+            for (int i = 0; i < magicArray.Length;)
             {
+                MagicItemSO item = magicArray[i];
+
                 if (item is SpellModItemSO mod)
                 {
                     currentMods.Add(mod);
+                    i++;
                 }
                 else if (item is SpellItemSO spell)
                 {
-                    _spellMetaDataList.Add(new SpellMetaData(spell, new List<SpellModItemSO>(currentMods)));
+                    _spellCastGroups.Add(new SpellCastGroup(new List<SpellMetaData>
+                    {
+                        new SpellMetaData(spell, new List<SpellModItemSO>(currentMods))
+                    }));
                     currentMods.Clear();
+                    i++;
+                }
+                else if (item is MultiCastItemSO multi)
+                {
+                    List<SpellMetaData> groupedSpells = new();
+                    int count = 0;
+                    i++; // skip the multicast
+
+                    while (i < magicArray.Length && count < multi.SpellCastAmount)
+                    {
+                        if (magicArray[i] is SpellModItemSO mod2)
+                        {
+                            currentMods.Add(mod2);
+                            i++;
+                        }
+                        else if (magicArray[i] is SpellItemSO spell2)
+                        {
+                            groupedSpells.Add(new SpellMetaData(spell2, new List<SpellModItemSO>(currentMods)));
+                            currentMods.Clear();
+                            count++;
+                            i++;
+                        }
+                        else
+                        {
+                            i++;
+                        }
+                    }
+
+                    if (groupedSpells.Count > 0)
+                    {
+                        _spellCastGroups.Add(new SpellCastGroup(groupedSpells));
+                    }
+                }
+                else
+                {
+                    i++;
                 }
             }
 
-            _currentSpellIndex = 0; // Reset to the first spell
-            _currentWandItemSO = wandItemSO;
+            _currentSpellIndex = 0;
         }
         else
         {
             _currentWandInventoryItem = null;
             _currentWandItemSO = null;
-            _spellMetaDataList = null;
+            _spellCastGroups = null;
         }
     }
 
@@ -211,26 +251,35 @@ public class SpellCastController
 
     private void CheckForSelectedItemChange(object sender, HotbarManager.OnFocusItemSetEventArgs e)
     {
-        if (e.SelectedItemId == _player.SpellCaster.CurrentSpellData.SpellItemId)
-        {
-            Debug.Log($"Cannot cancel if the spell is the same spell that is currently being cast.");
-            return;
-        }
+        // if (e.SelectedItemId == _player.SpellCaster.CurrentSpellData.SpellItemId)
+        // {
+        //     Debug.Log("Cannot cancel if the spell is the same one being cast.");
+        //     return;
+        // }
 
-        // If an invetnory slot was selected, cancel spell casting
-        if (_player.SpellCaster.IsCasting.Value)
-        {
-            _player.SpellCaster.TryToCancelCast();
-        }
+        // if (_player.SpellCaster.IsCasting.Value)
+        // {
+        //     _player.SpellCaster.TryToCancelCast();
+        // }
     }
 
     private int CalculateTotalManaCost(SpellMetaData spellMeta)
     {
-        int totalMana = spellMeta.SpellItem.ManaCost;
+        int total = spellMeta.SpellItem.ManaCost;
         foreach (var mod in spellMeta.SpellMods)
         {
-            totalMana += mod.ManaCost;
+            total += mod.ManaCost;
         }
-        return totalMana;
+        return total;
+    }
+
+    private int CalculateGroupManaCost(SpellCastGroup group)
+    {
+        int total = 0;
+        foreach (var spell in group.SpellsToCast)
+        {
+            total += CalculateTotalManaCost(spell);
+        }
+        return total;
     }
 }

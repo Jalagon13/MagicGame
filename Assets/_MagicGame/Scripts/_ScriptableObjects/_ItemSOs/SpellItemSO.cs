@@ -68,12 +68,12 @@ public class SpellItemSO : MagicItemSO
 			HasteMultiplier, Scatter, casterNetObjId, OnlyContinueAfterSpellEnds, spawnBiome, spellMods);
 	}
 	
-	public virtual void StartSpell(int slotIndex) // Default behavior, spawn spell on server, assign it to player
-	{
-		// var syncSpellData = GetSpellDataForLocalClientInstance();
+	// public virtual void StartSpell(int slotIndex) // Default behavior, spawn spell on server, assign it to player
+	// {
+	// 	// var syncSpellData = GetSpellDataForLocalClientInstance();
 		
-		// InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-		// SpellManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position);
-		// SpellManager.Instance.LoadSpell(this, new LoadedSpell(this, syncSpellData, selectedInventoryItem));
-	}
+	// 	// InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
+	// 	// SpellManager.Instance.SpawnSpellServerRpc(syncSpellData, Player.LocalClientInstance.PlayerHand.SpellSpawnTransform.position);
+	// 	// SpellManager.Instance.LoadSpell(this, new LoadedSpell(this, syncSpellData, selectedInventoryItem));
+	// }
 }

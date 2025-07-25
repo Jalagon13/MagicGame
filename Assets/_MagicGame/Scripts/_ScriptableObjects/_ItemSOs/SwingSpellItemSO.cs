@@ -12,9 +12,9 @@ public class SwingSpellItemSO : SpellItemSO
     [field: SerializeField] public EventReference HitSound { get; private set; }
     [field: SerializeField] public EventReference SwingSound { get; private set; }
 
-    public override void StartSpell(int slotIndex)
-    {
-        // SpellManager.Instance.SubtractManaAndSetCooldown(this);
-        // Player.LocalClientInstance.PlayerHand.ExecuteSwing(SwingDuration, GameManager.Instance.GetItemIdFromItemSO(this));
-    }
+    // public override void StartSpell(int slotIndex)
+    // {
+    //     // SpellManager.Instance.SubtractManaAndSetCooldown(this);
+    //     // Player.LocalClientInstance.PlayerHand.ExecuteSwing(SwingDuration, GameManager.Instance.GetItemIdFromItemSO(this));
+    // }
 }

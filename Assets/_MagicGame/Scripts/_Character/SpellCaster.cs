@@ -8,30 +8,36 @@ public class SpellCaster : NetworkBehaviour
 {
     public event EventHandler OnSpellCooldownTimersUpdated;
 
-    [SerializeField] 
+    [SerializeField]
     private ServerCharacter _serverCharacter;
-    
+
     private Timer _castTimer;
     public Timer CastTimer => _castTimer;
-    
+
     private NetworkObject _spellNetObj;
-    
+
     private bool _pendingCast, _cancelCast;
-    
+
     private NetworkVariable<bool> _isCasting = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<bool> IsCasting => _isCasting; // Exposes the NetworkVariable itself
-    
-    private SyncSpellData _currentSpellData;
-    public SyncSpellData CurrentSpellData => _currentSpellData;
-    
-    [SerializeField] 
+    public NetworkVariable<bool> IsCasting => _isCasting;
+
+    // private SyncSpellData _currentSpellData;
+    // public SyncSpellData CurrentSpellData => _currentSpellData;
+
+    [SerializeField]
     private Transform _spellSpawnTransform;
     public Transform SpellSpawnTransform => _spellSpawnTransform;
 
     private Func<(Vector3 spawnPoint, Vector3 direction)> _getExecutionParams;
-    
+
     private Vector2 _castingPoint;
     public Vector2 CastingPoint => _castingPoint;
+
+    private SpellCastGroup _currentSpellGroup;
+    public SpellCastGroup CurrentSpellGroup => _currentSpellGroup;
+    
+    private List<NetworkObjectReference> _pendingSpellsToExecute = new();
+    private int _waitingForEndCount = 0;
 
     private void Awake()
     {
@@ -40,99 +46,91 @@ public class SpellCaster : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsOwner) return; // Only the owner should update the casting state and cooldowns
-    
+        if (!IsOwner) return;
         _castTimer?.Tick(Time.deltaTime);
     }
-    
+
     public void SetCastingPoint(Vector2 castPoint)
     {
         _castingPoint = castPoint;
     }
-    
-    public void TryCastSpell(SpellMetaData spellMetaData, Func<(Vector3 spawnPoint, Vector3 direction)> getExecutionParams)
+
+    public void TryCastSpell(SpellCastGroup spellGroup, Func<(Vector3 spawnPoint, Vector3 direction)> getExecutionParams)
     {
-        // cast timer still going || still casting a spell
         if (_castTimer.IsRunning || _isCasting.Value) return;
 
         Reset();
 
-        _currentSpellData = spellMetaData.SpellItem.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome, spellMetaData.SpellMods);
-
-        SpawnSpellServerRpc(_currentSpellData);
-        
+        _currentSpellGroup = spellGroup;
         _getExecutionParams = getExecutionParams;
         _isCasting.Value = true;
-        
-        float totalCastTime = spellMetaData.SpellItem.CastTime;
-        foreach (var mod in spellMetaData.SpellMods)
+        _pendingSpellsToExecute.Clear();
+
+        float totalCastTime = 0f;
+
+        foreach (var spellMetaData in spellGroup.SpellsToCast)
         {
-            totalCastTime += mod.CastTime;
+            var syncData = spellMetaData.SpellItem.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome, spellMetaData.SpellMods);
+            SpawnSpellServerRpc(syncData); // spawn all spells now
+
+            totalCastTime += spellMetaData.SpellItem.CastTime;
+            foreach (var mod in spellMetaData.SpellMods)
+            {
+                totalCastTime += mod.CastTime;
+            }
         }
 
         _castTimer = new Timer(totalCastTime);
         _castTimer.OnTimerEnd += OnCastTimerEnd;
     }
-    
+
     public void TryToCancelCast()
     {
-        if(_isCasting.Value)
+        if (_isCasting.Value)
         {
             _isCasting.Value = false;
-            _cancelCast = _spellNetObj == null; // if it equals null, then RTT isn't done yet, set it to true so when it arrives, it is canceled not executed
-            if(_spellNetObj != null)
+            _cancelCast = _spellNetObj == null;
+            if (_spellNetObj != null)
             {
                 _spellNetObj.GetComponent<ServerSpell>().CancelSpellCharge();
                 Reset();
             }
-
-            // NTFS: add a cancel event here maybe
         }
     }
 
     private void OnCastTimerEnd(object sender, EventArgs e)
     {
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
-        
-        TryExecuteSpell();
-    }
-    
-    private void TryExecuteSpell()
-    {
-        if (_spellNetObj != null)
+
+        foreach (var spellRef in _pendingSpellsToExecute)
         {
-            ExecuteSpell(_spellNetObj);
+            ExecuteSpell(spellRef);
         }
-        else
+
+        if (_waitingForEndCount == 0)
         {
-            _pendingCast = true; // Wait for SendSpellRefToCasterRpc to retry
+            _isCasting.Value = false;
+            Reset();
         }
     }
-    
+
     private void ExecuteSpell(NetworkObjectReference spellNetObj)
     {
         if (spellNetObj.TryGet(out NetworkObject actualSpell))
         {
             if (actualSpell.TryGetComponent(out ServerSpell serverSpell))
             {
-                // Get the final spawn point and direction
-                var (finalSpawnPoint, finalDirection) = _getExecutionParams != null ? _getExecutionParams.Invoke() : (transform.position, transform.forward);
+                var (finalSpawnPoint, finalDirection) = _getExecutionParams != null
+                    ? _getExecutionParams.Invoke()
+                    : (transform.position, transform.forward);
 
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
 
-                if(serverSpell.SpellData.Value.OnlyContinueAfterSpellEnds)
+                if (serverSpell.SpellData.Value.OnlyContinueAfterSpellEnds)
                 {
-                    // Delay it until the spell ends
-                    Debug.Log($"Spell {serverSpell.name} is set to only continue after it ends, waiting for end event.");
+                    _waitingForEndCount++;
                     serverSpell.SpellStateNV.OnValueChanged += CheckForSpellEnd;
                 }
-                else
-                {
-                    Debug.Log($"Spell {serverSpell.name} is not set to wait for end, continuing casting immediately.");
-                    _isCasting.Value = false; // Continue casting for the next spell
-                    Reset();
-                }
-                
             }
             else
             {
@@ -147,12 +145,17 @@ public class SpellCaster : NetworkBehaviour
 
     private void CheckForSpellEnd(SpellState previousValue, SpellState newValue)
     {
-        if(previousValue == SpellState.Casting && newValue == SpellState.Stopping)
+        if (previousValue == SpellState.Casting && newValue == SpellState.Stopping)
         {
-            Debug.Log($"Spell ended, continuing casting for the next spell.");
-            _isCasting.Value = false; // Reset casting state
-            _spellNetObj.GetComponent<ServerSpell>().SpellStateNV.OnValueChanged -= CheckForSpellEnd;
-            Reset();
+            var spell = _spellNetObj.GetComponent<ServerSpell>();
+            spell.SpellStateNV.OnValueChanged -= CheckForSpellEnd;
+
+            _waitingForEndCount--;
+            if (_waitingForEndCount <= 0)
+            {
+                _isCasting.Value = false;
+                Reset();
+            }
         }
     }
 
@@ -169,8 +172,8 @@ public class SpellCaster : NetworkBehaviour
 
         spell.SpellData.Value = spellData;
         spell.GetComponent<SpellNetworkVisibility>().InitializeSpellNetwork(spellData);
-        
-        SendSpellRefToCasterRpc(spellNetObj.NetworkObjectId, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
+
+        SendSpellRefToCasterRpc(spellNetObj.NetworkObjectId, RpcTarget.Single(casterNetObj.OwnerClientId, RpcTargetUse.Persistent));
     }
 
     [Rpc(SendTo.SpecifiedInParams)]
@@ -178,10 +181,10 @@ public class SpellCaster : NetworkBehaviour
     {
         StartCoroutine(WaitForSpellNetObjAndHandle(spellNetObjId));
     }
-    
+
     private IEnumerator WaitForSpellNetObjAndHandle(ulong spellNetObjId)
     {
-        float timeout = 2f; // seconds, adjust as needed
+        float timeout = 2f;
         float elapsed = 0f;
         while (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(spellNetObjId, out _spellNetObj))
         {
@@ -194,8 +197,6 @@ public class SpellCaster : NetworkBehaviour
             yield return null;
         }
 
-        // Debug.Log($"SpellNetObj is null? {_spellNetObj == null}, on client {NetworkManager.Singleton.LocalClientId}, Elapsed time: {elapsed}s");
-
         if (_cancelCast)
         {
             _spellNetObj.GetComponent<ServerSpell>().CancelSpellCharge();
@@ -203,10 +204,7 @@ public class SpellCaster : NetworkBehaviour
             yield break;
         }
 
-        if (_pendingCast)
-        {
-            TryExecuteSpell(); // Delayed shoot now that the object exists
-        }
+        _pendingSpellsToExecute.Add(_spellNetObj);
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
@@ -219,9 +217,11 @@ public class SpellCaster : NetworkBehaviour
     private void Reset()
     {
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
-        
+
         _spellNetObj = null;
-        _pendingCast = false;
+        _pendingSpellsToExecute.Clear();
+        _waitingForEndCount = 0;
         _cancelCast = false;
+        _pendingCast = false;
     }
 }
