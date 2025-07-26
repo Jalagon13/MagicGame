@@ -4,7 +4,7 @@ public class PlayerSpellCastingState : BaseState
 {
     private PlayerStateMachine _ctx;
     private GameObject _clientChargeVfx;
-    private SpellItemSO _spellToCast;
+    private SpellCastGroup _currentSpellCastGroup;
 
     public PlayerSpellCastingState(AIState key, StateMachine context) : base(key, context)
     {
@@ -15,11 +15,21 @@ public class PlayerSpellCastingState : BaseState
     protected override void EnterState(AIStateData stateData)
     {
         // Debug.Log($"Player entering spell casting");
-        _spellToCast = GameManager.Instance.GetItemSOFromItemId(stateData.Amount) as SpellItemSO;
-        
+        _currentSpellCastGroup = _ctx.SpellCaster.CurrentSpellGroup;
+
+        float totalHasteMultiplier = 0;
+        int count = _currentSpellCastGroup.SpellsToCast.Count;
+
+        foreach (SpellMetaData spellMetaData in _currentSpellCastGroup.SpellsToCast)
+        {
+            totalHasteMultiplier += spellMetaData.SpellItem.HasteMultiplier;
+        }
+
+        float averageHasteMultiplier = count > 0 ? totalHasteMultiplier / count : 0;
+
         Buff castingMoveBuff = new(
-            _ctx.ServerCharacter.Stats.MovementSpeed, 
-            new StatModifier(_spellToCast.HasteMultiplier, StatModifierType.Percent, _spellToCast)/* ,
+            _ctx.ServerCharacter.Stats.MovementSpeed,
+            new StatModifier(averageHasteMultiplier, StatModifierType.Percent, _currentSpellCastGroup)/* ,
             _spellToCast.CastTime */);
         
         _ctx.ServerCharacter.Stats.AddBuff(castingMoveBuff);
@@ -44,19 +54,14 @@ public class PlayerSpellCastingState : BaseState
 
     public override void ExitState()
     {
-        if(_ctx.SpellCaster.SuccessfullSpellCast) 
-        {
-            _ctx.ServerCharacter.Movement.StartKnockback(ActionManager.MouseWorldPosition, _spellToCast.Recoil);
-        }
-
-        _ctx.ServerCharacter.Stats.RemoveBuffsFromSource(_spellToCast);
+        _ctx.ServerCharacter.Stats.RemoveBuffsFromSource(_currentSpellCastGroup);
     }
 
     public override void ClientEnterState(AIStateData stateData)
     {
         SpellItemSO spellToCast = GameManager.Instance.GetItemSOFromItemId(stateData.Amount) as SpellItemSO;
 
-        _clientChargeVfx = Object.Instantiate(spellToCast.ChargeVFX, _ctx.PlayerRef.PlayerHand.SpellSpawnTransform);
+        _clientChargeVfx = Object.Instantiate(spellToCast.ChargeVFX, _ctx.SpellCaster.SpellSpawnTransform);
         _clientChargeVfx.transform.localPosition = Vector3.zero;
         _clientChargeVfx.GetComponent<MagicCircle>().StartAnimation(spellToCast.CastTime);
     }

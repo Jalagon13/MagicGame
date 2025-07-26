@@ -6,8 +6,8 @@ using DG.Tweening;
 public class MagicCircle : MonoBehaviour
 {
     [field: SerializeField] public float RotationSpeed { get; private set; } = 90f; // degrees per second
-    [field: SerializeField] public float StopDuration { get; private set; } = 0.135f; // degrees per second
-    
+    [field: SerializeField] public float StopDuration { get; private set; } = 0.135f;
+
     private SpriteRenderer _magicCircleSr;
 
     private void Awake()
@@ -33,13 +33,16 @@ public class MagicCircle : MonoBehaviour
     {
         Sequence stopSequence = DOTween.Sequence();
 
-        // Scale from 1 to 1.5
         stopSequence.Append(transform.DOScale(1.5f, StopDuration));
-
-        // Fade out the sprite renderer
         stopSequence.Join(_magicCircleSr.DOFade(0f, StopDuration));
 
-        // After animation, destroy the game object
-        stopSequence.OnKill(() => Destroy(gameObject));
+        stopSequence.OnComplete(() => Destroy(gameObject)); // safer than OnKill
+    }
+
+    private void OnDestroy()
+    {
+        transform.DOKill();
+        if (_magicCircleSr != null)
+            _magicCircleSr.DOKill();
     }
 }

@@ -18,7 +18,7 @@ MonoBehaviour:
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <Capacity>k__BackingField: 5
-  <RechargeTime>k__BackingField: 3
+  <RechargeTime>k__BackingField: 1
   <Accuracy>k__BackingField: 0
   <BaseMana>k__BackingField: 25
-  <BaseManaRegen>k__BackingField: 2
+  <BaseManaRegen>k__BackingField: 4

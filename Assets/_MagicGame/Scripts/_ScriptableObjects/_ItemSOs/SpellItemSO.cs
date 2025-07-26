@@ -48,9 +48,6 @@ public class SpellItemSO : MagicItemSO
 	[field: Tooltip("The speed at which the projectile travels.")]
 	[field: SerializeField] public int Speed { get; private set; } = 100;
 	
-	[field: Tooltip("How much knockback applied to player when this spell recoils")]
-	[field: SerializeField] public float Recoil { get; private set; } = 2f;
-
 	[field: Tooltip("Multiplier on fast the player moves when casting this spell")]
 	[field: SerializeField] public float HasteMultiplier { get; private set; } = 0.5f;
 	

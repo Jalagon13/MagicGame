@@ -14,4 +14,5 @@ public class SpellModItemSO : MagicItemSO
 
     [field: Tooltip("The contributed cast time of the spell modifier.")]
     [field: SerializeField] public float CastTime { get; private set; } = 0f;
+    
 }

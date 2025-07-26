@@ -15,7 +15,7 @@ public struct SpellMetaData
     }
 }
 
-public struct SpellCastGroup
+public class SpellCastGroup
 {
     public List<SpellMetaData> SpellsToCast;
 
