@@ -37,6 +37,8 @@ public class SpellCaster : NetworkBehaviour
     private List<NetworkObjectReference> _pendingSpellsToExecute = new();
     private int _waitingForEndCount = 0;
 
+    private Coroutine _rapidFireRoutine;
+
     private void Awake()
     {
         _castTimer = new Timer(0f);
@@ -69,7 +71,7 @@ public class SpellCaster : NetworkBehaviour
         foreach (var spellMetaData in spellGroup.SpellsToCast)
         {
             var syncData = spellMetaData.SpellItem.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome, spellMetaData.SpellMods);
-            SpawnSpellServerRpc(syncData); // spawns all spells now
+            SpawnSpellServerRpc(syncData); // pre-spawn all spells
 
             totalCastTime += spellMetaData.SpellItem.CastTime;
             foreach (var mod in spellMetaData.SpellMods)
@@ -112,16 +114,67 @@ public class SpellCaster : NetworkBehaviour
     {
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
 
+        if (_currentSpellGroup?.PayloadSource is RapidCastItemSO rapidCastItem)
+        {
+            Debug.Log($"Executing rapid cast with {_currentSpellGroup.SpellsToCast.Count} spells.");
+            _rapidFireRoutine ??= StartCoroutine(RunRapidFireCast(rapidCastItem));
+        }
+        else
+        {
+            Debug.Log($"Executing spell group with {_currentSpellGroup.SpellsToCast.Count} spells.");
+            // Default: cast all spells at once
+            foreach (var spellRef in _pendingSpellsToExecute)
+            {
+                ExecuteSpell(spellRef);
+            }
+
+            if (_waitingForEndCount == 0)
+            {
+                Reset();
+            }
+        }
+    }
+
+    private IEnumerator RunRapidFireCast(RapidCastItemSO rapidCastItem)
+    {
+        float delayBetweenSpells = rapidCastItem.SpellDelay;
+
         foreach (var spellRef in _pendingSpellsToExecute)
         {
-            ExecuteSpell(spellRef);
+            if (_cancelCast)
+                yield break;
+
+            if (spellRef.TryGet(out NetworkObject actualSpell) &&
+                actualSpell.TryGetComponent(out ServerSpell serverSpell))
+            {
+                ExecuteSpell(spellRef);
+
+                if (serverSpell.SpellData.Value.OnlyContinueAfterSpellEnds)
+                {
+                    Debug.Log($"Waiting for spell {serverSpell.name} to end before continuing.");
+                    yield return new WaitForSeconds(delayBetweenSpells + serverSpell.SpellData.Value.Lifetime);
+                }
+                else
+                {
+                    Debug.Log($"Waiting for {delayBetweenSpells} seconds before casting next spell.");
+                    yield return new WaitForSeconds(delayBetweenSpells);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Could not resolve spell or ServerSpell component during rapid fire. Skipping to next.");
+                // Wait to prevent instant iteration even on failure
+                yield return new WaitForSeconds(delayBetweenSpells);
+            }
         }
 
+        // Only reset if nothing is waiting for a spell to end
         if (_waitingForEndCount == 0)
         {
-            _isCasting.Value = false;
             Reset();
         }
+
+        _rapidFireRoutine = null;
     }
 
     private void ExecuteSpell(NetworkObjectReference spellNetObj)
@@ -158,7 +211,6 @@ public class SpellCaster : NetworkBehaviour
     {
         if (previousValue == SpellState.Casting && newValue == SpellState.Stopping)
         {
-            // Find the matching spell that triggered this (by checking each with the handler still assigned)
             for (int i = _spellsWithEndCallbacks.Count - 1; i >= 0; i--)
             {
                 var spell = _spellsWithEndCallbacks[i];
@@ -171,9 +223,10 @@ public class SpellCaster : NetworkBehaviour
             }
 
             _waitingForEndCount--;
-            if (_waitingForEndCount <= 0)
+
+            // 🔐 Only reset if the rapid fire routine is done AND no more waiting spells
+            if (_waitingForEndCount <= 0 && _rapidFireRoutine == null)
             {
-                _isCasting.Value = false;
                 Reset();
             }
         }
@@ -242,7 +295,15 @@ public class SpellCaster : NetworkBehaviour
 
     private void Reset()
     {
+        Debug.Log($"Resetting");
+
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
+
+        if (_rapidFireRoutine != null)
+        {
+            StopCoroutine(_rapidFireRoutine);
+            _rapidFireRoutine = null;
+        }
 
         foreach (var spell in _spellsWithEndCallbacks)
         {
@@ -254,5 +315,6 @@ public class SpellCaster : NetworkBehaviour
         _activeSpellNetObjs.Clear();
         _waitingForEndCount = 0;
         _cancelCast = false;
+        _isCasting.Value = false; // centralized here
     }
 }

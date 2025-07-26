@@ -18,12 +18,14 @@ public struct SpellMetaData
 public class SpellCastGroup
 {
     public List<SpellMetaData> SpellsToCast;
+    public PayloadCastItemSO PayloadSource;
 
     public bool IsMultiCast => SpellsToCast.Count > 1;
 
-    public SpellCastGroup(List<SpellMetaData> spells)
+    public SpellCastGroup(List<SpellMetaData> spells, PayloadCastItemSO payloadSource = null)
     {
         SpellsToCast = spells;
+        PayloadSource = payloadSource;
     }
 }
 
@@ -194,36 +196,9 @@ public class SpellCastController
                     currentMods.Clear();
                     i++;
                 }
-                else if (item is MultiCastItemSO multi)
+                else if (item is PayloadCastItemSO payload)
                 {
-                    List<SpellMetaData> groupedSpells = new();
-                    int count = 0;
-                    i++; // skip the multicast
-
-                    while (i < magicArray.Length && count < multi.SpellCastAmount)
-                    {
-                        if (magicArray[i] is SpellModItemSO mod2)
-                        {
-                            currentMods.Add(mod2);
-                            i++;
-                        }
-                        else if (magicArray[i] is SpellItemSO spell2)
-                        {
-                            groupedSpells.Add(new SpellMetaData(spell2, new List<SpellModItemSO>(currentMods)));
-                            currentMods.Clear();
-                            count++;
-                            i++;
-                        }
-                        else
-                        {
-                            i++;
-                        }
-                    }
-
-                    if (groupedSpells.Count > 0)
-                    {
-                        _spellCastGroups.Add(new SpellCastGroup(groupedSpells));
-                    }
+                    _spellCastGroups.AddRange(payload.BuildSpellGroups(magicArray, ref i, currentMods));
                 }
                 else
                 {

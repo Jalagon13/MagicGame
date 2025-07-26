@@ -36,7 +36,6 @@ MonoBehaviour:
   <PierceCount>k__BackingField: 0
   <Lifetime>k__BackingField: 0.75
   <Speed>k__BackingField: 8
-  <Recoil>k__BackingField: 6
   <HasteMultiplier>k__BackingField: -0.5
-  <Scatter>k__BackingField: 35
+  <Scatter>k__BackingField: 5
   <OnlyContinueAfterSpellEnds>k__BackingField: 0

@@ -7,9 +7,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "New MultiCast", menuName = "Create Item/New MultiCast")]
-public class MultiCastItemSO : MagicItemSO
+public class MultiCastItemSO : PayloadCastItemSO
 {
-    [field: Tooltip("This is the amount of spells that can be cast at once")]
-    [field: SerializeField] 
-    public int SpellCastAmount { get; private set; }
+    
 }
