@@ -182,23 +182,15 @@ public class FlameBreath : ServerSpell
             yield return null;
     }
 
-    public override void ClientSpellStart(ClientSpell clientSpell)
+    public override void OnClientSpellStart(ClientSpell clientSpell)
     {
         clientSpell.Visualization.SetActive(true);
     
         _sustainedFireSoundEventInstance = SoundManager.Instance.CreateInstance(_sustainedFireSound);
         _sustainedFireSoundEventInstance.start();
-
-        SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
-        SoundManager.Instance.PlayOneShot(spellItemSO.SpellCastSound, transform.position);
-    }
-    
-    public override void ClientSpellUpdate(ClientSpell clientSpell)
-    {
-
     }
 
-    public override void ClientSpellStop(ClientSpell clientSpell)
+    public override void OnClientSpellStop(ClientSpell clientSpell)
     {
         _sustainedFireSoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 

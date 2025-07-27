@@ -79,7 +79,6 @@ public abstract class ServerSpell : NetworkBehaviour
         transform.position = spawnPoint;
         _finalDirection = finalDirection;
         
-        
         StartCoroutine(SpellLifetimeRoutine());
     }
 
@@ -136,9 +135,17 @@ public abstract class ServerSpell : NetworkBehaviour
     protected virtual void OnSpellCanceled() { }
     
     // Client Methods
-    public virtual void ClientSpellStart(ClientSpell clientSpell) { }
-    public virtual void ClientSpellUpdate(ClientSpell clientSpell) { }
-    public virtual void ClientSpellStop(ClientSpell clientSpell) { }
+    public void ClientSpellStart(ClientSpell clientSpell)
+    {
+        SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
+        SoundManager.Instance.PlayOneShot(spellItemSO.SpellCastSound, transform.position);
+
+        OnClientSpellStart(clientSpell);
+    }
+    
+    public virtual void OnClientSpellStart(ClientSpell clientSpell) { }
+    public virtual void OnClientSpellUpdate(ClientSpell clientSpell) { }
+    public virtual void OnClientSpellStop(ClientSpell clientSpell) { }
 
     // NTFS: *maybe* put this in a util class idk we'll see
     public bool IsValidNpcHit(Collider2D collider, out DamageReceiver damageReceiver)

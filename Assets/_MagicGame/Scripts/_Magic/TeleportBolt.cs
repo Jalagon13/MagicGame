@@ -15,7 +15,7 @@ public class TeleportBolt : ProjectileSpell
         return currentVelocity; // Constant velocity for teleport bolt, no decay
     }
 
-    public override void ClientSpellStop(ClientSpell clientSpell)
+    public override void OnClientSpellStop(ClientSpell clientSpell)
     {
         Player playerWhoShotIt = NetworkManager.Singleton.SpawnManager.SpawnedObjects[SpellData.Value.CasterNetworkObjectId].GetComponent<Player>();
         

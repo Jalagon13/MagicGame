@@ -38,7 +38,7 @@ public class ClientSpell : NetworkBehaviour
 
         if(_serverSpell.SpellStateNV.Value == SpellState.Casting)
         {
-            _serverSpell?.ClientSpellUpdate(this);
+            _serverSpell?.OnClientSpellUpdate(this);
         }
     }
 
@@ -50,7 +50,7 @@ public class ClientSpell : NetworkBehaviour
         }
         else if(previousValue == SpellState.Casting && newValue == SpellState.Stopping)
         {
-            _serverSpell.ClientSpellStop(this);
+            _serverSpell.OnClientSpellStop(this);
         }
     }
 

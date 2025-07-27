@@ -116,12 +116,10 @@ public class SpellCaster : NetworkBehaviour
 
         if (_currentSpellGroup?.PayloadSource is RapidCastItemSO rapidCastItem)
         {
-            Debug.Log($"Executing rapid cast with {_currentSpellGroup.SpellsToCast.Count} spells.");
             _rapidFireRoutine ??= StartCoroutine(RunRapidFireCast(rapidCastItem));
         }
         else
         {
-            Debug.Log($"Executing spell group with {_currentSpellGroup.SpellsToCast.Count} spells.");
             // Default: cast all spells at once
             foreach (var spellRef in _pendingSpellsToExecute)
             {
@@ -151,18 +149,15 @@ public class SpellCaster : NetworkBehaviour
 
                 if (serverSpell.SpellData.Value.OnlyContinueAfterSpellEnds)
                 {
-                    Debug.Log($"Waiting for spell {serverSpell.name} to end before continuing.");
                     yield return new WaitForSeconds(delayBetweenSpells + serverSpell.SpellData.Value.Lifetime);
                 }
                 else
                 {
-                    Debug.Log($"Waiting for {delayBetweenSpells} seconds before casting next spell.");
                     yield return new WaitForSeconds(delayBetweenSpells);
                 }
             }
             else
             {
-                Debug.LogWarning("Could not resolve spell or ServerSpell component during rapid fire. Skipping to next.");
                 // Wait to prevent instant iteration even on failure
                 yield return new WaitForSeconds(delayBetweenSpells);
             }
@@ -295,8 +290,6 @@ public class SpellCaster : NetworkBehaviour
 
     private void Reset()
     {
-        Debug.Log($"Resetting");
-
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
 
         if (_rapidFireRoutine != null)

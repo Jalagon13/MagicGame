@@ -47,20 +47,17 @@ public abstract class ProjectileSpell : ServerSpell
 
     protected abstract Vector2 CalculateVelocity(Vector2 currentVelocity);
 
-    public override void ClientSpellStart(ClientSpell clientSpell)
+    public override void OnClientSpellStart(ClientSpell clientSpell)
     {
         clientSpell.Visualization.SetActive(true);
-        
-        SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
-        SoundManager.Instance.PlayOneShot(spellItemSO.SpellCastSound, transform.position);
     }
     
-    public override void ClientSpellUpdate(ClientSpell clientSpell)
+    public override void OnClientSpellUpdate(ClientSpell clientSpell)
     {
         // Implement client-side update logic if needed
     }
     
-    public override void ClientSpellStop(ClientSpell clientSpell)
+    public override void OnClientSpellStop(ClientSpell clientSpell)
     {
         // Implement client-side stop logic if needed
         foreach (Transform child in clientSpell.Visualization.transform)
