@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
-  m_Name: Spell_TeleportBolt
+  m_Name: TeleportBoltSpell
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Teleport Bolt
   <UiDisplay>k__BackingField: {fileID: -762693607845688436, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
   <GoldValue>k__BackingField: 100
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <SpellProjectilePrefab>k__BackingField: {fileID: 433218415224276779, guid: 7b76a216d688c40859abed843d362a5f, type: 3}
+  <SpellPrefab>k__BackingField: {fileID: 433218415224276779, guid: 7b76a216d688c40859abed843d362a5f, type: 3}
   <SpellUIDisplaySprite>k__BackingField: {fileID: -762693607845688436, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 8285152488836000937, guid: 8175636c29a52422d8069d30cf23c5b6, type: 3}
   <SpellCastSound>k__BackingField:
@@ -28,13 +28,13 @@ MonoBehaviour:
       Data4: 1594458749
     Path: event:/Player/WandCast
   <CastTime>k__BackingField: 0.2
-  <Cooldown>k__BackingField: 5
-  <ManaCost>k__BackingField: 1
+  <ManaCost>k__BackingField: 20
   <Damage>k__BackingField: 0
   <Knockback>k__BackingField: 3
-  <Lifetime>k__BackingField: 0.6
-  <Speed>k__BackingField: 25
-  <Recoil>k__BackingField: 0
-  <HasteMultiplier>k__BackingField: 1
-  <DespawnIfFocusSlotChanged>k__BackingField: 0
-  <IsContinuousCast>k__BackingField: 0
+  <BounceCount>k__BackingField: 0
+  <PierceCount>k__BackingField: 0
+  <Lifetime>k__BackingField: 0.65
+  <Speed>k__BackingField: 10
+  <HasteMultiplier>k__BackingField: -0.25
+  <Scatter>k__BackingField: 2
+  <OnlyContinueAfterSpellEnds>k__BackingField: 0

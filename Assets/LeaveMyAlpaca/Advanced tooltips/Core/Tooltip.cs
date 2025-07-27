@@ -152,7 +152,7 @@ namespace AdvancedTooltips.Core
 			script.WandIcon.sprite = spell.SpellUIDisplaySprite;
 
 			JustText($"<br>Value: {spell.GoldValue} Gold<br>" + spell.GetDescription(), Color.white, fontSize: fontSize, customLayout: script.StatLayout);
-			JustText($"{spell.Cooldown} s   cast delay"
+			JustText($"{spell.CastTime} s   cast delay"
 			+ $"<br>{spell.Damage}   damage"
 			+ $"<br>{spell.ManaCost}   cost to cast"
 			+ $"<br>{spell.Knockback}   knockback"

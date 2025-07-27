@@ -24,9 +24,6 @@ public class SpellItemSO : MagicItemSO
 	[field: Tooltip("Time it takes to cast this projectile (in seconds).")]
 	[field: SerializeField] public float CastTime { get; private set; } = 0.2f;
 
-	[field: Tooltip("The cooldown time (in seconds) before this spell can be cast again. A lower value means the spell can be reused more quickly.")]
-	[field: SerializeField] public float Cooldown { get; private set; } = 0.1f;
-	
 	[field: Tooltip("The mana cost required to cast this spell.")]
 	[field: SerializeField] public int ManaCost { get; private set; } = 5;
 	
