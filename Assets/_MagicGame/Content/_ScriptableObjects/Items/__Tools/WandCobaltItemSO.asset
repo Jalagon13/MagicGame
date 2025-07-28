@@ -20,5 +20,5 @@ MonoBehaviour:
   <Capacity>k__BackingField: 5
   <RechargeTime>k__BackingField: 1
   <Accuracy>k__BackingField: 3
-  <BaseMana>k__BackingField: 35
-  <BaseManaRegen>k__BackingField: 3
+  <BaseMana>k__BackingField: 350
+  <BaseManaRegen>k__BackingField: 10

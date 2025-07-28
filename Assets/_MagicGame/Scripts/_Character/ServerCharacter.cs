@@ -28,6 +28,9 @@ public class ServerCharacter : NetworkBehaviour
     private ClientCharacter _clientCharacter;
     public ClientCharacter ClientCharacter => _clientCharacter;
     
+    [SerializeField] 
+    private ClientFeedbacks _clientFeedbacks;
+    
     public NetworkHealthState NetHealthState { get; private set; }
     public int HitPoints
     {
@@ -207,28 +210,28 @@ public class ServerCharacter : NetworkBehaviour
         {
             if(LifeState == LifeState.IFrame)
                 return;
-                
+            
             // Damage reduction mod functionality here
             float damageReduction = 1f;
             hpReceived = (int)(hpReceived * damageReduction);
-            
-            _clientCharacter.PlayGameFeelRpc(hpReceived);
-            
-            if (_characterData.CanBeKnockedBack && e.PlayKnockback)
-            {
-                _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
-            }
 
-            if(HitPoints + hpReceived > 0)
-            {
+            // If not dead after taking damage, play character damaged feedbacks
+            if (HitPoints + hpReceived > 0 || !_characterData.CanDie)
+                _clientFeedbacks.PlayDamageFeedbacksRpc(hpReceived);
+
+            if (_characterData.CanBeKnockedBack && e.PlayKnockback)
+                _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
+
+            if (HitPoints + hpReceived > 0)
                 StartCoroutine(StartIFrameTimer());
-            }
         }
+        
         HitPoints = Mathf.Clamp(HitPoints + hpReceived, 0, _characterData.BaseHealth);
         _stateMachine?.ReceiveHP(inflicter, hpReceived);
-        
-        if(HitPoints <= 0 && _characterData.CanDie)
+
+        if (HitPoints <= 0 && _characterData.CanDie)
         {
+            _clientFeedbacks.PlayDeathFeedbacksRpc(hpReceived);
             LifeState = LifeState.Dead;
         }
     }

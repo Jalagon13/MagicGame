@@ -10,7 +10,7 @@ public class ClientCharacter : NetworkBehaviour
 {
     [SerializeField] 
     private ServerCharacter _serverCharacter;
-    
+
     [SerializeField] 
     private GameObject _visuals;
     public GameObject Visuals => _visuals;
@@ -73,12 +73,5 @@ public class ClientCharacter : NetworkBehaviour
         _currentSubState = _serverCharacter.StateMachine.GetState(newValue.CurrentState);
         _currentSubState?.ClientEnterState(newValue);
         _currentSubStateData = newValue;
-    }
-
-    [Rpc(SendTo.ClientsAndHost)]
-    public void PlayGameFeelRpc(int damage)
-    {
-        GameManager.Instance.PlayDamageNumbers(damage, transform.position, _serverCharacter.CurrentBiome, Color.red);
-        SoundManager.Instance.PlayOneShot(_serverCharacter.Data.HurtSound, transform.position);
     }
 }

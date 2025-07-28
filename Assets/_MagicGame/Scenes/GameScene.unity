@@ -2716,12 +2716,12 @@ MonoBehaviour:
   MutualizeWaitingPools: 1
   PoolCanExpand: 1
   Lifetime: {x: 1.5, y: 1.5}
-  SpawnOffsetMin: {x: -0.25, y: -0.25, z: 0}
-  SpawnOffsetMax: {x: 0.25, y: 0.25, z: 0}
+  SpawnOffsetMin: {x: -0.375, y: -0.375, z: 0}
+  SpawnOffsetMax: {x: 0.375, y: 0.375, z: 0}
   AnimateMovement: 1
   AnimateX: 1
   RemapXZero: {x: 0, y: 0}
-  RemapXOne: {x: 0.5, y: 0.5}
+  RemapXOne: {x: 0.25, y: 0.25}
   AnimateXCurve:
     serializedVersion: 2
     m_Curve:
@@ -2748,7 +2748,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   AnimateY: 1
   RemapYZero: {x: 0, y: 0}
-  RemapYOne: {x: 3.5, y: 3.5}
+  RemapYOne: {x: 3, y: 3.5}
   AnimateYCurve:
     serializedVersion: 2
     m_Curve:
@@ -7086,16 +7086,18 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: 39a2aececb6c84af391896b67bfa1db6, type: 2}
-    - {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
-    - {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
-    - {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
+    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
   - Item: {fileID: 11400000, guid: c4927bf03814a4704890caffd32c85df, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
-    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
-    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+    - {fileID: 11400000, guid: 39a2aececb6c84af391896b67bfa1db6, type: 2}
+    - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
+    - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
+    - {fileID: 11400000, guid: b598ad423e03f460ca683f3a2acc9391, type: 2}
+    - {fileID: 11400000, guid: 38c5893581bb04dd98146753a9243fe6, type: 2}
+    - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
   _startingItems:
   - Item: {fileID: 11400000, guid: fe217e765840a43b5b9acff0a1269c2f, type: 2}
     Quantity: 1

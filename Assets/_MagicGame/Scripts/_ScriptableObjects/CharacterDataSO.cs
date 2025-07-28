@@ -27,6 +27,7 @@ public class CharacterDataSO : ScriptableObject
 
     [Header("Sounds")]
     public EventReference HurtSound;
+    public EventReference DeathSound;
     public EventReference WalkSound;
 
     [Header("Npc Parameters")]

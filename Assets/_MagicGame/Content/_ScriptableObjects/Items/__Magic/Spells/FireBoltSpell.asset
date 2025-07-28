@@ -27,8 +27,7 @@ MonoBehaviour:
       Data3: -1885222999
       Data4: 915117413
     Path: event:/Magic/FireBurst
-  <CastTime>k__BackingField: 0.5
-  <Cooldown>k__BackingField: 0.35
+  <CastTime>k__BackingField: 0.35
   <ManaCost>k__BackingField: 6
   <Damage>k__BackingField: 10
   <Knockback>k__BackingField: 15

@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 179419550266015163, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_Radius
+      value: 0.15
+      objectReference: {fileID: 0}
     - target: {fileID: 248577315121873963, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -149,6 +153,14 @@ PrefabInstance:
       value: -2033662663
       objectReference: {fileID: 0}
     - target: {fileID: 3885697903487451157, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_Radius
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 3885697903487451157, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3885697903487451157, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Offset.y
       value: 0.66
       objectReference: {fileID: 0}
@@ -224,6 +236,26 @@ PrefabInstance:
       propertyPath: m_TagString
       value: FriendlyNpc
       objectReference: {fileID: 0}
+    - target: {fileID: 5354399809560063715, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: managedReferences[9145718485797044374].SquashAndStretchTarget
+      value: 
+      objectReference: {fileID: 3289836609710370608}
+    - target: {fileID: 5354399809560063715, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: managedReferences[9145718485797044374].AnimateCurve.m_Curve.Array.data[1].time
+      value: 0.2916687
+      objectReference: {fileID: 0}
+    - target: {fileID: 5354399809560063715, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: managedReferences[9145718485797044374].AnimateCurve.m_Curve.Array.data[2].time
+      value: 0.651357
+      objectReference: {fileID: 0}
+    - target: {fileID: 5354399809560063715, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: managedReferences[9145718485797044374].AnimateCurve.m_Curve.Array.data[1].value
+      value: 0.5047188
+      objectReference: {fileID: 0}
+    - target: {fileID: 5354399809560063715, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: managedReferences[9145718485797044374].AnimateCurve.m_Curve.Array.data[2].value
+      value: -0.49057007
+      objectReference: {fileID: 0}
     - target: {fileID: 5534304216892901271, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
@@ -244,6 +276,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: -0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7163113064248389596, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 7196426771198909061, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _iHasHealthGameObject
       value: 
@@ -256,10 +292,18 @@ PrefabInstance:
       propertyPath: <NetworkHealthState>k__BackingField
       value: 
       objectReference: {fileID: 1463738292836241829}
+    - target: {fileID: 7484194678343393079, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.85
+      objectReference: {fileID: 0}
     - target: {fileID: 8184671317715962605, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1364854954
       objectReference: {fileID: 0}
+    - target: {fileID: 8924577568011003690, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: managedReferences[9145718485797044374].SquashAndStretchTarget
+      value: 
+      objectReference: {fileID: 3289836609710370608}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -281,3 +325,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9232ddee3f9f741b79915d6374a26a02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &3289836609710370608 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7163113064248389596, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+  m_PrefabInstance: {fileID: 5678939718979453164}
+  m_PrefabAsset: {fileID: 0}
