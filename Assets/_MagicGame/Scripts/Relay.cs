@@ -25,15 +25,14 @@ public class Relay : MonoBehaviour
 		{
 			Debug.LogWarning("No internet connection. Starting in offline mode...");
 
-			// Set to direct Unity Transport connection (localhost)
-			transport.SetConnectionData("0.0.0.0", 7777); // ✅ CORRECT
+			transport.SetConnectionData("0.0.0.0", 7777); 
 
 			Loader.IsHost = true;
 			Loader.Load(Loader.Scene.GameScene);
 			return;
 		}
 
-		// Online mode - use Unity Services
+		// If Online, use unity services
 		try
 		{
 			await UnityServices.InitializeAsync();
