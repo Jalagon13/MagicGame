@@ -304,7 +304,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638831247670695835
+  lastModified: 638893808383724471
   FileSizes:
   - Name: Desktop
     Value: 3104640
@@ -433,10 +433,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Magic.bank
   Name: Magic
   StudioPath: bank:/Magic
-  lastModified: 638839841306918985
+  lastModified: 638893811883511591
   FileSizes:
   - Name: Desktop
-    Value: 409280
+    Value: 419168
   Exists: 1
 --- !u!114 &-2423619658234550821
 MonoBehaviour:
@@ -711,12 +711,13 @@ MonoBehaviour:
   - {fileID: -482151191541268628}
   - {fileID: 3355502589203074115}
   - {fileID: -3016482441711642951}
+  - {fileID: 6233997563608643097}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6702288669578411488}
   StringsBanks:
   - {fileID: 5574528013551363316}
-  cacheTime: 638839841306918985
+  cacheTime: 638893811883511591
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:
@@ -868,7 +869,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Tiles.bank
   Name: Tiles
   StudioPath: bank:/Tiles
-  lastModified: 638833888497466887
+  lastModified: 638893808384131387
   FileSizes:
   - Name: Desktop
     Value: 61760
@@ -996,10 +997,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638839064398092545
+  lastModified: 638893808382405043
   FileSizes:
   - Name: Desktop
-    Value: 2652
+    Value: 2692
   Exists: 1
 --- !u!114 &5813129133648053243
 MonoBehaviour:
@@ -1055,6 +1056,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &6233997563608643097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/FireMiniBurst
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/FireMiniBurst
+  Guid:
+    Data1: -2009085937
+    Data2: 1294578059
+    Data3: 926459827
+    Data4: -62299656
+  Banks:
+  - {fileID: -2722816956503410227}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &6371852465751065072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1097,7 +1125,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638839064398061276
+  lastModified: 638893808382365181
   FileSizes:
   - Name: Desktop
     Value: 3619520

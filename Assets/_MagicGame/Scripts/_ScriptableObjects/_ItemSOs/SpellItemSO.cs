@@ -18,7 +18,8 @@ public class SpellItemSO : MagicItemSO
 	[field: Tooltip("Spell charging animation.")]
 	[field: SerializeField] public GameObject ChargeVFX { get; private set; }
 
-	[field: SerializeField] public EventReference SpellCastSound { get; private set; }
+	[field: SerializeField] public EventReference SpellOnCastSound { get; private set; }
+	[field: SerializeField] public EventReference SpellOnDamageSound { get; private set; }
 
 	[field: Header("Stats")]
 	[field: Tooltip("Time it takes to cast this projectile (in seconds).")]

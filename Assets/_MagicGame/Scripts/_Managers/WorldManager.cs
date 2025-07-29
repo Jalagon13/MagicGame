@@ -190,11 +190,9 @@ public class WorldManager : NetworkBehaviour
 		switch (toBiome)
 		{
 			case BiomeType.Forest:
-				Debug.Log($"Gernerating Forest...");
 				ForestGenerator.GenerateForest();
 				break;
 			case BiomeType.Cave:
-				Debug.Log($"Gernerating Cave...");
 				CaveGenerator.GenerateCave();
 				break;
 		}
@@ -203,7 +201,6 @@ public class WorldManager : NetworkBehaviour
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void LoadChunksClientRpc(BiomeType toBiome, RpcParams rpcParams)
 	{
-		Debug.Log($"Player biome: {toBiome} Allowing client to load chunks");
 		Player.Instance.CurrentBiome.Value = toBiome;
 		
 		// Invoke it first to prep the last chunk position to garentee a new set of chunks to generate, then set loadingbiome to true to resume the update method

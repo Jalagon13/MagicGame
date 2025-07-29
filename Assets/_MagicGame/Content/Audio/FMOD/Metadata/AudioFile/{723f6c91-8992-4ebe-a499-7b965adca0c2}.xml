@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{1ff8bf3b-437c-46ed-939f-999b66b1828a}">
+	<object class="AudioFile" id="{723f6c91-8992-4ebe-a499-7b965adca0c2}">
 		<property name="assetPath">
-			<value>SFX/SFX_StoneHit.wav</value>
+			<value>SFX/SFX_Fire_MiniBurst.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>
@@ -11,7 +11,7 @@
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>0.26291666666666669</value>
+			<value>0.46314583333333331</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{bc2b5265-0882-4ef2-998c-4498e0c7a8e5}</destination>

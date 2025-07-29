@@ -25,7 +25,6 @@ public class TerrainTileRenderer : MonoBehaviour
         {
             terrainTilemap.RefreshTerrainTilemap();
         }
-        Debug.Log($"Refreshed terrain tilemaps");
     }
 
     public void SetTerrainTileData(Vector3Int tilePosition, TileSO tileSO)
@@ -66,7 +65,7 @@ public class TerrainTileRenderer : MonoBehaviour
             map = Instantiate(tileSO.TileType == TileType.Terrain ? TerrainTilemapPrefab : LiquidTerrainTilemapPrefab, transform);
             map.Initialize(tileSO.DualGridTiles);
             map.name = tileSO.TileType == TileType.Terrain ? $"TerrainTilemap_{tileSO.name}" : $"LiquidTilemap_{tileSO.name}";
-            Debug.Log($"Created {map.name}");
+            
             int order = TerrainRenderHierarchy.IndexOf(tileSO);
             map.GetComponent<Renderer>().sortingOrder = TerrainRenderHierarchy.Count - order;
             map.transform.SetSiblingIndex(order);

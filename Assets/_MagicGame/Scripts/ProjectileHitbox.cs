@@ -59,6 +59,9 @@ public class ProjectileHitbox : NetworkBehaviour
                 if (_remainingPierces <= 0)
                 {
                     // TODO: Destroy or deactivate the spell
+                    SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(_serverSpell.SpellData.Value.SpellItemId) as SpellItemSO;
+                    SoundManager.Instance.PlayOneShot(spellItemSO.SpellOnDamageSound, transform.position);
+
                     _serverSpell.EndSpellExternally();
                     return;
                 }

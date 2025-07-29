@@ -20,7 +20,14 @@ MonoBehaviour:
   <SpellPrefab>k__BackingField: {fileID: 4388535776764661370, guid: 754e68487e3414b8eaf335c8e910dfdc, type: 3}
   <SpellUIDisplaySprite>k__BackingField: {fileID: 8117423320840903158, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 8285152488836000937, guid: 8175636c29a52422d8069d30cf23c5b6, type: 3}
-  <SpellCastSound>k__BackingField:
+  <SpellOnCastSound>k__BackingField:
+    Guid:
+      Data1: -2009085937
+      Data2: 1294578059
+      Data3: 926459827
+      Data4: -62299656
+    Path: event:/Magic/FireMiniBurst
+  <SpellOnDamageSound>k__BackingField:
     Guid:
       Data1: -959941032
       Data2: 1128627620

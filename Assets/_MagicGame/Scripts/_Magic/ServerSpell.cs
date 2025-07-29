@@ -138,7 +138,7 @@ public abstract class ServerSpell : NetworkBehaviour
     public void ClientSpellStart(ClientSpell clientSpell)
     {
         SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
-        SoundManager.Instance.PlayOneShot(spellItemSO.SpellCastSound, transform.position);
+        SoundManager.Instance.PlayOneShot(spellItemSO.SpellOnCastSound, transform.position);
 
         OnClientSpellStart(clientSpell);
     }
