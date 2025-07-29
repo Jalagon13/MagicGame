@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45bf45ce95db148eb957e731034dd7fb, type: 3}
   m_Name: TargetDummyData
   m_EditorClassIdentifier: 
-  BaseHealth: 100
+  BaseHealth: 20
   BaseSpeed: 0
   IFrameDuration: 0.2
   TurnSharpness: 8
   KnockbackResist: 0
   RespawnTimerDuration: 3
-  BaseHealthRegenTimeInterval: 2
-  BaseHealthRegenAmount: 15
+  BaseHealthRegenTimeInterval: 0
+  BaseHealthRegenAmount: 0
   CanBeKnockedBack: 0
-  CanDie: 0
+  CanDie: 1
   HurtSound:
     Guid:
       Data1: 1812228115
@@ -31,11 +31,11 @@ MonoBehaviour:
     Path: event:/WoodHit
   DeathSound:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 15823222
+      Data2: 1125522555
+      Data3: -1633797458
+      Data4: 490440430
+    Path: event:/WoodDestroyed
   WalkSound:
     Guid:
       Data1: 1812228115
@@ -47,6 +47,11 @@ MonoBehaviour:
   SlotAmount: 0
   StringID: targetdummy
   NpcPrefab: {fileID: 532044041320650086, guid: c87107d07ca65446598c8fdd66eaeab4, type: 3}
+  LootTable:
+  - Item: {fileID: 11400000, guid: 86cb8623724924d17ae00c150259df3d, type: 2}
+    Min: 1
+    Max: 1
+    Chance: 100
   IsFriendly: 1
   WillChasePlayer: 1
   OnlyChaseWhenProvoked: 1

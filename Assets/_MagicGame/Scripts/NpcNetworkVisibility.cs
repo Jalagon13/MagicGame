@@ -45,7 +45,6 @@ public class NpcNetworkVisibility : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void KillNpcServerRpc()
 	{
-		Debug.Log($"[Client {NetworkManager.LocalClientId}] Killing NPC.");
 		_npcIsBeingRemoved = true;
 		NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, true);
 	}

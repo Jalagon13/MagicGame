@@ -179,13 +179,14 @@ public class ServerCharacter : NetworkBehaviour
             if (_characterData.IsNpc)
             {
                 // Npc Death functionality here
+                LootTable.SpawnLoot(Data.LootTable, transform.position, CurrentBiome);
+                
+                // Dispose NPC, need to figure out the correct order to safely dispose NPC and play death game feel
+                NetworkObject.Despawn();
+                
                 if(TryGetComponent(out NpcNetworkVisibility npcVisibility))
                 {
                     npcVisibility.KillNpcServerRpc();
-                }
-                else
-                {
-                    Debug.LogError($"ServerCharacter {gameObject.name} missing NpcVisibility.");
                 }
             }
         }

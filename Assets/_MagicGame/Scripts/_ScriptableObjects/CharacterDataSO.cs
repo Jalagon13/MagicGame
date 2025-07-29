@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using FMODUnity;
 using UnityEngine;
 
@@ -39,6 +40,8 @@ public class CharacterDataSO : ScriptableObject
     public string StringID;
     [Tooltip("Prefab for the NPC")]
     public GameObject NpcPrefab;
+    [Tooltip("Loot table for loot dropped.")]
+    public List<Loot> LootTable = new();
     
     [Header("AI Parameters")]
     public bool IsFriendly;
