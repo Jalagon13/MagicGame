@@ -99,8 +99,16 @@ public class ServerCharacterMovement : NetworkBehaviour
     {
         _serverCharacter.MovementState.Value = MovementState.Knockback;
         _knockback.ApplyKnockback(knockerPosition, knockbackForce, inverse);
+        _knockback.OnKnockbackEnd += KnockbackEnd;
     }
-    
+
+    private void KnockbackEnd(object sender, EventArgs e)
+    {
+        _knockback.OnKnockbackEnd -= KnockbackEnd;
+
+        // Figure out what to do here
+    }
+
     public void SetDesiredDirection(Vector2 desiredDirection)
     {
         _desiredDirection = desiredDirection;

@@ -18,10 +18,10 @@ MonoBehaviour:
   TurnSharpness: 8
   KnockbackResist: 0
   RespawnTimerDuration: 3
-  BaseHealthRegenTimeInterval: 0
-  BaseHealthRegenAmount: 0
-  CanBeKnockedBack: 0
-  CanDie: 1
+  BaseHealthRegenTimeInterval: 1
+  BaseHealthRegenAmount: 10
+  CanBeKnockedBack: 1
+  CanDie: 0
   HurtSound:
     Guid:
       Data1: 1812228115

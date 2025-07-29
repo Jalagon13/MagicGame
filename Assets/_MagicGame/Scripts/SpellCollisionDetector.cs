@@ -45,17 +45,14 @@ public class SpellCollisionDetector : NetworkBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log($"{collision == null}");
-        Debug.Log($"{collision.gameObject == null}");
-        Debug.Log($"{collision.gameObject.transform == null}");
-        Debug.Log($"{collision.gameObject.transform.parent == null}");
+    {  
+        if (_spellCollider == null || !IsOwner || _serverSpell.SpellStateNV.Value != SpellState.Casting) return;
+        
+        // NTFS: This MIGHT not be the most reliable way of detecting if it is colliding with anything that ISN'T a world collider, but idk keep testing
         if (IsServer && collision != null  && collision.gameObject.transform.parent != null && collision.gameObject.transform.parent.TryGetComponent(out WorldObject worldObject))
         {
             return; // NTFS: If on server, ignore collisions with WorldObjects so the code below will only play for pathfinding wall collisions
         }
-
-        if (_spellCollider == null || !IsOwner || _serverSpell.SpellStateNV.Value != SpellState.Casting) return;
 
         if (!_bounceInitialized)
         {

@@ -103,7 +103,7 @@ public class ServerCharacter : NetworkBehaviour
         }
 
         if (_stateMachine == null)
-            Debug.LogWarning($"ServerCharacter {gameObject.name} missing _aiBrain.");
+            Debug.LogWarning($"ServerCharacter {gameObject.name} has not been assigned an AI state machine");
     }
 
     public override void OnNetworkSpawn()
@@ -184,6 +184,7 @@ public class ServerCharacter : NetworkBehaviour
                 // Dispose NPC, need to figure out the correct order to safely dispose NPC and play death game feel
                 NetworkObject.Despawn();
                 
+                // NTFS: Need to figure out if this can be deleted, ALSO need to figure out how to get the Npc manager to work with this
                 if(TryGetComponent(out NpcNetworkVisibility npcVisibility))
                 {
                     npcVisibility.KillNpcServerRpc();
@@ -192,7 +193,7 @@ public class ServerCharacter : NetworkBehaviour
         }
         else if(newValue == LifeState.IFrame)
         {
-            // TODO: IFrame functionality for all servercharacters here...
+            // TODO: IFrame functionality for all servercharacters here... not sure what to do with this probably delete it
         }
     }
 
@@ -221,7 +222,10 @@ public class ServerCharacter : NetworkBehaviour
                 _clientFeedbacks.PlayDamageFeedbacksRpc(hpReceived);
 
             if (_characterData.CanBeKnockedBack && e.PlayKnockback)
+            {
+                Debug.Log($"Playing knockback");
                 _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
+            }
 
             if (HitPoints + hpReceived > 0)
                 StartCoroutine(StartIFrameTimer());
