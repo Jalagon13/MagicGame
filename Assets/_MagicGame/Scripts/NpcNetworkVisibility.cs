@@ -17,6 +17,12 @@ public class NpcNetworkVisibility : NetworkBehaviour
 	public BiomeType NpcBiomeType { get; private set; }
 	private GameObject _npcGameObject;
 	private Collider2D _npcCollider;
+	private ServerCharacter _serverCharacter;
+	
+	private void Awake()
+	{
+		_serverCharacter = GetComponent<ServerCharacter>();
+	}
 
 	public override void OnNetworkSpawn()
 	{
@@ -29,7 +35,8 @@ public class NpcNetworkVisibility : NetworkBehaviour
 			
 			_npcCollider = GetComponent<Collider2D>();
 			
-			HideNpc(NetworkManager.ServerClientId);
+			// NTFS: This might be buggy later on, but for now it works
+			// HideNpc(NetworkManager.ServerClientId);
 
 			NetworkObject.CheckObjectVisibility += CheckIfInSameEnvironment;
 			NetworkManager.NetworkTickSystem.Tick += NpcNetworkTick;
@@ -43,10 +50,11 @@ public class NpcNetworkVisibility : NetworkBehaviour
 
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void KillNpcServerRpc()
+	public void RemoveNpcServerRpc(float slotAmount)
 	{
 		_npcIsBeingRemoved = true;
-		NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, true);
+		Debug.Log($"Removing NPC spawned by client: {_spawningClientId}");
+		NpcManager.Instance.DecrementNpcSlotsClientRpc(slotAmount, RpcTarget.Single(_spawningClientId, RpcTargetUse.Persistent));
 	}
 	
 	public void InitialieNpcNetwork(ulong sourceClientId, int npcId, BiomeType biome)
@@ -242,8 +250,9 @@ public class NpcNetworkVisibility : NetworkBehaviour
 		if(IsSpawned)
 		{
 			_npcIsBeingRemoved = true;
-			Debug.Log($"Spawned? {IsSpawned}");
-			NpcManager.Instance.DespawnNpcServerRpc(_npcId, GetComponent<NetworkObject>(), _spawningClientId, false);
+			RemoveNpcServerRpc(_serverCharacter.Data.SlotAmount);
+
+			NetworkObject.Despawn();
 		}
 	}
 

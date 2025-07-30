@@ -11014,6 +11014,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 7422ea774d457472da719d5895f0e535, type: 2}
+    - target: {fileID: 6641498890121537817, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6692481928224885727, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _knockbackEnabled
       value: 1
@@ -11045,6 +11049,10 @@ PrefabInstance:
     - target: {fileID: 8184671317715962605, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1364854954
+      objectReference: {fileID: 0}
+    - target: {fileID: 8184671317715962605, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: SpawnWithObservers
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8924577568011003690, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: FeedbacksList.Array.size

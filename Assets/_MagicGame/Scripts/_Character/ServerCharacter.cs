@@ -30,6 +30,7 @@ public class ServerCharacter : NetworkBehaviour
     
     [SerializeField] 
     private ClientFeedbacks _clientFeedbacks;
+    public ClientFeedbacks ClientFeedbacks => _clientFeedbacks;
     
     public NetworkHealthState NetHealthState { get; private set; }
     public int HitPoints
@@ -115,20 +116,13 @@ public class ServerCharacter : NetworkBehaviour
             
             HitPoints = _characterData.BaseHealth;
             _stateMachine?.OwnerInitialization();
+            _stateMachine?.StartStateMachine();
 
-            if(Data.CanRegenerateHealth)
+            if (Data.CanRegenerateHealth)
             {
                 _hpRegenTimer = new Timer(_characterData.BaseHealthRegenTimeInterval <= 0 ? 1f : _characterData.BaseHealthRegenTimeInterval);
                 _hpRegenTimer.OnTimerEnd += OnHealthRegenTimerEnd;
             }
-        }
-    }
-
-    protected override void OnNetworkPostSpawn()
-    {
-        if(IsOwner)
-        {
-            _stateMachine?.StartStateMachine();
         }
     }
 
@@ -208,13 +202,18 @@ public class ServerCharacter : NetworkBehaviour
             // Damage reduction mod functionality here
             float damageReduction = 1f;
             hpReceived = (int)(hpReceived * damageReduction);
+            
+            // Play damage numbers on client
+            _clientFeedbacks.PlayDamageNumbersRpc(hpReceived);
 
             // If not dead after taking damage, play character damaged feedbacks
             if (HitPoints + hpReceived > 0 || !_characterData.CanDie)
-                _clientFeedbacks.PlayDamageFeedbacksRpc(hpReceived);
+            {
+                _clientFeedbacks.PlayDamageFeedbacksRpc();
 
-            if (_characterData.CanBeKnockedBack && e.PlayKnockback)
-                _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
+                if (_characterData.CanBeKnockedBack && e.PlayKnockback)
+                    _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
+            }
 
             if (HitPoints + hpReceived > 0)
                 StartCoroutine(StartIFrameTimer());
@@ -225,7 +224,6 @@ public class ServerCharacter : NetworkBehaviour
 
         if (HitPoints <= 0 && _characterData.CanDie)
         {
-            _clientFeedbacks.PlayDeathFeedbacksRpc(hpReceived);
             LifeState = LifeState.Dead;
         }
     }

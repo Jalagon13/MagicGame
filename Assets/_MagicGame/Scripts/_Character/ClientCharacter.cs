@@ -24,9 +24,6 @@ public class ClientCharacter : NetworkBehaviour
     {
         if (!IsClient) return;
 
-        _serverCharacter.SuperAIState.OnValueChanged += OnSuperAIStateChanged;
-        _serverCharacter.SubAIState.OnValueChanged += OnSubAIStateChanged;
-
         if(!_serverCharacter.Data.IsNpc)
         {
             gameObject.name = $"Player_{OwnerClientId}";
@@ -37,7 +34,15 @@ public class ClientCharacter : NetworkBehaviour
             }
         }
     }
-    
+
+    protected override void OnNetworkPostSpawn()
+    {
+        if (!IsClient) return;
+        
+        _serverCharacter.SuperAIState.OnValueChanged += OnSuperAIStateChanged;
+        _serverCharacter.SubAIState.OnValueChanged += OnSubAIStateChanged;
+    }
+
     public override void OnNetworkDespawn()
     {
         if (!IsClient) return;

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45bf45ce95db148eb957e731034dd7fb, type: 3}
   m_Name: TargetDummyData
   m_EditorClassIdentifier: 
-  BaseHealth: 20
+  BaseHealth: 10
   BaseSpeed: 0
   IFrameDuration: 0.2
   TurnSharpness: 8

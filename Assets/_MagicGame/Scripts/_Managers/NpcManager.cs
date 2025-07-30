@@ -99,36 +99,19 @@ public class NpcManager : NetworkBehaviour
 		
 		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
 		npcPrefabNetworkObject.SpawnWithObservers = false;
-		npcPrefabNetworkObject.Spawn(true);
+		npcPrefabNetworkObject.Spawn();
 
 		var npcNetworkComponent = npcPrefab.GetComponent<NpcNetworkVisibility>();
 		npcNetworkComponent.InitialieNpcNetwork(spawnPlayerId, npcId, spawnBiome);
-	}
-	
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void DespawnNpcServerRpc(int npcId, NetworkObjectReference npcToRemoveNetworkObjectReference, ulong spawningClientId, bool killNpc)
-	{
-		// Either kill or despawn npc depending on the conditional
-		npcToRemoveNetworkObjectReference.TryGet(out NetworkObject npcNetworkObject);
-		// Npc npc = npcNetworkObject.GetComponent<Npc>();
-
-		if (killNpc)
-		{
-			// NTFS: Handle other death stuff here
-			// npc.DropLoot();
-		}
-		
-		// npc.DestroySelf();
-		
-		// DecrementNpcSlotsClientRpc(npc.NpcSO.SlotAmount, RpcTarget.Single(spawningClientId, RpcTargetUse.Persistent));
+		Debug.Log($"Spawning NPC {npcData.StringID} with ID {npcId} at position {spawnPosition} for player {spawnPlayerId}");
 	}
 
-	// [Rpc(SendTo.SpecifiedInParams, RequireOwnership = false)]
-    // private void DecrementNpcSlotsClientRpc(float slotAmount, RpcParams rpcParams = default)
-    // {
-    //     _npcSlots -= slotAmount;
-	// 	Debug.Log($"Decreasing NPC Slots by {slotAmount}, current amount: {_npcSlots}");
-    // }
+	[Rpc(SendTo.SpecifiedInParams, RequireOwnership = false)]
+    public void DecrementNpcSlotsClientRpc(float slotAmount, RpcParams rpcParams = default)
+    {
+        _npcSlots -= slotAmount;
+		Debug.Log($"Decreasing NPC Slots by {slotAmount}, current amount: {_npcSlots}");
+    }
 
     private bool SpawnSpotIsValid(Vector2 potentialSpawnPoint)
 	{

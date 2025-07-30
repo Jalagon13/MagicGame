@@ -13,10 +13,10 @@ public struct AIStateData : IEquatable<AIStateData>, INetworkSerializable
         Amount = 0;
     }
 
-    public AIStateData(AIState currentState, int spellId)
+    public AIStateData(AIState currentState, int amount)
     {
         CurrentState = currentState;
-        Amount = spellId;
+        Amount = amount;
     }
     
     public bool Equals(AIStateData other)
