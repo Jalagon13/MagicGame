@@ -49,8 +49,8 @@ MonoBehaviour:
   NpcPrefab: {fileID: 0}
   LootTable: []
   IsFriendly: 0
-  WillChasePlayer: 1
-  OnlyChaseWhenProvoked: 1
+  WillChasePlayer: 0
+  OnlyChaseWhenProvoked: 0
   CanMove: 1
   BaseAttack: 0
   BaseDefense: 0

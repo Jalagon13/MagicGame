@@ -19,12 +19,15 @@ public class BasicNpcGroundedState : BaseState
     public override void UpdateState()
     {
         // Logic for updating the grounded state
+        if(_ctx.ServerCharacter.NetLifeState.LifeState.Value == LifeState.Dead)
+        {
+            SwitchState(new AIStateData(AIState.Dead));
+        }
     }
 
     public override void ExitState()
     {
         // Logic for exiting the grounded state
-        Debug.Log("Exiting Grounded State");
     }
 
     public override void CheckSwitchStates()

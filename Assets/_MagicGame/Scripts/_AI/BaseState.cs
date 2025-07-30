@@ -49,7 +49,7 @@ public abstract class BaseState
         var newState = Context.GetState(newStateData.CurrentState);
         if (newState == this) return;
 
-        ExitState();
+        // ExitState();
 
         if (_isSuperState)
         {

@@ -32,6 +32,7 @@ public class BasicNpcStateMachine : StateMachine
         
         // Super States
         _states[AIState.Grounded] = new BasicNpcGroundedState(AIState.Grounded, this);
+        _states[AIState.Dead] = new BasicNpcDeadState(AIState.Dead, this);
         
         _currentState = _states[AIState.Grounded];
     }

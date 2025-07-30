@@ -13,10 +13,13 @@ public class CharacterDataSO : ScriptableObject
     public float IFrameDuration = 0.2f;
     [Tooltip("Smaller values = slower transition to desired direction")]
     public float TurnSharpness = 5f;
-    [Tooltip("Resistance to knockback effects (0 = no resistance)")]
+    [Tooltip("Resistance to knockback effects (0 = no resistance, 1 = full resistance)")]
+    [Range(0f, 1f)]
     public float KnockbackResist = 0f;
     [Tooltip("Respawn Timer")]
     public float RespawnTimerDuration = 0f;
+    
+    public bool CanRegenerateHealth = true;
     [Tooltip("Base Health Regen Interval")]
     public float BaseHealthRegenTimeInterval = 0.25f;
     [Tooltip("Base Health Regen Amount")]

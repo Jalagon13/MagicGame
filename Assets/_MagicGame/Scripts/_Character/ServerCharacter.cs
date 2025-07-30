@@ -116,8 +116,11 @@ public class ServerCharacter : NetworkBehaviour
             HitPoints = _characterData.BaseHealth;
             _stateMachine?.OwnerInitialization();
 
-            _hpRegenTimer = new Timer(_characterData.BaseHealthRegenTimeInterval <= 0 ? 1f : _characterData.BaseHealthRegenTimeInterval);
-            _hpRegenTimer.OnTimerEnd += OnHealthRegenTimerEnd;
+            if(Data.CanRegenerateHealth)
+            {
+                _hpRegenTimer = new Timer(_characterData.BaseHealthRegenTimeInterval <= 0 ? 1f : _characterData.BaseHealthRegenTimeInterval);
+                _hpRegenTimer.OnTimerEnd += OnHealthRegenTimerEnd;
+            }
         }
     }
 
@@ -165,31 +168,20 @@ public class ServerCharacter : NetworkBehaviour
                 _characterStats.TickBuffs(Time.deltaTime);
                 _stateMachine.UpdateAI();
             }
-            if (_hpRegenTimer != null && LifeState != LifeState.Dead && !NetHealthState.IsFullHp())
+            
+            if (_characterData.CanRegenerateHealth && _hpRegenTimer != null && LifeState != LifeState.Dead && !NetHealthState.IsFullHp())
             {
                 _hpRegenTimer.Tick(Time.deltaTime);
             }
         }
     }
 
+    // Probably delete this maybe later idk may be useful another time in this class
     private void OnLifeStateChanged(LifeState previousValue, LifeState newValue)
     {
         if(previousValue == LifeState.Alive && newValue == LifeState.Dead)
         {
-            if (_characterData.IsNpc)
-            {
-                // Npc Death functionality here
-                LootTable.SpawnLoot(Data.LootTable, transform.position, CurrentBiome);
-                
-                // Dispose NPC, need to figure out the correct order to safely dispose NPC and play death game feel
-                NetworkObject.Despawn();
-                
-                // NTFS: Need to figure out if this can be deleted, ALSO need to figure out how to get the Npc manager to work with this
-                if(TryGetComponent(out NpcNetworkVisibility npcVisibility))
-                {
-                    npcVisibility.KillNpcServerRpc();
-                }
-            }
+            // I already have a death state im not if im going to use this
         }
         else if(newValue == LifeState.IFrame)
         {
