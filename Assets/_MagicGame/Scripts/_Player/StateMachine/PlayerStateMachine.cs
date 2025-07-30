@@ -35,9 +35,12 @@ public class PlayerStateMachine : StateMachine
 		_serverCharacter = serverCharacter;
 		_swingCdTimer = new(0f);
 
+		// Sub States
 		_states[AIState.Idle] = new PlayerIdleState(AIState.Idle, this);
 		_states[AIState.Moving] = new PlayerMoveState(AIState.Moving, this);
 		_states[AIState.Knockbacked] = new PlayerKnockbackedState(AIState.Knockbacked, this);
+		
+		// Super States
 		_states[AIState.Grounded] = new PlayerGroundedState(AIState.Grounded, this);
 		_states[AIState.Attacking] = new PlayerAttackState(AIState.Attacking, this);
 		_states[AIState.SpellCasting] = new PlayerSpellCastingState(AIState.SpellCasting, this);

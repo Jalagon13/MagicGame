@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   BaseHealth: 100
-  BaseMana: 100
-  BaseManaRegen: 15
   BaseSpeed: 5
   IFrameDuration: 2
   TurnSharpness: 8
@@ -25,6 +23,13 @@ MonoBehaviour:
   CanBeKnockedBack: 1
   CanDie: 1
   HurtSound:
+    Guid:
+      Data1: 1908936704
+      Data2: 1218061417
+      Data3: -617592154
+      Data4: 2092223634
+    Path: event:/Player/PlayerHurt
+  DeathSound:
     Guid:
       Data1: 1908936704
       Data2: 1218061417
@@ -42,6 +47,7 @@ MonoBehaviour:
   SlotAmount: 0
   StringID: 
   NpcPrefab: {fileID: 0}
+  LootTable: []
   IsFriendly: 0
   WillChasePlayer: 1
   OnlyChaseWhenProvoked: 1

@@ -24,11 +24,16 @@ public class BasicNpcStateMachine : StateMachine
     {
         _serverCharacter = serverCharacter;
         
+        // Sub States
         _states[AIState.Idle] = new BasicNpcIdleState(AIState.Idle, this);
         _states[AIState.Moving] = new BasicNpcMoveState(AIState.Moving, this);
         _states[AIState.Knockbacked] = new BasicNpcKnockbackState(AIState.Knockbacked, this);
         _states[AIState.Pursuing] = new BasicNpcPursueState(AIState.Pursuing, this);
-        _currentState = _states[AIState.Idle];
+        
+        // Super States
+        _states[AIState.Grounded] = new BasicNpcGroundedState(AIState.Grounded, this);
+        
+        _currentState = _states[AIState.Grounded];
     }
 
     public override void OwnerInitialization()
@@ -48,16 +53,19 @@ public class BasicNpcStateMachine : StateMachine
             if (amount < 0)
             {
                 // Damaged
-                IsAngry = true;
-
-                // Try to strafe behavior
-                if (!IsStrafing && CharacterData.WillChasePlayer)
+                if(!CharacterData.IsFriendly)
                 {
-                    _strafeTimer = new Timer(CharacterData.StrafingDuration);
-                    _strafeTimer.OnTimerEnd -= EndStrafe;
-                    _strafeTimer.OnTimerEnd += EndStrafe;
-                    StrafingDirection = UnityEngine.Random.value > 0.5f ? 1 : -1;
-                    IsStrafing = true;
+                    IsAngry = true;
+
+                    // Try to strafe behavior
+                    if (!IsStrafing && CharacterData.WillChasePlayer)
+                    {
+                        _strafeTimer = new Timer(CharacterData.StrafingDuration);
+                        _strafeTimer.OnTimerEnd -= EndStrafe;
+                        _strafeTimer.OnTimerEnd += EndStrafe;
+                        StrafingDirection = UnityEngine.Random.value > 0.5f ? 1 : -1;
+                        IsStrafing = true;
+                    }
                 }
             }
             else

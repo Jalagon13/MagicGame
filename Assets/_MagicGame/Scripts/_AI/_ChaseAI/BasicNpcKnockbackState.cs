@@ -11,7 +11,7 @@ public class BasicNpcKnockbackState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        Debug.Log($"Knockback state");
+        
     }
 
     public override void ExitState()
@@ -32,12 +32,12 @@ public class BasicNpcKnockbackState : BaseState
             {
                 SwitchState(new AIStateData(AIState.Pursuing));
             }
-
-            SwitchState(new AIStateData(AIState.Idle));
-            
+            else
+            {
+                SwitchState(new AIStateData(AIState.Idle));
+            }
         }
-
-        if (_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
+        else if (_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
         {
             SwitchState(new AIStateData(AIState.Moving));
         }

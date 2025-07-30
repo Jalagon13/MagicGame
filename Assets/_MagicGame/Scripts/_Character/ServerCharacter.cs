@@ -150,7 +150,7 @@ public class ServerCharacter : NetworkBehaviour
     
     private void FixedUpdate()
     {
-        if ((IsOwner || (_characterData.IsNpc && IsServer)) && _characterData.CanMove)
+        if (IsOwner || (_characterData.IsNpc && IsServer))
         {
             _serverCharacterMovement.FixedUpdateMovement();
         }
@@ -222,10 +222,7 @@ public class ServerCharacter : NetworkBehaviour
                 _clientFeedbacks.PlayDamageFeedbacksRpc(hpReceived);
 
             if (_characterData.CanBeKnockedBack && e.PlayKnockback)
-            {
-                Debug.Log($"Playing knockback");
                 _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
-            }
 
             if (HitPoints + hpReceived > 0)
                 StartCoroutine(StartIFrameTimer());

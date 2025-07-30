@@ -41,19 +41,18 @@ public class ServerCharacterMovement : NetworkBehaviour
             return;
         }
 
-        // Movement is handled here
-        _knockback.UpdateKnockback(Time.fixedDeltaTime);
-
-        if(_serverCharacter.MovementState.Value == MovementState.Knockback)
+        if(_serverCharacter.Data.CanBeKnockedBack && _serverCharacter.MovementState.Value == MovementState.Knockback)
         {
+            _knockback.UpdateKnockback(Time.fixedDeltaTime);
             _velocity = _knockback.Velocity;
+            
             if(!_knockback.KnockbackActive)
             {
                 _serverCharacter.MovementState.Value = _desiredDirection == Vector2.zero ? MovementState.Idle : MovementState.Moving;
                 return;
             }
         }
-        else
+        else if(_serverCharacter.Data.CanMove)
         {
             float currentSpeed = _serverCharacter.Stats.MovementSpeed.GetValue();
             _velocity = Vector2.Lerp(_velocity, _desiredDirection * currentSpeed, _serverCharacter.Data.TurnSharpness * Time.fixedDeltaTime);
@@ -83,6 +82,12 @@ public class ServerCharacterMovement : NetworkBehaviour
         _serverCharacter.MovementState.Value = MovementState.Moving;
     }
 
+    public void StartKnockback(Vector2 knockerPosition, float knockbackForce, bool inverse = false)
+    {
+        _serverCharacter.MovementState.Value = MovementState.Knockback;
+        _knockback.ApplyKnockback(knockerPosition, knockbackForce, inverse);
+    }
+
     private CardinalDirection CardinalDirectionFromDesiredDirection()
     {
         if (Math.Abs(_desiredDirection.x) > Math.Abs(_desiredDirection.y))
@@ -93,20 +98,6 @@ public class ServerCharacterMovement : NetworkBehaviour
         {
             return _desiredDirection.y > 0 ? CardinalDirection.North : CardinalDirection.South;
         }
-    }
-
-    public void StartKnockback(Vector2 knockerPosition, float knockbackForce, bool inverse = false)
-    {
-        _serverCharacter.MovementState.Value = MovementState.Knockback;
-        _knockback.ApplyKnockback(knockerPosition, knockbackForce, inverse);
-        _knockback.OnKnockbackEnd += KnockbackEnd;
-    }
-
-    private void KnockbackEnd(object sender, EventArgs e)
-    {
-        _knockback.OnKnockbackEnd -= KnockbackEnd;
-
-        // Figure out what to do here
     }
 
     public void SetDesiredDirection(Vector2 desiredDirection)

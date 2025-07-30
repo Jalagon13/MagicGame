@@ -63,7 +63,6 @@ public class Knockback
 	public void ApplyKnockback(Vector2 knockerSourcePosition, float knockbackForce = -1, bool inverse = false)
 	{
 		if (!_knockbackEnabled || _serverCharacter == null) return;
-
 		OnKnockbackStart?.Invoke(this, new KnockbackEventArgs
 		{
 			KnockBackerPosition = knockerSourcePosition

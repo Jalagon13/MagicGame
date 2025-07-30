@@ -9,7 +9,7 @@ public enum AIState
 {
     None,
 
-    // Root States
+    // Super States
     Grounded,
     Attacking,
     SpellCasting,

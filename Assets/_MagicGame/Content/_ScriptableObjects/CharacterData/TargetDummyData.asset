@@ -53,8 +53,8 @@ MonoBehaviour:
     Max: 1
     Chance: 100
   IsFriendly: 1
-  WillChasePlayer: 1
-  OnlyChaseWhenProvoked: 1
+  WillChasePlayer: 0
+  OnlyChaseWhenProvoked: 0
   CanMove: 0
   BaseAttack: 0
   BaseDefense: 0
