@@ -53,7 +53,6 @@ public class NpcNetworkVisibility : NetworkBehaviour
 	public void RemoveNpcServerRpc(float slotAmount)
 	{
 		_npcIsBeingRemoved = true;
-		Debug.Log($"Removing NPC spawned by client: {_spawningClientId}");
 		NpcManager.Instance.DecrementNpcSlotsClientRpc(slotAmount, RpcTarget.Single(_spawningClientId, RpcTargetUse.Persistent));
 	}
 	

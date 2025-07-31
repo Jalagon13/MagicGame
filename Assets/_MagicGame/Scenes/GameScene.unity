@@ -13815,6 +13815,13 @@ MonoBehaviour:
       Data3: -1876040270
       Data4: -1388101932
     Path: event:/Ambience/Ambience
+  <MagicDestruction>k__BackingField:
+    Guid:
+      Data1: 1985903599
+      Data2: 1244674207
+      Data3: -343921521
+      Data4: -738418528
+    Path: event:/Magic/MagicDestruction
 --- !u!1001 &1744933028
 PrefabInstance:
   m_ObjectHideFlags: 0

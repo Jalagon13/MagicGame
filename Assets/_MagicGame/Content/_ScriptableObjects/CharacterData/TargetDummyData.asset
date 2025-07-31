@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45bf45ce95db148eb957e731034dd7fb, type: 3}
   m_Name: TargetDummyData
   m_EditorClassIdentifier: 
-  BaseHealth: 10
+  BaseHealth: 30
   BaseSpeed: 0
   IFrameDuration: 0.2
   TurnSharpness: 8
@@ -49,7 +49,7 @@ MonoBehaviour:
   StringID: targetdummy
   NpcPrefab: {fileID: 532044041320650086, guid: c87107d07ca65446598c8fdd66eaeab4, type: 3}
   LootTable:
-  - Item: {fileID: 11400000, guid: 86cb8623724924d17ae00c150259df3d, type: 2}
+  - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
     Min: 1
     Max: 1
     Chance: 100

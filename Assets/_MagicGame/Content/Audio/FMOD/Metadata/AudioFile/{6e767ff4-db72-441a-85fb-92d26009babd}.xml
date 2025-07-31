@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{1ff8bf3b-437c-46ed-939f-999b66b1828a}">
+	<object class="AudioFile" id="{6e767ff4-db72-441a-85fb-92d26009babd}">
 		<property name="assetPath">
-			<value>SFX/SFX_StoneHit.wav</value>
+			<value>SFX/sfx_magic_destruction.wav</value>
 		</property>
 		<property name="frequencyInKHz">
-			<value>48</value>
+			<value>44.0999985</value>
 		</property>
 		<property name="channelCount">
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>0.26291666666666669</value>
+			<value>1.2845578231292516</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{bc2b5265-0882-4ef2-998c-4498e0c7a8e5}</destination>

@@ -20,7 +20,14 @@ MonoBehaviour:
   <SpellPrefab>k__BackingField: {fileID: 8273380025569757591, guid: cc58c89ad65c049e9a5991ce772f0085, type: 3}
   <SpellUIDisplaySprite>k__BackingField: {fileID: 1348140596, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 8285152488836000937, guid: 8175636c29a52422d8069d30cf23c5b6, type: 3}
-  <SpellCastSound>k__BackingField:
+  <SpellOnCastSound>k__BackingField:
+    Guid:
+      Data1: -2009085937
+      Data2: 1294578059
+      Data3: 926459827
+      Data4: -62299656
+    Path: event:/Magic/FireMiniBurst
+  <SpellOnDamageSound>k__BackingField:
     Guid:
       Data1: -959941032
       Data2: 1128627620
@@ -28,7 +35,6 @@ MonoBehaviour:
       Data4: 915117413
     Path: event:/Magic/FireBurst
   <CastTime>k__BackingField: 1
-  <Cooldown>k__BackingField: 0.35
   <ManaCost>k__BackingField: 1
   <Damage>k__BackingField: 14
   <Knockback>k__BackingField: 15
@@ -36,7 +42,6 @@ MonoBehaviour:
   <PierceCount>k__BackingField: 0
   <Lifetime>k__BackingField: 2
   <Speed>k__BackingField: 15
-  <Recoil>k__BackingField: 0
   <HasteMultiplier>k__BackingField: -0.8
   <Scatter>k__BackingField: 0
   <OnlyContinueAfterSpellEnds>k__BackingField: 1

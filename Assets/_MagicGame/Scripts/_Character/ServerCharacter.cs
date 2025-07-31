@@ -185,6 +185,8 @@ public class ServerCharacter : NetworkBehaviour
 
     private void ReceiveHP(object sender, DamageReceiver.DamageReceivedEventArgs e)
     {
+        if(LifeState == LifeState.Dead) return;
+
         ServerCharacter inflicter = e.Inflicter;
         int hpReceived = e.HP;
         
@@ -210,10 +212,10 @@ public class ServerCharacter : NetworkBehaviour
             if (HitPoints + hpReceived > 0 || !_characterData.CanDie)
             {
                 _clientFeedbacks.PlayDamageFeedbacksRpc();
-
-                if (_characterData.CanBeKnockedBack && e.PlayKnockback)
-                    _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
             }
+
+            if (_characterData.CanBeKnockedBack && e.PlayKnockback)
+                _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
 
             if (HitPoints + hpReceived > 0)
                 StartCoroutine(StartIFrameTimer());

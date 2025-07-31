@@ -17,7 +17,7 @@ public class FlameBreath : ServerSpell
     private int _maxNpcsThatCanBeDamaged = 5;
 
     [SerializeField]
-    private float _timeBetweenDamage = 0.25f;
+    private float _timeBetweenDamage = 0.275f;
 
     [SerializeField]
     private float _cooldownBetweenPasses = 0.175f;
@@ -110,6 +110,9 @@ public class FlameBreath : ServerSpell
         {
             if (SpellCasterNetworkObject.TryGetComponent(out ServerCharacter inflicter))
             {
+                SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
+                SoundManager.Instance.PlayOneShot(spellItemSO.SpellOnDamageSound, transform.position);
+
                 target.ReceiveHP(inflicter, -SpellData.Value.Damage, true, SpellData.Value.Knockback);
             }
 

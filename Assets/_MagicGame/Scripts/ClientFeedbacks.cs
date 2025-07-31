@@ -34,8 +34,15 @@ public class ClientFeedbacks : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
     public void PlayDeathFeedbacksRpc()
     {
+        // SoundManager.Instance.PlayOneShot(_serverCharacter.Data.HurtSound, transform.position);
         SoundManager.Instance.PlayOneShot(_serverCharacter.Data.DeathSound, transform.position);
 
         _deathFeedback.PlayFeedbacks();
+    }
+    
+    public void PlayDeathSound() // Played through MMF_Player
+    {
+        // SoundManager.Instance.PlayOneShot(_serverCharacter.Data.WalkSound, transform.position);
+        SoundManager.Instance.PlayOneShot(FMODEvents.Instance.MagicDestruction, Player.Instance.transform.position);
     }
 }
