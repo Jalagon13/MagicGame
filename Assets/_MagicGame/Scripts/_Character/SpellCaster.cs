@@ -38,7 +38,7 @@ public class SpellCaster : NetworkBehaviour
     private int _waitingForEndCount = 0;
 
     private Coroutine _rapidFireRoutine;
-
+    
     private void Awake()
     {
         _castTimer = new Timer(0f);

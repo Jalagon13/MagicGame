@@ -226,12 +226,12 @@ public class SpellCastController
 
     private void CheckForSelectedItemChange(object sender, HotbarManager.OnFocusItemSetEventArgs e)
     {
-        // if (e.SelectedItemId == _player.SpellCaster.CurrentSpellData.SpellItemId)
-        // {
-        //     Debug.Log("Cannot cancel if the spell is the same one being cast.");
-        //     return;
-        // }
-
+        if(InventoryManager.Instance.SelectedItemExists(out InventoryItem inventoryItem))
+        {
+            if(_currentWandInventoryItem != null && inventoryItem.Id == _currentWandInventoryItem.Id) 
+                return;
+        }
+        
         if (_player.SpellCaster.IsCasting.Value)
         {
             _player.SpellCaster.TryToCancelCast();
