@@ -5,28 +5,43 @@ using UnityEngine;
 public struct AIStateData : IEquatable<AIStateData>, INetworkSerializable
 {
     public AIState CurrentState;
-    public int Amount; // Can be anything, spell id, damage, speed, whatever the fuck
+
+    // Single payload; using Vector3 so you can expand later if needed.
+    // .x is the “amount”, .y/.z are free for future use or ignored.
+    public Vector3 Payload;
+
+    public float Amount
+    {
+        get => Payload.x;
+        set => Payload.x = value;
+    }
 
     public AIStateData(AIState currentState)
     {
         CurrentState = currentState;
-        Amount = 0;
+        Payload = default; // all zero
     }
 
-    public AIStateData(AIState currentState, int amount)
+    public AIStateData(AIState currentState, float amount)
     {
         CurrentState = currentState;
-        Amount = amount;
+        Payload = new Vector3(amount, 0f, 0f);
     }
-    
+
+    public AIStateData(AIState currentState, Vector3 payload)
+    {
+        CurrentState = currentState;
+        Payload = payload;
+    }
+
     public bool Equals(AIStateData other)
     {
-        return CurrentState == other.CurrentState && Amount == other.Amount;
+        return CurrentState == other.CurrentState && Payload == other.Payload;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref CurrentState);
-        serializer.SerializeValue(ref Amount);
+        serializer.SerializeValue(ref Payload);
     }
 }

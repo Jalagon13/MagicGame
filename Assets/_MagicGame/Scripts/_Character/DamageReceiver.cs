@@ -7,17 +7,17 @@ public class DamageReceiver : NetworkBehaviour, IDamageable
     [SerializeField] 
     private NetworkLifeState _lifeState;
 
-    public event EventHandler<DamageReceivedEventArgs> HpReceived;
-    public class DamageReceivedEventArgs : EventArgs
+    public event EventHandler<HpReceivedEventArgs> HpReceived;
+    public class HpReceivedEventArgs : EventArgs
     {
         public ServerCharacter Inflicter;
-        public int HP;
+        public int HpReceived;
         public bool PlayKnockback;
         public float KnockbackForce;
-        public DamageReceivedEventArgs(ServerCharacter inflicter, int hp, bool playKnockback, float knockbackForce = -1)
+        public HpReceivedEventArgs(ServerCharacter inflicter, int hpReceived, bool playKnockback, float knockbackForce = -1)
         {
             Inflicter = inflicter;
-            HP = hp;
+            HpReceived = hpReceived;
             PlayKnockback = playKnockback;
             KnockbackForce = knockbackForce;
         }
@@ -37,7 +37,7 @@ public class DamageReceiver : NetworkBehaviour, IDamageable
 
         if (IsAlive())
         {
-            HpReceived?.Invoke(this, new DamageReceivedEventArgs(inflicterServerCharacter, hp, playKnockback, knockback));
+            HpReceived?.Invoke(this, new HpReceivedEventArgs(inflicterServerCharacter, hp, playKnockback, knockback));
         }
     }
 

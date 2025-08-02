@@ -7,6 +7,9 @@ public class ClientFeedbacks : NetworkBehaviour
 {
     [SerializeField] 
     private ServerCharacter _serverCharacter;
+    
+    [SerializeField]
+    private ParticleSystem _gibsParticleSystem;
 
     private MMF_Player _damageFeedback;
     private MMF_Player _deathFeedback;
@@ -34,15 +37,28 @@ public class ClientFeedbacks : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
     public void PlayDeathFeedbacksRpc()
     {
-        // SoundManager.Instance.PlayOneShot(_serverCharacter.Data.HurtSound, transform.position);
         SoundManager.Instance.PlayOneShot(_serverCharacter.Data.DeathSound, transform.position);
 
         _deathFeedback.PlayFeedbacks();
     }
-    
-    public void PlayDeathSound() // Played through MMF_Player
+
+    public void RotateGibs(Vector2 hitDirection)
     {
-        // SoundManager.Instance.PlayOneShot(_serverCharacter.Data.WalkSound, transform.position);
-        SoundManager.Instance.PlayOneShot(FMODEvents.Instance.MagicDestruction, Player.Instance.transform.position);
+        if (_gibsParticleSystem == null) return;
+        if (!float.IsFinite(hitDirection.x) || !float.IsFinite(hitDirection.y)) return;
+        
+        if (hitDirection == Vector2.zero)
+            hitDirection = Vector2.up; // Default direction if none provided
+
+        float angle = Mathf.Atan2(hitDirection.y, hitDirection.x) * Mathf.Rad2Deg;
+        Debug.Log($"RotateGibs: hitDir={hitDirection}, angle={angle}");
+        _gibsParticleSystem.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        // _gibsParticleSystem.Play();
     }
+
+    // public void PlayDeathSound() // Played through MMF_Player
+    // {
+    //     // SoundManager.Instance.PlayOneShot(_serverCharacter.Data.WalkSound, transform.position);
+    //     // SoundManager.Instance.PlayOneShot(FMODEvents.Instance.MagicDestruction, Player.Instance.transform.position);
+    // }
 }

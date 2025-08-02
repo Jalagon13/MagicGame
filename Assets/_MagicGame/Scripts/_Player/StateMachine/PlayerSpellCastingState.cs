@@ -59,7 +59,7 @@ public class PlayerSpellCastingState : BaseState
 
     public override void ClientEnterState(AIStateData stateData)
     {
-        SpellItemSO spellToCast = GameManager.Instance.GetItemSOFromItemId(stateData.Amount) as SpellItemSO;
+        SpellItemSO spellToCast = GameManager.Instance.GetItemSOFromItemId((int)stateData.Amount) as SpellItemSO;
 
         _clientChargeVfx = Object.Instantiate(spellToCast.ChargeVFX, _ctx.SpellCaster.SpellSpawnTransform);
         _clientChargeVfx.transform.localPosition = Vector3.zero;

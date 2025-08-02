@@ -183,12 +183,12 @@ public class ServerCharacter : NetworkBehaviour
         }
     }
 
-    private void ReceiveHP(object sender, DamageReceiver.DamageReceivedEventArgs e)
+    private void ReceiveHP(object sender, DamageReceiver.HpReceivedEventArgs e)
     {
         if(LifeState == LifeState.Dead) return;
 
         ServerCharacter inflicter = e.Inflicter;
-        int hpReceived = e.HP;
+        int hpReceived = e.HpReceived;
         
         if(hpReceived > 0)
         {

@@ -23,10 +23,14 @@ PrefabInstance:
     - target: {fileID: 1803180478442400679, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _clientFeedbacks
       value: 
-      objectReference: {fileID: 5369231184739414132}
+      objectReference: {fileID: 5382400653703838427}
     - target: {fileID: 2312357536969696663, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_SortingLayerID
       value: -1268719207
+      objectReference: {fileID: 0}
+    - target: {fileID: 2681213463648533448, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3165997416469630793, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <CanDie>k__BackingField
@@ -1540,6 +1544,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 7422ea774d457472da719d5895f0e535, type: 2}
+    - target: {fileID: 6525442232231987892, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6641498890121537817, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -6589,7 +6597,8 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6525442232231987892, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
@@ -6629,9 +6638,9 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 525988242494140349, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
   m_PrefabInstance: {fileID: 5678939718979453164}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5369231184739414132 stripped
+--- !u!114 &5382400653703838427 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 309889409316499608, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+  m_CorrespondingSourceObject: {fileID: 323561492516993591, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
   m_PrefabInstance: {fileID: 5678939718979453164}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
