@@ -210,9 +210,7 @@ public class ServerCharacter : NetworkBehaviour
 
             // If not dead after taking damage, play character damaged feedbacks
             if (HitPoints + hpReceived > 0 || !_characterData.CanDie)
-            {
                 _clientFeedbacks.PlayDamageFeedbacksRpc();
-            }
 
             if (_characterData.CanBeKnockedBack && e.PlayKnockback)
                 _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);

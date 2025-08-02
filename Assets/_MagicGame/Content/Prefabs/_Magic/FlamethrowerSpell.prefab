@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 8269354046363732758}
   - component: {fileID: 8273380025569757591}
   m_Layer: 15
-  m_Name: FlameBreathSpell
+  m_Name: FlamethrowerSpell
   m_TagString: Untagged
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0

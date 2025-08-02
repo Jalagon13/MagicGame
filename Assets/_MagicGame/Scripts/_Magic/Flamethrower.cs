@@ -5,7 +5,7 @@ using FMODUnity;
 using Unity.Netcode;
 using UnityEngine;
 
-public class FlameBreath : ServerSpell
+public class Flamethrower : ServerSpell
 {
     [SerializeField] 
     private EventReference _sustainedFireSound;
