@@ -11097,6 +11097,10 @@ PrefabInstance:
       propertyPath: <NetworkHealthState>k__BackingField
       value: 
       objectReference: {fileID: 6530109159927746889}
+    - target: {fileID: 852113991553211534, guid: d1ebaad98a64f44828327c2b9a320f25, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2360922072755242030, guid: d1ebaad98a64f44828327c2b9a320f25, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

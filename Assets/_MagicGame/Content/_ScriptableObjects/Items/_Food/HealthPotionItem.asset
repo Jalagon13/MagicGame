@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae8d9452d0c0d480f9a80d58066f02fa, type: 3}
-  m_Name: food_HealthPotion
+  m_Name: HealthPotionItem
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Health Potion
   <UiDisplay>k__BackingField: {fileID: -1818261724, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}

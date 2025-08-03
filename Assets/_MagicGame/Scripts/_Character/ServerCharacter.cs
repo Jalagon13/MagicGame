@@ -79,7 +79,10 @@ public class ServerCharacter : NetworkBehaviour
     
     private CharacterStats _characterStats;
     public CharacterStats Stats => _characterStats;
-    
+
+    private ServerCharacter _inflicter;
+    public ServerCharacter Inflicter => _inflicter;
+
     public NetworkVariable<MovementState> MovementState { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<CardinalDirection> CardinalDirection { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<AIStateData> SuperAIState { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -187,7 +190,7 @@ public class ServerCharacter : NetworkBehaviour
     {
         if(LifeState == LifeState.Dead) return;
 
-        ServerCharacter inflicter = e.Inflicter;
+        _inflicter = e.Inflicter;
         int hpReceived = e.HpReceived;
         
         if(hpReceived > 0)
@@ -213,14 +216,14 @@ public class ServerCharacter : NetworkBehaviour
                 _clientFeedbacks.PlayDamageFeedbacksRpc();
 
             if (_characterData.CanBeKnockedBack && e.PlayKnockback)
-                _serverCharacterMovement.StartKnockback(inflicter.transform.position, e.KnockbackForce);
+                _serverCharacterMovement.StartKnockback(_inflicter.transform.position, e.KnockbackForce);
 
             if (HitPoints + hpReceived > 0)
                 StartCoroutine(StartIFrameTimer());
         }
         
         HitPoints = Mathf.Clamp(HitPoints + hpReceived, 0, _characterData.BaseHealth);
-        _stateMachine?.ReceiveHP(inflicter, hpReceived);
+        _stateMachine?.ReceiveHP(_inflicter, hpReceived);
 
         if (HitPoints <= 0 && _characterData.CanDie)
         {

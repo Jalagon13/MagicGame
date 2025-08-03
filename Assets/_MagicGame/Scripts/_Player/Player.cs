@@ -161,7 +161,7 @@ public class Player : NetworkBehaviour
 
     private IEnumerator RespawnTimer()
 	{
-		yield return new WaitForSeconds(_serverCharacter.Data.RespawnTimerDuration);
+		yield return new WaitForSeconds(1f);
 		_serverCharacter.NetLifeState.LifeState.Value = LifeState.Alive;
 	}
 

@@ -9,7 +9,8 @@ public enum MovementState
     Idle,
     Moving,
     Knockback,
-    Pursuing
+    Pursuing,
+    Fleeing
 }
 
 public class ServerCharacterMovement : NetworkBehaviour
@@ -54,7 +55,7 @@ public class ServerCharacterMovement : NetworkBehaviour
         }
         else if(_serverCharacter.Data.CanMove)
         {
-            float currentSpeed = _serverCharacter.Stats.MovementSpeed.GetValue();
+            float currentSpeed = _serverCharacter.Stats.MovementSpeed.GetValue() * (_serverCharacter.MovementState.Value == MovementState.Fleeing ? _serverCharacter.Data.FleeSpeedMultiplier : 1f);
             _velocity = Vector2.Lerp(_velocity, _desiredDirection * currentSpeed, _serverCharacter.Data.TurnSharpness * Time.fixedDeltaTime);
         }
         
@@ -69,7 +70,7 @@ public class ServerCharacterMovement : NetworkBehaviour
     
     public void StartPursue(Vector2 desiredDirection)
     {
-        _desiredDirection = desiredDirection;
+        _desiredDirection = desiredDirection.normalized;
         // _speed = _serverCharacter.Data.PursueSpeed; // NTFS: Maybe just make this a buff or something
         _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection();
         _serverCharacter.MovementState.Value = MovementState.Pursuing;
@@ -77,9 +78,16 @@ public class ServerCharacterMovement : NetworkBehaviour
     
     public void StartMovement(Vector2 desiredDirection)
     {
-        _desiredDirection = desiredDirection;
+        _desiredDirection = desiredDirection.normalized;
         _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection();
         _serverCharacter.MovementState.Value = MovementState.Moving;
+    }
+    
+    public void StartFlee(Vector2 fleeDirection)
+    {
+        _desiredDirection = fleeDirection.normalized;
+        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection();
+        _serverCharacter.MovementState.Value = MovementState.Fleeing;
     }
 
     public void StartKnockback(Vector2 knockerPosition, float knockbackForce, bool inverse = false)
@@ -102,6 +110,6 @@ public class ServerCharacterMovement : NetworkBehaviour
 
     public void SetDesiredDirection(Vector2 desiredDirection)
     {
-        _desiredDirection = desiredDirection;
+        _desiredDirection = desiredDirection.normalized;
     }
 }

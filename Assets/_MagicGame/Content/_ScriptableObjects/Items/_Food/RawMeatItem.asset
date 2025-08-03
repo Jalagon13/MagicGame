@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae8d9452d0c0d480f9a80d58066f02fa, type: 3}
-  m_Name: food_CookedMeat
+  m_Name: RawMeatItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Cooked Meat
-  <UiDisplay>k__BackingField: {fileID: 1280716566, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <Name>k__BackingField: Raw Meat
+  <UiDisplay>k__BackingField: {fileID: 1876687506, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
   <GoldValue>k__BackingField: 25
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
@@ -24,6 +24,6 @@ MonoBehaviour:
       Data3: -219622527
       Data4: -1689700191
     Path: event:/WaterSplash
-  <Duration>k__BackingField: 6
-  <NetManaGain>k__BackingField: 35
+  <Duration>k__BackingField: 3
+  <NetManaGain>k__BackingField: 15
   <NetHealthGain>k__BackingField: 0

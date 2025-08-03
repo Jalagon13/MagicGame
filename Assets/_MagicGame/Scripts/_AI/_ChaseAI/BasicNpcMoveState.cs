@@ -13,8 +13,6 @@ public class BasicNpcMoveState : BaseState
     private float _timeThreshold = 3.5f; // Every _timeThreshold seconds, check if pixie has moved _distanceThreshold
     private float _distanceThreshold = 0.2f;
     private bool _isStuck;
-    private float _distanceToDestination;
-    private Vector2 _startingPosition;
     
     private bool _hasDestination;
     private Vector2? _destination;
@@ -27,51 +25,52 @@ public class BasicNpcMoveState : BaseState
     protected override void EnterState(AIStateData stateData)
     {
         Debug.Log("Move State");
-        _destination = GetRandomWanderDestinationBFS();
+        _destinationReached = false; 
+        _isStuck = false;
+        _timeNotMoved = 0f;
 
+        _destination = GetRandomWanderDestinationBFS();
         _hasDestination = _destination.HasValue;
+        Debug.Log($"Has Destination: {_hasDestination}, Destination: {_destination}");
         if (_destination.HasValue)
         {
             Vector2 direction = _destination.Value - (Vector2)_ctx.ServerCharacter.transform.position;
-            _ctx.ServerCharacter.Movement.StartMovement(direction);
+            _ctx.ServerCharacter.Movement.StartMovement(direction.normalized);
 
             _isStuck = false;
             _timeNotMoved = 0f;
             _lastPosition = _ctx.ServerCharacter.transform.position;
-            _distanceToDestination = Vector2.Distance(_ctx.ServerCharacter.transform.position, _destination.Value);
-            _startingPosition = _ctx.ServerCharacter.transform.position;
         }
     }
 
     public override void ExitState()
     {
-
+        _destinationReached = false;
+        _isStuck = false;
+        _hasDestination = false;
+        _destination = null;
     }
 
     public override void UpdateState()
     {
-        if(!_hasDestination) return;
+        if (!_hasDestination) return;
 
         // Check if the destination has been reached
         float distanceToDestination = Vector2.Distance(_ctx.ServerCharacter.transform.position, _destination.Value);
-        if (distanceToDestination <= _ctx.CharacterData.StoppingDistance || Vector2.Distance(_ctx.ServerCharacter.transform.position, _startingPosition) >= _distanceToDestination)
+        if (distanceToDestination <= _ctx.CharacterData.StoppingDistance)
         {
             _destinationReached = true;
         }
 
         // Check if the AI is stuck
-        _timeNotMoved += Time.fixedDeltaTime;
+        _timeNotMoved += Time.deltaTime;
         if (_timeNotMoved >= _timeThreshold)
         {
             float distanceMoved = Vector2.Distance(_lastPosition, _ctx.ServerCharacter.transform.position);
-
             if (distanceMoved < _distanceThreshold)
             {
-                // AI is stuck
                 _isStuck = true;
             }
-
-            // Reset timer and update last known position
             _timeNotMoved = 0f;
             _lastPosition = _ctx.ServerCharacter.transform.position;
         }
@@ -79,19 +78,18 @@ public class BasicNpcMoveState : BaseState
 
     public override void CheckSwitchStates()
     {
-        if (!_hasDestination || _destinationReached || _isStuck)
-        {
-            SwitchState(new AIStateData(AIState.Idle));
-        }
-
         if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
         {
             SwitchState(new AIStateData(AIState.Knockbacked));
         }
-
-        if (_ctx.IsChasing)
+        else if (_ctx.IsChasing)
         {
             SwitchState(new AIStateData(AIState.Pursuing));
+        }
+        else if (!_hasDestination || _destinationReached || _isStuck)
+        {
+            Debug.Log($"Switching to Idle State, !_hasDestination: {!_hasDestination}, _destinationReached: {_destinationReached}, _isStuck: {_isStuck}");
+            SwitchState(new AIStateData(AIState.Idle));
         }
     }
 
@@ -129,16 +127,30 @@ public class BasicNpcMoveState : BaseState
             }
         }
 
-        // Pick a random valid tile if any exist
         if (validTiles.Count > 0)
         {
-            int randomIndex = UnityEngine.Random.Range(0, validTiles.Count);
-            return validTiles[randomIndex];
+            // Don’t pick a destination that’s effectively already “reached”
+            float minDistance = _ctx.CharacterData.StoppingDistance + 0.1f; // small buffer
+            List<Vector2> filtered = new List<Vector2>(validTiles);
+            filtered.RemoveAll(tile => Vector2.Distance(_ctx.ServerCharacter.transform.position, tile) <= minDistance);
+
+            Vector2 chosen;
+            if (filtered.Count > 0)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, filtered.Count);
+                chosen = filtered[randomIndex];
+            }
+            else
+            {
+                // fallback: all tiles were too close, just pick from original so we don’t return null
+                int randomIndex = UnityEngine.Random.Range(0, validTiles.Count);
+                chosen = validTiles[randomIndex];
+            }
+
+            return chosen;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     private List<Vector2> GetTileNeighbors(Vector2 tilePos)

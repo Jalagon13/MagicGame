@@ -22,7 +22,7 @@ public class BasicNpcStateMachine : StateMachine
     
     private Vector2 _hitDirection;
     public Vector2 HitDireciton => _hitDirection;
-
+    
     public BasicNpcStateMachine(ServerCharacter serverCharacter)
     {
         _serverCharacter = serverCharacter;
@@ -32,7 +32,8 @@ public class BasicNpcStateMachine : StateMachine
         _states[AIState.Moving] = new BasicNpcMoveState(AIState.Moving, this);
         _states[AIState.Knockbacked] = new BasicNpcKnockbackState(AIState.Knockbacked, this);
         _states[AIState.Pursuing] = new BasicNpcPursueState(AIState.Pursuing, this);
-        
+        _states[AIState.Fleeing] = new BasicNpcFleeState(AIState.Fleeing, this);
+
         // Super States
         _states[AIState.Grounded] = new BasicNpcGroundedState(AIState.Grounded, this);
         _states[AIState.Dead] = new BasicNpcDeadState(AIState.Dead, this);

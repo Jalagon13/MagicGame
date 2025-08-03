@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BaseHealth: 100
   BaseSpeed: 5
-  IFrameDuration: 2
+  IFrameDuration: 0.17
   TurnSharpness: 8
   KnockbackResist: 0
   RespawnTimerDuration: 3
+  CanRegenerateHealth: 1
   BaseHealthRegenTimeInterval: 0.5
   BaseHealthRegenAmount: 1
   CanBeKnockedBack: 1

@@ -14,15 +14,16 @@ public class BasicNpcIdleState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {  
+        Debug.Log($"Idle State");
         _idleComplete = false;
         
         float idleDuration = UnityEngine.Random.Range(_ctx.CharacterData.MinIdleDuration, _ctx.CharacterData.MaxIdleDuration);
-        
         if(idleDuration <= 0)
         {
             idleDuration = 0.0001f;
         } 
         
+        Debug.Log($"Idle Duration: {idleDuration}");
         _idleTimer = new(idleDuration);
         _idleTimer.OnTimerEnd += IdleDone;
         
@@ -36,7 +37,7 @@ public class BasicNpcIdleState : BaseState
 
     public override void UpdateState()
     {
-        _idleTimer.Tick(Time.fixedDeltaTime);
+        _idleTimer.Tick(Time.deltaTime);
     }
 
     public override void CheckSwitchStates()
@@ -44,19 +45,14 @@ public class BasicNpcIdleState : BaseState
         if (_idleComplete && _ctx.CharacterData.CanMove && _ctx.CharacterData.BaseSpeed != 0)
         {
             SwitchState(new AIStateData(AIState.Moving));
-            return;
         }
-
-        if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
+        else if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
         {
             SwitchState(new AIStateData(AIState.Knockbacked));
-            return;
         }
-
-        if (_ctx.IsChasing)
+        else if (_ctx.IsChasing)
         {
             SwitchState(new AIStateData(AIState.Pursuing));
-            return;
         }
     }
 

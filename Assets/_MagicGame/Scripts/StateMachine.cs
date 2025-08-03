@@ -20,6 +20,7 @@ public enum AIState
     Moving,
     Knockbacked,
     Pursuing,
+    Fleeing,
 }
 
 public abstract class StateMachine
