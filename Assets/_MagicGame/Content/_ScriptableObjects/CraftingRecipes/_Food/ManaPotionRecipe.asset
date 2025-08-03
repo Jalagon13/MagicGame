@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55646a241e94b4a3a9d1cdf6e939102b, type: 3}
+  m_Name: ManaPotionRecipe
+  m_EditorClassIdentifier: 
+  OutputItem: {fileID: 11400000, guid: d7f6664b8772746fe92f3f5fb8fa611c, type: 2}
+  OutputAmount: 1
+  ResourceList:
+  - Item: {fileID: 11400000, guid: 86cb8623724924d17ae00c150259df3d, type: 2}
+    Quantity: 5

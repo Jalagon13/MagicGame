@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a7aded7ceac2467a95225af72ed6b1a, type: 3}
+  m_Name: CavePortalItem
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Cave Portal
+  <UiDisplay>k__BackingField: {fileID: 547736231, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <GoldValue>k__BackingField: 8
+  <Stackable>k__BackingField: 1
+  <Description>k__BackingField: 
+  _deployObjectPrefab: {fileID: 5150323723629226184, guid: d486dbafb74344fbb99c566098694a5f, type: 3}

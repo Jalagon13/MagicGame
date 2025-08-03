@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b31f6fd9b04647aeb0c34eda896b8b1, type: 3}
+  m_Name: ForgeCDB
+  m_EditorClassIdentifier: 
+  <DatabaseName>k__BackingField: Forge
+  RecipeDatabase:
+  - {fileID: 11400000, guid: a82e1cc10ce62460f8ad3e3f614c06dd, type: 2}
+  - {fileID: 11400000, guid: 609b6769c54224b20ac34e8a8d16f020, type: 2}
+  - {fileID: 11400000, guid: de3793e400b254dd9993d3d34d336b7f, type: 2}
+  - {fileID: 11400000, guid: 828efe99dd6fe4c059c4c8f611fc7b19, type: 2}
+  - {fileID: 11400000, guid: 6f09df162e36b41979645e99cbbd97c1, type: 2}
+  - {fileID: 11400000, guid: 9e308e05b3f234bc8b4d11707195933e, type: 2}
+  - {fileID: 11400000, guid: f363fcb16213c4c1596a0317714148c0, type: 2}
