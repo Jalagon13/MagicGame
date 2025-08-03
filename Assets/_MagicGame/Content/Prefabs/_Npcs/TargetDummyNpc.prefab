@@ -1868,6 +1868,10 @@ PrefabInstance:
       propertyPath: managedReferences[3871355197610000521].RangeFalloff.m_Curve.Array.data[1].weightedMode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6098015897637183109, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _serverCharacter
+      value: 
+      objectReference: {fileID: 6325739439915723595}
     - target: {fileID: 6511669604684677142, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -6995,5 +6999,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03836b3ee31af4f61b1040efe7941ddc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6325739439915723595 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1803180478442400679, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+  m_PrefabInstance: {fileID: 5678939718979453164}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 532044041320650086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b890406e5bcf4374a4a571b9744aa58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

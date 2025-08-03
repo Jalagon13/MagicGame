@@ -72,39 +72,42 @@ public class ServerCharacterMovement : NetworkBehaviour
     {
         _desiredDirection = desiredDirection.normalized;
         // _speed = _serverCharacter.Data.PursueSpeed; // NTFS: Maybe just make this a buff or something
-        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection();
+        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(_desiredDirection);
         _serverCharacter.MovementState.Value = MovementState.Pursuing;
     }
     
     public void StartMovement(Vector2 desiredDirection)
     {
         _desiredDirection = desiredDirection.normalized;
-        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection();
+        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(_desiredDirection);
         _serverCharacter.MovementState.Value = MovementState.Moving;
     }
     
     public void StartFlee(Vector2 fleeDirection)
     {
         _desiredDirection = fleeDirection.normalized;
-        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection();
+        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(_desiredDirection);
         _serverCharacter.MovementState.Value = MovementState.Fleeing;
     }
 
     public void StartKnockback(Vector2 knockerPosition, float knockbackForce, bool inverse = false)
     {
+        Vector2 knockbackDirection = ((Vector2)_serverCharacter.transform.position - knockerPosition).normalized;
+        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(knockbackDirection);
+        Debug.Log($"Knockback Direction {_serverCharacter.CardinalDirection.Value}");
         _serverCharacter.MovementState.Value = MovementState.Knockback;
         _knockback.ApplyKnockback(knockerPosition, knockbackForce, inverse);
     }
 
-    private CardinalDirection CardinalDirectionFromDesiredDirection()
+    private CardinalDirection CardinalDirectionFromDesiredDirection(Vector2 desiredDirection)
     {
-        if (Math.Abs(_desiredDirection.x) > Math.Abs(_desiredDirection.y))
+        if (Math.Abs(desiredDirection.x) > Math.Abs(desiredDirection.y))
         {
-            return _desiredDirection.x > 0 ? CardinalDirection.East : CardinalDirection.West;
+            return desiredDirection.x > 0 ? CardinalDirection.East : CardinalDirection.West;
         }
         else
         {
-            return _desiredDirection.y > 0 ? CardinalDirection.North : CardinalDirection.South;
+            return desiredDirection.y > 0 ? CardinalDirection.North : CardinalDirection.South;
         }
     }
 

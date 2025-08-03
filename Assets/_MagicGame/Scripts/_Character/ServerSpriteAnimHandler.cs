@@ -8,19 +8,21 @@ using UnityEngine;
 
 public class ServerSpriteAnimHandler : NetworkBehaviour
 {
+    private ServerCharacter _serverCharacter;
+
     [SerializeField]
     private AnimationConfigSO _animConfig;
-    private NetworkAnimator _networkAnimator;
+    private Animator _animator;
 
     private void Awake()
     {
-        _networkAnimator = GetComponent<NetworkAnimator>();
+        _serverCharacter = transform.root.GetComponent<ServerCharacter>();
+        _animator = GetComponent<Animator>();
     }
 
     public void PlayAnimation(MovementState movementState, CardinalDirection cardinalDirection)
     {
         UpdateSpriteOrientationClientRpc(cardinalDirection);
-
         AnimationClip clip = null;
 
         if (movementState == MovementState.Idle)
@@ -32,7 +34,7 @@ public class ServerSpriteAnimHandler : NetworkBehaviour
                 _ => _animConfig.SideIdleClip,
             };
         }
-        else if (movementState == MovementState.Pursuing || movementState == MovementState.Knockback || movementState == MovementState.Moving)
+        else if (movementState == MovementState.Pursuing || movementState == MovementState.Knockback || movementState == MovementState.Moving || movementState == MovementState.Fleeing)
         {
             clip = cardinalDirection switch
             {
@@ -44,20 +46,36 @@ public class ServerSpriteAnimHandler : NetworkBehaviour
 
         if (clip != null)
         {
-            AnimStateManager.ChangeAnimationState(_networkAnimator.Animator, clip);
+            AnimStateManager.ChangeAnimationState(_animator, clip);
         }
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     private void UpdateSpriteOrientationClientRpc(CardinalDirection direction)
     {
+        bool isPlayer = _serverCharacter.TryGetComponent(out Player player);
+    
         // Default scale facing East
-        transform.localScale = Vector3.one;
+        if(isPlayer)
+        {
+            transform.localScale = Vector3.one;
+        }
+        else
+        {
+            transform.parent.localScale = Vector3.one;
+        }
 
         // Flip sprite for West direction
         if (direction == CardinalDirection.West)
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            if(isPlayer)
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else
+            {
+                transform.parent.localScale = new Vector3(-1, 1, 1);
+            }
         }
     }
 }

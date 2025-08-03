@@ -310,6 +310,7 @@ MonoBehaviour:
   _aiType: 1
   _characterData: {fileID: 11400000, guid: 9720263fd0d0e4e21ad416d3d8caedf4, type: 2}
   _clientCharacter: {fileID: 8333186287527618759}
+  _clientFeedbacks: {fileID: 0}
   _serverCharacterMovement: {fileID: 3930061559417755682}
   _serverAnimationHandler: {fileID: 598476479702786246}
 --- !u!114 &1645875197371293612
@@ -538,6 +539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _serverCharacter: {fileID: 8141412508225569808}
   _animConfig:
     SideMoveClip: {fileID: 7400000, guid: 24f32a77bfab243f5ab5f450fb7d2244, type: 2}
     SideIdleClip: {fileID: 7400000, guid: 0cbc966b706b04ad4b57f1739c5e0a3d, type: 2}
@@ -2174,6 +2176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _serverCharacter: {fileID: 8141412508225569808}
   _animConfig:
     SideMoveClip: {fileID: 7400000, guid: c3786dd5f87694fea98d9c3308082ef4, type: 2}
     SideIdleClip: {fileID: 7400000, guid: 7573e0df65438459daa4629d2e07d0bc, type: 2}
@@ -2509,6 +2512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _serverCharacter: {fileID: 8141412508225569808}
   _animConfig:
     SideMoveClip: {fileID: 7400000, guid: bf7d8e7caefb4418fbd12e459ad61c72, type: 2}
     SideIdleClip: {fileID: 7400000, guid: 82666e05b74ad4c93ae3d08d7650c4de, type: 2}
@@ -2845,6 +2849,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _serverCharacter: {fileID: 8141412508225569808}
   _animConfig:
     SideMoveClip: {fileID: 7400000, guid: 83b6ce38a249f430c80be8129bbf4684, type: 2}
     SideIdleClip: {fileID: 7400000, guid: 9b110df85b7ab41b1a0b657a572a1422, type: 2}

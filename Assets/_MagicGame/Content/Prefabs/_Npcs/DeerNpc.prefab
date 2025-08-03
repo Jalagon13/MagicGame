@@ -16,6 +16,22 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 452738061098409354, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: ShapeModule.m_Position.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 647902995146852404, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _spriteAnimHandlers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 647902995146852404, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: '_spriteAnimHandlers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 3221309251872524564}
+    - target: {fileID: 1015989746420609539, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1803180478442400679, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _characterData
       value: 
@@ -260,6 +276,34 @@ PrefabInstance:
       propertyPath: _frontMoveClip
       value: 
       objectReference: {fileID: 7400000, guid: ab0d378cdacc6445289f30022f37ecf3, type: 2}
+    - target: {fileID: 6098015897637183109, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _serverCharacter
+      value: 
+      objectReference: {fileID: 6994879136395803702}
+    - target: {fileID: 6098015897637183109, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _animConfig.BackIdleClip
+      value: 
+      objectReference: {fileID: 7400000, guid: ebfde5a47013a45ecb9cde5141594ac1, type: 2}
+    - target: {fileID: 6098015897637183109, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _animConfig.BackMoveClip
+      value: 
+      objectReference: {fileID: 7400000, guid: db88c1cadf3414c3cb3a65a360b9fdd9, type: 2}
+    - target: {fileID: 6098015897637183109, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _animConfig.SideIdleClip
+      value: 
+      objectReference: {fileID: 7400000, guid: d85d931c12e2d48099ea7c588a836332, type: 2}
+    - target: {fileID: 6098015897637183109, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _animConfig.SideMoveClip
+      value: 
+      objectReference: {fileID: 7400000, guid: 2a398918468394b20a539ce4f466e33d, type: 2}
+    - target: {fileID: 6098015897637183109, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _animConfig.FrontIdleClip
+      value: 
+      objectReference: {fileID: 7400000, guid: e5e9ec76d596043679f6ca2cdfe82294, type: 2}
+    - target: {fileID: 6098015897637183109, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _animConfig.FrontMoveClip
+      value: 
+      objectReference: {fileID: 7400000, guid: ab0d378cdacc6445289f30022f37ecf3, type: 2}
     - target: {fileID: 6511669604684677142, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -308,6 +352,10 @@ PrefabInstance:
       propertyPath: NetworkTransformExpanded
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7854521408473194833, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: ShapeModule.m_Position.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8184671317715962605, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 404734043
@@ -331,8 +379,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9232ddee3f9f741b79915d6374a26a02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3221309251872524564 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6098015897637183109, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+  m_PrefabInstance: {fileID: 8652789913409017745}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8066f214e926c43c4b5d9d1bf4fbd377, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3583022790027280923 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
   m_PrefabInstance: {fileID: 8652789913409017745}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6994879136395803702 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1803180478442400679, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+  m_PrefabInstance: {fileID: 8652789913409017745}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3583022790027280923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b890406e5bcf4374a4a571b9744aa58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
