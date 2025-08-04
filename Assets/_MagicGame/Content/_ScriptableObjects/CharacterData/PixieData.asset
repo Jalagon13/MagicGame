@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45bf45ce95db148eb957e731034dd7fb, type: 3}
+  m_Name: PixieData
+  m_EditorClassIdentifier: 
+  BaseHealth: 14
+  BaseSpeed: 3
+  BaseAttack: 5
+  BaseDefense: 3
+  TurnSharpness: 5
+  KnockbackResist: 0
+  CanMove: 1
+  StoppingDistance: 0.25
+  WanderRadius: 10
+  StrafingDuration: 0.25
+  StrafeIntensity: 0.5
+  IFrameDuration: 0.17
+  CanRegenerateHealth: 1
+  BaseHealthRegenTimeInterval: 0.25
+  BaseHealthRegenAmount: 1
+  CanBeKnockedBack: 1
+  CanDie: 1
+  IsNpc: 0
+  WillChasePlayer: 1
+  OnlyChaseWhenProvoked: 1
+  WillFleeWhenProvoked: 1
+  IsFriendly: 0
+  FleeDuration: 1.5
+  FleeSpeedMultiplier: 1.5
+  PursueSpeed: 4
+  MinIdleDuration: 2.5
+  MaxIdleDuration: 5
+  DetectionRadius: 15
+  DetectionIntervalDuration: 0.5
+  SlotAmount: 0
+  StringID: 
+  NpcPrefab: {fileID: 0}
+  LootTable: []
+  HurtSound:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  DeathSound:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  WalkSound:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 

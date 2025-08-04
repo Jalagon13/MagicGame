@@ -36,7 +36,7 @@ public class CharacterDataSO : ScriptableObject
     [Space]
     [Header("Health & Survival")]
     [Tooltip("Duration of invincibility frames when character is hit")]
-    public float IFrameDuration = 0.2f;
+    public float IFrameDuration = 0.17f;
     public bool CanRegenerateHealth = true;
     [Tooltip("Base Health Regen Interval")]
     public float BaseHealthRegenTimeInterval = 0.25f;

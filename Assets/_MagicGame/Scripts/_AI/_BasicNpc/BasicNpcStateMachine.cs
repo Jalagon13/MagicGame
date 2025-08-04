@@ -38,6 +38,7 @@ public class BasicNpcStateMachine : StateMachine
         _states[AIState.Grounded] = new BasicNpcGroundedState(AIState.Grounded, this);
         _states[AIState.Dead] = new BasicNpcDeadState(AIState.Dead, this);
         
+        // Start on the Grounded State
         _currentState = _states[AIState.Grounded];
     }
 
@@ -193,12 +194,4 @@ public class BasicNpcStateMachine : StateMachine
 
         return true;
     }
-
-    // protected void FixedUpdate()
-    // {
-    //     if(_velocityBasedAnimator != null)
-    //     {
-    //         _velocityBasedAnimator.AnimateBasedOnVelocity(Velocity.Value);
-    //     }
-    // }
 }
