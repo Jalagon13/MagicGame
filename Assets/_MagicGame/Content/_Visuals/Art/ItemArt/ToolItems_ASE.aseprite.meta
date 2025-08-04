@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2ce3c3e10ace8454797acd7290847380
+guid: 1333ac4a0028b454fb4943c2bb1679e2
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -129,7 +129,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: ToolItems_ASE
     originalName: 
-    pivot: {x: 1.032258, y: -3.7692308}
+    pivot: {x: 0.503937, y: -3.5000002}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -137,9 +137,9 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 62
-      height: 13
-    spriteID: b6cacd11aa00f408082e7fb8b8f805fb
+      width: 127
+      height: 14
+    spriteID: 0a8773cbc424044f4a7f81bfe0e2837f
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -169,9 +169,9 @@ ScriptedImporter:
       cellRect:
         x: 0
         y: 49
-        width: 62
-        height: 13
-      spriteId: b6cacd11aa00f408082e7fb8b8f805fb
+        width: 127
+        height: 14
+      spriteId: 0a8773cbc424044f4a7f81bfe0e2837f
     linkedCells: []
     tileCells: []
     tileSetIndex: 0
@@ -182,4 +182,4 @@ ScriptedImporter:
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 128, y: 64}
-  previousTextureSize: {x: 128, y: 32}
+  previousTextureSize: {x: 256, y: 32}

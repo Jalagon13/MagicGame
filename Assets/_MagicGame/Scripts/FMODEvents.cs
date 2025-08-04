@@ -22,7 +22,7 @@ public class FMODEvents : MonoBehaviour
 	
 	[field: Header("Environment SFX")]
 	[field: SerializeField] public EventReference Ambience { get; private set; }
-	[field: SerializeField] public EventReference MagicDestruction { get; private set; }
+	[field: SerializeField] public EventReference MobSquash { get; private set; }
 	
 	
 	private void Awake()

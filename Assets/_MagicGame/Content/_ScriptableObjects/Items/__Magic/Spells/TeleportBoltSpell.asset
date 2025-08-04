@@ -13,20 +13,27 @@ MonoBehaviour:
   m_Name: TeleportBoltSpell
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Teleport Bolt
-  <UiDisplay>k__BackingField: {fileID: -762693607845688436, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
+  <UiDisplay>k__BackingField: {fileID: 1055845359, guid: 6b31da2f94c4a4f20b4c4f66b75905fc, type: 3}
   <GoldValue>k__BackingField: 100
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <SpellPrefab>k__BackingField: {fileID: 433218415224276779, guid: 7b76a216d688c40859abed843d362a5f, type: 3}
   <SpellUIDisplaySprite>k__BackingField: {fileID: -762693607845688436, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 8285152488836000937, guid: 8175636c29a52422d8069d30cf23c5b6, type: 3}
-  <SpellCastSound>k__BackingField:
+  <SpellOnCastSound>k__BackingField:
     Guid:
-      Data1: -2115950531
-      Data2: 1190229213
-      Data3: 49132942
-      Data4: 1594458749
-    Path: event:/Player/WandCast
+      Data1: 660675445
+      Data2: 1220625473
+      Data3: 1963841471
+      Data4: 1725148628
+    Path: event:/Magic/MagicWoosh
+  <SpellOnDamageSound>k__BackingField:
+    Guid:
+      Data1: 660675445
+      Data2: 1220625473
+      Data3: 1963841471
+      Data4: 1725148628
+    Path: event:/Magic/MagicWoosh
   <CastTime>k__BackingField: 0.2
   <ManaCost>k__BackingField: 20
   <Damage>k__BackingField: 0

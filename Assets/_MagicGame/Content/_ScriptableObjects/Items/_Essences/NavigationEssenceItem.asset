@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NavigationEssenceItem
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Navigation Essence
-  <UiDisplay>k__BackingField: {fileID: 3957214166121459164, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -61237270, guid: 0ed47c1efae5d4f2da0a01c32c7c6677, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 

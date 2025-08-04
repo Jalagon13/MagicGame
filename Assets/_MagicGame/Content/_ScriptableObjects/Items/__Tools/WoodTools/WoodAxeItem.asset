@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: WoodAxeItem
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Wood Axe
-  <UiDisplay>k__BackingField: {fileID: 9154204451635631574, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -217538429237877828, guid: 539b6686a978c4c08845afe71ddfe566, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <ToolType>k__BackingField: 1
   <MiningPower>k__BackingField: 1
   <MiningRange>k__BackingField: 4
-  <MeleeDamage>k__BackingField: 3
+  <Damage>k__BackingField: 0
   <Knockback>k__BackingField: 6
   <DetectionBetweenHitsDuration>k__BackingField: 0.05
+  <ColliderLength>k__BackingField: 1
   <SwingDuration>k__BackingField: 0.35
   <SwingCooldown>k__BackingField: 0.1
   <HitSound>k__BackingField:

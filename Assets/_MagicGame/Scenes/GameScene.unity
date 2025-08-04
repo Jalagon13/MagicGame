@@ -13815,13 +13815,13 @@ MonoBehaviour:
       Data3: -1876040270
       Data4: -1388101932
     Path: event:/Ambience/Ambience
-  <MagicDestruction>k__BackingField:
+  <MobSquash>k__BackingField:
     Guid:
-      Data1: 1985903599
-      Data2: 1244674207
-      Data3: -343921521
-      Data4: -738418528
-    Path: event:/Magic/MagicDestruction
+      Data1: -639042691
+      Data2: 1292326190
+      Data3: -1088953413
+      Data4: 1920233916
+    Path: event:/NPCs/Squish
 --- !u!1001 &1744933028
 PrefabInstance:
   m_ObjectHideFlags: 0

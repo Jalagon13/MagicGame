@@ -483,6 +483,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: rsc_tall_grass
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 64
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a57c41e05c5ee47e0948dcc813c31671
+      internalID: -1310281842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -513,6 +535,7 @@ TextureImporter:
       rsc_stairs_to_cave: -1882313086
       rsc_stairs_to_surface: 125475558
       rsc_stone: -153397541
+      rsc_tall_grass: -1310281842
       rsc_target_dummy: 1783913889
       rsc_work_bench: 1014094090
   mipmapLimitGroupName: 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HomingSpellMod
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Homing Modifier
-  <UiDisplay>k__BackingField: {fileID: -1822252437, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
+  <UiDisplay>k__BackingField: {fileID: 1956930672, guid: 6b31da2f94c4a4f20b4c4f66b75905fc, type: 3}
   <GoldValue>k__BackingField: 0
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 

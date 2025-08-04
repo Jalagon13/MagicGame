@@ -38,6 +38,7 @@ public class ClientFeedbacks : NetworkBehaviour
     public void PlayDeathFeedbacksRpc()
     {
         SoundManager.Instance.PlayOneShot(_serverCharacter.Data.DeathSound, transform.position);
+        SoundManager.Instance.PlayOneShot(FMODEvents.Instance.MobSquash, transform.position);
 
         _deathFeedback.PlayFeedbacks();
     }
@@ -53,12 +54,5 @@ public class ClientFeedbacks : NetworkBehaviour
         float angle = Mathf.Atan2(hitDirection.y, hitDirection.x) * Mathf.Rad2Deg;
         Debug.Log($"RotateGibs: hitDir={hitDirection}, angle={angle}");
         _gibsParticleSystem.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-        // _gibsParticleSystem.Play();
     }
-
-    // public void PlayDeathSound() // Played through MMF_Player
-    // {
-    //     // SoundManager.Instance.PlayOneShot(_serverCharacter.Data.WalkSound, transform.position);
-    //     // SoundManager.Instance.PlayOneShot(FMODEvents.Instance.MagicDestruction, Player.Instance.transform.position);
-    // }
 }

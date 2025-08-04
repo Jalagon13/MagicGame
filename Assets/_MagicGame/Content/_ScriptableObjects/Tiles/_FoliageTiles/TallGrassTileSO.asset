@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b52052ad4aefe4da580ba4e2ba9fed0c, type: 3}
   m_Name: TallGrassTileSO
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: -2185965059797946875, guid: 6af26ec302fd4416eab46141a8e44a05, type: 3}
+  m_DefaultSprite: {fileID: -1310281842, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
   m_DefaultGameObject: {fileID: 391421181423590875, guid: 7ccd4016f46464294a499bc53918b403, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules: []

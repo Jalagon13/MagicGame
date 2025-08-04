@@ -129,15 +129,15 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: deer_01
     originalName: 
-    pivot: {x: 0.5168539, y: 0}
+    pivot: {x: 0.5123967, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
       x: 4
-      y: 94
-      width: 89
+      y: 4
+      width: 121
       height: 37
     spriteID: 460fb22a6201c49259274e10522195c8
     spriteBone: []
@@ -147,16 +147,16 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 94}
+    uvTransform: {x: 4, y: 4}
   - name: deer_01_Frame_1
     originalName: 
-    pivot: {x: 0.52747256, y: 0}
+    pivot: {x: 0.7032967, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
-      x: 4
+      x: 133
       y: 4
       width: 91
       height: 37
@@ -168,10 +168,10 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 4}
+    uvTransform: {x: 133, y: 4}
   - name: deer_01_Frame_2
     originalName: 
-    pivot: {x: 0.5222223, y: 0}
+    pivot: {x: 0.7, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -211,7 +211,7 @@ ScriptedImporter:
       cellRect:
         x: 2
         y: 0
-        width: 89
+        width: 121
         height: 37
       spriteId: 460fb22a6201c49259274e10522195c8
     - name: Frame_1
@@ -241,5 +241,5 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 96, y: 48}
-  previousTextureSize: {x: 128, y: 256}
+  canvasSize: {x: 128, y: 48}
+  previousTextureSize: {x: 256, y: 128}

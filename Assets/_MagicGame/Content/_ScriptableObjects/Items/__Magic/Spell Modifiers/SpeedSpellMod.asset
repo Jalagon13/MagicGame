@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SpeedSpellMod
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Speed Modifier
-  <UiDisplay>k__BackingField: {fileID: -27199075, guid: b8e04058ca98b48f28d23f91e16244f1, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -141158605, guid: 6b31da2f94c4a4f20b4c4f66b75905fc, type: 3}
   <GoldValue>k__BackingField: 0
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
