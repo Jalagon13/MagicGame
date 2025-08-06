@@ -45,6 +45,7 @@ public class PlayerStateMachine : StateMachine
 		_states[AIState.Attacking] = new PlayerAttackState(AIState.Attacking, this);
 		_states[AIState.SpellCasting] = new PlayerSpellCastingState(AIState.SpellCasting, this);
 		_states[AIState.Dead] = new PlayerDeadState(AIState.Dead, this);
+		
 		_currentState = _states[AIState.Grounded];
 		
 		if (_serverCharacter.TryGetComponent(out Player player))

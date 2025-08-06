@@ -7,7 +7,6 @@ public class PixieChargingDashState : BaseState
     public PixieChargingDashState(AIState key, StateMachine context) : base(key, context)
     {
         _ctx = Context as PixieStateMachine;
-        IsSuperState = true;
     }
 
     protected override void EnterState(AIStateData stateData)

@@ -7,15 +7,14 @@ using UnityEngine;
 public class BasicNpcMoveState : BaseState
 {
     private BasicNpcStateMachine _ctx;
-    private bool _destinationReached;
     private Vector2 _lastPosition;
     private float _timeNotMoved = 0f;
     private float _timeThreshold = 3.5f; // Every _timeThreshold seconds, check if pixie has moved _distanceThreshold
     private float _distanceThreshold = 0.2f;
-    private bool _isStuck;
-    
-    private bool _hasDestination;
-    private Vector2? _destination;
+
+    protected bool _isStuck;
+    protected bool _destinationReached;
+    protected Vector2? _destination;
 
     public BasicNpcMoveState(AIState key, StateMachine context) : base(key, context)
     {
@@ -24,19 +23,50 @@ public class BasicNpcMoveState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        Debug.Log("Move State");
+        Debug.Log("Entering Move State");
         _destinationReached = false; 
         _isStuck = false;
         _timeNotMoved = 0f;
 
-        _destination = GetRandomWanderDestinationBFS();
-        _hasDestination = _destination.HasValue;
-        Debug.Log($"Has Destination: {_hasDestination}, Destination: {_destination}");
+        // Handle patrol point logic
+        if (_ctx.CharacterData.WillPatrolSpawnPoint)
+        {
+            // Store patrol point if not set
+            if (_ctx.PatrolPoint == null)
+            {
+                _ctx.PatrolPoint = _ctx.ServerCharacter.transform.position;
+            }
+            float patrolRadius = _ctx.ServerCharacter.Data.WanderRadius;
+            float distToPatrol = Vector2.Distance(_ctx.ServerCharacter.transform.position, _ctx.PatrolPoint.Value);
+            if (distToPatrol > patrolRadius)
+            {
+                // Too far, try to path back to patrol point if possible
+                if (_ctx.IsPathUnObstructed(_ctx.PatrolPoint.Value))
+                {
+                    _destination = _ctx.PatrolPoint.Value;
+                }
+                else
+                {
+                    // If can't path, reset patrol point to current position
+                    _ctx.PatrolPoint = _ctx.ServerCharacter.transform.position;
+                    _destination = GetRandomWanderDestinationBFS();
+                }
+            }
+            else
+            {
+                // Within patrol radius, wander as usual
+                _destination = GetRandomWanderDestinationBFS();
+            }
+        }
+        else
+        {
+            _destination = GetRandomWanderDestinationBFS();
+        }
+        Debug.Log($"Has Destination: {_destination.HasValue}, Destination: {_destination}");
         if (_destination.HasValue)
         {
             Vector2 direction = _destination.Value - (Vector2)_ctx.ServerCharacter.transform.position;
             _ctx.ServerCharacter.Movement.StartMovement(direction.normalized);
-
             _isStuck = false;
             _timeNotMoved = 0f;
             _lastPosition = _ctx.ServerCharacter.transform.position;
@@ -47,19 +77,33 @@ public class BasicNpcMoveState : BaseState
     {
         _destinationReached = false;
         _isStuck = false;
-        _hasDestination = false;
         _destination = null;
     }
 
     public override void UpdateState()
     {
-        if (!_hasDestination) return;
+        if (!_destination.HasValue) return;
 
         // Check if the destination has been reached
+        Debug.Log($"Distance to Destination: {Vector2.Distance(_ctx.ServerCharacter.transform.position, _destination.Value)}");
         float distanceToDestination = Vector2.Distance(_ctx.ServerCharacter.transform.position, _destination.Value);
         if (distanceToDestination <= _ctx.CharacterData.StoppingDistance)
         {
+            Debug.Log($"Destination Reached: {distanceToDestination} <= {_ctx.CharacterData.StoppingDistance}");
             _destinationReached = true;
+            return;
+        }
+
+        Vector2 toDestination = (_destination.Value - (Vector2)_ctx.ServerCharacter.transform.position).normalized;
+        Vector2 currentDirection = _ctx.ServerCharacter.Movement.Velocity; // You’ll need to expose this
+
+        float dot = Vector2.Dot(toDestination, currentDirection);
+        if (dot < 0)
+        {
+            // The pixie has passed the destination
+            Debug.Log($"Passed Destination: {distanceToDestination} < {_ctx.CharacterData.StoppingDistance}");
+            _destinationReached = true;
+            return;
         }
 
         // Check if the AI is stuck
@@ -69,6 +113,7 @@ public class BasicNpcMoveState : BaseState
             float distanceMoved = Vector2.Distance(_lastPosition, _ctx.ServerCharacter.transform.position);
             if (distanceMoved < _distanceThreshold)
             {
+                Debug.Log($"AI Stuck");
                 _isStuck = true;
             }
             _timeNotMoved = 0f;
@@ -81,15 +126,17 @@ public class BasicNpcMoveState : BaseState
         if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
         {
             SwitchState(new AIStateData(AIState.Knockbacked));
+            return;
         }
         else if (_ctx.IsChasing)
         {
             SwitchState(new AIStateData(AIState.Pursuing));
+            return;
         }
-        else if (!_hasDestination || _destinationReached || _isStuck)
+        else if (!_destination.HasValue || _destinationReached || _isStuck)
         {
-            Debug.Log($"Switching to Idle State, !_hasDestination: {!_hasDestination}, _destinationReached: {_destinationReached}, _isStuck: {_isStuck}");
             SwitchState(new AIStateData(AIState.Idle));
+            return;
         }
     }
 
@@ -127,12 +174,16 @@ public class BasicNpcMoveState : BaseState
             }
         }
 
+        Debug.Log($"Wander BFS found {validTiles.Count} valid tiles.");
+
         if (validTiles.Count > 0)
         {
             // Don’t pick a destination that’s effectively already “reached”
             float minDistance = _ctx.CharacterData.StoppingDistance + 0.1f; // small buffer
             List<Vector2> filtered = new List<Vector2>(validTiles);
             filtered.RemoveAll(tile => Vector2.Distance(_ctx.ServerCharacter.transform.position, tile) <= minDistance);
+
+            Debug.Log($"Filtered down to {filtered.Count} after removing close tiles.");
 
             Vector2 chosen;
             if (filtered.Count > 0)

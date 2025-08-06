@@ -8,7 +8,7 @@ public class BasicNpcGroundedState : BaseState
     {
         _ctx = context as BasicNpcStateMachine;
         IsSuperState = true; // This is a super state
-        SetSubState(AIState.Idle); // Default sub state is Idle
+        SetSubState(AIState.Idle); // Default sub state is idle
     }
 
     protected override void EnterState(AIStateData stateData)

@@ -57,8 +57,6 @@ public class PlayerMoveState : BaseState
 	
 	private void PlayFootStepSound()
 	{
-		if(_ctx.CharacterData.WalkSound.IsNull) return;
-	
-		SoundManager.Instance.PlayOneShot(_ctx.CharacterData.WalkSound, Player.Instance.transform.position);
+		SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerFootsteps, Player.Instance.transform.position);
 	}
 }

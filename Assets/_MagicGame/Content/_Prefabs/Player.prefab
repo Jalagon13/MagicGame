@@ -307,7 +307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _aiType: 1
+  _aiType: 0
   _characterData: {fileID: 11400000, guid: 9720263fd0d0e4e21ad416d3d8caedf4, type: 2}
   _clientCharacter: {fileID: 8333186287527618759}
   _clientFeedbacks: {fileID: 0}

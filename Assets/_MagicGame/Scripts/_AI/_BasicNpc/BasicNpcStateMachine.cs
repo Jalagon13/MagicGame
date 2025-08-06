@@ -23,6 +23,23 @@ public class BasicNpcStateMachine : StateMachine
     private Vector2 _hitDirection;
     public Vector2 HitDireciton => _hitDirection;
     
+    private Vector2? _patrolPoint;
+    public Vector2? PatrolPoint 
+    {
+        get => _patrolPoint;
+        set
+        {
+            if (value.HasValue)
+            {
+                _patrolPoint = value.Value;
+            }
+            else
+            {
+                _patrolPoint = null;
+            }
+        }
+    }
+    
     public BasicNpcStateMachine(ServerCharacter serverCharacter)
     {
         _serverCharacter = serverCharacter;

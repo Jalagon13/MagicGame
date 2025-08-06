@@ -5168,7 +5168,7 @@ PrefabInstance:
     - target: {fileID: 7196426771198909061, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <NetworkHealthState>k__BackingField
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5709838467652903951}
     - target: {fileID: 7484194678343393079, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0.75
@@ -5210,6 +5210,17 @@ CircleCollider2D:
   m_CorrespondingSourceObject: {fileID: 3885697903487451157, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
   m_PrefabInstance: {fileID: 1559072833224275270}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5709838467652903951 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6530109159927746889, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+  m_PrefabInstance: {fileID: 1559072833224275270}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6633633827701661900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9232ddee3f9f741b79915d6374a26a02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6633633827701661900 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}

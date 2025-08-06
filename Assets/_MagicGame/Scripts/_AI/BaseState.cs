@@ -44,8 +44,6 @@ public abstract class BaseState
     public abstract void ExitState();
     public abstract void CheckSwitchStates();
     
-    // NTFS: Find a way to reuse the basic npc idle state while adding aditional logic at the bottom of the idle state for the pixie AI
-
     protected void SwitchState(AIStateData newStateData)
     {
         var newState = Context.GetState(newStateData.CurrentState);
