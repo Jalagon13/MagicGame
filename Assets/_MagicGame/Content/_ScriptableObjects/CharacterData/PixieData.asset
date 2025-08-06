@@ -30,16 +30,16 @@ MonoBehaviour:
   CanBeKnockedBack: 1
   CanDie: 1
   IsNpc: 1
-  WillChasePlayer: 0
-  OnlyChaseWhenProvoked: 0
+  WillChasePlayer: 1
+  OnlyChaseWhenProvoked: 1
   WillFleeWhenProvoked: 0
   WillPatrolSpawnPoint: 1
-  IsFriendly: 1
+  IsFriendly: 0
   FleeDuration: 1.5
   FleeSpeedMultiplier: 1.5
   PursueSpeed: 4
-  MinIdleDuration: 0.1
-  MaxIdleDuration: 0.1
+  MinIdleDuration: 0
+  MaxIdleDuration: 0
   DetectionRadius: 15
   DetectionIntervalDuration: 0.5
   SlotAmount: 0.5

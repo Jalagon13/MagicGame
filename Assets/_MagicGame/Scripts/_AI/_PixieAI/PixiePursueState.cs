@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PixiePursueState : BaseState
+public class PixiePursueState : BasicNpcPursueState
 {
     private PixieStateMachine _ctx;
 
@@ -12,20 +12,12 @@ public class PixiePursueState : BaseState
     protected override void EnterState(AIStateData stateData)
     {
         // Initialize movement parameters or animations here
-    }
-
-    public override void UpdateState()
-    {
-        // Handle movement logic here
+        Debug.Log($"Pixie Pursue State");
     }
 
     public override void CheckSwitchStates()
     {
         // Logic to switch to other states if conditions are met
-    }
-
-    public override void ExitState()
-    {
-        // Cleanup or reset parameters when exiting this state
+        // Custom logic for the dash state
     }
 }

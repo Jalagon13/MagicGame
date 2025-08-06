@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PixieKnockbackState : BaseState
+public class PixieKnockbackState : BasicNpcKnockbackState
 {
     private PixieStateMachine _ctx;
 
@@ -12,20 +12,13 @@ public class PixieKnockbackState : BaseState
     protected override void EnterState(AIStateData stateData)
     {
         // Initialize movement parameters or animations here
-    }
-
-    public override void UpdateState()
-    {
-        // Handle movement logic here
+        // BUG: This played twice why??
+        Debug.Log($"Pixie Knockback state");
     }
 
     public override void CheckSwitchStates()
     {
         // Logic to switch to other states if conditions are met
-    }
-
-    public override void ExitState()
-    {
-        // Cleanup or reset parameters when exiting this state
+        base.CheckSwitchStates();
     }
 }

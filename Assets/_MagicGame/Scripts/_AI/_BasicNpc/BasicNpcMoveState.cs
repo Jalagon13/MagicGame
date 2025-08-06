@@ -85,7 +85,6 @@ public class BasicNpcMoveState : BaseState
         if (!_destination.HasValue) return;
 
         // Check if the destination has been reached
-        Debug.Log($"Distance to Destination: {Vector2.Distance(_ctx.ServerCharacter.transform.position, _destination.Value)}");
         float distanceToDestination = Vector2.Distance(_ctx.ServerCharacter.transform.position, _destination.Value);
         if (distanceToDestination <= _ctx.CharacterData.StoppingDistance)
         {

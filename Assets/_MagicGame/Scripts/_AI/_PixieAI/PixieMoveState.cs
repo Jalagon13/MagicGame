@@ -13,7 +13,12 @@ public class PixieMoveState : BasicNpcMoveState
     {
         // Logic to switch to other states if conditions are met
         base.CheckSwitchStates();
-        
+
         // TODO: Add Pixie-specific state switching logic here
+        if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
+        {
+            SwitchState(new AIStateData(AIState.Knockbacked));
+            return;
+        }
     }
 }

@@ -38,7 +38,7 @@ public class ServerCharacterMovement : NetworkBehaviour
     {
         if (_serverCharacter.MovementState.Value == MovementState.Idle)
         {
-            _velocity = Vector2.zero;
+            _desiredDirection = Vector2.zero;
             return;
         }
 
