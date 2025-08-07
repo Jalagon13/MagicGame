@@ -23,7 +23,6 @@ public class BasicNpcMoveState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        Debug.Log("Entering Move State");
         _destinationReached = false; 
         _isStuck = false;
         _timeNotMoved = 0f;
@@ -62,7 +61,7 @@ public class BasicNpcMoveState : BaseState
         {
             _destination = GetRandomWanderDestinationBFS();
         }
-        Debug.Log($"Has Destination: {_destination.HasValue}, Destination: {_destination}");
+        
         if (_destination.HasValue)
         {
             Vector2 direction = _destination.Value - (Vector2)_ctx.ServerCharacter.transform.position;
@@ -88,7 +87,6 @@ public class BasicNpcMoveState : BaseState
         float distanceToDestination = Vector2.Distance(_ctx.ServerCharacter.transform.position, _destination.Value);
         if (distanceToDestination <= _ctx.CharacterData.StoppingDistance)
         {
-            Debug.Log($"Destination Reached: {distanceToDestination} <= {_ctx.CharacterData.StoppingDistance}");
             _destinationReached = true;
             return;
         }
@@ -100,7 +98,6 @@ public class BasicNpcMoveState : BaseState
         if (dot < 0)
         {
             // The pixie has passed the destination
-            Debug.Log($"Passed Destination: {distanceToDestination} < {_ctx.CharacterData.StoppingDistance}");
             _destinationReached = true;
             return;
         }
@@ -112,7 +109,6 @@ public class BasicNpcMoveState : BaseState
             float distanceMoved = Vector2.Distance(_lastPosition, _ctx.ServerCharacter.transform.position);
             if (distanceMoved < _distanceThreshold)
             {
-                Debug.Log($"AI Stuck");
                 _isStuck = true;
             }
             _timeNotMoved = 0f;
@@ -127,7 +123,7 @@ public class BasicNpcMoveState : BaseState
             SwitchState(new AIStateData(AIState.Knockbacked));
             return;
         }
-        else if (_ctx.IsChasing)
+        else if (_ctx.IsPursuingPlayerOrBreadCrumb)
         {
             SwitchState(new AIStateData(AIState.Pursuing));
             return;
@@ -173,16 +169,12 @@ public class BasicNpcMoveState : BaseState
             }
         }
 
-        Debug.Log($"Wander BFS found {validTiles.Count} valid tiles.");
-
         if (validTiles.Count > 0)
         {
             // Don’t pick a destination that’s effectively already “reached”
             float minDistance = _ctx.CharacterData.StoppingDistance + 0.1f; // small buffer
             List<Vector2> filtered = new List<Vector2>(validTiles);
             filtered.RemoveAll(tile => Vector2.Distance(_ctx.ServerCharacter.transform.position, tile) <= minDistance);
-
-            Debug.Log($"Filtered down to {filtered.Count} after removing close tiles.");
 
             Vector2 chosen;
             if (filtered.Count > 0)

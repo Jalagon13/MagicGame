@@ -40,7 +40,7 @@ public class BasicNpcPursueState : BaseState
 
     public override void CheckSwitchStates()
     {
-        if (!_ctx.IsChasing)
+        if (!_ctx.IsPursuingPlayerOrBreadCrumb)
         {
             SwitchState(new AIStateData(AIState.Idle));
             return;

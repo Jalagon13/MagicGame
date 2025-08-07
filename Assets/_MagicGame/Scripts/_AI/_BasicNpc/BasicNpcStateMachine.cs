@@ -8,7 +8,7 @@ using System.Collections;
 // Wanders until it finds a player or breadcrumb to move to
 public class BasicNpcStateMachine : StateMachine
 {
-    public bool IsChasing { get; private set; }
+    public bool IsPursuingPlayerOrBreadCrumb { get; private set; }
     public bool IsStrafing { get; private set; }
     public bool PlayerInSight { get; private set; }
     public bool IsAngry { get; private set; }
@@ -63,7 +63,7 @@ public class BasicNpcStateMachine : StateMachine
     {
         if (!CharacterData.IsFriendly)
         {
-            _breadCrumbDetectionTimer = new Timer(0.5f);
+            _breadCrumbDetectionTimer = new Timer(_serverCharacter.Data.DetectionIntervalDuration);
             _breadCrumbDetectionTimer.OnTimerEnd -= TryToFindBreadcrumb;
             _breadCrumbDetectionTimer.OnTimerEnd += TryToFindBreadcrumb;
         }
@@ -117,6 +117,7 @@ public class BasicNpcStateMachine : StateMachine
 
     private void TryToFindBreadcrumb(object sender, EventArgs e)
     {
+        // If the Npc only chases when provoked, and it is not provoked, do not try to detect any breadcrumbs
         if (CharacterData.OnlyChaseWhenProvoked && _serverCharacter.NetHealthState.HitPoints.Value >= CharacterData.BaseHealth)
         {
             return;
@@ -175,14 +176,14 @@ public class BasicNpcStateMachine : StateMachine
         {
             // Debug.Log("Found closest player! moving towards player");
             
-            IsChasing = true;
+            IsPursuingPlayerOrBreadCrumb = true;
             
             if(_playerPositionFound)
                 PlayerInSight = true;
         }
         else
         {
-            IsChasing = false;
+            IsPursuingPlayerOrBreadCrumb = false;
         }
 
         _breadCrumbDetectionTimer.Reset();
