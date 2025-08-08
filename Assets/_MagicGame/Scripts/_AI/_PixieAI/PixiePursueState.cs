@@ -14,4 +14,11 @@ public class PixiePursueState : BasicNpcPursueState
         Debug.Log($"Pixie Pursue state enter");
         base.EnterState(stateData);
     }
+
+    public override void CheckSwitchStates()
+    {
+        // Custom logic for Pixie Charging Dash State
+    
+        base.CheckSwitchStates();
+    }
 }

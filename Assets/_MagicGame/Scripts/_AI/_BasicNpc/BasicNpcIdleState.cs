@@ -14,7 +14,7 @@ public class BasicNpcIdleState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {  
-        Debug.Log($"Basic NPC Idle state");
+        // Debug.Log($"Basic NPC Idle state");
         _idleComplete = false;
         
         float idleDuration = UnityEngine.Random.Range(_ctx.CharacterData.MinIdleDuration, _ctx.CharacterData.MaxIdleDuration);

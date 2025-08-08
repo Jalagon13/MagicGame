@@ -20,16 +20,19 @@ public class BasicNpcPursueState : BaseState
     public override void UpdateState()
     {
         // Strafe while chasing
-        if (_ctx.IsStrafing)
+        if (_ctx.IsStrafing && _ctx.PursueTargetTransform != null)
         {
-            Vector2 desiredDirection = _ctx.ServerCharacter.Movement.DesiredDirection.normalized;
+            // Instead of using Movement.DesiredDirection:
+            Vector2 targetDir = ((Vector2)_ctx.PursueTargetTransform.position -
+                                 (Vector2)_ctx.ServerCharacter.transform.position).normalized;
 
-            // Get a perpendicular vector (left or right)
-            Vector2 perpendicular = new Vector2(-desiredDirection.y, desiredDirection.x) * _ctx.StrafingDirection;
-
-            // Apply strafing effect by blending it into the desired direction
-            desiredDirection += perpendicular * _ctx.CharacterData.StrafeIntensity;
-            _ctx.ServerCharacter.Movement.SetDesiredDirection(desiredDirection.normalized); // Normalize to maintain consistent speed
+            Vector2 perpendicular = new Vector2(-targetDir.y, targetDir.x) * _ctx.StrafingDirection;
+            Vector2 offset = perpendicular * _ctx.CharacterData.StrafeIntensity;
+            _ctx.ServerCharacter.Movement.SetPursueOffset(offset);
+        }
+        else
+        {
+            _ctx.ServerCharacter.Movement.SetPursueOffset(Vector2.zero);
         }
     }
 
@@ -37,11 +40,13 @@ public class BasicNpcPursueState : BaseState
     {
         if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
         {
+            _ctx.ServerCharacter.Movement.SetPursueOffset(Vector2.zero);
             SwitchState(new AIStateData(AIState.Knockbacked));
             return;
         }
         else if (!_ctx.IsPursuingPlayerOrBreadCrumb)
         {
+            _ctx.ServerCharacter.Movement.SetPursueOffset(Vector2.zero);
             SwitchState(new AIStateData(AIState.Idle));
             return;
         }
@@ -49,6 +54,6 @@ public class BasicNpcPursueState : BaseState
 
     public override void ExitState()
     {
-        
+        _ctx.ServerCharacter.Movement.SetPursueOffset(Vector2.zero);
     }
 }

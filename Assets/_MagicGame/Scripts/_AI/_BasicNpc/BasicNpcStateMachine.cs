@@ -44,10 +44,18 @@ public class BasicNpcStateMachine : StateMachine
 
     public override void OwnerInitialization()
     {
+        _serverCharacter.MovementState.OnValueChanged += OnMovementStateChanged;
+    
         if (!CharacterData.IsFriendly)
         {
             _breadCrumbDetectionTimer = new Timer(_serverCharacter.Data.DetectionIntervalDuration);
             _breadCrumbDetectionTimer.OnTimerEnd += TryToFindBreadcrumbOrPlayer;
+        }
+        
+        if(CharacterData.WillChasePlayer)
+        {
+            _strafeTimer = new Timer(CharacterData.StrafingDuration);
+            _strafeTimer.OnTimerEnd += EndStrafe;
         }
     }
 
@@ -55,7 +63,32 @@ public class BasicNpcStateMachine : StateMachine
     {
         base.Dispose();
 
-        _breadCrumbDetectionTimer.OnTimerEnd -= TryToFindBreadcrumbOrPlayer;
+        _serverCharacter.MovementState.OnValueChanged -= OnMovementStateChanged;
+
+        if (!CharacterData.IsFriendly)
+        {
+            _breadCrumbDetectionTimer.OnTimerEnd -= TryToFindBreadcrumbOrPlayer;
+        }
+        
+        if(CharacterData.WillChasePlayer)
+        {
+            _strafeTimer.OnTimerEnd -= EndStrafe;
+        }
+    }
+
+    private void OnMovementStateChanged(MovementState previousValue, MovementState newValue)
+    {
+        if(newValue == MovementState.Pursuing)
+        {
+            // Try to strafe behavior
+            if (!IsStrafing && CharacterData.WillChasePlayer)
+            {
+                Debug.Log($"Strafe Started");
+                _strafeTimer.Reset();
+                StrafingDirection = UnityEngine.Random.value > 0.5f ? 1 : -1;
+                IsStrafing = true;
+            }
+        }
     }
 
     public override void ReceiveHP(ServerCharacter inflicter, int amount)
@@ -70,16 +103,6 @@ public class BasicNpcStateMachine : StateMachine
             if (!CharacterData.IsFriendly)
             {
                 IsAngry = true;
-
-                // Try to strafe behavior
-                if (!IsStrafing && CharacterData.WillChasePlayer)
-                {
-                    _strafeTimer = new Timer(CharacterData.StrafingDuration);
-                    _strafeTimer.OnTimerEnd -= EndStrafe;
-                    _strafeTimer.OnTimerEnd += EndStrafe;
-                    StrafingDirection = UnityEngine.Random.value > 0.5f ? 1 : -1;
-                    IsStrafing = true;
-                }
             }
         }
         else
@@ -95,12 +118,17 @@ public class BasicNpcStateMachine : StateMachine
         if (!CharacterData.IsFriendly)
         {
             _breadCrumbDetectionTimer?.Tick(Time.deltaTime);
+        }
+
+        if (IsStrafing)
+        {
             _strafeTimer?.Tick(Time.deltaTime);
         }
     }
 
     private void EndStrafe(object sender, EventArgs e)
     {
+        Debug.Log($"Strafe Ended");
         IsStrafing = false;
     }
 
@@ -159,7 +187,6 @@ public class BasicNpcStateMachine : StateMachine
             PursueTargetTransform = closestPlayerTransform;
             PlayerInSight = true;
             IsPursuingPlayerOrBreadCrumb = true;
-            Debug.Log($"Pursuing player: {closestPlayerTransform.name} at position: {closestPlayerTransform.position}");
         }
         else
         {
@@ -188,7 +215,6 @@ public class BasicNpcStateMachine : StateMachine
                 PursueTargetTransform = highestLifetimeBreadcrumbTransform;
                 IsPursuingPlayerOrBreadCrumb = true;
                 PlayerInSight = false;
-                Debug.Log($"Pursuing breadcrumb at position: {highestLifetimeBreadcrumbTransform.position}");
             }
             else
             {
@@ -196,7 +222,6 @@ public class BasicNpcStateMachine : StateMachine
                 PursueTargetTransform = null;
                 IsPursuingPlayerOrBreadCrumb = false;
                 PlayerInSight = false;
-                Debug.Log("No player or breadcrumb found");
             }
         }
 

@@ -30,6 +30,8 @@ public class ServerCharacterMovement : NetworkBehaviour
     public Vector2 DesiredDirection => _desiredDirection;
 
     private Transform _pursueTarget;
+
+    private Vector2 _pursueDirectionOffset;
     
     private void Awake()
     {
@@ -59,7 +61,8 @@ public class ServerCharacterMovement : NetworkBehaviour
         {
             if (_serverCharacter.MovementState.Value == MovementState.Pursuing && _pursueTarget != null)
             {
-                _desiredDirection = ((Vector2)_pursueTarget.position - (Vector2)_serverCharacter.transform.position).normalized;
+                Vector2 baseDirection = ((Vector2)_pursueTarget.position - (Vector2)_serverCharacter.transform.position).normalized;
+                _desiredDirection = baseDirection + _pursueDirectionOffset;
             }
             
             float currentSpeed = _serverCharacter.Stats.MovementSpeed.GetValue();
@@ -75,6 +78,11 @@ public class ServerCharacterMovement : NetworkBehaviour
             
             _velocity = Vector2.Lerp(_velocity, _desiredDirection * currentSpeed, _serverCharacter.Data.TurnSharpness * Time.fixedDeltaTime);
         }
+
+        if (_desiredDirection != Vector2.zero)
+        {
+            _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(_desiredDirection);
+        }
         
         _rigidbody2D.linearVelocity = _velocity;
     }
@@ -89,7 +97,6 @@ public class ServerCharacterMovement : NetworkBehaviour
     public void StartPursue(Transform target)
     {
         _pursueTarget = target;
-        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(_desiredDirection);
         _serverCharacter.MovementState.Value = MovementState.Pursuing;
     }
     
@@ -97,7 +104,6 @@ public class ServerCharacterMovement : NetworkBehaviour
     {
         _desiredDirection = desiredDirection.normalized;
         _pursueTarget = null;
-        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(_desiredDirection);
         _serverCharacter.MovementState.Value = MovementState.Moving;
     }
     
@@ -105,14 +111,12 @@ public class ServerCharacterMovement : NetworkBehaviour
     {
         _desiredDirection = fleeDirection.normalized;
         _pursueTarget = null;
-        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(_desiredDirection);
         _serverCharacter.MovementState.Value = MovementState.Fleeing;
     }
 
     public void StartKnockback(Vector2 knockerPosition, float knockbackForce, bool inverse = false)
     {
         Vector2 knockbackDirection = ((Vector2)_serverCharacter.transform.position - knockerPosition).normalized;
-        _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(knockbackDirection);
         _serverCharacter.MovementState.Value = MovementState.Knockback;
         _knockback.ApplyKnockback(knockerPosition, knockbackForce, inverse);
     }
@@ -132,5 +136,10 @@ public class ServerCharacterMovement : NetworkBehaviour
     public void SetDesiredDirection(Vector2 desiredDirection)
     {
         _desiredDirection = desiredDirection.normalized;
+    }
+
+    public void SetPursueOffset(Vector2 offset)
+    {
+        _pursueDirectionOffset = offset;
     }
 }

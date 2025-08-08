@@ -23,7 +23,7 @@ public class BasicNpcMoveState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        Debug.Log($"Basic NPC Move state");
+        // Debug.Log($"Basic NPC Move state");
         _destinationReached = false; 
         _isStuck = false;
         _timeNotMoved = 0f;
@@ -149,14 +149,14 @@ public class BasicNpcMoveState : BaseState
             {
                 int randomIndex = UnityEngine.Random.Range(0, filtered.Count);
                 chosen = filtered[randomIndex];
-                Debug.Log($"Chosen destination for Move state: {chosen}"); // Debug log for chosen destination
+                // Debug.Log($"Chosen destination for Move state: {chosen}"); // Debug log for chosen destination
             }
             else
             {
                 // fallback: all tiles were too close, just pick from original so we don’t return null
                 int randomIndex = UnityEngine.Random.Range(0, validTiles.Count);
                 chosen = validTiles[randomIndex];
-                Debug.Log($"Fallback chosen destination for Move state: {chosen}"); // Debug log for fallback
+                // Debug.Log($"Fallback chosen destination for Move state: {chosen}"); // Debug log for fallback
             }
 
             return chosen;

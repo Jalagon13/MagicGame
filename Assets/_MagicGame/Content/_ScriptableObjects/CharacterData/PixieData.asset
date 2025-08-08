@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PixieData
   m_EditorClassIdentifier: 
   BaseHealth: 30
-  BaseSpeed: 1.5
+  BaseSpeed: 2.5
   BaseAttack: 5
   BaseDefense: 3
   TurnSharpness: 2
@@ -21,8 +21,8 @@ MonoBehaviour:
   CanMove: 1
   StoppingDistance: 0.25
   WanderRadius: 5
-  StrafingDuration: 0.25
-  StrafeIntensity: 0.5
+  StrafingDuration: 0.4
+  StrafeIntensity: 1.5
   IFrameDuration: 0.17
   CanRegenerateHealth: 0
   BaseHealthRegenTimeInterval: 0.25
