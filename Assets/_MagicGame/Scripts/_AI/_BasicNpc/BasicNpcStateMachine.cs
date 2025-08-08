@@ -23,23 +23,6 @@ public class BasicNpcStateMachine : StateMachine
     private Vector2 _hitDirection;
     public Vector2 HitDireciton => _hitDirection;
     
-    private Vector2? _patrolPoint;
-    public Vector2? PatrolPoint 
-    {
-        get => _patrolPoint;
-        set
-        {
-            if (value.HasValue)
-            {
-                _patrolPoint = value.Value;
-            }
-            else
-            {
-                _patrolPoint = null;
-            }
-        }
-    }
-    
     public BasicNpcStateMachine(ServerCharacter serverCharacter)
     {
         _serverCharacter = serverCharacter;
@@ -64,7 +47,7 @@ public class BasicNpcStateMachine : StateMachine
         if (!CharacterData.IsFriendly)
         {
             _breadCrumbDetectionTimer = new Timer(_serverCharacter.Data.DetectionIntervalDuration);
-            _breadCrumbDetectionTimer.OnTimerEnd += TryToFindBreadcrumb;
+            _breadCrumbDetectionTimer.OnTimerEnd += TryToFindBreadcrumbOrPlayer;
         }
     }
 
@@ -72,7 +55,7 @@ public class BasicNpcStateMachine : StateMachine
     {
         base.Dispose();
 
-        _breadCrumbDetectionTimer.OnTimerEnd -= TryToFindBreadcrumb;
+        _breadCrumbDetectionTimer.OnTimerEnd -= TryToFindBreadcrumbOrPlayer;
     }
 
     public override void ReceiveHP(ServerCharacter inflicter, int amount)
@@ -121,9 +104,9 @@ public class BasicNpcStateMachine : StateMachine
         IsStrafing = false;
     }
 
-    private void TryToFindBreadcrumb(object sender, EventArgs e)
+    private void TryToFindBreadcrumbOrPlayer(object sender, EventArgs e)
     {
-        // If the Npc only chases when provoked, and it is not provoked, do not try to detect any breadcrumbs
+        // If the Npc only chases when provoked, and it is not provoked, do not try to detect any breadcrumbs or players
         if (CharacterData.OnlyChaseWhenProvoked && _serverCharacter.NetHealthState.HitPoints.Value >= CharacterData.BaseHealth)
         {
             _breadCrumbDetectionTimer.Reset();
@@ -134,11 +117,13 @@ public class BasicNpcStateMachine : StateMachine
         _breadCrumbPositionFound = false;
         PursueTargetTransform = null;
         PlayerInSight = false;
+        IsPursuingPlayerOrBreadCrumb = false;
 
-        // Circle cast to find player or breadcrumb in detection radius
+        // Find all colliders in detection radius for Player or Breadcrumb layers
         Collider2D[] colliders = Physics2D.OverlapCircleAll(_serverCharacter.transform.position, CharacterData.DetectionRadius, LayerMask.GetMask("Player", "Breadcrumb"));
         List<Collider2D> unObstructedColliders = new();
 
+        // Filter out obstructed targets
         foreach (Collider2D collider in colliders)
         {
             if (IsPathUnObstructed(collider.transform.position))
@@ -147,55 +132,78 @@ public class BasicNpcStateMachine : StateMachine
             }
         }
 
+        // Find the nearest player
         float closestDistance = float.MaxValue;
-        float highestLifetime = 0f;
+        Transform closestPlayerTransform = null;
 
-        foreach (Collider2D unObstructedCollider in unObstructedColliders)
+        foreach (Collider2D collider in unObstructedColliders)
         {
-            if (unObstructedCollider.transform.root.TryGetComponent(out Player player))
+            if (collider.transform.root.TryGetComponent(out Player player))
             {
                 if (player.CurrentBiome.Value == _serverCharacter.CurrentBiome)
                 {
                     float distance = Vector2.Distance(_serverCharacter.transform.position, player.transform.position);
-
                     if (distance < closestDistance)
                     {
                         closestDistance = distance;
-                        PursueTargetTransform = player.transform;
+                        closestPlayerTransform = player.transform;
                         _playerPositionFound = true;
                     }
                 }
             }
-            else if (unObstructedCollider.TryGetComponent(out BreadCrumb breadCrumb))
-            {
-                if (breadCrumb.Biome == _serverCharacter.CurrentBiome)
-                {
-                    if (breadCrumb.RemainingLifeTime > highestLifetime)
-                    {
-                        highestLifetime = breadCrumb.RemainingLifeTime;
-                        PursueTargetTransform = breadCrumb.transform;
-                        _breadCrumbPositionFound = true;
-                    }
-                }
-            }
         }
 
-        if (_playerPositionFound || _breadCrumbPositionFound)
+        if (_playerPositionFound)
         {
+            // Pursue the closest player found
+            PursueTargetTransform = closestPlayerTransform;
+            PlayerInSight = true;
             IsPursuingPlayerOrBreadCrumb = true;
-            
-            if(_playerPositionFound)
-                PlayerInSight = true;
+            Debug.Log($"Pursuing player: {closestPlayerTransform.name} at position: {closestPlayerTransform.position}");
         }
         else
         {
-            IsPursuingPlayerOrBreadCrumb = false;
+            // No player found - look for breadcrumb with highest lifetime
+            float highestLifetime = 0f;
+            Transform highestLifetimeBreadcrumbTransform = null;
+
+            foreach (Collider2D collider in unObstructedColliders)
+            {
+                if (collider.TryGetComponent(out BreadCrumb breadCrumb))
+                {
+                    if (breadCrumb.Biome == _serverCharacter.CurrentBiome)
+                    {
+                        if (breadCrumb.RemainingLifeTime > highestLifetime)
+                        {
+                            highestLifetime = breadCrumb.RemainingLifeTime;
+                            highestLifetimeBreadcrumbTransform = breadCrumb.transform;
+                            _breadCrumbPositionFound = true;
+                        }
+                    }
+                }
+            }
+
+            if (_breadCrumbPositionFound)
+            {
+                PursueTargetTransform = highestLifetimeBreadcrumbTransform;
+                IsPursuingPlayerOrBreadCrumb = true;
+                PlayerInSight = false;
+                Debug.Log($"Pursuing breadcrumb at position: {highestLifetimeBreadcrumbTransform.position}");
+            }
+            else
+            {
+                // No player or breadcrumb found
+                PursueTargetTransform = null;
+                IsPursuingPlayerOrBreadCrumb = false;
+                PlayerInSight = false;
+                Debug.Log("No player or breadcrumb found");
+            }
         }
 
         _breadCrumbDetectionTimer.Reset();
     }
 
-    
+
 
     public bool IsPathUnObstructed(Vector2 desiredEndpoint)
     {

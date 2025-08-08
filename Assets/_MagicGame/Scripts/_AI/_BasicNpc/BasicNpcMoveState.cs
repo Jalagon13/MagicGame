@@ -28,49 +28,8 @@ public class BasicNpcMoveState : BaseState
         _isStuck = false;
         _timeNotMoved = 0f;
 
-        // Handle patrol point logic
-        if (_ctx.CharacterData.WillPatrolSpawnPoint)
-        {
-            // Store patrol point if not set
-            if (_ctx.PatrolPoint == null)
-            {
-                _ctx.PatrolPoint = _ctx.ServerCharacter.transform.position;
-            }
-            float distToPatrol = Vector2.Distance(_ctx.ServerCharacter.transform.position, _ctx.PatrolPoint.Value);
-            if (distToPatrol > _ctx.ServerCharacter.Data.WanderRadius)
-            {
-                // Too far, try to path back to patrol point if possible
-                if (_ctx.IsPathUnObstructed(_ctx.PatrolPoint.Value))
-                {
-                    float patrolDist = Vector2.Distance(_ctx.ServerCharacter.transform.position, _ctx.PatrolPoint.Value);
-                    if (patrolDist > _ctx.CharacterData.StoppingDistance + 0.05f) // small buffer
-                    {
-                        Debug.Log($"Setting destination to patrol point: {_ctx.PatrolPoint.Value}");
-                        _destination = _ctx.PatrolPoint.Value;
-                    }
-                    else
-                    {
-                        _destination = GetRandomWanderDestinationBFS();
-                    }
-                }
-                else
-                {
-                    // If can't path, reset patrol point to current position
-                    _ctx.PatrolPoint = _ctx.ServerCharacter.transform.position;
-                    _destination = GetRandomWanderDestinationBFS();
-                }
-            }
-            else
-            {
-                // Within patrol radius, wander as usual
-                _destination = GetRandomWanderDestinationBFS();
-            }
-        }
-        else
-        {
-            _destination = GetRandomWanderDestinationBFS();
-        }
-        
+        _destination = GetRandomWanderDestinationBFS();
+
         if (_destination.HasValue)
         {
             Vector2 direction = _destination.Value - (Vector2)_ctx.ServerCharacter.transform.position;

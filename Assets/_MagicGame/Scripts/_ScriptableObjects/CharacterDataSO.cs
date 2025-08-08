@@ -57,8 +57,6 @@ public class CharacterDataSO : ScriptableObject
     public bool OnlyChaseWhenProvoked = true;
     [Tooltip("If true, the NPC will flee when provoked")]
     public bool WillFleeWhenProvoked = true;
-    [Tooltip("If true, the NPC will try to stay within a radius of its spawn point")]
-    public bool WillPatrolSpawnPoint = false;
     [Tooltip("If true, the NPC will not try to pursue the player")]
     public bool IsFriendly;
     [Tooltip("Duration the NPC will flee when provoked")]

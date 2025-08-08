@@ -35,9 +35,13 @@ public class BasicNpcPursueState : BaseState
 
     public override void CheckSwitchStates()
     {
-        if (!_ctx.IsPursuingPlayerOrBreadCrumb)
+        if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
         {
-            _ctx.PatrolPoint = _ctx.ServerCharacter.transform.position;
+            SwitchState(new AIStateData(AIState.Knockbacked));
+            return;
+        }
+        else if (!_ctx.IsPursuingPlayerOrBreadCrumb)
+        {
             SwitchState(new AIStateData(AIState.Idle));
             return;
         }
