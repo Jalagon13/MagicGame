@@ -8,4 +8,10 @@ public class PixiePursueState : BasicNpcPursueState
     {
         _ctx = Context as PixieStateMachine;
     }
+
+    protected override void EnterState(AIStateData stateData)
+    {
+        Debug.Log($"Pixie Pursue state enter");
+        base.EnterState(stateData);
+    }
 }

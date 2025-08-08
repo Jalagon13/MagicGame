@@ -12,8 +12,8 @@ public class BasicNpcStateMachine : StateMachine
     public bool IsStrafing { get; private set; }
     public bool PlayerInSight { get; private set; }
     public bool IsAngry { get; private set; }
-    public Vector2? PursueDestination { get; private set; } = Vector2.zero;
-    
+    public Transform PursueTargetTransform { get; private set; } = null;
+
     private Timer _breadCrumbDetectionTimer;
     private Timer _strafeTimer;
 
@@ -64,15 +64,21 @@ public class BasicNpcStateMachine : StateMachine
         if (!CharacterData.IsFriendly)
         {
             _breadCrumbDetectionTimer = new Timer(_serverCharacter.Data.DetectionIntervalDuration);
-            _breadCrumbDetectionTimer.OnTimerEnd -= TryToFindBreadcrumb;
             _breadCrumbDetectionTimer.OnTimerEnd += TryToFindBreadcrumb;
         }
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+
+        _breadCrumbDetectionTimer.OnTimerEnd -= TryToFindBreadcrumb;
     }
 
     public override void ReceiveHP(ServerCharacter inflicter, int amount)
     {
         if (inflicter == null) return;
-
+        
         if (amount < 0)
         {
             _hitDirection = (Vector2)(_serverCharacter.transform.position - inflicter.transform.position).normalized;
@@ -120,11 +126,13 @@ public class BasicNpcStateMachine : StateMachine
         // If the Npc only chases when provoked, and it is not provoked, do not try to detect any breadcrumbs
         if (CharacterData.OnlyChaseWhenProvoked && _serverCharacter.NetHealthState.HitPoints.Value >= CharacterData.BaseHealth)
         {
+            _breadCrumbDetectionTimer.Reset();
             return;
         }
 
         _playerPositionFound = false;
         _breadCrumbPositionFound = false;
+        PursueTargetTransform = null;
         PlayerInSight = false;
 
         // Circle cast to find player or breadcrumb in detection radius
@@ -153,7 +161,7 @@ public class BasicNpcStateMachine : StateMachine
                     if (distance < closestDistance)
                     {
                         closestDistance = distance;
-                        PursueDestination = player.transform.position;
+                        PursueTargetTransform = player.transform;
                         _playerPositionFound = true;
                     }
                 }
@@ -165,7 +173,7 @@ public class BasicNpcStateMachine : StateMachine
                     if (breadCrumb.RemainingLifeTime > highestLifetime)
                     {
                         highestLifetime = breadCrumb.RemainingLifeTime;
-                        PursueDestination = breadCrumb.transform.position;
+                        PursueTargetTransform = breadCrumb.transform;
                         _breadCrumbPositionFound = true;
                     }
                 }
@@ -174,8 +182,6 @@ public class BasicNpcStateMachine : StateMachine
 
         if (_playerPositionFound || _breadCrumbPositionFound)
         {
-            // Debug.Log("Found closest player! moving towards player");
-            
             IsPursuingPlayerOrBreadCrumb = true;
             
             if(_playerPositionFound)

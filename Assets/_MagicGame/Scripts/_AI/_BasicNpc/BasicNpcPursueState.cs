@@ -3,6 +3,7 @@ using UnityEngine;
 public class BasicNpcPursueState : BaseState
 {
     private BasicNpcStateMachine _ctx;
+    private Timer _setDirectionTimer;
 
     public BasicNpcPursueState(AIState key, StateMachine context) : base(key, context)
     {
@@ -11,15 +12,9 @@ public class BasicNpcPursueState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        Debug.Log($"Pursuing state");
+        Debug.Log($"Basic NPC Pursuing state");
 
-        Vector2 direction = (_ctx.PursueDestination.Value - (Vector2)_ctx.ServerCharacter.transform.position).normalized;
-        _ctx.ServerCharacter.Movement.StartPursue(direction);
-    }
-
-    public override void ExitState()
-    {
-        
+        _ctx.ServerCharacter.Movement.StartPursue(_ctx.PursueTargetTransform);
     }
 
     public override void UpdateState()
@@ -42,8 +37,14 @@ public class BasicNpcPursueState : BaseState
     {
         if (!_ctx.IsPursuingPlayerOrBreadCrumb)
         {
+            _ctx.PatrolPoint = _ctx.ServerCharacter.transform.position;
             SwitchState(new AIStateData(AIState.Idle));
             return;
         }
+    }
+
+    public override void ExitState()
+    {
+        
     }
 }

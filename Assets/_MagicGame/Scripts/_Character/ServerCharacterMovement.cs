@@ -28,6 +28,8 @@ public class ServerCharacterMovement : NetworkBehaviour
     
     private Vector2 _desiredDirection;
     public Vector2 DesiredDirection => _desiredDirection;
+
+    private Transform _pursueTarget;
     
     private void Awake()
     {
@@ -55,7 +57,22 @@ public class ServerCharacterMovement : NetworkBehaviour
         }
         else if(_serverCharacter.Data.CanMove)
         {
-            float currentSpeed = _serverCharacter.Stats.MovementSpeed.GetValue() * (_serverCharacter.MovementState.Value == MovementState.Fleeing ? _serverCharacter.Data.FleeSpeedMultiplier : 1f);
+            if (_serverCharacter.MovementState.Value == MovementState.Pursuing && _pursueTarget != null)
+            {
+                _desiredDirection = ((Vector2)_pursueTarget.position - (Vector2)_serverCharacter.transform.position).normalized;
+            }
+            
+            float currentSpeed = _serverCharacter.Stats.MovementSpeed.GetValue();
+
+            if (_serverCharacter.MovementState.Value == MovementState.Fleeing)
+            {
+                currentSpeed *= _serverCharacter.Data.FleeSpeedMultiplier;
+            }
+            else if (_serverCharacter.MovementState.Value == MovementState.Pursuing)
+            {
+                currentSpeed *= _serverCharacter.Data.PursueSpeedMultiplier;
+            }
+            
             _velocity = Vector2.Lerp(_velocity, _desiredDirection * currentSpeed, _serverCharacter.Data.TurnSharpness * Time.fixedDeltaTime);
         }
         
@@ -65,13 +82,13 @@ public class ServerCharacterMovement : NetworkBehaviour
     public void StartIdle()
     {
         _desiredDirection = Vector2.zero;
+        _pursueTarget = null;
         _serverCharacter.MovementState.Value = MovementState.Idle;
     }
     
-    public void StartPursue(Vector2 desiredDirection)
+    public void StartPursue(Transform target)
     {
-        _desiredDirection = desiredDirection.normalized;
-        // _speed = _serverCharacter.Data.PursueSpeed; // NTFS: Maybe just make this a buff or something
+        _pursueTarget = target;
         _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(_desiredDirection);
         _serverCharacter.MovementState.Value = MovementState.Pursuing;
     }
@@ -79,6 +96,7 @@ public class ServerCharacterMovement : NetworkBehaviour
     public void StartMovement(Vector2 desiredDirection)
     {
         _desiredDirection = desiredDirection.normalized;
+        _pursueTarget = null;
         _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(_desiredDirection);
         _serverCharacter.MovementState.Value = MovementState.Moving;
     }
@@ -86,6 +104,7 @@ public class ServerCharacterMovement : NetworkBehaviour
     public void StartFlee(Vector2 fleeDirection)
     {
         _desiredDirection = fleeDirection.normalized;
+        _pursueTarget = null;
         _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(_desiredDirection);
         _serverCharacter.MovementState.Value = MovementState.Fleeing;
     }
@@ -94,7 +113,6 @@ public class ServerCharacterMovement : NetworkBehaviour
     {
         Vector2 knockbackDirection = ((Vector2)_serverCharacter.transform.position - knockerPosition).normalized;
         _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(knockbackDirection);
-        Debug.Log($"Knockback Direction {_serverCharacter.CardinalDirection.Value}");
         _serverCharacter.MovementState.Value = MovementState.Knockback;
         _knockback.ApplyKnockback(knockerPosition, knockbackForce, inverse);
     }

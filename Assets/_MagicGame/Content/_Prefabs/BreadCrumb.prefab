@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3113868646354255142}
   - component: {fileID: 3276227326001876811}
   - component: {fileID: 8135148276865814890}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: BreadCrumb
   m_TagString: Untagged
   m_Icon: {fileID: 0}

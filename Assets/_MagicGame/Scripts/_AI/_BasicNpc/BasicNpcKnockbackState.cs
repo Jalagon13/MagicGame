@@ -11,7 +11,7 @@ public class BasicNpcKnockbackState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        Debug.Log($"Knockback State");
+        Debug.Log($"Basic Npc Knockback State");
         Vector2 knockbackDirection = _ctx.ServerCharacter.Inflicter != null
             ? (_ctx.ServerCharacter.transform.position - _ctx.ServerCharacter.Inflicter.transform.position).normalized
             : Vector2.zero;
@@ -36,25 +36,35 @@ public class BasicNpcKnockbackState : BaseState
             if (_ctx.IsAngry)
             {
                 SwitchState(new AIStateData(AIState.Pursuing));
+                return;
             }
             else if (_ctx.CharacterData.WillFleeWhenProvoked)
             {
                 SwitchState(new AIStateData(AIState.Fleeing));
+                return;
             }
             else
             {
                 SwitchState(new AIStateData(AIState.Idle));
+                return;
             }
         }
         else if (_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
         {
-            if(_ctx.CharacterData.WillFleeWhenProvoked)
+            if(_ctx.IsAngry)
+            {
+                SwitchState(new AIStateData(AIState.Pursuing));
+                return;
+            }
+            else if(_ctx.CharacterData.WillFleeWhenProvoked)
             {
                 SwitchState(new AIStateData(AIState.Fleeing));
+                return;
             }
             else
             {
                 SwitchState(new AIStateData(AIState.Moving));
+                return;
             }
         }
     }

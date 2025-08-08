@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: PixieData
   m_EditorClassIdentifier: 
   BaseHealth: 30
-  BaseSpeed: 2
+  BaseSpeed: 3
   BaseAttack: 5
   BaseDefense: 3
   TurnSharpness: 2
   KnockbackResist: 0
   CanMove: 1
   StoppingDistance: 0.25
-  WanderRadius: 4
+  WanderRadius: 5
   StrafingDuration: 0.25
   StrafeIntensity: 0.5
   IFrameDuration: 0.17
@@ -37,10 +37,10 @@ MonoBehaviour:
   IsFriendly: 0
   FleeDuration: 1.5
   FleeSpeedMultiplier: 1.5
-  PursueSpeed: 4
-  MinIdleDuration: 0
-  MaxIdleDuration: 0
-  DetectionRadius: 15
+  PursueSpeedMultiplier: 1.25
+  MinIdleDuration: 0.3
+  MaxIdleDuration: 0.3
+  DetectionRadius: 10
   DetectionIntervalDuration: 0.5
   SlotAmount: 0.5
   StringID: pixie

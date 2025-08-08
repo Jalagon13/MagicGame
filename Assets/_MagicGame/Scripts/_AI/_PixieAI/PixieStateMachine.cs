@@ -7,12 +7,12 @@ public class PixieStateMachine : BasicNpcStateMachine
         _serverCharacter = serverCharacter;
 
         // Sub States
-        _states[AIState.Idle] = new PixieIdleState(AIState.Idle, this);
-        _states[AIState.Moving] = new PixieMoveState(AIState.Moving, this);
-        _states[AIState.Knockbacked] = new PixieKnockbackState(AIState.Knockbacked, this);
+        _states[AIState.Idle] = new BasicNpcIdleState(AIState.Idle, this);
+        _states[AIState.Moving] = new BasicNpcMoveState(AIState.Moving, this);
+        _states[AIState.Knockbacked] = new BasicNpcKnockbackState(AIState.Knockbacked, this);
+        
+        // Pixie Specific Sub States
         _states[AIState.Pursuing] = new PixiePursueState(AIState.Pursuing, this);
-
-        // Unique Pixie Sub States
         _states[AIState.SpellCasting] = new PixieChargingDashState(AIState.SpellCasting, this);
         _states[AIState.Attacking] = new PixieDashState(AIState.Attacking, this);
 
@@ -22,10 +22,5 @@ public class PixieStateMachine : BasicNpcStateMachine
         
         // Start on the Grounded State
         _currentState = _states[AIState.Grounded];
-    }
-
-    public override void ReceiveHP(ServerCharacter inflicter, int amount)
-    {
-        
     }
 }

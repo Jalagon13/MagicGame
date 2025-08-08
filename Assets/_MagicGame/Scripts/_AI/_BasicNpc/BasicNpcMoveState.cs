@@ -23,6 +23,7 @@ public class BasicNpcMoveState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
+        Debug.Log($"Basic NPC Move state");
         _destinationReached = false; 
         _isStuck = false;
         _timeNotMoved = 0f;
@@ -35,14 +36,22 @@ public class BasicNpcMoveState : BaseState
             {
                 _ctx.PatrolPoint = _ctx.ServerCharacter.transform.position;
             }
-            float patrolRadius = _ctx.ServerCharacter.Data.WanderRadius;
             float distToPatrol = Vector2.Distance(_ctx.ServerCharacter.transform.position, _ctx.PatrolPoint.Value);
-            if (distToPatrol > patrolRadius)
+            if (distToPatrol > _ctx.ServerCharacter.Data.WanderRadius)
             {
                 // Too far, try to path back to patrol point if possible
                 if (_ctx.IsPathUnObstructed(_ctx.PatrolPoint.Value))
                 {
-                    _destination = _ctx.PatrolPoint.Value;
+                    float patrolDist = Vector2.Distance(_ctx.ServerCharacter.transform.position, _ctx.PatrolPoint.Value);
+                    if (patrolDist > _ctx.CharacterData.StoppingDistance + 0.05f) // small buffer
+                    {
+                        Debug.Log($"Setting destination to patrol point: {_ctx.PatrolPoint.Value}");
+                        _destination = _ctx.PatrolPoint.Value;
+                    }
+                    else
+                    {
+                        _destination = GetRandomWanderDestinationBFS();
+                    }
                 }
                 else
                 {
@@ -181,17 +190,19 @@ public class BasicNpcMoveState : BaseState
             {
                 int randomIndex = UnityEngine.Random.Range(0, filtered.Count);
                 chosen = filtered[randomIndex];
+                Debug.Log($"Chosen destination for Move state: {chosen}"); // Debug log for chosen destination
             }
             else
             {
                 // fallback: all tiles were too close, just pick from original so we don’t return null
                 int randomIndex = UnityEngine.Random.Range(0, validTiles.Count);
                 chosen = validTiles[randomIndex];
+                Debug.Log($"Fallback chosen destination for Move state: {chosen}"); // Debug log for fallback
             }
 
             return chosen;
         }
-
+        Debug.LogWarning("No valid wander destination found within the radius.");
         return null;
     }
 

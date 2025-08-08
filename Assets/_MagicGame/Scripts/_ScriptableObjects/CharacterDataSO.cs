@@ -65,8 +65,8 @@ public class CharacterDataSO : ScriptableObject
     public float FleeDuration = 1.5f;
     [Tooltip("Multiplier for the NPC's speed when fleeing")]
     public float FleeSpeedMultiplier = 1.5f;
-    [Tooltip("Speed the character uses when chasing a target")]
-    public float PursueSpeed = 4f;
+    [Tooltip("Multiplier for the NPC's speed when pursuing")]
+    public float PursueSpeedMultiplier = 1.25f;
     [Tooltip("Minimum time the NPC will stay idle before changing state")]
     public float MinIdleDuration = 2.5f;
     [Tooltip("Maximum time the NPC will stay idle before changing state")]
