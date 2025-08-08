@@ -129,16 +129,16 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: Frame_0
     originalName: 
-    pivot: {x: 0.47058824, y: -0.4}
+    pivot: {x: 0.4, y: -0.06666667}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
-      x: 29
+      x: 4
       y: 4
-      width: 17
-      height: 10
+      width: 40
+      height: 15
     spriteID: bd737ef8ffa6d47f6b0ef4c85bded22d
     spriteBone: []
     spriteOutline: []
@@ -147,17 +147,17 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 29, y: 4}
+    uvTransform: {x: 4, y: 4}
   - name: Frame_1
     originalName: 
-    pivot: {x: 0.47058824, y: -0.18181819}
+    pivot: {x: 0.9411764, y: -0.18181819}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
       x: 4
-      y: 46
+      y: 48
       width: 17
       height: 11
     spriteID: faae6d8b907934e8d8a255cf52d9b981
@@ -168,17 +168,17 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 46}
+    uvTransform: {x: 4, y: 48}
   - name: Frame_2
     originalName: 
-    pivot: {x: 0.47058824, y: -0.07692308}
+    pivot: {x: 0.9411764, y: -0.07692308}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
       x: 4
-      y: 4
+      y: 27
       width: 17
       height: 13
     spriteID: e43b947c078a6439eb3a4dbfaef18476
@@ -189,17 +189,17 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 4}
+    uvTransform: {x: 4, y: 27}
   - name: Frame_3
     originalName: 
-    pivot: {x: 0.47058824, y: -0.07692308}
+    pivot: {x: 0.9411764, y: -0.07692308}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
-      x: 4
-      y: 25
+      x: 29
+      y: 27
       width: 17
       height: 13
     spriteID: 83e1fb6f6e98d46a59b32740352765bf
@@ -210,7 +210,7 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 25}
+    uvTransform: {x: 29, y: 27}
   spriteSheetImportData: []
   tileSetImportData: []
   asepriteLayers:
@@ -231,9 +231,9 @@ ScriptedImporter:
       additiveSortOrder: 0
       cellRect:
         x: 8
-        y: 4
-        width: 17
-        height: 10
+        y: 1
+        width: 40
+        height: 15
       spriteId: bd737ef8ffa6d47f6b0ef4c85bded22d
     - name: Frame_1
       frameIndex: 1
@@ -295,5 +295,5 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 32, y: 16}
+  canvasSize: {x: 48, y: 16}
   previousTextureSize: {x: 64, y: 64}

@@ -52,7 +52,7 @@ public class BasicNpcStateMachine : StateMachine
             _breadCrumbDetectionTimer.OnTimerEnd += TryToFindBreadcrumbOrPlayer;
         }
         
-        if(CharacterData.WillChasePlayer)
+        if(CharacterData.CanStrafe && CharacterData.WillChasePlayer)
         {
             _strafeTimer = new Timer(CharacterData.StrafingDuration);
             _strafeTimer.OnTimerEnd += EndStrafe;
@@ -70,7 +70,7 @@ public class BasicNpcStateMachine : StateMachine
             _breadCrumbDetectionTimer.OnTimerEnd -= TryToFindBreadcrumbOrPlayer;
         }
         
-        if(CharacterData.WillChasePlayer)
+        if(CharacterData.CanStrafe && CharacterData.WillChasePlayer)
         {
             _strafeTimer.OnTimerEnd -= EndStrafe;
         }
@@ -81,7 +81,7 @@ public class BasicNpcStateMachine : StateMachine
         if(newValue == MovementState.Pursuing)
         {
             // Try to strafe behavior
-            if (!IsStrafing && CharacterData.WillChasePlayer)
+            if (CharacterData.CanStrafe && !IsStrafing && CharacterData.WillChasePlayer)
             {
                 Debug.Log($"Strafe Started");
                 _strafeTimer.Reset();

@@ -14,15 +14,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BaseHealth: 100
   BaseSpeed: 0
-  IFrameDuration: 0.17
+  BaseAttack: 0
+  BaseDefense: 0
   TurnSharpness: 8
   KnockbackResist: 0.3
-  RespawnTimerDuration: 3
+  CanMove: 0
+  StoppingDistance: 0.25
+  WanderRadius: 10
+  CanStrafe: 0
+  StrafingDuration: 0.25
+  StrafeIntensity: 0.5
+  IFrameDuration: 0.17
   CanRegenerateHealth: 1
   BaseHealthRegenTimeInterval: 2
   BaseHealthRegenAmount: 15
   CanBeKnockedBack: 0
   CanDie: 0
+  IsNpc: 1
+  WillChasePlayer: 0
+  OnlyChaseWhenProvoked: 0
+  WillFleeWhenProvoked: 1
+  IsFriendly: 1
+  FleeDuration: 1.5
+  FleeSpeedMultiplier: 1.5
+  PursueSpeedMultiplier: 1.25
+  MinIdleDuration: 2.5
+  MaxIdleDuration: 5
+  DetectionRadius: 15
+  DetectionIntervalDuration: 0.5
+  SlotAmount: 0
+  StringID: targetdummy
+  NpcPrefab: {fileID: 532044041320650086, guid: c87107d07ca65446598c8fdd66eaeab4, type: 3}
+  LootTable:
+  - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
+    Min: 1
+    Max: 1
+    Chance: 100
   HurtSound:
     Guid:
       Data1: 1812228115
@@ -37,34 +64,3 @@ MonoBehaviour:
       Data3: -1633797458
       Data4: 490440430
     Path: event:/WoodDestroyed
-  WalkSound:
-    Guid:
-      Data1: 1812228115
-      Data2: 1207244471
-      Data3: 1013332110
-      Data4: -2033662663
-    Path: event:/WoodHit
-  IsNpc: 1
-  SlotAmount: 0
-  StringID: targetdummy
-  NpcPrefab: {fileID: 532044041320650086, guid: c87107d07ca65446598c8fdd66eaeab4, type: 3}
-  LootTable:
-  - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
-    Min: 1
-    Max: 1
-    Chance: 100
-  IsFriendly: 1
-  WillChasePlayer: 0
-  OnlyChaseWhenProvoked: 0
-  CanMove: 0
-  BaseAttack: 0
-  BaseDefense: 0
-  PursueSpeed: 4
-  MinIdleDuration: 2.5
-  MaxIdleDuration: 5
-  DetectionRadius: 15
-  DetectionIntervalDuration: 0.5
-  WanderRadius: 10
-  StoppingDistance: 0.25
-  StrafingDuration: 0.25
-  StrafeIntensity: 0.5

@@ -28,6 +28,8 @@ public class CharacterDataSO : ScriptableObject
     public float StoppingDistance = 0.25f;
     [Tooltip("Radius within which the NPC can wander randomly")]
     public float WanderRadius = 10f;
+    [Tooltip("If true, the NPC can strafe while pursuing the player")]
+    public bool CanStrafe = true;
     [Tooltip("Duration the NPC will strafe during movement behavior")]
     public float StrafingDuration = 0.25f;
     [Tooltip("Intensity of the strafing movement")]
