@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BaseHealth: 30
   BaseSpeed: 0.1
-  BaseAttack: 50
-  BaseAttackKnockback: 20
+  BaseAttack: 200
+  BaseAttackKnockback: 35
   BaseDefense: 3
   TurnSharpness: 2
   KnockbackResist: 0

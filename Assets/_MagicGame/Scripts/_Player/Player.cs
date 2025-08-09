@@ -82,8 +82,6 @@ public class Player : NetworkBehaviour
 		GameInput.Instance.OnFKeyPressed += GameInput_OnFKeyPressed;
 		HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnSelectedItemUpdated;
 		CurrentBiome.OnValueChanged += UpdateCollisionDetection;
-		
-		_serverCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
 	}
 
 	public override void OnNetworkDespawn()
@@ -94,8 +92,6 @@ public class Player : NetworkBehaviour
 			GameInput.Instance.OnFKeyPressed -= GameInput_OnFKeyPressed;
 			HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnSelectedItemUpdated;
 			CurrentBiome.OnValueChanged -= UpdateCollisionDetection;
-			
-			_serverCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
 			_spellCastController.Dispose();
 		}
 	}
@@ -130,39 +126,30 @@ public class Player : NetworkBehaviour
 			SpawnBreadCrumbServerRpc(_lastTilePosition);
 		}
 	}
-
-	private void OnPlayerLifeStateChanged(LifeState previousValue, LifeState newValue)
+	
+	public void Respawn()
 	{
-		if (previousValue == LifeState.Alive && newValue == LifeState.Dead)
+		if (CurrentBiome.Value != _spawnBiome)
 		{
-			StartCoroutine(RespawnTimer());
+			WorldManager.Instance.OnBiomeTransitionEnd += HandleRespawn;
+			WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint);
+			return;
 		}
-		else if (previousValue == LifeState.Dead && newValue == LifeState.Alive)
-		{
-			if (CurrentBiome.Value != _spawnBiome)
-			{
-				WorldManager.Instance.OnBiomeTransitionEnd += HandleRespawn;
-				WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint);
-				return;
-			}
-
-			_damageReceiver.ReceiveHP(_serverCharacter, _serverCharacter.Data.BaseHealth, false);
-			transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
-		}
+		
+		OnRespawnLogic();
 	}
 
     private void HandleRespawn(object sender, EventArgs e)
     {
 		WorldManager.Instance.OnBiomeTransitionEnd -= HandleRespawn;
-
-		_damageReceiver.ReceiveHP(_serverCharacter, _serverCharacter.Data.BaseHealth, false);
-		transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
+		OnRespawnLogic();
 	}
-
-    private IEnumerator RespawnTimer()
+	
+	private void OnRespawnLogic()
 	{
-		yield return new WaitForSeconds(1f);
-		_serverCharacter.NetLifeState.LifeState.Value = LifeState.Alive;
+		transform.SetPositionAndRotation(_spawnPoint, Quaternion.identity);
+		StartCoroutine(_serverCharacter.StartIFrameTimer());
+		_damageReceiver.ReceiveHP(_serverCharacter, _serverCharacter.Data.BaseHealth, false);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]

@@ -231,7 +231,7 @@ public class ServerCharacter : NetworkBehaviour
         }
     }
 
-    private IEnumerator StartIFrameTimer()
+    public IEnumerator StartIFrameTimer()
     {
         LifeState = LifeState.IFrame;
         yield return new WaitForSeconds(_characterData.IFrameDuration);

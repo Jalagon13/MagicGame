@@ -1,10 +1,16 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class DeathPanelUI : MonoBehaviour
 {
+    [SerializeField] private float _delayBeforeShowingUI = 1.5f;
+
+    private GameObject _uiElements;
+
     private void Awake()
     {
+        _uiElements = transform.GetChild(0).gameObject;
         Player.OnAnyPlayerSpawned += RegisterDeathPanelLogic;
         Hide(); 
     }
@@ -30,21 +36,29 @@ public class DeathPanelUI : MonoBehaviour
     {
         if(previousValue == LifeState.Alive && newValue == LifeState.Dead)
         {
-            Show();
+            StartCoroutine(DeathPanelUIRoutine());
         }
-        else if(previousValue == LifeState.Dead && newValue == LifeState.Alive)
-        {
-            Hide();
-        }
+    }
+    
+    private IEnumerator DeathPanelUIRoutine()
+    {
+        yield return new WaitForSeconds(_delayBeforeShowingUI);
+        Show();
+    }    
+    
+    public void OnRespawnButtonPressed()
+    {
+        Hide();
+        Player.Instance.Respawn();
     }
     
     private void Show()
     {
-        gameObject.SetActive(true);
+        _uiElements.SetActive(true);
     }
     
     private void Hide()
     {
-        gameObject.SetActive(false);
+        _uiElements.SetActive(false);
     }
 }

@@ -26,7 +26,7 @@ public class PlayerDeadState : BaseState
 
     public override void CheckSwitchStates()
     {
-        if(_ctx.ServerCharacter.LifeState == LifeState.Alive)
+        if(_ctx.ServerCharacter.LifeState == LifeState.IFrame)
         {
             SwitchState(new AIStateData(AIState.Grounded));
         }
@@ -34,7 +34,10 @@ public class PlayerDeadState : BaseState
 
     public override void ExitState()
     {
-        
+        if (_ctx.ServerCharacter.TryGetComponent(out Collider2D collider2D))
+        {
+            collider2D.enabled = true;
+        }
     }
 
     public override void ClientEnterState(AIStateData stateData)

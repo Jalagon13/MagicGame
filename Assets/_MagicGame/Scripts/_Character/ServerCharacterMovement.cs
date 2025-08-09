@@ -30,16 +30,43 @@ public class ServerCharacterMovement : NetworkBehaviour
     public Vector2 DesiredDirection => _desiredDirection;
 
     private Transform _pursueTarget;
-
     private Vector2 _pursueDirectionOffset;
-    
-    private void Awake()
+    private bool _isDead;
+
+    public override void OnNetworkSpawn()
     {
-        _knockback = new(_serverCharacter);
+        if (IsServer)
+        {
+            _knockback = new(_serverCharacter);
+            _serverCharacter.NetLifeState.LifeState.OnValueChanged += OnLifeStateChanged;
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        if (IsServer)
+        {
+            _serverCharacter.NetLifeState.LifeState.OnValueChanged -= OnLifeStateChanged;
+        }
+    }
+
+    private void OnLifeStateChanged(LifeState previousValue, LifeState newValue)
+    {
+        if (previousValue == LifeState.Alive && newValue == LifeState.Dead)
+        {
+            _isDead = true;
+        }
+        else if (previousValue == LifeState.Dead && newValue == LifeState.IFrame)
+        {
+            _isDead = false;
+            StartIdle();
+        }
     }
 
     public void FixedUpdateMovement()
     {
+        if(_isDead) return; // Prevent movement if the character is dead.
+    
         if (_serverCharacter.MovementState.Value == MovementState.Idle)
         {
             _desiredDirection = Vector2.zero;
@@ -89,6 +116,7 @@ public class ServerCharacterMovement : NetworkBehaviour
     
     public void StartIdle()
     {
+        _velocity = Vector2.zero;
         _desiredDirection = Vector2.zero;
         _pursueTarget = null;
         _serverCharacter.MovementState.Value = MovementState.Idle;
