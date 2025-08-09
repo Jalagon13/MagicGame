@@ -2,45 +2,19 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageCollider : MonoBehaviour
+public class PlayerDamagerCollider : MonoBehaviour
 {
-	public event EventHandler<OnDamageEventArgs> OnDamage;
-	public class OnDamageEventArgs : EventArgs
-	{
-		public Collider2D ColliderDamaged;
-	}
+	[SerializeField] private ServerCharacter _serverCharacter;
 
-	[SerializeField] private bool _onlyDamagePlayer;
-	[field: SerializeField] public int DamageAmount { get; set; }
-	[field: SerializeField] public int KnockbackForce { get; set; }
-	public List<Collider2D> DamageExceptionColliders { get; private set; } = new();
-	
 	private void OnTriggerStay2D(Collider2D other)
 	{
-		if(_onlyDamagePlayer && !other.TryGetComponent(out Player plr))
-		{
-			return;
-		}
-	
-		if(!other.TryGetComponent(out NetworkHealthState iHasHealth) || ColliderAnException(other)) return; 
-	
-		// iHasHealth.TakeDamageRpc(DamageAmount, transform.parent.position, KnockbackForce);
-		OnDamage?.Invoke(this, new OnDamageEventArgs
-		{
-			ColliderDamaged = other
-		});
-	}
-	
-	public void AddDamageExceptionCollider(Collider2D col)
-	{
-		if(!DamageExceptionColliders.Contains(col))
-		{
-			DamageExceptionColliders.Add(col);
-		}
-	}
-	
-	private bool ColliderAnException(Collider2D col)
-	{
-		return DamageExceptionColliders.Contains(col);
+		if(!_serverCharacter.IsServer || 
+		!other.TryGetComponent(out Player player) || 
+		player.CurrentBiome.Value != _serverCharacter.CurrentBiome || 
+		player.ServerCharacter.LifeState != LifeState.Alive) return;
+		
+		// Only detect collisions with players in the same biome.
+		DamageReceiver damageReceiver = player.GetComponent<DamageReceiver>();
+		damageReceiver.ReceiveHP(_serverCharacter, -_serverCharacter.Data.BaseAttack, true, _serverCharacter.Data.BaseAttackKnockback);
 	}
 }

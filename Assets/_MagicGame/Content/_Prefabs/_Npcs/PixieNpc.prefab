@@ -29303,7 +29303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1803180478442400679, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _aiType
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1803180478442400679, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: _characterData
@@ -29684,6 +29684,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3b15608eccbc4cabbae559c4ceab4b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &911098680259452641 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1803180478442400679, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+  m_PrefabInstance: {fileID: 1559072833224275270}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6633633827701661900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b890406e5bcf4374a4a571b9744aa58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1569892639165803920 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 30277745207482582, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
@@ -29731,6 +29742,10 @@ PrefabInstance:
       propertyPath: _knockbackForce
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 6204638039996956914, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}
+      propertyPath: _serverCharacter
+      value: 
+      objectReference: {fileID: 911098680259452641}
     - target: {fileID: 6204638039996956914, guid: afa2e9866eb744d91812a6a3a95fb7e0, type: 3}
       propertyPath: _onlyDamagePlayer
       value: 1

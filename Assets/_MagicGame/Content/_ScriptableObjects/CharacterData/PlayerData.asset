@@ -15,6 +15,7 @@ MonoBehaviour:
   BaseHealth: 100
   BaseSpeed: 5
   BaseAttack: 0
+  BaseAttackKnockback: 0
   BaseDefense: 0
   TurnSharpness: 8
   KnockbackResist: 0
@@ -24,7 +25,7 @@ MonoBehaviour:
   CanStrafe: 0
   StrafingDuration: 0.25
   StrafeIntensity: 0.5
-  IFrameDuration: 0.17
+  IFrameDuration: 0.67
   CanRegenerateHealth: 1
   BaseHealthRegenTimeInterval: 0.5
   BaseHealthRegenAmount: 1

@@ -13,6 +13,10 @@ public class PlayerDeadState : BaseState
     protected override void EnterState(AIStateData stateData)
     {
         Debug.Log("Player entering dead");
+        if (_ctx.ServerCharacter.TryGetComponent(out Collider2D collider2D))
+        {
+            collider2D.enabled = false;
+        }
     }
 
     public override void UpdateState()
@@ -36,7 +40,9 @@ public class PlayerDeadState : BaseState
     public override void ClientEnterState(AIStateData stateData)
     {
         // NTFS: Player death animations here, just turn off visuals for now
-        _ctx.ServerCharacter.ClientCharacter.Visuals.SetActive(false);
+        _ctx.ServerCharacter.ClientFeedbacks.RotateGibs(stateData.Payload);
+        _ctx.ServerCharacter.ClientFeedbacks.PlayDeathFeedbacksRpc();
+
     }
     
     public override void ClientExitState(AIStateData stateData)

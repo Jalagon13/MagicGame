@@ -3,7 +3,6 @@ using UnityEngine;
 public class BasicNpcPursueState : BaseState
 {
     private BasicNpcStateMachine _ctx;
-    private Timer _setDirectionTimer;
 
     public BasicNpcPursueState(AIState key, StateMachine context) : base(key, context)
     {

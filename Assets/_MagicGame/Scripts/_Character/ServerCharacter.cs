@@ -9,7 +9,6 @@ public enum CharacterStateMachine
 {
     Player,
     BasicNpc,
-    PixieNpc
 }
 
 [RequireComponent(typeof(NetworkHealthState), typeof(NetworkLifeState))]
@@ -104,9 +103,6 @@ public class ServerCharacter : NetworkBehaviour
                 break;
             case CharacterStateMachine.Player:
                 _stateMachine = new PlayerStateMachine(this);
-                break;
-            case CharacterStateMachine.PixieNpc:
-                _stateMachine = new PixieStateMachine(this);
                 break;
         }
 

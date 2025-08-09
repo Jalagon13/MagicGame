@@ -83,7 +83,6 @@ public class BasicNpcStateMachine : StateMachine
             // Try to strafe behavior
             if (CharacterData.CanStrafe && !IsStrafing && CharacterData.WillChasePlayer)
             {
-                Debug.Log($"Strafe Started");
                 _strafeTimer.Reset();
                 StrafingDirection = UnityEngine.Random.value > 0.5f ? 1 : -1;
                 IsStrafing = true;
@@ -128,7 +127,6 @@ public class BasicNpcStateMachine : StateMachine
 
     private void EndStrafe(object sender, EventArgs e)
     {
-        Debug.Log($"Strafe Ended");
         IsStrafing = false;
     }
 

@@ -12,6 +12,8 @@ public class CharacterDataSO : ScriptableObject
     public float BaseSpeed;
     [Tooltip("Base attack stat for the character")]
     public int BaseAttack;
+    [Tooltip("Base knockback on attack stat for the character")]
+    public float BaseAttackKnockback;
     [Tooltip("Base defense stat for the character")]
     public int BaseDefense;
 
