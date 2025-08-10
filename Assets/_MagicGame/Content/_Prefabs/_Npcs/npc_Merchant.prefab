@@ -212,6 +212,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1803180478442400679, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: _aiType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2312357536969696663, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: m_SortingLayerID
       value: -1268719207
@@ -429,9 +433,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1928836707584080753}
-    - targetCorrespondingSourceObject: {fileID: 5309065195269084554, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3079678981023877485}
   m_SourcePrefab: {fileID: 100100000, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
 --- !u!1 &532044041320650086 stripped
 GameObject:
@@ -463,34 +464,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1164142a845a148a8ae0d7f0a04f74ca, type: 2}
   - {fileID: 11400000, guid: 24e09bdc93f06403bbc64317a192c595, type: 2}
   - {fileID: 11400000, guid: b3fe2d16a64484c06943064d240713aa, type: 2}
---- !u!114 &3079678981023877485
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 532044041320650086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a028b976919a24b57ae17c4445e747e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  <TurnSharpness>k__BackingField: 3
-  <WanderSpeed>k__BackingField: 1
-  <ChaseSpeed>k__BackingField: 1
-  <KnockbackResist>k__BackingField: 0
-  <MinIdleDuration>k__BackingField: 4
-  <MaxIdleDuration>k__BackingField: 8
-  <DetectionRadius>k__BackingField: 15
-  <DetectionIntervalDuration>k__BackingField: 0.5
-  <WanderRadius>k__BackingField: 3
-  <StoppingDistance>k__BackingField: 0.25
-  <StrafingDuration>k__BackingField: 0.25
-  <StrafeIntensity>k__BackingField: 0.5
-  <WillChasePlayer>k__BackingField: 0
-  <OnlyChaseWhenProvoked>k__BackingField: 0
-  <CanMove>k__BackingField: 1
 --- !u!4 &3224693067931935212 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7066091553908842752, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}

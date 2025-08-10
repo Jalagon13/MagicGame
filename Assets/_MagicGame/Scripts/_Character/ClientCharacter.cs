@@ -15,6 +15,10 @@ public class ClientCharacter : NetworkBehaviour
     private GameObject _visuals;
     public GameObject Visuals => _visuals;
     
+    [SerializeField] 
+    private GameObject _colliderHolder;
+    public GameObject ColliderHolder => _colliderHolder;
+    
     private BaseState _currentSuperState;
     private BaseState _currentSubState;
     private AIStateData _currentSuperStateData;

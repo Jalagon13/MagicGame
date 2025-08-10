@@ -10373,9 +10373,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4572527030133494615}
   - {fileID: 7284562413095845040}
   - {fileID: 1332535597681020578}
-  - {fileID: 4572527030133494615}
   m_Father: {fileID: 5642894971404015858}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8333186287527618759
@@ -10393,6 +10393,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _serverCharacter: {fileID: 8141412508225569808}
   _visuals: {fileID: 65483329398898238}
+  _colliderHolder: {fileID: 9080082044580222623}
 --- !u!1 &2205856462555269120
 GameObject:
   m_ObjectHideFlags: 0

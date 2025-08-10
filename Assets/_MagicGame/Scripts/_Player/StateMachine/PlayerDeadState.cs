@@ -17,6 +17,8 @@ public class PlayerDeadState : BaseState
         {
             collider2D.enabled = false;
         }
+
+        _ctx.ServerCharacter.ClientCharacter.ColliderHolder.gameObject.SetActive(false);
     }
 
     public override void UpdateState()
@@ -38,6 +40,8 @@ public class PlayerDeadState : BaseState
         {
             collider2D.enabled = true;
         }
+
+        _ctx.ServerCharacter.ClientCharacter.ColliderHolder.gameObject.SetActive(true);
     }
 
     public override void ClientEnterState(AIStateData stateData)

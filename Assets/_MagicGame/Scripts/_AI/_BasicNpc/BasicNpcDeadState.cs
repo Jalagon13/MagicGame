@@ -29,6 +29,8 @@ public class BasicNpcDeadState : BaseState
         {
             collider2D.enabled = false;
         }
+        
+        _ctx.ServerCharacter.ClientCharacter.ColliderHolder.gameObject.SetActive(false);   
     }
 
     private void OnDespawnTimerEnd(object sender, EventArgs e)
