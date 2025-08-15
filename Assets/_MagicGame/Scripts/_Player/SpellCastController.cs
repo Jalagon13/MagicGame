@@ -3,24 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpellCastGroup // NTFS: For now just keep this incase i want to do multi-casting later
-{
-    public List<SpellItemSO> SpellsToCast;
-    public bool IsMultiCast => SpellsToCast.Count > 1;
-
-    public SpellCastGroup(List<SpellItemSO> spells)
-    {
-        SpellsToCast = spells;
-    }
-}
-
 public class SpellCastController
 {
     private static readonly float _postCastDelayTimerDuration = 0.15f;
 
     private Player _player;
     private WandItemSO _currentWandItemSO;
-    private List<SpellCastGroup> _spellCastGroups = new();
+    private List<SpellItemSO> _selectedSpellArray = new();
     private Timer _postCastDelayTimer;
 
     private PlayerManaSystem _playerManaSystem;
@@ -37,7 +26,7 @@ public class SpellCastController
     {
         _postCastDelayTimer = new(_postCastDelayTimerDuration);
         _player = player;
-        _playerManaSystem = new(player.ServerCharacter.Data.BaseMana, player.ServerCharacter.Data.BaseManaRegen);
+        _playerManaSystem = new(player.ServerCharacter.Data.BaseMana);
 
         _player.SelectedItemIdNetworkVariable.OnValueChanged += OnItemSelectedChanged;
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
@@ -70,17 +59,17 @@ public class SpellCastController
 
         if (CanCast())
         {
-            SpellCastGroup group = _spellCastGroups[_selectedSpellIndex];
-            if (_playerManaSystem.CanCastSpell(_selectedSpell)) // Check if the first spell in the group can be cast SUBJECT TO CHANGE
+            SpellItemSO spell = _selectedSpellArray[_selectedSpellIndex];
+            if (_playerManaSystem.CanCastSpell(spell)) // Check if the first spell in the group can be cast SUBJECT TO CHANGE
             {
-                _player.SpellCaster.TryCastSpell(group, GetExecutionParams);
+                _player.SpellCaster.TryCastSpell(spell, GetExecutionParams);
             }
         }
     }
 
     private bool CanCast()
     {
-        if (_spellCastGroups == null || _spellCastGroups.Count == 0) return false;
+        if (_selectedSpellArray == null || _selectedSpellArray.Count == 0) return false;
 
         bool isOverUI = Pointer.IsOverUI();
         bool isOverInteractable = Pointer.IsOverInteractable();
@@ -91,7 +80,7 @@ public class SpellCastController
         bool isLoadingBiome = WorldManager.Instance.IsLoadingBiome;
 
         bool hasEnoughMana = false;
-        if (_spellCastGroups.Count > 0)
+        if (_selectedSpellArray.Count > 0)
         {
             hasEnoughMana = _playerManaSystem.CanCastSpell(_selectedSpell); // Check if the first spell in the group can be cast SUBJECT TO CHANGE
         }
@@ -124,27 +113,24 @@ public class SpellCastController
             _currentWandItemSO = wandItemSO;
             SpellItemSO[] magicArray = (_currentWandInventoryItem as WandInventoryItem).MagicArray;
 
-            _spellCastGroups = new();
+            _selectedSpellArray = new();
 
             for (int i = 0; i < magicArray.Length; i++)
             {
                 SpellItemSO item = magicArray[i];
 
-                _spellCastGroups.Add(new SpellCastGroup(new List<SpellItemSO>
-                {
-                    item
-                }));
+                _selectedSpellArray.Add(item);
             }
 
             _selectedSpellIndex = 0; // Default to the first spell in the wand for now
-            _selectedSpell = magicArray.Length > 0 ? _spellCastGroups[_selectedSpellIndex].SpellsToCast[0] : null; // Default set to the first spell in the group might change later
+            _selectedSpell = magicArray.Length > 0 ? _selectedSpellArray[_selectedSpellIndex] : null; // Default set to the first spell in the group might change later
             Debug.Log($"magic array length: {magicArray.Length}, _selectedSpell null?: {_selectedSpell == null}");
         }
         else
         {
             _currentWandInventoryItem = null;
             _currentWandItemSO = null;
-            _spellCastGroups = null;
+            _selectedSpellArray = null;
             _selectedSpell = null;
         }
     }

@@ -31,9 +31,9 @@ public class SpellCaster : NetworkBehaviour
     private Vector2 _castingPoint;
     public Vector2 CastingPoint => _castingPoint;
 
-    private SpellCastGroup _currentSpellGroup;
-    public SpellCastGroup CurrentSpellGroup => _currentSpellGroup;
-    
+    private SpellItemSO _currentSpell;
+    public SpellItemSO CurrentSpell => _currentSpell;
+
     private List<NetworkObjectReference> _pendingSpellsToExecute = new();
     private int _waitingForEndCount = 0;
 
@@ -53,28 +53,20 @@ public class SpellCaster : NetworkBehaviour
         _castingPoint = castPoint;
     }
 
-    public void TryCastSpell(SpellCastGroup spellGroup, Func<(Vector3 spawnPoint, Vector3 direction)> getExecutionParams)
+    public void TryCastSpell(SpellItemSO spellItemSO, Func<(Vector3 spawnPoint, Vector3 direction)> getExecutionParams)
     {
         if (_castTimer.IsRunning || _isCasting.Value) return;
 
         Reset();
 
-        _currentSpellGroup = spellGroup;
+        _currentSpell = spellItemSO;
         _getExecutionParams = getExecutionParams;
         _isCasting.Value = true;
         _pendingSpellsToExecute.Clear();
 
-        float totalCastTime = 0f;
+        SpawnSpellServerRpc(spellItemSO.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome)); // pre-spawn all spells
 
-        foreach (var spellMetaData in spellGroup.SpellsToCast)
-        {
-            var syncData = spellMetaData.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome);
-            SpawnSpellServerRpc(syncData); // pre-spawn all spells
-
-            totalCastTime += spellMetaData.CastTime;
-        }
-
-        _castTimer = new Timer(totalCastTime);
+        _castTimer = new Timer(spellItemSO.CastTime);
         _castTimer.OnTimerEnd += OnCastTimerEnd;
     }
 

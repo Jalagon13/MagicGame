@@ -22,13 +22,14 @@ public class SpellItemSO : ItemSO
 	[field: SerializeField] public EventReference SpellOnDamageSound { get; private set; }
 
 	[field: Header("Stats")]
+	[field: Tooltip("The the probability of the spell draining 1 mana from the player when cast."), Range(0f, 1f)]
+	[field: SerializeField] public float ManaDrainProbability { get; private set; } = 5;
+	
 	[field: Tooltip("Time it takes for the spell to charge before it is cast.")]
 	[field: SerializeField] public float CastTime { get; private set; } = 0.5f;
+	
 	[field: Tooltip("Time it takes before the spell can be cast again after casting it.")]
 	[field: SerializeField] public float Cooldown { get; private set; } = 0.5f;
-
-	[field: Tooltip("The mana cost required to cast this spell.")]
-	[field: SerializeField] public int ManaCost { get; private set; } = 5;
 	
 	[field: Tooltip("The amount of damage this projectile deals upon hitting an enemy.")]
 	[field: SerializeField] public int Damage { get; private set; } = 3;
@@ -61,7 +62,7 @@ public class SpellItemSO : ItemSO
 	public SyncSpellData GetSyncSpellData(ulong casterNetObjId, BiomeType spawnBiome)
 	{
 		return new SyncSpellData(GameManager.Instance.GetItemIdFromItemSO(this),
-			ManaCost, Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime,
+			Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime,
 			HasteMultiplier, Scatter, casterNetObjId, OnlyContinueAfterSpellEnds, spawnBiome);
 	}
 

@@ -5,7 +5,6 @@ using Unity.Netcode;
 public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 {
     public int SpellItemId;
-    public int ManaCost;
     public int Damage;
     public int Knockback;
     public int BounceCount;
@@ -18,11 +17,10 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
     public bool OnlyContinueAfterSpellEnds;
     public BiomeType SpawnBiome;
 
-    public SyncSpellData(int spellItemId, int manaCost, int damage, int knockback, int bounceCount, int pierceCount, float speed, float lifetime, float hasteMultiplier, 
+    public SyncSpellData(int spellItemId, int damage, int knockback, int bounceCount, int pierceCount, float speed, float lifetime, float hasteMultiplier, 
     float scatter, ulong casterNetworkObjectId, bool onlyContinueAfterSpellEnds, BiomeType spawnBiome)
     {
         SpellItemId = spellItemId;
-        ManaCost = manaCost;
         Damage = damage;
         Knockback = knockback;
         Speed = speed;
@@ -40,7 +38,6 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
     {
         // Check if all primitive properties match
         if (SpellItemId != other.SpellItemId ||
-            ManaCost != other.ManaCost ||
             Damage != other.Damage ||
             Knockback != other.Knockback ||
             BounceCount != other.BounceCount ||
@@ -64,7 +61,6 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref SpellItemId);
-        serializer.SerializeValue(ref ManaCost);
         serializer.SerializeValue(ref Damage);
         serializer.SerializeValue(ref Knockback);
         serializer.SerializeValue(ref BounceCount);

@@ -19,32 +19,18 @@ public class PlayerManaSystem
 
     private int _currentMana;
     private int _maxMana;
-    private int _regenRate;
 
     private Dictionary<SpellItemSO, Timer> _spellCooldowns = new();
 
-    private float _regenTimer;
 
-    public PlayerManaSystem(int maxMana, int regenRate)
+    public PlayerManaSystem(int maxMana)
     {
         _maxMana = maxMana;
         _currentMana = maxMana;
-        _regenRate = regenRate;
     }
 
     public void Tick(float deltaTime)
     {
-        // Regen
-        _regenTimer += deltaTime;
-        float manaToAdd = _regenRate * _regenTimer;
-        if (manaToAdd >= 1f)
-        {
-            int gain = Mathf.FloorToInt(manaToAdd);
-            _currentMana = Mathf.Min(_currentMana + gain, _maxMana);
-            _regenTimer -= gain / (float)_regenRate;
-            OnManaChanged?.Invoke(this, new ManaChangedEventArgs(_currentMana, _maxMana));
-        }
-
         // Tick spell cooldowns
         foreach (var kvp in _spellCooldowns)
             kvp.Value.Tick(deltaTime);
@@ -52,7 +38,7 @@ public class PlayerManaSystem
 
     public bool CanCastSpell(SpellItemSO spell)
     {
-        if (_currentMana < spell.ManaCost)
+        if (_currentMana < 1)
             return false;
 
         if (_spellCooldowns.TryGetValue(spell, out Timer cooldown) && cooldown.IsRunning)
@@ -63,7 +49,7 @@ public class PlayerManaSystem
     
     public void ApplySpellCooldown(SpellItemSO spell)
     {
-        Debug.Log($"Applying cooldown for spell: {spell.name}, Mana Cost: {spell.ManaCost}, Current Mana: {_currentMana}");
+        Debug.Log($"Applying cooldown for spell: {spell.name}, Mana probability: {spell.ManaDrainProbability}, Current Mana: {_currentMana}");
         if (_spellCooldowns.ContainsKey(spell))
         {
             _spellCooldowns[spell].Reset();
@@ -73,7 +59,16 @@ public class PlayerManaSystem
             _spellCooldowns[spell] = new Timer(spell.Cooldown);
         }
 
-        _currentMana -= spell.ManaCost;
+        bool drained = spell.ManaDrainProbability > UnityEngine.Random.value;
+        _currentMana -= drained ? 1 : 0;
+        Debug.Log($"Spell {spell.name} mana drain: {drained}, CurrentMana: {_currentMana}");
+        OnManaChanged?.Invoke(this, new ManaChangedEventArgs(_currentMana, _maxMana));
+    }
+
+    public void AddMana(int amount)
+    {
+        Debug.Log($"Adding mana: {amount}, CurrentMana: {_currentMana}, MaxMana: {_maxMana}");
+        _currentMana = Mathf.Min(_currentMana + amount, _maxMana);
         OnManaChanged?.Invoke(this, new ManaChangedEventArgs(_currentMana, _maxMana));
     }
 }

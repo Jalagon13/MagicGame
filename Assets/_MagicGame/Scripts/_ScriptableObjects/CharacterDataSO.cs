@@ -10,8 +10,6 @@ public class CharacterDataSO : ScriptableObject
     public int BaseHealth;
     [Tooltip("Base Mana held in this NPC.")]
     public int BaseMana = 100;
-    [Tooltip("Base Mana Regeneration per second of the NPC.")]
-    public int BaseManaRegen = 5;
     [Tooltip("Base Speed for character")]
     public float BaseSpeed;
     [Tooltip("Base attack stat for the character")]
