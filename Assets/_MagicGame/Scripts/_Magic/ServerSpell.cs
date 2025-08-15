@@ -92,7 +92,7 @@ public abstract class ServerSpell : NetworkBehaviour
         if (SpellData.Value.HoldToCast)
         {
             // Wait until the spell is ended externally via StopHoldCastSpell()
-            while (SpellStateNV.Value == SpellState.Casting)
+            while (SpellStateNV.Value == SpellState.Casting && GameInput.Instance.GetPrimaryHeldDown())
             {
                 yield return new WaitForSeconds(1f);
                 

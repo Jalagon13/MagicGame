@@ -35,7 +35,6 @@ public class SpellCaster : NetworkBehaviour
     public SpellItemSO CurrentSpell => _currentSpell;
 
     private List<NetworkObjectReference> _pendingSpellsToExecute = new();
-    private int _waitingForEndCount = 0;
 
     private void Awake()
     {
@@ -78,8 +77,7 @@ public class SpellCaster : NetworkBehaviour
 
             foreach (var spellRef in new List<NetworkObjectReference>(_activeSpellNetObjs))
             {
-                if (spellRef.TryGet(out NetworkObject spellObj) &&
-                    spellObj.TryGetComponent(out ServerSpell serverSpell))
+                if (spellRef.TryGet(out NetworkObject spellObj) && spellObj.TryGetComponent(out ServerSpell serverSpell))
                 {
                     if(serverSpell.SpellStateNV.Value == SpellState.Charging)
                     {
@@ -106,10 +104,7 @@ public class SpellCaster : NetworkBehaviour
             ExecuteSpell(spellRef);
         }
 
-        if (_waitingForEndCount == 0)
-        {
-            Reset();
-        }
+        Reset();
     }
 
     private void ExecuteSpell(NetworkObjectReference spellNetObj)
@@ -126,7 +121,6 @@ public class SpellCaster : NetworkBehaviour
 
                 if (serverSpell.SpellData.Value.HoldToCast)
                 {
-                    _waitingForEndCount++;
                     serverSpell.SpellStateNV.OnValueChanged += CheckForSpellEnd;
                     _spellsWithEndCallbacks.Add(serverSpell);
                 }
@@ -156,14 +150,8 @@ public class SpellCaster : NetworkBehaviour
                     break;
                 }
             }
-
-            _waitingForEndCount--;
-
-            // 🔐 Only reset if the rapid fire routine is done AND no more waiting spells
-            if (_waitingForEndCount <= 0)
-            {
-                Reset();
-            }
+            
+            Reset();
         }
     }
 
@@ -231,6 +219,7 @@ public class SpellCaster : NetworkBehaviour
     private void Reset()
     {
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
+        _castTimer.Reset();
 
         foreach (var spell in _spellsWithEndCallbacks)
         {
@@ -240,7 +229,6 @@ public class SpellCaster : NetworkBehaviour
         _spellsWithEndCallbacks.Clear();
         _pendingSpellsToExecute.Clear();
         _activeSpellNetObjs.Clear();
-        _waitingForEndCount = 0;
         _cancelCast = false;
         _isCasting.Value = false; // centralized here
     }
