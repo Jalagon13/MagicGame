@@ -54,16 +54,16 @@ public class SpellItemSO : ItemSO
 	
 	[field: Tooltip("How accurate the spell is being shot from")]
 	[field: SerializeField] public float Scatter { get; private set; } = 0f;
-	
-	[field: Tooltip("If true, only continue spell sequence after this spell ends or like it despawns")] 
-	[field: SerializeField] public bool OnlyContinueAfterSpellEnds { get; private set; } = false;
-	
-	
+
+	[field: Tooltip("If true, holding the fire button will keep this spell active until released. If false, it behaves as a normal single-cast spell.")]
+	[field: SerializeField] public bool HoldToCast { get; private set; } = false;
+
+
 	public SyncSpellData GetSyncSpellData(ulong casterNetObjId, BiomeType spawnBiome)
 	{
 		return new SyncSpellData(GameManager.Instance.GetItemIdFromItemSO(this),
 			Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime,
-			HasteMultiplier, Scatter, casterNetObjId, OnlyContinueAfterSpellEnds, spawnBiome);
+			HasteMultiplier, Scatter, casterNetObjId, HoldToCast, spawnBiome);
 	}
 
 	public override InventoryItem CreateInventoryItem(int quantity)

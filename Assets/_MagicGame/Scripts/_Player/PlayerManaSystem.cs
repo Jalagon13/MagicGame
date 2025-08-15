@@ -49,7 +49,6 @@ public class PlayerManaSystem
     
     public void ApplySpellCooldown(SpellItemSO spell)
     {
-        Debug.Log($"Applying cooldown for spell: {spell.name}, Mana probability: {spell.ManaDrainProbability}, Current Mana: {_currentMana}");
         if (_spellCooldowns.ContainsKey(spell))
         {
             _spellCooldowns[spell].Reset();
@@ -59,10 +58,15 @@ public class PlayerManaSystem
             _spellCooldowns[spell] = new Timer(spell.Cooldown);
         }
 
+        TryToDrainMana(spell);
+    }
+    
+    public void TryToDrainMana(SpellItemSO spell)
+    {
         bool drained = spell.ManaDrainProbability > UnityEngine.Random.value;
         _currentMana -= drained ? 1 : 0;
-        Debug.Log($"Spell {spell.name} mana drain: {drained}, CurrentMana: {_currentMana}");
         OnManaChanged?.Invoke(this, new ManaChangedEventArgs(_currentMana, _maxMana));
+        Debug.Log($"Spell {spell.name} mana drain: {drained}, CurrentMana: {_currentMana}");
     }
 
     public void AddMana(int amount)

@@ -34,8 +34,9 @@ MonoBehaviour:
       Data3: 1511411633
       Data4: 1298307303
     Path: event:/Magic/Zap2
+  <ManaDrainProbability>k__BackingField: 1
   <CastTime>k__BackingField: 0.5
-  <ManaCost>k__BackingField: 3
+  <Cooldown>k__BackingField: 0.5
   <Damage>k__BackingField: 6
   <Knockback>k__BackingField: 8
   <BounceCount>k__BackingField: 0

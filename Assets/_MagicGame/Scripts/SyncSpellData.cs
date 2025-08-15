@@ -14,11 +14,11 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
     public float HasteMultiplier;
     public float Scatter;
     public ulong CasterNetworkObjectId;
-    public bool OnlyContinueAfterSpellEnds;
+    public bool HoldToCast;
     public BiomeType SpawnBiome;
 
     public SyncSpellData(int spellItemId, int damage, int knockback, int bounceCount, int pierceCount, float speed, float lifetime, float hasteMultiplier, 
-    float scatter, ulong casterNetworkObjectId, bool onlyContinueAfterSpellEnds, BiomeType spawnBiome)
+    float scatter, ulong casterNetworkObjectId, bool holdToCast, BiomeType spawnBiome)
     {
         SpellItemId = spellItemId;
         Damage = damage;
@@ -28,7 +28,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         HasteMultiplier = hasteMultiplier;
         Scatter = scatter;
         CasterNetworkObjectId = casterNetworkObjectId;
-        OnlyContinueAfterSpellEnds = onlyContinueAfterSpellEnds;
+        HoldToCast = holdToCast;
         SpawnBiome = spawnBiome;
         BounceCount = bounceCount;
         PierceCount = pierceCount;
@@ -52,7 +52,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
             return false;
         }
 
-        if (OnlyContinueAfterSpellEnds != other.OnlyContinueAfterSpellEnds)
+        if (HoldToCast != other.HoldToCast)
             return false;
 
         return true;
@@ -71,6 +71,6 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         serializer.SerializeValue(ref Scatter);
         serializer.SerializeValue(ref CasterNetworkObjectId);
         serializer.SerializeValue(ref SpawnBiome);
-        serializer.SerializeValue(ref OnlyContinueAfterSpellEnds);
+        serializer.SerializeValue(ref HoldToCast);
     }
 }

@@ -124,7 +124,7 @@ public class SpellCaster : NetworkBehaviour
 
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
 
-                if (serverSpell.SpellData.Value.OnlyContinueAfterSpellEnds)
+                if (serverSpell.SpellData.Value.HoldToCast)
                 {
                     _waitingForEndCount++;
                     serverSpell.SpellStateNV.OnValueChanged += CheckForSpellEnd;

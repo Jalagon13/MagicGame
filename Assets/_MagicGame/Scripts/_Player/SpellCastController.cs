@@ -33,6 +33,7 @@ public class SpellCastController
         _player.SpellCaster.IsCasting.OnValueChanged += OnIsCastingChanged;
 
         HotbarManager.Instance.OnFocusSlotUpdated += CheckForSelectedItemChange;
+        GameInput.Instance.OnPrimaryAction += CheckForNotHeldDownPrimaryAction;
     }
 
     public void Dispose()
@@ -42,6 +43,7 @@ public class SpellCastController
         _player.SpellCaster.IsCasting.OnValueChanged -= OnIsCastingChanged;
 
         HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSelectedItemChange;
+        GameInput.Instance.OnPrimaryAction -= CheckForNotHeldDownPrimaryAction;
     }
 
     private void OnIsCastingChanged(bool previousValue, bool newValue)
@@ -138,6 +140,14 @@ public class SpellCastController
     private void OnPlayerLifeStateChanged(LifeState previousValue, LifeState newValue)
     {
         if (previousValue == LifeState.Alive && newValue == LifeState.Dead)
+        {
+            _player.SpellCaster.TryToCancelCast();
+        }
+    }
+
+    private void CheckForNotHeldDownPrimaryAction(object sender, GameInput.OnPrimaryOrSecondaryActionEventArgs e)
+    {
+        if (!e.IsHeldDown)
         {
             _player.SpellCaster.TryToCancelCast();
         }

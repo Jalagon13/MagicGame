@@ -89,9 +89,22 @@ public abstract class ServerSpell : NetworkBehaviour
         
         OnSpellExecute();
 
-        yield return new WaitForSeconds(SpellData.Value.Lifetime);
-
-        yield return EndSpellRoutine();
+        if (SpellData.Value.HoldToCast)
+        {
+            // Wait until the spell is ended externally via StopHoldCastSpell()
+            while (SpellStateNV.Value == SpellState.Casting)
+            {
+                yield return new WaitForSeconds(1f);
+                
+                SpellItemSO spell = GameManager.Instance.GetItemSOFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
+                Player.Instance.SpellCastController.PlayerManaSystem.TryToDrainMana(spell);
+            }
+        }
+        else
+        {
+            yield return new WaitForSeconds(SpellData.Value.Lifetime);
+            yield return EndSpellRoutine();
+        }
     }
 
     public void EndSpellExternally()
