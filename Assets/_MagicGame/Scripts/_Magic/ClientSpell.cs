@@ -10,18 +10,12 @@ public class ClientSpell : NetworkBehaviour
     [SerializeField] 
     private GameObject _visualization;
     public GameObject Visualization => _visualization;
-    
-    [SerializeField] 
-    private GameObject _modifiersContainer;
-    
-    private bool _spellModsInstantiated;
 
     public override void OnNetworkSpawn()
     {
         if (!IsClient) return;
         
         _serverSpell.SpellStateNV.OnValueChanged += HandleSpellStateChange;
-        _serverSpell.SpellData.OnValueChanged += OnSpellDataInitialized;
     }
 
     public override void OnNetworkDespawn()
@@ -29,7 +23,6 @@ public class ClientSpell : NetworkBehaviour
         if (!IsClient) return;
 
         _serverSpell.SpellStateNV.OnValueChanged -= HandleSpellStateChange;
-        _serverSpell.SpellData.OnValueChanged -= OnSpellDataInitialized;
     }
 
     private void Update()
@@ -51,25 +44,6 @@ public class ClientSpell : NetworkBehaviour
         else if(previousValue == SpellState.Casting && newValue == SpellState.Stopping)
         {
             _serverSpell.OnClientSpellStop(this);
-        }
-    }
-
-    private void OnSpellDataInitialized(SyncSpellData oldData, SyncSpellData newData)
-    {
-        if(_spellModsInstantiated) return;
-        _spellModsInstantiated = true;
-        
-        foreach (var item in newData.SpellMods)
-        {
-            if (GameManager.Instance.GetItemSOFromItemId(item) is SpellModItemSO spellMod)
-            {
-                // TODO: Add any visual effect or logic specific to this mod here
-                SpellModifier modGO = Instantiate(spellMod.SpellModPrefab, _modifiersContainer.transform);
-                if (IsOwner)
-                {
-                    _serverSpell.SpellData.Value = modGO.ModifiySpellData(newData, _serverSpell);
-                }
-            }
         }
     }
 }

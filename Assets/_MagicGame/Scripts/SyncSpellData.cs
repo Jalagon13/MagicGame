@@ -17,10 +17,9 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
     public ulong CasterNetworkObjectId;
     public bool OnlyContinueAfterSpellEnds;
     public BiomeType SpawnBiome;
-    public List<int> SpellMods; // Assuming SpellModItemSO is serializable or can be converted to int for network transmission
 
     public SyncSpellData(int spellItemId, int manaCost, int damage, int knockback, int bounceCount, int pierceCount, float speed, float lifetime, float hasteMultiplier, 
-    float scatter, ulong casterNetworkObjectId, bool onlyContinueAfterSpellEnds, BiomeType spawnBiome, List<SpellModItemSO> spellMods = null)
+    float scatter, ulong casterNetworkObjectId, bool onlyContinueAfterSpellEnds, BiomeType spawnBiome)
     {
         SpellItemId = spellItemId;
         ManaCost = manaCost;
@@ -35,14 +34,6 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         SpawnBiome = spawnBiome;
         BounceCount = bounceCount;
         PierceCount = pierceCount;
-        SpellMods = new List<int>();
-        if (spellMods != null)
-        {
-            foreach (SpellModItemSO item in spellMods)
-            {
-                SpellMods.Add(GameManager.Instance.GetItemIdFromItemSO(item));
-            }
-        }
     }
 
     public bool Equals(SyncSpellData other)
@@ -67,22 +58,6 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         if (OnlyContinueAfterSpellEnds != other.OnlyContinueAfterSpellEnds)
             return false;
 
-        if ((SpellMods == null && other.SpellMods != null) ||
-            (SpellMods != null && other.SpellMods == null) ||
-            (SpellMods != null && other.SpellMods != null && SpellMods.Count != other.SpellMods.Count))
-        {
-            return false;
-        }
-
-        if (SpellMods != null)
-        {
-            for (int i = 0; i < SpellMods.Count; i++)
-            {
-                if (SpellMods[i] != other.SpellMods[i])
-                    return false;
-            }
-        }
-
         return true;
     }
 
@@ -101,24 +76,5 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
         serializer.SerializeValue(ref CasterNetworkObjectId);
         serializer.SerializeValue(ref SpawnBiome);
         serializer.SerializeValue(ref OnlyContinueAfterSpellEnds);
-
-        int spellModsCount = SpellMods != null ? SpellMods.Count : 0;
-        serializer.SerializeValue(ref spellModsCount);
-
-        if (serializer.IsReader && SpellMods == null)
-        {
-            SpellMods = new List<int>(spellModsCount);
-        }
-
-        for (int i = 0; i < spellModsCount; i++)
-        {
-            int modValue = serializer.IsReader ? 0 : SpellMods[i];
-            serializer.SerializeValue(ref modValue);
-
-            if (serializer.IsReader)
-            {
-                SpellMods.Add(modValue);
-            }
-        }
     }
 }

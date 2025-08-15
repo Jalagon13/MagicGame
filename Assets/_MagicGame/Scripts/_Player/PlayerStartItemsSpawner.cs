@@ -39,16 +39,13 @@ public class PlayerStartItemsSpawner : NetworkBehaviour
 
                     for (int i = 0; i < wandInvItem.MagicArray.Length; i++)
                     {
-                        if (wandInvItem.MagicArray[i] is MagicItemSO)
+                        if (i < wandItemSO.Capacity)
                         {
-                            if (i < wandItemSO.Capacity)
-                            {
-                                wandItemToAdd.MagicArray[i] = wandInvItem.MagicArray[i];
-                            }
-                            else
-                            {
-                                Debug.LogWarning($"{wandInvItem.MagicArray[i].Name} being skipped because it is out of the index of {wandItemSO.Name}'s Capacity ({wandItemSO.Capacity})");
-                            }
+                            wandItemToAdd.MagicArray[i] = wandInvItem.MagicArray[i];
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"{wandInvItem.MagicArray[i].Name} being skipped because it is out of the index of {wandItemSO.Name}'s Capacity ({wandItemSO.Capacity})");
                         }
                     }
 

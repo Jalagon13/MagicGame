@@ -120,7 +120,7 @@ namespace AdvancedTooltips.Core
 			}
 		}
 		
-		public static void WandDisplay(WandItemSO wand, MagicItemSO[] magicArray, Transform customLayout = null, float fontSize = 10)
+		public static void WandDisplay(WandItemSO wand, SpellItemSO[] magicArray, Transform customLayout = null, float fontSize = 10)
 		{
 			WandTooltipDisplayHandlerUI script = _instantiateHandler.InstantiateWandTooltipDisplay(customLayout);
 			script.WandName.text = wand.Name;
@@ -152,7 +152,7 @@ namespace AdvancedTooltips.Core
 			script.WandIcon.sprite = spell.SpellUIDisplaySprite;
 
 			JustText($"<br>Value: {spell.GoldValue} Gold<br>" + spell.GetDescription(), Color.white, fontSize: fontSize, customLayout: script.StatLayout);
-			JustText($"{spell.CastTime} s   cast delay"
+			JustText($"{spell.Cooldown} s   cast delay"
 			+ $"<br>{spell.Damage}   damage"
 			+ $"<br>{spell.ManaCost}   cost to cast"
 			+ $"<br>{spell.Knockback}   knockback"

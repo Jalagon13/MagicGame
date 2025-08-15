@@ -4,7 +4,6 @@ public class PlayerSpellCastingState : BaseState
 {
     private PlayerStateMachine _ctx;
     private GameObject _clientChargeVfx;
-    private SpellCastGroup _currentSpellCastGroup;
 
     public PlayerSpellCastingState(AIState key, StateMachine context) : base(key, context)
     {
@@ -15,21 +14,12 @@ public class PlayerSpellCastingState : BaseState
     protected override void EnterState(AIStateData stateData)
     {
         // Debug.Log($"Player entering spell casting");
-        _currentSpellCastGroup = _ctx.SpellCaster.CurrentSpellGroup;
-
-        float totalHasteMultiplier = 0;
-        int count = _currentSpellCastGroup.SpellsToCast.Count;
-
-        foreach (SpellMetaData spellMetaData in _currentSpellCastGroup.SpellsToCast)
-        {
-            totalHasteMultiplier += spellMetaData.SpellItem.HasteMultiplier;
-        }
-
-        float averageHasteMultiplier = count > 0 ? totalHasteMultiplier / count : 0;
+        Debug.Log($"selected spell null? {Player.Instance.SpellCastController.SelectedSpell == null}");
+        float hasteMultiplier = Player.Instance.SpellCastController.SelectedSpell.HasteMultiplier;
 
         Buff castingMoveBuff = new(
             _ctx.ServerCharacter.Stats.MovementSpeed,
-            new StatModifier(averageHasteMultiplier, StatModifierType.Percent, _currentSpellCastGroup)/* ,
+            new StatModifier(hasteMultiplier, StatModifierType.Percent, _ctx.SpellCaster)/* ,
             _spellToCast.CastTime */);
         
         _ctx.ServerCharacter.Stats.AddBuff(castingMoveBuff);
@@ -54,7 +44,7 @@ public class PlayerSpellCastingState : BaseState
 
     public override void ExitState()
     {
-        _ctx.ServerCharacter.Stats.RemoveBuffsFromSource(_currentSpellCastGroup);
+        _ctx.ServerCharacter.Stats.RemoveBuffsFromSource(_ctx.SpellCaster);
     }
 
     public override void ClientEnterState(AIStateData stateData)
@@ -63,7 +53,7 @@ public class PlayerSpellCastingState : BaseState
 
         _clientChargeVfx = Object.Instantiate(spellToCast.ChargeVFX, _ctx.SpellCaster.SpellSpawnTransform);
         _clientChargeVfx.transform.localPosition = Vector3.zero;
-        _clientChargeVfx.GetComponent<MagicCircle>().StartAnimation(spellToCast.CastTime);
+        _clientChargeVfx.GetComponent<MagicCircle>().StartAnimation(spellToCast.Cooldown);
     }
 
     public override void ClientUpdateState(AIStateData stateData)

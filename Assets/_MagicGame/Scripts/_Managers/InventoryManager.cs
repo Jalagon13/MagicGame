@@ -444,7 +444,7 @@ public class InventoryManager : MonoBehaviour
 		switch (inventoryItem)
 		{
 			case WandInventoryItem wandInventoryItem:
-				MagicItemSO[] magicArray = wandInventoryItem.MagicArray;
+				SpellItemSO[] magicArray = wandInventoryItem.MagicArray;
 				Tooltip.WandDisplay(wandInventoryItem.Item as WandItemSO, magicArray, fontSize: 12f);
 				break;
 			default:	

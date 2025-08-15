@@ -19,21 +19,7 @@ public class PlayerManaStatUI : MonoBehaviour
 		if (Player.Instance != null)
 		{
 			Player.OnAnyPlayerSpawned -= Player_OnAnyPlayerSpawned;
-			Player.Instance.SpellCastController.WandManaSystem.OnManaChanged -= Player_OnPlayerManaUpdated;
-		}
-	}
-	
-	private void Update()
-	{
-		if (Player.Instance == null || Player.Instance.SpellCastController == null) return;
-		
-		if(Player.Instance.SpellCastController.WandManaSystem.IsSelectingWand)
-		{
-		    ShowBar();
-		}
-		else
-		{
-		    HideBar();
+			Player.Instance.SpellCastController.PlayerManaSystem.OnManaChanged -= Player_OnPlayerManaUpdated;
 		}
 	}
 
@@ -41,11 +27,11 @@ public class PlayerManaStatUI : MonoBehaviour
 	{
 		if (Player.Instance != null && e.PlayerId == Player.Instance.OwnerClientId)
 		{
-			Player.Instance.SpellCastController.WandManaSystem.OnManaChanged += Player_OnPlayerManaUpdated;
+			Player.Instance.SpellCastController.PlayerManaSystem.OnManaChanged += Player_OnPlayerManaUpdated;
 		}
 	}
 
-    private void Player_OnPlayerManaUpdated(object sender, WandManaSystem.ManaChangedEventArgs e)
+    private void Player_OnPlayerManaUpdated(object sender, PlayerManaSystem.ManaChangedEventArgs e)
     {
         UpdateView(e.CurrentMana, e.MaxMana);
     }
@@ -56,15 +42,5 @@ public class PlayerManaStatUI : MonoBehaviour
 
 	    _manaBar.UpdateBar(currentAmount, 0, maxAmount);
 	    _amountText.text = $"{currentAmount}/{maxAmount}";
-	}
-
-	private void ShowBar()
-	{
-		gameObject.transform.GetChild(0).gameObject.SetActive(true);
-	}
-
-	private void HideBar()
-	{
-		gameObject.transform.GetChild(0).gameObject.SetActive(false);
 	}
 }
