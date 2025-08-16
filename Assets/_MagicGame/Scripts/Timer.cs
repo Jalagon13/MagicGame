@@ -23,7 +23,7 @@ using UnityEngine;
         }
     }
 
-    public bool IsRunning => RemainingSeconds > 0f;
+    public bool IsRunning => RemainingSeconds > 0f; // This might not be the best way to check if the timer is running, depending on your use case.
 
     public float Duration
     {

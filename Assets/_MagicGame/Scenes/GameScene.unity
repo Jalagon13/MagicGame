@@ -7120,8 +7120,8 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
-    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
     - {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
+    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
     - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
   - Item: {fileID: 11400000, guid: c4927bf03814a4704890caffd32c85df, type: 2}
     Quantity: 1
@@ -10380,7 +10380,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7799646, g: 0.43467426, b: 0.8301887, a: 1}
+  m_Color: {r: 0.73643, g: 0.28368637, b: 0.8018868, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

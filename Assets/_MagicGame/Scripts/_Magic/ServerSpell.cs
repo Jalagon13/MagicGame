@@ -29,6 +29,7 @@ public abstract class ServerSpell : NetworkBehaviour
     protected Vector2 _finalDirection;
 
     private bool _hasEnded = false;
+    private Coroutine _lifetimeRoutine;
 
     public NetworkObject SpellCasterNetworkObject
     {
@@ -79,7 +80,7 @@ public abstract class ServerSpell : NetworkBehaviour
         transform.position = spawnPoint;
         _finalDirection = finalDirection;
         
-        StartCoroutine(SpellLifetimeRoutine());
+        _lifetimeRoutine = StartCoroutine(SpellLifetimeRoutine());
     }
 
     private IEnumerator SpellLifetimeRoutine()
@@ -92,7 +93,7 @@ public abstract class ServerSpell : NetworkBehaviour
         if (SpellData.Value.HoldToCast)
         {
             // Wait until the spell is ended externally via StopHoldCastSpell()
-            while (SpellStateNV.Value == SpellState.Casting && GameInput.Instance.GetPrimaryHeldDown())
+            while (SpellStateNV.Value == SpellState.Casting)
             {
                 yield return new WaitForSeconds(1f);
                 
@@ -111,7 +112,7 @@ public abstract class ServerSpell : NetworkBehaviour
     {
         if (!IsOwner || SpellStateNV.Value != SpellState.Casting)
             return;
-        
+
         StartCoroutine(EndSpellRoutine());
     }
 
@@ -119,6 +120,9 @@ public abstract class ServerSpell : NetworkBehaviour
     {
         if (_hasEnded) yield break;
         _hasEnded = true;
+
+        if (_lifetimeRoutine != null)
+            StopCoroutine(_lifetimeRoutine);
 
         SpellStateNV.Value = SpellState.Stopping;
 

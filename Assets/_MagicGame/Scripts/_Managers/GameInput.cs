@@ -186,12 +186,12 @@ public class GameInput : NetworkBehaviour
 	
 	private void PlayerInput_SecondaryActionCanceled(InputAction.CallbackContext context)
 	{
-		_secondaryHeldDown = context.performed;
+		_secondaryHeldDown = context.performed || context.started;
 	}
 
 	private void PlayerInput_PrimaryAction(InputAction.CallbackContext context)
 	{
-		_primaryHeldDown = context.performed;
+		_primaryHeldDown = context.performed || context.started;
 		
 		if(!_inputsEnabled) return;
 	

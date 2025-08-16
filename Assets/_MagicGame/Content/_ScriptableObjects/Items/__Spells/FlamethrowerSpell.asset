@@ -36,7 +36,7 @@ MonoBehaviour:
     Path: event:/Magic/FireBurst
   <ManaDrainProbability>k__BackingField: 0.5
   <CastTime>k__BackingField: 1
-  <Cooldown>k__BackingField: 0.5
+  <Cooldown>k__BackingField: 3
   <Damage>k__BackingField: 14
   <Knockback>k__BackingField: 3
   <BounceCount>k__BackingField: 0

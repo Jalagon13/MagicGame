@@ -7,6 +7,7 @@ using UnityEngine;
 public class SpellCaster : NetworkBehaviour
 {
     public event EventHandler OnSpellCooldownTimersUpdated;
+    public event EventHandler OnActiveHoldToCastSpellEnded;
 
     [SerializeField]
     private ServerCharacter _serverCharacter;
@@ -14,8 +15,9 @@ public class SpellCaster : NetworkBehaviour
     private Timer _castTimer;
     public Timer CastTimer => _castTimer;
 
-    private List<NetworkObjectReference> _activeSpellNetObjs = new();
-    private List<ServerSpell> _spellsWithEndCallbacks = new();
+    private NetworkObjectReference _activeSpellNetObj;
+    private ServerSpell _holdToCastSpell;
+    public ServerSpell HoldToCastSpell => _holdToCastSpell;
 
     private bool _cancelCast;
 
@@ -34,7 +36,6 @@ public class SpellCaster : NetworkBehaviour
     private SpellItemSO _currentSpell;
     public SpellItemSO CurrentSpell => _currentSpell;
 
-    private List<NetworkObjectReference> _pendingSpellsToExecute = new();
 
     private void Awake()
     {
@@ -54,16 +55,18 @@ public class SpellCaster : NetworkBehaviour
 
     public void TryCastSpell(SpellItemSO spellItemSO, Func<(Vector3 spawnPoint, Vector3 direction)> getExecutionParams)
     {
-        if (_castTimer.IsRunning || _isCasting.Value) return;
+        if (_isCasting.Value) return;
 
         Reset();
 
         _currentSpell = spellItemSO;
         _getExecutionParams = getExecutionParams;
         _isCasting.Value = true;
-        _pendingSpellsToExecute.Clear();
 
-        SpawnSpellServerRpc(spellItemSO.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome)); // pre-spawn all spells
+        _activeSpellNetObj = default;
+        _holdToCastSpell = null;
+
+        SpawnSpellServerRpc(spellItemSO.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome)); // pre-spawn the spell
 
         _castTimer = new Timer(spellItemSO.CastTime);
         _castTimer.OnTimerEnd += OnCastTimerEnd;
@@ -75,18 +78,15 @@ public class SpellCaster : NetworkBehaviour
         {
             _isCasting.Value = false;
 
-            foreach (var spellRef in new List<NetworkObjectReference>(_activeSpellNetObjs))
+            if (_activeSpellNetObj.TryGet(out NetworkObject spellObj) && spellObj.TryGetComponent(out ServerSpell serverSpell))
             {
-                if (spellRef.TryGet(out NetworkObject spellObj) && spellObj.TryGetComponent(out ServerSpell serverSpell))
+                if(serverSpell.SpellStateNV.Value == SpellState.Charging)
                 {
-                    if(serverSpell.SpellStateNV.Value == SpellState.Charging)
-                    {
-                        serverSpell.CancelSpellCharge();
-                    }
-                    else if (serverSpell.SpellStateNV.Value == SpellState.Casting)
-                    {
-                        serverSpell.EndSpellExternally();
-                    }
+                    serverSpell.CancelSpellCharge();
+                }
+                else if (serverSpell.SpellStateNV.Value == SpellState.Casting)
+                {
+                    serverSpell.EndSpellExternally();
                 }
             }
 
@@ -97,19 +97,18 @@ public class SpellCaster : NetworkBehaviour
     private void OnCastTimerEnd(object sender, EventArgs e)
     {
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
+        ExecuteSpell();
 
-        // Default: cast all spells at once
-        foreach (var spellRef in _pendingSpellsToExecute)
+        // Only reset if no HoldToCast spell is active
+        if (_holdToCastSpell == null)
         {
-            ExecuteSpell(spellRef);
+            Reset();
         }
-
-        Reset();
     }
 
-    private void ExecuteSpell(NetworkObjectReference spellNetObj)
+    private void ExecuteSpell()
     {
-        if (spellNetObj.TryGet(out NetworkObject actualSpell))
+        if (_activeSpellNetObj.TryGet(out NetworkObject actualSpell))
         {
             if (actualSpell.TryGetComponent(out ServerSpell serverSpell))
             {
@@ -122,7 +121,7 @@ public class SpellCaster : NetworkBehaviour
                 if (serverSpell.SpellData.Value.HoldToCast)
                 {
                     serverSpell.SpellStateNV.OnValueChanged += CheckForSpellEnd;
-                    _spellsWithEndCallbacks.Add(serverSpell);
+                    _holdToCastSpell = serverSpell;
                 }
             }
             else
@@ -140,17 +139,16 @@ public class SpellCaster : NetworkBehaviour
     {
         if (previousValue == SpellState.Casting && newValue == SpellState.Stopping)
         {
-            for (int i = _spellsWithEndCallbacks.Count - 1; i >= 0; i--)
+            // Call an event here for 
+            OnActiveHoldToCastSpellEnded?.Invoke(this, EventArgs.Empty);
+
+            Debug.Log($"HoldToCast Spell {NetworkObjectId} finished casting, resetting caster.");
+            if (_holdToCastSpell != null)
             {
-                var spell = _spellsWithEndCallbacks[i];
-                if (spell.SpellStateNV.Value == SpellState.Stopping)
-                {
-                    spell.SpellStateNV.OnValueChanged -= CheckForSpellEnd;
-                    _spellsWithEndCallbacks.RemoveAt(i);
-                    break;
-                }
+                _holdToCastSpell.SpellStateNV.OnValueChanged -= CheckForSpellEnd;
+                _holdToCastSpell = null;
             }
-            
+
             Reset();
         }
     }
@@ -182,7 +180,7 @@ public class SpellCaster : NetworkBehaviour
     {
         float timeout = 2f;
         float elapsed = 0f;
-        NetworkObject spellNetObj = null;
+        NetworkObject spellNetObj;
 
         while (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(spellNetObjId, out spellNetObj))
         {
@@ -204,9 +202,7 @@ public class SpellCaster : NetworkBehaviour
             yield break;
         }
 
-        var spellRef = new NetworkObjectReference(spellNetObj);
-        _pendingSpellsToExecute.Add(spellRef);
-        _activeSpellNetObjs.Add(spellRef);
+        _activeSpellNetObj = new NetworkObjectReference(spellNetObj);
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
@@ -218,17 +214,17 @@ public class SpellCaster : NetworkBehaviour
 
     private void Reset()
     {
+        Debug.Log($"Resetting SpellCaster for {NetworkObjectId}.");
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
         _castTimer.Reset();
 
-        foreach (var spell in _spellsWithEndCallbacks)
+        if (_holdToCastSpell != null)
         {
-            spell.SpellStateNV.OnValueChanged -= CheckForSpellEnd;
+            _holdToCastSpell.SpellStateNV.OnValueChanged -= CheckForSpellEnd;
+            _holdToCastSpell = null;
         }
 
-        _spellsWithEndCallbacks.Clear();
-        _pendingSpellsToExecute.Clear();
-        _activeSpellNetObjs.Clear();
+        _activeSpellNetObj = default;
         _cancelCast = false;
         _isCasting.Value = false; // centralized here
     }

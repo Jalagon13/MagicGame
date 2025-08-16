@@ -31,6 +31,7 @@ public class SpellCastController
         _player.SelectedItemIdNetworkVariable.OnValueChanged += OnItemSelectedChanged;
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
         _player.SpellCaster.IsCasting.OnValueChanged += OnIsCastingChanged;
+        _player.SpellCaster.OnActiveHoldToCastSpellEnded += SetCooldownForHoldToCastSpell;
 
         HotbarManager.Instance.OnFocusSlotUpdated += CheckForSelectedItemChange;
         GameInput.Instance.OnPrimaryAction += CheckForNotHeldDownPrimaryAction;
@@ -41,9 +42,16 @@ public class SpellCastController
         _player.SelectedItemIdNetworkVariable.OnValueChanged -= OnItemSelectedChanged;
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
         _player.SpellCaster.IsCasting.OnValueChanged -= OnIsCastingChanged;
+        _player.SpellCaster.OnActiveHoldToCastSpellEnded -= SetCooldownForHoldToCastSpell;
 
         HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSelectedItemChange;
         GameInput.Instance.OnPrimaryAction -= CheckForNotHeldDownPrimaryAction;
+    }
+
+    private void SetCooldownForHoldToCastSpell(object sender, EventArgs e)
+    {
+        var holdToCastSpell = GameManager.Instance.GetItemSOFromItemId(_player.SpellCaster.HoldToCastSpell.SpellData.Value.SpellItemId) as SpellItemSO;
+        _playerManaSystem.ApplySpellCooldown(holdToCastSpell);
     }
 
     private void OnIsCastingChanged(bool previousValue, bool newValue)
@@ -100,8 +108,11 @@ public class SpellCastController
         Vector2 baseDirection = (ActionManager.MouseWorldPosition - point).normalized;
         float angleOffset = UnityEngine.Random.Range(-totalAccuracy, totalAccuracy);
         Vector2 direction = Quaternion.Euler(0, 0, angleOffset) * baseDirection;
-        
-        _playerManaSystem.ApplySpellCooldown(_selectedSpell);
+
+        if(!_selectedSpell.HoldToCast)
+        {
+            _playerManaSystem.ApplySpellCooldown(_selectedSpell);
+        }
 
         return (point, direction);
     }
