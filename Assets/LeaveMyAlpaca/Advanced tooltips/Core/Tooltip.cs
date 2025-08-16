@@ -149,7 +149,7 @@ namespace AdvancedTooltips.Core
 		{
 			WandTooltipDisplayHandlerUI script = _instantiateHandler.InstantiateWandTooltipDisplay(customLayout);
 			script.WandName.text = spell.Name;
-			script.WandIcon.sprite = spell.SpellUIDisplaySprite;
+			script.WandIcon.sprite = spell.UiDisplay;
 
 			JustText($"<br>Value: {spell.GoldValue} Gold<br>" + spell.GetDescription(), Color.white, fontSize: fontSize, customLayout: script.StatLayout);
 			JustText($"{spell.Cooldown} s   cast delay"

@@ -13,6 +13,7 @@
 {c6c87658-7da4-4345-a9c7-a18f65958b36} event:/Magic/FireBurst
 {883fc80f-b18b-4d29-b3a7-3837f86149fc} event:/Magic/FireMiniBurst
 {4889d952-899b-41ec-b2ac-003aeeb3d25b} event:/Magic/FireWoosh
+{765e7bef-389f-4a30-8f2c-80eba0a0fcd3} event:/Magic/MagicDestruction
 {27611b75-4441-48c1-bfd7-0d75d4add366} event:/Magic/MagicWoosh
 {b11a4c29-c480-447a-82d3-b38cd6604312} event:/Magic/SpellHeal
 {6f9580b7-d103-488a-a87d-ab4d8194ab01} event:/Magic/SustainedElectricity
@@ -24,6 +25,7 @@
 {c370b08f-1a93-4bb3-8fa6-72074c22db89} event:/NPCs/DeerDamaged
 {055d1386-650b-445e-b82a-a550931d286b} event:/NPCs/DeerDeath
 {0030af96-a4e6-4ad1-961e-1c2dac4c5830} event:/NPCs/PixieDamaged
+{d9e8fb7d-552e-4d07-bbe3-17bfbc717472} event:/NPCs/Squish
 {fda3288e-4260-4d5f-bc9e-4c28914bf5c9} event:/Player/CoinPickup
 {c58166a2-af56-447d-b1ef-2bf6572239f1} event:/Player/FocusFloor
 {0dd2a955-5ec8-474c-aeca-e9d769790393} event:/Player/FocusWall
@@ -41,6 +43,7 @@
 {5b60b257-948e-4067-8fc9-32c96ce4d577} event:/UI/InventoryClose
 {ea7917f8-c58b-41a5-9792-a77921a50f37} event:/UI/InventoryOpen
 {c39a7923-63fa-4b12-81b4-4956961030ae} event:/UI/InventorySlotClicked
+{76dce295-49b0-4524-b4d7-99235409ecdd} event:/UI/SpellSelected
 {0b25faa5-e42c-43a8-81d3-e8f2a138499b} event:/WaterSplash
 {00f17176-1c7b-4316-ae3a-9e9eee863b1d} event:/WoodDestroyed
 {6c046813-16b7-47f5-8e38-663c39c5c886} event:/WoodHit

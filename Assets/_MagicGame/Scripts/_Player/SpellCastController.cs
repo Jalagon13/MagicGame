@@ -3,13 +3,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class SelectedSpellChangedEventArgs : EventArgs
+{
+    public SpellItemSO SelectedSpell { get; }
+    public int SelectedSpellIndex { get; }
+
+    public SelectedSpellChangedEventArgs(SpellItemSO selectedSpell, int selectedSpellIndex)
+    {
+        SelectedSpell = selectedSpell;
+        SelectedSpellIndex = selectedSpellIndex;
+    }
+}
+
+public class SpellArrayChangedEventArgs : EventArgs
+{
+    public List<SpellItemSO> SelectedSpellArray { get; }
+
+    public SpellArrayChangedEventArgs(List<SpellItemSO> selectedSpellArray)
+    {
+        SelectedSpellArray = selectedSpellArray;
+    }
+}
+
 public class SpellCastController
 {
+    public event EventHandler<SelectedSpellChangedEventArgs> OnSelectedSpellUpdated;
+    public event EventHandler<SpellArrayChangedEventArgs> OnSpellArrayUpdated;
     private static readonly float _postCastDelayTimerDuration = 0.15f;
 
     private Player _player;
     private WandItemSO _currentWandItemSO;
-    private List<SpellItemSO> _selectedSpellArray = new();
+    
+    private List<SpellItemSO> _spellArray = new();
+    public List<SpellItemSO> SpellArray => _spellArray;
+
+    private int _selectedSpellIndex = -1;
+    public int SelectedSpellIndex => _selectedSpellIndex;
+    
     private Timer _postCastDelayTimer;
 
     private PlayerManaSystem _playerManaSystem;
@@ -20,8 +50,6 @@ public class SpellCastController
     private SpellItemSO _selectedSpell;
     public SpellItemSO SelectedSpell => _selectedSpell;
     
-    private int _selectedSpellIndex;
-
     public SpellCastController(Player player)
     {
         _postCastDelayTimer = new(_postCastDelayTimerDuration);
@@ -35,6 +63,7 @@ public class SpellCastController
 
         HotbarManager.Instance.OnFocusSlotUpdated += CheckForSelectedItemChange;
         GameInput.Instance.OnPrimaryAction += CheckForNotHeldDownPrimaryAction;
+        GameInput.Instance.OnSpaceStarted += OnSpellWheelOpen;
     }
 
     public void Dispose()
@@ -46,6 +75,7 @@ public class SpellCastController
 
         HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSelectedItemChange;
         GameInput.Instance.OnPrimaryAction -= CheckForNotHeldDownPrimaryAction;
+        GameInput.Instance.OnSpaceStarted -= OnSpellWheelOpen;
     }
 
     private void SetCooldownForHoldToCastSpell(object sender, EventArgs e)
@@ -69,7 +99,7 @@ public class SpellCastController
 
         if (CanCast())
         {
-            SpellItemSO spell = _selectedSpellArray[_selectedSpellIndex];
+            SpellItemSO spell = _selectedSpell;
             if (_playerManaSystem.CanCastSpell(spell)) // Check if the first spell in the group can be cast SUBJECT TO CHANGE
             {
                 _player.SpellCaster.TryCastSpell(spell, GetExecutionParams);
@@ -79,7 +109,7 @@ public class SpellCastController
 
     private bool CanCast()
     {
-        if (_selectedSpellArray == null || _selectedSpellArray.Count == 0) return false;
+        if (_spellArray == null || _spellArray.Count == 0) return false;
 
         bool isOverUI = Pointer.IsOverUI();
         bool isOverInteractable = Pointer.IsOverInteractable();
@@ -90,12 +120,13 @@ public class SpellCastController
         bool isLoadingBiome = WorldManager.Instance.IsLoadingBiome;
 
         bool hasEnoughMana = false;
-        if (_selectedSpellArray.Count > 0)
+        if (_spellArray.Count > 0)
         {
             hasEnoughMana = _playerManaSystem.CanCastSpell(_selectedSpell); // Check if the first spell in the group can be cast SUBJECT TO CHANGE
         }
 
-        return !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && primaryHeldDown && !isCasting && !postCastDelayTimerRunning && !isLoadingBiome;
+        return !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && 
+        primaryHeldDown && !isCasting && !postCastDelayTimerRunning && !isLoadingBiome && !SpellWheelUI.SpellWheelOpen;
     }
 
     private (Vector3 spawnPoint, Vector3 direction) GetExecutionParams()
@@ -126,26 +157,44 @@ public class SpellCastController
             _currentWandItemSO = wandItemSO;
             SpellItemSO[] magicArray = (_currentWandInventoryItem as WandInventoryItem).MagicArray;
 
-            _selectedSpellArray = new();
+            _spellArray = new();
 
             for (int i = 0; i < magicArray.Length; i++)
             {
                 SpellItemSO item = magicArray[i];
-
-                _selectedSpellArray.Add(item);
+                _spellArray.Add(item);
             }
 
-            _selectedSpellIndex = 0; // Default to the first spell in the wand for now
-            _selectedSpell = magicArray.Length > 0 ? _selectedSpellArray[_selectedSpellIndex] : null; // Default set to the first spell in the group might change later
-            Debug.Log($"magic array length: {magicArray.Length}, _selectedSpell null?: {_selectedSpell == null}");
+            _selectedSpellIndex = 0;
+            _selectedSpell = _spellArray[_selectedSpellIndex]; // Default set to the first spell in the group might change later
+
+            OnSpellArrayUpdated?.Invoke(this, new SpellArrayChangedEventArgs(_spellArray));
+            OnSelectedSpellUpdated?.Invoke(this, new SelectedSpellChangedEventArgs(_selectedSpell, _selectedSpellIndex));
         }
         else
         {
             _currentWandInventoryItem = null;
             _currentWandItemSO = null;
-            _selectedSpellArray = null;
+            _spellArray = null;
             _selectedSpell = null;
+            _selectedSpellIndex = -1;
+            
+            OnSpellArrayUpdated?.Invoke(this, new SpellArrayChangedEventArgs(_spellArray));
+            OnSelectedSpellUpdated?.Invoke(this, new SelectedSpellChangedEventArgs(_selectedSpell, _selectedSpellIndex));
         }
+    }
+
+    public void SelectSpellByIndex(int index)
+    {
+        if (_spellArray == null || _spellArray.Count == 0 || index < 0 || index >= _spellArray.Count)
+        {
+            Debug.LogError($"SelectSpellByIndex: Invalid index or spell array is empty for index {index}");
+            return;
+        }
+
+        _selectedSpellIndex = index;
+        _selectedSpell = _spellArray[_selectedSpellIndex];
+        OnSelectedSpellUpdated?.Invoke(this, new SelectedSpellChangedEventArgs(_selectedSpell, _selectedSpellIndex));
     }
 
     private void OnPlayerLifeStateChanged(LifeState previousValue, LifeState newValue)
@@ -162,6 +211,11 @@ public class SpellCastController
         {
             _player.SpellCaster.TryToCancelCast();
         }
+    }
+
+    private void OnSpellWheelOpen(object sender, EventArgs e)
+    {
+        _player.SpellCaster.TryToCancelCast();
     }
 
     private void CheckForSelectedItemChange(object sender, HotbarManager.OnFocusItemSetEventArgs e)

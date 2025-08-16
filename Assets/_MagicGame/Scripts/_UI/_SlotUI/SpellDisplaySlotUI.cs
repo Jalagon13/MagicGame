@@ -8,27 +8,27 @@ using UnityEngine.UI;
 
 public class SpellDisplaySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [field: SerializeField] public Image CooldownUI { get; private set; }
-    [field: SerializeField] public TextMeshProUGUI ControlText { get; private set; }
+    [SerializeField] 
+    private Image _cooldownUI;
+    
+    [SerializeField] 
+    private Color _selectedColor = Color.yellow;
 
+    private Color _defaultColor;
     private SpellItemSO _spell;
-    private int _spellId;
     private Image _spellIcon;
     private Image _background;
     private bool _hovered;
-
-    private Dictionary<int, string> _controlTexts = new Dictionary<int, string>
-    {
-        { 0, $"Left<br>Click" },
-        { 1, $"Right<br>Click" },
-        { 2, "Shift" },
-        { 3, "Space" }
-    };
+    private int _spellIndex;
     
     private void Awake()
     {
         _spellIcon = transform.GetChild(0).GetComponent<Image>();
         _background = GetComponent<Image>();
+        _defaultColor = _background.color;
+        
+        Player.Instance.SpellCastController.PlayerManaSystem.OnSpellCooldownTimersUpdated += UpdateCooldownDisplay;
+        Player.Instance.SpellCastController.OnSelectedSpellUpdated += OnSelectedSpellUpdated;
     }
 
     private void OnDisable()
@@ -41,37 +41,48 @@ public class SpellDisplaySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     private void Start()
     {
-        CooldownUI.enabled = false;
-        Player.Instance.SpellCaster.OnSpellCooldownTimersUpdated += UpdateCooldownDisplay;
+        _cooldownUI.enabled = false;
     }
 
 
     private void OnDestroy()
     {
-        Player.Instance.SpellCaster.OnSpellCooldownTimersUpdated -= UpdateCooldownDisplay;
+        Player.Instance.SpellCastController.PlayerManaSystem.OnSpellCooldownTimersUpdated -= UpdateCooldownDisplay;
+        Player.Instance.SpellCastController.OnSelectedSpellUpdated -= OnSelectedSpellUpdated;
+    }
+
+    private void OnSelectedSpellUpdated(object sender, SelectedSpellChangedEventArgs e)
+    {
+        if (e.SelectedSpellIndex == _spellIndex)
+        {
+            _background.color = _selectedColor;
+        }
+        else
+        {
+            _background.color = _defaultColor;
+        }
     }
 
     private void UpdateCooldownDisplay(object sender, EventArgs e)
     {
-        // if(Player.LocalClientInstance.SpellCaster.SpellCoolDownTimers.ContainsKey(_spellId))
-        // {
-        //     Timer spellCdTimer = Player.LocalClientInstance.SpellCaster.SpellCoolDownTimers[_spellId];
-        //     CooldownUI.enabled = true;
-        //     CooldownUI.fillAmount = spellCdTimer.RemainingSeconds / spellCdTimer.Duration;
-        // }
-        // else
-        // {
-        //     CooldownUI.enabled = false;
-        // }
+        if(Player.Instance.SpellCastController.PlayerManaSystem.SpellCoolDownTimers.ContainsKey(_spell))
+        {
+            Timer spellCdTimer = Player.Instance.SpellCastController.PlayerManaSystem.SpellCoolDownTimers[_spell];
+            _cooldownUI.enabled = true;
+            _cooldownUI.fillAmount = spellCdTimer.RemainingSeconds / spellCdTimer.Duration;
+        }
+        else
+        {
+            _cooldownUI.enabled = false;
+        }
     }
 
-    public void SetSpell(SpellItemSO spell, int controlIndex)
+    public void SetSpell(SpellItemSO spell, int spellIndex)
     {
         _spell = spell;
-        _spellIcon.sprite = _spell != null ? _spell.SpellUIDisplaySprite : null;
+        _spellIcon.sprite = _spell != null ? _spell.UiDisplay : null;
         _spellIcon.enabled = _spell != null;
-        _spellId = GameManager.Instance.GetItemIdFromItemSO(_spell);
-        ControlText.text = _controlTexts.ContainsKey(controlIndex) ? _controlTexts[controlIndex] : "";
+        _spellIndex = spellIndex;
     }
 
     public void OnPointerEnter(PointerEventData eventData)

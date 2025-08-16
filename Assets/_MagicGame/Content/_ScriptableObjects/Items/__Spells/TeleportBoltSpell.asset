@@ -18,7 +18,7 @@ MonoBehaviour:
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <SpellPrefab>k__BackingField: {fileID: 433218415224276779, guid: 7b76a216d688c40859abed843d362a5f, type: 3}
-  <SpellUIDisplaySprite>k__BackingField: {fileID: -762693607845688436, guid: 927ec2a7855fa4fabb244f57c08e2cec, type: 3}
+  <SpellUIDisplaySprite>k__BackingField: {fileID: 1055845359, guid: 6b31da2f94c4a4f20b4c4f66b75905fc, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 8285152488836000937, guid: 8175636c29a52422d8069d30cf23c5b6, type: 3}
   <SpellOnCastSound>k__BackingField:
     Guid:
@@ -34,8 +34,9 @@ MonoBehaviour:
       Data3: 1963841471
       Data4: 1725148628
     Path: event:/Magic/MagicWoosh
+  <ManaDrainProbability>k__BackingField: 0.489
   <CastTime>k__BackingField: 0.2
-  <ManaCost>k__BackingField: 20
+  <Cooldown>k__BackingField: 0.5
   <Damage>k__BackingField: 0
   <Knockback>k__BackingField: 3
   <BounceCount>k__BackingField: 0
@@ -44,4 +45,4 @@ MonoBehaviour:
   <Speed>k__BackingField: 10
   <HasteMultiplier>k__BackingField: -0.25
   <Scatter>k__BackingField: 2
-  <OnlyContinueAfterSpellEnds>k__BackingField: 0
+  <HoldToCast>k__BackingField: 0

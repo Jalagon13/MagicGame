@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class SpellDisplayUI : NetworkBehaviour
 {
-    [field: SerializeField] public GameObject SpellDisplaySlotUIPrefab { get; private set; }
+    [SerializeField] 
+    private GameObject _spellDisplaySlotUIPrefab;
     
     private Dictionary<int, SpellDisplaySlotUI> _spellSlotDatabase = new Dictionary<int, SpellDisplaySlotUI>();
 
@@ -26,7 +27,7 @@ public class SpellDisplayUI : NetworkBehaviour
 
         if (Player.Instance != null)
         {
-            // Player.LocalClientInstance.SpellInputHandler.OnSpellArrayUpdated -= UpdateSpellDisplay;
+            Player.Instance.SpellCastController.OnSpellArrayUpdated -= UpdateSpellDisplay;
         }
     }
 
@@ -34,30 +35,30 @@ public class SpellDisplayUI : NetworkBehaviour
     {
         if(NetworkManager.LocalClientId != obj) return;
 
-        // Player.LocalClientInstance.SpellInputHandler.OnSpellArrayUpdated += UpdateSpellDisplay;
+        Player.Instance.SpellCastController.OnSpellArrayUpdated += UpdateSpellDisplay;
     }
 
-    // private void UpdateSpellDisplay(object sender, EventArgs e)
-    // {
-    //     ClearSpells();
+    private void UpdateSpellDisplay(object sender, EventArgs e)
+    {
+        ClearSpells();
 
-    //     if (Player.LocalClientInstance.SpellInputHandler.EquippedSpells != null)
-    //     {
-    //         for(int i = 0; i < Player.LocalClientInstance.SpellInputHandler.EquippedSpells.Length; i++)
-    //         {
-    //             if(Player.LocalClientInstance.SpellInputHandler.EquippedSpells[i] == null) continue;
+        if (Player.Instance.SpellCastController.SpellArray != null)
+        {
+            for(int i = 0; i < Player.Instance.SpellCastController.SpellArray.Count; i++)
+            {
+                if(Player.Instance.SpellCastController.SpellArray[i] == null) continue;
 
-    //             SpellItemSO spell = Player.LocalClientInstance.SpellInputHandler.EquippedSpells[i];
+                SpellItemSO spell = Player.Instance.SpellCastController.SpellArray[i];
 
-    //             GameObject spellDisplaySlotUI = Instantiate(SpellDisplaySlotUIPrefab, transform);
-    //             SpellDisplaySlotUI slotUI = spellDisplaySlotUI.GetComponent<SpellDisplaySlotUI>();
-    //             slotUI.SetSpell(spell, i);
+                GameObject spellDisplaySlotUI = Instantiate(_spellDisplaySlotUIPrefab, transform);
+                SpellDisplaySlotUI slotUI = spellDisplaySlotUI.GetComponent<SpellDisplaySlotUI>();
+                slotUI.SetSpell(spell, i);
 
-    //             int spellId = GameManager.Instance.GetItemIdFromItemSO(spell);
-    //             _spellSlotDatabase[spellId] = slotUI;
-    //         }
-    //     }
-    // }
+                int spellId = GameManager.Instance.GetItemIdFromItemSO(spell);
+                _spellSlotDatabase[spellId] = slotUI;
+            }
+        }
+    }
 
     private void ClearSpells()
     {

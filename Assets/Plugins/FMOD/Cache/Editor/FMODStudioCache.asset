@@ -149,10 +149,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/UI.bank
   Name: UI
   StudioPath: bank:/UI
-  lastModified: 638728486700914830
+  lastModified: 638909586917010161
   FileSizes:
   - Name: Desktop
-    Value: 21696
+    Value: 34752
   Exists: 1
 --- !u!114 &-5868496055694042480
 MonoBehaviour:
@@ -768,12 +768,13 @@ MonoBehaviour:
   - {fileID: 6233997563608643097}
   - {fileID: -5605479572757667641}
   - {fileID: -4706342772913996437}
+  - {fileID: 8821989022261634387}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6702288669578411488}
   StringsBanks:
   - {fileID: 5574528013551363316}
-  cacheTime: 638899058210396239
+  cacheTime: 638909586917010161
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:
@@ -1053,10 +1054,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638898983466434265
+  lastModified: 638909581330983340
   FileSizes:
   - Name: Desktop
-    Value: 2784
+    Value: 2828
   Exists: 1
 --- !u!114 &5813129133648053243
 MonoBehaviour:
@@ -1181,7 +1182,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638898983466396389
+  lastModified: 638909581330943397
   FileSizes:
   - Name: Desktop
     Value: 3619520
@@ -1287,6 +1288,33 @@ MonoBehaviour:
     Data4: 1725148628
   Banks:
   - {fileID: -2722816956503410227}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8821989022261634387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/SpellSelected
+  m_EditorClassIdentifier: 
+  Path: event:/UI/SpellSelected
+  Guid:
+    Data1: 1994187413
+    Data2: 1160006064
+    Data3: 597284788
+    Data4: -571733676
+  Banks:
+  - {fileID: -7513412204427243761}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerManaSystem
 {
+    public event EventHandler OnSpellCooldownTimersUpdated;
     public event EventHandler<ManaChangedEventArgs> OnManaChanged;
 
     public class ManaChangedEventArgs : EventArgs
@@ -21,6 +22,7 @@ public class PlayerManaSystem
     private int _maxMana;
 
     private Dictionary<SpellItemSO, Timer> _spellCooldowns = new();
+    public Dictionary<SpellItemSO, Timer> SpellCoolDownTimers => _spellCooldowns;
 
 
     public PlayerManaSystem(int maxMana)
@@ -31,9 +33,19 @@ public class PlayerManaSystem
 
     public void Tick(float deltaTime)
     {
-        // Tick spell cooldowns
+        bool anyCooldownRunning = false;
+
         foreach (var kvp in _spellCooldowns)
+        {
             kvp.Value.Tick(deltaTime);
+            if (kvp.Value.IsRunning)
+                anyCooldownRunning = true;
+        }
+
+        if (anyCooldownRunning)
+        {
+            OnSpellCooldownTimersUpdated?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public bool CanCastSpell(SpellItemSO spell)
@@ -43,10 +55,10 @@ public class PlayerManaSystem
 
         if (_spellCooldowns.TryGetValue(spell, out Timer cooldown) && cooldown.IsRunning)
             return false;
-        
+
         return true;
     }
-    
+
     public void ApplySpellCooldown(SpellItemSO spell)
     {
         if (_spellCooldowns.ContainsKey(spell))
@@ -66,7 +78,6 @@ public class PlayerManaSystem
         bool drained = spell.ManaDrainProbability > UnityEngine.Random.value;
         _currentMana -= drained ? 1 : 0;
         OnManaChanged?.Invoke(this, new ManaChangedEventArgs(_currentMana, _maxMana));
-        Debug.Log($"Spell {spell.name} mana drain: {drained}, CurrentMana: {_currentMana}");
     }
 
     public void AddMana(int amount)

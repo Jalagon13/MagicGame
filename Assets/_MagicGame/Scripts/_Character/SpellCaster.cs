@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class SpellCaster : NetworkBehaviour
 {
-    public event EventHandler OnSpellCooldownTimersUpdated;
     public event EventHandler OnActiveHoldToCastSpellEnded;
 
     [SerializeField]
@@ -142,7 +141,6 @@ public class SpellCaster : NetworkBehaviour
             // Call an event here for 
             OnActiveHoldToCastSpellEnded?.Invoke(this, EventArgs.Empty);
 
-            Debug.Log($"HoldToCast Spell {NetworkObjectId} finished casting, resetting caster.");
             if (_holdToCastSpell != null)
             {
                 _holdToCastSpell.SpellStateNV.OnValueChanged -= CheckForSpellEnd;
@@ -214,7 +212,6 @@ public class SpellCaster : NetworkBehaviour
 
     private void Reset()
     {
-        Debug.Log($"Resetting SpellCaster for {NetworkObjectId}.");
         _castTimer.OnTimerEnd -= OnCastTimerEnd;
         _castTimer.Reset();
 

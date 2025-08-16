@@ -12,9 +12,6 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("Actual Prefab for the projectile.")]
 	[field: SerializeField] public ServerSpell SpellPrefab { get; private set; }
 	
-	[field: Tooltip("Spell Icon that will be displayed as the actual spell when equipped")]
-	[field: SerializeField] public Sprite SpellUIDisplaySprite { get; private set; }
-
 	[field: Tooltip("Spell charging animation.")]
 	[field: SerializeField] public GameObject ChargeVFX { get; private set; }
 
