@@ -14,7 +14,7 @@ public class PlayerSpellCastingState : BaseState
     protected override void EnterState(AIStateData stateData)
     {
         // Debug.Log($"Player entering spell casting");
-        float hasteMultiplier = Player.Instance.SpellCastController.SelectedSpell.HasteMultiplier;
+        float hasteMultiplier = Player.Instance.SpellCastController.SelectedWandInventoryItem.GetSelectedSpell().HasteMultiplier;
 
         Buff castingMoveBuff = new(
             _ctx.ServerCharacter.Stats.MovementSpeed,

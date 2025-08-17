@@ -42,13 +42,13 @@ public class SpellDisplayUI : NetworkBehaviour
     {
         ClearSpells();
 
-        if (Player.Instance.SpellCastController.SpellArray != null)
+        if (Player.Instance.SpellCastController.SelectedWandInventoryItem != null)
         {
-            for(int i = 0; i < Player.Instance.SpellCastController.SpellArray.Count; i++)
+            for(int i = 0; i < Player.Instance.SpellCastController.SelectedWandInventoryItem.MagicArray.Length; i++)
             {
-                if(Player.Instance.SpellCastController.SpellArray[i] == null) continue;
+                if(Player.Instance.SpellCastController.SelectedWandInventoryItem.MagicArray[i] == null) continue;
 
-                SpellItemSO spell = Player.Instance.SpellCastController.SpellArray[i];
+                SpellItemSO spell = Player.Instance.SpellCastController.SelectedWandInventoryItem.MagicArray[i];
 
                 GameObject spellDisplaySlotUI = Instantiate(_spellDisplaySlotUIPrefab, transform);
                 SpellDisplaySlotUI slotUI = spellDisplaySlotUI.GetComponent<SpellDisplaySlotUI>();

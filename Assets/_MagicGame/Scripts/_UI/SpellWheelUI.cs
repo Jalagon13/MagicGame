@@ -23,6 +23,8 @@ public class SpellWheelUI : MonoBehaviour
     private float _selectedScale = 1.0f;
     [SerializeField]
     private float _lerpDuration = 0.25f;
+    [SerializeField]
+    private float _textYOffset = 50f;
     
     [Header("Audio Settings")]
     [SerializeField] 
@@ -116,15 +118,30 @@ public class SpellWheelUI : MonoBehaviour
         if (closestUI != _lastClosestUI)
         {
             _lastClosestUI = closestUI;
-            SpellItemSO newSpell = Player.Instance.SpellCastController.SpellArray[_activeSpellUIDict[closestUI]];
+            SpellItemSO newSpell = Player.Instance.SpellCastController.SelectedWandInventoryItem.MagicArray[_activeSpellUIDict[closestUI]];
             _selectedSpellText.text = newSpell.Name;
             SoundManager.Instance.PlayOneShot(_spellSelectedSound, transform.position);
+        }
+
+        if (_spellWheelOpen && closestUI != null)
+        {
+            // Reposition _selectedSpellText above the selected spell UI
+            // Convert closestUI world position to screen position
+            Vector3 screenPos = RectTransformUtility.WorldToScreenPoint(
+                null, // use null for main display
+                closestUI.transform.position
+            );
+            // Offset by (0, _textYOffset)
+            screenPos += new Vector3(0, _textYOffset, 0);
+            _selectedSpellText.rectTransform.position = screenPos;
         }
     }
 
     private void OpenSpellWheel(object sender, EventArgs e)
     {
-        List<SpellItemSO> spellList = Player.Instance.SpellCastController.SpellArray;
+        _selectedSpellText.enabled = false;
+
+        SpellItemSO[] spellList = Player.Instance.SpellCastController.SelectedWandInventoryItem.MagicArray;
 
         _numOfSpells = 0;
         foreach (SpellItemSO spell in spellList)
@@ -141,7 +158,7 @@ public class SpellWheelUI : MonoBehaviour
             float angleOffset = 90f;
             List<Tweener> tweens = new List<Tweener>();
 
-            for (int i = 0; i < spellList.Count; i++)
+            for (int i = 0; i < spellList.Length; i++)
             {
                 SpellItemSO spell = spellList[i];
                 
@@ -181,22 +198,26 @@ public class SpellWheelUI : MonoBehaviour
             {
                 DOTween.Sequence()
                     .AppendInterval(_lerpDuration)
-                    .OnComplete(() => { _spellWheelOpen = true; });
+                    .OnComplete(() => { _spellWheelOpen = true; _selectedSpellText.enabled = true; });
             }
             else
             {
                 _spellWheelOpen = true;
+                _selectedSpellText.enabled = true;
             }
         }
         else
         {
             transform.GetChild(0).gameObject.SetActive(true);
             _spellWheelOpen = true;
+            _selectedSpellText.enabled = true;
         }
     }
 
     private void CloseSpellWheel(object sender, EventArgs e)
     {
+        _selectedSpellText.enabled = false;
+
         SoundManager.Instance.PlayOneShot(_spellWheelCloseSound, transform.position);
 
         // Force closest UI detection even during lerp
@@ -236,7 +257,7 @@ public class SpellWheelUI : MonoBehaviour
         }
 
         // Clamp to valid range just in case
-        selectedSpellIndex = Mathf.Clamp(selectedSpellIndex, 0, Player.Instance.SpellCastController.SpellArray.Count - 1);
+        selectedSpellIndex = Mathf.Clamp(selectedSpellIndex, 0, Player.Instance.SpellCastController.SelectedWandInventoryItem.MagicArray.Length - 1);
 
         Player.Instance.SpellCastController.SelectSpellByIndex(selectedSpellIndex);
 

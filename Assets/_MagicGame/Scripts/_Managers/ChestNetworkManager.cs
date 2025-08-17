@@ -8,11 +8,12 @@ public struct SyncItemData : IEquatable<SyncItemData>, INetworkSerializable
 	public int ItemId;
 	public int Quantity;
 	public List<int> MagicArray;
+	public int SelectedSpellIndex;
 
 	public bool Equals(SyncItemData other)
 	{
 		// Check if basic properties are equal
-		if (ItemId != other.ItemId || Quantity != other.Quantity)
+		if (ItemId != other.ItemId || Quantity != other.Quantity || SelectedSpellIndex != other.SelectedSpellIndex)
 			return false;
 
 		// Check if both MagicArrays are either null or have the same count
@@ -57,6 +58,8 @@ public struct SyncItemData : IEquatable<SyncItemData>, INetworkSerializable
 				MagicArray.Add(value);
 			}
 		}
+
+		serializer.SerializeValue(ref SelectedSpellIndex);
 	}
 }
 
@@ -167,6 +170,8 @@ public class ChestNetworkManager : NetworkBehaviour
 		{
 			List<int> magicArray = new();
 
+			int selectedSpellIndex = -1;
+
 			if (invItem is WandInventoryItem wandInventoryItem)
 			{
 				Debug.Log($"Found a wand to convert {wandInventoryItem.Item.Name}");
@@ -175,6 +180,8 @@ public class ChestNetworkManager : NetworkBehaviour
 				{
 					magicArray.Add(wandInventoryItem.MagicArray[i] != null ? GameManager.Instance.GetItemIdFromItemSO(wandInventoryItem.MagicArray[i]) : -1);
 				}
+
+				selectedSpellIndex = wandInventoryItem.SelectedSpellIndex;
 			}
 			
 			if(magicArray.Count > 0)
@@ -186,7 +193,8 @@ public class ChestNetworkManager : NetworkBehaviour
 			{
 				ItemId = GameManager.Instance.GetItemIdFromItemSO(invItem.Item),
 				Quantity = invItem.Quantity,
-				MagicArray = magicArray
+				MagicArray = magicArray,
+				SelectedSpellIndex = selectedSpellIndex
 			});
 		}
 
@@ -203,8 +211,8 @@ public class ChestNetworkManager : NetworkBehaviour
 			
 			if(invItem.Item is WandItemSO wandItemSO)
 			{
-				var wandInventoryItem = new WandInventoryItem(GameManager.Instance.GetItemSOFromItemId(syncItem.ItemId), syncItem.Quantity, wandItemSO.Capacity);
-			
+				var wandInventoryItem = new WandInventoryItem(GameManager.Instance.GetItemSOFromItemId(syncItem.ItemId), syncItem.Quantity, wandItemSO.Capacity, syncItem.SelectedSpellIndex);
+
 				Debug.Log($"Found a wand to turn to game data {invItem.Item.Name}");
 			
 				for (int i = 0; i < syncItem.MagicArray.Count; i++)
@@ -213,6 +221,11 @@ public class ChestNetworkManager : NetworkBehaviour
 					{
 						wandInventoryItem.SetMagic(GameManager.Instance.GetItemSOFromItemId(syncItem.MagicArray[i]) as SpellItemSO, i);
 					}
+				}
+
+				if(syncItem.SelectedSpellIndex >= 0 && syncItem.SelectedSpellIndex < wandItemSO.Capacity)
+				{
+					wandInventoryItem.SetSelectedSpellIndex(syncItem.SelectedSpellIndex);
 				}
 
 				chestItemData.Add(wandInventoryItem);

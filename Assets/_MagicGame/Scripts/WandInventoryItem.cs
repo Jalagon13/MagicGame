@@ -6,11 +6,16 @@ public class WandInventoryItem : InventoryItem
 {
 	public event EventHandler OnWandContentsUpdated;
 	
-	[field: SerializeField] public SpellItemSO[] MagicArray { get; private set; }
+	[field: SerializeField] 
+	public SpellItemSO[] MagicArray { get; private set; }
+	
+	[HideInInspector]
+	public int SelectedSpellIndex { get; private set; }
 
-	public WandInventoryItem(ItemSO itemSO, int quantity, int capacity) : base(itemSO, quantity)
+	public WandInventoryItem(ItemSO itemSO, int quantity, int capacity, int selectedSpellIndex) : base(itemSO, quantity)
 	{
 		MagicArray = new SpellItemSO[capacity];
+		SelectedSpellIndex = selectedSpellIndex;
 	}
 	
 	public void ClearWandContentsUpdatedListeners()
@@ -60,5 +65,39 @@ public class WandInventoryItem : InventoryItem
 		OnWandContentsUpdated?.Invoke(this, EventArgs.Empty);
 		
 		return swappedMagic;
+	}
+	
+	public void SetSelectedSpellIndex(int index)
+	{
+		if (index < 0 || index >= MagicArray.Length)
+		{
+			Debug.LogError($"Selected spell index out of bounds: {index}");
+			return;
+		}
+
+		SelectedSpellIndex = index;
+	}
+	
+	public bool HasSpells()
+	{
+		foreach (var spell in MagicArray)
+		{
+			if (spell != null)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public SpellItemSO GetSelectedSpell()
+	{
+		if (SelectedSpellIndex < 0 || SelectedSpellIndex >= MagicArray.Length)
+		{
+			Debug.LogError($"Selected spell index out of bounds: {SelectedSpellIndex}");
+			return null;
+		}
+
+		return MagicArray[SelectedSpellIndex];
 	}
 }

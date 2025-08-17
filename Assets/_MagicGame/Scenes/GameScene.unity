@@ -3624,10 +3624,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spellWheelSlotUIPrefab: {fileID: 9083337564202707195, guid: 007e1f76b77e54612a948f116baa95e4, type: 3}
-  _distanceFromCenter: 200
+  _distanceFromCenter: 175
   _defaultScale: 0.5
   _selectedScale: 1
   _lerpDuration: 0.125
+  _textYOffset: 80
   _spellSelectedSound:
     Guid:
       Data1: 765158737
@@ -5541,10 +5542,10 @@ RectTransform:
   - {fileID: 830242655}
   - {fileID: 1945104450}
   - {fileID: 972672485}
-  - {fileID: 998176802}
-  - {fileID: 849543218}
   - {fileID: 633998776}
+  - {fileID: 998176802}
   - {fileID: 383862893}
+  - {fileID: 849543218}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7303,13 +7304,12 @@ MonoBehaviour:
     <MagicArray>k__BackingField:
     - {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
     - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
-    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
   - Item: {fileID: 11400000, guid: c4927bf03814a4704890caffd32c85df, type: 2}
     Quantity: 1
     <MagicArray>k__BackingField:
     - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
     - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
-    - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
+    - {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
   _startingItems:
   - Item: {fileID: 11400000, guid: fe217e765840a43b5b9acff0a1269c2f, type: 2}
     Quantity: 1
@@ -8684,7 +8684,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 770, y: 14.999998}
+  m_AnchoredPosition: {x: 735, y: 14.999998}
   m_SizeDelta: {x: 800, y: 70}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &998176803
@@ -8707,8 +8707,8 @@ MonoBehaviour:
   m_ChildAlignment: 3
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 55, y: 55}
-  m_Spacing: {x: 10, y: 0}
+  m_CellSize: {x: 60, y: 60}
+  m_Spacing: {x: 15, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!114 &998176804
@@ -16721,7 +16721,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -225}
+  m_AnchoredPosition: {x: 0, y: -275}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2119142543

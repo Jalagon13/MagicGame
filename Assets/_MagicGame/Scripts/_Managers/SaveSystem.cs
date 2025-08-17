@@ -196,6 +196,7 @@ public class SaveSystem : MonoBehaviour
 						SlotIndex = i,
 						ItemId = GameManager.Instance.GetItemIdFromItemSO(chestData.Value[i].Item),
 						Quantity = chestData.Value[i].Quantity,
+						SelectedSpellIndex = chestData.Value[i] is WandInventoryItem wandInvItem ? wandInvItem.SelectedSpellIndex : -1,
 						MagicArray = magicArray
 					});
 				}
@@ -373,7 +374,7 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 				
 				if(itemToAdd is WandItemSO wandItemSO)
 				{
-					WandInventoryItem wandInventoryItem = new WandInventoryItem(itemToAdd, item.Quantity, wandItemSO.Capacity);
+					WandInventoryItem wandInventoryItem = new WandInventoryItem(itemToAdd, item.Quantity, wandItemSO.Capacity, item.SelectedSpellIndex);
 
 					for (int i = 0; i < item.MagicArray.Count; i++)
 					{

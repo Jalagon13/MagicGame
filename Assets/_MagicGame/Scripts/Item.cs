@@ -139,7 +139,7 @@ public class Item : NetworkBehaviour
 		
 		if(itemSO is WandItemSO wandItemSO)
 		{
-			WandInventoryItem wandInventoryItem = new(itemSO, syncItemData.Quantity, wandItemSO.Capacity);
+			WandInventoryItem wandInventoryItem = new(itemSO, syncItemData.Quantity, wandItemSO.Capacity, syncItemData.SelectedSpellIndex);
 			
 			for (int i = 0; i < wandInventoryItem.MagicArray.Length; i++)
 			{

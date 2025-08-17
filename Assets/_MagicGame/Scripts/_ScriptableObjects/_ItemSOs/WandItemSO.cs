@@ -16,7 +16,7 @@ public class WandItemSO : ItemSO
 	
 	public override InventoryItem CreateInventoryItem(int quantity)
 	{
-		return new WandInventoryItem(this, quantity, Capacity);
+		return new WandInventoryItem(this, quantity, Capacity, -1);
 	}
 
 	public override string GetDescription()

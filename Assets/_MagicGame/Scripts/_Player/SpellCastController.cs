@@ -17,9 +17,9 @@ public class SelectedSpellChangedEventArgs : EventArgs
 
 public class SpellArrayChangedEventArgs : EventArgs
 {
-    public List<SpellItemSO> SelectedSpellArray { get; }
+    public SpellItemSO[] SelectedSpellArray { get; }
 
-    public SpellArrayChangedEventArgs(List<SpellItemSO> selectedSpellArray)
+    public SpellArrayChangedEventArgs(SpellItemSO[] selectedSpellArray)
     {
         SelectedSpellArray = selectedSpellArray;
     }
@@ -34,26 +34,18 @@ public class SpellCastController
     private Player _player;
     private WandItemSO _currentWandItemSO;
     
-    private List<SpellItemSO> _spellArray = new();
-    public List<SpellItemSO> SpellArray => _spellArray;
-
-    private int _selectedSpellIndex = -1;
-    public int SelectedSpellIndex => _selectedSpellIndex;
-    
     private Timer _postCastDelayTimer;
 
     private PlayerManaSystem _playerManaSystem;
     public PlayerManaSystem PlayerManaSystem => _playerManaSystem;
 
-    private InventoryItem _currentWandInventoryItem;
+    private WandInventoryItem _selectedWandInventoryItem;
+    public WandInventoryItem SelectedWandInventoryItem => _selectedWandInventoryItem;
 
-    private SpellItemSO _selectedSpell;
-    public SpellItemSO SelectedSpell => _selectedSpell;
-    
     public SpellCastController(Player player)
     {
-        _postCastDelayTimer = new(_postCastDelayTimerDuration);
         _player = player;
+        _postCastDelayTimer = new(_postCastDelayTimerDuration);
         _playerManaSystem = new(player.ServerCharacter.Data.BaseMana);
 
         _player.SelectedItemIdNetworkVariable.OnValueChanged += OnItemSelectedChanged;
@@ -99,7 +91,7 @@ public class SpellCastController
 
         if (CanCast())
         {
-            SpellItemSO spell = _selectedSpell;
+            SpellItemSO spell = _selectedWandInventoryItem.GetSelectedSpell();
             if (_playerManaSystem.CanCastSpell(spell)) // Check if the first spell in the group can be cast SUBJECT TO CHANGE
             {
                 _player.SpellCaster.TryCastSpell(spell, GetExecutionParams);
@@ -109,7 +101,7 @@ public class SpellCastController
 
     private bool CanCast()
     {
-        if (_spellArray == null || _spellArray.Count == 0) return false;
+        if (_selectedWandInventoryItem == null || !_selectedWandInventoryItem.HasSpells()) return false;
 
         bool isOverUI = Pointer.IsOverUI();
         bool isOverInteractable = Pointer.IsOverInteractable();
@@ -118,12 +110,7 @@ public class SpellCastController
         bool isCasting = _player.SpellCaster.IsCasting.Value;
         bool postCastDelayTimerRunning = _postCastDelayTimer.IsRunning;
         bool isLoadingBiome = WorldManager.Instance.IsLoadingBiome;
-
-        bool hasEnoughMana = false;
-        if (_spellArray.Count > 0)
-        {
-            hasEnoughMana = _playerManaSystem.CanCastSpell(_selectedSpell); // Check if the first spell in the group can be cast SUBJECT TO CHANGE
-        }
+        bool hasEnoughMana = _playerManaSystem.CanCastSpell(_selectedWandInventoryItem.GetSelectedSpell());
 
         return !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && 
         primaryHeldDown && !isCasting && !postCastDelayTimerRunning && !isLoadingBiome && !SpellWheelUI.SpellWheelOpen;
@@ -132,7 +119,7 @@ public class SpellCastController
     private (Vector3 spawnPoint, Vector3 direction) GetExecutionParams()
     {
         float wandAccuracy = _currentWandItemSO?.Accuracy ?? 0f;
-        float spellAccuracy = _selectedSpell.Scatter;
+        float spellAccuracy = _selectedWandInventoryItem.GetSelectedSpell().Scatter;
 
         float totalAccuracy = Mathf.Max(0f, wandAccuracy + spellAccuracy);
         Vector2 point = _player.PlayerHand.SpellSpawnTransform.position;
@@ -140,9 +127,9 @@ public class SpellCastController
         float angleOffset = UnityEngine.Random.Range(-totalAccuracy, totalAccuracy);
         Vector2 direction = Quaternion.Euler(0, 0, angleOffset) * baseDirection;
 
-        if(!_selectedSpell.HoldToCast)
+        if(!_selectedWandInventoryItem.GetSelectedSpell().HoldToCast)
         {
-            _playerManaSystem.ApplySpellCooldown(_selectedSpell);
+            _playerManaSystem.ApplySpellCooldown(_selectedWandInventoryItem.GetSelectedSpell());
         }
 
         return (point, direction);
@@ -152,49 +139,49 @@ public class SpellCastController
     {
         if (GameManager.Instance.GetItemSOFromItemId(newValue) is WandItemSO wandItemSO)
         {
-            InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
-            _currentWandInventoryItem = selectedInventoryItem;
             _currentWandItemSO = wandItemSO;
-            SpellItemSO[] magicArray = (_currentWandInventoryItem as WandInventoryItem).MagicArray;
+            
+            InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
+            _selectedWandInventoryItem = selectedInventoryItem as WandInventoryItem;
+            SpellItemSO[] magicArray = _selectedWandInventoryItem.MagicArray;
 
-            _spellArray = new();
-
-            for (int i = 0; i < magicArray.Length; i++)
+            // If the wand has no spells selected, we can set the first spell as the selected spell
+            if(_selectedWandInventoryItem.HasSpells() && _selectedWandInventoryItem.SelectedSpellIndex == -1)
             {
-                SpellItemSO item = magicArray[i];
-                _spellArray.Add(item);
+                for (int i = 0; i < magicArray.Length; i++)
+                {
+                    if(magicArray[i] != null)
+                    {
+                        // Set the first non-null spell as the selected spell
+                        _selectedWandInventoryItem.SetSelectedSpellIndex(i);
+                        break;
+                    }
+                }
             }
 
-            _selectedSpellIndex = 0;
-            _selectedSpell = _spellArray[_selectedSpellIndex]; // Default set to the first spell in the group might change later
-
-            OnSpellArrayUpdated?.Invoke(this, new SpellArrayChangedEventArgs(_spellArray));
-            OnSelectedSpellUpdated?.Invoke(this, new SelectedSpellChangedEventArgs(_selectedSpell, _selectedSpellIndex));
+            OnSpellArrayUpdated?.Invoke(this, new SpellArrayChangedEventArgs(_selectedWandInventoryItem.MagicArray));
+            OnSelectedSpellUpdated?.Invoke(this, new SelectedSpellChangedEventArgs(_selectedWandInventoryItem.GetSelectedSpell(), _selectedWandInventoryItem.SelectedSpellIndex));
         }
         else
         {
-            _currentWandInventoryItem = null;
+            _selectedWandInventoryItem = null;
             _currentWandItemSO = null;
-            _spellArray = null;
-            _selectedSpell = null;
-            _selectedSpellIndex = -1;
-            
-            OnSpellArrayUpdated?.Invoke(this, new SpellArrayChangedEventArgs(_spellArray));
-            OnSelectedSpellUpdated?.Invoke(this, new SelectedSpellChangedEventArgs(_selectedSpell, _selectedSpellIndex));
+
+            OnSpellArrayUpdated?.Invoke(this, new SpellArrayChangedEventArgs(Array.Empty<SpellItemSO>()));
+            OnSelectedSpellUpdated?.Invoke(this, new SelectedSpellChangedEventArgs(null, -1));
         }
     }
 
     public void SelectSpellByIndex(int index)
     {
-        if (_spellArray == null || _spellArray.Count == 0 || index < 0 || index >= _spellArray.Count)
+        if (_selectedWandInventoryItem.MagicArray == null || !_selectedWandInventoryItem.HasSpells() || index < 0 || index >= _selectedWandInventoryItem.MagicArray.Length)
         {
             Debug.LogError($"SelectSpellByIndex: Invalid index or spell array is empty for index {index}");
             return;
         }
-
-        _selectedSpellIndex = index;
-        _selectedSpell = _spellArray[_selectedSpellIndex];
-        OnSelectedSpellUpdated?.Invoke(this, new SelectedSpellChangedEventArgs(_selectedSpell, _selectedSpellIndex));
+        
+        _selectedWandInventoryItem.SetSelectedSpellIndex(index);
+        OnSelectedSpellUpdated?.Invoke(this, new SelectedSpellChangedEventArgs(_selectedWandInventoryItem.GetSelectedSpell(), _selectedWandInventoryItem.SelectedSpellIndex));
     }
 
     private void OnPlayerLifeStateChanged(LifeState previousValue, LifeState newValue)
@@ -222,7 +209,7 @@ public class SpellCastController
     {
         if(InventoryManager.Instance.SelectedItemExists(out InventoryItem inventoryItem))
         {
-            if(_currentWandInventoryItem != null && inventoryItem.Id == _currentWandInventoryItem.Id) 
+            if(_selectedWandInventoryItem != null && inventoryItem.Id == _selectedWandInventoryItem.Id) 
                 return;
         }
         
