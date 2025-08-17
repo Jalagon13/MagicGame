@@ -20,7 +20,7 @@ public class SpellItemSO : ItemSO
 
 	[field: Header("Stats")]
 	[field: Tooltip("The the probability of the spell draining 1 mana from the player when cast."), Range(0f, 1f)]
-	[field: SerializeField] public float ManaDrainProbability { get; private set; } = 5;
+	[field: SerializeField] public float ManaDrainProbability { get; private set; } = 1;
 	
 	[field: Tooltip("Time it takes for the spell to charge before it is cast.")]
 	[field: SerializeField] public float CastTime { get; private set; } = 0.5f;
@@ -58,6 +58,7 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("Materials required to cast this spell. If empty, the spell can be cast without any materials.")]
 	[field: SerializeField] public List<InventoryItem> CastingMaterials { get; private set; } = new List<InventoryItem>();
 
+	public bool IsDestructionItem = false;
 
 	public SyncSpellData GetSyncSpellData(ulong casterNetObjId, BiomeType spawnBiome)
 	{

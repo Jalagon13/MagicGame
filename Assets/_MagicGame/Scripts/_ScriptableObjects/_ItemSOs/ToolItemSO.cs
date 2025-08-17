@@ -12,10 +12,10 @@ public enum ToolType
 public class ToolItemSO : ItemSO
 {
 	[field: SerializeField] public ToolType ToolType { get; private set; }
-	[field: SerializeField] public int MiningPower { get; private set; }
-	[field: SerializeField] public float MiningRange { get; private set; }
-	[field: SerializeField] public int Damage { get; private set; }
-	[field: SerializeField] public int Knockback { get; private set; }
+	[field: SerializeField] public int MiningPower { get; private set; } = 1;
+	[field: SerializeField] public float MiningRange { get; private set; } = 4;
+	[field: SerializeField] public int Damage { get; private set; } = 4;
+	[field: SerializeField] public int Knockback { get; private set; } = 6;
 	[field: SerializeField] public float DetectionBetweenHitsDuration { get; private set; } = 0.05f;
 	[field: SerializeField] public float ColliderLength { get; private set; } = 1f;
 	[field: SerializeField] public float SwingDuration { get; private set; } = 0.35f;
