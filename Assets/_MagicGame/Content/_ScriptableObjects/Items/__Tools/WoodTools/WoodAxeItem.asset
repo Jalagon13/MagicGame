@@ -20,7 +20,7 @@ MonoBehaviour:
   <ToolType>k__BackingField: 1
   <MiningPower>k__BackingField: 1
   <MiningRange>k__BackingField: 4
-  <Damage>k__BackingField: 0
+  <Damage>k__BackingField: 4
   <Knockback>k__BackingField: 6
   <DetectionBetweenHitsDuration>k__BackingField: 0.05
   <ColliderLength>k__BackingField: 1

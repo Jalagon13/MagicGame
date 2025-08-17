@@ -7,7 +7,17 @@ using UnityEngine;
 public class SpellCaster : NetworkBehaviour
 {
     public event EventHandler OnActiveHoldToCastSpellEnded;
+    public event EventHandler<SpellExecutedEventArgs> OnSpellExecuted;
+    public class SpellExecutedEventArgs : EventArgs
+    {
+        public SpellItemSO SpellItem { get; }
 
+        public SpellExecutedEventArgs(SpellItemSO spellItem)
+        {
+            SpellItem = spellItem;
+        }
+    }
+    
     [SerializeField]
     private ServerCharacter _serverCharacter;
 
@@ -116,6 +126,7 @@ public class SpellCaster : NetworkBehaviour
                     : (transform.position, transform.forward);
 
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
+                OnSpellExecuted?.Invoke(this, new SpellExecutedEventArgs(_currentSpell));
 
                 if (serverSpell.SpellData.Value.HoldToCast)
                 {

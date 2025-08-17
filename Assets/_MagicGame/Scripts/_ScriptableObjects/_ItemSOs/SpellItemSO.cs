@@ -55,6 +55,9 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("If true, holding the fire button will keep this spell active until released. If false, it behaves as a normal single-cast spell.")]
 	[field: SerializeField] public bool HoldToCast { get; private set; } = false;
 
+	[field: Tooltip("Materials required to cast this spell. If empty, the spell can be cast without any materials.")]
+	[field: SerializeField] public List<InventoryItem> CastingMaterials { get; private set; } = new List<InventoryItem>();
+
 
 	public SyncSpellData GetSyncSpellData(ulong casterNetObjId, BiomeType spawnBiome)
 	{

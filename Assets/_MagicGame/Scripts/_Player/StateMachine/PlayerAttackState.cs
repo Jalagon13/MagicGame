@@ -27,16 +27,16 @@ public class PlayerAttackState : BaseState
         switch (_swingDirection)
         {
             case CardinalDirection.North:
-                Swing(150, 30, duration, true, CardinalDirection.North);
+                Swing(160, 20, duration, true, CardinalDirection.North);
                 break;
             case CardinalDirection.South:
-                Swing(330, 210, duration, false, CardinalDirection.South);
+                Swing(340, 200, duration, false, CardinalDirection.South);
                 break;
             case CardinalDirection.West:
-                Swing(120, 240, duration, false, CardinalDirection.West);
+                Swing(110, 250, duration, false, CardinalDirection.West);
                 break;
             case CardinalDirection.East:
-                Swing(60, 300, duration, true, CardinalDirection.East);
+                Swing(70, 290, duration, true, CardinalDirection.East);
                 break;
         }
     }
@@ -58,10 +58,9 @@ public class PlayerAttackState : BaseState
               HitSound = _toolItemSO.HitSound,
               ColliderLength = _toolItemSO.ColliderLength
         };
-
-        _ctx.PlayerRef.PlayerHand.MeleeCollider.StartSwing(swingData);
         _ctx.PlayerRef.PlayerHand.SwingDirection.Value = swingDirection;
         _ctx.PlayerRef.PlayerHand.PerformSwingClientRpc(startRotation, endRotation, duration, swingDirection);
+        _ctx.PlayerRef.PlayerHand.MeleeCollider.StartSwing(swingData);
     }
 
     public override void UpdateState()

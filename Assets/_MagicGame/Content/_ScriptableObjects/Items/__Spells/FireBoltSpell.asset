@@ -18,7 +18,6 @@ MonoBehaviour:
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: Shoots a single bolt of mana.
   <SpellPrefab>k__BackingField: {fileID: 4388535776764661370, guid: 754e68487e3414b8eaf335c8e910dfdc, type: 3}
-  <SpellUIDisplaySprite>k__BackingField: {fileID: -2864920213310542238, guid: 6b31da2f94c4a4f20b4c4f66b75905fc, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 8285152488836000937, guid: 8175636c29a52422d8069d30cf23c5b6, type: 3}
   <SpellOnCastSound>k__BackingField:
     Guid:
@@ -46,3 +45,6 @@ MonoBehaviour:
   <HasteMultiplier>k__BackingField: -0.5
   <Scatter>k__BackingField: 5
   <HoldToCast>k__BackingField: 0
+  <CastingMaterials>k__BackingField:
+  - Item: {fileID: 11400000, guid: 128b887eb5a144b6c8c4d6b1ad559dcf, type: 2}
+    Quantity: 1

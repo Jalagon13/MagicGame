@@ -52,6 +52,7 @@ public class SpellCastController
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
         _player.SpellCaster.IsCasting.OnValueChanged += OnIsCastingChanged;
         _player.SpellCaster.OnActiveHoldToCastSpellEnded += SetCooldownForHoldToCastSpell;
+        _player.SpellCaster.OnSpellExecuted += OnSpellExecuted;
 
         HotbarManager.Instance.OnFocusSlotUpdated += CheckForSelectedItemChange;
         GameInput.Instance.OnPrimaryAction += CheckForNotHeldDownPrimaryAction;
@@ -64,10 +65,16 @@ public class SpellCastController
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
         _player.SpellCaster.IsCasting.OnValueChanged -= OnIsCastingChanged;
         _player.SpellCaster.OnActiveHoldToCastSpellEnded -= SetCooldownForHoldToCastSpell;
+        _player.SpellCaster.OnSpellExecuted -= OnSpellExecuted;
 
         HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSelectedItemChange;
         GameInput.Instance.OnPrimaryAction -= CheckForNotHeldDownPrimaryAction;
         GameInput.Instance.OnSpaceStarted -= OnSpellWheelOpen;
+    }
+
+    private void OnSpellExecuted(object sender, SpellCaster.SpellExecutedEventArgs e)
+    {
+        InventoryManager.Instance.RemoveItems(e.SpellItem.CastingMaterials);
     }
 
     private void SetCooldownForHoldToCastSpell(object sender, EventArgs e)
@@ -111,8 +118,10 @@ public class SpellCastController
         bool postCastDelayTimerRunning = _postCastDelayTimer.IsRunning;
         bool isLoadingBiome = WorldManager.Instance.IsLoadingBiome;
         bool hasEnoughMana = _playerManaSystem.CanCastSpell(_selectedWandInventoryItem.GetSelectedSpell());
+        bool hasAllCastingMaterials = _selectedWandInventoryItem.GetSelectedSpell().CastingMaterials.Count == 0 ||
+          InventoryManager.Instance.HasAllIngredients(_selectedWandInventoryItem.GetSelectedSpell().CastingMaterials);
 
-        return !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && 
+        return !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && hasAllCastingMaterials &&
         primaryHeldDown && !isCasting && !postCastDelayTimerRunning && !isLoadingBiome && !SpellWheelUI.SpellWheelOpen;
     }
 

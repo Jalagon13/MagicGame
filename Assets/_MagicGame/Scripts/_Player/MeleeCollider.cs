@@ -14,21 +14,23 @@ public class MeleeCollider : NetworkBehaviour
         public EventReference HitSound;
         public float ColliderLength;
     }
-    private List<NetworkHealthState> _targetsFound = new();
-    private List<NetworkHealthState> _targetsHit = new();
+    private List<DamageReceiver> _targetsFound = new();
+    private List<DamageReceiver> _targetsHit = new();
     private BoxCollider2D _meleeCollider;
     private SwingData _currentSwingData;
+    private ServerCharacter _playerServerCharacter;
 
     private void Awake()
     {
         _meleeCollider = GetComponent<BoxCollider2D>();
         _meleeCollider.enabled = false;
+        _playerServerCharacter = transform.root.GetComponent<ServerCharacter>();
     }
 
     public void StartSwing(SwingData swingData)
     {
-        if (!IsOwner) return;
-
+        if (Player.Instance.OwnerClientId != _playerServerCharacter.OwnerClientId) return;
+        
         _currentSwingData = swingData;
         _targetsFound = new();
         _targetsHit = new();
@@ -51,7 +53,7 @@ public class MeleeCollider : NetworkBehaviour
 
     public void EndSwing()
     {
-        if (!IsOwner) return;
+        if (Player.Instance.OwnerClientId != _playerServerCharacter.OwnerClientId) return;
         
         _targetsFound = new();
         _targetsHit = new();
@@ -62,14 +64,14 @@ public class MeleeCollider : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!IsOwner) return;
+        if (Player.Instance.OwnerClientId != _playerServerCharacter.OwnerClientId) return;
 
         if (collision.TryGetComponent(out NpcNetworkVisibility npcNet) && npcNet.SameBiomeAs(Player.Instance.CurrentBiome.Value))
         {
-            _targetsFound.Add(npcNet.gameObject.GetComponent<NetworkHealthState>());
+            _targetsFound.Add(npcNet.gameObject.GetComponent<DamageReceiver>());
         }
         
-        if(collision.gameObject.layer == 16)
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Foliage"))
         {
             Vector2Int tilePos = new Vector2Int((int)collision.gameObject.transform.position.x, (int)collision.gameObject.transform.position.y);
             int tileId = GameManager.Instance.GetTileIDFromTilemapTilePosition(TileManager.Instance.FoliageTm, (Vector3Int)tilePos);
@@ -82,13 +84,13 @@ public class MeleeCollider : NetworkBehaviour
     {
         if(_targetsFound.Count > 0)
         {
-            foreach (NetworkHealthState targetToDamage in _targetsFound.ToArray())
+            foreach (DamageReceiver targetToDamage in _targetsFound.ToArray())
             {
                 if(_targetsHit.Contains(targetToDamage)) continue;
                 
                 SoundManager.Instance.PlayOneShot(_currentSwingData.HitSound, Player.Instance.transform.position);
+                targetToDamage.ReceiveHP(Player.Instance.ServerCharacter, -_currentSwingData.Damage, true, _currentSwingData.Knockback);
                 
-                // targetToDamage.TakeDamageRpc(_currentSwingData.Damage, Player.LocalClientInstance.transform.position, _currentSwingData.Knockback);
                 _targetsFound.Remove(targetToDamage);
                 _targetsHit.Add(targetToDamage);
                 
