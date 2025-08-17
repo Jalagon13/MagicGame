@@ -58,8 +58,6 @@ public class SpellItemSO : ItemSO
 	[field: Tooltip("Materials required to cast this spell. If empty, the spell can be cast without any materials.")]
 	[field: SerializeField] public List<InventoryItem> CastingMaterials { get; private set; } = new List<InventoryItem>();
 
-	public bool IsDestructionItem = false;
-
 	public SyncSpellData GetSyncSpellData(ulong casterNetObjId, BiomeType spawnBiome)
 	{
 		return new SyncSpellData(GameManager.Instance.GetItemIdFromItemSO(this),

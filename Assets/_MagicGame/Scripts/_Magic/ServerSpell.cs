@@ -123,7 +123,7 @@ public abstract class ServerSpell : NetworkBehaviour
 
         if (_lifetimeRoutine != null)
             StopCoroutine(_lifetimeRoutine);
-
+        
         SpellStateNV.Value = SpellState.Stopping;
 
         yield return OnSpellEnd(); // Cleanup visuals, sounds, etc.

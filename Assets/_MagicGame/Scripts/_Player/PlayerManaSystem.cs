@@ -50,6 +50,9 @@ public class PlayerManaSystem
 
     public bool CanCastSpell(SpellItemSO spell)
     {
+        if(spell == null)
+            return false;
+    
         if (_currentMana < 1)
             return false;
 

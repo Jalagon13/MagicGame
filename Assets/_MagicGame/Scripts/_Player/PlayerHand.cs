@@ -32,7 +32,7 @@ public class PlayerHand : NetworkBehaviour
 
 	private Player _thisPlayer;
 	private ItemSO _heldItem;
-    private bool _isHoldingWand;
+    private bool _isHoldingWandOrSpell;
 
 	public NetworkVariable<float> AngleToMouse { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<CardinalDirection> AimDirection { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -60,13 +60,13 @@ public class PlayerHand : NetworkBehaviour
 			AngleToMouse.Value = NormalizeAngle(Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
 			AimDirection.Value = DetermineCardinalDirection(AngleToMouse.Value);
 			
-			if(_isHoldingWand && !IsSwinging)
+			if(_isHoldingWandOrSpell && !IsSwinging)
 			{
 				CastingDirection.Value = DetermineCardinalDirection(AngleToMouse.Value);
 			}
 		}
 		
-		if(_heldItem is WandItemSO && !IsSwinging && CastingDirection.Value != CardinalDirection.None)
+		if((_heldItem is WandItemSO || _heldItem is SpellItemSO) && !IsSwinging && CastingDirection.Value != CardinalDirection.None)
 		{
 			_armPivotGO.transform.rotation = Quaternion.AngleAxis(AngleToMouse.Value, Vector3.forward);
 			SetPivotPosition(CastingDirection.Value);
@@ -77,8 +77,8 @@ public class PlayerHand : NetworkBehaviour
     {
 		_heldItem = GameManager.Instance.GetItemSOFromItemId(newValue);
 
-		_isHoldingWand = _heldItem is WandItemSO;
-		if(_isHoldingWand)
+		_isHoldingWandOrSpell = _heldItem is WandItemSO || _heldItem is SpellItemSO;
+		if(_isHoldingWandOrSpell)
 		{
 			float originalY = Mathf.Abs(SpellSpawnTransform.localPosition.y);
 			float newY = _heldItem is WandItemSO ? -originalY : originalY;

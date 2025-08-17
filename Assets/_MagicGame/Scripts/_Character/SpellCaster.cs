@@ -124,7 +124,7 @@ public class SpellCaster : NetworkBehaviour
                 var (finalSpawnPoint, finalDirection) = _getExecutionParams != null
                     ? _getExecutionParams.Invoke()
                     : (transform.position, transform.forward);
-
+                
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
                 OnSpellExecuted?.Invoke(this, new SpellExecutedEventArgs(_currentSpell));
 

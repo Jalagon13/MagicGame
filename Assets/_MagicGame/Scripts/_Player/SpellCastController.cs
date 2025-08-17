@@ -140,7 +140,6 @@ public class SpellCastController
         {
             _playerManaSystem.ApplySpellCooldown(_selectedWandInventoryItem.GetSelectedSpell());
         }
-
         return (point, direction);
     }
 
@@ -170,6 +169,19 @@ public class SpellCastController
 
             OnSpellArrayUpdated?.Invoke(this, new SpellArrayChangedEventArgs(_selectedWandInventoryItem.MagicArray));
             OnSelectedSpellUpdated?.Invoke(this, new SelectedSpellChangedEventArgs(_selectedWandInventoryItem.GetSelectedSpell(), _selectedWandInventoryItem.SelectedSpellIndex));
+        }
+        else if (GameManager.Instance.GetItemSOFromItemId(newValue) is SpellItemSO spellItemSO)
+        {
+            _selectedWandInventoryItem = new WandInventoryItem(spellItemSO, 1, 1, 0);
+            _selectedWandInventoryItem.SetMagic(spellItemSO, 0);
+            _currentWandItemSO = null;
+
+            // Do this so the fake WandInventoryItem has the same Id as the inventory slot currently being held so the CheckForSelectedItemChange's check works
+            InventoryManager.Instance.SelectedItemExists(out InventoryItem inventoryItem);
+            _selectedWandInventoryItem.SetId(inventoryItem.Id);
+
+            OnSpellArrayUpdated?.Invoke(this, new SpellArrayChangedEventArgs(new SpellItemSO[1] { spellItemSO }));
+            OnSelectedSpellUpdated?.Invoke(this, new SelectedSpellChangedEventArgs(spellItemSO, 0));
         }
         else
         {

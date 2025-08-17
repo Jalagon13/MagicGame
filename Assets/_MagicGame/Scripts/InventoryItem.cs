@@ -24,6 +24,11 @@ public class InventoryItem
 		}
 	}
 	
+	public void SetId(ulong newId)
+	{
+		Id = newId;
+	}
+	
 	public InventoryItem()
 	{
 		Item = null;
