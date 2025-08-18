@@ -52,7 +52,7 @@ public class SpellCastController
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
         _player.SpellCaster.IsCasting.OnValueChanged += OnIsCastingChanged;
         _player.SpellCaster.OnActiveHoldToCastSpellEnded += SetCooldownForHoldToCastSpell;
-        _player.SpellCaster.OnSpellExecuted += OnSpellExecuted;
+        _player.SpellCaster.OnRightBeforeSpellExecuted += OnRightBeforeSpellExecuted;
 
         HotbarManager.Instance.OnFocusSlotUpdated += CheckForSelectedItemChange;
         GameInput.Instance.OnPrimaryAction += CheckForNotHeldDownPrimaryAction;
@@ -65,16 +65,26 @@ public class SpellCastController
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
         _player.SpellCaster.IsCasting.OnValueChanged -= OnIsCastingChanged;
         _player.SpellCaster.OnActiveHoldToCastSpellEnded -= SetCooldownForHoldToCastSpell;
-        _player.SpellCaster.OnSpellExecuted -= OnSpellExecuted;
+        _player.SpellCaster.OnRightBeforeSpellExecuted -= OnRightBeforeSpellExecuted;
 
         HotbarManager.Instance.OnFocusSlotUpdated -= CheckForSelectedItemChange;
         GameInput.Instance.OnPrimaryAction -= CheckForNotHeldDownPrimaryAction;
         GameInput.Instance.OnSpaceStarted -= OnSpellWheelOpen;
     }
 
-    private void OnSpellExecuted(object sender, SpellCaster.SpellExecutedEventArgs e)
+    private void OnRightBeforeSpellExecuted(object sender, SpellCaster.SpellExecutedEventArgs e)
     {
-        InventoryManager.Instance.RemoveItems(e.SpellItem.CastingMaterials);
+        if(_selectedWandInventoryItem.GetSelectedSpell().CastingMaterials.Count == 0) 
+            return;
+          
+        if(InventoryManager.Instance.HasAllIngredients(_selectedWandInventoryItem.GetSelectedSpell().CastingMaterials))
+        {
+            InventoryManager.Instance.RemoveItems(e.SpellItem.CastingMaterials);
+        }
+        else
+        {
+            _player.SpellCaster.TryToCancelCast();
+        }
     }
 
     private void SetCooldownForHoldToCastSpell(object sender, EventArgs e)

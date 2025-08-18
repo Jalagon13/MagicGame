@@ -7,7 +7,7 @@ using UnityEngine;
 public class SpellCaster : NetworkBehaviour
 {
     public event EventHandler OnActiveHoldToCastSpellEnded;
-    public event EventHandler<SpellExecutedEventArgs> OnSpellExecuted;
+    public event EventHandler<SpellExecutedEventArgs> OnRightBeforeSpellExecuted;
     public class SpellExecutedEventArgs : EventArgs
     {
         public SpellItemSO SpellItem { get; }
@@ -75,7 +75,7 @@ public class SpellCaster : NetworkBehaviour
         _activeSpellNetObj = default;
         _holdToCastSpell = null;
 
-        SpawnSpellServerRpc(spellItemSO.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome)); // pre-spawn the spell
+        SpawnSpellServerRpc(spellItemSO.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome, 0)); // pre-spawn the spell
 
         _castTimer = new Timer(spellItemSO.CastTime);
         _castTimer.OnTimerEnd += OnCastTimerEnd;
@@ -125,8 +125,8 @@ public class SpellCaster : NetworkBehaviour
                     ? _getExecutionParams.Invoke()
                     : (transform.position, transform.forward);
                 
+                OnRightBeforeSpellExecuted?.Invoke(this, new SpellExecutedEventArgs(_currentSpell));
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
-                OnSpellExecuted?.Invoke(this, new SpellExecutedEventArgs(_currentSpell));
 
                 if (serverSpell.SpellData.Value.HoldToCast)
                 {
