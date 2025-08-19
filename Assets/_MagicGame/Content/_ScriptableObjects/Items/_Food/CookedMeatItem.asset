@@ -24,6 +24,4 @@ MonoBehaviour:
       Data3: -219622527
       Data4: -1689700191
     Path: event:/WaterSplash
-  <Duration>k__BackingField: 6
-  <NetManaGain>k__BackingField: 35
-  <NetHealthGain>k__BackingField: 0
+  <ManaGain>k__BackingField: 5

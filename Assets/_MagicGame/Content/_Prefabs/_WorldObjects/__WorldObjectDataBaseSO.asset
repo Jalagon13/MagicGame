@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: __WorldObjectDataBaseSO
   m_EditorClassIdentifier: 
   WorldObjectList:
+  - {fileID: 1030882037603866735, guid: f4caf4c5091224ab38ce3d21bbffe7bf, type: 3}
   - {fileID: -590340910586133321, guid: 3bc37f5a996714e3c93136f78e87bc55, type: 3}
   - {fileID: 590160871130149661, guid: c971db339f3074561aae8abe3ce5e3ad, type: 3}
   - {fileID: 5150323723629226184, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
   - {fileID: 6290587451616296401, guid: e9eb770362141454f8cd8a3e777aa608, type: 3}
-  - {fileID: 1030882037603866735, guid: f4caf4c5091224ab38ce3d21bbffe7bf, type: 3}
   - {fileID: 5780725128829530697, guid: beba537ea73434d4fb7eed0f1a7fc2fc, type: 3}
   - {fileID: 5150323723629226184, guid: 751f13ce30c9145419bf57f41f494fef, type: 3}
   - {fileID: 6290587451616296401, guid: c214c7aca12314abda7a4e3291adf050, type: 3}

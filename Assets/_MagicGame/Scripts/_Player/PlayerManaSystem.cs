@@ -89,4 +89,9 @@ public class PlayerManaSystem
         _currentMana = Mathf.Min(_currentMana + amount, _maxMana);
         OnManaChanged?.Invoke(this, new ManaChangedEventArgs(_currentMana, _maxMana));
     }
+    
+    public bool IsFullOnMana()
+    {
+        return _currentMana >= _maxMana;
+    }
 }

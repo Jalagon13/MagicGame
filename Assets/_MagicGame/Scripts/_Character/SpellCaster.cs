@@ -75,7 +75,7 @@ public class SpellCaster : NetworkBehaviour
         _activeSpellNetObj = default;
         _holdToCastSpell = null;
 
-        SpawnSpellServerRpc(spellItemSO.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome, 0)); // pre-spawn the spell
+        SpawnSpellServerRpc(spellItemSO.GetSyncSpellData(NetworkObjectId, _serverCharacter.CurrentBiome)); // pre-spawn the spell
 
         _castTimer = new Timer(spellItemSO.CastTime);
         _castTimer.OnTimerEnd += OnCastTimerEnd;
