@@ -46,4 +46,10 @@ public class NetworkHealthState : NetworkBehaviour
     {
         return HitPoints.Value >= _serverCharacter.Stats.MaxHealth.AsIntValue;
     }
+    
+    public void AddHp(int amount)
+    {
+        // Double check with GPT if this logic is correct
+        HitPoints.Value += Mathf.Clamp(amount, 0, _serverCharacter.Stats.MaxHealth.AsIntValue);
+    }
 }
