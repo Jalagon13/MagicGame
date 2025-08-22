@@ -137,7 +137,7 @@ public class PlayerHand : NetworkBehaviour
 	[Rpc(SendTo.ClientsAndHost)]
 	public void PerformSwingClientRpc(Quaternion startRotation, Quaternion endRotation, float duration, CardinalDirection direction)
 	{
-		SetPivotPosition(direction);
+		// SetPivotPosition(direction);
 		ShowArm();
 
 		IsSwinging = true;
