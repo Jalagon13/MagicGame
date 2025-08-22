@@ -9,7 +9,7 @@ public class CharacterDataSO : ScriptableObject
     [Tooltip("Base HP for character")]
     public int BaseHealth;
     [Tooltip("Base Mana held in this NPC.")]
-    public int BaseMana = 100;
+    public int InsanityThreshold = 100;
     [Tooltip("Base Speed for character")]
     public float BaseSpeed;
     [Tooltip("Base attack stat for the character")]

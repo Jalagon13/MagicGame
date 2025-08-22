@@ -46,7 +46,7 @@ public class SpellCastController
     {
         _player = player;
         _postCastDelayTimer = new(_postCastDelayTimerDuration);
-        _playerManaSystem = new(player.ServerCharacter.Data.BaseMana);
+        _playerManaSystem = new(player.ServerCharacter.Data.InsanityThreshold);
 
         _player.SelectedItemIdNetworkVariable.OnValueChanged += OnItemSelectedChanged;
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
