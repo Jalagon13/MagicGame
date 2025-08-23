@@ -38,7 +38,7 @@ public class SaveSystem : MonoBehaviour
 	
 	public bool BiomeSaveFileExists(BiomeType biome)
 	{
-		return File.Exists(Application.dataPath + $"/_ScaryGame/Configuration/JsonData/{biome}_data.json");
+		return File.Exists(Application.dataPath + $"/_FableForge/Configuration/JsonData/{biome}_data.json");
 	}
 	
 	#region Serialization
@@ -59,9 +59,9 @@ public class SaveSystem : MonoBehaviour
 	private async Task SerializeDataAndWriteToFile(BiomeType biomeToSave)
 	{
 		Debug.Log($"<color=orange>=====================SAVING========================</color>");
-		Debug.Log($"Path: " + Application.dataPath + $"/_ScaryGame/Configuration/JsonData/{biomeToSave}_data.json");
+		Debug.Log($"Path: " + Application.dataPath + $"/_FableForge/Configuration/JsonData/{biomeToSave}_data.json");
 	
-		_path = Application.dataPath + $"/_ScaryGame/Configuration/JsonData/{biomeToSave}_data.json";
+		_path = Application.dataPath + $"/_FableForge/Configuration/JsonData/{biomeToSave}_data.json";
 		
 		// Serialize Assets and Chunks
 		SerializeObjectDataOfCurrentEnvironment(biomeToSave);
@@ -228,7 +228,7 @@ public class SaveSystem : MonoBehaviour
 	
 public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWorldObjectData(BiomeType biomeToLoad)
 {
-    _path = Application.dataPath + $"/_ScaryGame/Configuration/JsonData/{biomeToLoad}_data.json";
+    _path = Application.dataPath + $"/_FableForge/Configuration/JsonData/{biomeToLoad}_data.json";
     List<(int WorldObjectId, Vector2Int Position)> transitionDataList = new();
 
     if (File.Exists(_path))
@@ -262,12 +262,12 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 	
 		IsDeserializing = true;
 	
-		_path = Application.dataPath + $"/_ScaryGame/Configuration/JsonData/{biomeToLoad}_data.json";
+		_path = Application.dataPath + $"/_FableForge/Configuration/JsonData/{biomeToLoad}_data.json";
 		
 		if (File.Exists(_path))
 		{
 			Debug.Log($"<color=orange>=====================LOADING========================</color>");
-			Debug.Log($"Path: " + Application.dataPath + $"/_ScaryGame/Configuration/JsonData/{biomeToLoad}_data.json");
+			Debug.Log($"Path: " + Application.dataPath + $"/_FableForge/Configuration/JsonData/{biomeToLoad}_data.json");
 			Debug.Log($"<color=orange>Deserializing </color>{biomeToLoad}<color=orange> Data From File...</color>");
 			
 			// Read JSON data from file asynchronously

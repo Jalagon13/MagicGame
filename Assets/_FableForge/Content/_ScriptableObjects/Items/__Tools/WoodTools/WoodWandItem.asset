@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WoodWandItem
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Wood Wand
-  <UiDisplay>k__BackingField: {fileID: 86968822, guid: 539b6686a978c4c08845afe71ddfe566, type: 3}
+  <UiDisplay>k__BackingField: {fileID: -7495197899600450172, guid: 539b6686a978c4c08845afe71ddfe566, type: 3}
   <GoldValue>k__BackingField: 25
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
