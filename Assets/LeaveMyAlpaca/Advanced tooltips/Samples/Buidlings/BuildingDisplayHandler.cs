@@ -6,7 +6,7 @@ namespace AdvancedTooltips.ContentTypesHandlers
 
     public class BuildingDisplayHandler : MonoBehaviour
     {
-        public TMP_Text name;
+        public TMP_Text Name;
         public Image icon;
 
         public Transform productionLayout;

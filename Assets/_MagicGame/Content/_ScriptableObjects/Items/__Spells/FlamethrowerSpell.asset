@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
+  m_Name: FlamethrowerSpell
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Flamethrower
+  <UiDisplay>k__BackingField: {fileID: -3168733581550749585, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
+  <GoldValue>k__BackingField: 70
+  <Stackable>k__BackingField: 0
+  <Description>k__BackingField: Shoots a single bolt of mana.
+  <SpellPrefab>k__BackingField: {fileID: 8273380025569757591, guid: cc58c89ad65c049e9a5991ce772f0085, type: 3}
+  <ChargeVFX>k__BackingField: {fileID: 8285152488836000937, guid: 8175636c29a52422d8069d30cf23c5b6, type: 3}
+  <SpellOnCastSound>k__BackingField:
+    Guid:
+      Data1: -2009085937
+      Data2: 1294578059
+      Data3: 926459827
+      Data4: -62299656
+    Path: event:/Magic/FireMiniBurst
+  <SpellOnDamageSound>k__BackingField:
+    Guid:
+      Data1: -959941032
+      Data2: 1128627620
+      Data3: -1885222999
+      Data4: 915117413
+    Path: event:/Magic/FireBurst
+  <CastTime>k__BackingField: 1
+  <Cooldown>k__BackingField: 3
+  <Damage>k__BackingField: 14
+  <Knockback>k__BackingField: 3
+  <BounceCount>k__BackingField: 0
+  <PierceCount>k__BackingField: 0
+  <Lifetime>k__BackingField: 2
+  <Speed>k__BackingField: 15
+  <HasteMultiplier>k__BackingField: -0.8
+  <Scatter>k__BackingField: 0
+  <HoldToCast>k__BackingField: 1
+  <CastingMaterials>k__BackingField:
+  - Item: {fileID: 11400000, guid: 128b887eb5a144b6c8c4d6b1ad559dcf, type: 2}
+    Quantity: 1

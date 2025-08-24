@@ -107,9 +107,9 @@ namespace AdvancedTooltips.Core
 			BuildingDisplayHandler script = _instantiateHandler.InstantiateBuildingDisplay(customLayout);
 			script.icon.sprite = building.icon;
 
-			script.name.font = font == null ? _referenceHolder.DefaultFont : font;
-			script.name.text = building.name;
-			script.name.fontSize = nameSize;
+			script.Name.font = font == null ? _referenceHolder.DefaultFont : font;
+			script.Name.text = building.name;
+			script.Name.fontSize = nameSize;
 			foreach (var materialsDisplay in building.production)
 			{
 				DisplayMaterial(materialsDisplay, showPlusSignOnPositiveValues: true, showName: true, customLayout: script.productionLayout, fontSize: fontSize);
