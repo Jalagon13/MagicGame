@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ea56ac133374041179bb9ce8b8e4507f
+guid: 441d030f2a008486ba198b1ed9bb9a21
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 518175295372279904
-    second: spider_concepts_0
+      213: 2726114858957132234
+    second: _GoblinConcepts_Sheet_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,12 +100,34 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spider_concepts_0
+      name: goblin_concept
       rect:
         serializedVersion: 2
-        x: 5
-        y: 11
-        width: 22
+        x: 0
+        y: 0
+        width: 16
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac1dd09450b15d520800000000000000
+      internalID: 2726114858957132234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_goblin_01
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 19
+        width: 11
         height: 12
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -113,10 +135,76 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 0604c0c8fade03700800000000000000
-      internalID: 518175295372279904
+      spriteID: d8924cfe209a24c319c94fd707632d2e
+      internalID: -1019968554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_goblin_02
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 9
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6397adbaacca4b478dcfa6cb62a45fb
+      internalID: -636010386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_goblin_03
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 0
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 150106d0890144764a40a09c95b40935
+      internalID: -1331602440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_goblin_04
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 0
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e1f2a16cc4254d52a68ebb14d17ddc3
+      internalID: 928502395
       vertices: []
       indices: 
       edges: []
@@ -125,7 +213,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 10d50530e820d49eb9624bbd782323ce
+    spriteID: 968389befdfef4207be85e3b91837ab1
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +223,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      spider_concepts_0: 518175295372279904
+      gibs_goblin_01: -1019968554
+      gibs_goblin_02: -636010386
+      gibs_goblin_03: -1331602440
+      gibs_goblin_04: 928502395
+      goblin_concept: 2726114858957132234
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

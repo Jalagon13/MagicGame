@@ -25,13 +25,16 @@ public class BasicNpcPursueState : BaseState
             Vector2 targetDir = ((Vector2)_ctx.PursueTargetTransform.position -
                                  (Vector2)_ctx.ServerCharacter.transform.position).normalized;
 
-            Vector2 perpendicular = new Vector2(-targetDir.y, targetDir.x) * _ctx.StrafingDirection;
-            Vector2 offset = perpendicular * _ctx.CharacterData.StrafeIntensity;
-            _ctx.ServerCharacter.Movement.SetPursueOffset(offset);
+            Vector2 perpendicular = Vector2.zero;
+            if (targetDir != Vector2.zero)
+            {
+                perpendicular = new Vector2(-targetDir.y, targetDir.x).normalized * _ctx.StrafingDirection;
+            }
+            _ctx.ServerCharacter.Movement.SetPursueOffset(perpendicular, _ctx.ServerCharacter.Data.StrafeSpeedMultiplier);
         }
         else
         {
-            _ctx.ServerCharacter.Movement.SetPursueOffset(Vector2.zero);
+            _ctx.ServerCharacter.Movement.SetPursueOffset(Vector2.zero, 1);
         }
     }
 
@@ -39,13 +42,13 @@ public class BasicNpcPursueState : BaseState
     {
         if (_ctx.ServerCharacter.MovementState.Value == MovementState.Knockback)
         {
-            _ctx.ServerCharacter.Movement.SetPursueOffset(Vector2.zero);
+            _ctx.ServerCharacter.Movement.SetPursueOffset(Vector2.zero, 1);
             SwitchState(new AIStateData(AIState.Knockbacked));
             return;
         }
         else if (!_ctx.IsPursuingPlayerOrBreadCrumb)
         {
-            _ctx.ServerCharacter.Movement.SetPursueOffset(Vector2.zero);
+            _ctx.ServerCharacter.Movement.SetPursueOffset(Vector2.zero, 1);
             SwitchState(new AIStateData(AIState.Idle));
             return;
         }
@@ -53,6 +56,6 @@ public class BasicNpcPursueState : BaseState
 
     public override void ExitState()
     {
-        _ctx.ServerCharacter.Movement.SetPursueOffset(Vector2.zero);
+        _ctx.ServerCharacter.Movement.SetPursueOffset(Vector2.zero, 1);
     }
 }

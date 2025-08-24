@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: GoblinData
   m_EditorClassIdentifier: 
   BaseHealth: 45
-  BaseSpeed: 2
+  BaseSpeed: 2.25
   BaseAttack: 24
   BaseAttackKnockback: 25
-  BaseDefense: 4
-  TurnSharpness: 10
+  BaseDefense: 7
+  TurnSharpness: 8
   KnockbackResist: 0.65
   CanMove: 1
   StoppingDistance: 0.25
   WanderRadius: 5
   CanStrafe: 1
-  StrafingDuration: 0.65
-  StrafeIntensity: 1.2
+  StrafingDuration: 1.5
+  StrafeSpeedMultiplier: 1
   IFrameDuration: 0.17
   CanRegenerateHealth: 0
   BaseHealthRegenTimeInterval: 0.25
@@ -38,30 +38,30 @@ MonoBehaviour:
   IsFriendly: 0
   FleeDuration: 1.5
   FleeSpeedMultiplier: 1.5
-  PursueSpeedMultiplier: 1.25
+  PursueSpeedMultiplier: 1.125
   MinIdleDuration: 2
   MaxIdleDuration: 4
   DetectionRadius: 15
   DetectionIntervalDuration: 0.5
   SlotAmount: 0.5
-  StringID: spider
+  StringID: goblin
   NpcPrefab: {fileID: 6633633827701661900, guid: 8400ae4f3ed2f487fb0bbb1a07a80f0f, type: 3}
   LootTable:
   - Item: {fileID: 11400000, guid: fe14886186b414dc8a0cca5f83f3fdb9, type: 2}
     Min: 1
-    Max: 1
-    Chance: 100
+    Max: 2
+    Chance: 60
   HurtSound:
     Guid:
-      Data1: 343470518
-      Data2: 1104490139
-      Data3: 1878935205
-      Data4: 389126360
-    Path: event:/NPCs/BugDeath
+      Data1: 768998640
+      Data2: 1204921274
+      Data3: -878287463
+      Data4: -2002300701
+    Path: event:/NPCs/GoblinDamaged
   DeathSound:
     Guid:
-      Data1: 1529267703
-      Data2: 1144459138
-      Data3: -1546983784
-      Data4: -1702726188
-    Path: event:/NPCs/BugDamaged
+      Data1: -1611712246
+      Data2: 1119939547
+      Data3: 1097284999
+      Data4: -373772228
+    Path: event:/NPCs/GoblinDeath

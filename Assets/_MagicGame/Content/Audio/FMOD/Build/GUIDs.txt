@@ -24,6 +24,7 @@
 {1478f1b6-2e9b-41d5-a546-fe6fd8983117} event:/NPCs/BugDeath
 {c370b08f-1a93-4bb3-8fa6-72074c22db89} event:/NPCs/DeerDamaged
 {055d1386-650b-445e-b82a-a550931d286b} event:/NPCs/DeerDeath
+{2dd5fcf0-a3ba-47d1-9965-a6cbe350a788} event:/NPCs/GoblinDamaged
 {0030af96-a4e6-4ad1-961e-1c2dac4c5830} event:/NPCs/PixieDamaged
 {d9e8fb7d-552e-4d07-bbe3-17bfbc717472} event:/NPCs/Squish
 {fda3288e-4260-4d5f-bc9e-4c28914bf5c9} event:/Player/CoinPickup

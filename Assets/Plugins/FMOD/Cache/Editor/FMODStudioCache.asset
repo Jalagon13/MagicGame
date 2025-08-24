@@ -19,7 +19,7 @@ MonoBehaviour:
     Data3: -1901462113
     Data4: -244489252
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -27,32 +27,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-8595475514370727515
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Ambience/Ambience
-  m_EditorClassIdentifier: 
-  Name: Ambience
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 3654794721
-    data2: 312539312
-  Type: 2
-  IsGlobal: 0
-  Labels:
-  - ForestAmbience
-  - CaveAmbience
-  Exists: 1
 --- !u!114 &-8368555601859639280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,7 +46,7 @@ MonoBehaviour:
     Data3: -1934371966
     Data4: 306405590
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -99,7 +73,7 @@ MonoBehaviour:
     Data3: 153888670
     Data4: -2048565155
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -126,7 +100,7 @@ MonoBehaviour:
     Data3: -822515824
     Data4: 2017467891
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -134,26 +108,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-7513412204427243761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/UI.bank
-  m_EditorClassIdentifier: 
-  Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/UI.bank
-  Name: UI
-  StudioPath: bank:/UI
-  lastModified: 638909586917010161
-  FileSizes:
-  - Name: Desktop
-    Value: 34752
-  Exists: 1
 --- !u!114 &-5868496055694042480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,7 +127,7 @@ MonoBehaviour:
     Data3: 1447670913
     Data4: -1372581738
   Banks:
-  - {fileID: -7513412204427243761}
+  - {fileID: -167728990351699398}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -200,7 +154,7 @@ MonoBehaviour:
     Data3: -530487679
     Data4: 360285647
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -227,7 +181,7 @@ MonoBehaviour:
     Data3: -343921521
     Data4: -738418528
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -254,7 +208,7 @@ MonoBehaviour:
     Data3: -1633797458
     Data4: 490440430
   Banks:
-  - {fileID: 4239372470019258213}
+  - {fileID: 2910971625801169270}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -281,7 +235,7 @@ MonoBehaviour:
     Data3: -1349617790
     Data4: -270854617
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -289,6 +243,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-5118738364778561889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 638916329787237484
+  FileSizes:
+  - Name: Desktop
+    Value: 3619520
+  Exists: 1
 --- !u!114 &-5100934024035244767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,7 +282,7 @@ MonoBehaviour:
     Data3: 124954255
     Data4: -1982127540
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -335,7 +309,7 @@ MonoBehaviour:
     Data3: -1088953413
     Data4: 1920233916
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -343,26 +317,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-4626298972836983042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/SFX.bank
-  m_EditorClassIdentifier: 
-  Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
-  Name: SFX
-  StudioPath: bank:/SFX
-  lastModified: 638899058210396239
-  FileSizes:
-  - Name: Desktop
-    Value: 3106496
-  Exists: 1
 --- !u!114 &-4447199315379070513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,39 +336,11 @@ MonoBehaviour:
     Data3: 1511411633
     Data4: 1298307303
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
   Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-4100935872588225253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Ambience/Ambience
-  m_EditorClassIdentifier: 
-  Path: event:/Ambience/Ambience
-  Guid:
-    Data1: 1999850616
-    Data2: 1096425094
-    Data3: -1876040270
-    Data4: -1388101932
-  Banks:
-  - {fileID: 6702288669578411488}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters:
-  - {fileID: -8595475514370727515}
   MinDistance: 1
   MaxDistance: 20
   Length: 0
@@ -437,7 +363,7 @@ MonoBehaviour:
     Data3: -1870693459
     Data4: -353672984
   Banks:
-  - {fileID: -7513412204427243761}
+  - {fileID: -167728990351699398}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -464,7 +390,7 @@ MonoBehaviour:
     Data3: 973122738
     Data4: 1540535278
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -472,7 +398,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-2722816956503410227
+--- !u!114 &-2545359783482338934
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -481,17 +407,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Magic.bank
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/FocusFloor
   m_EditorClassIdentifier: 
-  Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Magic.bank
-  Name: Magic
-  StudioPath: bank:/Magic
-  lastModified: 638895528941335899
-  FileSizes:
-  - Name: Desktop
-    Value: 440352
-  Exists: 1
+  Path: event:/Player/FocusFloor
+  Guid:
+    Data1: -981375326
+    Data2: 1149087574
+    Data3: -164892751
+    Data4: -247913897
+  Banks:
+  - {fileID: -5118738364778561889}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-2423619658234550821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -511,7 +444,7 @@ MonoBehaviour:
     Data3: 2041025175
     Data4: 923772193
   Banks:
-  - {fileID: -7513412204427243761}
+  - {fileID: -167728990351699398}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -538,7 +471,7 @@ MonoBehaviour:
     Data3: -919418481
     Data4: 2010506348
   Banks:
-  - {fileID: -7513412204427243761}
+  - {fileID: -167728990351699398}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -565,7 +498,7 @@ MonoBehaviour:
     Data3: -617592154
     Data4: 2092223634
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -592,7 +525,7 @@ MonoBehaviour:
     Data3: -130389574
     Data4: -1987048442
   Banks:
-  - {fileID: 4239372470019258213}
+  - {fileID: 2910971625801169270}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -619,7 +552,7 @@ MonoBehaviour:
     Data3: -1546983784
     Data4: -1702726188
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -646,7 +579,7 @@ MonoBehaviour:
     Data3: -1885222999
     Data4: 915117413
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -673,7 +606,7 @@ MonoBehaviour:
     Data3: -453350209
     Data4: 967977714
   Banks:
-  - {fileID: 4239372470019258213}
+  - {fileID: 2910971625801169270}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -681,6 +614,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-467104696155213177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Magic.bank
+  m_EditorClassIdentifier: 
+  Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Magic.bank
+  Name: Magic
+  StudioPath: bank:/Magic
+  lastModified: 638895528941335899
+  FileSizes:
+  - Name: Desktop
+    Value: 440352
+  Exists: 1
 --- !u!114 &-326097733281759104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -700,7 +653,7 @@ MonoBehaviour:
     Data3: -219622527
     Data4: -1689700191
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -708,6 +661,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-167728990351699398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/UI.bank
+  m_EditorClassIdentifier: 
+  Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/UI.bank
+  Name: UI
+  StudioPath: bank:/UI
+  lastModified: 638909586917010161
+  FileSizes:
+  - Name: Desktop
+    Value: 34752
+  Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -721,12 +694,12 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: 5574528013551363316}
-  - {fileID: 6702288669578411488}
-  - {fileID: -4626298972836983042}
-  - {fileID: 4239372470019258213}
-  - {fileID: -7513412204427243761}
-  - {fileID: -2722816956503410227}
+  - {fileID: 5143058463646552385}
+  - {fileID: -467104696155213177}
+  - {fileID: -5118738364778561889}
+  - {fileID: 1442470161565190594}
+  - {fileID: 2910971625801169270}
+  - {fileID: -167728990351699398}
   EditorEvents:
   - {fileID: -2013000793435297120}
   - {fileID: 5242794587038571529}
@@ -743,7 +716,6 @@ MonoBehaviour:
   - {fileID: -2151828162186299522}
   - {fileID: -2423619658234550821}
   - {fileID: 5061384021580652553}
-  - {fileID: 6885153926838661541}
   - {fileID: 1476141278191997832}
   - {fileID: -9050220173966839909}
   - {fileID: -8102585319215244543}
@@ -754,7 +726,6 @@ MonoBehaviour:
   - {fileID: -5253504312498639110}
   - {fileID: -1277810612265870814}
   - {fileID: -326097733281759104}
-  - {fileID: -4100935872588225253}
   - {fileID: 3972319742351911701}
   - {fileID: -8368555601859639280}
   - {fileID: 8116599811075677841}
@@ -769,12 +740,16 @@ MonoBehaviour:
   - {fileID: -5605479572757667641}
   - {fileID: -4706342772913996437}
   - {fileID: 8821989022261634387}
+  - {fileID: 3529032671265993966}
+  - {fileID: -2545359783482338934}
+  - {fileID: 4090251831969363818}
+  - {fileID: 4234236444842156600}
   EditorParameters: []
   MasterBanks:
-  - {fileID: 6702288669578411488}
+  - {fileID: -5118738364778561889}
   StringsBanks:
-  - {fileID: 5574528013551363316}
-  cacheTime: 638909586917010161
+  - {fileID: 5143058463646552385}
+  cacheTime: 638916330305218770
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:
@@ -795,7 +770,7 @@ MonoBehaviour:
     Data3: 756817558
     Data4: 811093164
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -803,6 +778,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &1442470161565190594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/SFX.bank
+  m_EditorClassIdentifier: 
+  Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
+  Name: SFX
+  StudioPath: bank:/SFX
+  lastModified: 638916330305218770
+  FileSizes:
+  - Name: Desktop
+    Value: 3138912
+  Exists: 1
 --- !u!114 &1476141278191997832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -822,7 +817,7 @@ MonoBehaviour:
     Data3: -672544082
     Data4: -1828488855
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -830,6 +825,52 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &2910971625801169270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Tiles.bank
+  m_EditorClassIdentifier: 
+  Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Tiles.bank
+  Name: Tiles
+  StudioPath: bank:/Tiles
+  lastModified: 638893808384131387
+  FileSizes:
+  - Name: Desktop
+    Value: 61760
+  Exists: 1
+--- !u!114 &3140660271979043867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Ambience/Ambience
+  m_EditorClassIdentifier: 
+  Name: Ambience
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3654794721
+    data2: 312539312
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - ForestAmbience
+  - CaveAmbience
+  Exists: 1
 --- !u!114 &3355502589203074115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -849,7 +890,7 @@ MonoBehaviour:
     Data3: 195266464
     Data4: 349084553
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -857,6 +898,34 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 12720
+--- !u!114 &3529032671265993966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/Ambience/Ambience
+  Guid:
+    Data1: 1999850616
+    Data2: 1096425094
+    Data3: -1876040270
+    Data4: -1388101932
+  Banks:
+  - {fileID: -5118738364778561889}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 3140660271979043867}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &3628424433783273261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -876,7 +945,7 @@ MonoBehaviour:
     Data3: 1013332110
     Data4: -2033662663
   Banks:
-  - {fileID: 4239372470019258213}
+  - {fileID: 2910971625801169270}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -903,7 +972,7 @@ MonoBehaviour:
     Data3: 51854251
     Data4: 858203368
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -911,7 +980,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &4239372470019258213
+--- !u!114 &4090251831969363818
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -920,17 +989,51 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Tiles.bank
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPCs/GoblinDamaged
   m_EditorClassIdentifier: 
-  Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Tiles.bank
-  Name: Tiles
-  StudioPath: bank:/Tiles
-  lastModified: 638893808384131387
-  FileSizes:
-  - Name: Desktop
-    Value: 61760
-  Exists: 1
+  Path: event:/NPCs/GoblinDamaged
+  Guid:
+    Data1: 768998640
+    Data2: 1204921274
+    Data3: -878287463
+    Data4: -2002300701
+  Banks:
+  - {fileID: 1442470161565190594}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &4234236444842156600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPCs/GoblinDeath
+  m_EditorClassIdentifier: 
+  Path: event:/NPCs/GoblinDeath
+  Guid:
+    Data1: -1611712246
+    Data2: 1119939547
+    Data3: 1097284999
+    Data4: -373772228
+  Banks:
+  - {fileID: 1442470161565190594}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &4743123837593905006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -950,7 +1053,7 @@ MonoBehaviour:
     Data3: 255401399
     Data4: -184975247
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 1
   Is3D: 0
   IsOneShot: 1
@@ -977,7 +1080,7 @@ MonoBehaviour:
     Data3: 2078279570
     Data4: 643237060
   Banks:
-  - {fileID: 4239372470019258213}
+  - {fileID: 2910971625801169270}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1004,7 +1107,7 @@ MonoBehaviour:
     Data3: 676110012
     Data4: -906671215
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1012,6 +1115,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &5143058463646552385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.strings.bank
+  m_EditorClassIdentifier: 
+  Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
+  Name: Master.strings
+  StudioPath: bank:/Master.strings
+  lastModified: 638916329787250864
+  FileSizes:
+  - Name: Desktop
+    Value: 2918
+  Exists: 1
 --- !u!114 &5242794587038571529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1031,7 +1154,7 @@ MonoBehaviour:
     Data3: 197467520
     Data4: 1755672934
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1039,26 +1162,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &5574528013551363316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.strings.bank
-  m_EditorClassIdentifier: 
-  Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
-  Name: Master.strings
-  StudioPath: bank:/Master.strings
-  lastModified: 638909581330983340
-  FileSizes:
-  - Name: Desktop
-    Value: 2828
-  Exists: 1
 --- !u!114 &5813129133648053243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1078,7 +1181,7 @@ MonoBehaviour:
     Data3: 49132942
     Data4: 1594458749
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1105,7 +1208,7 @@ MonoBehaviour:
     Data3: 951300029
     Data4: -972426705
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1132,7 +1235,7 @@ MonoBehaviour:
     Data3: 926459827
     Data4: -62299656
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1159,7 +1262,7 @@ MonoBehaviour:
     Data3: 1303084456
     Data4: 28021889
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 0
@@ -1167,53 +1270,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4990
---- !u!114 &6702288669578411488
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.bank
-  m_EditorClassIdentifier: 
-  Path: /Users/jalagon/Projects/MagicGame/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
-  Name: Master
-  StudioPath: bank:/Master
-  lastModified: 638909581330943397
-  FileSizes:
-  - Name: Desktop
-    Value: 3619520
-  Exists: 1
---- !u!114 &6885153926838661541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Player/FocusFloor
-  m_EditorClassIdentifier: 
-  Path: event:/Player/FocusFloor
-  Guid:
-    Data1: -981375326
-    Data2: 1149087574
-    Data3: -164892751
-    Data4: -247913897
-  Banks:
-  - {fileID: 6702288669578411488}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
 --- !u!114 &6887363961906838663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1233,7 +1289,7 @@ MonoBehaviour:
     Data3: 1878935205
     Data4: 389126360
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1260,7 +1316,7 @@ MonoBehaviour:
     Data3: 1353001656
     Data4: 1797791123
   Banks:
-  - {fileID: -4626298972836983042}
+  - {fileID: 1442470161565190594}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1287,7 +1343,7 @@ MonoBehaviour:
     Data3: 1963841471
     Data4: 1725148628
   Banks:
-  - {fileID: -2722816956503410227}
+  - {fileID: -467104696155213177}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1314,7 +1370,7 @@ MonoBehaviour:
     Data3: 597284788
     Data4: -571733676
   Banks:
-  - {fileID: -7513412204427243761}
+  - {fileID: -167728990351699398}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1

@@ -34,8 +34,8 @@ public class CharacterDataSO : ScriptableObject
     public bool CanStrafe = true;
     [Tooltip("Duration the NPC will strafe during movement behavior")]
     public float StrafingDuration = 0.25f;
-    [Tooltip("Intensity of the strafing movement")]
-    public float StrafeIntensity = 0.5f;
+    [Tooltip("How much it multipliers the speed when strafing")]
+    public float StrafeSpeedMultiplier = 1f;
 
     [Space]
     [Header("Health & Survival")]

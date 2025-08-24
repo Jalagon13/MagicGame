@@ -262,7 +262,7 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 	
 		IsDeserializing = true;
 	
-		_path = Application.dataPath + $"/_FableForge/Configuration/JsonData/{biomeToLoad}_data.json";
+		_path = Application.dataPath + $"/_MagicGame/Configuration/JsonData/{biomeToLoad}_data.json";
 		
 		if (File.Exists(_path))
 		{

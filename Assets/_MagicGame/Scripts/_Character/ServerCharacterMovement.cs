@@ -31,6 +31,7 @@ public class ServerCharacterMovement : NetworkBehaviour
 
     private Transform _pursueTarget;
     private Vector2 _pursueDirectionOffset;
+    private float _strafeSpeedMultiplier;
     private bool _isDead;
 
     public override void OnNetworkSpawn()
@@ -89,7 +90,7 @@ public class ServerCharacterMovement : NetworkBehaviour
             if (_serverCharacter.MovementState.Value == MovementState.Pursuing && _pursueTarget != null)
             {
                 Vector2 baseDirection = ((Vector2)_pursueTarget.position - (Vector2)_serverCharacter.transform.position).normalized;
-                _desiredDirection = baseDirection + _pursueDirectionOffset;
+                _desiredDirection = (baseDirection + _pursueDirectionOffset).normalized;
             }
             
             float currentSpeed = _serverCharacter.Stats.MovementSpeed.GetValue();
@@ -101,6 +102,7 @@ public class ServerCharacterMovement : NetworkBehaviour
             else if (_serverCharacter.MovementState.Value == MovementState.Pursuing)
             {
                 currentSpeed *= _serverCharacter.Data.PursueSpeedMultiplier;
+                currentSpeed *= _strafeSpeedMultiplier;
             }
             
             _velocity = Vector2.Lerp(_velocity, _desiredDirection * currentSpeed, _serverCharacter.Data.TurnSharpness * Time.fixedDeltaTime);
@@ -166,8 +168,9 @@ public class ServerCharacterMovement : NetworkBehaviour
         _desiredDirection = desiredDirection.normalized;
     }
 
-    public void SetPursueOffset(Vector2 offset)
+    public void SetPursueOffset(Vector2 offset, float speedMultiplier)
     {
         _pursueDirectionOffset = offset;
+        _strafeSpeedMultiplier = speedMultiplier;
     }
 }
