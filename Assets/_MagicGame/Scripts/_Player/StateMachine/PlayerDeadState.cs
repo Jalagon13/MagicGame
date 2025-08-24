@@ -47,9 +47,7 @@ public class PlayerDeadState : BaseState
     public override void ClientEnterState(AIStateData stateData)
     {
         // NTFS: Player death animations here, just turn off visuals for now
-        _ctx.ServerCharacter.ClientFeedbacks.RotateGibs(stateData.Payload);
-        _ctx.ServerCharacter.ClientFeedbacks.PlayDeathFeedbacksRpc();
-
+        _ctx.ServerCharacter.ClientFeedbacks.PlayDeathFeedbacksRpc(stateData.Payload);
     }
     
     public override void ClientExitState(AIStateData stateData)

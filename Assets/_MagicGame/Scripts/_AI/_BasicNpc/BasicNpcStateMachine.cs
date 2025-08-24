@@ -20,9 +20,6 @@ public class BasicNpcStateMachine : StateMachine
     private bool _playerPositionFound, _breadCrumbPositionFound;
     public int StrafingDirection { get; private set; }
     
-    private Vector2 _hitDirection;
-    public Vector2 HitDireciton => _hitDirection;
-    
     public BasicNpcStateMachine(ServerCharacter serverCharacter)
     {
         _serverCharacter = serverCharacter;
@@ -96,8 +93,6 @@ public class BasicNpcStateMachine : StateMachine
         
         if (amount < 0)
         {
-            _hitDirection = (Vector2)(_serverCharacter.transform.position - inflicter.transform.position).normalized;
-        
             // Damaged
             if (!CharacterData.IsFriendly)
             {

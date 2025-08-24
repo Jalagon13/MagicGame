@@ -66,7 +66,6 @@ public class BasicNpcDeadState : BaseState
 
     public override void ClientEnterState(AIStateData stateData)
     {
-        _ctx.ServerCharacter.ClientFeedbacks.RotateGibs(stateData.Payload);
-        _ctx.ServerCharacter.ClientFeedbacks.PlayDeathFeedbacksRpc();
+        _ctx.ServerCharacter.ClientFeedbacks.PlayDeathFeedbacksRpc(stateData.Payload);
     }
 }

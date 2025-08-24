@@ -9,7 +9,7 @@ public class ClientFeedbacks : NetworkBehaviour
     private ServerCharacter _serverCharacter;
     
     [SerializeField]
-    private ParticleSystem _gibsParticleSystem;
+    private ParticleSystem _damagedParticles, _deathParticles;
 
     private MMF_Player _damageFeedback;
     private MMF_Player _deathFeedback;
@@ -27,32 +27,37 @@ public class ClientFeedbacks : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
-    public void PlayDamageFeedbacksRpc()
+    public void PlayDamageFeedbacksRpc(Vector2 hitDirection)
     {
         SoundManager.Instance.PlayOneShot(_serverCharacter.Data.HurtSound, transform.position);
-
+        RotateFeedbacks(hitDirection);
         _damageFeedback.PlayFeedbacks();
     }
 
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
-    public void PlayDeathFeedbacksRpc()
+    public void PlayDeathFeedbacksRpc(Vector2 hitDirection)
     {
         SoundManager.Instance.PlayOneShot(_serverCharacter.Data.DeathSound, transform.position);
         SoundManager.Instance.PlayOneShot(FMODEvents.Instance.MobSquash, transform.position);
-
+        RotateFeedbacks(hitDirection);
         _deathFeedback.PlayFeedbacks();
     }
 
-    public void RotateGibs(Vector2 hitDirection)
+    private void RotateFeedbacks(Vector2 hitDirection)
     {
-        if (_gibsParticleSystem == null) return;
+        if (_deathParticles == null || _damagedParticles == null) 
+        {
+            Debug.LogWarning($"Either Death or Damaged Particles are null therefore can't be rotated");
+        }
+        
         if (!float.IsFinite(hitDirection.x) || !float.IsFinite(hitDirection.y)) return;
         
         if (hitDirection == Vector2.zero)
             hitDirection = Vector2.up; // Default direction if none provided
 
         float angle = Mathf.Atan2(hitDirection.y, hitDirection.x) * Mathf.Rad2Deg;
-        Debug.Log($"RotateGibs: hitDir={hitDirection}, angle={angle}");
-        _gibsParticleSystem.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        // Debug.Log($"RotateGibs: hitDir={hitDirection}, angle={angle}");
+        _damagedParticles.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        _deathParticles.transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 }

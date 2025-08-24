@@ -83,6 +83,9 @@ public class ServerCharacter : NetworkBehaviour
     private ServerCharacter _inflicter;
     public ServerCharacter Inflicter => _inflicter;
 
+    private Vector2 _inflicterToTargetDirection;
+    public Vector2 InflicterToTargetDirection => _inflicterToTargetDirection;
+
     public NetworkVariable<MovementState> MovementState { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<CardinalDirection> CardinalDirection { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<AIStateData> SuperAIState { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -192,8 +195,10 @@ public class ServerCharacter : NetworkBehaviour
 
         _inflicter = e.Inflicter;
         int hpReceived = e.HpReceived;
-        
-        if(hpReceived > 0)
+
+        _inflicterToTargetDirection = (Vector2)(transform.position - _inflicter.transform.position).normalized;
+
+        if (hpReceived > 0)
         {
             // HP healing mod functionality here
             float healingMod = 1f;
@@ -213,7 +218,7 @@ public class ServerCharacter : NetworkBehaviour
 
             // If not dead after taking damage, play character damaged feedbacks
             if (HitPoints + hpReceived > 0 || !_characterData.CanDie)
-                _clientFeedbacks.PlayDamageFeedbacksRpc();
+                _clientFeedbacks.PlayDamageFeedbacksRpc(_inflicterToTargetDirection);
 
             if (_characterData.CanBeKnockedBack && e.PlayKnockback)
                 _serverCharacterMovement.StartKnockback(_inflicter.transform.position, e.KnockbackForce);

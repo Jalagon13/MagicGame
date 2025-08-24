@@ -670,7 +670,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _serverCharacter: {fileID: 1803180478442400679}
-  _gibsParticleSystem: {fileID: 7854521408473194833}
+  _deathParticles: {fileID: 0}
+  _damagedParticles: {fileID: 0}
 --- !u!1 &5309065195269084554
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,7 +960,7 @@ GameObject:
   - component: {fileID: 452738061098409354}
   - component: {fileID: 7989454560496947106}
   m_Layer: 0
-  m_Name: StarsParticles
+  m_Name: DamagedParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1927,8 +1928,8 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 3
-        scalar: 4
-        minScalar: 3
+        scalar: 0
+        minScalar: 0
         maxCurve:
           serializedVersion: 2
           m_Curve:
@@ -5883,7 +5884,7 @@ GameObject:
   - component: {fileID: 7854521408473194833}
   - component: {fileID: 8935709236656788683}
   m_Layer: 0
-  m_Name: GibletParticles
+  m_Name: DeathParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
