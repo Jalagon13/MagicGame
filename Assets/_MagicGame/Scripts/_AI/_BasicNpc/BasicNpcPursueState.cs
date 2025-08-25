@@ -11,7 +11,7 @@ public class BasicNpcPursueState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        Debug.Log($"Basic NPC Pursuing state");
+        // Debug.Log($"Basic NPC Pursuing state");
 
         _ctx.ServerCharacter.Movement.StartPursue(_ctx.PursueTargetTransform);
     }

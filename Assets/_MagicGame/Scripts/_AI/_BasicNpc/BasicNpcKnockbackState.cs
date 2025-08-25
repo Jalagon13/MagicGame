@@ -11,7 +11,7 @@ public class BasicNpcKnockbackState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        Debug.Log($"Basic Npc Knockback State");
+        // Debug.Log($"Basic Npc Knockback State");
         Vector2 knockbackDirection = _ctx.ServerCharacter.Inflicter != null
             ? (_ctx.ServerCharacter.transform.position - _ctx.ServerCharacter.Inflicter.transform.position).normalized
             : Vector2.zero;

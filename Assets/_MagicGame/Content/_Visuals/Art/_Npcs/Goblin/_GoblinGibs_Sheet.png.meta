@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: goblin_concept
+      name: goblin_side
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 16
-        height: 24
+        height: 20
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,7 +125,7 @@ TextureImporter:
       name: gibs_goblin_01
       rect:
         serializedVersion: 2
-        x: 19
+        x: 51
         y: 19
         width: 13
         height: 12
@@ -147,7 +147,7 @@ TextureImporter:
       name: gibs_goblin_02
       rect:
         serializedVersion: 2
-        x: 20
+        x: 52
         y: 9
         width: 9
         height: 9
@@ -169,7 +169,7 @@ TextureImporter:
       name: gibs_goblin_03
       rect:
         serializedVersion: 2
-        x: 18
+        x: 50
         y: 0
         width: 6
         height: 8
@@ -191,7 +191,7 @@ TextureImporter:
       name: gibs_goblin_04
       rect:
         serializedVersion: 2
-        x: 26
+        x: 58
         y: 0
         width: 6
         height: 7
@@ -205,6 +205,50 @@ TextureImporter:
       bones: []
       spriteID: 5e1f2a16cc4254d52a68ebb14d17ddc3
       internalID: 928502395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: goblin_front
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 20
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 796e3402452384c99bb3682f683ad498
+      internalID: -1974532028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: goblin_back
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 20
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1136d652eff9142008d490a4a39202e8
+      internalID: -1086736351
       vertices: []
       indices: 
       edges: []
@@ -227,7 +271,9 @@ TextureImporter:
       gibs_goblin_02: -636010386
       gibs_goblin_03: -1331602440
       gibs_goblin_04: 928502395
-      goblin_concept: 2726114858957132234
+      goblin_back: -1086736351
+      goblin_front: -1974532028
+      goblin_side: 2726114858957132234
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

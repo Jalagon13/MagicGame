@@ -15,7 +15,7 @@ public class BasicNpcFleeState : BaseState
 
     protected override void EnterState(AIStateData stateData)
     {
-        Debug.Log($"Flee State");
+        // Debug.Log($"Flee State");
         _fleeDone = false;
         _fleeTimer = new Timer(_ctx.CharacterData.FleeDuration);
         _fleeTimer.OnTimerEnd += OnFleeEnd;
@@ -31,7 +31,7 @@ public class BasicNpcFleeState : BaseState
         _fleeTimer.OnTimerEnd -= OnFleeEnd;
         _fleeDone = true;
 
-        Debug.Log("Fleeing done");
+        // Debug.Log("Fleeing done");
     }
 
     public override void ExitState()

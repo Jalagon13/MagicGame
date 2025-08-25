@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GoblinData
   m_EditorClassIdentifier: 
   BaseHealth: 45
-  BaseSpeed: 2.25
+  BaseSpeed: 1.25
   BaseAttack: 24
   BaseAttackKnockback: 25
   BaseDefense: 7
@@ -33,14 +33,14 @@ MonoBehaviour:
   CanDie: 1
   IsNpc: 1
   WillChasePlayer: 1
-  OnlyChaseWhenProvoked: 0
+  OnlyChaseWhenProvoked: 1
   WillFleeWhenProvoked: 0
   IsFriendly: 0
   FleeDuration: 1.5
   FleeSpeedMultiplier: 1.5
-  PursueSpeedMultiplier: 1.125
+  PursueSpeedMultiplier: 2.25
   MinIdleDuration: 2
-  MaxIdleDuration: 4
+  MaxIdleDuration: 3
   DetectionRadius: 6.5
   DetectionIntervalDuration: 0.5
   SlotAmount: 0.5
@@ -50,7 +50,7 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: fe14886186b414dc8a0cca5f83f3fdb9, type: 2}
     Min: 1
     Max: 2
-    Chance: 60
+    Chance: 100
   HurtSound:
     Guid:
       Data1: 768998640

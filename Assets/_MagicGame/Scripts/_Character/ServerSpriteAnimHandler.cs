@@ -8,10 +8,10 @@ using UnityEngine;
 
 public class ServerSpriteAnimHandler : NetworkBehaviour
 {
-    private ServerCharacter _serverCharacter;
-
     [SerializeField]
     private AnimationConfigSO _animConfig;
+    
+    private ServerCharacter _serverCharacter;
     private Animator _animator;
 
     private void Awake()
@@ -24,7 +24,7 @@ public class ServerSpriteAnimHandler : NetworkBehaviour
     {
         UpdateSpriteOrientationClientRpc(cardinalDirection);
         AnimationClip clip = null;
-
+        
         if (movementState == MovementState.Idle)
         {
             clip = cardinalDirection switch
@@ -47,6 +47,10 @@ public class ServerSpriteAnimHandler : NetworkBehaviour
         if (clip != null)
         {
             AnimStateManager.ChangeAnimationState(_animator, clip);
+        }
+        else
+        {
+            Debug.Log($"Clip is null");
         }
     }
 
