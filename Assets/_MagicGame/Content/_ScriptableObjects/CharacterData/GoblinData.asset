@@ -41,7 +41,7 @@ MonoBehaviour:
   PursueSpeedMultiplier: 2.25
   MinIdleDuration: 2
   MaxIdleDuration: 3
-  DetectionRadius: 6.5
+  DetectionRadius: 3
   DetectionIntervalDuration: 0.5
   SlotAmount: 0.5
   StringID: goblin
