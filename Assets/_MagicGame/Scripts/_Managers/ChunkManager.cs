@@ -196,7 +196,7 @@ public class ChunkManager : NetworkBehaviour
 		
 		if(ResourceManager.Instance.TryToFindResourceObject(position, out ResourceObject rsc))
 		{
-			rsc.PlayClientDestructionSequence();
+			rsc.ResourceFeedbacks.PlayClientDestructionSequence();
 		}
 	}
 

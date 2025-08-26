@@ -176,8 +176,8 @@ public class ResourceManager : NetworkBehaviour
 			// If asset visually exists, just delete it
 			if(TryToFindResourceObject(assetData.Position, out ResourceObject wo))
 			{
-				// TileManager.Instance.RemoveTileVisibilityData((Vector3Int)assetData.Position);
-				wo.PlayClientDestructionSequence();
+				// NTFS: This might be bugged
+				Destroy(wo);
 			}
 		}
 	}

@@ -12,6 +12,10 @@ public class ResourceObject : MonoBehaviour // Base class for every "physical" a
 	private ResourceDataSO _resourceData;
 	public ResourceDataSO Data => _resourceData;
 	
+	[SerializeField] 
+	private ResourceFeedbacks _resourceFeedback;
+	public ResourceFeedbacks ResourceFeedbacks => _resourceFeedback;
+	
 	protected CardinalDirection _orientation;
 
 
@@ -28,24 +32,5 @@ public class ResourceObject : MonoBehaviour // Base class for every "physical" a
 	protected bool PlayerInRangeOfPosition(Vector2 position)
 	{
 		return Vector2.Distance(Player.Instance.transform.position, position) <= ResourceDataSO.InteractDistance;
-	}
-	
-	public void PlayHitFeedback()
-	{
-	    transform.GetChild(2).GetChild(0).GetComponent<MMF_Player>().PlayFeedbacks();
-	}
-
-	public void PlayClientDestructionSequence()
-	{
-		StartCoroutine(ClientDestructionSequence());
-	}
-	
-	private IEnumerator ClientDestructionSequence()
-	{
-		Debug.Log($"Playing Client side resource destruction");
-		SoundManager.Instance.PlayOneShot(_resourceData.ResourceDestroyed, transform.position);
-		Lightmap.Instance.UpdateLightMap();
-		yield return null;
-		Destroy(gameObject);
 	}
 }

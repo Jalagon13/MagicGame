@@ -254,7 +254,7 @@ public class MiningHandler : MonoBehaviour
         {
             case DestructableType.WorldObject:
                 SoundManager.Instance.PlayOneShot(_resourceSelected.Data.MiningSound, (Vector3)_currentBreakTargetPosition);
-                _resourceSelected.PlayHitFeedback();
+                _resourceSelected.ResourceFeedbacks.PlayHitFeedback();
                 break;
             case DestructableType.Tile:
                 SoundManager.Instance.PlayOneShot(_tileSelected.MiningSound, (Vector3)_currentBreakTargetPosition);

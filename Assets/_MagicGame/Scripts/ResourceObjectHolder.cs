@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class WorldObjectHolder : MonoBehaviour
+public class ResourceObjectHolder : MonoBehaviour
 {
 	private void Start()
 	{
@@ -18,11 +18,12 @@ public class WorldObjectHolder : MonoBehaviour
 			Transform child = transform.GetChild(i);
         
 			// Try to get the WorldObject component
-			ResourceObject worldObject = child.GetComponent<ResourceObject>();
-			if (worldObject != null)
+			ResourceObject resourceObject = child.GetComponent<ResourceObject>();
+			if (resourceObject != null)
 			{
 				// Call the DestroySelf() method
-				worldObject.PlayClientDestructionSequence();
+				// NTFS: This might be bugged
+				Destroy(resourceObject);
 			}
 			else
 			{

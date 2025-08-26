@@ -52,6 +52,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 980097713811626668, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: managedReferences[4092682917026988139].Active
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 980097713811626668, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: managedReferences[4092682917026988145].Active
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2392654451137683977, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -371,6 +379,10 @@ PrefabInstance:
     - target: {fileID: 7036439714320413687, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: <ResourceDestroyed>k__BackingField.Guid.Data4
       value: 490440430
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532639493858514323, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7576710181112671801, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_LocalPosition.y
