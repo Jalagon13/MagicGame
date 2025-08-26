@@ -133,7 +133,7 @@ public class DoorObject : ResourceObject
 	{
 		if (_isOpen)
 		{
-			Pathfinding.Instance.RemovePfWallTileServerRpc(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value);
+			Pathfinding.Instance.RemovePathfindingfWallTileServerRpc(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value);
 		}
 		else
 		{
@@ -143,7 +143,7 @@ public class DoorObject : ResourceObject
 	
 	private void OnDestroy()
 	{
-		Pathfinding.Instance.RemovePfWallTileServerRpc(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value);
+		Pathfinding.Instance.RemovePathfindingfWallTileServerRpc(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value);
 	
 		GameInput.Instance.OnSecondaryActionStarted -= GameInput_OnSecondaryActionStarted;
 	}

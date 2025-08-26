@@ -104,7 +104,7 @@ public class MiningHandler : MonoBehaviour
         Vector3Int pos = ActionManager.MouseTilePosition;
         Vector3Int wallPos = Pointer.IsOverTopTile() ? pos + Vector3Int.down : pos;
 
-        if (ResourceManager.Instance.TryToFindWorldObject((Vector2Int)pos, out ResourceObject wo) && wo.Data.CanBeDestroyed)
+        if (ResourceManager.Instance.TryToFindResourceObject((Vector2Int)pos, out ResourceObject wo) && wo.Data.CanBeDestroyed)
         {
             _resourceSelected = wo;
             _destructableFound = DestructableType.WorldObject;
@@ -236,7 +236,7 @@ public class MiningHandler : MonoBehaviour
         switch (_destructableFound)
         {
             case DestructableType.WorldObject:
-                ResourceManager.Instance.DestroyObjectServerRpc(Player.Instance.CurrentBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetUShortIdFromResourceData(_resourceSelected.Data));
+                ResourceManager.Instance.DestroyResourceServerRpc(Player.Instance.CurrentBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetUShortIdFromResourceData(_resourceSelected.Data));
                 break;
             case DestructableType.Tile:
                 TileManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.Instance.CurrentBiome.Value);

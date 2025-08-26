@@ -130,7 +130,7 @@ public class Pathfinding : NetworkBehaviour
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void RemovePfWallTileServerRpc(Vector2Int position, BiomeType biome)
+	public void RemovePathfindingfWallTileServerRpc(Vector2Int position, BiomeType biome)
 	{
 		if(!BiomeToLoadedPathfindingChunks.ContainsKey(biome)) return;
 		

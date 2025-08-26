@@ -35,22 +35,17 @@ public class ResourceObject : MonoBehaviour // Base class for every "physical" a
 	    transform.GetChild(2).GetChild(0).GetComponent<MMF_Player>().PlayFeedbacks();
 	}
 
-	public void DestroyObject(Vector2Int objectPosition, BiomeType biome)
+	public void PlayClientDestructionSequence()
 	{
-		LootTable.SpawnLoot(_resourceData.Table, (Vector2)objectPosition + (Vector2.one * 0.5f), biome);
-		SoundManager.Instance.PlayOneShot(_resourceData.ResourceDestroyed, transform.position);
-		ChunkManager.Instance.RemoveObjectDataFromChunkServerRpc(objectPosition, biome);
-
-		if (!_resourceData.PassThrough)
-		{
-			Pathfinding.Instance.RemovePfWallTileServerRpc(objectPosition, biome);
-		}
-
-		Lightmap.Instance.UpdateLightMap();
+		StartCoroutine(ClientDestructionSequence());
 	}
-
-	public void DestroySelf()
+	
+	private IEnumerator ClientDestructionSequence()
 	{
+		Debug.Log($"Playing Client side resource destruction");
+		SoundManager.Instance.PlayOneShot(_resourceData.ResourceDestroyed, transform.position);
+		Lightmap.Instance.UpdateLightMap();
+		yield return null;
 		Destroy(gameObject);
 	}
 }

@@ -22,7 +22,7 @@ public class WorldObjectHolder : MonoBehaviour
 			if (worldObject != null)
 			{
 				// Call the DestroySelf() method
-				worldObject.DestroySelf();
+				worldObject.PlayClientDestructionSequence();
 			}
 			else
 			{

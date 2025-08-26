@@ -183,20 +183,20 @@ public class ChunkManager : NetworkBehaviour
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void RemoveObjectDataFromChunkServerRpc(Vector2Int position, BiomeType biomeToRemoveFrom)
+	public void RemoveRscDataFromChunkServerRpc(Vector2Int position, BiomeType biomeToRemoveFrom)
 	{
-		GetChunkFromAnyWorldPos(position, biomeToRemoveFrom).RemoveObjectData(position);
-		TryToRemoveObjectClientRpc(position, biomeToRemoveFrom);
+		GetChunkFromAnyWorldPos(position, biomeToRemoveFrom).RemoveResourceData(position);
+		TryToRemoveResourceClientRpc(position, biomeToRemoveFrom);
 	}
 	
 	[Rpc(SendTo.ClientsAndHost)]
-	private void TryToRemoveObjectClientRpc(Vector2Int position, BiomeType biomeToRemoveObjData)
+	private void TryToRemoveResourceClientRpc(Vector2Int position, BiomeType biomeToRemoveResourceData)
 	{
-		if(Player.Instance.CurrentBiome.Value != biomeToRemoveObjData) return;
+		if(Player.Instance.CurrentBiome.Value != biomeToRemoveResourceData) return;
 		
-		if(ResourceManager.Instance.TryToFindWorldObject(position, out ResourceObject wo))
+		if(ResourceManager.Instance.TryToFindResourceObject(position, out ResourceObject rsc))
 		{
-			wo.DestroySelf();
+			rsc.PlayClientDestructionSequence();
 		}
 	}
 
@@ -221,7 +221,7 @@ public class ChunkManager : NetworkBehaviour
 
 		if (tileType == TileType.Wall || tileType == TileType.Ore)
 		{
-			Pathfinding.Instance.RemovePfWallTileServerRpc(position, biome);
+			Pathfinding.Instance.RemovePathfindingfWallTileServerRpc(position, biome);
 		}
 
 		TileManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, -1, tileType, biome);

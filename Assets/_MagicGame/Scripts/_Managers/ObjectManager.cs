@@ -27,22 +27,30 @@ public class ResourceManager : NetworkBehaviour
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void DestroyObjectServerRpc(BiomeType biome, Vector2Int objectPos, int id)
+	public void DestroyResourceServerRpc(BiomeType biome, Vector2Int resourcePos, ushort resourceId)
 	{
-		foreach (ResourceObjectGameData objectGameData in ChunkManager.Instance.GetChunkFromAnyWorldPos(objectPos, biome).GetWorldObjects())
+		foreach (ResourceObjectGameData objectGameData in ChunkManager.Instance.GetChunkFromAnyWorldPos(resourcePos, biome).GetWorldObjects())
 		{
-			if(objectGameData.Position != objectPos) continue;
+			if(objectGameData.Position != resourcePos) continue;
 		
-			if (ChestManager.Instance.GetChestDataFromBiome(biome).ContainsKey(objectPos))
+			if (ChestManager.Instance.GetChestDataFromBiome(biome).ContainsKey(resourcePos))
 			{
-				if (ChestManager.Instance.OpenedChestIds.Contains($"{objectPos}{biome}") || ChestManager.Instance.ChestHasItems(objectPos, biome))
+				if (ChestManager.Instance.OpenedChestIds.Contains($"{resourcePos}{biome}") || ChestManager.Instance.ChestHasItems(resourcePos, biome))
 				{
 					Debug.LogWarning("Can't destroy a chest that is not empty or open.");
 					return;
 				}
 			}
+			
+			ResourceDataSO rscData = GameDataRegistry.Instance.GetResourceDataFromUShortId(resourceId);
+			if (!rscData.PassThrough)
+			{
+				Pathfinding.Instance.RemovePathfindingfWallTileServerRpc(resourcePos, biome);
+			}
+			
+			LootTable.SpawnLoot(rscData.Table, (Vector2)resourcePos + (Vector2.one * 0.5f), biome);
+			ChunkManager.Instance.RemoveRscDataFromChunkServerRpc(resourcePos, biome);
 
-			objectGameData.Rsc.DestroyObject(objectPos, biome);
 			return;
 		}
 	}
@@ -59,7 +67,7 @@ public class ResourceManager : NetworkBehaviour
 
 		if (isOpen)
 		{
-			Pathfinding.Instance.RemovePfWallTileServerRpc(Vector2Int.FloorToInt(doorPos), biome);
+			Pathfinding.Instance.RemovePathfindingfWallTileServerRpc(Vector2Int.FloorToInt(doorPos), biome);
 		}
 		else
 		{
@@ -166,15 +174,15 @@ public class ResourceManager : NetworkBehaviour
 		foreach (ResourceObjectGameData assetData in e.Chunk.GetWorldObjects())
 		{
 			// If asset visually exists, just delete it
-			if(TryToFindWorldObject(assetData.Position, out ResourceObject wo))
+			if(TryToFindResourceObject(assetData.Position, out ResourceObject wo))
 			{
 				// TileManager.Instance.RemoveTileVisibilityData((Vector3Int)assetData.Position);
-				wo.DestroySelf();
+				wo.PlayClientDestructionSequence();
 			}
 		}
 	}
 	
-	public bool TryToFindWorldObject(Vector2Int position, out ResourceObject wo)
+	public bool TryToFindResourceObject(Vector2Int position, out ResourceObject wo)
 	{
 		// Convert the tile position to world space if necessary
 		Vector2 worldPosition = (Vector2)position + new Vector2(0.5f, 0.5f); // Center of the tile

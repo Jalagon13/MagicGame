@@ -176,7 +176,7 @@ public class ChunkGameData
 		_worldObjectGameDataList.Add(worldObjectToAdd);
 	}
 
-	public void RemoveObjectData(Vector2Int position)
+	public void RemoveResourceData(Vector2Int position)
 	{
 		foreach (ResourceObjectGameData assetGameData in _worldObjectGameDataList)
 		{
