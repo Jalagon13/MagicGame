@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using FMODUnity;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Character Data", menuName = "CharacterData")]
+[CreateAssetMenu(fileName = "New Character Data", menuName = "Data/CharacterData")]
 public class CharacterDataSO : ScriptableObject
 {
     [Header("Core Stats")]
@@ -85,7 +85,7 @@ public class CharacterDataSO : ScriptableObject
     [Tooltip("The String ID of the NPC used for serialization not runtime lookups and networksyncing")]
     public string StringID;
     [Tooltip("Prefab for the NPC")]
-    public GameObject NpcPrefab;
+    public ServerCharacter NpcPrefab;
     [Tooltip("Loot table for loot dropped.")]
     public List<Loot> LootTable = new();
 

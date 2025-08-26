@@ -285,7 +285,7 @@ public class Lightmap : MonoBehaviour
 		// Loop through all the colliders within the bounds
 		foreach (Collider2D collider in colliders)
 		{
-			if(collider.TryGetComponent(out WorldObject worldObject) && !worldObject.PassThrough)
+			if(collider.TryGetComponent(out ResourceObject worldObject) && !worldObject.Data.PassThrough)
 			{
 				Vector3Int tilePosition = new Vector3Int(Mathf.FloorToInt(worldObject.transform.position.x), Mathf.FloorToInt(worldObject.transform.position.y), 0);
 				localVisibilityDict[tilePosition] = new TileVisibility(1);

@@ -6,9 +6,12 @@ using UnityEngine;
 [System.Serializable]
 public class BiomeFileData 
 {
-	[SerializeReference] public List<WorldObjectFileData> WorldObjectsList = new();
-	[SerializeReference] public List<ChunkFileData> ChunksList = new();
-	[SerializeReference] public List<ChestFileData> ChestList = new();
+	[SerializeReference] 
+	public List<ResourceObjectFileData> ResourceObjectsList = new();
+	[SerializeReference] 
+	public List<ChunkFileData> ChunksList = new();
+	[SerializeReference] 
+	public List<ChestFileData> ChestList = new();
 }
 
 [Serializable]
@@ -50,26 +53,26 @@ public class ChunkFileData // For Serialization
 }
 
 [Serializable]
-public class WorldObjectFileData // For Serialization
+public class ResourceObjectFileData // For Serialization
 {
-	public int WorldObjectId;
+	public ushort Id;
 	public Vector2Int Pos;
 	public CardinalDirection Orientation;
 	
-	public WorldObjectFileData(int id, Vector2Int pos, CardinalDirection orientation)
+	public ResourceObjectFileData(ushort id, Vector2Int pos, CardinalDirection orientation)
 	{
-		WorldObjectId = id;
+		Id = id;
 		Pos = pos;
 		Orientation = orientation;
 	}
 }
 
 [Serializable]
-public class DoorObjectFileData : WorldObjectFileData
+public class DoorObjectFileData : ResourceObjectFileData
 {
 	public bool IsOpen;
 
-	public DoorObjectFileData(int worldObject, Vector2Int pos, CardinalDirection orientation, bool isOpen) : base(worldObject, pos, orientation)
+	public DoorObjectFileData(ushort resourceObject, Vector2Int pos, CardinalDirection orientation, bool isOpen) : base(resourceObject, pos, orientation)
 	{
 		IsOpen = isOpen;
 	}

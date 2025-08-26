@@ -3704,10 +3704,10 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 832159822}
+  - {fileID: 1813096623}
   - {fileID: 2018757677}
   - {fileID: 876396786}
   - {fileID: 462286018}
-  - {fileID: 1813096623}
   - {fileID: 1616656745}
   - {fileID: 1655249452}
   - {fileID: 1007229085}
@@ -12294,7 +12294,6 @@ MonoBehaviour:
   _itemBasePrefab: {fileID: 4324714860010554649, guid: b80d6a3337ea34052b9944957d71ebd0, type: 3}
   _playerPrefab: {fileID: 815970926421098775, guid: f97c883a224ab4846b8446859cca2edd, type: 3}
   _itemDataBaseSO: {fileID: 11400000, guid: f8a736388b2c44969af16475866a4801, type: 2}
-  _worldObjectDataBaseSO: {fileID: 11400000, guid: de04e42d3d1784c50ae37924da4d8a99, type: 2}
   _tileDataBaseSO: {fileID: 11400000, guid: 86b92227f4ff84b0a9aee415c11b1cbe, type: 2}
 --- !u!1001 &1655304322
 PrefabInstance:
@@ -13595,6 +13594,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aaf57dff203064114a65c9ca56af7859, type: 2}
   - {fileID: 11400000, guid: e36d86ddefcdf4a19897bf7f30b8f27e, type: 2}
   - {fileID: 11400000, guid: 83e7f42dea9e944ceace0cac02e79f10, type: 2}
+  _resourceData:
+  - {fileID: 11400000, guid: 53d23b095bd4c410d95e0722ae609db1, type: 2}
+  - {fileID: 11400000, guid: 6a85358bb9fb54ad5a87dc908e10bf8b, type: 2}
+  - {fileID: 11400000, guid: 11f42201ce0164a5b85e5dd318d1a87c, type: 2}
+  - {fileID: 11400000, guid: 02e6019387ab643d496e9e121cc6e278, type: 2}
 --- !u!1 &1832040324
 GameObject:
   m_ObjectHideFlags: 0

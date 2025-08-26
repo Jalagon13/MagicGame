@@ -2,7 +2,7 @@ using System;
 using FMODUnity;
 using UnityEngine;
 
-public class DoorObject : WorldObject
+public class DoorObject : ResourceObject
 {
 	[SerializeField] private WorldInput _worldInput;
 	[SerializeField] private float _doorOpenDistance = 2.75f; 
@@ -29,7 +29,7 @@ public class DoorObject : WorldObject
 		if(other.gameObject.layer == 8 && !_isOpen)
 		{
 			OpenDoor();
-			ObjectManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value, true);
+			ResourceManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value, true);
 		}
 	}
 
@@ -38,7 +38,7 @@ public class DoorObject : WorldObject
 		if (other.gameObject.layer == 8 && _isOpen)
 		{
 			CloseDoor();
-			ObjectManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value, false);
+			ResourceManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value, false);
 		}
 	}
 
@@ -51,7 +51,7 @@ public class DoorObject : WorldObject
 		{
 			_isOpen = !_isOpen;
 		
-			ObjectManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value, _isOpen);
+			ResourceManager.Instance.SetDoorOpenStateServerRpc(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value, _isOpen);
 			HandlePathfinding();
 		}
 	}

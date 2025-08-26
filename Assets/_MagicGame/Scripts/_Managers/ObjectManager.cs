@@ -4,9 +4,9 @@ using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ObjectManager : NetworkBehaviour
+public class ResourceManager : NetworkBehaviour
 {
-	public static ObjectManager Instance { get; private set; }
+	public static ResourceManager Instance { get; private set; }
 	
 	public event EventHandler OnClearAllEnvironmentObjects;
 	public event EventHandler<OnWorldAssetSpawnedEventArgs> OnWorldObjectSpawned;
@@ -29,7 +29,7 @@ public class ObjectManager : NetworkBehaviour
 	[Rpc(SendTo.Server, RequireOwnership = false)]
 	public void DestroyObjectServerRpc(BiomeType biome, Vector2Int objectPos, int id)
 	{
-		foreach (WorldObjectGameData objectGameData in ChunkManager.Instance.GetChunkFromAnyWorldPos(objectPos, biome).GetWorldObjects())
+		foreach (ResourceObjectGameData objectGameData in ChunkManager.Instance.GetChunkFromAnyWorldPos(objectPos, biome).GetWorldObjects())
 		{
 			if(objectGameData.Position != objectPos) continue;
 		
@@ -42,7 +42,7 @@ public class ObjectManager : NetworkBehaviour
 				}
 			}
 
-			objectGameData.WO.DestroyObject(objectPos, biome);
+			objectGameData.Rsc.DestroyObject(objectPos, biome);
 			return;
 		}
 	}
@@ -92,13 +92,13 @@ public class ObjectManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void PlaceResourceObjectServerRpc(Vector2Int position, int id, BiomeType biomeToPlaceIn, CardinalDirection orientation)
+	public void PlaceResourceObjectServerRpc(Vector2Int position, ushort id, BiomeType biomeToPlaceIn, CardinalDirection orientation)
 	{
 		// While on server, add the data to chunks
-		ChunkManager.Instance.AddObjectDataToChunkServerRpc(position, id, biomeToPlaceIn, orientation);
+		ChunkManager.Instance.AddResourceDataToChunkServerRpc(position, id, biomeToPlaceIn, orientation);
 		
-		WorldObject obj = GameManager.Instance.GetWorldObjectFromID(id);
-		if(!obj.PassThrough)
+		ResourceObject obj = GameDataRegistry.Instance.GetResourceDataFromUShortId(id).ResourcePrefab;
+		if(!obj.Data.PassThrough)
 		{
 			Pathfinding.Instance.AddPfWallTileServerRpc(position, biomeToPlaceIn);
 		}
@@ -107,14 +107,14 @@ public class ObjectManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.ClientsAndHost)]
-	private void HandleObjectVisualsClientRpc(Vector2Int position, int assetID, BiomeType objectBiome, CardinalDirection orientation)
+	private void HandleObjectVisualsClientRpc(Vector2Int position, ushort assetID, BiomeType objectBiome, CardinalDirection orientation)
 	{
 		if(objectBiome == Player.Instance.CurrentBiome.Value)
 		{
 			// Visually place it down for everyone
-			WorldObject worldAsset = GameManager.Instance.GetWorldObjectFromID(assetID);
+			ResourceObject worldAsset = GameDataRegistry.Instance.GetResourceDataFromUShortId(assetID).ResourcePrefab;
 			GameObject placedAsset = Instantiate(worldAsset.gameObject, (Vector2)position, Quaternion.identity);
-			placedAsset.GetComponent<WorldObject>().SetOrientation(orientation);
+			placedAsset.GetComponent<ResourceObject>().SetOrientation(orientation);
 
 			if (placedAsset.TryGetComponent(out DoorObject doorObject))
 			{
@@ -132,12 +132,12 @@ public class ObjectManager : NetworkBehaviour
 	{
 		if(e.Chunk.GetWorldObjects().Count <= 0) return;
 		
-		foreach (WorldObjectGameData objectData in e.Chunk.GetWorldObjects())
+		foreach (ResourceObjectGameData objectData in e.Chunk.GetWorldObjects())
 		{	
 			// Instantiate the visual asset
-			GameObject assetGO = Instantiate(objectData.WO.gameObject, (Vector2)objectData.Position, Quaternion.identity);
+			GameObject assetGO = Instantiate(objectData.Rsc.gameObject, (Vector2)objectData.Position, Quaternion.identity);
 			
-			assetGO.GetComponent<WorldObject>().SetOrientation(objectData.Orientation);
+			assetGO.GetComponent<ResourceObject>().SetOrientation(objectData.Orientation);
 
 			if (assetGO.TryGetComponent(out DoorObject door))
 			{
@@ -146,7 +146,7 @@ public class ObjectManager : NetworkBehaviour
 				door.InitializeOpenState(doorObject.IsOpen);
 			}
 			
-			if(!objectData.WO.PassThrough)
+			if(!objectData.Rsc.Data.PassThrough)
 			{
 				Pathfinding.Instance.AddPfWallTileServerRpc(objectData.Position, Player.Instance.CurrentBiome.Value);
 				// TileManager.Instance.AddTileVisibilityData((Vector3Int)objectData.Position, new TileVisibility() { Visibility = 1 });
@@ -163,10 +163,10 @@ public class ObjectManager : NetworkBehaviour
 	{
 		if(e.Chunk.GetWorldObjects().Count <= 0) return;
 		
-		foreach (WorldObjectGameData assetData in e.Chunk.GetWorldObjects())
+		foreach (ResourceObjectGameData assetData in e.Chunk.GetWorldObjects())
 		{
 			// If asset visually exists, just delete it
-			if(TryToFindWorldObject(assetData.Position, out WorldObject wo))
+			if(TryToFindWorldObject(assetData.Position, out ResourceObject wo))
 			{
 				// TileManager.Instance.RemoveTileVisibilityData((Vector3Int)assetData.Position);
 				wo.DestroySelf();
@@ -174,7 +174,7 @@ public class ObjectManager : NetworkBehaviour
 		}
 	}
 	
-	public bool TryToFindWorldObject(Vector2Int position, out WorldObject wo)
+	public bool TryToFindWorldObject(Vector2Int position, out ResourceObject wo)
 	{
 		// Convert the tile position to world space if necessary
 		Vector2 worldPosition = (Vector2)position + new Vector2(0.5f, 0.5f); // Center of the tile
@@ -185,7 +185,7 @@ public class ObjectManager : NetworkBehaviour
 		// Iterate through the colliders to check for a WorldAsset component
 		foreach (Collider2D collider in colliders)
 		{
-			collider.TryGetComponent(out WorldObject asset);
+			collider.TryGetComponent(out ResourceObject asset);
 			
 			if (asset != null)
 			{

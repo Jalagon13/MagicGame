@@ -15,7 +15,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 	public List<GenericGameObjectSyncData> SyncLiquidTileDataList;
 	public List<GenericGameObjectSyncData> SyncFoliageTileDataList;
 	
-	public List<WorldObjectSyncData> SyncObjectAssetDataList;
+	public List<ResourceSyncData> SyncObjectAssetDataList;
 	public List<DoorObjectSyncData> SyncDoorObjectDataList;
 
 	public bool Equals(SyncChunkData other)
@@ -45,7 +45,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 		SerializeDoorDataList(serializer, ref SyncDoorObjectDataList);
 	}
 	
-	private void SerializeWorldObjectDataList<T>(BufferSerializer<T> serializer, ref List<WorldObjectSyncData> worldObjectDataList) where T : IReaderWriter
+	private void SerializeWorldObjectDataList<T>(BufferSerializer<T> serializer, ref List<ResourceSyncData> worldObjectDataList) where T : IReaderWriter
 	{
 		if (serializer.IsWriter)
 		{
@@ -56,7 +56,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 			// Serialize each world object in the list
 			for (int i = 0; i < listLength; i++)
 			{
-				WorldObjectSyncData worldObjectData = worldObjectDataList[i];
+				ResourceSyncData worldObjectData = worldObjectDataList[i];
 				serializer.SerializeValue(ref worldObjectData);
 			}
 		}
@@ -75,7 +75,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 			// Initialize or clear the list
 			if (worldObjectDataList == null)
 			{
-				worldObjectDataList = new List<WorldObjectSyncData>();
+				worldObjectDataList = new List<ResourceSyncData>();
 			}
 			else
 			{
@@ -85,7 +85,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 			// Deserialize each item in the list
 			for (int i = 0; i < listLength; i++)
 			{
-				WorldObjectSyncData worldObjectData = default;
+				ResourceSyncData worldObjectData = default;
 				serializer.SerializeValue(ref worldObjectData);
 				worldObjectDataList.Add(worldObjectData);
 			}
@@ -205,13 +205,13 @@ public struct GenericGameObjectSyncData : IEquatable<GenericGameObjectSyncData>,
 	}
 }
 
-public struct WorldObjectSyncData : IEquatable<WorldObjectSyncData>, INetworkSerializable
+public struct ResourceSyncData : IEquatable<ResourceSyncData>, INetworkSerializable
 {
 	public Vector2Int Position;
-	public byte ID;
+	public ushort ID;
 	public CardinalDirection Orientation;
 
-	public bool Equals(WorldObjectSyncData other)
+	public bool Equals(ResourceSyncData other)
 	{
 		return Position.Equals(other.Position) && ID == other.ID && Orientation == other.Orientation;
 	}
@@ -228,7 +228,7 @@ public struct WorldObjectSyncData : IEquatable<WorldObjectSyncData>, INetworkSer
 public struct DoorObjectSyncData : IEquatable<DoorObjectSyncData>, INetworkSerializable
 {
 	public Vector2Int Position;
-	public byte ID;
+	public ushort ID;
 	public bool IsOpen;
 	public CardinalDirection Orientation;
 	

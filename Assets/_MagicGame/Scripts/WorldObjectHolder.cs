@@ -5,8 +5,8 @@ public class WorldObjectHolder : MonoBehaviour
 {
 	private void Start()
 	{
-		ObjectManager.Instance.OnWorldObjectSpawned += ObjectManager_OnWorldObjectSpawned;
-		ObjectManager.Instance.OnClearAllEnvironmentObjects += ObjectManager_OnClearAllEnvironmentObjects;
+		ResourceManager.Instance.OnWorldObjectSpawned += ObjectManager_OnWorldObjectSpawned;
+		ResourceManager.Instance.OnClearAllEnvironmentObjects += ObjectManager_OnClearAllEnvironmentObjects;
 	}
 
 	private void ObjectManager_OnClearAllEnvironmentObjects(object sender, EventArgs e)
@@ -18,7 +18,7 @@ public class WorldObjectHolder : MonoBehaviour
 			Transform child = transform.GetChild(i);
         
 			// Try to get the WorldObject component
-			WorldObject worldObject = child.GetComponent<WorldObject>();
+			ResourceObject worldObject = child.GetComponent<ResourceObject>();
 			if (worldObject != null)
 			{
 				// Call the DestroySelf() method
@@ -31,14 +31,14 @@ public class WorldObjectHolder : MonoBehaviour
 		}
 	}
 
-	private void ObjectManager_OnWorldObjectSpawned(object sender, ObjectManager.OnWorldAssetSpawnedEventArgs e)
+	private void ObjectManager_OnWorldObjectSpawned(object sender, ResourceManager.OnWorldAssetSpawnedEventArgs e)
 	{
 		e.WorldObjectGameObject.transform.SetParent(transform);
 	}
 
 	private void OnDestroy()
 	{
-		ObjectManager.Instance.OnWorldObjectSpawned -= ObjectManager_OnWorldObjectSpawned;
-		ObjectManager.Instance.OnClearAllEnvironmentObjects += ObjectManager_OnClearAllEnvironmentObjects;
+		ResourceManager.Instance.OnWorldObjectSpawned -= ObjectManager_OnWorldObjectSpawned;
+		ResourceManager.Instance.OnClearAllEnvironmentObjects += ObjectManager_OnClearAllEnvironmentObjects;
 	}
 }

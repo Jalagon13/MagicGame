@@ -13,7 +13,7 @@ public class DeployItemSO : ItemSO
 {
 	public static bool PlacedThisFrameFlag = false;
 
-	[SerializeField] private WorldObject _deployObjectPrefab;
+	[SerializeField] private ResourceObject _deployObjectPrefab;
 	
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
@@ -68,7 +68,7 @@ public class DeployItemSO : ItemSO
 		return true;
 	}
 	
-	public WorldObject GetDeployObjectPrefab()
+	public ResourceObject GetDeployObjectPrefab()
 	{
 		return _deployObjectPrefab;
 	}

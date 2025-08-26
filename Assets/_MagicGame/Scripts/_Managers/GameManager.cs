@@ -28,7 +28,6 @@ public class GameManager : NetworkBehaviour
 	
 	[Title("Database Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
 	[SerializeField] private ItemDataBaseSO _itemDataBaseSO;
-	[SerializeField] private WorldObjectDataBaseSO _worldObjectDataBaseSO;
 	[SerializeField] private TileDataBaseSO _tileDataBaseSO;
 	
 	private void Awake()
@@ -137,25 +136,6 @@ public class GameManager : NetworkBehaviour
 		}
 		
 		return (ushort)index;
-	}
-	
-	public WorldObject GetWorldObjectFromID(int id)
-	{
-		return _worldObjectDataBaseSO.WorldObjectList[id];
-	}
-	
-	public int GetIDFromWorldObject(WorldObject worldObject)
-	{
-		foreach (WorldObject wo in _worldObjectDataBaseSO.WorldObjectList)
-		{
-			if(wo.WorldObjectName == worldObject.WorldObjectName)
-			{
-				return _worldObjectDataBaseSO.WorldObjectList.IndexOf(wo);
-			}
-		}
-		
-		Debug.LogError($"Cannot find {worldObject} in WorldAssetList. Warning returning 0");
-		return 0;
 	}
 	
 	public TileSO GetTileSOFromTileBase(TileBase tileBase)

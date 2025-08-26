@@ -11,7 +11,7 @@ public class ForestStairsGenerationStep : GenerationStep
         
         foreach (var (transitionObjectId, forestTransitionObjectPosition) in forestTransitionObjectData)
         {
-            if(transitionObjectId == GameManager.Instance.GetIDFromWorldObject(caveGenData.StairsToCave))
+            if(transitionObjectId == GameDataRegistry.Instance.GetUShortIdFromResourceData(caveGenData.StairsToCave.Data))
             {
                 DeleteNeighborWallsAroundPoint(forestTransitionObjectPosition);
                 caveGenData.SetWorldObjectData(forestTransitionObjectPosition.x, forestTransitionObjectPosition.y, caveGenData.StairsToForest, CardinalDirection.North);

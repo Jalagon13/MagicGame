@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [SelectionBase]
-public class CraftingTableObject : WorldObject
+public class CraftingTableObject : ResourceObject
 {
     [Header("Crafting Table Parameters")]
     [field: SerializeField] public RecipeDataBaseObject CraftingRecipeDB { get; private set; }
@@ -18,7 +18,7 @@ public class CraftingTableObject : WorldObject
     private void GameInput_OnSecondaryActionStarted(object sender, EventArgs e)
     {
         var centerPosition = new Vector2(transform.position.x + 0.5f, transform.position.y + 0.5f);
-        var playerInRange = Vector2.Distance(Player.Instance.transform.position, centerPosition) <= InteractDistance;
+        var playerInRange = Vector2.Distance(Player.Instance.transform.position, centerPosition) <= ResourceDataSO.InteractDistance;
         
         if (WorldInput.IsMouseOverIndputDetector() && playerInRange && !Pointer.IsOverUI())
         {

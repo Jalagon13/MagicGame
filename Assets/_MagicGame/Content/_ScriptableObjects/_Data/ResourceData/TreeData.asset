@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d4e45105852413c9fb3508bbf2b3c1, type: 3}
+  m_Name: TreeData
+  m_EditorClassIdentifier: 
+  StringID: tree
+  PassThrough: 0
+  CanBeDestroyed: 1
+  ResourcePrefab: {fileID: 1030882037603866735, guid: f4caf4c5091224ab38ce3d21bbffe7bf, type: 3}
+  Hardness: 1
+  ToolTypeNeededForHarvest: 1
+  Table:
+  - Item: {fileID: 11400000, guid: 86cb8623724924d17ae00c150259df3d, type: 2}
+    Min: 1
+    Max: 1
+    Chance: 100
+  MiningSound:
+    Guid:
+      Data1: 1812228115
+      Data2: 1207244471
+      Data3: 1013332110
+      Data4: -2033662663
+    Path: event:/WoodHit
+  ResourceDestroyed:
+    Guid:
+      Data1: 15823222
+      Data2: 1125522555
+      Data3: -1633797458
+      Data4: 490440430
+    Path: event:/WoodDestroyed
+  PlaceSound:
+    Guid:
+      Data1: 1812228115
+      Data2: 1207244471
+      Data3: 1013332110
+      Data4: -2033662663
+    Path: event:/WoodHit

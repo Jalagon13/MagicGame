@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChestObject : WorldObject
+public class ChestObject : ResourceObject
 {
 	[field: SerializeField] public WorldInput WorldInput { get; private set; }
 

@@ -4,9 +4,16 @@ using UnityEngine;
 // Facilitates broad step by step process to generate forest
 public class ForestGenerator : MonoBehaviour
 {
-    [field: SerializeField] public ForestGenerationData ForestGenerationData { get; private set; }
-    [field: SerializeField] public GenerationStep[] GenerationSteps { get; private set; }
-    [field: SerializeField] public List<NoiseMapSO> NoiseMapsToApplySeed { get; private set; }
+    [field: SerializeField] 
+    public ForestGenerationData ForestGenerationData { get; private set; }
+    
+    [field: Space(15)]
+    [field: SerializeField] 
+    public GenerationStep[] GenerationSteps { get; private set; }
+
+    [field: Space(15)]
+    [field: SerializeField] 
+    public List<NoiseMapSO> NoiseMapsToApplySeed { get; private set; }
 
     public void GenerateForest()
     {

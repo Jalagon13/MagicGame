@@ -63,7 +63,7 @@ public class PlaceDownUI : MonoBehaviour
 
 		foreach(Collider2D col in colliders)
 		{
-			if(col.TryGetComponent(out WorldObject clickable)) 
+			if(col.TryGetComponent(out ResourceObject clickable)) 
 				return false;
 		}
 

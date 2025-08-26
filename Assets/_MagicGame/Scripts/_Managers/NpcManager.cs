@@ -85,17 +85,17 @@ public class NpcManager : NetworkBehaviour
 	public void SpawnNpc(Vector2 spawnPosition, CharacterDataSO npcData)
 	{
 		_npcSlots += npcData.SlotAmount;
-		short id = GameDataRegistry.Instance.GetShortIdFromCharacterData(npcData);
+		ushort id = GameDataRegistry.Instance.GetUShortIdFromCharacterData(npcData);
 		SpawnNpcServerRpc(Player.Instance.CurrentBiome.Value, id, NetworkManager.LocalClientId, spawnPosition, npcData.SlotAmount);
 	}
 	
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnNpcServerRpc(BiomeType spawnBiome, short npcId, ulong spawnPlayerId, Vector2 position, float slotAmount)
+	private void SpawnNpcServerRpc(BiomeType spawnBiome, ushort npcId, ulong spawnPlayerId, Vector2 position, float slotAmount)
 	{
-		CharacterDataSO npcData = GameDataRegistry.Instance.GetCharacterDataFromShortId(npcId);
+		CharacterDataSO npcData = GameDataRegistry.Instance.GetCharacterDataFromUShortId(npcId);
 		
 		var spawnPosition = new Vector2(Mathf.FloorToInt(position.x) + 0.5f, Mathf.FloorToInt(position.y) + 0.5f);
-		GameObject npcPrefab = Instantiate(npcData.NpcPrefab, spawnPosition, Quaternion.identity);
+		GameObject npcPrefab = Instantiate(npcData.NpcPrefab.gameObject, spawnPosition, Quaternion.identity);
 		
 		NetworkObject npcPrefabNetworkObject = npcPrefab.GetComponent<NetworkObject>();
 		npcPrefabNetworkObject.SpawnWithObservers = false;

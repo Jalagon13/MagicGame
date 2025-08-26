@@ -39,7 +39,7 @@ public class MiningHandler : MonoBehaviour
 
     private Timer _miningTimer, _miningSoundTimer, _breakCooldownTimer;
     private DestructableType _destructableFound;
-    private WorldObject _worldObjectSelected;
+    private ResourceObject _resourceSelected;
     private TileSO _tileSelected;
     private Vector3Int? _currentBreakTargetPosition = null;
     private Vector3Int? _originalBreakTargetPosition = null;
@@ -104,11 +104,11 @@ public class MiningHandler : MonoBehaviour
         Vector3Int pos = ActionManager.MouseTilePosition;
         Vector3Int wallPos = Pointer.IsOverTopTile() ? pos + Vector3Int.down : pos;
 
-        if (ObjectManager.Instance.TryToFindWorldObject((Vector2Int)pos, out WorldObject wo) && wo.CanBeDestroyed)
+        if (ResourceManager.Instance.TryToFindWorldObject((Vector2Int)pos, out ResourceObject wo) && wo.Data.CanBeDestroyed)
         {
-            _worldObjectSelected = wo;
+            _resourceSelected = wo;
             _destructableFound = DestructableType.WorldObject;
-            _selectedResourceToolType = wo.ToolTypeNeededForHarvest;
+            _selectedResourceToolType = wo.Data.ToolTypeNeededForHarvest;
             _currentBreakTargetPosition = pos;
         }
         else if (TileManager.Instance.WallTm.HasTile(wallPos))
@@ -184,7 +184,7 @@ public class MiningHandler : MonoBehaviour
 
         float hardness = _destructableFound switch
         {
-            DestructableType.WorldObject => _worldObjectSelected.Hardness,
+            DestructableType.WorldObject => _resourceSelected.Data.Hardness,
             DestructableType.Tile => _tileSelected.Hardness,
             _ => 1f
         };
@@ -236,7 +236,7 @@ public class MiningHandler : MonoBehaviour
         switch (_destructableFound)
         {
             case DestructableType.WorldObject:
-                ObjectManager.Instance.DestroyObjectServerRpc(Player.Instance.CurrentBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetIDFromWorldObject(_worldObjectSelected));
+                ResourceManager.Instance.DestroyObjectServerRpc(Player.Instance.CurrentBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetUShortIdFromResourceData(_resourceSelected.Data));
                 break;
             case DestructableType.Tile:
                 TileManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.Instance.CurrentBiome.Value);
@@ -253,8 +253,8 @@ public class MiningHandler : MonoBehaviour
         switch (_destructableFound)
         {
             case DestructableType.WorldObject:
-                SoundManager.Instance.PlayOneShot(_worldObjectSelected.MiningSound, (Vector3)_currentBreakTargetPosition);
-                _worldObjectSelected.PlayHitFeedback();
+                SoundManager.Instance.PlayOneShot(_resourceSelected.Data.MiningSound, (Vector3)_currentBreakTargetPosition);
+                _resourceSelected.PlayHitFeedback();
                 break;
             case DestructableType.Tile:
                 SoundManager.Instance.PlayOneShot(_tileSelected.MiningSound, (Vector3)_currentBreakTargetPosition);

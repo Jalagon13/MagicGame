@@ -8,8 +8,8 @@ public class CaveGenerationData : BaseGenerationData
     [field: SerializeField] public TileSO CoboltOreTile { get; private set; }
 
     [field: Header("World Objects")]
-    [field: SerializeField] public WorldObject StairsToForest { get; private set; }
-    [field: SerializeField] public WorldObject StairsToCave { get; private set; }
+    [field: SerializeField] public ResourceObject StairsToForest { get; private set; }
+    [field: SerializeField] public ResourceObject StairsToCave { get; private set; }
 
     [field: Header("Noise Maps")]
     [field: SerializeField] public NoiseMapSO SpaghettiCaveNM;

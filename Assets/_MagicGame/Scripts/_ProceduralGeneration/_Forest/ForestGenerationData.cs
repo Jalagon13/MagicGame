@@ -11,8 +11,8 @@ public class ForestGenerationData : BaseGenerationData
     [field: SerializeField] public TileSO TallGrassTile { get; private set; }
 
     [field: Header("World Objects")]
-    [field: SerializeField] public WorldObject TreeWorldObject { get; private set; }
-    [field: SerializeField] public WorldObject CaveEntranceWorldObject { get; private set; }
+    [field: SerializeField] public ResourceObject TreeWorldObject { get; private set; }
+    [field: SerializeField] public ResourceObject CaveEntranceWorldObject { get; private set; }
 
     [field: Header("Noise Maps")]
     [field: SerializeField] public NoiseMapSO RiverNoiseMap { get; private set; }

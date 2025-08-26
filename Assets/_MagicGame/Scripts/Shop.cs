@@ -60,7 +60,7 @@ public class Shop : NetworkBehaviour
     private void GameInput_OnSecondaryActionStarted(object sender, EventArgs e)
     {
         var centerPosition = new Vector2(transform.position.x, transform.position.y + 0.5f);
-        var playerInRange = Vector2.Distance(Player.Instance.transform.position, centerPosition) <= WorldObject.InteractDistance;
+        var playerInRange = Vector2.Distance(Player.Instance.transform.position, centerPosition) <= ResourceDataSO.InteractDistance;
 
         if (WorldInput.IsMouseOverIndputDetector() && playerInRange && !PlayersUsingShop.Contains(NetworkManager.LocalClientId))
         {

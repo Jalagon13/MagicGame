@@ -34,9 +34,9 @@ public abstract class BaseGenerationData : MonoBehaviour
         MostFrontRenderedTileMatrix[x, y] = GameManager.Instance.GetTileIdFromTileSO(tileSO);
     }
 
-    public virtual void SetWorldObjectData(int x, int y, WorldObject obj, CardinalDirection dir)
+    public virtual void SetWorldObjectData(int x, int y, ResourceObject resource, CardinalDirection dir)
     {
-        ChunkManager.Instance.AddObjectDataToChunkServerRpc(new Vector2Int(x, y), GameManager.Instance.GetIDFromWorldObject(obj), _biomeType, dir);
+        ChunkManager.Instance.AddResourceDataToChunkServerRpc(new Vector2Int(x, y), GameDataRegistry.Instance.GetUShortIdFromResourceData(resource.Data), _biomeType, dir);
     }
 
     public bool IsInBounds(int x, int y)

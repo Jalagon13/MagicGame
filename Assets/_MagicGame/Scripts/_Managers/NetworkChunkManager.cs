@@ -48,7 +48,7 @@ public class NetworkChunkManager : NetworkBehaviour
 			SyncLiquidTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Liquid).Count),
 			SyncFoliageTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Foliage).Count),
 			
-			SyncObjectAssetDataList = new List<WorldObjectSyncData>(chunkGameData.GetWorldObjects().Count),
+			SyncObjectAssetDataList = new List<ResourceSyncData>(chunkGameData.GetWorldObjects().Count),
 			SyncDoorObjectDataList = new List<DoorObjectSyncData>(doorCount)
 		};
 
@@ -61,11 +61,11 @@ public class NetworkChunkManager : NetworkBehaviour
 		ConvertTileList(chunkGameData.GetTileList(TileType.Foliage), syncChunkData.SyncFoliageTileDataList);
 
 		// Convert world asset game data to agnostic sync data
-		foreach (var worldObjectGameData in chunkGameData.GetWorldObjects())
+		foreach (ResourceObjectGameData resourceGameData in chunkGameData.GetWorldObjects())
 		{
-			byte id = (byte)GameManager.Instance.GetIDFromWorldObject(worldObjectGameData.WO);
+			ushort id = GameDataRegistry.Instance.GetUShortIdFromResourceData(resourceGameData.Rsc.Data);
 			
-			if(worldObjectGameData is DoorObjectGameData doorObjectGameData)
+			if(resourceGameData is DoorObjectGameData doorObjectGameData)
 			{
 				syncChunkData.SyncDoorObjectDataList.Add(new DoorObjectSyncData(){ 
 				Position = doorObjectGameData.Position, 
@@ -75,10 +75,10 @@ public class NetworkChunkManager : NetworkBehaviour
 			}
 			else
 			{
-				syncChunkData.SyncObjectAssetDataList.Add(new WorldObjectSyncData(){ 
-				Position = worldObjectGameData.Position, 
+				syncChunkData.SyncObjectAssetDataList.Add(new ResourceSyncData(){ 
+				Position = resourceGameData.Position, 
 				ID = id, 
-				Orientation = worldObjectGameData.Orientation});
+				Orientation = resourceGameData.Orientation});
 			}
 		}
 
@@ -132,14 +132,14 @@ private ChunkGameData ConvertToGameChunkData(SyncChunkData syncChunkData)
 	// Convert SyncWorldAssetData to WorldAssetGameData
 	ConvertSyncDataList(syncChunkData.SyncObjectAssetDataList, (syncAsset) =>
 	{
-		WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(syncAsset.ID);
-		return new WorldObjectGameData(worldObject, syncAsset.Position, syncAsset.Orientation);
+		ResourceObject worldObject = GameDataRegistry.Instance.GetResourceDataFromUShortId(syncAsset.ID).ResourcePrefab;
+		return new ResourceObjectGameData(worldObject, syncAsset.Position, syncAsset.Orientation);
 	}, chunkGameData.GetWorldObjects());
 
 	// Convert SyncDoorObjectData To DoorObjectGameData
 	ConvertSyncDataList(syncChunkData.SyncDoorObjectDataList, (syncDoor) => 
 	{
-		WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(syncDoor.ID);
+		ResourceObject worldObject = GameDataRegistry.Instance.GetResourceDataFromUShortId(syncDoor.ID).ResourcePrefab;
 		return new DoorObjectGameData(worldObject, syncDoor.Position, syncDoor.Orientation, syncDoor.IsOpen);
 	}, chunkGameData.GetWorldObjects());
 

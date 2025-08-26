@@ -149,7 +149,7 @@ public class ChunkManager : NetworkBehaviour
 		
 		ChunkGameData chunk = GetChunkFromAnyWorldPos(doorPos, biome);
 		
-		foreach (WorldObjectGameData worldObject in chunk.GetWorldObjects())
+		foreach (ResourceObjectGameData worldObject in chunk.GetWorldObjects())
 		{
 			if(worldObject.Position == doorPos)
 			{
@@ -164,7 +164,7 @@ public class ChunkManager : NetworkBehaviour
 		return false;
 	}
 	
-	public void DeserializeObjectDataToChunk(WorldObjectFileData worldObjectFileData, BiomeType biome, WorldObject worldObject, CardinalDirection orientation)
+	public void DeserializeObjectDataToChunk(ResourceObjectFileData worldObjectFileData, BiomeType biome, ResourceObject worldObject, CardinalDirection orientation)
 	{
 		if(!IsServer) return;
 		
@@ -174,11 +174,11 @@ public class ChunkManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void AddObjectDataToChunkServerRpc(Vector2Int position, int worldObjectId, BiomeType biomeToPlaceIn, CardinalDirection orientation)
+	public void AddResourceDataToChunkServerRpc(Vector2Int position, ushort resourceId, BiomeType biomeToPlaceIn, CardinalDirection orientation)
 	{
 		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, biomeToPlaceIn);
 		
-		WorldObject worldObject = GameManager.Instance.GetWorldObjectFromID(worldObjectId);
+		ResourceObject worldObject = GameDataRegistry.Instance.GetResourceDataFromUShortId(resourceId).ResourcePrefab;
 		chunk.AddObjectData(position, worldObject, orientation);
 	}
 	
@@ -194,7 +194,7 @@ public class ChunkManager : NetworkBehaviour
 	{
 		if(Player.Instance.CurrentBiome.Value != biomeToRemoveObjData) return;
 		
-		if(ObjectManager.Instance.TryToFindWorldObject(position, out WorldObject wo))
+		if(ResourceManager.Instance.TryToFindWorldObject(position, out ResourceObject wo))
 		{
 			wo.DestroySelf();
 		}

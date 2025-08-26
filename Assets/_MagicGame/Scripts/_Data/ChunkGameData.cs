@@ -14,7 +14,7 @@ public class ChunkGameData
 	private readonly List<TileGameData> _wallTileGameDataList;
 	private readonly List<TileGameData> _oreTileGameDataList;
 	private readonly List<TileGameData> _foliageTileGameDataList;
-	private readonly List<WorldObjectGameData> _worldObjectGameDataList;
+	private readonly List<ResourceObjectGameData> _worldObjectGameDataList;
 	public int Size { get; private set; }
 
 	private readonly Dictionary<TileType, List<TileGameData>> _tileTypeToList;
@@ -29,7 +29,7 @@ public class ChunkGameData
 		_wallTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		_oreTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		_foliageTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
-		_worldObjectGameDataList = new List<WorldObjectGameData>(chunkSize * chunkSize);
+		_worldObjectGameDataList = new List<ResourceObjectGameData>(chunkSize * chunkSize);
 
 		_tileTypeToList = new Dictionary<TileType, List<TileGameData>>
 		{
@@ -128,14 +128,14 @@ public class ChunkGameData
 		return _worldObjectGameDataList.Exists(o => o.Position == position);
 	}
 
-	public List<WorldObjectGameData> GetWorldObjects()
+	public List<ResourceObjectGameData> GetWorldObjects()
 	{
 		return _worldObjectGameDataList;
 	}
 
-	public void DeserializeObjectData(WorldObjectFileData worldObjectFileData, WorldObject worldObject, CardinalDirection orientation) // For deserialization
+	public void DeserializeObjectData(ResourceObjectFileData worldObjectFileData, ResourceObject worldObject, CardinalDirection orientation) // For deserialization
 	{
-		WorldObjectGameData worldObjectToAdd;
+		ResourceObjectGameData worldObjectToAdd;
 		
 		if(worldObjectFileData is DoorObjectFileData doorObjectFileData)
 		{
@@ -143,15 +143,15 @@ public class ChunkGameData
 		}
 		else
 		{
-			worldObjectToAdd = new WorldObjectGameData(worldObject, worldObjectFileData.Pos, orientation);
+			worldObjectToAdd = new ResourceObjectGameData(worldObject, worldObjectFileData.Pos, orientation);
 		}
 		
 		_worldObjectGameDataList.Add(worldObjectToAdd);
 	}
 
-	public void AddObjectData(Vector2Int position, WorldObject worldObject, CardinalDirection orientation) // For run time game play
+	public void AddObjectData(Vector2Int position, ResourceObject worldObject, CardinalDirection orientation) // For run time game play
 	{
-		WorldObjectGameData worldObjectToAdd;
+		ResourceObjectGameData worldObjectToAdd;
 
 		if (worldObject is DoorObject)
 		{
@@ -159,7 +159,7 @@ public class ChunkGameData
 		}
 		else
 		{
-			worldObjectToAdd = new WorldObjectGameData(worldObject, position, orientation);
+			worldObjectToAdd = new ResourceObjectGameData(worldObject, position, orientation);
 		}
 
 		for (int i = 0; i < _worldObjectGameDataList.Count; i++)
@@ -167,7 +167,7 @@ public class ChunkGameData
 			if (_worldObjectGameDataList[i].Position == position)
 			{
 				// Found something already there
-				Debug.LogWarning($"Found {_worldObjectGameDataList[i].WO} already there at {position}, replacing it with {worldObject}");
+				Debug.LogWarning($"Found {_worldObjectGameDataList[i].Rsc} already there at {position}, replacing it with {worldObject}");
 				_worldObjectGameDataList.RemoveAt(i);
 				break;
 			}
@@ -178,7 +178,7 @@ public class ChunkGameData
 
 	public void RemoveObjectData(Vector2Int position)
 	{
-		foreach (WorldObjectGameData assetGameData in _worldObjectGameDataList)
+		foreach (ResourceObjectGameData assetGameData in _worldObjectGameDataList)
 		{
 			if(assetGameData.Position == position)
 			{
@@ -189,25 +189,25 @@ public class ChunkGameData
 	}
 }
 
-public class WorldObjectGameData
+public class ResourceObjectGameData
 {
-	public WorldObject WO { get; private set; }
+	public ResourceObject Rsc { get; private set; }
 	public Vector2Int Position { get; private set; }
 	public CardinalDirection Orientation { get; set; }
 	
-	public WorldObjectGameData(WorldObject worldObject, Vector2Int position, CardinalDirection orientation)
+	public ResourceObjectGameData(ResourceObject resourceObject, Vector2Int position, CardinalDirection orientation)
 	{
-		WO = worldObject;
+		Rsc = resourceObject;
 		Position = position;
 		Orientation = orientation;
 	}
 }
 
-public class DoorObjectGameData : WorldObjectGameData
+public class DoorObjectGameData : ResourceObjectGameData
 {
 	public bool IsOpen { get; private set; }
 
-	public DoorObjectGameData(WorldObject worldObject, Vector2Int position, CardinalDirection orientation, bool isOpen) : base(worldObject, position, orientation)
+	public DoorObjectGameData(ResourceObject worldObject, Vector2Int position, CardinalDirection orientation, bool isOpen) : base(worldObject, position, orientation)
 	{
 		IsOpen = isOpen;
 		Orientation = orientation;

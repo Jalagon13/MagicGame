@@ -75,32 +75,32 @@ public class SaveSystem : MonoBehaviour
 	private void SerializeObjectDataOfCurrentEnvironment(BiomeType biomeToSave)
 	{
 		// Clear assets
-		_biomeFileDataForSaving.WorldObjectsList.Clear();
+		_biomeFileDataForSaving.ResourceObjectsList.Clear();
 		
 		// Loop through all assets and push them to _sceneData before serializing it
 		foreach (var chunkPosChunkDataKVP in ChunkManager.Instance.GetChunksFromBiome(biomeToSave))
 		{
 			if(chunkPosChunkDataKVP.Value.GetWorldObjects().Count > 0)
 			{
-				foreach (WorldObjectGameData worldObjectGameData in chunkPosChunkDataKVP.Value.GetWorldObjects())
+				foreach (ResourceObjectGameData rscObjGameData in chunkPosChunkDataKVP.Value.GetWorldObjects())
 				{
 					// If so, serialize it
-					if(worldObjectGameData.WO != null)
+					if(rscObjGameData.Rsc != null)
 					{
 						// Create new filedata for this asset
-						WorldObjectFileData worldAssetData;
+						ResourceObjectFileData worldAssetData;
 						
-						if(worldObjectGameData is DoorObjectGameData doorObjectGameData)
+						if(rscObjGameData is DoorObjectGameData doorObjectGameData)
 						{
-							worldAssetData = new DoorObjectFileData(GameManager.Instance.GetIDFromWorldObject(worldObjectGameData.WO), worldObjectGameData.Position, worldObjectGameData.Orientation, doorObjectGameData.IsOpen);
+							worldAssetData = new DoorObjectFileData(GameDataRegistry.Instance.GetUShortIdFromResourceData(rscObjGameData.Rsc.Data), rscObjGameData.Position, rscObjGameData.Orientation, doorObjectGameData.IsOpen);
 						}
 						else
 						{
-							worldAssetData = new WorldObjectFileData(GameManager.Instance.GetIDFromWorldObject(worldObjectGameData.WO), worldObjectGameData.Position, worldObjectGameData.Orientation);
+							worldAssetData = new ResourceObjectFileData(GameDataRegistry.Instance.GetUShortIdFromResourceData(rscObjGameData.Rsc.Data), rscObjGameData.Position, rscObjGameData.Orientation);
 						}
 						
 						// Push it to WorldAssets in sceneData
-						_biomeFileDataForSaving.WorldObjectsList.Add(worldAssetData);
+						_biomeFileDataForSaving.ResourceObjectsList.Add(worldAssetData);
 					}
 				}
 			}
@@ -235,15 +235,15 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
     {
         string json = File.ReadAllText(_path);
         BiomeFileData biomeFileData = JsonUtility.FromJson<BiomeFileData>(json);
-        List<WorldObjectFileData> worldObjectFileData = new(biomeFileData.WorldObjectsList);
+        List<ResourceObjectFileData> worldObjectFileData = new(biomeFileData.ResourceObjectsList);
 
         // Collect data for each BiomeTransitionObject
-        foreach (WorldObjectFileData data in worldObjectFileData)
+        foreach (ResourceObjectFileData data in worldObjectFileData)
         {
-            if (GameManager.Instance.GetWorldObjectFromID(data.WorldObjectId) is BiomeTransitionObject)
+            if (GameDataRegistry.Instance.GetResourceDataFromUShortId(data.Id).ResourcePrefab is BiomeTransitionObject)
             {
-                Debug.Log($"Found BiomeTransitionObject: {data.WorldObjectId} at {data.Pos}");
-                transitionDataList.Add((data.WorldObjectId, data.Pos));
+                Debug.Log($"Found BiomeTransitionObject: {data.Id} at {data.Pos}");
+                transitionDataList.Add((data.Id, data.Pos));
             }
         }
     }
@@ -340,13 +340,13 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 	private void DeserializeObjectData(BiomeType biomeToDeserialize)
 	{
 		// Unpack asset data need to make a new list to avoid error that said I was modifying this list as it was being processed
-		List<WorldObjectFileData> worldObjectFileData = new(_biomeFileDataForLoading.WorldObjectsList);
+		List<ResourceObjectFileData> worldObjectFileData = new(_biomeFileDataForLoading.ResourceObjectsList);
 		
 		// Instantiate each asset
-		foreach (WorldObjectFileData data in worldObjectFileData)
+		foreach (ResourceObjectFileData data in worldObjectFileData)
 		{
 			// Fetch each prefab from database
-			WorldObject worldObjectToInst = GameManager.Instance.GetWorldObjectFromID(data.WorldObjectId);
+			ResourceObject worldObjectToInst = GameDataRegistry.Instance.GetResourceDataFromUShortId(data.Id).ResourcePrefab;
 			ChunkManager.Instance.DeserializeObjectDataToChunk(data, biomeToDeserialize, worldObjectToInst, data.Orientation);
 		}
 		
