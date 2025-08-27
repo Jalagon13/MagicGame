@@ -12082,7 +12082,7 @@ GameObject:
   - component: {fileID: 1630212177}
   - component: {fileID: 1630212178}
   m_Layer: 0
-  m_Name: WorldObjectRendering
+  m_Name: ResourceObjectRendering
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

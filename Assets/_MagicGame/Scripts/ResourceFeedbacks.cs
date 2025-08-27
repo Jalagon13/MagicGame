@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ResourceFeedbacks : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSecondsBeforeDespawn = new(4f);
+    
     [SerializeField] 
     private ResourceObject _resourceObject;
 
@@ -38,11 +40,14 @@ public class ResourceFeedbacks : MonoBehaviour
         Lightmap.Instance.UpdateLightMap();
         
         _visuals.SetActive(false);
-        _resourceObjectCollider.gameObject.SetActive(false);
-        _wallCollider.gameObject.SetActive(false);
+        _resourceObjectCollider.enabled = false;
+        _wallCollider.enabled = false;
+        
+        // NTFS: This not working for some reason
         _destroyFeedbacks.PlayFeedbacks(); 
 
-        yield return new WaitForSeconds(4f);
+        yield return _waitForSecondsBeforeDespawn;
+        Debug.Log($"Destroying this gameobject");
         Destroy(gameObject);
     }
 }
