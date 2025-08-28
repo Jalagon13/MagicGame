@@ -17,7 +17,7 @@ public class Loot
 
 public static class LootTable
 {
-	public static void SpawnLoot(List<Loot> lootTable, Vector2 spawnPos, BiomeType biome)
+	public static void SpawnLoot(List<Loot> lootTable, Vector2 spawnPos, BiomeType biome, Vector2 velocity = default, float startingZAxis = 0f)
 	{
 		var itemsToSpawn = GetItemsToSpawn(lootTable);
 
@@ -29,7 +29,7 @@ public static class LootTable
 				ItemSO itemToSpawn = itemsToSpawnKVP.Key;
 				int amountToSpawn = itemsToSpawnKVP.Value;	
 				
-				GameManager.Instance.SpawnItem(new InventoryItem(itemToSpawn, amountToSpawn), spawnPos, biome);
+				GameManager.Instance.SpawnItem(new InventoryItem(itemToSpawn, amountToSpawn), spawnPos, biome, velocity, startingZAxis);
 			}
 		}
 	}

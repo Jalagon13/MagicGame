@@ -177,7 +177,7 @@ public class GameManager : NetworkBehaviour
 
 	#region Item Functions
 	
-	public void SpawnItem(InventoryItem inventoryItem, Vector2 spawnPos, BiomeType biome, Vector2 velocity = default)
+	public void SpawnItem(InventoryItem inventoryItem, Vector2 spawnPos, BiomeType biome, Vector2 velocity = default, float startingZAxis = 0f)
 	{
 		if(inventoryItem == null)
 		{
@@ -193,11 +193,11 @@ public class GameManager : NetworkBehaviour
 			SelectedSpellIndex = inventoryItem is WandInventoryItem wandItem ? wandItem.SelectedSpellIndex : -1
 		};
 		
-		SpawnItemServerRpc(syncItemData, spawnPos, biome, velocity);
+		SpawnItemServerRpc(syncItemData, spawnPos, biome, velocity, startingZAxis);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnItemServerRpc(SyncItemData syncItemData, Vector2 spawnPos, BiomeType biome, Vector2 velocity)
+	private void SpawnItemServerRpc(SyncItemData syncItemData, Vector2 spawnPos, BiomeType biome, Vector2 velocity, float startingZAxis)
 	{
 		GameObject itemGameObject = Instantiate(_itemBasePrefab, spawnPos, Quaternion.identity);
 		
@@ -206,7 +206,7 @@ public class GameManager : NetworkBehaviour
 		itemNetworkObject.Spawn(true);
 		
 		Item item = itemGameObject.GetComponent<Item>();
-		item.Initialize(syncItemData, biome, velocity);
+		item.Initialize(syncItemData, biome, velocity, startingZAxis);
 	}
 	
 	public void DestroyItem(Item itemToDestroy)

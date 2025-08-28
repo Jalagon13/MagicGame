@@ -33,4 +33,10 @@ public class ResourceObject : MonoBehaviour // Base class for every "physical" a
 	{
 		return Vector2.Distance(Player.Instance.transform.position, position) <= ResourceDataSO.InteractDistance;
 	}
+	
+	public void SpawnItems(Vector2 resourcePosition, BiomeType biome)
+	{
+		Debug.Log($"Item spawn logic local to resource object");
+		LootTable.SpawnLoot(_resourceData.Table, resourcePosition + (Vector2.one * 0.5f), biome, default, 1f);
+	}
 }

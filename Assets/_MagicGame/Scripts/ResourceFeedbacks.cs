@@ -48,6 +48,6 @@ public class ResourceFeedbacks : MonoBehaviour
 
         yield return _waitForSecondsBeforeDespawn;
         Debug.Log($"Destroying this gameobject");
-        Destroy(gameObject);
+        Destroy(_resourceObject.gameObject);
     }
 }

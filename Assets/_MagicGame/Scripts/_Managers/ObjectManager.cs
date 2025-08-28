@@ -47,8 +47,8 @@ public class ResourceManager : NetworkBehaviour
 			{
 				Pathfinding.Instance.RemovePathfindingfWallTileServerRpc(resourcePos, biome);
 			}
-			
-			LootTable.SpawnLoot(rscData.Table, (Vector2)resourcePos + (Vector2.one * 0.5f), biome);
+
+			rscData.ResourcePrefab.SpawnItems(resourcePos, biome);
 			ChunkManager.Instance.RemoveRscDataFromChunkServerRpc(resourcePos, biome);
 
 			return;

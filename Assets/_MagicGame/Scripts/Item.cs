@@ -11,9 +11,12 @@ public class Item : NetworkBehaviour
 	[SerializeField] private float _attractSpeed = 5f;
 	[SerializeField] private float _turnSharpness = 5f;
 	[SerializeField] private float _initialCollectDelay = 0.5f;
-	[SerializeField] private float _dropForce = 3f;
+	[SerializeField] private ZAxisSimulator _zAxisSimulator;
 
 	private NetworkVariable<SyncItemData> _syncItemDataNetworkVariable = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	private NetworkVariable<float> _zAxisNetworkVariable = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public float ZAxis => _zAxisNetworkVariable.Value;
+	
 	private SpriteRenderer _sr;
 	private bool _canCollect, _itemCollected;
 	private Rigidbody2D _rb;
@@ -42,7 +45,7 @@ public class Item : NetworkBehaviour
 
 	public override void OnNetworkSpawn()
 	{
-		if(IsClient && !IsHost)
+		if(IsClient)
 		{
 			UpdateItemDataAndVisuals();
 		}
@@ -110,11 +113,12 @@ public class Item : NetworkBehaviour
 		_rb.linearVelocity = _velocity;
 	}
 
-	public void Initialize(SyncItemData syncItemData, BiomeType biome, Vector2 velocity)
+	public void Initialize(SyncItemData syncItemData, BiomeType biome, Vector2 velocity, float startingZAxis)
 	{
 		_syncItemDataNetworkVariable.Value = syncItemData;
+		_zAxisNetworkVariable.Value = startingZAxis;
 		_itemBiome = biome;
-		_velocity = velocity * _dropForce;
+		_velocity = velocity;
 		_itemCollider = GetComponent<Collider2D>();
 
 		HideItem(NetworkManager.ServerClientId);
@@ -216,6 +220,7 @@ public class Item : NetworkBehaviour
 		ItemSO itemSO = GameManager.Instance.GetItemSOFromItemId(_syncItemDataNetworkVariable.Value.ItemId);
 		
 		_sr.sprite = itemSO.UiDisplay;
+		_zAxisSimulator.SetZAxis(_zAxisNetworkVariable.Value);
 		gameObject.name = $"Item_{itemSO.Name}";
 	}
 	

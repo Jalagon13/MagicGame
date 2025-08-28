@@ -7118,6 +7118,8 @@ MonoBehaviour:
   <CurrencyItem>k__BackingField: {fileID: 11400000, guid: 8aefdfbeb172142758db0f6cace885e7, type: 2}
   _slotAmount: 37
   _timeBetweenCollections: 0.1
+  _itemDropForce: 7
+  _startingItemZAxis: 1
   _itemCollectPlatePrefab: {fileID: 2893883857882228170, guid: 97583e12174a6488193592c120954140, type: 3}
 --- !u!114 &832159824
 MonoBehaviour:

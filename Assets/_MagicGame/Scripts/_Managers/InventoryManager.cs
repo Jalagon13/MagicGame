@@ -37,7 +37,7 @@ public class InventoryManager : MonoBehaviour
 
 	[field: SerializeField] public ItemSO CurrencyItem { get; private set; }
 	[SerializeField] private int _slotAmount;
-	[SerializeField] private float _timeBetweenCollections = 0.1f;
+	[SerializeField] private float _timeBetweenCollections = 0.1f, _itemDropForce = 3f, _startingItemZAxis = 0.5f;
 	[SerializeField] private ItemCollectWorldUI _itemCollectPlatePrefab;
 	
 	private InventoryModel _inventoryModel;
@@ -92,7 +92,8 @@ public class InventoryManager : MonoBehaviour
 		GameManager.Instance.SpawnItem(_mouseItemModel.MouseInventoryItem, 
         Player.Instance.transform.position, 
         Player.Instance.CurrentBiome.Value, 
-        ActionManager.PlayerToMouseDirNormalized);
+        ActionManager.PlayerToMouseDirNormalized * _itemDropForce,
+        _startingItemZAxis);
         
 		_mouseItemModel.MouseInventoryItem = new();
 		_inventoryModel.UpdateInventory();
