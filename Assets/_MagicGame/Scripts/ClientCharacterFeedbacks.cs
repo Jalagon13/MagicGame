@@ -52,12 +52,15 @@ public class ClientCharacterFeedbacks : NetworkBehaviour
         foreach (Gibfab gibfab in _gibfabs)
         { 
             float spread = 45f;
+            
             float minInitialUpSpeed = 0.075f;
             float maxInitialUpSpeed = 0.225f;
+            
             float minVelocityMag = 2f;
             float maxVelocityMag = 8f;
+            
             float minAddVelocity = 0;
-            float maxAddVelocity = 15;
+            float maxAddVelocity = 10;
             float addedVelocity = Mathf.Lerp(minAddVelocity, maxAddVelocity, knockbackForce / 100);
 
             float randomVelocityMagnitude = UnityEngine.Random.Range(minVelocityMag, maxVelocityMag) + addedVelocity;

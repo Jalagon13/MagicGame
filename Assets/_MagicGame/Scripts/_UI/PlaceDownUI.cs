@@ -47,6 +47,8 @@ public class PlaceDownUI : MonoBehaviour
 
 	private bool IsInRange()
 	{
+		if(Player.Instance == null) return false;
+	
 		return Vector2.Distance(transform.position, Player.Instance.transform.position) < 3;
 	}
 	

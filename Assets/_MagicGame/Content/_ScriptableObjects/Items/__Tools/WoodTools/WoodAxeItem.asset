@@ -21,7 +21,7 @@ MonoBehaviour:
   <MiningPower>k__BackingField: 1
   <MiningRange>k__BackingField: 4
   <Damage>k__BackingField: 30
-  <Knockback>k__BackingField: 6
+  <Knockback>k__BackingField: 30
   <DetectionBetweenHitsDuration>k__BackingField: 0.05
   <ColliderLength>k__BackingField: 1
   <SwingDuration>k__BackingField: 0.35
