@@ -8,6 +8,7 @@ public class HealthBarUI : MonoBehaviour
 	[field: SerializeField] public NetworkHealthState NetworkHealthState { get; private set; }
 	
 	private MMProgressBar _progressBar;
+	private bool _firstTimeSetup = true;
 	
 	private void Awake()
 	{
@@ -20,6 +21,7 @@ public class HealthBarUI : MonoBehaviour
 	
 	private void Start()
 	{
+		_progressBar.UpdateBar(1, 0, 1);
 		NetworkHealthState.OnHitPointsChanged += UpdateHealthBar;
 
 		Hide();

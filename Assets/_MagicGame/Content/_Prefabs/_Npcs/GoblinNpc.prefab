@@ -10310,6 +10310,10 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -1268719207
       objectReference: {fileID: 0}
+    - target: {fileID: 2999104121883707982, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3165997416469630793, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: <BaseHealth>k__BackingField
       value: 30
@@ -16170,6 +16174,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 0d67d36eb3b1c4f719b6308777c8e8f4, type: 2}
+    - target: {fileID: 6889063140462735079, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
+      propertyPath: m_Color.a
+      value: 0.72156864
+      objectReference: {fileID: 0}
     - target: {fileID: 7089301418198093555, guid: 378c006a773f44223bf5cbc9627f55cb, type: 3}
       propertyPath: DecreasingDelay
       value: 0.25
