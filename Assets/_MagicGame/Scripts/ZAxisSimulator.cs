@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ZAxisSimulator : MonoBehaviour
@@ -33,6 +34,8 @@ public class ZAxisSimulator : MonoBehaviour
     private Vector3 _defaultShadowScale;
     private Vector2 _defaultSpritePos;
     private Vector2 _defaultShadowPos;
+
+    public event EventHandler OnBounce;
 
     public float ZAxis => _zAxis;
     public float ZSpeed => _zSpeed;
@@ -89,6 +92,8 @@ public class ZAxisSimulator : MonoBehaviour
             _zAxis = -_zAxis;
             if (_zSpeed < 0)
                 _zSpeed = -_zSpeed * _bounceDamping - _bounceLoss;
+
+            OnBounce?.Invoke(this, EventArgs.Empty);
 
             if (!_loopBounce && _zSpeed < _minBounceSpeed)
             {

@@ -29,8 +29,8 @@ public class ServerCharacter : NetworkBehaviour
     public ClientCharacter ClientCharacter => _clientCharacter;
     
     [SerializeField] 
-    private ClientFeedbacks _clientFeedbacks;
-    public ClientFeedbacks ClientFeedbacks => _clientFeedbacks;
+    private ClientCharacterFeedbacks _clientFeedbacks;
+    public ClientCharacterFeedbacks ClientFeedbacks => _clientFeedbacks;
     
     public NetworkHealthState NetHealthState { get; private set; }
     public int HitPoints
@@ -85,6 +85,9 @@ public class ServerCharacter : NetworkBehaviour
 
     private Vector2 _inflicterToTargetDirection;
     public Vector2 InflicterToTargetDirection => _inflicterToTargetDirection;
+    
+    private float _knockbackForceFromInflicter;
+    public float KnockbackForceFromInflicter => _knockbackForceFromInflicter;
 
     public NetworkVariable<MovementState> MovementState { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<CardinalDirection> CardinalDirection { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -197,6 +200,7 @@ public class ServerCharacter : NetworkBehaviour
         int hpReceived = e.HpReceived;
 
         _inflicterToTargetDirection = (Vector2)(transform.position - _inflicter.transform.position).normalized;
+        _knockbackForceFromInflicter = e.KnockbackForce;
 
         if (hpReceived > 0)
         {

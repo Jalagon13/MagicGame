@@ -1,27 +1,49 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using DG.Tweening;
+using MoreMountains.Feedbacks;
 
 public class Gibfab : MonoBehaviour
 {
-    [SerializeField] 
-    private ZAxisSimulator _zAxisSimulator;
     
     [SerializeField] 
     private float _airResistance = 2f;
 
-    private Collider2D _gibCollider;
+    private ZAxisSimulator _zAxisSimulator;
+    private SpriteRenderer _gibSprite, _shadowSprite;
     private Vector2 _velocity;
     private Rigidbody2D _rb;
+    private MMF_Player _bounceFeedback;
     private bool _gibStarted;
+    private float _rotationDirection, _rotationSpeed, _rotationMultiplier = 1f;
     
     private void Awake()
     {
-        _gibCollider = GetComponent<Collider2D>();
         _rb = GetComponent<Rigidbody2D>();
+        _bounceFeedback = GetComponent<MMF_Player>();
+        _gibSprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        _shadowSprite = transform.GetChild(1).GetComponent<SpriteRenderer>();
+        _zAxisSimulator = transform.GetChild(0).GetComponent<ZAxisSimulator>();
+
+        _zAxisSimulator.OnBounce += OnGibBounce;
         
         gameObject.SetActive(false);
     }
     
+    private void OnDestroy()
+    {
+        _zAxisSimulator.OnBounce -= OnGibBounce;
+
+        if (_gibSprite != null)
+            DOTween.Kill(_gibSprite.transform);
+        if (_gibSprite != null)
+            DOTween.Kill(_gibSprite);
+        if (_shadowSprite != null)
+            DOTween.Kill(_shadowSprite.transform);
+        if (_shadowSprite != null)
+            DOTween.Kill(_shadowSprite);
+    }
+
     private void FixedUpdate()
     {
         if(!_gibStarted) return;
@@ -29,15 +51,47 @@ public class Gibfab : MonoBehaviour
         _velocity = Vector2.Lerp(_velocity, Vector2.zero, _airResistance * Time.fixedDeltaTime);
 
         _rb.linearVelocity = _velocity;
+
+        if (_velocity.magnitude <= 0.1f && _gibStarted)
+        {
+            _gibStarted = false;
+
+            float delay = Random.Range(1f, 1.5f);
+            float shrinkDuration = 0.25f;
+
+            // Shrink and fade the gib sprite
+            _gibSprite.transform.DOScale(0f, shrinkDuration).SetDelay(delay);
+            _gibSprite.DOFade(0f, shrinkDuration).SetDelay(delay);
+
+            // Shrink and fade the shadow sprite
+            _shadowSprite.transform.DOScale(0f, shrinkDuration).SetDelay(delay).OnComplete(() => Destroy(gameObject));
+            _shadowSprite.DOFade(0f, shrinkDuration).SetDelay(delay);
+        }
+
+        // Calculate and apply rotation based on velocity magnitude and direction
+        _rotationSpeed = _velocity.magnitude;
+        float rotationAmount = _rotationSpeed * _rotationDirection * _rotationMultiplier;
+        _gibSprite.transform.Rotate(0f, 0f, rotationAmount);
     }
-    
-    // NTFS: Need to come up with a speed system of measurement that actually makes sense.
-    [Button("Test Velocity to the right")]
-    public void StartGib(float speed, Vector2 velocity)
+
+    private void OnGibBounce(object sender, System.EventArgs e)
     {
+        _bounceFeedback?.PlayFeedbacks();
+    }
+
+    // NTFS: Need to come up with a speed system of measurement that actually makes sense.
+    public void LaunchGib(float speed, Vector2 velocity)
+    {
+        gameObject.SetActive(true);
+
         _velocity = velocity;
         _zAxisSimulator.Launch(speed);
-    
+        
+        // Randomize rotation direction and reset rotation speed
+        _rotationDirection = Random.value < 0.5f ? -1f : 1f;
+        _rotationSpeed = 0f;
+        _rotationMultiplier = Random.Range(2.5f, 5f);
+
         _gibStarted = true;
     }
 }

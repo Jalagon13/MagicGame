@@ -21,7 +21,8 @@ public class BasicNpcGroundedState : BaseState
         // Logic for updating the grounded state
         if(_ctx.ServerCharacter.NetLifeState.LifeState.Value == LifeState.Dead)
         {
-            SwitchState(new AIStateData(AIState.Dead, _ctx.ServerCharacter.InflicterToTargetDirection));
+            Vector3 payload = new(_ctx.ServerCharacter.InflicterToTargetDirection.x, _ctx.ServerCharacter.InflicterToTargetDirection.y, _ctx.ServerCharacter.KnockbackForceFromInflicter);
+            SwitchState(new AIStateData(AIState.Dead, payload));
         }
     }
 

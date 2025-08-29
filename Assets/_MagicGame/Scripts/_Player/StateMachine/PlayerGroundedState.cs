@@ -34,7 +34,8 @@ public class PlayerGroundedState : BaseState
         }
         else if(_ctx.ServerCharacter.LifeState == LifeState.Dead)
         {
-            SwitchState(new AIStateData(AIState.Dead));
+            Vector3 payload = new(_ctx.ServerCharacter.InflicterToTargetDirection.x, _ctx.ServerCharacter.InflicterToTargetDirection.y, _ctx.ServerCharacter.KnockbackForceFromInflicter);
+            SwitchState(new AIStateData(AIState.Dead, payload));
         }
     }
 

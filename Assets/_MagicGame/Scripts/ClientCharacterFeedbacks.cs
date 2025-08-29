@@ -1,15 +1,19 @@
 using System;
+using System.Collections.Generic;
 using MoreMountains.Feedbacks;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ClientFeedbacks : NetworkBehaviour
+public class ClientCharacterFeedbacks : NetworkBehaviour
 {
     [SerializeField] 
     private ServerCharacter _serverCharacter;
     
     [SerializeField]
     private ParticleSystem _damagedParticles, _deathParticles;
+    
+    [SerializeField] 
+    private List<Gibfab> _gibfabs;
 
     private MMF_Player _damageFeedback;
     private MMF_Player _deathFeedback;
@@ -35,12 +39,38 @@ public class ClientFeedbacks : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
-    public void PlayDeathFeedbacksRpc(Vector2 hitDirection)
+    public void PlayDeathFeedbacksRpc(Vector3 payload)
     {
+        Vector2 hitDirection = new(payload.x, payload.y);
+        float knockbackForce = payload.z;
+
         SoundManager.Instance.PlayOneShot(_serverCharacter.Data.DeathSound, transform.position);
         SoundManager.Instance.PlayOneShot(FMODEvents.Instance.MobSquash, transform.position);
         RotateFeedbacks(hitDirection);
         _deathFeedback.PlayFeedbacks();
+
+        foreach (Gibfab gibfab in _gibfabs)
+        { 
+            float spread = 45f;
+            float minInitialUpSpeed = 0.075f;
+            float maxInitialUpSpeed = 0.225f;
+            float minVelocityMag = 2f;
+            float maxVelocityMag = 8f;
+            float minAddVelocity = 0;
+            float maxAddVelocity = 15;
+            float addedVelocity = Mathf.Lerp(minAddVelocity, maxAddVelocity, knockbackForce / 100);
+
+            float randomVelocityMagnitude = UnityEngine.Random.Range(minVelocityMag, maxVelocityMag) + addedVelocity;
+            float t = Mathf.InverseLerp(minVelocityMag + addedVelocity, maxVelocityMag + addedVelocity, randomVelocityMagnitude);
+            float initialUpwardSpeed = Mathf.Lerp(minInitialUpSpeed, maxInitialUpSpeed, t);
+
+            float baseAngle = Mathf.Atan2(hitDirection.y, hitDirection.x);
+            float offsetAngle = UnityEngine.Random.Range(-spread, spread) * Mathf.Deg2Rad;
+            float angle = baseAngle + offsetAngle;
+            Vector2 randomizedDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+
+            gibfab.LaunchGib(initialUpwardSpeed, randomizedDirection * randomVelocityMagnitude);
+        }
     }
 
     private void RotateFeedbacks(Vector2 hitDirection)
