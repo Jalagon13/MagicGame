@@ -128,6 +128,7 @@ Transform:
   m_Children:
   - {fileID: 152898161928028872}
   - {fileID: 4618399081016867072}
+  - {fileID: 3211663273159194221}
   m_Father: {fileID: 2392654451137683977}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5441594633594964993
@@ -146,6 +147,7 @@ MonoBehaviour:
   _destroyFeedbacks: {fileID: 980097713811626668}
   _hitFeedbacks: {fileID: 2477297134445187927}
   _visuals: {fileID: 7338866711029681380}
+  _gibfabs: []
 --- !u!1 &1159208342324720585
 GameObject:
   m_ObjectHideFlags: 0
@@ -573,6 +575,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &2434819423530951677
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3211663273159194221}
+  m_Layer: 0
+  m_Name: Gibfabs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3211663273159194221
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2434819423530951677}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5733363292446020751}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7338866711029681380
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,10 +3,8 @@ using UnityEngine;
 
 public class Knockback
 {
-	private const float DefaultDecayMult = 5f;
-	private const float MinKnockbackForce = 0f;
-	private const float MaxKnockbackForce = 100f;
-	private const float KnockbackEndThreshold = 0.75f;
+	// DefaultDecayMult: Higher = knockback fades out faster
+	private const float DefaultDecayMult = 5f, MinKnockbackForce = 0f, MaxKnockbackForce = 100f, KnockbackEndThreshold = 0.75f;
 
 	public event EventHandler<KnockbackEventArgs> OnKnockbackStart;
 	public event EventHandler OnKnockbackEnd;
@@ -18,10 +16,7 @@ public class Knockback
 	public Vector2 Velocity { get; private set; }
 
 	private bool _knockbackEnabled = true;
-	private float _decayMult = DefaultDecayMult; // Higher = knockback fades out faster
-	private float _minKnockback = MinKnockbackForce;
-	private float _maxKnockback = MaxKnockbackForce;
-	private float _finalKnockback;
+	private float _decayMult = DefaultDecayMult, _minKnockback = MinKnockbackForce, _maxKnockback = MaxKnockbackForce, _finalKnockback; 
     private ServerCharacter _serverCharacter;
     
 	private bool _isKnockbackActive;

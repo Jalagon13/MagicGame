@@ -128,13 +128,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pine_tree_gib03
+      name: gibs_tree_04
       rect:
         serializedVersion: 2
-        x: 46
-        y: 0
-        width: 50
-        height: 26
+        x: 49
+        y: 11
+        width: 21
+        height: 20
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,13 +150,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pine_tree_gib02
+      name: gibs_tree_02
       rect:
         serializedVersion: 2
         x: 51
-        y: 26
-        width: 40
-        height: 27
+        y: 33
+        width: 21
+        height: 21
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -172,13 +172,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pine_tree_gib01
+      name: gibs_tree_01
       rect:
         serializedVersion: 2
-        x: 58
-        y: 53
-        width: 27
-        height: 27
+        x: 60
+        y: 54
+        width: 23
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -369,6 +369,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: gibs_tree_03
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 37
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73b51f8d9610340e4a80b221bc31b9ea
+      internalID: -1987943347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_tree_05
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 8
+        width: 25
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39b1f37d8f4964d5d8ffbad87fc7e9de
+      internalID: 1455701377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -383,11 +427,13 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      gibs_tree_01: 1382960695
+      gibs_tree_02: 1546467043
+      gibs_tree_03: -1987943347
+      gibs_tree_04: -468716316
+      gibs_tree_05: 1455701377
       pine_tree_01_1: 7139616543170386471
       pine_tree_01_2: 8507524245260775593
-      pine_tree_gib01: 1382960695
-      pine_tree_gib02: 1546467043
-      pine_tree_gib03: -468716316
       pine_tree_leaf01: -1497226680
       pine_tree_leaf02: 522438243
       pine_tree_leaf03: 301701486

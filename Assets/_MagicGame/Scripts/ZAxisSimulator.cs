@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class ZAxisSimulator : MonoBehaviour
 {
+    private const float GravityFactor = 0.01f;
+
     [Header("References")]
     [Tooltip("Renderer used to draw the shadow beneath this object.")]
     [SerializeField] private SpriteRenderer _shadowRenderer;
@@ -14,8 +16,8 @@ public class ZAxisSimulator : MonoBehaviour
     [SerializeField] private float _zSpeed;
 
     [Header("Physics Settings")]
-    [Tooltip("Downward force applied each frame to simulate gravity.")]
-    [SerializeField] private float _gravity = 0.01f;
+    [Tooltip("Gravity scale: 1 = normal gravity, <1 = floaty, >1 = harsh, negative = upwards.")]
+    [SerializeField] private float _gravity = 1f;
     [Tooltip("Multiplier applied to vertical speed after bouncing.")]
     [SerializeField] private float _bounceDamping = 0.7f;
     [Tooltip("Flat loss applied to vertical speed after bouncing.")]
@@ -76,7 +78,7 @@ public class ZAxisSimulator : MonoBehaviour
     private void HandleZAxis()
     {
         if (_zAxis > 0)
-            _zSpeed -= _gravity;
+            _zSpeed -= _gravity * GravityFactor;
 
         _zAxis += _zSpeed;
 
@@ -89,12 +91,19 @@ public class ZAxisSimulator : MonoBehaviour
                 return;
             }
 
+            // Invert Z and calculate new speed
             _zAxis = -_zAxis;
-            if (_zSpeed < 0)
-                _zSpeed = -_zSpeed * _bounceDamping - _bounceLoss;
+            float newZSpeed = (_zSpeed < 0) ? -_zSpeed * _bounceDamping - _bounceLoss : _zSpeed;
 
-            OnBounce?.Invoke(this, EventArgs.Empty);
+            // Only invoke bounce if the resulting speed is meaningful
+            if (newZSpeed >= _minBounceSpeed)
+            {
+                OnBounce?.Invoke(this, EventArgs.Empty);
+            }
 
+            _zSpeed = newZSpeed;
+
+            // If not looping and speed too small, stop bouncing
             if (!_loopBounce && _zSpeed < _minBounceSpeed)
             {
                 _zAxis = 0;

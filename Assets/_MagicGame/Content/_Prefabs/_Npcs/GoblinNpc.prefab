@@ -16487,6 +16487,10 @@ PrefabInstance:
       propertyPath: _rotationMultiplier
       value: 1.75
       objectReference: {fileID: 0}
+    - target: {fileID: 7526933917217291068, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _gravity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7840290395053342416, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: m_Name
       value: Gibfab (2)
@@ -16697,6 +16701,10 @@ PrefabInstance:
       propertyPath: _rotationMultiplier
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7526933917217291068, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _gravity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7840290395053342416, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: m_Name
       value: Gibfab (1)
@@ -16773,6 +16781,10 @@ PrefabInstance:
     - target: {fileID: 1434462143135316828, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7526933917217291068, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _gravity
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7840290395053342416, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: m_Name
@@ -16878,6 +16890,10 @@ PrefabInstance:
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _rotationMultiplier
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7526933917217291068, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _gravity
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7840290395053342416, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: m_Name

@@ -8,7 +8,6 @@ public class HealthBarUI : MonoBehaviour
 	[field: SerializeField] public NetworkHealthState NetworkHealthState { get; private set; }
 	
 	private MMProgressBar _progressBar;
-	private bool _firstTimeSetup = true;
 	
 	private void Awake()
 	{

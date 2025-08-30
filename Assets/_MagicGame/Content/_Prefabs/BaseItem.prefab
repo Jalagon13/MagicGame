@@ -190,7 +190,7 @@ MonoBehaviour:
   _shadowRenderer: {fileID: 5887641664352430237}
   _zAxis: 0
   _zSpeed: 0
-  _gravity: 0.01
+  _gravity: 1
   _bounceDamping: 0.7
   _bounceLoss: 0.01
   _minBounceSpeed: 0.04

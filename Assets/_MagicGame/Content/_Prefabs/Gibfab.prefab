@@ -103,7 +103,7 @@ MonoBehaviour:
   _shadowRenderer: {fileID: 6379659780698872554}
   _zAxis: 0
   _zSpeed: 0
-  _gravity: 0.01
+  _gravity: 1
   _bounceDamping: 0.7
   _bounceLoss: 0.01
   _minBounceSpeed: 0.04
@@ -310,6 +310,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _airResistance: 2
+  _minRotationMultiplier: 2.5
+  _maxRotationMultiplier: 5
+  _minShrinkDelay: 1
+  _maxShrinkDelay: 1.5
 --- !u!114 &479749789386465522
 MonoBehaviour:
   m_ObjectHideFlags: 0

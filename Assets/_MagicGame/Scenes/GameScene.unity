@@ -13062,6 +13062,13 @@ MonoBehaviour:
       Data3: -1088953413
       Data4: 1920233916
     Path: event:/NPCs/Squish
+  <LeafRustle>k__BackingField:
+    Guid:
+      Data1: 445680714
+      Data2: 1259393807
+      Data3: -83488869
+      Data4: 564357219
+    Path: event:/Ambience/LeafRustle
 --- !u!1001 &1744933028
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -27,6 +27,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-8937805039677400420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/World.bank
+  m_EditorClassIdentifier: 
+  Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/World.bank
+  Name: World
+  StudioPath: bank:/World
+  lastModified: 638921510610351093
+  FileSizes:
+  - Name: Desktop
+    Value: 8672
+  Exists: 1
 --- !u!114 &-8368555601859639280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,7 +278,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638916329787237484
+  lastModified: 638921510609002350
   FileSizes:
   - Name: Desktop
     Value: 3619520
@@ -310,6 +330,34 @@ MonoBehaviour:
     Data4: 1920233916
   Banks:
   - {fileID: 1442470161565190594}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4601107495475197954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/LeafRustle
+  m_EditorClassIdentifier: 
+  Path: event:/Ambience/LeafRustle
+  Guid:
+    Data1: 445680714
+    Data2: 1259393807
+    Data3: -83488869
+    Data4: 564357219
+  Banks:
+  - {fileID: 1442470161565190594}
+  - {fileID: -8937805039677400420}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -700,6 +748,7 @@ MonoBehaviour:
   - {fileID: 1442470161565190594}
   - {fileID: 2910971625801169270}
   - {fileID: -167728990351699398}
+  - {fileID: -8937805039677400420}
   EditorEvents:
   - {fileID: -2013000793435297120}
   - {fileID: 5242794587038571529}
@@ -744,12 +793,13 @@ MonoBehaviour:
   - {fileID: -2545359783482338934}
   - {fileID: 4090251831969363818}
   - {fileID: 4234236444842156600}
+  - {fileID: -4601107495475197954}
   EditorParameters: []
   MasterBanks:
   - {fileID: -5118738364778561889}
   StringsBanks:
   - {fileID: 5143058463646552385}
-  cacheTime: 638916330305218770
+  cacheTime: 638921510610351093
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:
@@ -793,10 +843,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638916330305218770
+  lastModified: 638921510610081591
   FileSizes:
   - Name: Desktop
-    Value: 3138912
+    Value: 3146848
   Exists: 1
 --- !u!114 &1476141278191997832
 MonoBehaviour:
@@ -1130,10 +1180,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638916329787250864
+  lastModified: 638921510609065208
   FileSizes:
   - Name: Desktop
-    Value: 2918
+    Value: 3008
   Exists: 1
 --- !u!114 &5242794587038571529
 MonoBehaviour:

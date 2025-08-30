@@ -4,9 +4,11 @@
 {e60b6e6e-b64d-4824-a202-641b0646e37b} bank:/SFX
 {5cdcb21f-823d-4fd5-a342-cbec0e1917f9} bank:/Tiles
 {0ad9c126-9702-463d-b5c6-565332557634} bank:/UI
+{0763a83d-6f67-4968-acc3-ff9675212b5d} bank:/World
 {fe1d45b1-470a-4b0e-ae5f-64aa0e6f1445} bus:/
 {115820a4-924b-4311-a929-7a6896d07534} bus:/Reverb
 {77334c78-1e86-415a-b2e5-2d90d43e43ad} event:/Ambience/Ambience
+{1a908c4a-d30f-4b10-9b0f-06fb6368a321} event:/Ambience/LeafRustle
 {d442e856-0cb1-4fa6-9067-f9cef31d4078} event:/DoorClosed
 {2289b0c3-b713-4304-8277-8eaf2716dbef} event:/DoorOpen
 {8eb5730a-9fde-4958-bf6c-fae4f22ab239} event:/LeafCrunch
@@ -25,6 +27,7 @@
 {c370b08f-1a93-4bb3-8fa6-72074c22db89} event:/NPCs/DeerDamaged
 {055d1386-650b-445e-b82a-a550931d286b} event:/NPCs/DeerDeath
 {2dd5fcf0-a3ba-47d1-9965-a6cbe350a788} event:/NPCs/GoblinDamaged
+{9fef390a-ebdb-42c0-873d-67413cb0b8e9} event:/NPCs/GoblinDeath
 {0030af96-a4e6-4ad1-961e-1c2dac4c5830} event:/NPCs/PixieDamaged
 {d9e8fb7d-552e-4d07-bbe3-17bfbc717472} event:/NPCs/Squish
 {fda3288e-4260-4d5f-bc9e-4c28914bf5c9} event:/Player/CoinPickup

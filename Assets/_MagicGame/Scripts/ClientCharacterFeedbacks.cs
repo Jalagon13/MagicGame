@@ -56,8 +56,8 @@ public class ClientCharacterFeedbacks : NetworkBehaviour
             float minInitialUpSpeed = 0.075f;
             float maxInitialUpSpeed = 0.225f;
             
-            float minVelocityMag = 2f;
-            float maxVelocityMag = 8f;
+            float minVelocityMag = 1f;
+            float maxVelocityMag = 10f;
             
             float minAddVelocity = 0;
             float maxAddVelocity = 10;
@@ -72,7 +72,7 @@ public class ClientCharacterFeedbacks : NetworkBehaviour
             float angle = baseAngle + offsetAngle;
             Vector2 randomizedDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
-            gibfab.LaunchGib(initialUpwardSpeed, randomizedDirection * randomVelocityMagnitude);
+            gibfab.LaunchGib(initialUpwardSpeed, 0, randomizedDirection * randomVelocityMagnitude);
         }
     }
 
