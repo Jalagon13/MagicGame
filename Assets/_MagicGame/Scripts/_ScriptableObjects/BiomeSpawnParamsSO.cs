@@ -50,7 +50,7 @@ public class BiomeSpawnRule
 
 	public NpcSpawnData GetRandomNpc()
 	{
-		bool isNightTime = WorldManager.Instance.IsNight;
+		bool isNightTime = GameWorld.Instance.IsNight;
 	
 		List<NpcSpawnData> validNpcEntries = new();
 

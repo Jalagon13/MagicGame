@@ -49,6 +49,7 @@ public class WorldInput : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        Debug.Log($"Pointer Entered World Input Detector: {gameObject.name}");
         _mouseOverDetector = true;
         OnEnter?.Invoke(this, eventData);
     }
@@ -60,6 +61,7 @@ public class WorldInput : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        Debug.Log($"Pointer Exited World Input Detector: {gameObject.name}");
         _mouseOverDetector = false;
         OnExit?.Invoke(this, eventData);
     }

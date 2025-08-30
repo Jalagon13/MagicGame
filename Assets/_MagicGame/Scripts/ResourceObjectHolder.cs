@@ -23,7 +23,7 @@ public class ResourceObjectHolder : MonoBehaviour
 			{
 				// Call the DestroySelf() method
 				// NTFS: This might be bugged
-				Destroy(resourceObject);
+				Destroy(resourceObject.gameObject);
 			}
 			else
 			{

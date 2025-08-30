@@ -9,14 +9,14 @@ using UnityEngine;
 [Flags]
 public enum BiomeType // NTFS: When adding new IDs remember to put the value to the next power of 2 for the [Flags] to work properly
 {
-	Forest = 0,
-	Cave = 1,
-	None = 2
+	None = 0,
+	Forest = 1,
+	Cave = 2,
 }
 
-public class WorldManager : NetworkBehaviour
+public class GameWorld : NetworkBehaviour
 {
-	public static WorldManager Instance { get; private set; }
+	public static GameWorld Instance { get; private set; }
 	
 	public event EventHandler OnBiomeTransitionStart;
 	public event EventHandler OnBiomeTransitionEnd;
@@ -28,27 +28,29 @@ public class WorldManager : NetworkBehaviour
 		public float CurrentTime;
 		public float DayDuration;
 	}
-	
-	public bool IsNight { get; private set; }
-	public bool IsLoadingBiome { get; private set; }
 
-	[Title("Boundaries", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
-	[SerializeField] private float _dayDurationInSeconds;
-	[SerializeField] private float _startingTime = 0.0f;
-	[SerializeField] private bool _isTicking = true;
-	[SerializeField] private bool _saveAfterGeneration = true;
+	[Header("Time Settings")]
+	[SerializeField] 
+	private bool _isTicking = true;
+	[SerializeField] 
+	private float _dayDurationInSeconds, _startingTime = 0.0f;
 	
-	[Title("World Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
-	[SerializeField] private bool _randomSeed = false;
-	[SerializeField] private string _customSeed = 123.ToString();
-	// [SerializeField] private float _portalSearchRadius = 10f;
-	// [SerializeField] private float _portalSearchDelayOnBiomeLoad = 0.75f;
-	// [SerializeField] private float _endBiomeTransitionDelay = 1f;
-	[field: SerializeField] public ForestGenerator ForestGenerator { get; private set; }
-	[field: SerializeField] public CaveGenerator CaveGenerator { get; private set; }
+	[Header("World Settings")]
+	[SerializeField] 
+	private string _customSeed = 123.ToString();
+	[SerializeField] 
+	private bool _randomSeed = false;
+	
+	[Header("Generators")]
+	[SerializeField] 
+	private ForestGenerator _forestGenerator;
+	[SerializeField] 
+	private CaveGenerator _caveGenerator;
 	
 	private float _currentTime;
 	
+	public bool IsNight { get; private set; }
+	public bool IsLoadingBiome { get; private set; }
 	public string Seed 
 	{ 
 		get 
@@ -138,8 +140,12 @@ public class WorldManager : NetworkBehaviour
 		OnBiomeTransitionStart?.Invoke(this, EventArgs.Empty); 
 		
 		IsLoadingBiome = true;
-		ChunkManager.Instance.UnloadAllPlayerChunks();
-		ResourceManager.Instance.ClearAllBiomeObjectVisuals();
+		
+		if(Player.Instance.CurrentBiome.Value != BiomeType.None)
+		{
+			ChunkManager.Instance.UnloadAllPlayerChunks();
+			ResourceManager.Instance.ClearAllBiomeObjectVisuals();
+		}
 		
 		LoadBiomeServerRpc(Player.Instance.CurrentBiome.Value, targetBiome);
 	}
@@ -152,6 +158,8 @@ public class WorldManager : NetworkBehaviour
 
 	private async void AsyncLoadBiome(BiomeType fromBiome, BiomeType toBiome, RpcParams rpcParams = default)
 	{
+		Debug.Log($"Executing biome load from {fromBiome} to {toBiome}");
+	
 		// Save the last biome it came from and set the player's burrent biome to tobiome.
 		if(!SaveSystem.Instance.IsSaving && SaveSystem.Instance.BiomeLoadedInMemory(fromBiome))
 		{
@@ -173,12 +181,9 @@ public class WorldManager : NetworkBehaviour
 			}
 			else
 			{
-				if (_saveAfterGeneration)
-				{
-					await SaveSystem.Instance.SaveBiome(fromBiome);
-				}
-
 				GenerateBiome(toBiome);
+				
+				await SaveSystem.Instance.SaveBiome(toBiome);
 			}
 			
 			LoadChunksClientRpc(toBiome, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Persistent));
@@ -190,10 +195,10 @@ public class WorldManager : NetworkBehaviour
 		switch (toBiome)
 		{
 			case BiomeType.Forest:
-				ForestGenerator.GenerateForest();
+				_forestGenerator.GenerateForest();
 				break;
 			case BiomeType.Cave:
-				CaveGenerator.GenerateCave();
+				_caveGenerator.GenerateCave();
 				break;
 		}
 	}

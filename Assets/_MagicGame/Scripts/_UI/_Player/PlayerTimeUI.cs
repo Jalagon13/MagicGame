@@ -9,16 +9,16 @@ public class PlayerTimeUI : MonoBehaviour
 	
 	private void Start()
 	{
-		WorldManager.Instance.OnTick += UpdateTimeUI;
+		GameWorld.Instance.OnTick += UpdateTimeUI;
 	}
 
-	private void UpdateTimeUI(object sender, WorldManager.OnTickEventArgs e)
+	private void UpdateTimeUI(object sender, GameWorld.OnTickEventArgs e)
 	{
 		_amountText.text = $"Time:<br> {Mathf.RoundToInt(e.CurrentTime)}/{Mathf.RoundToInt(e.DayDuration)}";
 	}
 	
 	private void OnDestroy()
 	{
-		WorldManager.Instance.OnTick -= UpdateTimeUI;
+		GameWorld.Instance.OnTick -= UpdateTimeUI;
 	}
 }

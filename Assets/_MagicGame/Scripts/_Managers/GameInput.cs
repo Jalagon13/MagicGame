@@ -73,8 +73,8 @@ public class GameInput : NetworkBehaviour
 
     private void Start()
 	{
-		WorldManager.Instance.OnBiomeTransitionStart += WorldManager_DisableInputs;
-		WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_EnableInputs;
+		GameWorld.Instance.OnBiomeTransitionStart += WorldManager_DisableInputs;
+		GameWorld.Instance.OnBiomeTransitionEnd += WorldManager_EnableInputs;
 		InGameMenu.Instance.OnMenuOpen += InGameMenu_OnMenuOpen;
 		Player.OnAnyPlayerSpawned += RegisterOnPlayerLifeStateChanged;
 	}
@@ -84,8 +84,8 @@ public class GameInput : NetworkBehaviour
 		_playerInput.Disable();
 		_playerInput.Dispose();
 
-		WorldManager.Instance.OnBiomeTransitionStart -= WorldManager_DisableInputs;
-		WorldManager.Instance.OnBiomeTransitionEnd -= WorldManager_EnableInputs;
+		GameWorld.Instance.OnBiomeTransitionStart -= WorldManager_DisableInputs;
+		GameWorld.Instance.OnBiomeTransitionEnd -= WorldManager_EnableInputs;
 		InGameMenu.Instance.OnMenuOpen -= InGameMenu_OnMenuOpen;
 		Player.OnAnyPlayerSpawned -= RegisterOnPlayerLifeStateChanged;
 		

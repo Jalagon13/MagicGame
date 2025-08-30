@@ -16,7 +16,7 @@ public class TerrainTileRenderer : MonoBehaviour
 
     private void Start()
     {
-        WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_OnBiomeTransitionEnd;
+        GameWorld.Instance.OnBiomeTransitionEnd += WorldManager_OnBiomeTransitionEnd;
     }
 
     private void WorldManager_OnBiomeTransitionEnd(object sender, EventArgs e)
@@ -112,6 +112,6 @@ public class TerrainTileRenderer : MonoBehaviour
     
     private void OnDestroy()
     {
-        WorldManager.Instance.OnBiomeTransitionEnd -= WorldManager_OnBiomeTransitionEnd;
+        GameWorld.Instance.OnBiomeTransitionEnd -= WorldManager_OnBiomeTransitionEnd;
     }
 }

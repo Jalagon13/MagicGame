@@ -28,9 +28,9 @@ public class SoundManager : NetworkBehaviour
 
     private void Start()
     {
-		if(WorldManager.Instance != null)
+		if(GameWorld.Instance != null)
 		{
-			WorldManager.Instance.OnBiomeDataLoaded += ChangeAmbience;
+			GameWorld.Instance.OnBiomeDataLoaded += ChangeAmbience;
 		}
 	}
 
@@ -93,9 +93,9 @@ public class SoundManager : NetworkBehaviour
 			NetworkManager.OnClientConnectedCallback -= InitializeSounds;
 		}
 
-		if (WorldManager.Instance != null)
+		if (GameWorld.Instance != null)
 		{
-			WorldManager.Instance.OnBiomeDataLoaded -= ChangeAmbience;
+			GameWorld.Instance.OnBiomeDataLoaded -= ChangeAmbience;
 		}
 
 		base.OnDestroy();

@@ -3640,14 +3640,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _isTicking: 0
   _dayDurationInSeconds: 600
   _startingTime: 1
-  _isTicking: 0
-  _saveAfterGeneration: 1
-  _randomSeed: 1
   _customSeed: zotty
-  <ForestGenerator>k__BackingField: {fileID: 1357089833}
-  <CaveGenerator>k__BackingField: {fileID: 2110037627}
+  _randomSeed: 1
+  _forestGenerator: {fileID: 1357089833}
+  _caveGenerator: {fileID: 2110037627}
 --- !u!1 &435010856
 GameObject:
   m_ObjectHideFlags: 0
@@ -12084,7 +12083,7 @@ GameObject:
   - component: {fileID: 1630212177}
   - component: {fileID: 1630212178}
   m_Layer: 0
-  m_Name: ResourceObjectRendering
+  m_Name: ResourceObjectHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12292,7 +12291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _startingBiome: 0
+  _startingBiome: 1
   _itemBasePrefab: {fileID: 4324714860010554649, guid: b80d6a3337ea34052b9944957d71ebd0, type: 3}
   _playerPrefab: {fileID: 815970926421098775, guid: f97c883a224ab4846b8446859cca2edd, type: 3}
   _itemDataBaseSO: {fileID: 11400000, guid: f8a736388b2c44969af16475866a4801, type: 2}
@@ -13062,13 +13061,6 @@ MonoBehaviour:
       Data3: -1088953413
       Data4: 1920233916
     Path: event:/NPCs/Squish
-  <LeafRustle>k__BackingField:
-    Guid:
-      Data1: 445680714
-      Data2: 1259393807
-      Data3: -83488869
-      Data4: 564357219
-    Path: event:/Ambience/LeafRustle
 --- !u!1001 &1744933028
 PrefabInstance:
   m_ObjectHideFlags: 0

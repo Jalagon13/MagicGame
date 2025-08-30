@@ -5,8 +5,8 @@ public class LoadingUI : MonoBehaviour
 {
     private void Start()
     {
-        WorldManager.Instance.OnBiomeTransitionStart += Show;
-        WorldManager.Instance.OnBiomeTransitionEnd += Hide;
+        GameWorld.Instance.OnBiomeTransitionStart += Show;
+        GameWorld.Instance.OnBiomeTransitionEnd += Hide;
         
         gameObject.SetActive(true);
     }
@@ -24,7 +24,7 @@ public class LoadingUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        WorldManager.Instance.OnBiomeTransitionStart -= Show;
-        WorldManager.Instance.OnBiomeTransitionEnd -= Hide;
+        GameWorld.Instance.OnBiomeTransitionStart -= Show;
+        GameWorld.Instance.OnBiomeTransitionEnd -= Hide;
     }
 }

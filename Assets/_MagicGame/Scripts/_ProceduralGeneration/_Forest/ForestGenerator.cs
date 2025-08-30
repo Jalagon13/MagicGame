@@ -20,7 +20,7 @@ public class ForestGenerator : MonoBehaviour
         ChunkManager.IS_GENERATING_BIOME = true;
 
         // Generate seed and noise textures 
-        ForestGenerationData.MapGenerationSeed = WorldManager.Instance.Seed;
+        ForestGenerationData.MapGenerationSeed = GameWorld.Instance.Seed;
         foreach (NoiseMapSO noiseMapSO in NoiseMapsToApplySeed)
         {
             noiseMapSO.GenerateNoiseTexture(ForestGenerationData.MapGenerationSeed);

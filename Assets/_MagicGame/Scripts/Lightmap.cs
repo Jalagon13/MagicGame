@@ -34,10 +34,10 @@ public class Lightmap : MonoBehaviour
 
 	private void Start()
 	{
-		WorldManager.Instance.OnTick += WorldManager_OnTick;
+		GameWorld.Instance.OnTick += WorldManager_OnTick;
 	}
 
-	private void WorldManager_OnTick(object sender, WorldManager.OnTickEventArgs e)
+	private void WorldManager_OnTick(object sender, GameWorld.OnTickEventArgs e)
 	{
 		float ratio = e.CurrentDayRatio;
 		
@@ -99,7 +99,7 @@ public class Lightmap : MonoBehaviour
 	
 	public void UpdateLightMap()
 	{
-		if(_lightmapRenderTexture == null || WorldManager.Instance.IsLoadingBiome) return;
+		if(_lightmapRenderTexture == null || GameWorld.Instance.IsLoadingBiome) return;
 
 		UpdateOverlayRect();
 		UpdateRenderTexture();
@@ -108,7 +108,7 @@ public class Lightmap : MonoBehaviour
 	
 	public void UpdateLightMapBounds(Vector2Int minLoadedTilePos, Vector2Int maxLoadedTilePos)
 	{
-		if(!WorldManager.Instance.IsTicking()) return;
+		if(!GameWorld.Instance.IsTicking()) return;
 		
 		_minLoadedTilePos = minLoadedTilePos;
 		_maxLoadedTilePos = maxLoadedTilePos;
@@ -331,6 +331,6 @@ public class Lightmap : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		WorldManager.Instance.OnTick -= WorldManager_OnTick;
+		GameWorld.Instance.OnTick -= WorldManager_OnTick;
 	}
 }

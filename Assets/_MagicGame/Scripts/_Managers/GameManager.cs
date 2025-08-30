@@ -92,7 +92,7 @@ public class GameManager : NetworkBehaviour
 	{
 		if(NetworkManager.LocalClientId != rpcParams.Receive.SenderClientId) return;
 	
-		WorldManager.Instance.LoadBiome(_startingBiome, Player.Instance.transform.position);
+		GameWorld.Instance.LoadBiome(_startingBiome, Player.Instance.transform.position);
 	}
 	
 	#endregion

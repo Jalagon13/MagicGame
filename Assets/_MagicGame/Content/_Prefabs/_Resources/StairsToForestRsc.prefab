@@ -279,6 +279,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5441594633594964993, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _resourceObject
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Size.x
       value: 2.875
@@ -359,6 +363,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5150323723629226184}
   m_SourcePrefab: {fileID: 100100000, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+--- !u!114 &2397960822785900515 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5441594633594964993, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+  m_PrefabInstance: {fileID: 7693038582619796450}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deb3a23fd5c63404b82d91a57ae0678f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &5473917948437254635 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2392654451137683977, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
@@ -382,5 +397,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resourceData: {fileID: 11400000, guid: 02e6019387ab643d496e9e121cc6e278, type: 2}
+  _resourceFeedback: {fileID: 2397960822785900515}
   <WorldInput>k__BackingField: {fileID: 6227793256016715967}
-  <DestinationBiome>k__BackingField: 0
+  <DestinationBiome>k__BackingField: 1

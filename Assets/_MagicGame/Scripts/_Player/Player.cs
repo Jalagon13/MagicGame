@@ -66,7 +66,7 @@ public class Player : NetworkBehaviour
 	public void OnNetworkSpawnLocalClientInitializations()
 	{
 		Instance = this;
-		CurrentBiome.Value = BiomeType.Forest; // For now all players will spawn in the forest
+		CurrentBiome.Value = BiomeType.None; // Initialize it to none and the GameManager sets it to the correct biome on start at the time of writing this comment
 		
 		_spellCastController = new SpellCastController(this);
 		_spawnBiome = BiomeType.Forest;
@@ -131,8 +131,8 @@ public class Player : NetworkBehaviour
 	{
 		if (CurrentBiome.Value != _spawnBiome)
 		{
-			WorldManager.Instance.OnBiomeTransitionEnd += HandleRespawn;
-			WorldManager.Instance.LoadBiome(_spawnBiome, _spawnPoint);
+			GameWorld.Instance.OnBiomeTransitionEnd += HandleRespawn;
+			GameWorld.Instance.LoadBiome(_spawnBiome, _spawnPoint);
 			return;
 		}
 		
@@ -141,7 +141,7 @@ public class Player : NetworkBehaviour
 
     private void HandleRespawn(object sender, EventArgs e)
     {
-		WorldManager.Instance.OnBiomeTransitionEnd -= HandleRespawn;
+		GameWorld.Instance.OnBiomeTransitionEnd -= HandleRespawn;
 		OnRespawnLogic();
 	}
 	

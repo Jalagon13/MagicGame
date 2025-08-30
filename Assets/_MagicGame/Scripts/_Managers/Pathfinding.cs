@@ -40,7 +40,7 @@ public class Pathfinding : NetworkBehaviour
 	
 	private void Start()
 	{
-		WorldManager.Instance.OnBiomeDataLoaded += CacheCurrentPlayerBiome;
+		GameWorld.Instance.OnBiomeDataLoaded += CacheCurrentPlayerBiome;
 		ChunkManager.Instance.OnUnloadChunk += RequestUnlockPfChunk;
 	}
 
@@ -258,7 +258,7 @@ public class Pathfinding : NetworkBehaviour
 	{
 		base.OnDestroy();
 		
-		WorldManager.Instance.OnBiomeDataLoaded -= CacheCurrentPlayerBiome;
+		GameWorld.Instance.OnBiomeDataLoaded -= CacheCurrentPlayerBiome;
 		ChunkManager.Instance.OnUnloadChunk -= RequestUnlockPfChunk;
 	}
 }

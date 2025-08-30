@@ -74197,7 +74197,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxRotationMultiplier
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _minRotationMultiplier
@@ -75362,7 +75362,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxRotationMultiplier
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _minRotationMultiplier
@@ -76527,7 +76527,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxRotationMultiplier
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _minRotationMultiplier
@@ -76872,11 +76872,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 203665943941511441, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 203665943941511441, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.minScalar
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 203665943941511441, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: SizeBySpeedModule.curve.maxCurve.m_Curve.Array.data[1].time
@@ -79584,7 +79584,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxRotationMultiplier
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _minRotationMultiplier
@@ -80749,7 +80749,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxRotationMultiplier
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _minRotationMultiplier

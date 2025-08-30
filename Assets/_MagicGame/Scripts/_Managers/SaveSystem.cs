@@ -26,7 +26,7 @@ public class SaveSystem : MonoBehaviour
 	{
 		if(!BiomesInMemory.Contains(biome))
 		{
-			Debug.Log($"Adding biome to biomes in memeory {biome}");
+			Debug.Log($"Adding biome '{biome}' to biomes in memeory session tracker.");
 			BiomesInMemory.Add(biome);
 		}
 	}
@@ -69,7 +69,7 @@ public class SaveSystem : MonoBehaviour
 		SerializeChestDataOfCurrentEnvironment(biomeToSave);
 		
 		// Write the data to file
-		await WriteCurrentEnvironmentDataToFile();
+		await WriteCurrentEnvironmentDataToFile(biomeToSave);
 	}
 	
 	private void SerializeObjectDataOfCurrentEnvironment(BiomeType biomeToSave)
@@ -210,15 +210,15 @@ public class SaveSystem : MonoBehaviour
 		}
 	}
 	
-	private async Task WriteCurrentEnvironmentDataToFile()
+	private async Task WriteCurrentEnvironmentDataToFile(BiomeType biomeToSave)
 	{
 		string json = JsonUtility.ToJson(_biomeFileDataForSaving);
 		
-		Debug.Log($"<color=orange>Writing Biome Data of: </color>{Player.Instance.CurrentBiome.Value}<color=orange> to file...</color>");
+		Debug.Log($"<color=orange>Writing Biome Data of: </color>{biomeToSave}<color=orange> to file...</color>");
 		
 		await File.WriteAllTextAsync(_path, json);
 		
-		Debug.Log($"<color=orange>Biome: </color>{Player.Instance.CurrentBiome.Value}<color=orange> writing data to file complete!</color>");
+		Debug.Log($"<color=orange>Biome: </color>{biomeToSave}<color=orange> writing data to file complete!</color>");
 		Debug.Log($"<color=orange>=====================SAVING========================</color>");
 	}
 
@@ -242,7 +242,7 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
         {
             if (GameDataRegistry.Instance.GetResourceDataFromUShortId(data.Id).ResourcePrefab is BiomeTransitionObject)
             {
-                Debug.Log($"Found BiomeTransitionObject: {data.Id} at {data.Pos}");
+                Debug.Log($"Found BiomeTransitionObject: ID-{data.Id} at {data.Pos}");
                 transitionDataList.Add((data.Id, data.Pos));
             }
         }

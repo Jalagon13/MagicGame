@@ -131,7 +131,7 @@ public class SpellCastController
         bool primaryHeldDown = GameInput.Instance.GetPrimaryHeldDown();
         bool isCasting = _player.SpellCaster.IsCasting.Value;
         bool postCastDelayTimerRunning = _postCastDelayTimer.IsRunning;
-        bool isLoadingBiome = WorldManager.Instance.IsLoadingBiome;
+        bool isLoadingBiome = GameWorld.Instance.IsLoadingBiome;
         bool hasEnoughMana = _spellCooldownSystem.CanCastSpell(_selectedWandInventoryItem.GetSelectedSpell());
         bool hasAllCastingMaterials = _selectedWandInventoryItem.GetSelectedSpell().CastingMaterials.Count == 0 ||
           InventoryManager.Instance.HasAllIngredients(_selectedWandInventoryItem.GetSelectedSpell().CastingMaterials);

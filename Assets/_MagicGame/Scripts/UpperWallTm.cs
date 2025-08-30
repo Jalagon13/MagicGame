@@ -16,7 +16,7 @@ public class UpperWallTm : MonoBehaviour
 
     private void Start()
     {
-        WorldManager.Instance.OnBiomeTransitionEnd += RefreshUpperWallTiles;
+        GameWorld.Instance.OnBiomeTransitionEnd += RefreshUpperWallTiles;
     }
 
 
@@ -213,6 +213,6 @@ public class UpperWallTm : MonoBehaviour
 
     private void OnDestroy()
     {
-        WorldManager.Instance.OnBiomeTransitionEnd -= RefreshUpperWallTiles;
+        GameWorld.Instance.OnBiomeTransitionEnd -= RefreshUpperWallTiles;
     }
 }

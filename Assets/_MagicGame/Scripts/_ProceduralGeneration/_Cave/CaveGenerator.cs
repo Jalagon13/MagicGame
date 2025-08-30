@@ -12,7 +12,7 @@ public class CaveGenerator : MonoBehaviour
         ChunkManager.IS_GENERATING_BIOME = true;
 
         // Generate seed and noise textures 
-        CaveGenerationData.MapGenerationSeed = WorldManager.Instance.Seed;
+        CaveGenerationData.MapGenerationSeed = GameWorld.Instance.Seed;
         foreach (NoiseMapSO noiseMapSO in NoiseMapsToApplySeed)
         {
             noiseMapSO.GenerateNoiseTexture(CaveGenerationData.MapGenerationSeed);

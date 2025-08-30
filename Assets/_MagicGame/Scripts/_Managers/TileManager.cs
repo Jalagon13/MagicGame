@@ -37,8 +37,8 @@ public class TileManager : NetworkBehaviour
 	private void Start()
 	{
 		ChunkManager.Instance.OnLoadChunk += ChunkManager_OnLoadChunk;
-		WorldManager.Instance.OnBiomeTransitionStart += WorldManager_OnBiomeTransitionStart;
-		WorldManager.Instance.OnBiomeTransitionEnd += WorldManager_OnBiomeTransitionEnd;
+		GameWorld.Instance.OnBiomeTransitionStart += WorldManager_OnBiomeTransitionStart;
+		GameWorld.Instance.OnBiomeTransitionEnd += WorldManager_OnBiomeTransitionEnd;
 	}
 	
 	private void WorldManager_OnBiomeTransitionStart(object sender, EventArgs e)
@@ -176,7 +176,7 @@ public class TileManager : NetworkBehaviour
 		{
 			UpperWallTm.DeleteUpperWallTile(tilePos);
 		}
-		else if (tileSO != null && (tileType == TileType.Wall || tileType == TileType.Ore) && !WorldManager.Instance.IsLoadingBiome)
+		else if (tileSO != null && (tileType == TileType.Wall || tileType == TileType.Ore) && !GameWorld.Instance.IsLoadingBiome)
 		{
 			UpperWallTm.TryToRenderSurroundingUpperWallTiles(tilePos);
 		}
@@ -217,7 +217,7 @@ public class TileManager : NetworkBehaviour
 	{
 		base.OnDestroy();
 		ChunkManager.Instance.OnLoadChunk -= ChunkManager_OnLoadChunk;
-		WorldManager.Instance.OnBiomeTransitionStart -= WorldManager_OnBiomeTransitionStart;
-		WorldManager.Instance.OnBiomeTransitionEnd -= WorldManager_OnBiomeTransitionEnd;
+		GameWorld.Instance.OnBiomeTransitionStart -= WorldManager_OnBiomeTransitionStart;
+		GameWorld.Instance.OnBiomeTransitionEnd -= WorldManager_OnBiomeTransitionEnd;
 	}
 }
