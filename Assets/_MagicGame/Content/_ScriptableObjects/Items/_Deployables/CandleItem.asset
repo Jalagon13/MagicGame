@@ -17,4 +17,4 @@ MonoBehaviour:
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  _deployObjectPrefab: {fileID: 5780725128829530697, guid: beba537ea73434d4fb7eed0f1a7fc2fc, type: 3}
+  _resourceData: {fileID: 11400000, guid: 198ec7423c329484caa893f680e724b6, type: 2}

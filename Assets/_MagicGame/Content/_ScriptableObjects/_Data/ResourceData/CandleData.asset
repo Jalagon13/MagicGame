@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d4e45105852413c9fb3508bbf2b3c1, type: 3}
+  m_Name: CandleData
+  m_EditorClassIdentifier: 
+  StringID: candle
+  PassThrough: 1
+  CanBeDestroyed: 1
+  ResourcePrefab: {fileID: 4460518573807241978, guid: beba537ea73434d4fb7eed0f1a7fc2fc, type: 3}
+  Hardness: 1
+  ToolTypeNeededForHarvest: 4
+  Table:
+  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
+    Min: 1
+    Max: 1
+    Chance: 100
+  MiningSound:
+    Guid:
+      Data1: -281162869
+      Data2: 1160666795
+      Data3: -1901462113
+      Data4: -244489252
+    Path: event:/Thump
+  ResourceDestroyed:
+    Guid:
+      Data1: -281162869
+      Data2: 1160666795
+      Data3: -1901462113
+      Data4: -244489252
+    Path: event:/Thump
+  PlaceSound:
+    Guid:
+      Data1: -281162869
+      Data2: 1160666795
+      Data3: -1901462113
+      Data4: -244489252
+    Path: event:/Thump

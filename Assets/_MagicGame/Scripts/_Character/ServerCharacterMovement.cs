@@ -110,7 +110,7 @@ public class ServerCharacterMovement : NetworkBehaviour
 
         if (_desiredDirection != Vector2.zero)
         {
-            _serverCharacter.CardinalDirection.Value = CardinalDirectionFromDesiredDirection(_desiredDirection);
+            _serverCharacter.CardinalDirection.Value = GetCardinalDirectionFromVector2(_desiredDirection);
         }
         
         _rigidbody2D.linearVelocity = _velocity;
@@ -151,7 +151,7 @@ public class ServerCharacterMovement : NetworkBehaviour
         _knockback.ApplyKnockback(knockerPosition, knockbackForce, inverse);
     }
 
-    private CardinalDirection CardinalDirectionFromDesiredDirection(Vector2 desiredDirection)
+    public CardinalDirection GetCardinalDirectionFromVector2(Vector2 desiredDirection)
     {
         if (Math.Abs(desiredDirection.x) > Math.Abs(desiredDirection.y))
         {

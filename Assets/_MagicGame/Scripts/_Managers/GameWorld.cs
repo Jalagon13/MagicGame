@@ -144,6 +144,7 @@ public class GameWorld : NetworkBehaviour
 		if(Player.Instance.CurrentBiome.Value != BiomeType.None)
 		{
 			ChunkManager.Instance.UnloadAllPlayerChunks();
+			// NTFS: Need to figure out a stagger unload biome object visuals so its not all getting deleted in one frame
 			ResourceManager.Instance.ClearAllBiomeObjectVisuals();
 		}
 		

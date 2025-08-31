@@ -3640,7 +3640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _isTicking: 0
+  _isTicking: 1
   _dayDurationInSeconds: 600
   _startingTime: 1
   _customSeed: zotty
@@ -7154,15 +7154,17 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
     - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
   _startingItems:
-  - Item: {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+  - Item: {fileID: 11400000, guid: ca1b5b14cbb4545468fad1cb43e84ca2, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: fe217e765840a43b5b9acff0a1269c2f, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
+    Quantity: 100
+  - Item: {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
     Quantity: 100
   - Item: {fileID: 11400000, guid: 128b887eb5a144b6c8c4d6b1ad559dcf, type: 2}
-    Quantity: 100
-  - Item: {fileID: 11400000, guid: cc794b3ff79a04281acef56156ee7eb8, type: 2}
     Quantity: 100
 --- !u!1 &849543217
 GameObject:
@@ -13600,6 +13602,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6a85358bb9fb54ad5a87dc908e10bf8b, type: 2}
   - {fileID: 11400000, guid: 11f42201ce0164a5b85e5dd318d1a87c, type: 2}
   - {fileID: 11400000, guid: 02e6019387ab643d496e9e121cc6e278, type: 2}
+  - {fileID: 11400000, guid: 198ec7423c329484caa893f680e724b6, type: 2}
 --- !u!1 &1832040324
 GameObject:
   m_ObjectHideFlags: 0
@@ -15868,7 +15871,6 @@ MonoBehaviour:
   <GenerationSteps>k__BackingField:
   - {fileID: 767011084}
   - {fileID: 1532492750}
-  - {fileID: 621504238}
   - {fileID: 698152855}
   <NoiseMapsToApplySeed>k__BackingField:
   - {fileID: 11400000, guid: fb24aaaf205ca41ac928db4d742f1f5c, type: 2}

@@ -13,24 +13,24 @@ public class DeployItemSO : ItemSO
 {
 	public static bool PlacedThisFrameFlag = false;
 
-	[SerializeField] private ResourceObject _deployObjectPrefab;
+	[SerializeField] private ResourceDataSO _resourceData;
 	
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
-		// Vector2 pos = ActionManager.MouseWorldPosition;
+		Vector2 pos = ActionManager.MouseWorldPosition;
 		
-		// if(IsClear(pos) && PlayerInRangeOfMouse() && !TileManager.Instance.WallTm.HasTile(new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y))))
-		// {
-		// 	CardinalDirection orientation = Player.LocalClientInstance.StateMachine.FacingDirection;
-		// 	Vector2Int spawnPosition = new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
-		// 	BiomeType biome = Player.LocalClientInstance.CurrentPlayerBiome.Value;
-		// 	int id = GameManager.Instance.GetIDFromWorldObject(_deployObjectPrefab);
+		if(IsClear(pos) && PlayerInRangeOfMouse() && !TileManager.Instance.WallTm.HasTile(new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y))))
+		{
+			CardinalDirection orientation = Player.Instance.ServerCharacter.Movement.GetCardinalDirectionFromVector2(Player.Instance.ServerCharacter.Movement.DesiredDirection);
+			Vector2Int spawnPosition = new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
+			BiomeType biome = Player.Instance.CurrentBiome.Value;
+			ushort id = GameDataRegistry.Instance.GetUShortIdFromResourceData(_resourceData);
 
-		// 	ObjectManager.Instance.PlaceResourceObjectServerRpc(spawnPosition, id, biome, orientation);
-		// 	InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
-		// 	SoundManager.Instance.PlayOneShot(_deployObjectPrefab.PlaceSound, Player.LocalClientInstance.transform.position);
-		// 	PlacedThisFrameFlag = true;
-		// }
+			ResourceManager.Instance.PlaceResourceObjectServerRpc(spawnPosition, id, biome, orientation);
+			InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later
+			SoundManager.Instance.PlayOneShot(_resourceData.PlaceSound, Player.Instance.transform.position);
+			PlacedThisFrameFlag = true;
+		}
 		
 		return _baseActionCooldown;
 	}
@@ -66,10 +66,5 @@ public class DeployItemSO : ItemSO
 		}
 
 		return true;
-	}
-	
-	public ResourceObject GetDeployObjectPrefab()
-	{
-		return _deployObjectPrefab;
 	}
 }
