@@ -6,6 +6,8 @@ public class ZAxisSimulator : MonoBehaviour
     private const float GravityFactor = 0.01f;
 
     [Header("References")]
+    [Tooltip("Transform of the sprite that visually moves up/down with Z axis.")]
+    [SerializeField] private Transform _spriteTransform;
     [Tooltip("Renderer used to draw the shadow beneath this object.")]
     [SerializeField] private SpriteRenderer _shadowRenderer;
 
@@ -34,7 +36,6 @@ public class ZAxisSimulator : MonoBehaviour
     [SerializeField] private bool _loopBounce = false;
 
     private Vector3 _defaultShadowScale;
-    private Vector2 _defaultSpritePos;
     private Vector2 _defaultShadowPos;
 
     public event EventHandler OnBounce;
@@ -44,7 +45,7 @@ public class ZAxisSimulator : MonoBehaviour
 
     private void Awake()
     {
-        _defaultSpritePos = transform.localPosition;
+        // Anchor stays fixed, so no need to store sprite position.
         if (_shadowRenderer != null)
         {
             _defaultShadowPos = _shadowRenderer.transform.localPosition;
@@ -56,7 +57,9 @@ public class ZAxisSimulator : MonoBehaviour
     {
         HandleZAxis();
 
-        transform.localPosition = new Vector3(_defaultSpritePos.x, _defaultSpritePos.y + _zAxis);
+        if (_spriteTransform != null)
+            _spriteTransform.localPosition = new Vector3(0f, _zAxis, 0f);
+        
         if (_enableShadow && _shadowRenderer != null)
         {
             float scaleFactor = 1f / (1f + _zAxis);

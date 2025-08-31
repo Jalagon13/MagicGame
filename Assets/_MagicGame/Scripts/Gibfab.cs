@@ -29,7 +29,7 @@ public class Gibfab : MonoBehaviour
         _bounceFeedback = GetComponent<MMF_Player>();
         _gibSprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
         _shadowSprite = transform.GetChild(1).GetComponent<SpriteRenderer>();
-        _zAxisSimulator = transform.GetChild(0).GetComponent<ZAxisSimulator>();
+        _zAxisSimulator = GetComponent<ZAxisSimulator>();
 
         _zAxisSimulator.OnBounce += OnGibBounce;
         
