@@ -5446,7 +5446,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Description>k__BackingField: 
-  <OreGenThreshold>k__BackingField: 0.05
+  _blobCount: 65
+  _blobSizeMin: 10
+  _blobSizeMax: 15
+  _minBlobSpacing: 10
 --- !u!1001 &623672983
 PrefabInstance:
   m_ObjectHideFlags: 0
