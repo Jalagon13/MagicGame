@@ -13206,7 +13206,7 @@ GameObject:
   - component: {fileID: 1776348053}
   - component: {fileID: 1776348055}
   - component: {fileID: 1776348054}
-  m_Layer: 14
+  m_Layer: 12
   m_Name: MouseTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}

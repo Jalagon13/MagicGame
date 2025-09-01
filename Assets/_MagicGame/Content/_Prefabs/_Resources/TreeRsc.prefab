@@ -74183,17 +74183,29 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _bounceLoss
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _bounceDamping
+      value: 0.625
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _minBounceSpeed
+      value: 0.08
+      objectReference: {fileID: 0}
     - target: {fileID: 4915819473556562129, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: m_Radius
       value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxShrinkDelay
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _minShrinkDelay
-      value: 0.5
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxRotationMultiplier
@@ -75348,17 +75360,29 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _bounceLoss
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _bounceDamping
+      value: 0.625
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _minBounceSpeed
+      value: 0.08
+      objectReference: {fileID: 0}
     - target: {fileID: 4915819473556562129, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: m_Radius
       value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxShrinkDelay
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _minShrinkDelay
-      value: 0.5
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxRotationMultiplier
@@ -76513,17 +76537,29 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _bounceLoss
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _bounceDamping
+      value: 0.625
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _minBounceSpeed
+      value: 0.08
+      objectReference: {fileID: 0}
     - target: {fileID: 4915819473556562129, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: m_Radius
       value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxShrinkDelay
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _minShrinkDelay
-      value: 0.5
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxRotationMultiplier
@@ -79570,17 +79606,29 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _bounceLoss
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _bounceDamping
+      value: 0.625
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _minBounceSpeed
+      value: 0.08
+      objectReference: {fileID: 0}
     - target: {fileID: 4915819473556562129, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: m_Radius
       value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxShrinkDelay
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _minShrinkDelay
-      value: 0.5
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxRotationMultiplier
@@ -80735,17 +80783,29 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _bounceLoss
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _bounceDamping
+      value: 0.625
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530240307255119501, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
+      propertyPath: _minBounceSpeed
+      value: 0.08
+      objectReference: {fileID: 0}
     - target: {fileID: 4915819473556562129, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: m_Radius
       value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxShrinkDelay
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _minShrinkDelay
-      value: 0.5
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5029625716472372365, guid: d8536f7b7823340b083e8295ae4e0ef8, type: 3}
       propertyPath: _maxRotationMultiplier

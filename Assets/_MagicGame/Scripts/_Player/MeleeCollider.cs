@@ -73,7 +73,8 @@ public class MeleeCollider : NetworkBehaviour
         
         if(collision.gameObject.layer == LayerMask.NameToLayer("Foliage"))
         {
-            Vector2Int tilePos = new Vector2Int((int)collision.gameObject.transform.position.x, (int)collision.gameObject.transform.position.y);
+            Vector3 colPos = collision.gameObject.transform.position;
+            Vector2Int tilePos = new(Mathf.RoundToInt(colPos.x), Mathf.RoundToInt(colPos.y));
             int tileId = GameManager.Instance.GetTileIDFromTilemapTilePosition(TileManager.Instance.FoliageTm, (Vector3Int)tilePos);
             TileManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.Instance.CurrentBiome.Value);
             collision.gameObject.GetComponent<FoliageCollider>().DestroyFoliage();
