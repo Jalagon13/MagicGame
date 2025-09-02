@@ -3,9 +3,9 @@ using UnityEngine;
 public class CaveGenerationData : BaseGenerationData
 {
     [field: Header("Terrain Tiles")]
-    [field: SerializeField] public TileSO StoneTerrainTile { get; private set; }
-    [field: SerializeField] public TileSO StoneWallTile { get; private set; }
-    [field: SerializeField] public TileSO CoboltOreTile { get; private set; }
+    [field: SerializeField] public TileDataSO StoneTerrainTile { get; private set; }
+    [field: SerializeField] public TileDataSO StoneWallTile { get; private set; }
+    [field: SerializeField] public TileDataSO CoboltOreTile { get; private set; }
 
     [field: Header("World Objects")]
     [field: SerializeField] public ResourceObject StairsToForest { get; private set; }

@@ -35,10 +35,10 @@ public class ProjectileHitbox : NetworkBehaviour
         {
             Vector3Int tilePos = new Vector3Int((int)collision.gameObject.transform.position.x, (int)collision.gameObject.transform.position.y, 0);
 
-            if(TileManager.Instance.HasTile(tilePos, TileType.Foliage, out TileSO tileSO))
+            if(TileManager.Instance.HasTile(tilePos, TileType.Foliage, out TileDataSO tileSO))
             {
                 int tileId = GameManager.Instance.GetTileIDFromTilemapTilePosition(TileManager.Instance.FoliageTm, (Vector3Int)tilePos);
-                TileManager.Instance.DestroyTileServerRpc((Vector2Int)tilePos, tileId, _serverSpell.SpellData.Value.SpawnBiome);
+                TileManager.Instance.DestroyTile((Vector2Int)tilePos, tileId, _serverSpell.SpellData.Value.SpawnBiome);
                 collision.gameObject.GetComponent<FoliageCollider>()?.DestroyFoliage();
             }
         }

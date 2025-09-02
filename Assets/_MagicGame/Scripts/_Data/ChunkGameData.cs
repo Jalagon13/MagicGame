@@ -105,7 +105,7 @@ public class ChunkGameData
 	}
 	
 	// When a tile is placed, add tile data in chunk
-	public void AddTileData(Vector2Int position, TileSO tile)
+	public void AddTileData(Vector2Int position, TileDataSO tile)
 	{
 		TileGameData tileToAdd = new(tile, position);
 
@@ -222,10 +222,10 @@ public class DoorObjectGameData : ResourceObjectGameData
 // Data used in the game to store tile information (versus tile information stored on file)
 public struct TileGameData
 {
-	public TileSO TileSO { get; private set; }
+	public TileDataSO TileSO { get; private set; }
 	public Vector2Int TilePosition { get; private set; }
 
-	public TileGameData(TileSO tileBase, Vector2Int position)
+	public TileGameData(TileDataSO tileBase, Vector2Int position)
 	{
 		TileSO = tileBase;
 		TilePosition = position;

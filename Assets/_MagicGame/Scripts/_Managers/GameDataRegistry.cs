@@ -12,9 +12,43 @@ public class GameDataRegistry : MonoBehaviour
     [SerializeField] 
     private List<ResourceDataSO> _resourceData;
 
+    [Space(15)]
+    [SerializeField]
+    private List<TileDataSO> _tileData;
+
     private void Awake()
     {
         Instance = this;
+    }
+    
+    public ushort GetUShortIdFromTileData(TileDataSO tileData)
+    {
+        if(tileData == null)
+        {
+            Debug.LogError($"TileDataSO is null. Use this log to deduce where this came from");
+        }
+
+        for (int i = 0; i < _resourceData.Count; i++)
+        {
+            if (_resourceData[i].StringID == tileData.StringID)
+            {
+                return (ushort)i;
+            }
+        }
+
+        Debug.LogError($"TileDataSO '{tileData}' not found!");
+        return ushort.MaxValue;
+    }
+    
+    public TileDataSO GetTileDataFromUShortId(ushort tileId)
+    {
+        if (tileId >= _resourceData.Count)
+        {
+            Debug.LogError($"Invalid Resource ID: {tileId}");
+            return null;
+        }
+
+        return _tileData[tileId];
     }
 
     public ushort GetUShortIdFromResourceData(ResourceDataSO resourceData)

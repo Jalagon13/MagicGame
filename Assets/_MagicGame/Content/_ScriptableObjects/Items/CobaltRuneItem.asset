@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CobaltRuneItem
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Cobalt Crystal
-  <UiDisplay>k__BackingField: {fileID: -984316580, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <UiDisplay>k__BackingField: {fileID: 5524590292671962877, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 

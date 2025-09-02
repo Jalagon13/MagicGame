@@ -86,7 +86,7 @@ public class TileManager : NetworkBehaviour
 		}
 	}
 
-	public bool HasTile(Vector3Int position, TileType tileType, out TileSO tileSO)
+	public bool HasTile(Vector3Int position, TileType tileType, out TileDataSO tileSO)
 	{
 		tileSO = null;
 
@@ -103,28 +103,28 @@ public class TileManager : NetworkBehaviour
 			case TileType.Floor:
 				if (FloorTm.HasTile(position))
 				{
-					tileSO = FloorTm.GetTile<TileSO>(position);
+					tileSO = FloorTm.GetTile<TileDataSO>(position);
 					return true;
 				}
 				break;
 			case TileType.Wall:
 				if (WallTm.HasTile(position))
 				{
-					tileSO = WallTm.GetTile<TileSO>(position);
+					tileSO = WallTm.GetTile<TileDataSO>(position);
 					return true;
 				}
 				break;
 			case TileType.Ore:
 				if (OreTm.HasTile(position))
 				{
-					tileSO = OreTm.GetTile<TileSO>(position);
+					tileSO = OreTm.GetTile<TileDataSO>(position);
 					return true;
 				}
 				break;
 			case TileType.Foliage:
 				if (FoliageTm.HasTile(position))
 				{
-					tileSO = FoliageTm.GetTile<TileSO>(position);
+					tileSO = FoliageTm.GetTile<TileDataSO>(position);
 					return true;
 				}
 				break;
@@ -138,13 +138,13 @@ public class TileManager : NetworkBehaviour
 	{
 	    if (Player.Instance.CurrentBiome.Value != biome) return;
 
-	    TileSO tileToPlace = syncTileId >= 0 ? GameManager.Instance.GetTileSOFromID(syncTileId) : null;
+	    TileDataSO tileToPlace = syncTileId >= 0 ? GameManager.Instance.GetTileSOFromID(syncTileId) : null;
 	    RenderTile(pos, tileToPlace, syncTileType);
 
 	    Lightmap.Instance.UpdateLightMap();
 	}
 
-	public void RenderTile(Vector3Int tilePos, TileSO tileSO, TileType tileType)
+	public void RenderTile(Vector3Int tilePos, TileDataSO tileSO, TileType tileType)
 	{
 		switch (tileType)
 		{
@@ -182,10 +182,9 @@ public class TileManager : NetworkBehaviour
 		}
 	}
 
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void DestroyTileServerRpc(Vector2Int tilePos, int tileId, BiomeType biome)
+	public void DestroyTile(Vector2Int tilePos, int tileId, BiomeType biome)
 	{
-		TileSO tileSO = GameManager.Instance.GetTileSOFromID(tileId);
+		TileDataSO tileSO = GameManager.Instance.GetTileSOFromID(tileId);
 		var tileList = GetTileListFromType(tileSO.TileType, tilePos, biome);
 		
 		if (tileList == null)

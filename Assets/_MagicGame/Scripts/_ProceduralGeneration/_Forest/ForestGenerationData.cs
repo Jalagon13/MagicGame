@@ -5,10 +5,10 @@ using UnityEngine;
 public class ForestGenerationData : BaseGenerationData
 {
     [field: Header("Terrain Tiles")]
-    [field: SerializeField] public TileSO GrassTerrainTile { get; private set; }
-    [field: SerializeField] public TileSO SandTerrainTile { get; private set; }
-    [field: SerializeField] public TileSO WaterTerrainTile { get; private set; }
-    [field: SerializeField] public TileSO TallGrassTile { get; private set; }
+    [field: SerializeField] public TileDataSO GrassTerrainTile { get; private set; }
+    [field: SerializeField] public TileDataSO SandTerrainTile { get; private set; }
+    [field: SerializeField] public TileDataSO WaterTerrainTile { get; private set; }
+    [field: SerializeField] public TileDataSO TallGrassTile { get; private set; }
 
     [field: Header("World Objects")]
     [field: SerializeField] public ResourceObject TreeWorldObject { get; private set; }

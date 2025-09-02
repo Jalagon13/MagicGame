@@ -148,7 +148,7 @@ public class SaveSystem : MonoBehaviour
 			{
 				foreach (TileGameData tile in sourceList)
 				{
-					TileSO tileObjectSO = GameManager.Instance.GetTileSOFromTileBase(tile.TileSO);
+					TileDataSO tileObjectSO = GameManager.Instance.GetTileSOFromTileBase(tile.TileSO);
 					TileFileData tileData = new()
 					{
 						Pos = tile.TilePosition,
@@ -330,7 +330,7 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 
 		for (int i = 0; i < count; i++)
 		{
-			TileSO tileSO = GameManager.Instance.GetTileSOFromID(tileFileData[i].TileId);
+			TileDataSO tileSO = GameManager.Instance.GetTileSOFromID(tileFileData[i].TileId);
 			tileGameData.Add(new TileGameData(tileSO, tileFileData[i].Pos));
 		}
 

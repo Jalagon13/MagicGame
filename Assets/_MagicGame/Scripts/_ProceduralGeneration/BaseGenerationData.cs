@@ -27,7 +27,7 @@ public abstract class BaseGenerationData : MonoBehaviour
         Debug.Log($"Resetting data for biome: {_biomeType}, count: {ChunkManager.Instance.GetChunksFromBiome(_biomeType).Count}, chunks HashCode: {ChunkManager.Instance.GetChunksFromBiome(_biomeType).GetHashCode()}");
     }
 
-    public virtual void SetTileData(int x, int y, TileSO tileSO)
+    public virtual void SetTileData(int x, int y, TileDataSO tileSO)
     {
         Vector2Int pos = new Vector2Int(x, y);
         ChunkManager.Instance.GetChunkFromAnyWorldPos(pos, _biomeType).AddTileData(pos, tileSO);

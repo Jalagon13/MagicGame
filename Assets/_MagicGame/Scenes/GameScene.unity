@@ -12300,7 +12300,6 @@ MonoBehaviour:
   _itemBasePrefab: {fileID: 4324714860010554649, guid: b80d6a3337ea34052b9944957d71ebd0, type: 3}
   _playerPrefab: {fileID: 815970926421098775, guid: f97c883a224ab4846b8446859cca2edd, type: 3}
   _itemDataBaseSO: {fileID: 11400000, guid: f8a736388b2c44969af16475866a4801, type: 2}
-  _tileDataBaseSO: {fileID: 11400000, guid: 86b92227f4ff84b0a9aee415c11b1cbe, type: 2}
 --- !u!1001 &1655304322
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13606,6 +13605,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 11f42201ce0164a5b85e5dd318d1a87c, type: 2}
   - {fileID: 11400000, guid: 02e6019387ab643d496e9e121cc6e278, type: 2}
   - {fileID: 11400000, guid: 198ec7423c329484caa893f680e724b6, type: 2}
+  _tileData:
+  - {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
+  - {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
+  - {fileID: 11400000, guid: 4f8bf3351009c45c4a6ad868dd7eccbd, type: 2}
+  - {fileID: 11400000, guid: 3144a3907552b4687a0f9c034cc12b4d, type: 2}
+  - {fileID: 11400000, guid: c5388903dacbb4c4db84b0b22dae9c49, type: 2}
+  - {fileID: 11400000, guid: 3cf6ac136b8b9491680e4b25ad24dc32, type: 2}
+  - {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
+  - {fileID: 11400000, guid: 4f9eaf08ec277459e99a321c73aa23c7, type: 2}
 --- !u!1 &1832040324
 GameObject:
   m_ObjectHideFlags: 0

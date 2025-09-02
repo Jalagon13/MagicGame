@@ -124,7 +124,7 @@ private ChunkGameData ConvertToGameChunkData(SyncChunkData syncChunkData)
 	{
 		ConvertSyncDataList(syncList, (syncTile) =>
 		{
-			TileSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
+			TileDataSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
 			return new TileGameData(tileSO, new Vector2Int(syncTile.Position.x, syncTile.Position.y));
 		}, chunkGameData.GetTileList(type));
 	}

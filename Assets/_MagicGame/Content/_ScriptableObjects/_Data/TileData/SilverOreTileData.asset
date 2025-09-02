@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b52052ad4aefe4da580ba4e2ba9fed0c, type: 3}
-  m_Name: CoboltOreTileSO
+  m_Name: SilverOreTileData
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: -395762601290963129, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}
   m_DefaultGameObject: {fileID: 0}
@@ -362,7 +362,11 @@ MonoBehaviour:
   <TileType>k__BackingField: 2
   <ToolTypeNeededForHarvest>k__BackingField: 0
   <Hardness>k__BackingField: 1
-  <ItemDropTable>k__BackingField: []
+  <ItemDropTable>k__BackingField:
+  - Item: {fileID: 11400000, guid: 948cd40c3b143404aa76b1fbde01f383, type: 2}
+    Min: 1
+    Max: 1
+    Chance: 100
   <MiningSound>k__BackingField:
     Guid:
       Data1: 249587751

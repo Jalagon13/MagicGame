@@ -40,7 +40,7 @@ public class MiningHandler : MonoBehaviour
     private Timer _miningTimer, _miningSoundTimer, _breakCooldownTimer;
     private DestructableType _destructableFound;
     private ResourceObject _resourceSelected;
-    private TileSO _tileSelected;
+    private TileDataSO _tileSelected;
     private Vector3Int? _currentBreakTargetPosition = null;
     private Vector3Int? _originalBreakTargetPosition = null;
     private bool _placeDelayActive;
@@ -239,7 +239,7 @@ public class MiningHandler : MonoBehaviour
                 ResourceManager.Instance.DestroyResourceServerRpc(Player.Instance.CurrentBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetUShortIdFromResourceData(_resourceSelected.Data));
                 break;
             case DestructableType.Tile:
-                TileManager.Instance.DestroyTileServerRpc((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.Instance.CurrentBiome.Value);
+                TileManager.Instance.DestroyTile((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.Instance.CurrentBiome.Value);
                 break;
         }
         

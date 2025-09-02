@@ -100,12 +100,12 @@ public class UpperWallTm : MonoBehaviour
 
     private void TryToRenderUpperWallTile(int x, int y)
     {
-        TileSO tileAtPosition = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(new Vector3Int(x, y, 0)));
+        TileDataSO tileAtPosition = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(new Vector3Int(x, y, 0)));
         bool tileExistsAbove = TileManager.Instance.WallTm.HasTile(new Vector3Int(x, y + 1, 0));
         
         if(tileExistsAbove)
         {
-            TileSO aboveTileSO = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(new Vector3Int(x, y + 1, 0)));  
+            TileDataSO aboveTileSO = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(new Vector3Int(x, y + 1, 0)));  
             
             if(GameManager.Instance.GetTileIdFromTileSO(tileAtPosition) != GameManager.Instance.GetTileIdFromTileSO(aboveTileSO))
             {
@@ -118,7 +118,7 @@ public class UpperWallTm : MonoBehaviour
         }
     }
 
-    private void RenderUpperWallTile(TileSO tileAtPosition, int x, int y)
+    private void RenderUpperWallTile(TileDataSO tileAtPosition, int x, int y)
     {
         Vector3Int tilePosition = new Vector3Int(x, y, 0);
         Vector3Int leftTilePosition = new Vector3Int(x - 1, y, 0);
@@ -149,7 +149,7 @@ public class UpperWallTm : MonoBehaviour
         }
     }
 
-    private void SetUpperWallTile(Vector3Int upperTilePosition, TileSO tileAtPosition, TopTileType topTileType)
+    private void SetUpperWallTile(Vector3Int upperTilePosition, TileDataSO tileAtPosition, TopTileType topTileType)
     {
         Vector3Int baseTilePosition = upperTilePosition + Vector3Int.down;
 
@@ -189,7 +189,7 @@ public class UpperWallTm : MonoBehaviour
         if (TileManager.Instance.OreTm.HasTile(oreTilePosition))
         {
             TileBase oreBaseTile = TileManager.Instance.OreTm.GetTile(oreTilePosition);
-            TileSO oreTileSO = GameManager.Instance.GetTileSOFromTileBase(oreBaseTile);
+            TileDataSO oreTileSO = GameManager.Instance.GetTileSOFromTileBase(oreBaseTile);
 
             Tile oreTile = ScriptableObject.CreateInstance<Tile>();
             switch (topTileType)

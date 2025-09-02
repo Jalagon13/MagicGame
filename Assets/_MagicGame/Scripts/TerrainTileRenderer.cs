@@ -10,9 +10,9 @@ public class TerrainTileRenderer : MonoBehaviour
     [field: SerializeField] public TerrainTilemap LiquidTerrainTilemapPrefab { get; private set; }
     [field: Space(10)]
     [field: SerializeField, Tooltip("Top tiles are highest priority, bottom is lowest")] 
-    public List<TileSO> TerrainRenderHierarchy { get; private set; }
+    public List<TileDataSO> TerrainRenderHierarchy { get; private set; }
 
-    private readonly Dictionary<TileSO, TerrainTilemap> _terrainTilemaps = new();
+    private readonly Dictionary<TileDataSO, TerrainTilemap> _terrainTilemaps = new();
 
     private void Start()
     {
@@ -27,7 +27,7 @@ public class TerrainTileRenderer : MonoBehaviour
         }
     }
 
-    public void SetTerrainTileData(Vector3Int tilePosition, TileSO tileSO)
+    public void SetTerrainTileData(Vector3Int tilePosition, TileDataSO tileSO)
     {
         if (!TerrainRenderHierarchy.Contains(tileSO) && tileSO != null)
         {
@@ -88,7 +88,7 @@ public class TerrainTileRenderer : MonoBehaviour
         _terrainTilemaps.Clear();
     }
 
-    public TileSO GetTileSO(Vector3Int position)
+    public TileDataSO GetTileSO(Vector3Int position)
     {
         foreach (var kvp in _terrainTilemaps)
         {

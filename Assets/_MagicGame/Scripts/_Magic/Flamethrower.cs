@@ -141,7 +141,7 @@ public class Flamethrower : ServerSpell
                 foliage.DestroyFoliage();
             }
 
-            TileManager.Instance.DestroyTileServerRpc(tilePos, tileId, Player.Instance.CurrentBiome.Value);
+            TileManager.Instance.DestroyTile(tilePos, tileId, Player.Instance.CurrentBiome.Value);
 
             yield return new WaitForSeconds(_timeBetweenDamage);
         }

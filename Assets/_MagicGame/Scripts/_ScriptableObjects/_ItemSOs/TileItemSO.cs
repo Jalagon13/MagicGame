@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu(fileName = "New Tile Item", menuName = "Create Item/New Tile Item")]
 public class TileItemSO : ItemSO
 {
-	[field: SerializeField] public TileSO TileToPlace { get; private set; }
+	[field: SerializeField] public TileDataSO TileToPlace { get; private set; }
 	
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{
