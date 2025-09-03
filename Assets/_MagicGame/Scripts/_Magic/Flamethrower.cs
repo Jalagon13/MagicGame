@@ -132,7 +132,7 @@ public class Flamethrower : ServerSpell
 
             Vector3 pos = foliage.transform.position;
             Vector2Int tilePos = new Vector2Int((int)pos.x, (int)pos.y);
-            int tileId = GameManager.Instance.GetTileIDFromTilemapTilePosition(
+            ushort tileId = GameDataRegistry.Instance.GetUShortIdFromTilemapTilePosition(
                 TileManager.Instance.FoliageTm, (Vector3Int)tilePos
             );
 

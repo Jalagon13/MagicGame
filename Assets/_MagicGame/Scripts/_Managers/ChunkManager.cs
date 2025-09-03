@@ -201,10 +201,10 @@ public class ChunkManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void PlaceTileServerRpc(Vector2Int position, int tileID, BiomeType biomeToAddTileData, TileType tileType)
+	public void PlaceTileServerRpc(Vector2Int position, ushort tileID, BiomeType biomeToAddTileData, TileType tileType)
 	{
 		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, biomeToAddTileData);
-		chunk.AddTileData(position, GameManager.Instance.GetTileSOFromID(tileID));
+		chunk.AddTileData(position, GameDataRegistry.Instance.GetTileDataFromUShortId(tileID));
 		
 		if(tileType == TileType.Wall)	
 		{
@@ -224,7 +224,8 @@ public class ChunkManager : NetworkBehaviour
 			Pathfinding.Instance.RemovePathfindingfWallTileServerRpc(position, biome);
 		}
 
-		TileManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, -1, tileType, biome);
+		// NTFS: ushort.MinValue can be any number as long as render air is true here to render air
+		TileManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, ushort.MinValue, tileType, biome, true);
 	}
 
 	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType biomeToGetChunkFrom)

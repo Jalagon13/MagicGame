@@ -34,7 +34,7 @@ public struct ItemFileData
 [Serializable]
 public class TileFileData // For Serialization
 {
-	public int TileId;
+	public ushort TileId;
 	public Vector2Int Pos; // Could be position in chunk or in the world not sure yet
 	public TileType TileType;
 }

@@ -359,6 +359,7 @@ MonoBehaviour:
     - {x: -1, y: 0, z: 0}
     - {x: 1, y: 0, z: 0}
     m_RuleTransform: 0
+  StringID: woodwalltile
   <TileType>k__BackingField: 2
   <ToolTypeNeededForHarvest>k__BackingField: 1
   <Hardness>k__BackingField: 0.65

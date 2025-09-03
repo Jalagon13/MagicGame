@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GameDataRegistry : MonoBehaviour
 {
@@ -28,9 +29,9 @@ public class GameDataRegistry : MonoBehaviour
             Debug.LogError($"TileDataSO is null. Use this log to deduce where this came from");
         }
 
-        for (int i = 0; i < _resourceData.Count; i++)
+        for (int i = 0; i < _tileData.Count; i++)
         {
-            if (_resourceData[i].StringID == tileData.StringID)
+            if (_tileData[i].StringID == tileData.StringID)
             {
                 return (ushort)i;
             }
@@ -40,11 +41,41 @@ public class GameDataRegistry : MonoBehaviour
         return ushort.MaxValue;
     }
     
+    public ushort GetUShortIdFromTileBase(TileBase tileBase)
+    {
+        return GetUShortIdFromTileData(GetTileDataFromTileBase(tileBase));
+    }
+    
+    public TileDataSO GetTileDataFromTileBase(TileBase tileBase)
+    {
+        foreach (TileDataSO tileObjectSO in _tileData)
+        {
+        	if(tileObjectSO == tileBase)
+        	{
+        		return tileObjectSO;
+        	}
+        }
+
+        Debug.LogError($"Cannot find {tileBase} in TileObjectSOList, returning default");
+        return default;
+    }
+
+    public ushort GetUShortIdFromTilemapTilePosition(Tilemap tilemap, Vector3Int position)
+    {
+        if (tilemap.HasTile(position))
+        {
+            return GetUShortIdFromTileBase(tilemap.GetTile(position));
+        }
+
+        Debug.LogError($"Cannot return tile on tilemap {tilemap.name} on {position} because {tilemap.name} has no tile at that position");
+        return default;
+    }
+
     public TileDataSO GetTileDataFromUShortId(ushort tileId)
     {
-        if (tileId >= _resourceData.Count)
+        if (tileId >= _tileData.Count || tileId < 0)
         {
-            Debug.LogError($"Invalid Resource ID: {tileId}");
+            Debug.LogError($"Invalid Tile ID: {tileId}");
             return null;
         }
 

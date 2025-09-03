@@ -90,12 +90,12 @@ public class NetworkChunkManager : NetworkBehaviour
 	{
 		foreach (var tile in gameDataList)
 		{
-			byte id = GameManager.Instance.GetTileIdFromTileSO(tile.TileSO);
+			ushort id = GameDataRegistry.Instance.GetUShortIdFromTileData(tile.TileSO);
 			syncDataList.Add(ConvertGameDataIntoGenericSyncData(tile.TilePosition, id));
 		}
 	}
 
-	private GenericGameObjectSyncData ConvertGameDataIntoGenericSyncData(Vector2Int position, byte id)
+	private GenericGameObjectSyncData ConvertGameDataIntoGenericSyncData(Vector2Int position, ushort id)
 	{
 		return new GenericGameObjectSyncData
 		{
@@ -124,7 +124,7 @@ private ChunkGameData ConvertToGameChunkData(SyncChunkData syncChunkData)
 	{
 		ConvertSyncDataList(syncList, (syncTile) =>
 		{
-			TileDataSO tileSO = GameManager.Instance.GetTileSOFromID(syncTile.ID);
+			TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromUShortId(syncTile.ID);
 			return new TileGameData(tileSO, new Vector2Int(syncTile.Position.x, syncTile.Position.y));
 		}, chunkGameData.GetTileList(type));
 	}

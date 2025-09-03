@@ -16,7 +16,9 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
+  StringID: waterterraintile
   <TileType>k__BackingField: 4
+  <ToolTypeNeededForHarvest>k__BackingField: 0
   <Hardness>k__BackingField: 0.65
   <ItemDropTable>k__BackingField: []
   <MiningSound>k__BackingField:

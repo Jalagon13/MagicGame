@@ -114,8 +114,8 @@ public class MiningHandler : MonoBehaviour
         else if (TileManager.Instance.WallTm.HasTile(wallPos))
         {
             _tileSelected = TileManager.Instance.OreTm.HasTile(wallPos)
-                ? GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.OreTm.GetTile(wallPos))
-                : GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.WallTm.GetTile(wallPos));
+                ? GameDataRegistry.Instance.GetTileDataFromTileBase(TileManager.Instance.OreTm.GetTile(wallPos))
+                : GameDataRegistry.Instance.GetTileDataFromTileBase(TileManager.Instance.WallTm.GetTile(wallPos));
 
             _destructableFound = DestructableType.Tile;
             _selectedResourceToolType = _tileSelected.ToolTypeNeededForHarvest;
@@ -123,8 +123,8 @@ public class MiningHandler : MonoBehaviour
         }
         else if (TileManager.Instance.FloorTm.HasTile(pos))
         {
-            _tileSelected = GameManager.Instance.GetTileSOFromTileBase(TileManager.Instance.FloorTm.GetTile(pos));
-            
+            _tileSelected = GameDataRegistry.Instance.GetTileDataFromTileBase(TileManager.Instance.FloorTm.GetTile(pos));
+
             _destructableFound = DestructableType.Tile;
             _selectedResourceToolType = _tileSelected.ToolTypeNeededForHarvest;
             _currentBreakTargetPosition = pos;
@@ -239,7 +239,7 @@ public class MiningHandler : MonoBehaviour
                 ResourceManager.Instance.DestroyResourceServerRpc(Player.Instance.CurrentBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetUShortIdFromResourceData(_resourceSelected.Data));
                 break;
             case DestructableType.Tile:
-                TileManager.Instance.DestroyTile((Vector2Int)_currentBreakTargetPosition, GameManager.Instance.GetTileIdFromTileSO(_tileSelected), Player.Instance.CurrentBiome.Value);
+                TileManager.Instance.DestroyTile((Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetUShortIdFromTileData(_tileSelected), Player.Instance.CurrentBiome.Value);
                 break;
         }
         

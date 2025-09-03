@@ -3,7 +3,7 @@ using UnityEngine;
 public abstract class BaseGenerationData : MonoBehaviour
 {
 
-    [HideInInspector] public int[,] MostFrontRenderedTileMatrix = new int[ChunkManager.BIOME_SIDE_LENGTH, ChunkManager.BIOME_SIDE_LENGTH];
+    [HideInInspector] public ushort[,] MostFrontRenderedTileMatrix = new ushort[ChunkManager.BIOME_SIDE_LENGTH, ChunkManager.BIOME_SIDE_LENGTH];
     [HideInInspector] public string MapGenerationSeed;
     
     protected abstract BiomeType _biomeType { get; }
@@ -27,11 +27,11 @@ public abstract class BaseGenerationData : MonoBehaviour
         Debug.Log($"Resetting data for biome: {_biomeType}, count: {ChunkManager.Instance.GetChunksFromBiome(_biomeType).Count}, chunks HashCode: {ChunkManager.Instance.GetChunksFromBiome(_biomeType).GetHashCode()}");
     }
 
-    public virtual void SetTileData(int x, int y, TileDataSO tileSO)
+    public virtual void SetTileData(int x, int y, TileDataSO tileData)
     {
         Vector2Int pos = new Vector2Int(x, y);
-        ChunkManager.Instance.GetChunkFromAnyWorldPos(pos, _biomeType).AddTileData(pos, tileSO);
-        MostFrontRenderedTileMatrix[x, y] = GameManager.Instance.GetTileIdFromTileSO(tileSO);
+        ChunkManager.Instance.GetChunkFromAnyWorldPos(pos, _biomeType).AddTileData(pos, tileData);
+        MostFrontRenderedTileMatrix[x, y] = GameDataRegistry.Instance.GetUShortIdFromTileData(tileData);
     }
 
     public virtual void SetWorldObjectData(int x, int y, ResourceObject resource, CardinalDirection dir)

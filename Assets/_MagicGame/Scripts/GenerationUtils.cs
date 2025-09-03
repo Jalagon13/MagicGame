@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class GenerationUtils
 {
-    public static HashSet<Vector2Int> GetEdgeTiles(List<TileDataSO> tilesToSearchFor, List<TileDataSO> tilesAdjacentTo, List<Vector2Int> directions, int[,] tileMatrix)
+    public static HashSet<Vector2Int> GetEdgeTiles(List<TileDataSO> tilesToSearchFor, List<TileDataSO> tilesAdjacentTo, List<Vector2Int> directions, ushort[,] tileMatrix)
     {
         HashSet<Vector2Int> edgeTiles = new HashSet<Vector2Int>();
 
@@ -14,8 +14,8 @@ public static class GenerationUtils
         {
             for (int y = 0; y < height; y++)
             {
-                int tileId = tileMatrix[x, y];
-                TileDataSO currentTile = GameManager.Instance.GetTileSOFromID(tileId);
+                ushort tileId = tileMatrix[x, y];
+                TileDataSO currentTile = GameDataRegistry.Instance.GetTileDataFromUShortId(tileId);
 
                 if (tilesToSearchFor.Contains(currentTile) && IsAdjacentToTiles(x, y, tilesAdjacentTo, directions, tileMatrix))
                 {
@@ -27,7 +27,7 @@ public static class GenerationUtils
         return edgeTiles;
     }
 
-    public static bool IsAdjacentToTiles(int x, int y, List<TileDataSO> tilesToCheckFor, List<Vector2Int> directions, int[,] tileMatrix)
+    public static bool IsAdjacentToTiles(int x, int y, List<TileDataSO> tilesToCheckFor, List<Vector2Int> directions, ushort[,] tileMatrix)
     {
         int width = tileMatrix.GetLength(0);
         int height = tileMatrix.GetLength(1);
@@ -40,7 +40,7 @@ public static class GenerationUtils
             if (nx >= 0 && nx < width && ny >= 0 && ny < height)
             {
                 int neighborTileId = tileMatrix[nx, ny];
-                TileDataSO neighborTile = GameManager.Instance.GetTileSOFromID(neighborTileId);
+                TileDataSO neighborTile = GameDataRegistry.Instance.GetTileDataFromUShortId((ushort)neighborTileId);
 
                 if (tilesToCheckFor.Contains(neighborTile))
                 {
@@ -52,7 +52,7 @@ public static class GenerationUtils
         return false;
     }
 
-    public static HashSet<Vector2Int> ExpandEdgeTiles(HashSet<Vector2Int> initialShoreTiles, int width, List<TileDataSO> validTiles, int[,] tileMatrix)
+    public static HashSet<Vector2Int> ExpandEdgeTiles(HashSet<Vector2Int> initialShoreTiles, int width, List<TileDataSO> validTiles, ushort[,] tileMatrix)
     {
         HashSet<Vector2Int> expandedEdgeTiles = new HashSet<Vector2Int>();
         HashSet<Vector2Int> currentLayerTiles = new HashSet<Vector2Int>(initialShoreTiles);
@@ -73,7 +73,7 @@ public static class GenerationUtils
                     if (adjacentTile.x >= 0 && adjacentTile.x < matrixWidth && adjacentTile.y >= 0 && adjacentTile.y < matrixHeight)
                     {
                         int tileId = tileMatrix[adjacentTile.x, adjacentTile.y];
-                        TileDataSO tileSO = GameManager.Instance.GetTileSOFromID(tileId);
+                        TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromUShortId((ushort)tileId);
 
                         if (validTiles.Contains(tileSO) && !expandedEdgeTiles.Contains(adjacentTile))
                         {

@@ -17,7 +17,7 @@ public class TileItemSO : ItemSO
 		var pos = Vector3Int.FloorToInt(ActionManager.MouseWorldPosition);
 		var floorTmHasTile = TileManager.Instance.FloorTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition));
 		var wallTmHasTile = TileManager.Instance.WallTm.HasTile(Vector3Int.FloorToInt(ActionManager.MouseWorldPosition));
-		int syncTileId = GameManager.Instance.GetIDFromTileObjectSO(TileToPlace);
+		ushort syncTileId = GameDataRegistry.Instance.GetUShortIdFromTileData(TileToPlace);
 
 		switch (TileToPlace.TileType)
 		{

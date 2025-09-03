@@ -37,7 +37,7 @@ public class ProjectileHitbox : NetworkBehaviour
 
             if(TileManager.Instance.HasTile(tilePos, TileType.Foliage, out TileDataSO tileSO))
             {
-                int tileId = GameManager.Instance.GetTileIDFromTilemapTilePosition(TileManager.Instance.FoliageTm, (Vector3Int)tilePos);
+                ushort tileId = GameDataRegistry.Instance.GetUShortIdFromTilemapTilePosition(TileManager.Instance.FoliageTm, tilePos);
                 TileManager.Instance.DestroyTile((Vector2Int)tilePos, tileId, _serverSpell.SpellData.Value.SpawnBiome);
                 collision.gameObject.GetComponent<FoliageCollider>()?.DestroyFoliage();
             }

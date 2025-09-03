@@ -64,9 +64,9 @@ public class BreakingVisual : NetworkBehaviour
             if(TileManager.Instance.HasTile(e.BreakTargetPosition + Vector3Int.down, TileType.Wall, out TileDataSO belowWallTile))
             {
                 // There is a tile below the tile we are breaking
-                int tileIdOfTileBeingBroken = GameManager.Instance.GetTileIdFromTileSO(TileManager.Instance.WallTm.GetTile<TileDataSO>(e.BreakTargetPosition));
-                int tileIdOfTileBelow = GameManager.Instance.GetTileIdFromTileSO(belowWallTile);
-                
+                int tileIdOfTileBeingBroken = GameDataRegistry.Instance.GetUShortIdFromTileData(TileManager.Instance.WallTm.GetTile<TileDataSO>(e.BreakTargetPosition));
+                int tileIdOfTileBelow = GameDataRegistry.Instance.GetUShortIdFromTileData(belowWallTile);
+
                 if(tileIdOfTileBeingBroken == tileIdOfTileBelow) // Same tile
                 {
                     transform.position = new Vector3(e.BreakTargetPosition.x, e.BreakTargetPosition.y + 0.5f, 0f);

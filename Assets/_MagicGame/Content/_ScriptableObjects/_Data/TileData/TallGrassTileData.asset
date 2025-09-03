@@ -16,6 +16,7 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 391421181423590875, guid: 7ccd4016f46464294a499bc53918b403, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules: []
+  StringID: tallgrasstile
   <TileType>k__BackingField: 5
   <ToolTypeNeededForHarvest>k__BackingField: 4
   <Hardness>k__BackingField: 0.65

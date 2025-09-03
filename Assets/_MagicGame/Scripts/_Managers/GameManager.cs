@@ -97,10 +97,10 @@ public class GameManager : NetworkBehaviour
 	#endregion
 	
 	#region DataBase Functions
-	
+
 	public ItemSO GetItemSOFromItemId(int index)
 	{
-		if(index >= 0 && index < _itemDataBaseSO.ItemSOList.Count)
+		if (index >= 0 && index < _itemDataBaseSO.ItemSOList.Count)
 		{
 			return _itemDataBaseSO.ItemSOList[index];
 		}
@@ -109,54 +109,6 @@ public class GameManager : NetworkBehaviour
 			// Debug.LogWarning($"ItemSO for index: {index} can't be found, returning null");
 			return null;
 		}
-	}
-	
-	public byte GetTileIdFromTileSO(TileDataSO tileSO)
-	{
-		// return (byte)_tileDataBaseSO.TileObjectSOList.IndexOf(tileSO);
-		return default;
-	}
-	
-	public int GetTileIdFromTileBase(TileBase tileBase)
-	{
-		return GetTileIdFromTileSO(GetTileSOFromTileBase(tileBase));
-	}
-
-	public TileDataSO GetTileSOFromTileBase(TileBase tileBase)
-	{
-		// foreach (TileDataSO tileObjectSO in _tileDataBaseSO.TileObjectSOList)
-		// {
-		// 	if(tileObjectSO == tileBase)
-		// 	{
-		// 		return tileObjectSO;
-		// 	}
-		// }
-
-		Debug.LogError($"Cannot find {tileBase} in TileObjectSOList, returning default");
-		return default;
-	}
-
-	public byte GetTileIDFromTilemapTilePosition(Tilemap tilemap, Vector3Int position)
-	{
-		if (tilemap.HasTile(position))
-		{
-			return GetIDFromTileObjectSO(tilemap.GetTile(position) as TileDataSO);
-		}
-
-		Debug.LogError($"Cannot return tile on tilemap {tilemap.name} on {position} because {tilemap.name} has no tile at that position");
-		return default;
-	}
-
-	public byte GetIDFromTileObjectSO(TileDataSO tileObjectSO)
-	{
-		// return (byte)_tileDataBaseSO.TileObjectSOList.IndexOf(tileObjectSO);
-		return default;
-	}
-
-	public TileDataSO GetTileSOFromID(int id)
-	{
-		// return _tileDataBaseSO.TileObjectSOList.ElementAt(id);
-		return default;
 	}
 
 	public int GetItemIdFromItemSO(ItemSO item)

@@ -134,12 +134,19 @@ public class TileManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.ClientsAndHost)]
-	public void HandleTileVisualClientRpc(Vector3Int pos, int syncTileId, TileType syncTileType, BiomeType biome)
+	public void HandleTileVisualClientRpc(Vector3Int pos, ushort syncTileId, TileType syncTileType, BiomeType biome, bool renderAir = false)
 	{
 	    if (Player.Instance.CurrentBiome.Value != biome) return;
 
-	    TileDataSO tileToPlace = syncTileId >= 0 ? GameManager.Instance.GetTileSOFromID(syncTileId) : null;
-	    RenderTile(pos, tileToPlace, syncTileType);
+		if(renderAir)
+		{
+		    RenderTile(pos, null, syncTileType);
+		}
+		else
+		{
+			TileDataSO tileToPlace = GameDataRegistry.Instance.GetTileDataFromUShortId(syncTileId);
+			RenderTile(pos, tileToPlace, syncTileType);
+		}
 
 	    Lightmap.Instance.UpdateLightMap();
 	}
@@ -182,9 +189,9 @@ public class TileManager : NetworkBehaviour
 		}
 	}
 
-	public void DestroyTile(Vector2Int tilePos, int tileId, BiomeType biome)
+	public void DestroyTile(Vector2Int tilePos, ushort tileId, BiomeType biome)
 	{
-		TileDataSO tileSO = GameManager.Instance.GetTileSOFromID(tileId);
+		TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromUShortId(tileId);
 		var tileList = GetTileListFromType(tileSO.TileType, tilePos, biome);
 		
 		if (tileList == null)

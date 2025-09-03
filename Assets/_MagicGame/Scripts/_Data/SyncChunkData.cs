@@ -191,7 +191,7 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 public struct GenericGameObjectSyncData : IEquatable<GenericGameObjectSyncData>, INetworkSerializable
 {
 	public Vector2Int Position;
-	public byte ID;
+	public ushort ID;
 
 	public bool Equals(GenericGameObjectSyncData other)
 	{
