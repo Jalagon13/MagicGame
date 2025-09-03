@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(fileName = "New Tile Item", menuName = "Create Item/New Tile Item")]
-public class TileItemSO : ItemSO
+public class TileItemSO : ItemDataSO
 {
 	[field: SerializeField] public TileDataSO TileToPlace { get; private set; }
 	

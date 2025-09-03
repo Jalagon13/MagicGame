@@ -18,11 +18,11 @@ public class MouseItemModel
 		_mouseInventoryItem = item;
 	}
 	
-	public void TryToRemoveItem(ItemSO itemToRemove, int amountToRemove, out int remainder)
+	public void TryToRemoveItem(ItemDataSO itemToRemove, int amountToRemove, out int remainder)
 	{
 		if(_mouseInventoryItem.Item != null)
 		{
-			if(_mouseInventoryItem.Item.Name == itemToRemove.Name)
+			if(_mouseInventoryItem.Item.InGameName == itemToRemove.InGameName)
 			{
 				_mouseInventoryItem.Quantity -= amountToRemove;
 				

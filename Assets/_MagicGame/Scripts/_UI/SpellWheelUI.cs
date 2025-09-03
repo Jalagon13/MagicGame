@@ -119,7 +119,7 @@ public class SpellWheelUI : MonoBehaviour
         {
             _lastClosestUI = closestUI;
             SpellItemSO newSpell = Player.Instance.SpellCastController.SelectedWandInventoryItem.MagicArray[_activeSpellUIDict[closestUI]];
-            _selectedSpellText.text = newSpell.Name;
+            _selectedSpellText.text = newSpell.InGameName;
             SoundManager.Instance.PlayOneShot(_spellSelectedSound, transform.position);
         }
 

@@ -7,7 +7,7 @@ using UnityEngine.Assertions;
 using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(fileName = "New Npc Item", menuName = "Create Item/New NPC Item")]
-public class NpcItemSO : ItemSO
+public class NpcItemSO : ItemDataSO
 {
     [SerializeField] private CharacterDataSO _npcToSpawn;
     [Tooltip("For debugging purposes")]

@@ -2,7 +2,7 @@ using FMODUnity;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "food_", menuName = "Create Item/New Food")]
-public class FoodItemSO : ItemSO
+public class FoodItemSO : ItemDataSO
 {
     [field: SerializeField] public EventReference ConsumeSound { get; private set; }
     

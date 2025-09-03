@@ -37,7 +37,7 @@ public class InventoryModel
 			{
 				if(!_inventoryItems[i].HasItem) continue; // If slot is empty, move on to the next slot to check
 				
-				if (_inventoryItems[i].Item.Name == itemToAdd.Item.Name)
+				if (_inventoryItems[i].Item.InGameName == itemToAdd.Item.InGameName)
 				{
 					_inventoryItems[i].Quantity += itemToAdd.Quantity;
 					
@@ -96,14 +96,14 @@ public class InventoryModel
 		UpdateInventory();
 	}
 	
-	public void RemoveItem(ItemSO itemToRemove, int amountToRemove)
+	public void RemoveItem(ItemDataSO itemToRemove, int amountToRemove)
 	{
 		// Basic funationalty, need to revisit later to fix bugs
 		for(int i = 0; i < _inventoryItems.Count; i++)
 		{
 			if(_inventoryItems[i].Item == null) continue;
 			
-			if(_inventoryItems[i].Item.Name == itemToRemove.Name)
+			if(_inventoryItems[i].Item.InGameName == itemToRemove.InGameName)
 			{
 				_inventoryItems[i].Quantity -= amountToRemove;
 				
@@ -127,7 +127,7 @@ public class InventoryModel
 		{
 			if(item.Item == null) continue;
 			
-			if(item.Item.Name == inventoryItemToCheck.Item.Name)
+			if(item.Item.InGameName == inventoryItemToCheck.Item.InGameName)
 			{
 				amountCounter += item.Quantity;
 			}
@@ -136,7 +136,7 @@ public class InventoryModel
 		return amountCounter >= inventoryItemToCheck.Quantity;
 	}
 	
-	public int GetAmount(ItemSO itemToCheck)
+	public int GetAmount(ItemDataSO itemToCheck)
 	{
 		int amountCounter = 0;
 		
@@ -144,7 +144,7 @@ public class InventoryModel
 		{
 			if(item.Item == null) continue;
 			
-			if(item.Item.Name == itemToCheck.Name)
+			if(item.Item.InGameName == itemToCheck.InGameName)
 			{
 				amountCounter += item.Quantity;
 			}

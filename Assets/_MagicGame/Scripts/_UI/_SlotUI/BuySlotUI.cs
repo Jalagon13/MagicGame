@@ -8,10 +8,10 @@ public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
 {
     [field: SerializeField] public Image ItemImage { get; private set; }
 
-    private ItemSO _itemToBuy;
+    private ItemDataSO _itemToBuy;
     private bool _hovered;
 
-    public void Initialize(ItemSO itemToBuy)
+    public void Initialize(ItemDataSO itemToBuy)
     {
         _itemToBuy = itemToBuy;
         if(_hovered)
@@ -31,7 +31,7 @@ public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
         {
             if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.HasItem)
             {
-                if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item.Name == _itemToBuy.Name)
+                if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item.InGameName == _itemToBuy.InGameName)
                 {
                     InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity++;
                     SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.Instance.transform.position);
@@ -70,7 +70,7 @@ public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
                 default:
                     int quantity = 1;
                     string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
-                    string itemText = $"{_itemToBuy.Name} {quantityString}<br>Cost: {_itemToBuy.GoldValue} Gold<br>{_itemToBuy.GetDescription()}";
+                    string itemText = $"{_itemToBuy.InGameName} {quantityString}<br>Cost: {_itemToBuy.GoldValue} Gold<br>{_itemToBuy.GetDescription()}";
 
                     Tooltip.JustText(itemText, Color.white, fontSize: 12f);
                     break;

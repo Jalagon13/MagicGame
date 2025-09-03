@@ -119,7 +119,7 @@ public class SpellbookInspectorMenuUI : MonoBehaviour
 		// Replace the selected spellbook with the new one
 		SelectedWand = newWand;
 
-		Debug.Log($"Swapped spellbook. New selected spellbook: {SelectedWand.Item.Name}");
+		Debug.Log($"Swapped spellbook. New selected spellbook: {SelectedWand.Item.InGameName}");
 
 		// Update the UI
 		UpdateWandSlotsUI();
@@ -143,7 +143,7 @@ public class SpellbookInspectorMenuUI : MonoBehaviour
 			}
 		}
 
-		InspectorTitleText.text = $"Inspecting {SelectedWand.Item.Name}";
+		InspectorTitleText.text = $"Inspecting {SelectedWand.Item.InGameName}";
 		_spellBookSlotUI.UpdateSlotUI();
 		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
 	}

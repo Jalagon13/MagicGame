@@ -6,7 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Spell", menuName = "Create Item/New Spell")]
-public class SpellItemSO : ItemSO
+public class SpellItemSO : ItemDataSO
 {
 	[field: Header("Visuals")]
 	[field: Tooltip("Actual Prefab for the projectile.")]

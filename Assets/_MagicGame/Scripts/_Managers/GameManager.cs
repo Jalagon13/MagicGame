@@ -26,9 +26,6 @@ public class GameManager : NetworkBehaviour
 	[SerializeField] private GameObject _itemBasePrefab;
 	[SerializeField] private GameObject _playerPrefab;
 	
-	[Title("Database Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
-	[SerializeField] private ItemDataBaseSO _itemDataBaseSO;
-	
 	private void Awake()
 	{
 		Instance = this;
@@ -96,38 +93,6 @@ public class GameManager : NetworkBehaviour
 	
 	#endregion
 	
-	#region DataBase Functions
-
-	public ItemSO GetItemSOFromItemId(int index)
-	{
-		if (index >= 0 && index < _itemDataBaseSO.ItemSOList.Count)
-		{
-			return _itemDataBaseSO.ItemSOList[index];
-		}
-		else
-		{
-			// Debug.LogWarning($"ItemSO for index: {index} can't be found, returning null");
-			return null;
-		}
-	}
-
-	public int GetItemIdFromItemSO(ItemSO item)
-	{
-		if(item == null)
-		{
-			return -1;
-		}
-	
-		int index = _itemDataBaseSO.ItemSOList.IndexOf(item);
-		if(index > 65535 || index < 0)
-		{
-			Debug.LogError($"Warning, {item.name} is returning an index value out of bounds of a ushort");
-		}
-		
-		return (ushort)index;
-	}
-	
-	#endregion
 
 	#region Item Functions
 	
@@ -141,9 +106,9 @@ public class GameManager : NetworkBehaviour
 	
 		SyncItemData syncItemData = new SyncItemData
 		{
-			ItemId = (ushort)GetItemIdFromItemSO(inventoryItem.Item),
+			ItemId = GameDataRegistry.Instance.GetUShortIdFromItemData(inventoryItem.Item),
 			Quantity = (ushort)inventoryItem.Quantity,
-			MagicArray = inventoryItem is WandInventoryItem wandInventoryItem ? wandInventoryItem.MagicArray.Select(x => x != null ? GetItemIdFromItemSO(x) : -1).ToList() : new List<int>(),
+			MagicArray = inventoryItem is WandInventoryItem wandInventoryItem ? wandInventoryItem.MagicArray.Select(x => x != null ? GameDataRegistry.Instance.GetUShortIdFromItemData(x) : -1).ToList() : new List<int>(),
 			SelectedSpellIndex = inventoryItem is WandInventoryItem wandItem ? wandItem.SelectedSpellIndex : -1
 		};
 		

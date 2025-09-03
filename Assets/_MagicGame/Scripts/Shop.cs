@@ -7,7 +7,7 @@ public class Shop : NetworkBehaviour
 {
     [field: SerializeField] public float PlayerDetectionRange { get; private set; } = 10f;
     [field: SerializeField] public WorldInput WorldInput { get; private set; }
-    [field: SerializeField] public List<ItemSO> ItemsToSell { get; private set; }
+    [field: SerializeField] public List<ItemDataSO> ItemsToSell { get; private set; }
     
     [HideInInspector] public NetworkList<ulong> PlayersUsingShop { get; private set; }= new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private BasicNpcStateMachine _chaseAI;

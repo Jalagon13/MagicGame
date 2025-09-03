@@ -92,7 +92,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 				default:
 					int quantity = _inventoryAssociatedWith[_inventoryIndex].Quantity;
 					string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
-					string itemText = $"{_item.Item.Name} {quantityString}<br>Value: {_item.Item.GoldValue} Gold<br>{_item.Item.GetDescription()}";
+					string itemText = $"{_item.Item.InGameName} {quantityString}<br>Value: {_item.Item.GoldValue} Gold<br>{_item.Item.GetDescription()}";
 					
 					Tooltip.JustText(itemText, Color.white, fontSize: 12f);
 					break;

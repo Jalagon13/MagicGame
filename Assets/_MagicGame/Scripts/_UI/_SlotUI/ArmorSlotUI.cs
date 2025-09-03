@@ -87,7 +87,7 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 		return unequippedArmor;
 	}
 
-	public ItemSO SwapArmor(ArmorItemSO newArmor)
+	public ItemDataSO SwapArmor(ArmorItemSO newArmor)
 	{
 		// Swap the currently equipped armor with the new armor
 		ArmorItemSO oldArmor = _armorEquipped;

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Wand", menuName = "Create Item/New Wand")]
-public class WandItemSO : ItemSO
+public class WandItemSO : ItemDataSO
 {
 	[field: Tooltip("The number of spells that can be stored in the spell book.")]
 	[field: SerializeField] public int Capacity { get; private set; } = 2;

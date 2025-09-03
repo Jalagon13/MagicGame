@@ -123,7 +123,7 @@ namespace AdvancedTooltips.Core
 		public static void WandDisplay(WandItemSO wand, SpellItemSO[] magicArray, Transform customLayout = null, float fontSize = 10)
 		{
 			WandTooltipDisplayHandlerUI script = _instantiateHandler.InstantiateWandTooltipDisplay(customLayout);
-			script.WandName.text = wand.Name;
+			script.WandName.text = wand.InGameName;
 			script.WandIcon.sprite = wand.UiDisplay;
 			
 			JustText($"<br>Value: {wand.GoldValue} Gold"
@@ -148,7 +148,7 @@ namespace AdvancedTooltips.Core
 		public static void SpellDisplay(SpellItemSO spell, Transform customLayout = null, float fontSize = 10)
 		{
 			WandTooltipDisplayHandlerUI script = _instantiateHandler.InstantiateWandTooltipDisplay(customLayout);
-			script.WandName.text = spell.Name;
+			script.WandName.text = spell.InGameName;
 			script.WandIcon.sprite = spell.UiDisplay;
 
 			JustText($"<br>Value: {spell.GoldValue} Gold<br>" + spell.GetDescription(), Color.white, fontSize: fontSize, customLayout: script.StatLayout);
@@ -160,7 +160,7 @@ namespace AdvancedTooltips.Core
 		
 		public static void CraftingRecipeDisplay(RecipeSO recipeSO, Transform customLayout = null, float fontSize = 10, float iconScale = 1)
 		{
-			JustText($"{recipeSO.OutputItem.Name} Recipe for ({recipeSO.OutputAmount}):<br>", Color.white, fontSize: fontSize);
+			JustText($"{recipeSO.OutputItem.InGameName} Recipe for ({recipeSO.OutputAmount}):<br>", Color.white, fontSize: fontSize);
 
 			//for each ingredient in the recipe resource list
 			foreach (InventoryItem ingredient in recipeSO.ResourceList)
@@ -171,8 +171,8 @@ namespace AdvancedTooltips.Core
 
 				script.text.fontSize = fontSize;
 				script.text.text = InventoryManager.Instance.GetInventoryModel().GetAmount(ingredient.Item) >= ingredient.Quantity ?
-				$"{ingredient.Item.Name} ({ingredient.Quantity})<br>" :
-				$"<color=red>{ingredient.Item.Name} ({ingredient.Quantity})</color><br>";
+				$"{ingredient.Item.InGameName} ({ingredient.Quantity})<br>" :
+				$"<color=red>{ingredient.Item.InGameName} ({ingredient.Quantity})</color><br>";
 			}
 		}
 

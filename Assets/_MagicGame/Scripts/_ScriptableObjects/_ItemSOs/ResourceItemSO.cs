@@ -2,7 +2,7 @@ using System.Text;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Resource Item", menuName = "Create Item/New Resource Item")]
-public class ResourceItemSO : ItemSO
+public class ResourceItemSO : ItemDataSO
 {
     public override InventoryItem CreateInventoryItem(int quantity)
     {

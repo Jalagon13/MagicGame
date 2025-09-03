@@ -17,8 +17,8 @@ public enum CardinalDirection
 
 public class PlayerStateMachine : StateMachine
 {
-	private ItemSO _heldItem;
-	public ItemSO HeldItem => _heldItem;
+	private ItemDataSO _heldItem;
+	public ItemDataSO HeldItem => _heldItem;
 	
 	private Timer _swingCdTimer;
 	public Timer SwingCooldownTimer => _swingCdTimer;

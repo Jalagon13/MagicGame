@@ -35,7 +35,7 @@ public class InventoryManager : MonoBehaviour
 		public List<InventoryItem> InventoryItems;
 	}
 
-	[field: SerializeField] public ItemSO CurrencyItem { get; private set; }
+	[field: SerializeField] public ItemDataSO CurrencyItem { get; private set; }
 	[SerializeField] private int _slotAmount;
 	[SerializeField] private float _timeBetweenCollections = 0.1f, _itemDropForce = 3f, _startingItemZAxis = 0.5f;
 	[SerializeField] private ItemCollectWorldUI _itemCollectPlatePrefab;
@@ -134,7 +134,7 @@ public class InventoryManager : MonoBehaviour
 		}
 	}
 	
-	public void RemoveItem(ItemSO item, int amount)
+	public void RemoveItem(ItemDataSO item, int amount)
 	{
 		_mouseItemModel.TryToRemoveItem(item, amount, out int remainder);
 		
@@ -157,7 +157,7 @@ public class InventoryManager : MonoBehaviour
 		}
 	}
 	
-	public void AddItem(ItemSO ItemToAdd, int quantity, bool playCollectSound = true)
+	public void AddItem(ItemDataSO ItemToAdd, int quantity, bool playCollectSound = true)
 	{
 		// NTFS: BUG: This will create a brand new inventory item and will not transfer over any inventory item data that might have existed before
 		_itemQueue.Enqueue(ItemToAdd.CreateInventoryItem(quantity));
@@ -193,7 +193,7 @@ public class InventoryManager : MonoBehaviour
 				}
 			}
 			
-			string itemName = itemToCollect.Item.Name;
+			string itemName = itemToCollect.Item.InGameName;
 			InventoryItem invItemToDisplay = new(itemToCollect.Item, itemToCollect.Quantity);
 
 			// If there exists an item collect plate as the item being collected, delete it and spawn a new one
@@ -222,7 +222,7 @@ public class InventoryManager : MonoBehaviour
 	
 	private void SpawnItemCollectPlate(InventoryItem itemToCollect)
 	{
-		string itemName = itemToCollect.Item.Name;
+		string itemName = itemToCollect.Item.InGameName;
 		ItemCollectWorldUI itemPlate = Instantiate(_itemCollectPlatePrefab, Player.Instance.transform.position, Quaternion.identity);
 		itemPlate.DisplayedItem = itemToCollect;
 		itemPlate.OnAnimationComplete += () => 
@@ -259,7 +259,7 @@ public class InventoryManager : MonoBehaviour
 		if(mouseItem.HasItem)
 		{
 			// NOTE to future self: handle stack limits if you decide to have one
-			if(!mouseItem.Item.Stackable || mouseItem.Item.Name != recipeSO.OutputItem.Name) return; 
+			if(!mouseItem.Item.Stackable || mouseItem.Item.InGameName != recipeSO.OutputItem.InGameName) return; 
 			
 			_mouseItemModel.MouseInventoryItem.Quantity += recipeSO.OutputAmount;
 			
@@ -306,7 +306,7 @@ public class InventoryManager : MonoBehaviour
 		{
 			if(mouseItem.HasItem) // Normal functionality
 			{
-				if(inventoryItem.Item.Name == mouseItem.Item.Name)
+				if(inventoryItem.Item.InGameName == mouseItem.Item.InGameName)
 				{
 					inventory[clickedInventorySlotIndex].Quantity += 1;
 					_mouseItemModel.MouseInventoryItem.Quantity -= 1;
@@ -391,7 +391,7 @@ public class InventoryManager : MonoBehaviour
 		{
 			if(mouseItem.HasItem)
 			{
-				if(inventoryItem.Item.Name == mouseItem.Item.Name && mouseItem.Item.Stackable)
+				if(inventoryItem.Item.InGameName == mouseItem.Item.InGameName && mouseItem.Item.Stackable)
 				{
 					inventory[clickedInventorySlotIndex].Quantity += mouseItem.Quantity;
 					_mouseItemModel.MouseInventoryItem = new();
@@ -456,7 +456,7 @@ public class InventoryManager : MonoBehaviour
 				else
 				{
 					string quantityString = inventoryItem.Quantity > 1 ? $"[{inventoryItem.Quantity}]" : string.Empty;
-					string itemText = $"{inventoryItem.Item.Name} {quantityString}<br>{inventoryItem.Item.GetDescription()}";
+					string itemText = $"{inventoryItem.Item.InGameName} {quantityString}<br>{inventoryItem.Item.GetDescription()}";
 
 					Tooltip.JustText(itemText, Color.white, fontSize: 12f);
 				}

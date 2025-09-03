@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class Loot 
 {
-	public ItemSO Item;
+	public ItemDataSO Item;
 	public int Min = 1;
 	public int Max = 1;
 	[Range(0.0f, 100.0f)]
@@ -26,7 +26,7 @@ public static class LootTable
 			foreach (var itemsToSpawnKVP in itemsToSpawn)
 			{
 				// Spawn Loot here.
-				ItemSO itemToSpawn = itemsToSpawnKVP.Key;
+				ItemDataSO itemToSpawn = itemsToSpawnKVP.Key;
 				int amountToSpawn = itemsToSpawnKVP.Value;	
 				
 				GameManager.Instance.SpawnItem(new InventoryItem(itemToSpawn, amountToSpawn), spawnPos, biome, velocity, startingZAxis);
@@ -34,9 +34,9 @@ public static class LootTable
 		}
 	}
 	
-	private static Dictionary<ItemSO, int> GetItemsToSpawn(List<Loot> lootTable)
+	private static Dictionary<ItemDataSO, int> GetItemsToSpawn(List<Loot> lootTable)
 	{
-		Dictionary<ItemSO, int> lootToDrop = new();
+		Dictionary<ItemDataSO, int> lootToDrop = new();
 
 		foreach (Loot loot in lootTable)
 		{

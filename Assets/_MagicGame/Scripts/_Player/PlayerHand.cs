@@ -31,7 +31,7 @@ public class PlayerHand : NetworkBehaviour
 	public bool IsSwinging { get; private set; }
 
 	private Player _thisPlayer;
-	private ItemSO _heldItem;
+	private ItemDataSO _heldItem;
     private bool _isHoldingWandOrSpell;
 
 	public NetworkVariable<float> AngleToMouse { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -73,9 +73,9 @@ public class PlayerHand : NetworkBehaviour
 		}
 	}
 
-	private void OnItemIdChanged(int previousValue, int newValue)
+	private void OnItemIdChanged(ushort previousValue, ushort newValue)
     {
-		_heldItem = GameManager.Instance.GetItemSOFromItemId(newValue);
+		_heldItem = GameDataRegistry.Instance.GetItemDataFromUShortId(newValue);
 
 		_isHoldingWandOrSpell = _heldItem is WandItemSO || _heldItem is SpellItemSO;
 		if(_isHoldingWandOrSpell)

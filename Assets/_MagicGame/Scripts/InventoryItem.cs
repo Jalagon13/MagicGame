@@ -8,12 +8,12 @@ using UnityEngine;
 [Serializable]
 public class InventoryItem
 {
-	public ItemSO Item;
+	public ItemDataSO Item;
 	public int Quantity;
 	public bool HasItem => Item != null;
 	public ulong Id { get; private set; }
 	
-	public InventoryItem(ItemSO itemSO, int quantity)
+	public InventoryItem(ItemDataSO itemSO, int quantity)
 	{
 		Item = itemSO;
 		

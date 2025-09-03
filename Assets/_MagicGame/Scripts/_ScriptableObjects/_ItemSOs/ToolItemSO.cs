@@ -9,7 +9,7 @@ public enum ToolType
 }
 
 [CreateAssetMenu(fileName = "New Tool", menuName = "Create Item/New Tool")]
-public class ToolItemSO : ItemSO
+public class ToolItemSO : ItemDataSO
 {
 	[field: SerializeField] public ToolType ToolType { get; private set; }
 	[field: SerializeField] public int MiningPower { get; private set; } = 1;

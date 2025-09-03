@@ -3,7 +3,7 @@ using Vector2 = UnityEngine.Vector2;
 
 public class PlaceDownUI : MonoBehaviour
 {
-	private ItemSO _focusItemSO;
+	private ItemDataSO _focusItemSO;
 	private SpriteRenderer _sr;
 	
 	private void Awake()

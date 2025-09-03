@@ -45,7 +45,7 @@ public class PlayerStartItemsSpawner : NetworkBehaviour
                         }
                         else
                         {
-                            Debug.LogWarning($"{wandInvItem.MagicArray[i].Name} being skipped because it is out of the index of {wandItemSO.Name}'s Capacity ({wandItemSO.Capacity})");
+                            Debug.LogWarning($"{wandInvItem.MagicArray[i].InGameName} being skipped because it is out of the index of {wandItemSO.InGameName}'s Capacity ({wandItemSO.Capacity})");
                         }
                     }
 

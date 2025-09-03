@@ -134,11 +134,11 @@ public class TileManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.ClientsAndHost)]
-	public void HandleTileVisualClientRpc(Vector3Int pos, ushort syncTileId, TileType syncTileType, BiomeType biome, bool renderAir = false)
+	public void HandleTileVisualClientRpc(Vector3Int pos, ushort syncTileId, TileType syncTileType, BiomeType biome)
 	{
 	    if (Player.Instance.CurrentBiome.Value != biome) return;
 
-		if(renderAir)
+		if(syncTileId == ushort.MaxValue)
 		{
 		    RenderTile(pos, null, syncTileType);
 		}

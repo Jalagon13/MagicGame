@@ -11,7 +11,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
     [field: SerializeField] public bool IsAimingArmSprite { get; private set; }
     [field: SerializeField] public Sprite DefaultAimArmSprite { get; private set; } // NTFS: This will cause visual bugs later down the road when loading player with armor on. Fix it later. Just a quick fix for now.
 
-    private NetworkVariable<int> _armorEquippedId = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<ushort> _armorEquippedId = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private HashSet<Sprite> _overrideSheet;
     private SpriteRenderer _playerPartRenderer;
     private Player _thisPlayer;
@@ -37,9 +37,20 @@ public class PlayerSpriteOverrider : NetworkBehaviour
         _armorEquippedId.OnValueChanged += OnArmorEquippedIdChanged;
     }
 
+    public override void OnDestroy()
+    {
+        if (_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
+        {
+            // PlayerStats.Instance.OnArmorEquipped -= OnArmorEquipped;
+            // PlayerStats.Instance.OnArmorUnEquipped -= OnArmorUnEquipped;
+        }
+
+        _armorEquippedId.OnValueChanged -= OnArmorEquippedIdChanged;
+    }
+
     public override void OnNetworkSpawn()
     {
-        if (GameManager.Instance.GetItemSOFromItemId(_armorEquippedId.Value) is not ArmorItemSO) return;
+        if (GameDataRegistry.Instance.GetItemDataFromUShortId(_armorEquippedId.Value) is not ArmorItemSO) return;
 
         UpdateSpriteSheet();
     }
@@ -58,14 +69,15 @@ public class PlayerSpriteOverrider : NetworkBehaviour
         }
     }
 
-    private void OnArmorEquippedIdChanged(int previousValue, int newValue)
+    private void OnArmorEquippedIdChanged(ushort previousValue, ushort newValue)
     {
         UpdateSpriteSheet();
     }
     
     private void UpdateSpriteSheet()
     {
-        if (_armorEquippedId.Value == -1)
+        // NTFS: Use ushort.MaxValue for checking for null vaues 
+        if (_armorEquippedId.Value == ushort.MaxValue)
         {
             _overrideSheet = null;
             if (IsAimingArmSprite)
@@ -75,7 +87,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
             return;
         }
 
-        ArmorItemSO armorItem = GameManager.Instance.GetItemSOFromItemId(_armorEquippedId.Value) as ArmorItemSO;
+        ArmorItemSO armorItem = GameDataRegistry.Instance.GetItemDataFromUShortId(_armorEquippedId.Value) as ArmorItemSO;
         _overrideSheet = new();
 
         Texture2D armorSheet = null;
@@ -127,15 +139,4 @@ public class PlayerSpriteOverrider : NetworkBehaviour
     
     //     _armorEquippedId.Value = -1;
     // }
-
-    public override void OnDestroy()
-    {
-        if (_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
-        {
-            // PlayerStats.Instance.OnArmorEquipped -= OnArmorEquipped;
-            // PlayerStats.Instance.OnArmorUnEquipped -= OnArmorUnEquipped;
-        }
-
-        _armorEquippedId.OnValueChanged -= OnArmorEquippedIdChanged;
-    }
 }

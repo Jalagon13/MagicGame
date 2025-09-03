@@ -4,7 +4,7 @@ using UnityEngine;
 public enum ArmorType { Head, Chest, Legs }
 
 [CreateAssetMenu(fileName = "New Armor", menuName = "Create Item/New Armor")]
-public class ArmorItemSO : ItemSO
+public class ArmorItemSO : ItemDataSO
 {
 	[field: SerializeField] public ArmorType ArmorType { get; private set; }
 	[field: SerializeField] public int DefenseAmount { get; private set; }

@@ -4,7 +4,7 @@ using Unity.Netcode;
 
 public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 {
-    public int SpellItemId;
+    public ushort SpellItemId;
     public int Damage;
     public int Knockback;
     public int BounceCount;
@@ -17,7 +17,7 @@ public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
     public bool HoldToCast;
     public BiomeType SpawnBiome;
 
-    public SyncSpellData(int spellItemId, int damage, int knockback, int bounceCount, int pierceCount, float speed, float lifetime, float hasteMultiplier, 
+    public SyncSpellData(ushort spellItemId, int damage, int knockback, int bounceCount, int pierceCount, float speed, float lifetime, float hasteMultiplier, 
     float scatter, ulong casterNetworkObjectId, bool holdToCast, BiomeType spawnBiome)
     {
         SpellItemId = spellItemId;

@@ -12,7 +12,7 @@ public class WandInventoryItem : InventoryItem
 	[HideInInspector]
 	public int SelectedSpellIndex { get; private set; }
 
-	public WandInventoryItem(ItemSO itemSO, int quantity, int capacity, int selectedSpellIndex) : base(itemSO, quantity)
+	public WandInventoryItem(ItemDataSO itemSO, int quantity, int capacity, int selectedSpellIndex) : base(itemSO, quantity)
 	{
 		MagicArray = new SpellItemSO[capacity];
 		SelectedSpellIndex = selectedSpellIndex;

@@ -9,7 +9,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Deployable", menuName = "Create Item/New Deployable")]
-public class DeployItemSO : ItemSO
+public class DeployItemSO : ItemDataSO
 {
 	public static bool PlacedThisFrameFlag = false;
 

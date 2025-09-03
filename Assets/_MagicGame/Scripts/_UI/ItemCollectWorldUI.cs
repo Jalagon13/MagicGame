@@ -35,7 +35,7 @@ public class ItemCollectWorldUI : MonoBehaviour
             _displayedItem = value;
             _displayAmount = value.Quantity;
 
-            _itemText.text = $"+{DisplayAmount} {_displayedItem.Item.Name}";
+            _itemText.text = $"+{DisplayAmount} {_displayedItem.Item.InGameName}";
             _itemText.color = value.Item == InventoryManager.Instance.CurrencyItem ? Color.yellow : _itemText.color;
         }
     }

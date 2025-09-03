@@ -12,7 +12,7 @@ public class NpcMenuUI : MonoBehaviour
     [field: SerializeField] public TextMeshProUGUI TotalText { get; private set; }
     [field: SerializeField] public Button SellButton { get; private set; }
 
-    private List<ItemSO> _itemsToSell;
+    private List<ItemDataSO> _itemsToSell;
     private List<InventoryItem> _sellItemInventory = new List<InventoryItem>();
     
     private void Start()
@@ -73,7 +73,7 @@ public class NpcMenuUI : MonoBehaviour
         TotalText.text = $"Total Gold: {total}";
     }
 
-    public void SetItemsToSell(List<ItemSO> itemsToSell)
+    public void SetItemsToSell(List<ItemDataSO> itemsToSell)
     {
         _itemsToSell = itemsToSell;
         

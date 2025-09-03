@@ -17,10 +17,50 @@ public class GameDataRegistry : MonoBehaviour
     [SerializeField]
     private List<TileDataSO> _tileData;
 
+    [Space(15)]
+    [SerializeField]
+    private List<ItemDataSO> _itemData;
+
     private void Awake()
     {
         Instance = this;
     }
+    
+    #region Item Data Functions
+    
+    public ushort GetUShortIdFromItemData(ItemDataSO itemData)
+    {
+        if (itemData == null)
+        {
+            Debug.LogError($"ItemDataSO is null. Use this log to deduce where this came from");
+        }
+
+        for (int i = 0; i < _itemData.Count; i++)
+        {
+            if (_itemData[i].StringID == itemData.StringID)
+            {
+                return (ushort)i;
+            }
+        }
+
+        Debug.LogError($"ItemDataSO '{itemData}' not found!");
+        return ushort.MaxValue;
+    }
+    
+    public ItemDataSO GetItemDataFromUShortId(ushort itemId)
+    {
+        if (itemId >= _itemData.Count || itemId < 0)
+        {
+            Debug.LogError($"Invalid Item ID: {itemId}");
+            return null;
+        }
+
+        return _itemData[itemId];
+    }
+    
+    #endregion
+    
+    #region Tile Data Functions
     
     public ushort GetUShortIdFromTileData(TileDataSO tileData)
     {
@@ -82,6 +122,10 @@ public class GameDataRegistry : MonoBehaviour
         return _tileData[tileId];
     }
 
+    #endregion
+    
+    #region Resource Data Functions
+
     public ushort GetUShortIdFromResourceData(ResourceDataSO resourceData)
     {
         if(resourceData == null)
@@ -112,6 +156,10 @@ public class GameDataRegistry : MonoBehaviour
         return _resourceData[resourceId];
     }
 
+    #endregion
+
+    #region Character Data Functions
+
     public ushort GetUShortIdFromCharacterData(CharacterDataSO characterData)
     {
         if (characterData == null)
@@ -141,4 +189,6 @@ public class GameDataRegistry : MonoBehaviour
 
         return _characterData[npcId];
     }
+    
+    #endregion
 }

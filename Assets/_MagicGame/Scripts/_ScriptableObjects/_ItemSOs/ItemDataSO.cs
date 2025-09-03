@@ -5,9 +5,10 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 [Serializable]
-public abstract class ItemSO : ScriptableObject
+public abstract class ItemDataSO : ScriptableObject
 {
-	[field: SerializeField] public string Name { get; private set; }
+	[field: SerializeField] public string InGameName { get; private set; }
+	[field: SerializeField] public string StringID { get; private set; }
 	[field: SerializeField] public Sprite UiDisplay { get; private set; }
 	[field: SerializeField] public int GoldValue { get; private set; }
 	[field: SerializeField] public bool Stackable { get; private set; } = true;

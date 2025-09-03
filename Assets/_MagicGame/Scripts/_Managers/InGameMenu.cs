@@ -80,7 +80,7 @@ public class InGameMenu : MonoBehaviour
         OnMenuOpen?.Invoke(this, EventArgs.Empty);
     }
     
-    public void OpenNpcMenu(List<ItemSO> itemsToSell, GameObject menuSourceGO)
+    public void OpenNpcMenu(List<ItemDataSO> itemsToSell, GameObject menuSourceGO)
     {
         ClearOldMenu();
         

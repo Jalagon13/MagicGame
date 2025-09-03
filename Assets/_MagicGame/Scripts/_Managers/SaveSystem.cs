@@ -370,7 +370,7 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 			
 			foreach (ItemFileData item in chestData.ChestItems)
 			{
-				ItemSO itemToAdd = GameManager.Instance.GetItemSOFromItemId(item.ItemId);
+				ItemDataSO itemToAdd = GameManager.Instance.GetItemSOFromItemId(item.ItemId);
 				
 				if(itemToAdd is WandItemSO wandItemSO)
 				{

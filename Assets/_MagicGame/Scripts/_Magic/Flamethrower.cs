@@ -110,7 +110,7 @@ public class Flamethrower : ServerSpell
         {
             if (SpellCasterNetworkObject.TryGetComponent(out ServerCharacter inflicter))
             {
-                SpellItemSO spellItemSO = GameManager.Instance.GetItemSOFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
+                SpellItemSO spellItemSO = GameDataRegistry.Instance.GetItemDataFromUShortId(SpellData.Value.SpellItemId) as SpellItemSO;
                 SoundManager.Instance.PlayOneShot(spellItemSO.SpellOnDamageSound, transform.position);
 
                 target.ReceiveHP(inflicter, -SpellData.Value.Damage, true, SpellData.Value.Knockback);
