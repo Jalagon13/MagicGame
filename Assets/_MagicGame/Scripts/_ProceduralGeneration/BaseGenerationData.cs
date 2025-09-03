@@ -31,12 +31,12 @@ public abstract class BaseGenerationData : MonoBehaviour
     {
         Vector2Int pos = new Vector2Int(x, y);
         ChunkManager.Instance.GetChunkFromAnyWorldPos(pos, _biomeType).AddTileData(pos, tileData);
-        MostFrontRenderedTileMatrix[x, y] = GameDataRegistry.Instance.GetUShortIdFromTileData(tileData);
+        MostFrontRenderedTileMatrix[x, y] = GameDataRegistry.Instance.GetTileIdFromTileData(tileData);
     }
 
     public virtual void SetWorldObjectData(int x, int y, ResourceObject resource, CardinalDirection dir)
     {
-        ChunkManager.Instance.AddResourceDataToChunkServerRpc(new Vector2Int(x, y), GameDataRegistry.Instance.GetUShortIdFromResourceData(resource.Data), _biomeType, dir);
+        ChunkManager.Instance.AddResourceDataToChunkServerRpc(new Vector2Int(x, y), GameDataRegistry.Instance.GetResourceIdFromResourceData(resource.Data), _biomeType, dir);
     }
 
     public bool IsInBounds(int x, int y)

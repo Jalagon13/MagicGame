@@ -37,7 +37,7 @@ public class Player : NetworkBehaviour
 	private BiomeType _spawnBiome;
 	private Vector2Int _lastTilePosition;
 	
-	public NetworkVariable<int> SelectedItemIdNetworkVariable { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	public NetworkVariable<ushort> SelectedItemId { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<BiomeType> CurrentBiome { get; set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	
 	private ServerCharacter _serverCharacter;
@@ -181,7 +181,7 @@ public class Player : NetworkBehaviour
 		if (IsOwner)
 		{
 			// NTFS: Network variables onvaluechanged is only executed if the value is different from the current value
-			SelectedItemIdNetworkVariable.Value = e.SelectedItemId;
+			SelectedItemId.Value = e.SelectedItemId;
 		}
 	}
 }

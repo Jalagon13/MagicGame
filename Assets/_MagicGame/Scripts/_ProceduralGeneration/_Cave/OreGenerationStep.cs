@@ -110,7 +110,7 @@ public class OreGenerationStep : GenerationStep
         {
             for (int y = 0; y < side; y++)
             {
-                if (caveGenData.MostFrontRenderedTileMatrix[x, y] == GameDataRegistry.Instance.GetUShortIdFromTileData(caveGenData.StoneWallTile))
+                if (caveGenData.MostFrontRenderedTileMatrix[x, y] == GameDataRegistry.Instance.GetTileIdFromTileData(caveGenData.StoneWallTile))
                 {
                     if (oreMask[x, y])
                     {

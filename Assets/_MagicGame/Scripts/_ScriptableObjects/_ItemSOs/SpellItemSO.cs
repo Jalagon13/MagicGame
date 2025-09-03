@@ -57,7 +57,7 @@ public class SpellItemSO : ItemDataSO
 
 	public SyncSpellData GetSyncSpellData(ulong casterNetObjId, BiomeType spawnBiome)
 	{
-		return new SyncSpellData(GameManager.Instance.GetItemIdFromItemSO(this),
+		return new SyncSpellData(GameDataRegistry.Instance.GetItemIdFromItemData(this),
 			Damage, Knockback, BounceCount, PierceCount, Speed, Lifetime,
 			HasteMultiplier, Scatter, casterNetObjId, HoldToCast, spawnBiome);
 	}

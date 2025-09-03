@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
   m_Name: FlamethrowerSpell
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Flamethrower
+  <InGameName>k__BackingField: Flamethrower
+  <StringID>k__BackingField: flamerthrower
   <UiDisplay>k__BackingField: {fileID: -3168733581550749585, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
   <GoldValue>k__BackingField: 70
   <Stackable>k__BackingField: 0

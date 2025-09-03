@@ -44,12 +44,12 @@ public class PlayerHand : NetworkBehaviour
 		HideArm();
 		
 		_thisPlayer = transform.root.GetComponent<Player>();
-		_thisPlayer.SelectedItemIdNetworkVariable.OnValueChanged += OnItemIdChanged;
+		_thisPlayer.SelectedItemId.OnValueChanged += OnItemIdChanged;
 	}
 
 	public override void OnDestroy()
 	{
-		_thisPlayer.SelectedItemIdNetworkVariable.OnValueChanged -= OnItemIdChanged;
+		_thisPlayer.SelectedItemId.OnValueChanged -= OnItemIdChanged;
 	}
 
     private void Update()
@@ -75,7 +75,7 @@ public class PlayerHand : NetworkBehaviour
 
 	private void OnItemIdChanged(ushort previousValue, ushort newValue)
     {
-		_heldItem = GameDataRegistry.Instance.GetItemDataFromUShortId(newValue);
+		_heldItem = GameDataRegistry.Instance.GetItemDataFromItemId(newValue);
 
 		_isHoldingWandOrSpell = _heldItem is WandItemSO || _heldItem is SpellItemSO;
 		if(_isHoldingWandOrSpell)

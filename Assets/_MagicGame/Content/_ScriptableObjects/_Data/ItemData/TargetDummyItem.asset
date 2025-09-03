@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 774130f330eb2403bb786b6d66d390b1, type: 3}
   m_Name: TargetDummyItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Target Dummy
+  <InGameName>k__BackingField: Target Dummy
+  <StringID>k__BackingField: targetdummy
   <UiDisplay>k__BackingField: {fileID: -1001872173, guid: 0ed47c1efae5d4f2da0a01c32c7c6677, type: 3}
   <GoldValue>k__BackingField: 10
   <Stackable>k__BackingField: 1

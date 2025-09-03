@@ -137,7 +137,7 @@ public class Item : NetworkBehaviour
 	[Rpc(SendTo.SpecifiedInParams)]
 	private void AddItemClientRpc(SyncItemData syncItemData, RpcParams rpcParams = default)
 	{
-		ItemDataSO itemSO = GameDataRegistry.Instance.GetItemDataFromUShortId(syncItemData.ItemId);
+		ItemDataSO itemSO = GameDataRegistry.Instance.GetItemDataFromItemId(syncItemData.ItemId);
 		
 		InventoryItem inventoryItem = new();
 		
@@ -147,7 +147,7 @@ public class Item : NetworkBehaviour
 			
 			for (int i = 0; i < wandInventoryItem.MagicArray.Length; i++)
 			{
-				wandInventoryItem.SetMagic(GameDataRegistry.Instance.GetItemDataFromUShortId(syncItemData.MagicArray[i]) as SpellItemSO, i);
+				wandInventoryItem.SetMagic(GameDataRegistry.Instance.GetItemDataFromItemId(syncItemData.MagicArray[i]) as SpellItemSO, i);
 			}
 			
 			inventoryItem = wandInventoryItem;
@@ -217,7 +217,7 @@ public class Item : NetworkBehaviour
 
 	private void UpdateItemDataAndVisuals()
 	{
-		ItemDataSO itemSO = GameDataRegistry.Instance.GetItemDataFromUShortId(_syncItemDataNetworkVariable.Value.ItemId);
+		ItemDataSO itemSO = GameDataRegistry.Instance.GetItemDataFromItemId(_syncItemDataNetworkVariable.Value.ItemId);
 		
 		_sr.sprite = itemSO.UiDisplay;
 		_zAxisSimulator.SetZAxis(_zAxisNetworkVariable.Value);

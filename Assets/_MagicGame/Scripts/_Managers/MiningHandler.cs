@@ -236,10 +236,10 @@ public class MiningHandler : MonoBehaviour
         switch (_destructableFound)
         {
             case DestructableType.WorldObject:
-                ResourceManager.Instance.DestroyResourceServerRpc(Player.Instance.CurrentBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetUShortIdFromResourceData(_resourceSelected.Data));
+                ResourceManager.Instance.DestroyResourceServerRpc(Player.Instance.CurrentBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetResourceIdFromResourceData(_resourceSelected.Data));
                 break;
             case DestructableType.Tile:
-                TileManager.Instance.DestroyTile((Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetUShortIdFromTileData(_tileSelected), Player.Instance.CurrentBiome.Value);
+                TileManager.Instance.DestroyTile((Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetTileIdFromTileData(_tileSelected), Player.Instance.CurrentBiome.Value);
                 break;
         }
         

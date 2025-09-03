@@ -24,7 +24,7 @@ public class DeployItemSO : ItemDataSO
 			CardinalDirection orientation = Player.Instance.ServerCharacter.Movement.GetCardinalDirectionFromVector2(Player.Instance.ServerCharacter.Movement.DesiredDirection);
 			Vector2Int spawnPosition = new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
 			BiomeType biome = Player.Instance.CurrentBiome.Value;
-			ushort id = GameDataRegistry.Instance.GetUShortIdFromResourceData(_resourceData);
+			ushort id = GameDataRegistry.Instance.GetResourceIdFromResourceData(_resourceData);
 
 			ResourceManager.Instance.PlaceResourceObjectServerRpc(spawnPosition, id, biome, orientation);
 			InventoryManager.Instance.RemoveItem(this, 1); // Note to future self: This implementation is bugged and will need fixing later

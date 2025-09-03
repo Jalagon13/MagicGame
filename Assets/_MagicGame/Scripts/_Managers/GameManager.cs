@@ -106,9 +106,9 @@ public class GameManager : NetworkBehaviour
 	
 		SyncItemData syncItemData = new SyncItemData
 		{
-			ItemId = GameDataRegistry.Instance.GetUShortIdFromItemData(inventoryItem.Item),
+			ItemId = GameDataRegistry.Instance.GetItemIdFromItemData(inventoryItem.Item),
 			Quantity = (ushort)inventoryItem.Quantity,
-			MagicArray = inventoryItem is WandInventoryItem wandInventoryItem ? wandInventoryItem.MagicArray.Select(x => x != null ? GameDataRegistry.Instance.GetUShortIdFromItemData(x) : -1).ToList() : new List<int>(),
+			MagicArray = inventoryItem is WandInventoryItem wandInventoryItem ? wandInventoryItem.MagicArray.Select(x => x != null ? GameDataRegistry.Instance.GetItemIdFromItemData(x) : ushort.MaxValue).ToList() : new List<ushort>(),
 			SelectedSpellIndex = inventoryItem is WandInventoryItem wandItem ? wandItem.SelectedSpellIndex : -1
 		};
 		

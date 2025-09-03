@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7444942030d94c08a92835895e63bb2, type: 3}
   m_Name: WoodWandItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Wood Wand
+  <InGameName>k__BackingField: Wood Wand
+  <StringID>k__BackingField: woodwand
   <UiDisplay>k__BackingField: {fileID: -7495197899600450172, guid: 539b6686a978c4c08845afe71ddfe566, type: 3}
   <GoldValue>k__BackingField: 25
   <Stackable>k__BackingField: 0

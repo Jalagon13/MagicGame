@@ -15,7 +15,7 @@ public static class GenerationUtils
             for (int y = 0; y < height; y++)
             {
                 ushort tileId = tileMatrix[x, y];
-                TileDataSO currentTile = GameDataRegistry.Instance.GetTileDataFromUShortId(tileId);
+                TileDataSO currentTile = GameDataRegistry.Instance.GetTileDataFromTileId(tileId);
 
                 if (tilesToSearchFor.Contains(currentTile) && IsAdjacentToTiles(x, y, tilesAdjacentTo, directions, tileMatrix))
                 {
@@ -40,7 +40,7 @@ public static class GenerationUtils
             if (nx >= 0 && nx < width && ny >= 0 && ny < height)
             {
                 int neighborTileId = tileMatrix[nx, ny];
-                TileDataSO neighborTile = GameDataRegistry.Instance.GetTileDataFromUShortId((ushort)neighborTileId);
+                TileDataSO neighborTile = GameDataRegistry.Instance.GetTileDataFromTileId((ushort)neighborTileId);
 
                 if (tilesToCheckFor.Contains(neighborTile))
                 {
@@ -73,7 +73,7 @@ public static class GenerationUtils
                     if (adjacentTile.x >= 0 && adjacentTile.x < matrixWidth && adjacentTile.y >= 0 && adjacentTile.y < matrixHeight)
                     {
                         int tileId = tileMatrix[adjacentTile.x, adjacentTile.y];
-                        TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromUShortId((ushort)tileId);
+                        TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromTileId((ushort)tileId);
 
                         if (validTiles.Contains(tileSO) && !expandedEdgeTiles.Contains(adjacentTile))
                         {

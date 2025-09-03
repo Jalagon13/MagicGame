@@ -157,7 +157,7 @@ public abstract class ServerSpell : NetworkBehaviour
     // Client Methods
     public void ClientSpellStart(ClientSpell clientSpell)
     {
-        SpellItemSO spellItemSO = GameDataRegistry.Instance.GetItemDataFromUShortId(SpellData.Value.SpellItemId) as SpellItemSO;
+        SpellItemSO spellItemSO = GameDataRegistry.Instance.GetItemDataFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
         SoundManager.Instance.PlayOneShot(spellItemSO.SpellOnCastSound, transform.position);
 
         OnClientSpellStart(clientSpell);

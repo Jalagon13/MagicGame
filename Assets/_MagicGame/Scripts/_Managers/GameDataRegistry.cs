@@ -6,7 +6,8 @@ using UnityEngine.Tilemaps;
 public class GameDataRegistry : MonoBehaviour
 {
     public static GameDataRegistry Instance { get; private set; }
-    
+    public const ushort INVALID_ID = ushort.MaxValue;
+
     [SerializeField] 
     private List<CharacterDataSO> _characterData;
     [Space(15)]
@@ -28,7 +29,7 @@ public class GameDataRegistry : MonoBehaviour
     
     #region Item Data Functions
     
-    public ushort GetUShortIdFromItemData(ItemDataSO itemData)
+    public ushort GetItemIdFromItemData(ItemDataSO itemData)
     {
         if (itemData == null)
         {
@@ -47,11 +48,11 @@ public class GameDataRegistry : MonoBehaviour
         return ushort.MaxValue;
     }
     
-    public ItemDataSO GetItemDataFromUShortId(ushort itemId)
+    public ItemDataSO GetItemDataFromItemId(ushort itemId)
     {
         if (itemId >= _itemData.Count || itemId < 0)
         {
-            Debug.LogError($"Invalid Item ID: {itemId}");
+            // Debug.LogError($"Invalid Item ID: {itemId}");
             return null;
         }
 
@@ -62,7 +63,7 @@ public class GameDataRegistry : MonoBehaviour
     
     #region Tile Data Functions
     
-    public ushort GetUShortIdFromTileData(TileDataSO tileData)
+    public ushort GetTileIdFromTileData(TileDataSO tileData)
     {
         if(tileData == null)
         {
@@ -81,9 +82,9 @@ public class GameDataRegistry : MonoBehaviour
         return ushort.MaxValue;
     }
     
-    public ushort GetUShortIdFromTileBase(TileBase tileBase)
+    public ushort GetTileIdFromTileBase(TileBase tileBase)
     {
-        return GetUShortIdFromTileData(GetTileDataFromTileBase(tileBase));
+        return GetTileIdFromTileData(GetTileDataFromTileBase(tileBase));
     }
     
     public TileDataSO GetTileDataFromTileBase(TileBase tileBase)
@@ -100,18 +101,18 @@ public class GameDataRegistry : MonoBehaviour
         return default;
     }
 
-    public ushort GetUShortIdFromTilemapTilePosition(Tilemap tilemap, Vector3Int position)
+    public ushort GetTileIdFromTilemapTilePosition(Tilemap tilemap, Vector3Int position)
     {
         if (tilemap.HasTile(position))
         {
-            return GetUShortIdFromTileBase(tilemap.GetTile(position));
+            return GetTileIdFromTileBase(tilemap.GetTile(position));
         }
 
         Debug.LogError($"Cannot return tile on tilemap {tilemap.name} on {position} because {tilemap.name} has no tile at that position");
         return default;
     }
 
-    public TileDataSO GetTileDataFromUShortId(ushort tileId)
+    public TileDataSO GetTileDataFromTileId(ushort tileId)
     {
         if (tileId >= _tileData.Count || tileId < 0)
         {
@@ -126,7 +127,7 @@ public class GameDataRegistry : MonoBehaviour
     
     #region Resource Data Functions
 
-    public ushort GetUShortIdFromResourceData(ResourceDataSO resourceData)
+    public ushort GetResourceIdFromResourceData(ResourceDataSO resourceData)
     {
         if(resourceData == null)
         {
@@ -145,7 +146,7 @@ public class GameDataRegistry : MonoBehaviour
         return ushort.MaxValue;
     }
 
-    public ResourceDataSO GetResourceDataFromUShortId(ushort resourceId)
+    public ResourceDataSO GetResourceDataFromResourceId(ushort resourceId)
     {
         if (resourceId >= _resourceData.Count)
         {
@@ -160,7 +161,7 @@ public class GameDataRegistry : MonoBehaviour
 
     #region Character Data Functions
 
-    public ushort GetUShortIdFromCharacterData(CharacterDataSO characterData)
+    public ushort GetCharacterIdFromCharacterData(CharacterDataSO characterData)
     {
         if (characterData == null)
         {
@@ -179,7 +180,7 @@ public class GameDataRegistry : MonoBehaviour
         return ushort.MaxValue;
     }
 
-    public CharacterDataSO GetCharacterDataFromUShortId(ushort npcId)
+    public CharacterDataSO GetCharacterDataFromCharacterId(ushort npcId)
     {
         if (npcId >= _characterData.Count)
         {

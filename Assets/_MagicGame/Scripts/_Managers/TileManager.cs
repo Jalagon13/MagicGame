@@ -138,13 +138,13 @@ public class TileManager : NetworkBehaviour
 	{
 	    if (Player.Instance.CurrentBiome.Value != biome) return;
 
-		if(syncTileId == ushort.MaxValue)
+		if(syncTileId == GameDataRegistry.INVALID_ID)
 		{
 		    RenderTile(pos, null, syncTileType);
 		}
 		else
 		{
-			TileDataSO tileToPlace = GameDataRegistry.Instance.GetTileDataFromUShortId(syncTileId);
+			TileDataSO tileToPlace = GameDataRegistry.Instance.GetTileDataFromTileId(syncTileId);
 			RenderTile(pos, tileToPlace, syncTileType);
 		}
 
@@ -191,7 +191,7 @@ public class TileManager : NetworkBehaviour
 
 	public void DestroyTile(Vector2Int tilePos, ushort tileId, BiomeType biome)
 	{
-		TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromUShortId(tileId);
+		TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromTileId(tileId);
 		var tileList = GetTileListFromType(tileSO.TileType, tilePos, biome);
 		
 		if (tileList == null)

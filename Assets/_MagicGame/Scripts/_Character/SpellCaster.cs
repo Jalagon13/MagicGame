@@ -165,7 +165,7 @@ public class SpellCaster : NetworkBehaviour
     [Rpc(SendTo.Server, RequireOwnership = false)]
     private void SpawnSpellServerRpc(SyncSpellData spellData, RpcParams rpcParams = default)
     {
-        var spellPrefab = (GameDataRegistry.Instance.GetItemDataFromUShortId(spellData.SpellItemId) as SpellItemSO).SpellPrefab;
+        var spellPrefab = (GameDataRegistry.Instance.GetItemDataFromItemId(spellData.SpellItemId) as SpellItemSO).SpellPrefab;
         NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(spellData.CasterNetworkObjectId, out NetworkObject casterNetObj);
         ServerSpell spell = Instantiate(spellPrefab, casterNetObj.transform.position, Quaternion.identity);
 

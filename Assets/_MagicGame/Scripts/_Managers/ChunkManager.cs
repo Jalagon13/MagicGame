@@ -178,7 +178,7 @@ public class ChunkManager : NetworkBehaviour
 	{
 		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, biomeToPlaceIn);
 		
-		ResourceObject worldObject = GameDataRegistry.Instance.GetResourceDataFromUShortId(resourceId).ResourcePrefab;
+		ResourceObject worldObject = GameDataRegistry.Instance.GetResourceDataFromResourceId(resourceId).ResourcePrefab;
 		chunk.AddObjectData(position, worldObject, orientation);
 	}
 	
@@ -204,7 +204,7 @@ public class ChunkManager : NetworkBehaviour
 	public void PlaceTileServerRpc(Vector2Int position, ushort tileID, BiomeType biomeToAddTileData, TileType tileType)
 	{
 		ChunkGameData chunk = GetChunkFromAnyWorldPos(position, biomeToAddTileData);
-		chunk.AddTileData(position, GameDataRegistry.Instance.GetTileDataFromUShortId(tileID));
+		chunk.AddTileData(position, GameDataRegistry.Instance.GetTileDataFromTileId(tileID));
 		
 		if(tileType == TileType.Wall)	
 		{
@@ -225,7 +225,7 @@ public class ChunkManager : NetworkBehaviour
 		}
 
 		// NTFS: ushort.MinValue can be any number as long as render air is true here to render air
-		TileManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, ushort.MinValue, tileType, biome, true);
+		TileManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, GameDataRegistry.INVALID_ID, tileType, biome);
 	}
 
 	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType biomeToGetChunkFrom)

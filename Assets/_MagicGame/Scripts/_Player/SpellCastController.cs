@@ -48,7 +48,7 @@ public class SpellCastController
         _postCastDelayTimer = new(_postCastDelayTimerDuration);
         _spellCooldownSystem = new();
 
-        _player.SelectedItemIdNetworkVariable.OnValueChanged += OnItemSelectedChanged;
+        _player.SelectedItemId.OnValueChanged += OnItemSelectedChanged;
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
         _player.SpellCaster.IsCasting.OnValueChanged += OnIsCastingChanged;
         _player.SpellCaster.OnActiveHoldToCastSpellEnded += SetCooldownForHoldToCastSpell;
@@ -61,7 +61,7 @@ public class SpellCastController
 
     public void Dispose()
     {
-        _player.SelectedItemIdNetworkVariable.OnValueChanged -= OnItemSelectedChanged;
+        _player.SelectedItemId.OnValueChanged -= OnItemSelectedChanged;
         _player.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
         _player.SpellCaster.IsCasting.OnValueChanged -= OnIsCastingChanged;
         _player.SpellCaster.OnActiveHoldToCastSpellEnded -= SetCooldownForHoldToCastSpell;
@@ -94,7 +94,7 @@ public class SpellCastController
 
     private void SetCooldownForHoldToCastSpell(object sender, EventArgs e)
     {
-        var holdToCastSpell = GameManager.Instance.GetItemSOFromItemId(_player.SpellCaster.HoldToCastSpell.SpellData.Value.SpellItemId) as SpellItemSO;
+        var holdToCastSpell = GameDataRegistry.Instance.GetItemDataFromItemId(_player.SpellCaster.HoldToCastSpell.SpellData.Value.SpellItemId) as SpellItemSO;
         _spellCooldownSystem.ApplySpellCooldown(holdToCastSpell);
     }
 
@@ -158,9 +158,9 @@ public class SpellCastController
         return (point, direction);
     }
 
-    private void OnItemSelectedChanged(int previousValue, int newValue)
+    private void OnItemSelectedChanged(ushort previousValue, ushort newValue)
     {
-        if (GameManager.Instance.GetItemSOFromItemId(newValue) is WandItemSO wandItemSO)
+        if (GameDataRegistry.Instance.GetItemDataFromItemId(newValue) is WandItemSO wandItemSO)
         {
             _currentWandItemSO = wandItemSO;
             
@@ -185,7 +185,7 @@ public class SpellCastController
             OnSpellArrayUpdated?.Invoke(this, new SpellArrayChangedEventArgs(_selectedWandInventoryItem.MagicArray));
             OnSelectedSpellUpdated?.Invoke(this, new SelectedSpellChangedEventArgs(_selectedWandInventoryItem.GetSelectedSpell(), _selectedWandInventoryItem.SelectedSpellIndex));
         }
-        else if (GameManager.Instance.GetItemSOFromItemId(newValue) is SpellItemSO spellItemSO)
+        else if (GameDataRegistry.Instance.GetItemDataFromItemId(newValue) is SpellItemSO spellItemSO)
         {
             _selectedWandInventoryItem = new WandInventoryItem(spellItemSO, 1, 1, 0);
             _selectedWandInventoryItem.SetMagic(spellItemSO, 0);

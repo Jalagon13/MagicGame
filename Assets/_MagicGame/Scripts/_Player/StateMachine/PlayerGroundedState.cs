@@ -30,7 +30,7 @@ public class PlayerGroundedState : BaseState
         }
         else if(_ctx.SpellCaster.IsCasting.Value)
         {
-            SwitchState(new AIStateData(AIState.SpellCasting, GameManager.Instance.GetItemIdFromItemSO(Player.Instance.SpellCastController.SelectedWandInventoryItem.GetSelectedSpell())));
+            SwitchState(new AIStateData(AIState.SpellCasting, GameDataRegistry.Instance.GetItemIdFromItemData(Player.Instance.SpellCastController.SelectedWandInventoryItem.GetSelectedSpell())));
         }
         else if(_ctx.ServerCharacter.LifeState == LifeState.Dead)
         {

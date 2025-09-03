@@ -107,7 +107,7 @@ public class UpperWallTm : MonoBehaviour
         {
             TileDataSO aboveTileSO = GameDataRegistry.Instance.GetTileDataFromTileBase(TileManager.Instance.WallTm.GetTile(new Vector3Int(x, y + 1, 0)));
 
-            if(GameDataRegistry.Instance.GetUShortIdFromTileData(tileAtPosition) != GameDataRegistry.Instance.GetUShortIdFromTileData(aboveTileSO))
+            if(GameDataRegistry.Instance.GetTileIdFromTileData(tileAtPosition) != GameDataRegistry.Instance.GetTileIdFromTileData(aboveTileSO))
             {
                 RenderUpperWallTile(tileAtPosition, x, y);
             }
@@ -126,10 +126,10 @@ public class UpperWallTm : MonoBehaviour
         Vector3Int upperTilePosition = new Vector3Int(x, y + 1, 0);
 
         bool sameBotLeftTileExists = TileManager.Instance.WallTm.HasTile(leftTilePosition) &&
-        (GameDataRegistry.Instance.GetUShortIdFromTileBase(TileManager.Instance.WallTm.GetTile(leftTilePosition)) == GameDataRegistry.Instance.GetUShortIdFromTileBase(TileManager.Instance.WallTm.GetTile(tilePosition)));
+        (GameDataRegistry.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile(leftTilePosition)) == GameDataRegistry.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile(tilePosition)));
 
         bool sameBotRightTileExists = TileManager.Instance.WallTm.HasTile(rightTilePosition) &&
-        (GameDataRegistry.Instance.GetUShortIdFromTileBase(TileManager.Instance.WallTm.GetTile(rightTilePosition)) == GameDataRegistry.Instance.GetUShortIdFromTileBase(TileManager.Instance.WallTm.GetTile(tilePosition)));
+        (GameDataRegistry.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile(rightTilePosition)) == GameDataRegistry.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile(tilePosition)));
 
         if (!sameBotLeftTileExists && !sameBotRightTileExists)
         {
@@ -156,8 +156,8 @@ public class UpperWallTm : MonoBehaviour
         if (_upperWallTm.HasTile(baseTilePosition))
         {
             Vector3Int lowerTilePosition = baseTilePosition + Vector3Int.down;
-            int lowerTileId = GameDataRegistry.Instance.GetUShortIdFromTileBase(TileManager.Instance.WallTm.GetTile(lowerTilePosition));
-            int baseTileId = GameDataRegistry.Instance.GetUShortIdFromTileBase(TileManager.Instance.WallTm.GetTile(baseTilePosition));
+            int lowerTileId = GameDataRegistry.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile(lowerTilePosition));
+            int baseTileId = GameDataRegistry.Instance.GetTileIdFromTileBase(TileManager.Instance.WallTm.GetTile(baseTilePosition));
 
             if (baseTileId == lowerTileId)
             {

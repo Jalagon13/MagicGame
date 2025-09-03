@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2639c94874c947ca9b3c0b265407970, type: 3}
   m_Name: WoodItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Wood
+  <InGameName>k__BackingField: Wood
+  <StringID>k__BackingField: wood
   <UiDisplay>k__BackingField: {fileID: -1339918299593017867, guid: 0ed47c1efae5d4f2da0a01c32c7c6677, type: 3}
   <GoldValue>k__BackingField: 3
   <Stackable>k__BackingField: 1

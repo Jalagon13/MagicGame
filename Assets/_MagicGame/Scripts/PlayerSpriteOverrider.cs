@@ -50,7 +50,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (GameDataRegistry.Instance.GetItemDataFromUShortId(_armorEquippedId.Value) is not ArmorItemSO) return;
+        if (GameDataRegistry.Instance.GetItemDataFromItemId(_armorEquippedId.Value) is not ArmorItemSO) return;
 
         UpdateSpriteSheet();
     }
@@ -77,7 +77,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
     private void UpdateSpriteSheet()
     {
         // NTFS: Use ushort.MaxValue for checking for null vaues 
-        if (_armorEquippedId.Value == ushort.MaxValue)
+        if (_armorEquippedId.Value == GameDataRegistry.INVALID_ID)
         {
             _overrideSheet = null;
             if (IsAimingArmSprite)
@@ -87,7 +87,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
             return;
         }
 
-        ArmorItemSO armorItem = GameDataRegistry.Instance.GetItemDataFromUShortId(_armorEquippedId.Value) as ArmorItemSO;
+        ArmorItemSO armorItem = GameDataRegistry.Instance.GetItemDataFromItemId(_armorEquippedId.Value) as ArmorItemSO;
         _overrideSheet = new();
 
         Texture2D armorSheet = null;

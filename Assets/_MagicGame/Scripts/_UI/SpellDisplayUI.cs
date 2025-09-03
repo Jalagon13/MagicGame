@@ -54,7 +54,7 @@ public class SpellDisplayUI : NetworkBehaviour
                 SpellDisplaySlotUI slotUI = spellDisplaySlotUI.GetComponent<SpellDisplaySlotUI>();
                 slotUI.SetSpell(spell, i);
 
-                int spellId = GameManager.Instance.GetItemIdFromItemSO(spell);
+                int spellId = GameDataRegistry.Instance.GetItemIdFromItemData(spell);
                 _spellSlotDatabase[spellId] = slotUI;
             }
         }

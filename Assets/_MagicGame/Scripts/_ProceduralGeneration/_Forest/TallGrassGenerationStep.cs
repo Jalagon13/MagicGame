@@ -19,7 +19,7 @@ public class TallGrassGenerationStep : GenerationStep
             if (tallGrassNoiseValue > TallGrassThreshold) continue;
 
             if (forestGenData.IsInBounds(point.x, point.y) && 
-            forestGenData.MostFrontRenderedTileMatrix[point.x, point.y] == GameDataRegistry.Instance.GetUShortIdFromTileData(forestGenData.GrassTerrainTile) && 
+            forestGenData.MostFrontRenderedTileMatrix[point.x, point.y] == GameDataRegistry.Instance.GetTileIdFromTileData(forestGenData.GrassTerrainTile) && 
             !ChunkManager.Instance.GetChunkFromAnyWorldPos(point, forestGenData.Biome).HasWorldObject(point))
             {
                 forestGenData.SetTileData(point.x, point.y, forestGenData.TallGrassTile);

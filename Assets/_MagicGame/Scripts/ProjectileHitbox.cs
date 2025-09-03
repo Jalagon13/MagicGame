@@ -37,7 +37,7 @@ public class ProjectileHitbox : NetworkBehaviour
 
             if(TileManager.Instance.HasTile(tilePos, TileType.Foliage, out TileDataSO tileSO))
             {
-                ushort tileId = GameDataRegistry.Instance.GetUShortIdFromTilemapTilePosition(TileManager.Instance.FoliageTm, tilePos);
+                ushort tileId = GameDataRegistry.Instance.GetTileIdFromTilemapTilePosition(TileManager.Instance.FoliageTm, tilePos);
                 TileManager.Instance.DestroyTile((Vector2Int)tilePos, tileId, _serverSpell.SpellData.Value.SpawnBiome);
                 collision.gameObject.GetComponent<FoliageCollider>()?.DestroyFoliage();
             }
@@ -59,7 +59,7 @@ public class ProjectileHitbox : NetworkBehaviour
                 if (_remainingPierces <= 0)
                 {
                     // TODO: Destroy or deactivate the spell
-                    SpellItemSO spellItemSO = GameDataRegistry.Instance.GetItemDataFromUShortId(_serverSpell.SpellData.Value.SpellItemId) as SpellItemSO;
+                    SpellItemSO spellItemSO = GameDataRegistry.Instance.GetItemDataFromItemId(_serverSpell.SpellData.Value.SpellItemId) as SpellItemSO;
                     SoundManager.Instance.PlayOneShot(spellItemSO.SpellOnDamageSound, transform.position);
 
                     _serverSpell.EndSpellExternally();

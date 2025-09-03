@@ -12299,7 +12299,6 @@ MonoBehaviour:
   _startingBiome: 1
   _itemBasePrefab: {fileID: 4324714860010554649, guid: b80d6a3337ea34052b9944957d71ebd0, type: 3}
   _playerPrefab: {fileID: 815970926421098775, guid: f97c883a224ab4846b8446859cca2edd, type: 3}
-  _itemDataBaseSO: {fileID: 11400000, guid: f8a736388b2c44969af16475866a4801, type: 2}
 --- !u!1001 &1655304322
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13614,6 +13613,22 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3cf6ac136b8b9491680e4b25ad24dc32, type: 2}
   - {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
   - {fileID: 11400000, guid: 4f9eaf08ec277459e99a321c73aa23c7, type: 2}
+  _itemData:
+  - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+  - {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
+  - {fileID: 11400000, guid: fe217e765840a43b5b9acff0a1269c2f, type: 2}
+  - {fileID: 11400000, guid: ca1b5b14cbb4545468fad1cb43e84ca2, type: 2}
+  - {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
+  - {fileID: 11400000, guid: 5849721283c6441cbaa36b109972e84d, type: 2}
+  - {fileID: 11400000, guid: fe14886186b414dc8a0cca5f83f3fdb9, type: 2}
+  - {fileID: 11400000, guid: 128b887eb5a144b6c8c4d6b1ad559dcf, type: 2}
+  - {fileID: 11400000, guid: b1ef818a3b6974596ba2183158e148af, type: 2}
+  - {fileID: 11400000, guid: 613cd6896fd8c4dcb918aad3dec0eaab, type: 2}
+  - {fileID: 11400000, guid: 7085c09076ff64c65815502e952be852, type: 2}
+  - {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
+  - {fileID: 11400000, guid: 80b56846aa37c45a1b11af4d1a1eb5b9, type: 2}
+  - {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
+  - {fileID: 11400000, guid: 86cb8623724924d17ae00c150259df3d, type: 2}
 --- !u!1 &1832040324
 GameObject:
   m_ObjectHideFlags: 0

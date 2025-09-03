@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9486b8ae30ede473d930ac44d01ec3aa, type: 3}
-  m_Name: WoodPickaxeItem
+  m_Name: WoodAxeItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Wood Pickaxe
-  <UiDisplay>k__BackingField: {fileID: 517902985880779990, guid: 539b6686a978c4c08845afe71ddfe566, type: 3}
+  <InGameName>k__BackingField: Wood Axe
+  <StringID>k__BackingField: woodaxe
+  <UiDisplay>k__BackingField: {fileID: -217538429237877828, guid: 539b6686a978c4c08845afe71ddfe566, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <ToolType>k__BackingField: 0
+  <ToolType>k__BackingField: 1
   <MiningPower>k__BackingField: 1
   <MiningRange>k__BackingField: 4
-  <Damage>k__BackingField: 4
-  <Knockback>k__BackingField: 6
+  <Damage>k__BackingField: 30
+  <Knockback>k__BackingField: 30
   <DetectionBetweenHitsDuration>k__BackingField: 0.05
   <ColliderLength>k__BackingField: 1
   <SwingDuration>k__BackingField: 0.35

@@ -42,7 +42,7 @@ public class ResourceManager : NetworkBehaviour
 				}
 			}
 			
-			ResourceDataSO rscData = GameDataRegistry.Instance.GetResourceDataFromUShortId(resourceId);
+			ResourceDataSO rscData = GameDataRegistry.Instance.GetResourceDataFromResourceId(resourceId);
 			if (!rscData.PassThrough)
 			{
 				Pathfinding.Instance.RemovePathfindingfWallTileServerRpc(resourcePos, biome);
@@ -105,7 +105,7 @@ public class ResourceManager : NetworkBehaviour
 		// While on server, add the data to chunks
 		ChunkManager.Instance.AddResourceDataToChunkServerRpc(position, id, biomeToPlaceIn, orientation);
 		
-		ResourceObject obj = GameDataRegistry.Instance.GetResourceDataFromUShortId(id).ResourcePrefab;
+		ResourceObject obj = GameDataRegistry.Instance.GetResourceDataFromResourceId(id).ResourcePrefab;
 		if(!obj.Data.PassThrough)
 		{
 			Pathfinding.Instance.AddPfWallTileServerRpc(position, biomeToPlaceIn);
@@ -120,7 +120,7 @@ public class ResourceManager : NetworkBehaviour
 		if(objectBiome == Player.Instance.CurrentBiome.Value)
 		{
 			// Visually place it down for everyone
-			ResourceObject worldAsset = GameDataRegistry.Instance.GetResourceDataFromUShortId(assetID).ResourcePrefab;
+			ResourceObject worldAsset = GameDataRegistry.Instance.GetResourceDataFromResourceId(assetID).ResourcePrefab;
 			GameObject placedAsset = Instantiate(worldAsset.gameObject, (Vector2)position, Quaternion.identity);
 			placedAsset.GetComponent<ResourceObject>().SetOrientation(orientation);
 

@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
   m_Name: FireBoltSpell
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Fire Bolt
+  <InGameName>k__BackingField: Fire Bolt
+  <StringID>k__BackingField: firebolt
   <UiDisplay>k__BackingField: {fileID: -2864920213310542238, guid: 6b31da2f94c4a4f20b4c4f66b75905fc, type: 3}
   <GoldValue>k__BackingField: 70
   <Stackable>k__BackingField: 0

@@ -19,7 +19,7 @@ public class CaveEntranceGenerationStep : GenerationStep
             if (entranceNoiseValue > CaveEntranceSpawnThreshold) continue;
 
             if (forestGenData.IsInBounds(point.x, point.y) && 
-            forestGenData.MostFrontRenderedTileMatrix[point.x, point.y] == GameDataRegistry.Instance.GetUShortIdFromTileData(forestGenData.GrassTerrainTile))
+            forestGenData.MostFrontRenderedTileMatrix[point.x, point.y] == GameDataRegistry.Instance.GetTileIdFromTileData(forestGenData.GrassTerrainTile))
             {
                 forestGenData.SetWorldObjectData(point.x, point.y, forestGenData.CaveEntranceWorldObject, CardinalDirection.North);
             }

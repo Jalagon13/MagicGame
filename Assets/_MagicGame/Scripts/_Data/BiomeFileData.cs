@@ -25,10 +25,10 @@ public class ChestFileData
 public struct ItemFileData
 {
 	public int SlotIndex;
-	public int ItemId; // Unique ID of the item
+	public ushort ItemId; // Unique ID of the item
 	public int Quantity; // Quantity of the item
 	public int SelectedSpellIndex; // For wands, the index of the selected spell
-	public List<int> MagicArray;
+	public List<ushort> MagicArray;
 }
 
 [Serializable]

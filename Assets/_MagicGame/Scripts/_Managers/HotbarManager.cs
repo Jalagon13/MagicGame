@@ -8,7 +8,7 @@ public class HotbarManager : MonoBehaviour
 	public class OnFocusItemSetEventArgs : EventArgs
 	{
 		// public InventoryItem FocusItem;
-		public int SelectedItemId;
+		public ushort SelectedItemId;
 		public int SelectedItemInventorySlotIndex;
 	}
 
@@ -36,11 +36,11 @@ public class HotbarManager : MonoBehaviour
 		_focusInventoryItem = mouseHasItem ? InventoryManager.Instance.GetMouseItem().MouseInventoryItem : InventoryManager.Instance.GetInventoryModel().InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
 		if(mouseHasItem)
 		{
-			InvokeOnFocusItemSetEvent(GameDataRegistry.Instance.GetUShortIdFromItemData(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item), -1);
+			InvokeOnFocusItemSetEvent(GameDataRegistry.Instance.GetItemIdFromItemData(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item), -1);
 		}
 		else
 		{
-			InvokeOnFocusItemSetEvent(GameDataRegistry.Instance.GetUShortIdFromItemData(_focusInventoryItem.Item), GameInput.Instance.GetSelectedSlotIndex());
+			InvokeOnFocusItemSetEvent(GameDataRegistry.Instance.GetItemIdFromItemData(_focusInventoryItem.Item), GameInput.Instance.GetSelectedSlotIndex());
 		}
 	}
 
@@ -49,12 +49,12 @@ public class HotbarManager : MonoBehaviour
 		if(e.InventoryItem.Item != null)
 		{
 			_focusInventoryItem = e.InventoryItem;
-			InvokeOnFocusItemSetEvent(GameDataRegistry.Instance.GetUShortIdFromItemData(e.InventoryItem.Item), -1);
+			InvokeOnFocusItemSetEvent(GameDataRegistry.Instance.GetItemIdFromItemData(e.InventoryItem.Item), -1);
 		}
 		else
 		{
 			_focusInventoryItem = InventoryManager.Instance.GetInventoryModel().InventoryItems[GameInput.Instance.GetSelectedSlotIndex()]; 
-			InvokeOnFocusItemSetEvent(GameDataRegistry.Instance.GetUShortIdFromItemData(_focusInventoryItem.Item), GameInput.Instance.GetSelectedSlotIndex());
+			InvokeOnFocusItemSetEvent(GameDataRegistry.INVALID_ID, GameInput.Instance.GetSelectedSlotIndex());
 		}
 	}
 
@@ -64,11 +64,11 @@ public class HotbarManager : MonoBehaviour
 		
 		if(_focusInventoryItem == null)
 		{
-			InvokeOnFocusItemSetEvent(-1, e.SelectedSlotIndex);
+			InvokeOnFocusItemSetEvent(GameDataRegistry.INVALID_ID, e.SelectedSlotIndex);
 		}
 		else
 		{
-			InvokeOnFocusItemSetEvent(GameDataRegistry.Instance.GetUShortIdFromItemData(_focusInventoryItem.Item), e.SelectedSlotIndex);
+			InvokeOnFocusItemSetEvent(GameDataRegistry.Instance.GetItemIdFromItemData(_focusInventoryItem.Item), e.SelectedSlotIndex);
 		}
 	}
 
@@ -78,15 +78,15 @@ public class HotbarManager : MonoBehaviour
 		
 		if(_focusInventoryItem == null)
 		{
-			InvokeOnFocusItemSetEvent(-1, e.SelectedSlotIndex);
+			InvokeOnFocusItemSetEvent(GameDataRegistry.INVALID_ID, e.SelectedSlotIndex);
 		}
 		else
 		{
-			InvokeOnFocusItemSetEvent(GameDataRegistry.Instance.GetUShortIdFromItemData(_focusInventoryItem.Item), e.SelectedSlotIndex);
+			InvokeOnFocusItemSetEvent(GameDataRegistry.Instance.GetItemIdFromItemData(_focusInventoryItem.Item), e.SelectedSlotIndex);
 		}
 	}
 	
-	private void InvokeOnFocusItemSetEvent(int focusItemIndex, int selectedSlotIndex)
+	private void InvokeOnFocusItemSetEvent(ushort focusItemIndex, int selectedSlotIndex)
 	{
 		OnFocusSlotUpdated?.Invoke(this, new OnFocusItemSetEventArgs
 		{
@@ -102,7 +102,7 @@ public class HotbarManager : MonoBehaviour
 	
 	public int GetFocusItemIndex()
 	{
-		return GameDataRegistry.Instance.GetUShortIdFromItemData(_focusInventoryItem.Item);
+		return GameDataRegistry.Instance.GetItemIdFromItemData(_focusInventoryItem.Item);
 	}
 	
 	private void OnDestroy()

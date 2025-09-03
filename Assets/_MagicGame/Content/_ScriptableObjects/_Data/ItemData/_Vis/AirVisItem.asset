@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2639c94874c947ca9b3c0b265407970, type: 3}
-  m_Name: FireEssenceItem
+  m_Name: AirVisItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Fire Essence
-  <UiDisplay>k__BackingField: {fileID: -979416955, guid: 0ed47c1efae5d4f2da0a01c32c7c6677, type: 3}
+  <InGameName>k__BackingField: Air Vis
+  <StringID>k__BackingField: airvis
+  <UiDisplay>k__BackingField: {fileID: -553074925, guid: 0ed47c1efae5d4f2da0a01c32c7c6677, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 

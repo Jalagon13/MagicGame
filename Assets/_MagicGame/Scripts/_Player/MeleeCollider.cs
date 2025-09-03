@@ -75,7 +75,7 @@ public class MeleeCollider : NetworkBehaviour
         {
             Vector3 colPos = collision.gameObject.transform.position;
             Vector2Int tilePos = new(Mathf.RoundToInt(colPos.x), Mathf.RoundToInt(colPos.y));
-            ushort tileId = GameDataRegistry.Instance.GetUShortIdFromTilemapTilePosition(TileManager.Instance.FoliageTm, (Vector3Int)tilePos);
+            ushort tileId = GameDataRegistry.Instance.GetTileIdFromTilemapTilePosition(TileManager.Instance.FoliageTm, (Vector3Int)tilePos);
             TileManager.Instance.DestroyTile(tilePos, tileId, Player.Instance.CurrentBiome.Value);
             collision.gameObject.GetComponent<FoliageCollider>().DestroyFoliage();
         }

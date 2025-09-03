@@ -63,7 +63,7 @@ public class NetworkChunkManager : NetworkBehaviour
 		// Convert world asset game data to agnostic sync data
 		foreach (ResourceObjectGameData resourceGameData in chunkGameData.GetWorldObjects())
 		{
-			ushort id = GameDataRegistry.Instance.GetUShortIdFromResourceData(resourceGameData.Rsc.Data);
+			ushort id = GameDataRegistry.Instance.GetResourceIdFromResourceData(resourceGameData.Rsc.Data);
 			
 			if(resourceGameData is DoorObjectGameData doorObjectGameData)
 			{
@@ -90,7 +90,7 @@ public class NetworkChunkManager : NetworkBehaviour
 	{
 		foreach (var tile in gameDataList)
 		{
-			ushort id = GameDataRegistry.Instance.GetUShortIdFromTileData(tile.TileSO);
+			ushort id = GameDataRegistry.Instance.GetTileIdFromTileData(tile.TileSO);
 			syncDataList.Add(ConvertGameDataIntoGenericSyncData(tile.TilePosition, id));
 		}
 	}
@@ -124,7 +124,7 @@ private ChunkGameData ConvertToGameChunkData(SyncChunkData syncChunkData)
 	{
 		ConvertSyncDataList(syncList, (syncTile) =>
 		{
-			TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromUShortId(syncTile.ID);
+			TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromTileId(syncTile.ID);
 			return new TileGameData(tileSO, new Vector2Int(syncTile.Position.x, syncTile.Position.y));
 		}, chunkGameData.GetTileList(type));
 	}
@@ -132,14 +132,14 @@ private ChunkGameData ConvertToGameChunkData(SyncChunkData syncChunkData)
 	// Convert SyncWorldAssetData to WorldAssetGameData
 	ConvertSyncDataList(syncChunkData.SyncObjectAssetDataList, (syncAsset) =>
 	{
-		ResourceObject worldObject = GameDataRegistry.Instance.GetResourceDataFromUShortId(syncAsset.ID).ResourcePrefab;
+		ResourceObject worldObject = GameDataRegistry.Instance.GetResourceDataFromResourceId(syncAsset.ID).ResourcePrefab;
 		return new ResourceObjectGameData(worldObject, syncAsset.Position, syncAsset.Orientation);
 	}, chunkGameData.GetWorldObjects());
 
 	// Convert SyncDoorObjectData To DoorObjectGameData
 	ConvertSyncDataList(syncChunkData.SyncDoorObjectDataList, (syncDoor) => 
 	{
-		ResourceObject worldObject = GameDataRegistry.Instance.GetResourceDataFromUShortId(syncDoor.ID).ResourcePrefab;
+		ResourceObject worldObject = GameDataRegistry.Instance.GetResourceDataFromResourceId(syncDoor.ID).ResourcePrefab;
 		return new DoorObjectGameData(worldObject, syncDoor.Position, syncDoor.Orientation, syncDoor.IsOpen);
 	}, chunkGameData.GetWorldObjects());
 

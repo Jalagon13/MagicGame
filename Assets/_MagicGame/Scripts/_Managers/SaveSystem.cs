@@ -92,11 +92,11 @@ public class SaveSystem : MonoBehaviour
 						
 						if(rscObjGameData is DoorObjectGameData doorObjectGameData)
 						{
-							worldAssetData = new DoorObjectFileData(GameDataRegistry.Instance.GetUShortIdFromResourceData(rscObjGameData.Rsc.Data), rscObjGameData.Position, rscObjGameData.Orientation, doorObjectGameData.IsOpen);
+							worldAssetData = new DoorObjectFileData(GameDataRegistry.Instance.GetResourceIdFromResourceData(rscObjGameData.Rsc.Data), rscObjGameData.Position, rscObjGameData.Orientation, doorObjectGameData.IsOpen);
 						}
 						else
 						{
-							worldAssetData = new ResourceObjectFileData(GameDataRegistry.Instance.GetUShortIdFromResourceData(rscObjGameData.Rsc.Data), rscObjGameData.Position, rscObjGameData.Orientation);
+							worldAssetData = new ResourceObjectFileData(GameDataRegistry.Instance.GetResourceIdFromResourceData(rscObjGameData.Rsc.Data), rscObjGameData.Position, rscObjGameData.Orientation);
 						}
 						
 						// Push it to WorldAssets in sceneData
@@ -152,7 +152,7 @@ public class SaveSystem : MonoBehaviour
 					TileFileData tileData = new()
 					{
 						Pos = tile.TilePosition,
-						TileId = GameDataRegistry.Instance.GetUShortIdFromTileData(tileObjectSO),
+						TileId = GameDataRegistry.Instance.GetTileIdFromTileData(tileObjectSO),
 						TileType = tileObjectSO.TileType
 					};
 
@@ -181,20 +181,20 @@ public class SaveSystem : MonoBehaviour
 			{
 				if(chestData.Value[i] != null)
 				{
-					List<int> magicArray = new();
+					List<ushort> magicArray = new();
 					
 					if(chestData.Value[i] is WandInventoryItem wandInventoryItem)
 					{
 						for (int j = 0; j < wandInventoryItem.MagicArray.Length; j++)
 						{
-							magicArray.Add(wandInventoryItem.MagicArray[j] != null ? GameManager.Instance.GetItemIdFromItemSO(wandInventoryItem.MagicArray[j]) : -1);
+							magicArray.Add(wandInventoryItem.MagicArray[j] != null ? GameDataRegistry.Instance.GetItemIdFromItemData(wandInventoryItem.MagicArray[j]) : GameDataRegistry.INVALID_ID);
 						}
 					}
 				
 					chestItemsToSerialize.Add(new ItemFileData
 					{
 						SlotIndex = i,
-						ItemId = GameManager.Instance.GetItemIdFromItemSO(chestData.Value[i].Item),
+						ItemId = GameDataRegistry.Instance.GetItemIdFromItemData(chestData.Value[i].Item),
 						Quantity = chestData.Value[i].Quantity,
 						SelectedSpellIndex = chestData.Value[i] is WandInventoryItem wandInvItem ? wandInvItem.SelectedSpellIndex : -1,
 						MagicArray = magicArray
@@ -240,7 +240,7 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
         // Collect data for each BiomeTransitionObject
         foreach (ResourceObjectFileData data in worldObjectFileData)
         {
-            if (GameDataRegistry.Instance.GetResourceDataFromUShortId(data.Id).ResourcePrefab is BiomeTransitionObject)
+            if (GameDataRegistry.Instance.GetResourceDataFromResourceId(data.Id).ResourcePrefab is BiomeTransitionObject)
             {
                 Debug.Log($"Found BiomeTransitionObject: ID-{data.Id} at {data.Pos}");
                 transitionDataList.Add((data.Id, data.Pos));
@@ -330,7 +330,7 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 
 		for (int i = 0; i < count; i++)
 		{
-			TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromUShortId(tileFileData[i].TileId);
+			TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromTileId(tileFileData[i].TileId);
 			tileGameData.Add(new TileGameData(tileSO, tileFileData[i].Pos));
 		}
 
@@ -346,7 +346,7 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 		foreach (ResourceObjectFileData data in worldObjectFileData)
 		{
 			// Fetch each prefab from database
-			ResourceObject worldObjectToInst = GameDataRegistry.Instance.GetResourceDataFromUShortId(data.Id).ResourcePrefab;
+			ResourceObject worldObjectToInst = GameDataRegistry.Instance.GetResourceDataFromResourceId(data.Id).ResourcePrefab;
 			ChunkManager.Instance.DeserializeObjectDataToChunk(data, biomeToDeserialize, worldObjectToInst, data.Orientation);
 		}
 		
@@ -370,7 +370,7 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 			
 			foreach (ItemFileData item in chestData.ChestItems)
 			{
-				ItemDataSO itemToAdd = GameManager.Instance.GetItemSOFromItemId(item.ItemId);
+				ItemDataSO itemToAdd = GameDataRegistry.Instance.GetItemDataFromItemId(item.ItemId);
 				
 				if(itemToAdd is WandItemSO wandItemSO)
 				{
@@ -378,9 +378,9 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
 
 					for (int i = 0; i < item.MagicArray.Count; i++)
 					{
-						if(item.MagicArray[i] > -1)
+						if(item.MagicArray[i] != ushort.MaxValue)
 						{
-							wandInventoryItem.SetMagic(GameManager.Instance.GetItemSOFromItemId(item.MagicArray[i]) as SpellItemSO, i);
+							wandInventoryItem.SetMagic(GameDataRegistry.Instance.GetItemDataFromItemId(item.MagicArray[i]) as SpellItemSO, i);
 						}
 					}
 

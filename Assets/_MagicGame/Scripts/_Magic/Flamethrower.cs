@@ -110,7 +110,7 @@ public class Flamethrower : ServerSpell
         {
             if (SpellCasterNetworkObject.TryGetComponent(out ServerCharacter inflicter))
             {
-                SpellItemSO spellItemSO = GameDataRegistry.Instance.GetItemDataFromUShortId(SpellData.Value.SpellItemId) as SpellItemSO;
+                SpellItemSO spellItemSO = GameDataRegistry.Instance.GetItemDataFromItemId(SpellData.Value.SpellItemId) as SpellItemSO;
                 SoundManager.Instance.PlayOneShot(spellItemSO.SpellOnDamageSound, transform.position);
 
                 target.ReceiveHP(inflicter, -SpellData.Value.Damage, true, SpellData.Value.Knockback);
@@ -132,7 +132,7 @@ public class Flamethrower : ServerSpell
 
             Vector3 pos = foliage.transform.position;
             Vector2Int tilePos = new Vector2Int((int)pos.x, (int)pos.y);
-            ushort tileId = GameDataRegistry.Instance.GetUShortIdFromTilemapTilePosition(
+            ushort tileId = GameDataRegistry.Instance.GetTileIdFromTilemapTilePosition(
                 TileManager.Instance.FoliageTm, (Vector3Int)tilePos
             );
 

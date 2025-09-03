@@ -21,7 +21,7 @@ public class TreeGenerationStep : GenerationStep
             float treeNoiseValue = forestGenData.ForestTreesNM.NoiseTexture.GetPixel(point.x, point.y).grayscale;
             if(treeNoiseValue > TreeThreshold) continue;
 
-            if (forestGenData.IsInBounds(point.x, point.y) && forestGenData.MostFrontRenderedTileMatrix[point.x, point.y] == GameDataRegistry.Instance.GetUShortIdFromTileData(forestGenData.GrassTerrainTile))
+            if (forestGenData.IsInBounds(point.x, point.y) && forestGenData.MostFrontRenderedTileMatrix[point.x, point.y] == GameDataRegistry.Instance.GetTileIdFromTileData(forestGenData.GrassTerrainTile))
             {
                 forestGenData.SetWorldObjectData(point.x, point.y, forestGenData.TreeWorldObject, CardinalDirection.North);
             }

@@ -178,7 +178,7 @@ public class ChestNetworkManager : NetworkBehaviour
 			
 				for (int i = 0; i < wandInventoryItem.MagicArray.Length; i++)
 				{
-					magicArray.Add(wandInventoryItem.MagicArray[i] != null ? GameDataRegistry.Instance.GetUShortIdFromItemData(wandInventoryItem.MagicArray[i]) : ushort.MaxValue);
+					magicArray.Add(wandInventoryItem.MagicArray[i] != null ? GameDataRegistry.Instance.GetItemIdFromItemData(wandInventoryItem.MagicArray[i]) : ushort.MaxValue);
 				}
 
 				selectedSpellIndex = wandInventoryItem.SelectedSpellIndex;
@@ -191,7 +191,7 @@ public class ChestNetworkManager : NetworkBehaviour
 
 			syncChestData.Add(new SyncItemData
 			{
-				ItemId = GameDataRegistry.Instance.GetUShortIdFromItemData(invItem.Item),
+				ItemId = GameDataRegistry.Instance.GetItemIdFromItemData(invItem.Item),
 				Quantity = invItem.Quantity,
 				MagicArray = magicArray,
 				SelectedSpellIndex = selectedSpellIndex
@@ -207,11 +207,11 @@ public class ChestNetworkManager : NetworkBehaviour
 
 		foreach (SyncItemData syncItem in syncChestData)
 		{
-			InventoryItem invItem = new(GameDataRegistry.Instance.GetItemDataFromUShortId(syncItem.ItemId), syncItem.Quantity);
+			InventoryItem invItem = new(GameDataRegistry.Instance.GetItemDataFromItemId(syncItem.ItemId), syncItem.Quantity);
 			
 			if(invItem.Item is WandItemSO wandItemSO)
 			{
-				var wandInventoryItem = new WandInventoryItem(GameDataRegistry.Instance.GetItemDataFromUShortId(syncItem.ItemId), syncItem.Quantity, wandItemSO.Capacity, syncItem.SelectedSpellIndex);
+				var wandInventoryItem = new WandInventoryItem(GameDataRegistry.Instance.GetItemDataFromItemId(syncItem.ItemId), syncItem.Quantity, wandItemSO.Capacity, syncItem.SelectedSpellIndex);
 
 				Debug.Log($"Found a wand to turn to game data {invItem.Item.InGameName}");
 			
@@ -219,7 +219,7 @@ public class ChestNetworkManager : NetworkBehaviour
 				{
 					if(syncItem.MagicArray[i] >= 0)
 					{
-						wandInventoryItem.SetMagic(GameDataRegistry.Instance.GetItemDataFromUShortId(syncItem.MagicArray[i]) as SpellItemSO, i);
+						wandInventoryItem.SetMagic(GameDataRegistry.Instance.GetItemDataFromItemId(syncItem.MagicArray[i]) as SpellItemSO, i);
 					}
 				}
 

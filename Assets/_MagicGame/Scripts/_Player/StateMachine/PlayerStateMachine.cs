@@ -51,7 +51,7 @@ public class PlayerStateMachine : StateMachine
 		if (_serverCharacter.TryGetComponent(out Player player))
 		{
 			_playerRef = player;
-			_playerRef.SelectedItemIdNetworkVariable.OnValueChanged += OnSelectedItemIdChanged; 
+			_playerRef.SelectedItemId.OnValueChanged += OnSelectedItemIdChanged; 
 		}
 		
 		if(_serverCharacter.TryGetComponent(out SpellCaster spellCaster))
@@ -69,7 +69,7 @@ public class PlayerStateMachine : StateMachine
 	{
 		if (_serverCharacter.TryGetComponent(out Player player))
 		{
-			player.SelectedItemIdNetworkVariable.OnValueChanged -= OnSelectedItemIdChanged;
+			player.SelectedItemId.OnValueChanged -= OnSelectedItemIdChanged;
 		}
 	}
 
@@ -80,10 +80,10 @@ public class PlayerStateMachine : StateMachine
 		_swingCdTimer?.Tick(Time.deltaTime);
 	}
 
-    private void OnSelectedItemIdChanged(int previousValue, int newValue)
+    private void OnSelectedItemIdChanged(ushort previousValue, ushort newValue)
     {
 		// Played on all client machines for this player instance
-		_heldItem = GameManager.Instance.GetItemSOFromItemId(newValue);
+		_heldItem = GameDataRegistry.Instance.GetItemDataFromItemId(newValue);
     }
 
     public override void ReceiveHP(ServerCharacter inflicter, int amount)
