@@ -392,6 +392,9 @@ MonoBehaviour:
       Data3: 2078279570
       Data4: 643237060
     Path: event:/StoneDestroyed
+  <DestructionGibSprite1>k__BackingField: {fileID: -3347302374123360772, guid: a7607542f398f4e668471296c02b146e, type: 3}
+  <DestructionGibSprite2>k__BackingField: {fileID: -3347302374123360772, guid: a7607542f398f4e668471296c02b146e, type: 3}
+  <DestructionGibSprite3>k__BackingField: {fileID: -3347302374123360772, guid: a7607542f398f4e668471296c02b146e, type: 3}
   <TopTileSingle>k__BackingField: {fileID: -743263003, guid: a7607542f398f4e668471296c02b146e, type: 3}
   <TopTileLeft>k__BackingField: {fileID: -503482117, guid: a7607542f398f4e668471296c02b146e, type: 3}
   <TopTileCenter>k__BackingField: {fileID: -1084791293, guid: a7607542f398f4e668471296c02b146e, type: 3}

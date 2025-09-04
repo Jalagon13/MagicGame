@@ -22,10 +22,13 @@ public class TileDataSO : RuleTile
 	[field: SerializeField] public float Hardness { get; private set; } = 0.65f;
 	[field: SerializeField] public List<Loot> ItemDropTable { get; private set; }
 	
-	[field: Header("Sounds")]
+	[field: Header("Game Feel")]
 	[field: SerializeField] public EventReference MiningSound { get; private set; }
 	[field: SerializeField] public EventReference PlaceSound { get; private set; }
 	[field: SerializeField] public EventReference DestroySound { get; private set; }
+	[field: SerializeField] public Sprite DestructionGibSprite1 { get; private set; }
+	[field: SerializeField] public Sprite DestructionGibSprite2 { get; private set; }
+	[field: SerializeField] public Sprite DestructionGibSprite3 { get; private set; }
 
 	[field: Header("Top Tiles (For Walls Only)")]
 	[field: SerializeField] public Sprite TopTileSingle { get; private set; }

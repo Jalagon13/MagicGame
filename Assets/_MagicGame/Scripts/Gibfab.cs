@@ -82,6 +82,11 @@ public class Gibfab : MonoBehaviour
         float rotationAmount = _rotationSpeed * _rotationDirection * _rotationMultiplier;
         _gibSprite.transform.Rotate(0f, 0f, rotationAmount);
     }
+    
+    public void SetSprite(Sprite sprite)
+    {
+        _gibSprite.sprite = sprite;
+    }
 
     private void OnGibBounce(object sender, System.EventArgs e)
     {
