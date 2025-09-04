@@ -109,8 +109,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  <BreakingClip>k__BackingField: {fileID: 7400000, guid: 39b4b8752780248738c2d31d73bf944a, type: 2}
-  <NotBreakingClip>k__BackingField: {fileID: 7400000, guid: e148e027df11649de93c0606ed15b01c, type: 2}
+  _breakingClip: {fileID: 7400000, guid: 39b4b8752780248738c2d31d73bf944a, type: 2}
+  _notBreakingClip: {fileID: 7400000, guid: e148e027df11649de93c0606ed15b01c, type: 2}
 --- !u!1 &6228433884398184969
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,7 +219,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &7587316496055325955

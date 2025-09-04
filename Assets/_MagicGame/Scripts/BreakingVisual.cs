@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class BreakingVisual : NetworkBehaviour
 {
-    [field: SerializeField] public AnimationClip BreakingClip { get; private set; }
-    [field: SerializeField] public AnimationClip NotBreakingClip { get; private set; }
+    [SerializeField]
+    private AnimationClip _breakingClip;
+
+    [SerializeField]
+    private AnimationClip _notBreakingClip;
 
     private NetworkVariable<bool> _isVisible = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private NetworkVariable<float> _totalMiningTime = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -31,26 +34,35 @@ public class BreakingVisual : NetworkBehaviour
 
         _isVisible.OnValueChanged += OnVisibleChanged;
     }
-    
+
+    public override void OnNetworkDespawn()
+    {
+        if (IsOwner)
+        {
+            MiningHandler.Instance.OnMiningStarted -= MiningStarted;
+            MiningHandler.Instance.OnMiningStopped -= MiningStopped;
+        }
+    }
+
     private void OnVisibleChanged(bool previousValue, bool newValue)
     {
         if(Player.Instance.CurrentBiome.Value == _ownerBiome.Value)
         {
             if (newValue)
             {
-                AnimStateManager.ChangeAnimationState(_breakingAnimator, BreakingClip, _totalMiningTime.Value); 
+                AnimStateManager.ChangeAnimationState(_breakingAnimator, _breakingClip, _totalMiningTime.Value); 
                 _breakingSr.sortingOrder = _sortingOrder;
                 _breakingSr.enabled = true;
             }
             else
             {
-                AnimStateManager.ChangeAnimationState(_breakingAnimator, NotBreakingClip);
+                AnimStateManager.ChangeAnimationState(_breakingAnimator, _notBreakingClip);
                 _breakingSr.enabled = false;
             }
         }
         else
         {
-            AnimStateManager.ChangeAnimationState(_breakingAnimator, NotBreakingClip);
+            AnimStateManager.ChangeAnimationState(_breakingAnimator, _notBreakingClip);
             _breakingSr.enabled = false;
         }
     }
@@ -61,6 +73,8 @@ public class BreakingVisual : NetworkBehaviour
 
         if (e.DestructableType == DestructableType.Tile)
         {
+            TileDataSO tileBeingBroken = e.TileData;
+        
             if(TileManager.Instance.HasTile(e.BreakTargetPosition + Vector3Int.down, TileType.Wall, out TileDataSO belowWallTile))
             {
                 // There is a tile below the tile we are breaking
@@ -98,17 +112,14 @@ public class BreakingVisual : NetworkBehaviour
         _isVisible.Value = true;
     }
 
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+    private void PlayHitFeedbacksClientRpc()
+    {
+        
+    }
+
     private void MiningStopped(object sender, EventArgs e)
     {
         _isVisible.Value = false;
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        if(IsOwner)
-        {
-            MiningHandler.Instance.OnMiningStarted -= MiningStarted;
-            MiningHandler.Instance.OnMiningStopped -= MiningStopped;
-        }
     }
 }

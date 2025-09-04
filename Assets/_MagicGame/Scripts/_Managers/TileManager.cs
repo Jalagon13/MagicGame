@@ -26,6 +26,8 @@ public class TileManager : NetworkBehaviour
 	[field: SerializeField] public Tilemap FoliageTm { get; private set; }
 	[field: SerializeField] public TerrainTileRenderer TerrainTileRenderer { get; private set; }
 	[field: SerializeField] public UpperWallTm UpperWallTm { get; private set; }
+	[field: SerializeField] public TileDestructionFeedbacks TileDestructionFeedbacks { get; private set; }
+
 
 	private void Awake()
 	{
@@ -81,7 +83,7 @@ public class TileManager : NetworkBehaviour
 			foreach (TileGameData tile in tileLayer)
 			{
 				var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-				RenderTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType);
+				RenderTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType, false);
 			}
 		}
 	}
@@ -96,7 +98,7 @@ public class TileManager : NetworkBehaviour
 			case TileType.Liquid:
 				if (TerrainTileRenderer.HasTile(position))
 				{
-					tileSO = TerrainTileRenderer.GetTileSO(position);
+					tileSO = TerrainTileRenderer.GetTileData(position);
 					return true;
 				}
 				break;
@@ -134,40 +136,44 @@ public class TileManager : NetworkBehaviour
 	}
 
 	[Rpc(SendTo.ClientsAndHost)]
-	public void HandleTileVisualClientRpc(Vector3Int pos, ushort syncTileId, TileType syncTileType, BiomeType biome)
+	public void HandleTileVisualClientRpc(Vector3Int pos, ushort syncTileId, TileType syncTileType, BiomeType biome, bool playDestroyFeedbacks)
 	{
 	    if (Player.Instance.CurrentBiome.Value != biome) return;
 
 		if(syncTileId == GameDataRegistry.INVALID_ID)
 		{
-		    RenderTile(pos, null, syncTileType);
+		    RenderTile(pos, null, syncTileType, playDestroyFeedbacks);
 		}
 		else
 		{
 			TileDataSO tileToPlace = GameDataRegistry.Instance.GetTileDataFromTileId(syncTileId);
-			RenderTile(pos, tileToPlace, syncTileType);
+			RenderTile(pos, tileToPlace, syncTileType, playDestroyFeedbacks);
 		}
 
 	    Lightmap.Instance.UpdateLightMap();
 	}
 
-	public void RenderTile(Vector3Int tilePos, TileDataSO tileSO, TileType tileType)
+	public void RenderTile(Vector3Int tilePos, TileDataSO tileSO, TileType tileType, bool playDestroyFeedbacks)
 	{
+		TileDataSO previousTile = null;
+	
 		switch (tileType)
 		{
 			case TileType.Terrain:
-				TerrainTileRenderer.SetTerrainTileData(tilePos, tileSO);
-				break;
 			case TileType.Liquid:
+				previousTile = TerrainTileRenderer.GetTileData(tilePos);
 				TerrainTileRenderer.SetTerrainTileData(tilePos, tileSO);
 				break;
 			case TileType.Floor:
+				previousTile = FloorTm.GetTile<TileDataSO>(tilePos);
 				FloorTm.SetTile(tilePos, tileSO);
 				break;
 			case TileType.Wall:
+				previousTile = WallTm.GetTile<TileDataSO>(tilePos);
 				WallTm.SetTile(tilePos, tileSO);
 				break;
 			case TileType.Ore: 
+				previousTile = OreTm.GetTile<TileDataSO>(tilePos);
 				OreTm.SetTile(tilePos, tileSO);
 				if(tileSO == null) // When destroying ore, destroy the wall behind it
 				{
@@ -175,6 +181,7 @@ public class TileManager : NetworkBehaviour
 				}
 				break;
 			case TileType.Foliage:
+				previousTile = FoliageTm.GetTile<TileDataSO>(tilePos);
 				FoliageTm.SetTile(tilePos, tileSO);
 				break;
 		}
@@ -187,9 +194,16 @@ public class TileManager : NetworkBehaviour
 		{
 			UpperWallTm.TryToRenderSurroundingUpperWallTiles(tilePos);
 		}
+		
+		if(playDestroyFeedbacks && previousTile != null && tileSO == null)
+		{
+		    // Spawn destroy feedbacks prefab that automatically deletes itself when done playing
+		    var go = Instantiate(TileDestructionFeedbacks.gameObject, tilePos, Quaternion.identity);
+		    go.GetComponent<TileDestructionFeedbacks>().PlayDestroyFeedbacks(previousTile);
+		}
 	}
 
-	public void DestroyTile(Vector2Int tilePos, ushort tileId, BiomeType biome)
+	public void DestroyTile(Vector2Int tilePos, ushort tileId, BiomeType biome, bool playDestroyFeedbacks)
 	{
 		TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromTileId(tileId);
 		var tileList = GetTileListFromType(tileSO.TileType, tilePos, biome);
@@ -206,7 +220,7 @@ public class TileManager : NetworkBehaviour
 			{
 				var spawnPos = new Vector2(tileList[i].TilePosition.x + 0.5f, tileList[i].TilePosition.y + 0.5f);
 				LootTable.SpawnLoot(tileSO.ItemDropTable, spawnPos, biome);
-				ChunkManager.Instance.RemoveTileServerRpc(tileSO.TileType, tileList[i].TilePosition, biome);
+				ChunkManager.Instance.RemoveTileServerRpc(tileSO.TileType, tileList[i].TilePosition, biome, playDestroyFeedbacks);
 				SoundManager.Instance.PlayOneShot(tileSO.DestroySound, spawnPos);
 				return;
 			}

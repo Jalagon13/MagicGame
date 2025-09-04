@@ -14,7 +14,7 @@ public enum TileType
 [CreateAssetMenu(fileName = "New TileSO", menuName = "Tiles/TileSO", order = 1)]
 public class TileDataSO : RuleTile
 {
-	[field: Header("TileSO Properties")]
+	[field: Header("TileData Properties")]
 	[Tooltip("Name of the resource world object")]
 	public string StringID;
 	[field: SerializeField] public TileType TileType { get; private set; }

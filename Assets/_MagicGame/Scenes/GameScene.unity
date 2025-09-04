@@ -3287,6 +3287,7 @@ MonoBehaviour:
   <FoliageTm>k__BackingField: {fileID: 561820071}
   <TerrainTileRenderer>k__BackingField: {fileID: 61712750}
   <UpperWallTm>k__BackingField: {fileID: 1893141008}
+  <TileDestructionFeedbacks>k__BackingField: {fileID: 6093932232749975433, guid: 5fa39d5cde16744449884a390d2f7e38, type: 3}
 --- !u!1 &366871599
 GameObject:
   m_ObjectHideFlags: 0
@@ -13629,6 +13630,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 80b56846aa37c45a1b11af4d1a1eb5b9, type: 2}
   - {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
   - {fileID: 11400000, guid: 86cb8623724924d17ae00c150259df3d, type: 2}
+  - {fileID: 11400000, guid: 948cd40c3b143404aa76b1fbde01f383, type: 2}
 --- !u!1 &1832040324
 GameObject:
   m_ObjectHideFlags: 0

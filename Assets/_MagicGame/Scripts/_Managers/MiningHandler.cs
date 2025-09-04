@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using FMODUnity;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public enum DestructableType
 {
@@ -22,13 +23,15 @@ public class MiningHandler : MonoBehaviour
         public float TotalMiningTime;
         public BiomeType Biome;
         public DestructableType DestructableType;
+        public TileDataSO TileData;
 
-        public MiningStartedEventArgs(float totalMiningTime, Vector3Int breakTargetPosition, BiomeType biome, DestructableType destructableType)
+        public MiningStartedEventArgs(float totalMiningTime, Vector3Int breakTargetPosition, BiomeType biome, DestructableType destructableType, TileDataSO tileData)
         {
             TotalMiningTime = totalMiningTime;
             BreakTargetPosition = breakTargetPosition;
             Biome = biome;
             DestructableType = destructableType;
+            TileData = tileData;
         }
     }
     
@@ -211,7 +214,7 @@ public class MiningHandler : MonoBehaviour
     {
         if (IsMining)
         {
-            OnMiningStarted?.Invoke(this, new MiningStartedEventArgs(_cachedTotalMiningTime, (Vector3Int)_currentBreakTargetPosition, Player.Instance.CurrentBiome.Value, _destructableFound));
+            OnMiningStarted?.Invoke(this, new MiningStartedEventArgs(_cachedTotalMiningTime, (Vector3Int)_currentBreakTargetPosition, Player.Instance.CurrentBiome.Value, _destructableFound, _tileSelected));
         }
         else
         {
@@ -239,7 +242,7 @@ public class MiningHandler : MonoBehaviour
                 ResourceManager.Instance.DestroyResourceServerRpc(Player.Instance.CurrentBiome.Value, (Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetResourceIdFromResourceData(_resourceSelected.Data));
                 break;
             case DestructableType.Tile:
-                TileManager.Instance.DestroyTile((Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetTileIdFromTileData(_tileSelected), Player.Instance.CurrentBiome.Value);
+                TileManager.Instance.DestroyTile((Vector2Int)_currentBreakTargetPosition, GameDataRegistry.Instance.GetTileIdFromTileData(_tileSelected), Player.Instance.CurrentBiome.Value, true);
                 break;
         }
         

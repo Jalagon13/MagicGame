@@ -14,6 +14,14 @@ public class BreakingVisualsHandler : NetworkBehaviour
         }
     }
 
+    public override void OnDestroy()
+    {
+        if (NetworkManager != null)
+        {
+            NetworkManager.OnClientConnectedCallback -= SpawnBreakingVisuals;
+        }
+    }
+
     private void SpawnBreakingVisuals(ulong clientId)
     {
         if (NetworkManager.LocalClientId != clientId) return;
@@ -27,15 +35,5 @@ public class BreakingVisualsHandler : NetworkBehaviour
         BreakingVisual breakingVisual = Instantiate(BreakingVisualPrefab, transform.position, Quaternion.identity);
         NetworkObject no = breakingVisual.GetComponent<NetworkObject>();
         no.SpawnWithOwnership(clientId, true);
-    }
-
-    public override void OnDestroy()
-    {
-        if (NetworkManager != null)
-        {
-            NetworkManager.OnClientConnectedCallback -= SpawnBreakingVisuals;
-        }
-
-        base.OnDestroy();
     }
 }

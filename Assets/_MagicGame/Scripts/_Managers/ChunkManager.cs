@@ -211,11 +211,11 @@ public class ChunkManager : NetworkBehaviour
 			Pathfinding.Instance.AddPfWallTileServerRpc(position, biomeToAddTileData);
 		}
 		
-		TileManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, tileID, tileType, biomeToAddTileData);
+		TileManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, tileID, tileType, biomeToAddTileData, false);
 	}
 
 	[Rpc(SendTo.Server, RequireOwnership = false)]
-	public void RemoveTileServerRpc(TileType tileType, Vector2Int position, BiomeType biome)
+	public void RemoveTileServerRpc(TileType tileType, Vector2Int position, BiomeType biome, bool playDestroyFeedbacks)
 	{
 		GetChunkFromAnyWorldPos(position, biome).RemoveTileData(position, tileType);
 
@@ -225,7 +225,7 @@ public class ChunkManager : NetworkBehaviour
 		}
 
 		// NTFS: ushort.MinValue can be any number as long as render air is true here to render air
-		TileManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, GameDataRegistry.INVALID_ID, tileType, biome);
+		TileManager.Instance.HandleTileVisualClientRpc((Vector3Int)position, GameDataRegistry.INVALID_ID, tileType, biome, playDestroyFeedbacks);
 	}
 
 	public ChunkGameData GetChunkFromAnyWorldPos(Vector2Int anyWorldPos, BiomeType biomeToGetChunkFrom)

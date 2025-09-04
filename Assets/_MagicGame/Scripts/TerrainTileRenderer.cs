@@ -88,7 +88,7 @@ public class TerrainTileRenderer : MonoBehaviour
         _terrainTilemaps.Clear();
     }
 
-    public TileDataSO GetTileSO(Vector3Int position)
+    public TileDataSO GetTileData(Vector3Int position)
     {
         foreach (var kvp in _terrainTilemaps)
         {
