@@ -42,10 +42,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/World.bank
   Name: World
   StudioPath: bank:/World
-  lastModified: 638921510610351093
+  lastModified: 638926639809487326
   FileSizes:
   - Name: Desktop
-    Value: 8672
+    Value: 21792
   Exists: 1
 --- !u!114 &-8368555601859639280
 MonoBehaviour:
@@ -278,7 +278,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638921510609002350
+  lastModified: 638926639808966209
   FileSizes:
   - Name: Desktop
     Value: 3619520
@@ -357,7 +357,6 @@ MonoBehaviour:
     Data4: 564357219
   Banks:
   - {fileID: 1442470161565190594}
-  - {fileID: -8937805039677400420}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -392,6 +391,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-4187424807725185675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/DirtStoneHit
+  m_EditorClassIdentifier: 
+  Path: event:/World/DirtStoneHit
+  Guid:
+    Data1: 1862938621
+    Data2: 1274891820
+    Data3: 1432831924
+    Data4: 1424327741
+  Banks:
+  - {fileID: -8937805039677400420}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4024909556737517532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -412,6 +438,33 @@ MonoBehaviour:
     Data4: -353672984
   Banks:
   - {fileID: -167728990351699398}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-3344317040950804398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/StoneDestroyed
+  m_EditorClassIdentifier: 
+  Path: event:/World/StoneDestroyed
+  Guid:
+    Data1: -557428352
+    Data2: 1107459471
+    Data3: 2078279570
+    Data4: 643237060
+  Banks:
+  - {fileID: 2910971625801169270}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -527,6 +580,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-2139146096904039782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/StoneHit
+  m_EditorClassIdentifier: 
+  Path: event:/World/StoneHit
+  Guid:
+    Data1: 249587751
+    Data2: 1169178929
+    Data3: -130389574
+    Data4: -1987048442
+  Banks:
+  - {fileID: 2910971625801169270}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-2013000793435297120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,33 +627,6 @@ MonoBehaviour:
     Data4: 2092223634
   Banks:
   - {fileID: 1442470161565190594}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-1361311089419184812
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/StoneHit
-  m_EditorClassIdentifier: 
-  Path: event:/StoneHit
-  Guid:
-    Data1: 249587751
-    Data2: 1169178929
-    Data3: -130389574
-    Data4: -1987048442
-  Banks:
-  - {fileID: 2910971625801169270}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -757,9 +810,7 @@ MonoBehaviour:
   - {fileID: 5852192925778057525}
   - {fileID: 4743123837593905006}
   - {fileID: 3628424433783273261}
-  - {fileID: -1361311089419184812}
   - {fileID: -5380485776774333557}
-  - {fileID: 5042452085065505974}
   - {fileID: -5868496055694042480}
   - {fileID: -4024909556737517532}
   - {fileID: -2151828162186299522}
@@ -794,12 +845,17 @@ MonoBehaviour:
   - {fileID: 4090251831969363818}
   - {fileID: 4234236444842156600}
   - {fileID: -4601107495475197954}
+  - {fileID: -2139146096904039782}
+  - {fileID: -3344317040950804398}
+  - {fileID: 2235353134663070430}
+  - {fileID: -4187424807725185675}
+  - {fileID: 8993295446187482387}
   EditorParameters: []
   MasterBanks:
   - {fileID: -5118738364778561889}
   StringsBanks:
   - {fileID: 5143058463646552385}
-  cacheTime: 638921510610351093
+  cacheTime: 638926639809487326
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:
@@ -843,10 +899,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638921510610081591
+  lastModified: 638926625915368249
   FileSizes:
   - Name: Desktop
-    Value: 3146848
+    Value: 3148096
   Exists: 1
 --- !u!114 &1476141278191997832
 MonoBehaviour:
@@ -875,6 +931,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &2235353134663070430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/DirtStoneBreak
+  m_EditorClassIdentifier: 
+  Path: event:/World/DirtStoneBreak
+  Guid:
+    Data1: 1129784295
+    Data2: 1315776549
+    Data3: 2116532867
+    Data4: 2003096992
+  Banks:
+  - {fileID: -8937805039677400420}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &2910971625801169270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -890,7 +973,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Tiles.bank
   Name: Tiles
   StudioPath: bank:/Tiles
-  lastModified: 638893808384131387
+  lastModified: 638926638665663607
   FileSizes:
   - Name: Desktop
     Value: 61760
@@ -1111,33 +1194,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 605
---- !u!114 &5042452085065505974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/StoneDestroyed
-  m_EditorClassIdentifier: 
-  Path: event:/StoneDestroyed
-  Guid:
-    Data1: -557428352
-    Data2: 1107459471
-    Data3: 2078279570
-    Data4: 643237060
-  Banks:
-  - {fileID: 2910971625801169270}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
 --- !u!114 &5061384021580652553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1180,10 +1236,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638921510609065208
+  lastModified: 638926639809003493
   FileSizes:
   - Name: Desktop
-    Value: 3008
+    Value: 3152
   Exists: 1
 --- !u!114 &5242794587038571529
 MonoBehaviour:
@@ -1421,6 +1477,33 @@ MonoBehaviour:
     Data4: -571733676
   Banks:
   - {fileID: -167728990351699398}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8993295446187482387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/OreHit
+  m_EditorClassIdentifier: 
+  Path: event:/World/OreHit
+  Guid:
+    Data1: -760126013
+    Data2: 1214834390
+    Data3: 1071028877
+    Data4: -1910282493
+  Banks:
+  - {fileID: -8937805039677400420}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1

@@ -370,11 +370,11 @@ MonoBehaviour:
     Chance: 100
   <MiningSound>k__BackingField:
     Guid:
-      Data1: 249587751
-      Data2: 1169178929
-      Data3: -130389574
-      Data4: -1987048442
-    Path: event:/StoneHit
+      Data1: 1862938621
+      Data2: 1274891820
+      Data3: 1432831924
+      Data4: 1424327741
+    Path: event:/DirtStoneHit
   <PlaceSound>k__BackingField:
     Guid:
       Data1: 249587751
@@ -384,11 +384,11 @@ MonoBehaviour:
     Path: event:/StoneHit
   <DestroySound>k__BackingField:
     Guid:
-      Data1: -557428352
-      Data2: 1107459471
-      Data3: 2078279570
-      Data4: 643237060
-    Path: event:/StoneDestroyed
+      Data1: 1129784295
+      Data2: 1315776549
+      Data3: 2116532867
+      Data4: 2003096992
+    Path: event:/DirtStoneBreak
   <TopTileSingle>k__BackingField: {fileID: -511455213, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}
   <TopTileLeft>k__BackingField: {fileID: -2134649256, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}
   <TopTileCenter>k__BackingField: {fileID: 1820265310, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}
