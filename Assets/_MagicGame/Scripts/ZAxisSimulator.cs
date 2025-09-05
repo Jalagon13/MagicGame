@@ -51,6 +51,11 @@ public class ZAxisSimulator : MonoBehaviour
             _defaultShadowPos = _shadowRenderer.transform.localPosition;
             _defaultShadowScale = _shadowRenderer.transform.localScale;
         }
+        
+        if(!_enableShadow)
+        {
+            _shadowRenderer.enabled = false;
+        }
     }
 
     private void FixedUpdate()

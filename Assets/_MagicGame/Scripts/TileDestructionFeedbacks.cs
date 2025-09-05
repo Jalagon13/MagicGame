@@ -25,6 +25,7 @@ public class TileDestructionFeedbacks : MonoBehaviour
     {
         // Split the default sprite into 4 quadrants and assign them to gibfabs
         Sprite[] quads = CreateQuadrantSprites(previousTile.m_DefaultSprite);
+        Debug.Log($"Name of tile being destroyed: {previousTile.m_DefaultSprite.name}");
         
         // Assign sprites to gibfabs
         for (int i = 0; i < 4 && i < _gibfabs.Count; i++)
@@ -50,8 +51,8 @@ public class TileDestructionFeedbacks : MonoBehaviour
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
 
             // Random velocity magnitude and initial upward speed
-            float randomVelocityMagnitude = Random.Range(1f, 3f);
-            float randomInitialUpwardSpeed = Random.Range(0f, 0.075f);
+            float randomVelocityMagnitude = Random.Range(1.5f, 4.5f);
+            float randomInitialUpwardSpeed = Random.Range(0f, 0.125f);
 
             // Launch gib with steadily increasing height
             _gibfabs[i].LaunchGib(randomInitialUpwardSpeed, currentHeight, direction * randomVelocityMagnitude);

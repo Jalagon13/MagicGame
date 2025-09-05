@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c165b42f9814629a98a34f3f8f19c8, type: 3}
   m_Name: StoneWallItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Stone Wall
+  <InGameName>k__BackingField: 
+  <StringID>k__BackingField: 
   <UiDisplay>k__BackingField: {fileID: -3347302374123360772, guid: a7607542f398f4e668471296c02b146e, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 1

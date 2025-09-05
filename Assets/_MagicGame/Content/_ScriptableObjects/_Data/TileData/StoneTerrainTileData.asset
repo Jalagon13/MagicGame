@@ -27,7 +27,7 @@ MonoBehaviour:
       Data2: 1274891820
       Data3: 1432831924
       Data4: 1424327741
-    Path: event:/DirtStoneHit
+    Path: event:/World/DirtStoneHit
   <PlaceSound>k__BackingField:
     Guid:
       Data1: 0
@@ -41,7 +41,7 @@ MonoBehaviour:
       Data2: 1107459471
       Data3: 2078279570
       Data4: 643237060
-    Path: event:/StoneDestroyed
+    Path: event:/World/StoneDestroyed
   <TopTileSingle>k__BackingField: {fileID: 0}
   <TopTileLeft>k__BackingField: {fileID: 0}
   <TopTileCenter>k__BackingField: {fileID: 0}

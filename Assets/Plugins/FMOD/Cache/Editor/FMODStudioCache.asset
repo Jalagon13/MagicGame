@@ -42,10 +42,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/World.bank
   Name: World
   StudioPath: bank:/World
-  lastModified: 638926639809487326
+  lastModified: 638926649462313116
   FileSizes:
   - Name: Desktop
-    Value: 21792
+    Value: 38112
   Exists: 1
 --- !u!114 &-8368555601859639280
 MonoBehaviour:
@@ -278,7 +278,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638926639808966209
+  lastModified: 638926647936935885
   FileSizes:
   - Name: Desktop
     Value: 3619520
@@ -465,6 +465,33 @@ MonoBehaviour:
     Data4: 643237060
   Banks:
   - {fileID: 2910971625801169270}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-3130647307026079644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/OreBreak
+  m_EditorClassIdentifier: 
+  Path: event:/World/OreBreak
+  Guid:
+    Data1: 1159300372
+    Data2: 1197579924
+    Data3: 820410264
+    Data4: -1545463411
+  Banks:
+  - {fileID: -8937805039677400420}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -850,12 +877,13 @@ MonoBehaviour:
   - {fileID: 2235353134663070430}
   - {fileID: -4187424807725185675}
   - {fileID: 8993295446187482387}
+  - {fileID: -3130647307026079644}
   EditorParameters: []
   MasterBanks:
   - {fileID: -5118738364778561889}
   StringsBanks:
   - {fileID: 5143058463646552385}
-  cacheTime: 638926639809487326
+  cacheTime: 638926649462313116
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:
@@ -1236,10 +1264,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638926639809003493
+  lastModified: 638926647936965180
   FileSizes:
   - Name: Desktop
-    Value: 3152
+    Value: 3200
   Exists: 1
 --- !u!114 &5242794587038571529
 MonoBehaviour:
