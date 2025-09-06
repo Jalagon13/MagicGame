@@ -42,10 +42,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/World.bank
   Name: World
   StudioPath: bank:/World
-  lastModified: 638926649462313116
+  lastModified: 638927548965300708
   FileSizes:
   - Name: Desktop
-    Value: 38112
+    Value: 31680
   Exists: 1
 --- !u!114 &-8368555601859639280
 MonoBehaviour:
@@ -883,7 +883,7 @@ MonoBehaviour:
   - {fileID: -5118738364778561889}
   StringsBanks:
   - {fileID: 5143058463646552385}
-  cacheTime: 638926649462313116
+  cacheTime: 638927548965300708
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:

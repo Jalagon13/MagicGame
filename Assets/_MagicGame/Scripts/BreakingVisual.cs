@@ -13,14 +13,17 @@ public class BreakingVisual : NetworkBehaviour
     private NetworkVariable<bool> _isVisible = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private NetworkVariable<float> _totalMiningTime = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private NetworkVariable<BiomeType> _ownerBiome = new(BiomeType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<ushort> _tileBreakingId = new(GameDataRegistry.INVALID_ID, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private Animator _breakingAnimator;
     private SpriteRenderer _breakingSr;
     private int _sortingOrder;
+    private ParticleSystem _hitParticles;
     
     private void Awake()
     {
         _breakingAnimator = transform.GetChild(0).GetComponent<Animator>();
         _breakingSr = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        _hitParticles = transform.GetChild(1).GetComponent<ParticleSystem>();
         _breakingSr.enabled = false;
     }
 
@@ -42,6 +45,8 @@ public class BreakingVisual : NetworkBehaviour
             MiningHandler.Instance.OnMiningStarted -= MiningStarted;
             MiningHandler.Instance.OnMiningStopped -= MiningStopped;
         }
+
+        _isVisible.OnValueChanged -= OnVisibleChanged;
     }
 
     private void OnVisibleChanged(bool previousValue, bool newValue)
@@ -53,28 +58,46 @@ public class BreakingVisual : NetworkBehaviour
                 AnimStateManager.ChangeAnimationState(_breakingAnimator, _breakingClip, _totalMiningTime.Value); 
                 _breakingSr.sortingOrder = _sortingOrder;
                 _breakingSr.enabled = true;
+
+                TileDataSO tileData = GameDataRegistry.Instance.GetTileDataFromTileId(_tileBreakingId.Value);
+                Debug.Log($"Breaking tile: {tileData}");
+                var tsa = _hitParticles.textureSheetAnimation;
+                tsa.enabled = true;
+                tsa.mode = ParticleSystemAnimationMode.Sprites;
+                for (int i = 0; i < tsa.spriteCount; i++)
+                {
+                    tsa.SetSprite(i, tileData.GetRandomMiningParticleSprite());
+                }
+                
+                _hitParticles.Play();
             }
             else
             {
                 AnimStateManager.ChangeAnimationState(_breakingAnimator, _notBreakingClip);
                 _breakingSr.enabled = false;
+                _hitParticles.Stop();
             }
         }
         else
         {
             AnimStateManager.ChangeAnimationState(_breakingAnimator, _notBreakingClip);
             _breakingSr.enabled = false;
+            _hitParticles.Stop();
         }
     }
 
     private void MiningStarted(object sender, MiningHandler.MiningStartedEventArgs e)
     {
         _sortingOrder = 0;
+        
+        if(e.TileData != null)
+        {
+            Debug.Log($"Tile Data in breaking visuals: {e.TileData}");
+            _tileBreakingId.Value = GameDataRegistry.Instance.GetTileIdFromTileData(e.TileData);
+        }
 
         if (e.DestructableType == DestructableType.Tile)
         {
-            TileDataSO tileBeingBroken = e.TileData;
-        
             if(TileManager.Instance.HasTile(e.BreakTargetPosition + Vector3Int.down, TileType.Wall, out TileDataSO belowWallTile))
             {
                 // There is a tile below the tile we are breaking
@@ -110,12 +133,6 @@ public class BreakingVisual : NetworkBehaviour
         _totalMiningTime.Value = e.TotalMiningTime;
         _ownerBiome.Value = e.Biome;
         _isVisible.Value = true;
-    }
-
-    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
-    private void PlayHitFeedbacksClientRpc()
-    {
-        
     }
 
     private void MiningStopped(object sender, EventArgs e)

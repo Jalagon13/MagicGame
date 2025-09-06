@@ -26,6 +26,7 @@ public class TileDataSO : RuleTile
 	[field: SerializeField] public EventReference MiningSound { get; private set; }
 	[field: SerializeField] public EventReference PlaceSound { get; private set; }
 	[field: SerializeField] public EventReference DestroySound { get; private set; }
+	[field: SerializeField] public List<Sprite> MiningParticleSprites { get; private set; }
 
 	[field: Header("Top Tiles (For Walls Only)")]
 	[field: SerializeField] public Sprite TopTileSingle { get; private set; }
@@ -36,4 +37,16 @@ public class TileDataSO : RuleTile
 	[field: Header("Dual Grid Properties (probably make this its own class)")]
 	[field: SerializeField] public Material DualGridFillTileMaterial { get; private set; }
 	[field: SerializeField] public TileBase[] DualGridTiles { get; private set; }
+	
+	public Sprite GetRandomMiningParticleSprite()
+	{
+	    if (MiningParticleSprites == null || MiningParticleSprites.Count == 0)
+	    {
+	        Debug.LogWarning("No mining particle sprites assigned.");
+	        return null;
+	    }
+
+	    int randomIndex = Random.Range(0, MiningParticleSprites.Count);
+	    return MiningParticleSprites[randomIndex];
+	}
 }

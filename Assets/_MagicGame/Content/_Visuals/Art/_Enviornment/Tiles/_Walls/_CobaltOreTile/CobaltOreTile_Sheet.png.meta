@@ -627,6 +627,94 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: gibs_silver01
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 24
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1288d13642044504bf35eeb12e5ec9e
+      internalID: -1388353380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_silver02
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 26
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db452bce05590497eacc1bade284ab58
+      internalID: 662300017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_silver03
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 16
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29b59850eb58f4080bc267ee14b1fdb7
+      internalID: -154576731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_silver04
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 16
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8b413bc440224c4c896bf9ce57f3781
+      internalID: -2043000774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -665,6 +753,10 @@ TextureImporter:
       cobalt_ore_tiles_7: -704175517
       cobalt_ore_tiles_8: -1155768316
       cobalt_ore_tiles_9: 1512284513
+      gibs_silver01: -1388353380
+      gibs_silver02: 662300017
+      gibs_silver03: -154576731
+      gibs_silver04: -2043000774
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

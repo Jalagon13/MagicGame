@@ -389,6 +389,11 @@ MonoBehaviour:
       Data3: 820410264
       Data4: -1545463411
     Path: event:/World/OreBreak
+  <MiningParticleSprites>k__BackingField:
+  - {fileID: -1388353380, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}
+  - {fileID: 662300017, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}
+  - {fileID: -154576731, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}
+  - {fileID: -2043000774, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}
   <TopTileSingle>k__BackingField: {fileID: -511455213, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}
   <TopTileLeft>k__BackingField: {fileID: -2134649256, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}
   <TopTileCenter>k__BackingField: {fileID: 1820265310, guid: bc75a9dd81902455ab34323ae84a598b, type: 3}

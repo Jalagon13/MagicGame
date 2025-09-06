@@ -627,6 +627,94 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: gibs_dirt_stone01
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 42
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f91ed6b4043e4440a60fd32f84c33a7
+      internalID: 724744531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_dirt_stone02
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 42
+        width: 5
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96847da7e7b3a4d66aa78daa07402eab
+      internalID: 1271718917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_dirt_stone03
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c11ebbbbf5e964410ada1f05b8697248
+      internalID: -1754358464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_dirt_stone04
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e56b8f888565f42d1892ddf4b6290b20
+      internalID: -1958684112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -641,6 +729,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      gibs_dirt_stone01: 724744531
+      gibs_dirt_stone02: 1271718917
+      gibs_dirt_stone03: -1754358464
+      gibs_dirt_stone04: -1958684112
       stone_wall_tiles_0: -3347302374123360772
       stone_wall_tiles_1: -832688702
       stone_wall_tiles_10: -548639662

@@ -24,13 +24,12 @@ public class TileDestructionFeedbacks : MonoBehaviour
     public void PlayDestroyFeedbacks(TileDataSO previousTile)
     {
         // Split the default sprite into 4 quadrants and assign them to gibfabs
-        Sprite[] quads = CreateQuadrantSprites(previousTile.m_DefaultSprite);
         Debug.Log($"Name of tile being destroyed: {previousTile.m_DefaultSprite.name}");
         
         // Assign sprites to gibfabs
-        for (int i = 0; i < 4 && i < _gibfabs.Count; i++)
+        for (int i = 0; i < _gibfabs.Count; i++)
         {
-            _gibfabs[i].SetSprite(quads[i]);
+            _gibfabs[i].SetSprite(previousTile.GetRandomMiningParticleSprite());
         }
 
         // Play destruction feedbacks for the previous tile
@@ -51,8 +50,8 @@ public class TileDestructionFeedbacks : MonoBehaviour
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
 
             // Random velocity magnitude and initial upward speed
-            float randomVelocityMagnitude = Random.Range(1.5f, 4.5f);
-            float randomInitialUpwardSpeed = Random.Range(0f, 0.125f);
+            float randomVelocityMagnitude = Random.Range(2f, 5.25f);
+            float randomInitialUpwardSpeed = Random.Range(0f, 0.135f);
 
             // Launch gib with steadily increasing height
             _gibfabs[i].LaunchGib(randomInitialUpwardSpeed, currentHeight, direction * randomVelocityMagnitude);
@@ -65,53 +64,12 @@ public class TileDestructionFeedbacks : MonoBehaviour
         tsa.enabled = true;
         tsa.mode = ParticleSystemAnimationMode.Sprites;
         tsa.RemoveSprite(0);
-        for (int i = 0; i < quads.Length; i++)
+        for (int i = 0; i < 6; i++)
         {
-            tsa.AddSprite(quads[i]);
+            tsa.AddSprite(previousTile.GetRandomMiningParticleSprite());
         }
         _destroyParticles.Play();
 
         Destroy(gameObject, 4f); // Destroy this feedbacks object after 4 seconds
-    }
-
-    private Sprite[] CreateQuadrantSprites(Sprite original)
-    {
-        Texture2D tex = original.texture;
-        Rect rect = original.rect;
-
-        float halfWidth = rect.width / 2f;
-        float halfHeight = rect.height / 2f;
-
-        // Create new textures for each quadrant and assign them to sprites
-        Texture2D[] quadTextures = new Texture2D[4];
-
-        // Top-left
-        quadTextures[0] = new Texture2D((int)halfWidth, (int)halfHeight);
-        quadTextures[0].SetPixels(tex.GetPixels((int)rect.x, (int)(rect.y + halfHeight), (int)halfWidth, (int)halfHeight));
-        quadTextures[0].Apply();
-
-        // Top-right
-        quadTextures[1] = new Texture2D((int)halfWidth, (int)halfHeight);
-        quadTextures[1].SetPixels(tex.GetPixels((int)(rect.x + halfWidth), (int)(rect.y + halfHeight), (int)halfWidth, (int)halfHeight));
-        quadTextures[1].Apply();
-
-        // Bottom-left
-        quadTextures[2] = new Texture2D((int)halfWidth, (int)halfHeight);
-        quadTextures[2].SetPixels(tex.GetPixels((int)rect.x, (int)rect.y, (int)halfWidth, (int)halfHeight));
-        quadTextures[2].Apply();
-
-        // Bottom-right
-        quadTextures[3] = new Texture2D((int)halfWidth, (int)halfHeight);
-        quadTextures[3].SetPixels(tex.GetPixels((int)(rect.x + halfWidth), (int)rect.y, (int)halfWidth, (int)halfHeight));
-        quadTextures[3].Apply();
-
-        // Create sprites from new textures
-        Sprite[] quads = new Sprite[4];
-        for (int i = 0; i < 4; i++)
-        {
-            quads[i] = Sprite.Create(quadTextures[i], new Rect(0, 0, quadTextures[i].width, quadTextures[i].height), new Vector2(0.5f, 0.5f), original.pixelsPerUnit);
-        }
-
-        return quads;
     }
 }
