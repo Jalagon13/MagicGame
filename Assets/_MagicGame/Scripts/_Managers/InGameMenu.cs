@@ -43,13 +43,11 @@ public class InGameMenu : MonoBehaviour
         }
     }
     
-    public void OpenCraftingMenu(RecipeDataBaseObject recipeDataBase, GameObject menuSourceGO)
+    public void OpenCraftingMenu(GameObject craftingMenuUI, GameObject menuSourceGO)
     {
         ClearOldMenu();
 
-        CraftingMenuUI craftingMenuUI = _instantiateHandler.InstantiateCraftingMenu();
-        craftingMenuUI.CraftingTitleText.text = recipeDataBase.DatabaseName;
-        craftingMenuUI.PopulateCraftingMenuUI(recipeDataBase);
+        GameObject menu = _instantiateHandler.InstantiateCustomMenu(craftingMenuUI);
 
         _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
         DefaultCraftingMenu.SetActive(false);

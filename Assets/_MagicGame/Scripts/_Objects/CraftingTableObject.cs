@@ -7,12 +7,20 @@ using UnityEngine;
 public class CraftingTableObject : ResourceObject
 {
     [Header("Crafting Table Parameters")]
-    [field: SerializeField] public RecipeDataBaseObject CraftingRecipeDB { get; private set; }
-    [field: SerializeField] public WorldInput WorldInput { get; private set; }
+    [SerializeField] 
+    private GameObject _craftingMenuUI;
+    
+    [SerializeField] 
+    private WorldInput _worldInput;
     
     private void Start()
     {
         GameInput.Instance.OnSecondaryActionStarted += GameInput_OnSecondaryActionStarted;
+    }
+
+    private void OnDestroy()
+    {
+        GameInput.Instance.OnSecondaryActionStarted -= GameInput_OnSecondaryActionStarted;
     }
 
     private void GameInput_OnSecondaryActionStarted(object sender, EventArgs e)
@@ -20,14 +28,9 @@ public class CraftingTableObject : ResourceObject
         var centerPosition = new Vector2(transform.position.x + 0.5f, transform.position.y + 0.5f);
         var playerInRange = Vector2.Distance(Player.Instance.transform.position, centerPosition) <= ResourceDataSO.InteractDistance;
         
-        if (WorldInput.IsMouseOverIndputDetector() && playerInRange && !Pointer.IsOverUI())
+        if (_worldInput.IsMouseOverIndputDetector() && playerInRange && !Pointer.IsOverUI())
         {
-            InGameMenu.Instance.OpenCraftingMenu(CraftingRecipeDB, gameObject);
+            InGameMenu.Instance.OpenCraftingMenu(_craftingMenuUI, gameObject);
         }
-    }
-
-    private void OnDestroy()
-    {
-        GameInput.Instance.OnSecondaryActionStarted -= GameInput_OnSecondaryActionStarted;
     }
 }

@@ -9,11 +9,20 @@ using UnityEngine.UI;
 
 public class CraftNodeUI : MonoBehaviour
 {
-	[SerializeField] private Image _outputImage;
-	[SerializeField] private TextMeshProUGUI _outputAmountText;
-	[SerializeField] private Button _craftButton;
-	
+	[SerializeField]
 	private RecipeSO _recipeSO;
+	
+	[Header("Dependencies")]
+	[SerializeField] 
+	private Image _outputImage;
+	
+	[SerializeField] 
+	private TextMeshProUGUI _outputAmountText;
+	
+	[SerializeField] 
+	private Button _craftButton;
+	
+	
 	private bool _canCraft, _hovered;
 	
 	private void OnDisable()
@@ -31,10 +40,17 @@ public class CraftNodeUI : MonoBehaviour
 
     private void Start()
 	{
+		Initialize(_recipeSO);
+
 		InventoryManager.Instance.OnInventoryUpdated += UpdateCraftStatus;
 	}
 
-    private void UpdateCraftStatus(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
+	private void OnDestroy()
+	{
+		InventoryManager.Instance.OnInventoryUpdated -= UpdateCraftStatus;
+	}
+
+	private void UpdateCraftStatus(object sender, InventoryManager.OnInventoryUpdatedEventArgs e)
     {
 		UpdateCraftStatus();
 	}
@@ -78,10 +94,5 @@ public class CraftNodeUI : MonoBehaviour
 		// Edit CraftNodeView visuals depending on _canCraft
 		_craftButton.interactable = _canCraft;
 		// ...
-	}
-	
-	private void OnDestroy()
-	{
-		InventoryManager.Instance.OnInventoryUpdated -= UpdateCraftStatus;
 	}
 }

@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class InGameMenuReferenceHolder : MonoBehaviour
 {
-    [field: SerializeField] public GameObject CraftingMenuPrefab { get; private set; }
     [field: SerializeField] public GameObject ChestMenuPrefab { get; private set; }
     [field: SerializeField] public GameObject WandInspectorMenuPrefab { get; private set; }
     [field: SerializeField] public GameObject NpcMenuPrefab { get; private set; }

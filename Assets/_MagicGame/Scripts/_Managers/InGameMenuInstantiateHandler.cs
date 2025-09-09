@@ -9,11 +9,10 @@ public class InGameMenuInstantiateHandler : MonoBehaviour
         _inGameMenuReferenceHolder = GetComponent<InGameMenuReferenceHolder>();
     }
     
-    public CraftingMenuUI InstantiateCraftingMenu()
+    public GameObject InstantiateCustomMenu(GameObject customMenuPrefab)
     {
-        GameObject craftingMenuUI = Instantiate(_inGameMenuReferenceHolder.CraftingMenuPrefab, transform);
-        
-        return craftingMenuUI.GetComponent<CraftingMenuUI>();
+        GameObject customMenuUI = Instantiate(customMenuPrefab, transform);
+        return customMenuUI;
     }
 
     public ChestMenuUI InstantiateChestMenu()

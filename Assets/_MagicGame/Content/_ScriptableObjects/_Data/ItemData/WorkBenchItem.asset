@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7aded7ceac2467a95225af72ed6b1a, type: 3}
   m_Name: WorkBenchItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Work Bench
-  <UiDisplay>k__BackingField: {fileID: 1147903491, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <InGameName>k__BackingField: Work Bench
+  <StringID>k__BackingField: workbench
+  <UiDisplay>k__BackingField: {fileID: 1014094090, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
   <GoldValue>k__BackingField: 12
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  _deployObjectPrefab: {fileID: 6290587451616296401, guid: e9eb770362141454f8cd8a3e777aa608, type: 3}
+  _resourceData: {fileID: 11400000, guid: ff3bd4cbbd37949dcb4ce6c728a5dbb4, type: 2}
