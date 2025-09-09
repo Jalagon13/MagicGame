@@ -6540,7 +6540,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9b8248d8725846799928a477bb12aff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <CraftingMenuPrefab>k__BackingField: {fileID: 9166478209638812033, guid: 6ed284abb0c314a6aa2a6d945c9714b7, type: 3}
   <ChestMenuPrefab>k__BackingField: {fileID: 9166478209638812033, guid: 7c301b64c59f747d6b7047bd0fcd655f, type: 3}
   <WandInspectorMenuPrefab>k__BackingField: {fileID: 6345806169929071140, guid: 7a44d8c6d25294c69ae4c4d703e5fddf, type: 3}
   <NpcMenuPrefab>k__BackingField: {fileID: 9166478209638812033, guid: 8524048e89db8441b8eb76dd2756588b, type: 3}
@@ -13608,6 +13607,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 02e6019387ab643d496e9e121cc6e278, type: 2}
   - {fileID: 11400000, guid: 198ec7423c329484caa893f680e724b6, type: 2}
   - {fileID: 11400000, guid: ff3bd4cbbd37949dcb4ce6c728a5dbb4, type: 2}
+  - {fileID: 11400000, guid: 23a8033ef91ef423daec2c609acf104b, type: 2}
+  - {fileID: 11400000, guid: dd9810e2317ed4e4cb5b881a200ee220, type: 2}
   _tileData:
   - {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
   - {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
@@ -13635,6 +13636,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 86cb8623724924d17ae00c150259df3d, type: 2}
   - {fileID: 11400000, guid: 948cd40c3b143404aa76b1fbde01f383, type: 2}
   - {fileID: 11400000, guid: d3be2b9539bc040428db5097cea0bed6, type: 2}
+  - {fileID: 11400000, guid: 9e26e0145233d498ab9936ca8144a7e5, type: 2}
+  - {fileID: 11400000, guid: 69e56cd3052a345a8a60b0a50e39e3f4, type: 2}
 --- !u!1 &1832040324
 GameObject:
   m_ObjectHideFlags: 0

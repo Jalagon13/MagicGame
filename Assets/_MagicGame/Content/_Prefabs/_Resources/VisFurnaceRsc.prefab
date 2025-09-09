@@ -123,7 +123,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 154920837247502213, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Name
-      value: wo_Forge
+      value: VisFurnaceRsc
       objectReference: {fileID: 0}
     - target: {fileID: 154920837247502213, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Layer
@@ -169,6 +169,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5441594633594964993, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+      propertyPath: _resourceObject
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -202,6 +206,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 6290587451616296401}
   m_SourcePrefab: {fileID: 100100000, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+--- !u!114 &2928187850182680907 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5441594633594964993, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
+  m_PrefabInstance: {fileID: 7144800455931555146}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deb3a23fd5c63404b82d91a57ae0678f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4761154329330110275 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2392654451137683977, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
@@ -224,35 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd0317ec138084df9b0828660d7c4d81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <WorldObjectName>k__BackingField: Forge
-  <Hardness>k__BackingField: 1.25
-  <PassThrough>k__BackingField: 0
-  <CanBeDestroyed>k__BackingField: 1
-  <Table>k__BackingField:
-  - Item: {fileID: 11400000, guid: 9e26e0145233d498ab9936ca8144a7e5, type: 2}
-    Min: 1
-    Max: 1
-    Chance: 100
-  <MiningSound>k__BackingField:
-    Guid:
-      Data1: 249587751
-      Data2: 1169178929
-      Data3: -130389574
-      Data4: -1987048442
-    Path: event:/StoneHit
-  <ResourceDestroyed>k__BackingField:
-    Guid:
-      Data1: -557428352
-      Data2: 1107459471
-      Data3: 2078279570
-      Data4: 643237060
-    Path: event:/StoneDestroyed
-  <PlaceSound>k__BackingField:
-    Guid:
-      Data1: -281162869
-      Data2: 1160666795
-      Data3: -1901462113
-      Data4: -244489252
-    Path: event:/Thump
-  <CraftingRecipeDB>k__BackingField: {fileID: 11400000, guid: d76e02cadd86940e49bef8c1798390fe, type: 2}
-  <WorldInput>k__BackingField: {fileID: 5672824818914870251}
+  _resourceData: {fileID: 11400000, guid: 23a8033ef91ef423daec2c609acf104b, type: 2}
+  _resourceFeedback: {fileID: 2928187850182680907}
+  _craftingMenuUI: {fileID: 9166478209638812033, guid: c89a8f1572e324b148b1602fce7fdc71, type: 3}
+  _worldInput: {fileID: 5672824818914870251}

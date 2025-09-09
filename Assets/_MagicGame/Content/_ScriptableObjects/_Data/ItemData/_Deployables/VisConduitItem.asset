@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a7aded7ceac2467a95225af72ed6b1a, type: 3}
-  m_Name: ForgeItem
+  m_Name: VisConduitItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Forge
-  <UiDisplay>k__BackingField: {fileID: -1644608659, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
-  <GoldValue>k__BackingField: 5
+  <InGameName>k__BackingField: Vis Conduit
+  <StringID>k__BackingField: visconduit
+  <UiDisplay>k__BackingField: {fileID: -443529757, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
+  <GoldValue>k__BackingField: 12
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  _deployObjectPrefab: {fileID: 6290587451616296401, guid: 74c8697574aa94375aac49798c88ceef, type: 3}
+  _resourceData: {fileID: 11400000, guid: dd9810e2317ed4e4cb5b881a200ee220, type: 2}
