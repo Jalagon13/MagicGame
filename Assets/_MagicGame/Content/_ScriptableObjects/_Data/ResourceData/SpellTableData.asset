@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5d4e45105852413c9fb3508bbf2b3c1, type: 3}
-  m_Name: VisConduitData
+  m_Name: SpellTableData
   m_EditorClassIdentifier: 
   StringID: visconduit
   PassThrough: 1

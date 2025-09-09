@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c165b42f9814629a98a34f3f8f19c8, type: 3}
   m_Name: WoodWallItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Wood Wall
-  <UiDisplay>k__BackingField: {fileID: 67440230, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <InGameName>k__BackingField: Wood Wall
+  <StringID>k__BackingField: woodwall
+  <UiDisplay>k__BackingField: {fileID: -3348714016332750533, guid: 5d9b3ddca3c834037adf5c7c5f75820c, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 

@@ -1053,7 +1053,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3080180208402767522}
   m_Layer: 5
-  m_Name: VisConduitMenuUI
+  m_Name: SpellTableMenuUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

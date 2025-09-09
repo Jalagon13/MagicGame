@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7aded7ceac2467a95225af72ed6b1a, type: 3}
   m_Name: WoodChestItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Wood Chest
+  <InGameName>k__BackingField: Wood Chest
+  <StringID>k__BackingField: woodchest
   <UiDisplay>k__BackingField: {fileID: 2426947791168540418, guid: 0ed47c1efae5d4f2da0a01c32c7c6677, type: 3}
   <GoldValue>k__BackingField: 12
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  _deployObjectPrefab: {fileID: -590340910586133321, guid: 3bc37f5a996714e3c93136f78e87bc55, type: 3}
+  _resourceData: {fileID: 0}

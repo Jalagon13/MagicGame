@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7aded7ceac2467a95225af72ed6b1a, type: 3}
   m_Name: WoodDoorItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Wood Door
-  <UiDisplay>k__BackingField: {fileID: 730009004, guid: f8368a1fbfce54d21a2c15f756ba8e59, type: 3}
+  <InGameName>k__BackingField: Wood Door
+  <StringID>k__BackingField: wooddoor
+  <UiDisplay>k__BackingField: {fileID: -691286103, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
   <GoldValue>k__BackingField: 12
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  _deployObjectPrefab: {fileID: 590160871130149661, guid: c971db339f3074561aae8abe3ce5e3ad, type: 3}
+  _resourceData: {fileID: 11400000, guid: d23a8b048dd1141c5a4ae41e2227b86e, type: 2}
