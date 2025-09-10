@@ -87,7 +87,7 @@ public class CraftNodeUI : MonoBehaviour
 	
 	private void UpdateCraftStatus()
 	{
-		if(_recipeSO == null) return;
+		if(_recipeSO == null || InventoryManager.Instance == null) return;
 
 		_canCraft = InventoryManager.Instance.HasAllIngredients(_recipeSO.ResourceList);
 		

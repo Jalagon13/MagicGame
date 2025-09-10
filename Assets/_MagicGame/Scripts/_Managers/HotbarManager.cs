@@ -62,7 +62,7 @@ public class HotbarManager : MonoBehaviour
 	{
 		_focusInventoryItem = InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SelectedSlotIndex];
 		
-		if(_focusInventoryItem == null)
+		if(_focusInventoryItem == null || _focusInventoryItem.Item == null)
 		{
 			InvokeOnFocusItemSetEvent(GameDataRegistry.INVALID_ID, e.SelectedSlotIndex);
 		}
@@ -76,7 +76,7 @@ public class HotbarManager : MonoBehaviour
 	{
 		_focusInventoryItem = InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SelectedSlotIndex];
 		
-		if(_focusInventoryItem == null)
+		if(_focusInventoryItem == null || _focusInventoryItem.Item == null)
 		{
 			InvokeOnFocusItemSetEvent(GameDataRegistry.INVALID_ID, e.SelectedSlotIndex);
 		}

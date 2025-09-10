@@ -80,6 +80,7 @@ public abstract class ServerSpell : NetworkBehaviour
         transform.position = spawnPoint;
         _finalDirection = finalDirection;
         
+        // TODO: This might be bugged somewhere when the spell spawns im automatically ending its lifetime somewhere. Need to Log everything next time
         _lifetimeRoutine = StartCoroutine(SpellLifetimeRoutine());
     }
 
