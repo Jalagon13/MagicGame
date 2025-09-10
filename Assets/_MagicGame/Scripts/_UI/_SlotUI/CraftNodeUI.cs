@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class CraftNodeUI : MonoBehaviour
 {
 	[SerializeField]
-	private RecipeSO _recipeSO;
+	private RecipeDataSO _recipeSO;
 	
 	[Header("Dependencies")]
 	[SerializeField] 
@@ -55,7 +55,7 @@ public class CraftNodeUI : MonoBehaviour
 		UpdateCraftStatus();
 	}
 
-    public void Initialize(RecipeSO recipe)
+    public void Initialize(RecipeDataSO recipe)
 	{
 		_recipeSO = recipe;
 		_outputImage.sprite = _recipeSO.OutputItem.UiDisplay;

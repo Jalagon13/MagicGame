@@ -251,7 +251,7 @@ public class InventoryManager : MonoBehaviour
 		return true;
 	}
 	
-	public void TryToCraft(RecipeSO recipeSO)
+	public void TryToCraft(RecipeDataSO recipeSO)
 	{
 		InventoryItem mouseItem = _mouseItemModel.MouseInventoryItem;
 

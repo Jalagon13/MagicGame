@@ -158,7 +158,7 @@ namespace AdvancedTooltips.Core
 			+ $"<br>{spell.Speed}   speed", Color.white, fontSize: fontSize, customLayout: script.StatLayout);
 		}
 		
-		public static void CraftingRecipeDisplay(RecipeSO recipeSO, Transform customLayout = null, float fontSize = 10, float iconScale = 1)
+		public static void CraftingRecipeDisplay(RecipeDataSO recipeSO, Transform customLayout = null, float fontSize = 10, float iconScale = 1)
 		{
 			JustText($"{recipeSO.OutputItem.InGameName} Recipe for ({recipeSO.OutputAmount}):<br>", Color.white, fontSize: fontSize);
 
