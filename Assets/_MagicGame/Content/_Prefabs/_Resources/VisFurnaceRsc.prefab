@@ -241,5 +241,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _resourceData: {fileID: 11400000, guid: 23a8033ef91ef423daec2c609acf104b, type: 2}
   _resourceFeedback: {fileID: 2928187850182680907}
-  _craftingMenuUI: {fileID: 9166478209638812033, guid: c89a8f1572e324b148b1602fce7fdc71, type: 3}
+  _craftingMenuUI: {fileID: 9166478209638812033, guid: f9cd6eceef4e94fe5b624cfc8a3af9dc, type: 3}
   _worldInput: {fileID: 5672824818914870251}

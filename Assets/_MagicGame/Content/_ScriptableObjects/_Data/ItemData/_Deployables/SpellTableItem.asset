@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7aded7ceac2467a95225af72ed6b1a, type: 3}
   m_Name: SpellTableItem
   m_EditorClassIdentifier: 
-  <InGameName>k__BackingField: Vis Conduit
-  <StringID>k__BackingField: visconduit
+  <InGameName>k__BackingField: Spell Table
+  <StringID>k__BackingField: spelltable
   <UiDisplay>k__BackingField: {fileID: -443529757, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
   <GoldValue>k__BackingField: 12
   <Stackable>k__BackingField: 1

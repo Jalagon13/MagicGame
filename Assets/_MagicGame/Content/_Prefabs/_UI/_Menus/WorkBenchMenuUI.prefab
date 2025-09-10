@@ -1281,7 +1281,7 @@ PrefabInstance:
     - target: {fileID: 5551016306213243192, guid: 07f522f1df9a64cc6add5194c2ad95f0, type: 3}
       propertyPath: _recipeSO
       value: 
-      objectReference: {fileID: 11400000, guid: b4eaba770ba894825a5dad79d59771cc, type: 2}
+      objectReference: {fileID: 11400000, guid: 70fe2bf0957da4965adb80249259b470, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2023,7 +2023,7 @@ PrefabInstance:
     - target: {fileID: 5551016306213243192, guid: 07f522f1df9a64cc6add5194c2ad95f0, type: 3}
       propertyPath: _recipeSO
       value: 
-      objectReference: {fileID: 11400000, guid: 1c6fdcdd5cf454405bc493b8ef54b5be, type: 2}
+      objectReference: {fileID: 11400000, guid: 30fb1bc12d17f49819a877661bf2d0b5, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

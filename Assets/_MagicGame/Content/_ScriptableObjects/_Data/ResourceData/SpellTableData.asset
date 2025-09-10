@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5d4e45105852413c9fb3508bbf2b3c1, type: 3}
   m_Name: SpellTableData
   m_EditorClassIdentifier: 
-  StringID: visconduit
+  StringID: spelltable
   PassThrough: 1
   CanBeDestroyed: 1
-  ResourcePrefab: {fileID: 0}
+  ResourcePrefab: {fileID: 6290587451616296401, guid: c214c7aca12314abda7a4e3291adf050, type: 3}
   Hardness: 1
   ToolTypeNeededForHarvest: 0
   Table:

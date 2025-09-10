@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a7aded7ceac2467a95225af72ed6b1a, type: 3}
-  m_Name: VisFurnaceItem
+  m_Script: {fileID: 11500000, guid: d2639c94874c947ca9b3c0b265407970, type: 3}
+  m_Name: SilverRuneplate
   m_EditorClassIdentifier: 
-  <InGameName>k__BackingField: Vis Furnace
-  <StringID>k__BackingField: visfurnace
-  <UiDisplay>k__BackingField: {fileID: -1474684095, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
+  <InGameName>k__BackingField: Silver Runeplate
+  <StringID>k__BackingField: silverruneplate
+  <UiDisplay>k__BackingField: {fileID: 5524590292671962877, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
-  _resourceData: {fileID: 11400000, guid: 23a8033ef91ef423daec2c609acf104b, type: 2}

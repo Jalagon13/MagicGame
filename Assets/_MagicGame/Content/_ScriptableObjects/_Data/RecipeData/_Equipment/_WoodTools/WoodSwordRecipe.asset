@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55646a241e94b4a3a9d1cdf6e939102b, type: 3}
-  m_Name: SilkRecipe
+  m_Name: WoodSwordRecipe
   m_EditorClassIdentifier: 
-  OutputItem: {fileID: 11400000, guid: 04044fe07a04248d68caf80150e53108, type: 2}
+  OutputItem: {fileID: 11400000, guid: 9d30c9caf7d4c41fe97ee1850d87c8df, type: 2}
   OutputAmount: 1
   ResourceList:
-  - Item: {fileID: 11400000, guid: 2b1a63af7d46946fc92b75c764d94358, type: 2}
-    Quantity: 3
+  - Item: {fileID: 11400000, guid: 86cb8623724924d17ae00c150259df3d, type: 2}
+    Quantity: 5

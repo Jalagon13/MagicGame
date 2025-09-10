@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9486b8ae30ede473d930ac44d01ec3aa, type: 3}
   m_Name: WoodShovelItem
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Wood Shovel
+  <InGameName>k__BackingField: Wood Shovel
+  <StringID>k__BackingField: woodshovel
   <UiDisplay>k__BackingField: {fileID: 5544836521405195925, guid: 539b6686a978c4c08845afe71ddfe566, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 0
