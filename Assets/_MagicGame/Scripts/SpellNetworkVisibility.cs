@@ -30,7 +30,18 @@ public class SpellNetworkVisibility : NetworkBehaviour
 			HideSpell(NetworkManager.ServerClientId);
 		}
 	}
-	
+
+	public override void OnNetworkDespawn()
+	{
+		if (IsServer)
+		{
+			NetworkObject.CheckObjectVisibility -= InitialVisCheck;
+			NetworkManager.NetworkTickSystem.Tick -= SpellNetworkTick;
+		}
+
+		base.OnNetworkDespawn();
+	}
+
 	public void InitializeSpellNetwork(SyncSpellData syncSpellData)
 	{
 		_spell = GetComponent<ServerSpell>();
@@ -111,16 +122,5 @@ public class SpellNetworkVisibility : NetworkBehaviour
 		{
 			NetworkObject.NetworkHide(clientId);
 		}
-	}
-
-	public override void OnNetworkDespawn()
-	{
-		if (IsServer)
-		{
-			NetworkObject.CheckObjectVisibility -= InitialVisCheck;
-			NetworkManager.NetworkTickSystem.Tick -= SpellNetworkTick;
-		}
-
-		base.OnNetworkDespawn();
 	}
 }

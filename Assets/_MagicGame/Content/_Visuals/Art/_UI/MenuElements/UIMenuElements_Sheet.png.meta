@@ -242,7 +242,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ui_upgrade_slot
+      name: ui_menu_bg
       rect:
         serializedVersion: 2
         x: 28
@@ -251,7 +251,7 @@ TextureImporter:
         height: 20
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 2, y: 2, z: 2, w: 2}
       customData: 
       outline: []
       physicsShape: []
@@ -482,6 +482,7 @@ TextureImporter:
       ui_craft_slot: -1063686979
       ui_craft_tab: 1067556479
       ui_menu: -566747577
+      ui_menu_bg: 2112500626
       ui_menu_tab: -1386310693
       ui_symbol_craft: 1815619937
       ui_symbol_player: -1159362154
@@ -490,7 +491,6 @@ TextureImporter:
       ui_upgrade_construction: -1033066220
       ui_upgrade_mining: 373821493
       ui_upgrade_range: -203632381
-      ui_upgrade_slot: 2112500626
       ui_upgrade_woodcutting: 1515278701
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

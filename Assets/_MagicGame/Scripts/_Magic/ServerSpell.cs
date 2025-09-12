@@ -114,14 +114,16 @@ public abstract class ServerSpell : NetworkBehaviour
 
     public void EndSpellExternally()
     {
+        Debug.Log($"EndSpellExternally callback");
         if (!IsOwner || SpellStateNV.Value != SpellState.Casting)
             return;
-
+        
         StartCoroutine(EndSpellRoutine());
     }
 
     private IEnumerator EndSpellRoutine()
     {
+        Debug.Log($"EndSpellRoutine callback");
         if (_hasEnded) yield break;
         _hasEnded = true;
 
@@ -138,6 +140,7 @@ public abstract class ServerSpell : NetworkBehaviour
 
     public void CancelSpellCharge()
     {
+        Debug.Log($"CancelSpellCharge callback");
         OnSpellCanceled();
         
         SpellStateNV.Value = SpellState.Stopping;

@@ -126,6 +126,9 @@ public class SpellCaster : NetworkBehaviour
                     : (transform.position, transform.forward);
                 
                 OnRightBeforeSpellExecuted?.Invoke(this, new SpellExecutedEventArgs(_currentSpell));
+                
+                // NTFS: For some reason it is just now showing up
+                Debug.Log($"Actual Spell enabled?: {actualSpell.gameObject.activeInHierarchy}");
                 serverSpell.ExecuteSpellStart(finalSpawnPoint, finalDirection);
 
                 if (serverSpell.SpellData.Value.HoldToCast)

@@ -243,14 +243,27 @@ public class SpellCastController
 
     private void CheckForSelectedItemChange(object sender, HotbarManager.OnFocusItemSetEventArgs e)
     {
+        Debug.Log($"CheckForSelectedItemChange callback");
+        bool willCancel = true;
+    
         if(InventoryManager.Instance.SelectedItemExists(out InventoryItem inventoryItem))
         {
+            if(_selectedWandInventoryItem != null)
+            {
+                Debug.Log($"These the same? {inventoryItem.Id} {_selectedWandInventoryItem.Id}");
+            }
             if(_selectedWandInventoryItem != null && inventoryItem.Id == _selectedWandInventoryItem.Id) 
-                return;
+            {
+                Debug.Log($"Not canceling the cast because it is the same id");
+                Debug.Log($"1will cancel {willCancel}");
+                willCancel = false;
+            }
         }
+        Debug.Log($"2Will cancel {willCancel}");
         
-        if (_player.SpellCaster.IsCasting.Value)
+        if (_player.SpellCaster.IsCasting.Value && willCancel)
         {
+            Debug.Log($"3willCancel: {willCancel}");
             _player.SpellCaster.TryToCancelCast();
         }
     }
