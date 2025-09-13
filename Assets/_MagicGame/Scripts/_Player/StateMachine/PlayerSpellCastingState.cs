@@ -62,6 +62,6 @@ public class PlayerSpellCastingState : BaseState
     
     public override void ClientExitState(AIStateData stateData)
     {
-        _clientChargeVfx?.GetComponent<MagicCircle>().StopAnimation();
+        _clientChargeVfx?.GetComponent<MagicCircle>().StopAnimation(true);
     }
 }

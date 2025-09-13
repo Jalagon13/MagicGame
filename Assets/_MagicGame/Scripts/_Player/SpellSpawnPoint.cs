@@ -9,11 +9,13 @@ public class SpellSpawnPoint : MonoBehaviour
 
     private EventInstance _sustainedExtractionRaySoundEventInstance;
     private ParticleSystem _miningParticleSystem;
+    private MagicCircle _magicCircle;
     private bool _isMining;
 
     private void Awake()
     {
-        _miningParticleSystem = transform.GetChild(0).GetComponent<ParticleSystem>();
+        _magicCircle = transform.GetChild(0).GetComponent<MagicCircle>();
+        _miningParticleSystem = transform.GetChild(1).GetComponent<ParticleSystem>();
     }
 
     private void Start()
@@ -45,6 +47,7 @@ public class SpellSpawnPoint : MonoBehaviour
         // Handle mining started event
         _isMining = true;
         _sustainedExtractionRaySoundEventInstance.start();
+        _magicCircle.StartAnimation(0.25f);
         _miningParticleSystem.Play();
     }
 
@@ -54,5 +57,6 @@ public class SpellSpawnPoint : MonoBehaviour
         _isMining = false;
         _sustainedExtractionRaySoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         _miningParticleSystem.Stop();
+        _magicCircle.StopAnimation(false);
     }
 }

@@ -7157,11 +7157,9 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
     - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
   _startingItems:
-  - Item: {fileID: 11400000, guid: ca1b5b14cbb4545468fad1cb43e84ca2, type: 2}
-    Quantity: 1
-  - Item: {fileID: 11400000, guid: fe217e765840a43b5b9acff0a1269c2f, type: 2}
-    Quantity: 1
   - Item: {fileID: 11400000, guid: 5ed72337ffce74fdca523240f091195a, type: 2}
+    Quantity: 1
+  - Item: {fileID: 11400000, guid: 9d30c9caf7d4c41fe97ee1850d87c8df, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
     Quantity: 1
