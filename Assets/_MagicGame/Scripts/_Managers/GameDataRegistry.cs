@@ -116,7 +116,7 @@ public class GameDataRegistry : MonoBehaviour
     {
         if (tileId >= _tileData.Count || tileId < 0)
         {
-            Debug.LogError($"Invalid Tile ID: {tileId}");
+            // Debug.LogError($"Invalid Tile ID: {tileId}");
             return null;
         }
 

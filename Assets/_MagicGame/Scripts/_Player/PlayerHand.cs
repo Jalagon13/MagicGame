@@ -66,7 +66,7 @@ public class PlayerHand : NetworkBehaviour
 			}
 		}
 		
-		if((_heldItem is WandItemSO || _heldItem is SpellItemSO) && !IsSwinging && CastingDirection.Value != CardinalDirection.None)
+		if((_heldItem is WandItemSO || _heldItem is SpellItemSO || _heldItem is MiningSpellItemSO) && !IsSwinging && CastingDirection.Value != CardinalDirection.None)
 		{
 			_armPivotGO.transform.rotation = Quaternion.AngleAxis(AngleToMouse.Value, Vector3.forward);
 			SetPivotPosition(CastingDirection.Value);
@@ -77,7 +77,7 @@ public class PlayerHand : NetworkBehaviour
     {
 		_heldItem = GameDataRegistry.Instance.GetItemDataFromItemId(newValue);
 
-		_isHoldingWandOrSpell = _heldItem is WandItemSO || _heldItem is SpellItemSO;
+		_isHoldingWandOrSpell = _heldItem is WandItemSO || _heldItem is SpellItemSO || _heldItem is MiningSpellItemSO;
 		if(_isHoldingWandOrSpell)
 		{
 			float originalY = Mathf.Abs(SpellSpawnTransform.localPosition.y);

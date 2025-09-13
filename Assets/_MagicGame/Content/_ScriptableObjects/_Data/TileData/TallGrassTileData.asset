@@ -42,6 +42,11 @@ MonoBehaviour:
       Data3: -453350209
       Data4: 967977714
     Path: event:/LeafCrunch
+  <MiningParticleSprites>k__BackingField:
+  - {fileID: 5811767254019768959, guid: 7e893999705434bdf95d2463e7f88509, type: 3}
+  - {fileID: -1458627655167298386, guid: 7e893999705434bdf95d2463e7f88509, type: 3}
+  - {fileID: 5586595272869041545, guid: 7e893999705434bdf95d2463e7f88509, type: 3}
+  - {fileID: -1164810991571017520, guid: 7e893999705434bdf95d2463e7f88509, type: 3}
   <TopTileSingle>k__BackingField: {fileID: 0}
   <TopTileLeft>k__BackingField: {fileID: 0}
   <TopTileCenter>k__BackingField: {fileID: 0}

@@ -60,16 +60,19 @@ public class BreakingVisual : NetworkBehaviour
                 _breakingSr.enabled = true;
 
                 TileDataSO tileData = GameDataRegistry.Instance.GetTileDataFromTileId(_tileBreakingId.Value);
-                Debug.Log($"Breaking tile: {tileData}");
-                var tsa = _hitParticles.textureSheetAnimation;
-                tsa.enabled = true;
-                tsa.mode = ParticleSystemAnimationMode.Sprites;
-                for (int i = 0; i < tsa.spriteCount; i++)
+                if(tileData != null)
                 {
-                    tsa.SetSprite(i, tileData.GetRandomMiningParticleSprite());
+                    Debug.Log($"Breaking tile: {tileData}");
+                    var tsa = _hitParticles.textureSheetAnimation;
+                    tsa.enabled = true;
+                    tsa.mode = ParticleSystemAnimationMode.Sprites;
+                    for (int i = 0; i < tsa.spriteCount; i++)
+                    {
+                        tsa.SetSprite(i, tileData.GetRandomMiningParticleSprite());
+                    }
+
+                    _hitParticles.Play();
                 }
-                
-                _hitParticles.Play();
             }
             else
             {

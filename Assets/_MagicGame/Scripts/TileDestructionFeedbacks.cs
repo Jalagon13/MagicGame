@@ -23,9 +23,6 @@ public class TileDestructionFeedbacks : MonoBehaviour
 
     public void PlayDestroyFeedbacks(TileDataSO previousTile)
     {
-        // Split the default sprite into 4 quadrants and assign them to gibfabs
-        Debug.Log($"Name of tile being destroyed: {previousTile.m_DefaultSprite.name}");
-        
         // Assign sprites to gibfabs
         for (int i = 0; i < _gibfabs.Count; i++)
         {

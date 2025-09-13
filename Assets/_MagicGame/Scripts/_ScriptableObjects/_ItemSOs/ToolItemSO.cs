@@ -27,11 +27,6 @@ public class ToolItemSO : ItemDataSO
 		return _baseActionCooldown;
 	}
 
-	public bool PlayerWithinMiningRangeOfMouse()
-	{
-		return Vector2.Distance(Player.Instance.transform.position, ActionManager.MouseWorldPosition) <= MiningRange;
-	}
-
 	public override string GetDescription()
 	{
 		return Description;

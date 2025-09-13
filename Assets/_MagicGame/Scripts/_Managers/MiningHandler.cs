@@ -74,12 +74,12 @@ public class MiningHandler : MonoBehaviour
 
         _breakCooldownTimer.Tick(Time.deltaTime);
 
-        if(InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedItem) && selectedItem.Item is ToolItemSO toolItemSO)
+        if(InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedItem) && selectedItem.Item is MiningSpellItemSO miningSpellItemSO)
         {
-            _playerToolType = toolItemSO.ToolType;
-            
-            DetectTarget(toolItemSO);
-            HandleMiningLogic(toolItemSO);
+            _playerToolType = miningSpellItemSO.ToolType;
+
+            DetectTarget(miningSpellItemSO);
+            HandleMiningLogic(miningSpellItemSO);
         }
         else
         {
@@ -96,13 +96,13 @@ public class MiningHandler : MonoBehaviour
                InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem);
     }
 
-    private void DetectTarget(ToolItemSO toolItemSO)
+    private void DetectTarget(MiningSpellItemSO miningSpellItemSO)
     {
         _destructableFound = DestructableType.None;
         _selectedResourceToolType = ToolType.None;
         _currentBreakTargetPosition = null;
 
-        if (!toolItemSO.PlayerWithinMiningRangeOfMouse()) return;
+        if (!miningSpellItemSO.PlayerWithinMiningRangeOfMouse()) return;
 
         Vector3Int pos = ActionManager.MouseTilePosition;
         Vector3Int wallPos = Pointer.IsOverTopTile() ? pos + Vector3Int.down : pos;
@@ -138,7 +138,7 @@ public class MiningHandler : MonoBehaviour
         }
     }
 
-    private void HandleMiningLogic(ToolItemSO toolItemSO)
+    private void HandleMiningLogic(MiningSpellItemSO miningSpellItemSO)
     {
         bool wasMining = IsMining;
 
@@ -150,7 +150,7 @@ public class MiningHandler : MonoBehaviour
         {
             if (!IsMining)
             {
-                BeginMining(toolItemSO);
+                BeginMining(miningSpellItemSO);
             }
 
             if (IsMining)
@@ -180,7 +180,7 @@ public class MiningHandler : MonoBehaviour
         }
     }
 
-    private void BeginMining(ToolItemSO toolItemSO)
+    private void BeginMining(MiningSpellItemSO miningSpellItemSO)
     {
         IsMining = true;
         _originalBreakTargetPosition = _currentBreakTargetPosition;
@@ -192,7 +192,7 @@ public class MiningHandler : MonoBehaviour
             _ => 1f
         };
 
-        float totalTicks = hardness * 30f / Mathf.Max(toolItemSO.MiningPower, 0.1f);
+        float totalTicks = hardness * 30f / Mathf.Max(miningSpellItemSO.MiningPower, 0.1f);
         float totalMiningTime = totalTicks * 0.05f;
         _cachedTotalMiningTime = totalMiningTime;
 
