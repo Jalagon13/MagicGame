@@ -3,17 +3,9 @@ using UnityEngine;
 using System.Linq;
 using FMODUnity;
 
-public enum ToolType
+[CreateAssetMenu(fileName = "New Sword", menuName = "Create Item/New Sword")]
+public class SwordItemSO : ItemDataSO
 {
-	Pickaxe, Axe, Sword, Shovel, None
-}
-
-[CreateAssetMenu(fileName = "New Tool", menuName = "Create Item/New Tool")]
-public class ToolItemSO : ItemDataSO
-{
-	[field: SerializeField] public ToolType ToolType { get; private set; }
-	[field: SerializeField] public int MiningPower { get; private set; } = 1;
-	[field: SerializeField] public float MiningRange { get; private set; } = 4;
 	[field: SerializeField] public int Damage { get; private set; } = 4;
 	[field: SerializeField] public int Knockback { get; private set; } = 6;
 	[field: SerializeField] public float DetectionBetweenHitsDuration { get; private set; } = 0.05f;

@@ -21,8 +21,6 @@ public class ResourceDataSO : ScriptableObject
     [Header("Mining & Harvesting")]
     [Tooltip("Hardness value determining mining speed")]
     public float Hardness = 1f;
-    [Tooltip("Tool type required to harvest this resource")]
-    public ToolType ToolTypeNeededForHarvest;
 
     [Space]
     [Header("Loot & Drops")]

@@ -62,7 +62,6 @@ public class BreakingVisual : NetworkBehaviour
                 TileDataSO tileData = GameDataRegistry.Instance.GetTileDataFromTileId(_tileBreakingId.Value);
                 if(tileData != null)
                 {
-                    Debug.Log($"Breaking tile: {tileData}");
                     var tsa = _hitParticles.textureSheetAnimation;
                     tsa.enabled = true;
                     tsa.mode = ParticleSystemAnimationMode.Sprites;
@@ -95,7 +94,6 @@ public class BreakingVisual : NetworkBehaviour
         
         if(e.TileData != null)
         {
-            Debug.Log($"Tile Data in breaking visuals: {e.TileData}");
             _tileBreakingId.Value = GameDataRegistry.Instance.GetTileIdFromTileData(e.TileData);
         }
 

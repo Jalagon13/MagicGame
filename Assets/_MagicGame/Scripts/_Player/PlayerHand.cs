@@ -106,11 +106,11 @@ public class PlayerHand : NetworkBehaviour
 	
 	private void RefreshItemSprite()
 	{
-		_itemHeldSR.flipX = _heldItem is WandItemSO || _heldItem is ToolItemSO;
+		_itemHeldSR.flipX = _heldItem is WandItemSO || _heldItem is SwordItemSO;
 		_itemHeldSR.sprite = _heldItem switch
 		{
 			WandItemSO wand => wand.UiDisplay,
-			ToolItemSO tool => tool.UiDisplay,
+			SwordItemSO tool => tool.UiDisplay,
 			_ => null
 		};
 	}

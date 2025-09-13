@@ -18,7 +18,6 @@ public class TileDataSO : RuleTile
 	[Tooltip("Name of the resource world object")]
 	public string StringID;
 	[field: SerializeField] public TileType TileType { get; private set; }
-	[field: SerializeField] public ToolType ToolTypeNeededForHarvest { get; private set; }
 	[field: SerializeField] public float Hardness { get; private set; } = 0.65f;
 	[field: SerializeField] public List<Loot> ItemDropTable { get; private set; }
 	

@@ -48,7 +48,6 @@ public class MiningHandler : MonoBehaviour
     private Vector3Int? _originalBreakTargetPosition = null;
     private bool _placeDelayActive;
     private float _cachedTotalMiningTime;
-    private ToolType _playerToolType, _selectedResourceToolType;
 
     private void Awake()
     {
@@ -76,14 +75,8 @@ public class MiningHandler : MonoBehaviour
 
         if(InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedItem) && selectedItem.Item is MiningSpellItemSO miningSpellItemSO)
         {
-            _playerToolType = miningSpellItemSO.ToolType;
-
             DetectTarget(miningSpellItemSO);
             HandleMiningLogic(miningSpellItemSO);
-        }
-        else
-        {
-            _playerToolType = ToolType.None;
         }
     }
 
@@ -99,7 +92,6 @@ public class MiningHandler : MonoBehaviour
     private void DetectTarget(MiningSpellItemSO miningSpellItemSO)
     {
         _destructableFound = DestructableType.None;
-        _selectedResourceToolType = ToolType.None;
         _currentBreakTargetPosition = null;
 
         if (!miningSpellItemSO.PlayerWithinMiningRangeOfMouse()) return;
@@ -111,7 +103,6 @@ public class MiningHandler : MonoBehaviour
         {
             _resourceSelected = wo;
             _destructableFound = DestructableType.WorldObject;
-            _selectedResourceToolType = wo.Data.ToolTypeNeededForHarvest;
             _currentBreakTargetPosition = pos;
         }
         else if (TileManager.Instance.WallTm.HasTile(wallPos))
@@ -121,7 +112,6 @@ public class MiningHandler : MonoBehaviour
                 : GameDataRegistry.Instance.GetTileDataFromTileBase(TileManager.Instance.WallTm.GetTile(wallPos));
 
             _destructableFound = DestructableType.Tile;
-            _selectedResourceToolType = _tileSelected.ToolTypeNeededForHarvest;
             _currentBreakTargetPosition = wallPos;
         }
         else if (TileManager.Instance.FloorTm.HasTile(pos))
@@ -129,7 +119,6 @@ public class MiningHandler : MonoBehaviour
             _tileSelected = GameDataRegistry.Instance.GetTileDataFromTileBase(TileManager.Instance.FloorTm.GetTile(pos));
 
             _destructableFound = DestructableType.Tile;
-            _selectedResourceToolType = _tileSelected.ToolTypeNeededForHarvest;
             _currentBreakTargetPosition = pos;
         }
         else
@@ -146,7 +135,7 @@ public class MiningHandler : MonoBehaviour
         {
             IsMining = false;
         }
-        else if (GameInput.Instance.GetPrimaryHeldDown() && _selectedResourceToolType == _playerToolType)
+        else if (GameInput.Instance.GetPrimaryHeldDown())
         {
             if (!IsMining)
             {

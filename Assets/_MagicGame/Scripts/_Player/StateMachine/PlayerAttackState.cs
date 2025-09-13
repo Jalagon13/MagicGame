@@ -6,7 +6,7 @@ public class PlayerAttackState : BaseState
 {
     private PlayerStateMachine _ctx;
     private float _swingCd;
-    private ToolItemSO _toolItemSO;
+    private SwordItemSO _toolItemSO;
     private CardinalDirection _swingDirection;
 
     public PlayerAttackState(AIState key, StateMachine context) : base(key, context)
@@ -18,7 +18,7 @@ public class PlayerAttackState : BaseState
     protected override void EnterState(AIStateData stateData)
     {
         // Debug.Log("Player entering swing");
-        _toolItemSO = _ctx.HeldItem as ToolItemSO;
+        _toolItemSO = _ctx.HeldItem as SwordItemSO;
         _swingCd = _toolItemSO.SwingCooldown;
         _swingDirection = _ctx.PlayerRef.PlayerHand.AimDirection.Value;
         

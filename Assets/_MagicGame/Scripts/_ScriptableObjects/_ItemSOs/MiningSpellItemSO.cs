@@ -4,9 +4,6 @@ using UnityEngine;
 public class MiningSpellItemSO : ItemDataSO
 {
     [field: SerializeField] 
-    public ToolType ToolType { get; private set; }
-
-    [field: SerializeField] 
     public int MiningPower { get; private set; } = 1;
     
     [field: SerializeField] 

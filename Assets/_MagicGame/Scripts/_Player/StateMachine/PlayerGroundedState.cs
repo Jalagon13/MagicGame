@@ -24,7 +24,7 @@ public class PlayerGroundedState : BaseState
 
     public override void CheckSwitchStates()
     {
-        if(_ctx.HeldItem is ToolItemSO && _ctx.SwingCooldownTimer.PercentRemaining <= 0 && GameInput.Instance.GetPrimaryHeldDown() && !Pointer.IsOverUI() && !Pointer.IsOverInteractable())
+        if(_ctx.HeldItem is SwordItemSO && _ctx.SwingCooldownTimer.PercentRemaining <= 0 && GameInput.Instance.GetPrimaryHeldDown() && !Pointer.IsOverUI() && !Pointer.IsOverInteractable())
         {
             SwitchState(new AIStateData(AIState.Attacking));
         }
