@@ -31,22 +31,29 @@ public class BreakingVisual : NetworkBehaviour
     {
         if(IsOwner)
         {
-            MiningHandler.Instance.OnMiningStarted += MiningStarted;
-            MiningHandler.Instance.OnMiningStopped += MiningStopped;
+            MiningManager.Instance.OnMiningStarted += MiningStarted;
+            MiningManager.Instance.OnMiningStopped += MiningStopped;
         }
 
         _isVisible.OnValueChanged += OnVisibleChanged;
+        _tileBreakingId.OnValueChanged += OnTileBreakingIdChanged;
     }
 
     public override void OnNetworkDespawn()
     {
         if (IsOwner)
         {
-            MiningHandler.Instance.OnMiningStarted -= MiningStarted;
-            MiningHandler.Instance.OnMiningStopped -= MiningStopped;
+            MiningManager.Instance.OnMiningStarted -= MiningStarted;
+            MiningManager.Instance.OnMiningStopped -= MiningStopped;
         }
 
         _isVisible.OnValueChanged -= OnVisibleChanged;
+        _tileBreakingId.OnValueChanged -= OnTileBreakingIdChanged;
+    }
+
+    private void MiningStopped(object sender, EventArgs e)
+    {
+        _isVisible.Value = false;
     }
 
     private void OnVisibleChanged(bool previousValue, bool newValue)
@@ -59,19 +66,7 @@ public class BreakingVisual : NetworkBehaviour
                 _breakingSr.sortingOrder = _sortingOrder;
                 _breakingSr.enabled = true;
 
-                TileDataSO tileData = GameDataRegistry.Instance.GetTileDataFromTileId(_tileBreakingId.Value);
-                if(tileData != null)
-                {
-                    var tsa = _hitParticles.textureSheetAnimation;
-                    tsa.enabled = true;
-                    tsa.mode = ParticleSystemAnimationMode.Sprites;
-                    for (int i = 0; i < tsa.spriteCount; i++)
-                    {
-                        tsa.SetSprite(i, tileData.GetRandomMiningParticleSprite());
-                    }
-
-                    _hitParticles.Play();
-                }
+                _hitParticles.Play();
             }
             else
             {
@@ -88,7 +83,7 @@ public class BreakingVisual : NetworkBehaviour
         }
     }
 
-    private void MiningStarted(object sender, MiningHandler.MiningStartedEventArgs e)
+    private void MiningStarted(object sender, MiningManager.MiningStartedEventArgs e)
     {
         _sortingOrder = 0;
         
@@ -97,7 +92,7 @@ public class BreakingVisual : NetworkBehaviour
             _tileBreakingId.Value = GameDataRegistry.Instance.GetTileIdFromTileData(e.TileData);
         }
 
-        if (e.DestructableType == DestructableType.Tile)
+        if (e.TileData != null)
         {
             if(TileManager.Instance.HasTile(e.BreakTargetPosition + Vector3Int.down, TileType.Wall, out TileDataSO belowWallTile))
             {
@@ -136,8 +131,21 @@ public class BreakingVisual : NetworkBehaviour
         _isVisible.Value = true;
     }
 
-    private void MiningStopped(object sender, EventArgs e)
+    private void OnTileBreakingIdChanged(ushort previousValue, ushort newValue)
     {
-        _isVisible.Value = false;
+        TileDataSO tileData = GameDataRegistry.Instance.GetTileDataFromTileId(newValue);
+        if (tileData != null)
+        {
+            Debug.Log($"Changing tile breaking ID from {previousValue} to {newValue}");
+            var tsa = _hitParticles.textureSheetAnimation;
+            tsa.enabled = true;
+            tsa.mode = ParticleSystemAnimationMode.Sprites;
+            for (int i = 0; i < tsa.spriteCount; i++)
+            {
+                tsa.SetSprite(i, tileData.GetRandomMiningParticleSprite());
+            }
+        }
     }
 }
+
+    

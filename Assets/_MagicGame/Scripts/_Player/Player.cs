@@ -180,6 +180,8 @@ public class Player : NetworkBehaviour
 	{
 		if (IsOwner)
 		{
+			if(SelectedItemId.Value == e.SelectedItemId || e.SelectedItemId == GameDataRegistry.INVALID_ID) return;
+
 			// NTFS: Network variables onvaluechanged is only executed if the value is different from the current value
 			SelectedItemId.Value = e.SelectedItemId;
 		}

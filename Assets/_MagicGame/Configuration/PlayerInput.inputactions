@@ -300,12 +300,12 @@
                 },
                 {
                     "name": "Scroll",
-                    "type": "PassThrough",
+                    "type": "Value",
                     "id": "cfb5d8fa-9046-4b6b-a10f-613add295bbd",
                     "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [

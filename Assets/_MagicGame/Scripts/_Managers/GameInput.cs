@@ -48,7 +48,7 @@ public class GameInput : NetworkBehaviour
 		_playerInput.Player.Move.performed += PlayerInput_OnMove;
 		_playerInput.Player.Move.canceled += PlayerInput_OnMove;
 		_playerInput.Player.ToggleInventory.started += PlayerInput_OnToggleInventory;
-		_playerInput.Hotbar.Scroll.performed += PlayerInput_OnScroll;
+		_playerInput.Hotbar.Scroll.started += PlayerInput_OnScroll;
 		_playerInput.Hotbar._1.started += PlayerInput_SlotSelected;
 		_playerInput.Hotbar._2.started += PlayerInput_SlotSelected;
 		_playerInput.Hotbar._3.started += PlayerInput_SlotSelected;
@@ -59,7 +59,7 @@ public class GameInput : NetworkBehaviour
 		_playerInput.Hotbar._8.started += PlayerInput_SlotSelected;
 		_playerInput.Hotbar._9.started += PlayerInput_SlotSelected;
 		_playerInput.Player.PrimaryAction.started += PlayerInput_PrimaryAction; 
-		_playerInput.Player.PrimaryAction.performed += PlayerInput_PrimaryAction; 
+		// _playerInput.Player.PrimaryAction.performed += PlayerInput_PrimaryAction; 
 		_playerInput.Player.PrimaryAction.canceled += PlayerInput_PrimaryAction; 
 		_playerInput.Player.SecondaryAction.started += PlayerInput_SecondaryActionStarted; 
 		_playerInput.Player.SecondaryAction.performed += PlayerInput_SecondaryAction; 

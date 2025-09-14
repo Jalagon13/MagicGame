@@ -36270,6 +36270,7 @@ MonoBehaviour:
       Data3: 1303084456
       Data4: 28021889
     Path: event:/Magic/SustainedElectricity
+  _miningParticleSystem: {fileID: 5053628560358272627}
 --- !u!1 &6449608859788415041
 GameObject:
   m_ObjectHideFlags: 0

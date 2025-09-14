@@ -33,7 +33,11 @@ public class HotbarManager : MonoBehaviour
 	{
 		bool mouseHasItem = InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item != null;
 		
-		_focusInventoryItem = mouseHasItem ? InventoryManager.Instance.GetMouseItem().MouseInventoryItem : InventoryManager.Instance.GetInventoryModel().InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
+		var selectedItem = mouseHasItem ? InventoryManager.Instance.GetMouseItem().MouseInventoryItem : InventoryManager.Instance.GetInventoryModel().InventoryItems[GameInput.Instance.GetSelectedSlotIndex()];
+		
+		if(_focusInventoryItem == selectedItem) return;
+		
+		_focusInventoryItem = selectedItem;
 		if(mouseHasItem)
 		{
 			InvokeOnFocusItemSetEvent(GameDataRegistry.Instance.GetItemIdFromItemData(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item), -1);
