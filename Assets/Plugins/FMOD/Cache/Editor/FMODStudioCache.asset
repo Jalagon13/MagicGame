@@ -278,7 +278,7 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638926647936935885
+  lastModified: 638935256802277840
   FileSizes:
   - Name: Desktop
     Value: 3619520
@@ -688,6 +688,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-1159350074183954988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Magic/SustainedElectricity 2
+  m_EditorClassIdentifier: 
+  Path: event:/Magic/SustainedElectricity 2
+  Guid:
+    Data1: -1217189635
+    Data2: 1099602521
+    Data3: 1378047888
+    Data4: -215157857
+  Banks:
+  - {fileID: -467104696155213177}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5000
 --- !u!114 &-961492354960494440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -757,10 +784,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Magic.bank
   Name: Magic
   StudioPath: bank:/Magic
-  lastModified: 638895528941335899
+  lastModified: 638935260392263941
   FileSizes:
   - Name: Desktop
-    Value: 440352
+    Value: 547712
   Exists: 1
 --- !u!114 &-326097733281759104
 MonoBehaviour:
@@ -878,12 +905,13 @@ MonoBehaviour:
   - {fileID: -4187424807725185675}
   - {fileID: 8993295446187482387}
   - {fileID: -3130647307026079644}
+  - {fileID: -1159350074183954988}
   EditorParameters: []
   MasterBanks:
   - {fileID: -5118738364778561889}
   StringsBanks:
   - {fileID: 5143058463646552385}
-  cacheTime: 638927548965300708
+  cacheTime: 638935260392263941
   cacheVersion: 131623
 --- !u!114 &1299394522513603259
 MonoBehaviour:
@@ -1264,10 +1292,10 @@ MonoBehaviour:
   Path: /Users/jalagon/Projects/FableForge/Assets/_MagicGame/Content/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638926647936965180
+  lastModified: 638935256802324794
   FileSizes:
   - Name: Desktop
-    Value: 3200
+    Value: 3244
   Exists: 1
 --- !u!114 &5242794587038571529
 MonoBehaviour:

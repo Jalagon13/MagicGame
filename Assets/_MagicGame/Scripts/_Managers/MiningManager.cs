@@ -47,11 +47,12 @@ public class MiningManager : MonoBehaviour
 
     private Vector2Int? _lastCheckedTilePosition = null;
     private Coroutine _currentMiningCoroutine;
-    private bool _tinyDelayOnGoing;
+    private Timer _breakCooldownTimer;
 
     private void Awake()
     {
         Instance = this;
+        _breakCooldownTimer = new(_breakCooldownDuration);
     }
     
     private void Start()
@@ -65,10 +66,15 @@ public class MiningManager : MonoBehaviour
         HotbarManager.Instance.OnFocusSlotUpdated -= DetectMiningSpell;
         GameInput.Instance.OnPrimaryAction -= DetectMiningInput;
     }
+    
+    private void Update()
+    {
+        _breakCooldownTimer.Tick(Time.deltaTime);
+    }
 
     private void CheckForMineables()
     {
-        if (_currentMiningSpellItemSO == null || !_currentMiningSpellItemSO.PlayerWithinMiningRangeOfMouse())
+        if (_currentMiningSpellItemSO == null || !_currentMiningSpellItemSO.PlayerWithinMiningRangeOfMouse() || _breakCooldownTimer.RemainingSeconds > 0)
             return;
 
         Vector2Int currentPos = (Vector2Int)ActionManager.MouseTilePosition;
@@ -76,17 +82,22 @@ public class MiningManager : MonoBehaviour
         // Start a new mining sequence if we're on a new tile or if the current mining coroutine has ended
         if (_lastCheckedTilePosition == null || currentPos != _lastCheckedTilePosition.Value || _currentMiningCoroutine == null)
         {
-            _lastCheckedTilePosition = currentPos;
-
             // Stop the previous mining coroutine if it exists
             if (_currentMiningCoroutine != null)
             {
                 StopCoroutine(_currentMiningCoroutine);
+                OnMiningStopped?.Invoke(this, EventArgs.Empty);
+                _currentMiningCoroutine = null;
+                _breakCooldownTimer.Reset();
             }
-
-            if (!TryMineResource(currentPos))
+            else 
             {
-                TryMineWall(currentPos);
+                _lastCheckedTilePosition = currentPos;
+
+                if (!TryMineResource(currentPos))
+                {
+                    TryMineWall(currentPos);
+                }
             }
         }
     }

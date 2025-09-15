@@ -24,6 +24,7 @@ public class BreakingVisual : NetworkBehaviour
         _breakingAnimator = transform.GetChild(0).GetComponent<Animator>();
         _breakingSr = transform.GetChild(0).GetComponent<SpriteRenderer>();
         _hitParticles = transform.GetChild(1).GetComponent<ParticleSystem>();
+        _hitParticles.gameObject.SetActive(false);
         _breakingSr.enabled = false;
     }
 
@@ -97,8 +98,9 @@ public class BreakingVisual : NetworkBehaviour
             if(TileManager.Instance.HasTile(e.BreakTargetPosition + Vector3Int.down, TileType.Wall, out TileDataSO belowWallTile))
             {
                 // There is a tile below the tile we are breaking
-                int tileIdOfTileBeingBroken = GameDataRegistry.Instance.GetTileIdFromTileData(TileManager.Instance.WallTm.GetTile<TileDataSO>(e.BreakTargetPosition));
-                int tileIdOfTileBelow = GameDataRegistry.Instance.GetTileIdFromTileData(belowWallTile);
+                TileDataSO tileData = TileManager.Instance.WallTm.GetTile<TileDataSO>(e.BreakTargetPosition);
+                ushort tileIdOfTileBeingBroken = tileData != null ? GameDataRegistry.Instance.GetTileIdFromTileData(tileData) : ushort.MaxValue;
+                ushort tileIdOfTileBelow = belowWallTile != null ? GameDataRegistry.Instance.GetTileIdFromTileData(belowWallTile) : ushort.MaxValue;
 
                 if(tileIdOfTileBeingBroken == tileIdOfTileBelow) // Same tile
                 {
@@ -144,6 +146,13 @@ public class BreakingVisual : NetworkBehaviour
             {
                 tsa.SetSprite(i, tileData.GetRandomMiningParticleSprite());
             }
+            
+            _hitParticles.gameObject.SetActive(true);
+        }
+        else
+        {
+            _hitParticles.Stop();
+            _hitParticles.gameObject.SetActive(false);
         }
     }
 }
