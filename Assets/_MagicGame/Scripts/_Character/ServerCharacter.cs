@@ -217,6 +217,8 @@ public class ServerCharacter : NetworkBehaviour
             float damageReduction = 1f;
             hpReceived = (int)(hpReceived * damageReduction);
             
+            hpReceived = Mathf.Clamp(hpReceived - _characterStats.Defense, 1, )
+            
             // Play damage numbers on client
             _clientFeedbacks.PlayDamageNumbersRpc(hpReceived);
 

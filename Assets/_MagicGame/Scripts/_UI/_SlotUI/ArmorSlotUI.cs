@@ -65,10 +65,11 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 		// Equip the armor and update the reference
 		_armorEquipped = armorItem;
 
-		// Optionally, apply stats or effects from the armor to the player
-		// Player.LocalClientInstance.PlayerStats.EquipArmor(_armorEquipped);
+		// NTFS: Need to incorporate method for custom special buffs for full armor sets being worn
+		Buff defenseBuff = new(Player.Instance.ServerCharacter.Stats.Defense, new StatModifier(_armorEquipped.DefenseAmount, StatModifierType.Flat, this, true));
+		Player.Instance.ServerCharacter.Stats.AddBuff(defenseBuff);
+		
 		InventoryManager.Instance.PlayClickFeedbacks();
-
 		UpdateSlotUI();
 	}
 
@@ -79,9 +80,9 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 		_armorEquipped = null;
 
 		// Optionally, remove stats or effects from the armor
-		// Player.LocalClientInstance.PlayerStats.UnequipArmor(unequippedArmor);
-		InventoryManager.Instance.PlayClickFeedbacks();
+		Player.Instance.ServerCharacter.Stats.RemoveBuffsFromSource(this);
 
+		InventoryManager.Instance.PlayClickFeedbacks();
 		UpdateSlotUI();
 		
 		return unequippedArmor;
