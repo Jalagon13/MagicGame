@@ -30,8 +30,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
     {
         if(_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
         {
-            // PlayerStats.Instance.OnArmorEquipped += OnArmorEquipped;
-            // PlayerStats.Instance.OnArmorUnEquipped += OnArmorUnEquipped;
+            ArmorSlotUI.OnArmorUpdated += OnArmorUpdated;
         }
 
         _armorEquippedId.OnValueChanged += OnArmorEquippedIdChanged;
@@ -41,8 +40,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
     {
         if (_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
         {
-            // PlayerStats.Instance.OnArmorEquipped -= OnArmorEquipped;
-            // PlayerStats.Instance.OnArmorUnEquipped -= OnArmorUnEquipped;
+            ArmorSlotUI.OnArmorUpdated -= OnArmorUpdated;
         }
 
         _armorEquippedId.OnValueChanged -= OnArmorEquippedIdChanged;
@@ -67,6 +65,11 @@ public class PlayerSpriteOverrider : NetworkBehaviour
                 _playerPartRenderer.sprite = sprite;
             }
         }
+    }
+
+    private void OnArmorUpdated(object sender, ArmorSlotUI.ArmorEquipDataEventArgs e)
+    {
+        _armorEquippedId.Value = e.ArmorItemData != null ? GameDataRegistry.Instance.GetItemIdFromItemData(e.ArmorItemData) : GameDataRegistry.INVALID_ID;
     }
 
     private void OnArmorEquippedIdChanged(ushort previousValue, ushort newValue)
@@ -125,18 +128,4 @@ public class PlayerSpriteOverrider : NetworkBehaviour
             }
         }
     }
-
-    // private void OnArmorEquipped(object sender, PlayerStats.ArmorChangedEventArgs e)
-    // {
-    //     if (e.ArmorItem.ArmorType != ArmorType) return;
-        
-    //     _armorEquippedId.Value = GameManager.Instance.GetItemIdFromItemSO(e.ArmorItem);
-    // }
-
-    // private void OnArmorUnEquipped(object sender, PlayerStats.ArmorChangedEventArgs e)
-    // {
-    //     if (e.ArmorItem.ArmorType != ArmorType) return;
-    
-    //     _armorEquippedId.Value = -1;
-    // }
 }

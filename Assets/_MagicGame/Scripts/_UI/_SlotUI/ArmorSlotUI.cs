@@ -6,6 +6,20 @@ using UnityEngine.UI;
 
 public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+	// NTFS: If ArmorItemData is null, then I am taking off the armor or trying to.
+	public static EventHandler<ArmorEquipDataEventArgs> OnArmorUpdated;
+	public class ArmorEquipDataEventArgs : EventArgs
+	{
+	    public ArmorType ArmorType { get; private set; }
+	    public ArmorItemSO ArmorItemData { get; private set; }
+	    
+	    public ArmorEquipDataEventArgs(ArmorType armorType, ArmorItemSO armorItemData)
+	    {
+	        ArmorType = armorType;
+	        ArmorItemData = armorItemData;
+	    }
+	}
+
 	[SerializeField] private ArmorType _armorType; // The type of armor this slot represents (e.g., Head, Chest, Legs)
 	[SerializeField] private Image _armorItemIcon; // The UI icon for the equipped armor
 	[SerializeField] private Image _armorIcon;
@@ -68,7 +82,8 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 		// NTFS: Need to incorporate method for custom special buffs for full armor sets being worn
 		Buff defenseBuff = new(Player.Instance.ServerCharacter.Stats.Defense, new StatModifier(_armorEquipped.DefenseAmount, StatModifierType.Flat, this, true));
 		Player.Instance.ServerCharacter.Stats.AddBuff(defenseBuff);
-		
+		OnArmorUpdated?.Invoke(this, new ArmorEquipDataEventArgs(_armorType, _armorEquipped));
+
 		InventoryManager.Instance.PlayClickFeedbacks();
 		UpdateSlotUI();
 	}
@@ -81,6 +96,7 @@ public class ArmorSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
 		// Optionally, remove stats or effects from the armor
 		Player.Instance.ServerCharacter.Stats.RemoveBuffsFromSource(this);
+		OnArmorUpdated?.Invoke(this, new ArmorEquipDataEventArgs(_armorType, _armorEquipped));
 
 		InventoryManager.Instance.PlayClickFeedbacks();
 		UpdateSlotUI();

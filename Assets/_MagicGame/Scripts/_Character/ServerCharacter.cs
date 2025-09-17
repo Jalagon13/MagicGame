@@ -214,10 +214,14 @@ public class ServerCharacter : NetworkBehaviour
                 return;
             
             // Damage reduction mod functionality here
-            float damageReduction = 1f;
-            hpReceived = (int)(hpReceived * damageReduction);
-            
-            hpReceived = Mathf.Clamp(hpReceived - _characterStats.Defense, 1, )
+            if(hpReceived + _characterStats.Defense.GetValue() > -1)
+            {
+                hpReceived = -1;
+            }
+            else
+            {
+                hpReceived += (int)_characterStats.Defense.GetValue();
+            }
             
             // Play damage numbers on client
             _clientFeedbacks.PlayDamageNumbersRpc(hpReceived);
