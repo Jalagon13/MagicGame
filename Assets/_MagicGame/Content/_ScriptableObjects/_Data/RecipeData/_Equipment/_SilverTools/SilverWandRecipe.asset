@@ -10,14 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55646a241e94b4a3a9d1cdf6e939102b, type: 3}
-  m_Name: CobaltCodexRecipe
+  m_Name: SilverWandRecipe
   m_EditorClassIdentifier: 
   OutputItem: {fileID: 11400000, guid: c4927bf03814a4704890caffd32c85df, type: 2}
   OutputAmount: 1
   ResourceList:
-  - Item: {fileID: 11400000, guid: 948cd40c3b143404aa76b1fbde01f383, type: 2}
+  - Item: {fileID: 11400000, guid: 7e3bafb8f1b844b6c83f9fa80f34268e, type: 2}
     Quantity: 12
-  - Item: {fileID: 11400000, guid: 38f7861ff20ac42c5bf7fd53dce5e82a, type: 2}
-    Quantity: 8
   - Item: {fileID: 11400000, guid: d562dae53acb04aa48034eb14ee90338, type: 2}
     Quantity: 4

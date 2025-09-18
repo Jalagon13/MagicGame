@@ -57,9 +57,13 @@ public class CraftNodeUI : MonoBehaviour
 
     public void Initialize(RecipeDataSO recipe)
 	{
-		_recipeSO = recipe;
-		_outputImage.sprite = _recipeSO.OutputItem.UiDisplay;
-		_outputAmountText.text = _recipeSO.OutputAmount == 1 ? string.Empty : _recipeSO.OutputAmount.ToString();
+		if(recipe != null)
+		{
+			_recipeSO = recipe;
+			_outputImage.sprite = _recipeSO.OutputItem.UiDisplay;
+			_outputAmountText.text = _recipeSO.OutputAmount == 1 ? string.Empty : _recipeSO.OutputAmount.ToString();
+		}
+		
 		UpdateCraftStatus();
 	}
 	

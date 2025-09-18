@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d4e45105852413c9fb3508bbf2b3c1, type: 3}
+  m_Name: SilverAnvilData
+  m_EditorClassIdentifier: 
+  StringID: silveranvil
+  PassThrough: 1
+  CanBeDestroyed: 1
+  ResourcePrefab: {fileID: 6290587451616296401, guid: d7188030314b146dc879a2b3ece6a490, type: 3}
+  Hardness: 1
+  Table:
+  - Item: {fileID: 11400000, guid: 4a9169e0ff97940fe85b3384da6e9fe8, type: 2}
+    Min: 1
+    Max: 1
+    Chance: 100
+  MiningSound:
+    Guid:
+      Data1: -760126013
+      Data2: 1214834390
+      Data3: 1071028877
+      Data4: -1910282493
+    Path: event:/World/OreHit
+  ResourceDestroyed:
+    Guid:
+      Data1: 1159300372
+      Data2: 1197579924
+      Data3: 820410264
+      Data4: -1545463411
+    Path: event:/World/OreBreak
+  PlaceSound:
+    Guid:
+      Data1: -760126013
+      Data2: 1214834390
+      Data3: 1071028877
+      Data4: -1910282493
+    Path: event:/World/OreHit
