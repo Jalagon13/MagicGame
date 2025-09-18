@@ -1,18 +1,27 @@
-using System;
 using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
 
 public class PlayerSpriteOverrider : NetworkBehaviour
 {
-    [field: SerializeField] public ArmorType ArmorType { get; private set; }
-    [field: SerializeField] public bool UseArmSheet { get; private set; }
-    [field: SerializeField] public bool IsAimingArmSprite { get; private set; }
-    [field: SerializeField] public Sprite DefaultAimArmSprite { get; private set; } // NTFS: This will cause visual bugs later down the road when loading player with armor on. Fix it later. Just a quick fix for now.
+    [field: SerializeField]
+    public ArmorType ArmorType { get; private set; }
+
+    [field: SerializeField]
+    public bool UseArmSheet { get; private set; }
+
+    [field: SerializeField]
+    public bool IsAimingArmSprite { get; private set; }
+
+    [field: SerializeField]
+    public Sprite DefaultAimArmSprite { get; private set; }
+
+    [SerializeField, Tooltip("Renderer for armor overlay (if used)")]
+    private SpriteRenderer _overlaySpriteRenderer;
 
     private NetworkVariable<ushort> _armorEquippedId = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    private HashSet<Sprite> _overrideSheet;
+    private Dictionary<string, Sprite> _spriteSheetLookup;
     private SpriteRenderer _playerPartRenderer;
     private Player _thisPlayer;
 
@@ -28,7 +37,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
 
     private void Start()
     {
-        if(_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
+        if (_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
         {
             ArmorSlotUI.OnArmorUpdated += OnArmorUpdated;
         }
@@ -48,50 +57,71 @@ public class PlayerSpriteOverrider : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (GameDataRegistry.Instance.GetItemDataFromItemId(_armorEquippedId.Value) is not ArmorItemSO) return;
-
         UpdateSpriteSheet();
     }
 
     private void LateUpdate()
     {
-        if (_overrideSheet == null) return;
+        if (_spriteSheetLookup == null || _playerPartRenderer.sprite == null)
+            return;
 
-        foreach (var sprite in _overrideSheet)
+        ArmorItemSO armorItem = null;
+        if (_armorEquippedId.Value != GameDataRegistry.INVALID_ID)
         {
-            string spriteName = sprite.name;
-            if (_playerPartRenderer.sprite.name == spriteName)
+            armorItem = GameDataRegistry.Instance.GetItemDataFromItemId(_armorEquippedId.Value) as ArmorItemSO;
+        }
+
+        // Overlay armor: overlay tracks base sprite animation
+        if (armorItem != null && armorItem.OverlayArmor && _overlaySpriteRenderer != null)
+        {
+            string baseSpriteName = _playerPartRenderer.sprite.name;
+            if (_spriteSheetLookup.TryGetValue(baseSpriteName, out Sprite overlaySprite))
             {
-                _playerPartRenderer.sprite = sprite;
+                _overlaySpriteRenderer.sprite = overlaySprite;
+            }
+            else
+            {
+                _overlaySpriteRenderer.sprite = null;
+            }
+        }
+        // Non-overlay: player part renderer uses override sprite directly
+        else if (_spriteSheetLookup != null && _playerPartRenderer.sprite != null)
+        {
+            string baseSpriteName = _playerPartRenderer.sprite.name;
+            if (_spriteSheetLookup.TryGetValue(baseSpriteName, out Sprite overrideSprite))
+            {
+                _playerPartRenderer.sprite = overrideSprite;
+                if (_overlaySpriteRenderer != null) _overlaySpriteRenderer.sprite = null;
             }
         }
     }
 
     private void OnArmorUpdated(object sender, ArmorSlotUI.ArmorEquipDataEventArgs e)
     {
-        _armorEquippedId.Value = e.ArmorItemData != null ? GameDataRegistry.Instance.GetItemIdFromItemData(e.ArmorItemData) : GameDataRegistry.INVALID_ID;
+        if (e.ArmorType != ArmorType) return;
+
+        _armorEquippedId.Value = e.ArmorItemData != null
+            ? GameDataRegistry.Instance.GetItemIdFromItemData(e.ArmorItemData)
+            : GameDataRegistry.INVALID_ID;
     }
 
     private void OnArmorEquippedIdChanged(ushort previousValue, ushort newValue)
     {
         UpdateSpriteSheet();
     }
-    
+
     private void UpdateSpriteSheet()
     {
-        // NTFS: Use ushort.MaxValue for checking for null vaues 
+        _spriteSheetLookup = null;
+
         if (_armorEquippedId.Value == GameDataRegistry.INVALID_ID)
         {
-            _overrideSheet = null;
-            if (IsAimingArmSprite)
-            {
-                _playerPartRenderer.sprite = DefaultAimArmSprite;
-            }
+            ClearRenderers();
             return;
         }
 
         ArmorItemSO armorItem = GameDataRegistry.Instance.GetItemDataFromItemId(_armorEquippedId.Value) as ArmorItemSO;
-        _overrideSheet = new();
+        if (armorItem == null) return;
 
         Texture2D armorSheet = null;
 
@@ -116,16 +146,77 @@ public class PlayerSpriteOverrider : NetworkBehaviour
         }
 
         UnityEngine.Object[] data = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(armorSheet));
-        if (data != null)
+        _spriteSheetLookup = new Dictionary<string, Sprite>();
+
+        foreach (UnityEngine.Object obj in data)
         {
-            foreach (UnityEngine.Object obj in data)
+            if (obj is Sprite sprite)
             {
-                if (obj.GetType() == typeof(Sprite))
+                _spriteSheetLookup[sprite.name] = sprite;
+            }
+        }
+
+        // Immediately apply first sprite
+        ApplyFirstSprite(armorItem);
+    }
+
+    private void ApplyFirstSprite(ArmorItemSO armorItem)
+    {
+        // On equip, immediately sync overlay with current animation frame if overlay armor
+        if (_spriteSheetLookup == null || _spriteSheetLookup.Count == 0) return;
+
+        if (armorItem.OverlayArmor && _overlaySpriteRenderer != null && _playerPartRenderer.sprite != null)
+        {
+            string baseSpriteName = _playerPartRenderer.sprite.name;
+            if (_spriteSheetLookup.TryGetValue(baseSpriteName, out Sprite overlaySprite))
+            {
+                _overlaySpriteRenderer.sprite = overlaySprite;
+            }
+            else
+            {
+                // fallback to first sprite
+                foreach (var sprite in _spriteSheetLookup.Values)
                 {
-                    Sprite sprite = obj as Sprite;
-                    _overrideSheet.Add(sprite);
+                    _overlaySpriteRenderer.sprite = sprite;
+                    break;
                 }
             }
         }
+        else
+        {
+            // Not overlay: just set first sprite to player part renderer
+            foreach (var sprite in _spriteSheetLookup.Values)
+            {
+                _playerPartRenderer.sprite = sprite;
+                break;
+            }
+            if (_overlaySpriteRenderer != null) _overlaySpriteRenderer.sprite = null;
+        }
+    }
+
+    private void ClearRenderers()
+    {
+        if (IsAimingArmSprite)
+        {
+            _playerPartRenderer.sprite = DefaultAimArmSprite;
+        }
+
+        if (_overlaySpriteRenderer != null)
+        {
+            _overlaySpriteRenderer.sprite = null;
+        }
+    }
+
+    private SpriteRenderer GetTargetRenderer()
+    {
+        if (_armorEquippedId.Value == GameDataRegistry.INVALID_ID) return _playerPartRenderer;
+
+        ArmorItemSO armorItem = GameDataRegistry.Instance.GetItemDataFromItemId(_armorEquippedId.Value) as ArmorItemSO;
+        if (armorItem != null && armorItem.OverlayArmor && _overlaySpriteRenderer != null)
+        {
+            return _overlaySpriteRenderer;
+        }
+
+        return _playerPartRenderer;
     }
 }

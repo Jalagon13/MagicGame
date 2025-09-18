@@ -6,9 +6,17 @@ public enum ArmorType { Head, Chest, Legs }
 [CreateAssetMenu(fileName = "New Armor", menuName = "Create Item/New Armor")]
 public class ArmorItemSO : ItemDataSO
 {
-	[field: SerializeField] public ArmorType ArmorType { get; private set; }
-	[field: SerializeField] public int DefenseAmount { get; private set; }
-	[field: SerializeField] public ArmorSpritesSO ArmorSprites { get; private set; }
+	[field: SerializeField] 
+	public ArmorType ArmorType { get; private set; }
+	
+	[field: SerializeField] 
+	public int DefenseAmount { get; private set; }
+	
+	[field: SerializeField] 
+	public ArmorSpritesSO ArmorSprites { get; private set; }
+	
+	[field: SerializeField, Tooltip("If true, this armor will be rendered on top of default sprite, if false, it will replace the default sprite.")]
+	public bool OverlayArmor { get; private set; }
 
 	public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
 	{

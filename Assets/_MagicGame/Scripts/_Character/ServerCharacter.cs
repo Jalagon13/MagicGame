@@ -220,7 +220,8 @@ public class ServerCharacter : NetworkBehaviour
             }
             else
             {
-                hpReceived += (int)_characterStats.Defense.GetValue();
+                float difficultyMult = 0.5f; // Placeholder for difficulty multiplier, 0.5 for normal, 0.75 for hard, 1 for insane TENT mults
+                hpReceived += Mathf.RoundToInt((int)(_characterStats.Defense.GetValue() * difficultyMult));
             }
             
             // Play damage numbers on client

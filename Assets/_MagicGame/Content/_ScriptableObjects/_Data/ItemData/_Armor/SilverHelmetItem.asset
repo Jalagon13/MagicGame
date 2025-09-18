@@ -21,3 +21,4 @@ MonoBehaviour:
   <ArmorType>k__BackingField: 0
   <DefenseAmount>k__BackingField: 5
   <ArmorSprites>k__BackingField: {fileID: 11400000, guid: 3ce723319b872445f9d60a140a797fa4, type: 2}
+  <OverlayArmor>k__BackingField: 1
