@@ -4,10 +4,11 @@ using UnityEngine;
 public class OreGenerationStep : GenerationStep
 {
     [Header("Ore Blob Generation")]
-    [SerializeField] private int _blobCount = 15;
-    [SerializeField] private int _blobSizeMin = 5;
-    [SerializeField] private int _blobSizeMax = 10;
-    [SerializeField] private float _minBlobSpacing = 12f;
+    [SerializeField] 
+    private int _blobCount = 15, _blobSizeMin = 5, _blobSizeMax = 10;
+    
+    [SerializeField] 
+    private float _minBlobSpacing = 12f;
 
     public override void Execute(BaseGenerationData genData)
     {

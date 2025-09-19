@@ -23,7 +23,7 @@ public class TreeGenerationStep : GenerationStep
 
             if (forestGenData.IsInBounds(point.x, point.y) && forestGenData.MostFrontRenderedTileMatrix[point.x, point.y] == GameDataRegistry.Instance.GetTileIdFromTileData(forestGenData.GrassTerrainTile))
             {
-                forestGenData.SetWorldObjectData(point.x, point.y, forestGenData.TreeWorldObject, CardinalDirection.North);
+                forestGenData.SetResourceobjectData(point.x, point.y, GameDataRegistry.Instance.GetResourceIdFromResourceData(forestGenData.TreeWorldObject.Data), CardinalDirection.North);
             }
         }
     }

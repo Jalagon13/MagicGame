@@ -11,10 +11,12 @@ public class ForestStairsGenerationStep : GenerationStep
         
         foreach (var (transitionObjectId, forestTransitionObjectPosition) in forestTransitionObjectData)
         {
-            if(transitionObjectId == GameDataRegistry.Instance.GetResourceIdFromResourceData(caveGenData.StairsToCave.Data))
+            ushort stairsId = GameDataRegistry.Instance.GetResourceIdFromResourceData(caveGenData.StairsToCave.Data);
+
+            if (transitionObjectId == stairsId)
             {
                 DeleteNeighborWallsAroundPoint(forestTransitionObjectPosition);
-                caveGenData.SetWorldObjectData(forestTransitionObjectPosition.x, forestTransitionObjectPosition.y, caveGenData.StairsToForest, CardinalDirection.North);
+                caveGenData.SetResourceobjectData(forestTransitionObjectPosition.x, forestTransitionObjectPosition.y, stairsId, CardinalDirection.North);
             }
         }
     }

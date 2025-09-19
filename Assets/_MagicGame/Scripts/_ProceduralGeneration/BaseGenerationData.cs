@@ -3,8 +3,11 @@ using UnityEngine;
 public abstract class BaseGenerationData : MonoBehaviour
 {
 
-    [HideInInspector] public ushort[,] MostFrontRenderedTileMatrix = new ushort[ChunkManager.BIOME_SIDE_LENGTH, ChunkManager.BIOME_SIDE_LENGTH];
-    [HideInInspector] public string MapGenerationSeed;
+    [HideInInspector] 
+    public ushort[,] MostFrontRenderedTileMatrix = new ushort[ChunkManager.BIOME_SIDE_LENGTH, ChunkManager.BIOME_SIDE_LENGTH];
+    
+    [HideInInspector] 
+    public string MapGenerationSeed;
     
     protected abstract BiomeType _biomeType { get; }
     public BiomeType Biome => _biomeType;
@@ -34,9 +37,9 @@ public abstract class BaseGenerationData : MonoBehaviour
         MostFrontRenderedTileMatrix[x, y] = GameDataRegistry.Instance.GetTileIdFromTileData(tileData);
     }
 
-    public virtual void SetWorldObjectData(int x, int y, ResourceObject resource, CardinalDirection dir)
+    public virtual void SetResourceobjectData(int x, int y, ushort rscId, CardinalDirection dir)
     {
-        ChunkManager.Instance.AddResourceDataToChunkServerRpc(new Vector2Int(x, y), GameDataRegistry.Instance.GetResourceIdFromResourceData(resource.Data), _biomeType, dir);
+        ChunkManager.Instance.AddResourceDataToChunkServerRpc(new Vector2Int(x, y), rscId, _biomeType, dir);
     }
 
     public bool IsInBounds(int x, int y)

@@ -2582,6 +2582,7 @@ MonoBehaviour:
   <CoboltOreTile>k__BackingField: {fileID: 11400000, guid: 4f8bf3351009c45c4a6ad868dd7eccbd, type: 2}
   <StairsToForest>k__BackingField: {fileID: 5150323723629226184, guid: 751f13ce30c9145419bf57f41f494fef, type: 3}
   <StairsToCave>k__BackingField: {fileID: 5150323723629226184, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
+  <VisCrystalIgnis>k__BackingField: {fileID: 7010316107804073469, guid: d9fedaf391dbb40288bf4e3f30c5d5a5, type: 3}
   SpaghettiCaveNM: {fileID: 11400000, guid: c621735f7aae34658a8101ebe324437c, type: 2}
   CheeseCaveNM: {fileID: 11400000, guid: fb24aaaf205ca41ac928db4d742f1f5c, type: 2}
   OreGenNM: {fileID: 11400000, guid: e05079a8f761b4e5e8f0f7f3c492221d, type: 2}
@@ -4672,6 +4673,7 @@ Transform:
   - {fileID: 767011083}
   - {fileID: 1532492749}
   - {fileID: 621504237}
+  - {fileID: 2064736210}
   - {fileID: 698152854}
   m_Father: {fileID: 397047566}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13612,6 +13614,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 23a8033ef91ef423daec2c609acf104b, type: 2}
   - {fileID: 11400000, guid: dd9810e2317ed4e4cb5b881a200ee220, type: 2}
   - {fileID: 11400000, guid: c67841b6c3fe545989b083d953a8dd5f, type: 2}
+  - {fileID: 11400000, guid: 81b473b1f08af425b971c01b723339fe, type: 2}
   _tileData:
   - {fileID: 11400000, guid: df8d501aa01c743c5a8bfa279522ca08, type: 2}
   - {fileID: 11400000, guid: 2da24928f3c5f475fae76379f26f7110, type: 2}
@@ -15834,6 +15837,51 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
   m_PrefabInstance: {fileID: 2063657527}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2064736209
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2064736210}
+  - component: {fileID: 2064736211}
+  m_Layer: 0
+  m_Name: CrystalGenerationStep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2064736210
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064736209}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 520333813}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2064736211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064736209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1db9bff63abb44aaebada5247c9a94a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: 
 --- !u!224 &2078334444 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
@@ -15921,6 +15969,7 @@ MonoBehaviour:
   - {fileID: 767011084}
   - {fileID: 1532492750}
   - {fileID: 621504238}
+  - {fileID: 2064736211}
   - {fileID: 698152855}
   <NoiseMapsToApplySeed>k__BackingField:
   - {fileID: 11400000, guid: fb24aaaf205ca41ac928db4d742f1f5c, type: 2}
