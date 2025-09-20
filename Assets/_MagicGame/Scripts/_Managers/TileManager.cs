@@ -73,7 +73,6 @@ public class TileManager : NetworkBehaviour
 			e.Chunk.GetTileList(TileType.Liquid),
 			e.Chunk.GetTileList(TileType.Floor),
 			e.Chunk.GetTileList(TileType.Wall),
-			e.Chunk.GetTileList(TileType.Ore),
 			e.Chunk.GetTileList(TileType.Foliage),
 		};
 
@@ -113,13 +112,6 @@ public class TileManager : NetworkBehaviour
 				if (WallTm.HasTile(position))
 				{
 					tileSO = WallTm.GetTile<TileDataSO>(position);
-					return true;
-				}
-				break;
-			case TileType.Ore:
-				if (OreTm.HasTile(position))
-				{
-					tileSO = OreTm.GetTile<TileDataSO>(position);
 					return true;
 				}
 				break;
@@ -172,25 +164,17 @@ public class TileManager : NetworkBehaviour
 				previousTile = WallTm.GetTile<TileDataSO>(tilePos);
 				WallTm.SetTile(tilePos, tileSO);
 				break;
-			case TileType.Ore: 
-				previousTile = OreTm.GetTile<TileDataSO>(tilePos);
-				OreTm.SetTile(tilePos, tileSO);
-				if(tileSO == null) // When destroying ore, destroy the wall behind it
-				{
-					WallTm.SetTile(tilePos, tileSO);
-				}
-				break;
 			case TileType.Foliage:
 				previousTile = FoliageTm.GetTile<TileDataSO>(tilePos);
 				FoliageTm.SetTile(tilePos, tileSO);
 				break;
 		}
 		
-		if(tileSO == null && (tileType == TileType.Wall || tileType == TileType.Ore))
+		if(tileSO == null && (tileType == TileType.Wall))
 		{
 			UpperWallTm.DeleteUpperWallTile(tilePos);
 		}
-		else if (tileSO != null && (tileType == TileType.Wall || tileType == TileType.Ore) && !GameWorld.Instance.IsLoadingBiome)
+		else if (tileSO != null && (tileType == TileType.Wall) && !GameWorld.Instance.IsLoadingBiome)
 		{
 			UpperWallTm.TryToRenderSurroundingUpperWallTiles(tilePos);
 		}

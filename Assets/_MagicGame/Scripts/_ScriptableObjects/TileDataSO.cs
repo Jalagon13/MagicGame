@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 [System.Serializable]
 public enum TileType
 {
-	Terrain, Floor, Wall, Ore, Liquid, Foliage
+	Terrain, Floor, Wall, Liquid, Foliage
 }
 
 [CreateAssetMenu(fileName = "New TileSO", menuName = "Tiles/TileSO", order = 1)]

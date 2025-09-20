@@ -219,7 +219,7 @@ public class ChunkManager : NetworkBehaviour
 	{
 		GetChunkFromAnyWorldPos(position, biome).RemoveTileData(position, tileType);
 
-		if (tileType == TileType.Wall || tileType == TileType.Ore)
+		if (tileType == TileType.Wall)
 		{
 			Pathfinding.Instance.RemovePathfindingfWallTileServerRpc(position, biome);
 		}

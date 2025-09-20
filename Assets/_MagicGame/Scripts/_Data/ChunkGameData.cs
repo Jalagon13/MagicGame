@@ -12,7 +12,6 @@ public class ChunkGameData
 	private readonly List<TileGameData> _liquidTileGameDataList;
 	private readonly List<TileGameData> _floorTileGameDataList;
 	private readonly List<TileGameData> _wallTileGameDataList;
-	private readonly List<TileGameData> _oreTileGameDataList;
 	private readonly List<TileGameData> _foliageTileGameDataList;
 	private readonly List<ResourceObjectGameData> _worldObjectGameDataList;
 	public int Size { get; private set; }
@@ -27,7 +26,6 @@ public class ChunkGameData
 		_liquidTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		_floorTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		_wallTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
-		_oreTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		_foliageTileGameDataList = new List<TileGameData>(chunkSize * chunkSize);
 		_worldObjectGameDataList = new List<ResourceObjectGameData>(chunkSize * chunkSize);
 
@@ -36,7 +34,6 @@ public class ChunkGameData
 			{ TileType.Terrain, _terrainTileGameDataList },
 			{ TileType.Floor, _floorTileGameDataList },
 			{ TileType.Wall, _wallTileGameDataList },
-			{ TileType.Ore, _oreTileGameDataList },
 			{ TileType.Liquid, _liquidTileGameDataList },
 			{ TileType.Foliage, _foliageTileGameDataList },
 		};
@@ -57,7 +54,6 @@ public class ChunkGameData
 			{ TileType.Liquid, liquidTiles },
 			{ TileType.Floor, floorTiles },
 			{ TileType.Wall, wallTiles },
-			{ TileType.Ore, oreTiles },
 			{ TileType.Foliage, foliageTiles },
 		};
 
@@ -89,16 +85,6 @@ public class ChunkGameData
 	        if (index >= 0)
 	        {
 	            list.RemoveAt(index);
-	            
-	            if (tileType == TileType.Ore) // Always remove the wall behind the destroyed ore
-	            {
-	                var wallList = _tileTypeToList[TileType.Wall];
-	                int wallIndex = wallList.FindIndex(t => t.TilePosition == position);
-	                if (wallIndex >= 0)
-	                {
-	                    wallList.RemoveAt(wallIndex);
-	                }
-	            }
 	            return;
 	        }
 	    }

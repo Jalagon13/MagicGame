@@ -44,7 +44,6 @@ public class NetworkChunkManager : NetworkBehaviour
 			SyncTerrainTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Terrain).Count),
 			SyncFloorTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Floor).Count),
 			SyncWallTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Wall).Count),
-			SyncOreTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Ore).Count),
 			SyncLiquidTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Liquid).Count),
 			SyncFoliageTileDataList = new List<GenericGameObjectSyncData>(chunkGameData.GetTileList(TileType.Foliage).Count),
 			
@@ -56,7 +55,6 @@ public class NetworkChunkManager : NetworkBehaviour
 		ConvertTileList(chunkGameData.GetTileList(TileType.Terrain), syncChunkData.SyncTerrainTileDataList);
 		ConvertTileList(chunkGameData.GetTileList(TileType.Floor), syncChunkData.SyncFloorTileDataList);
 		ConvertTileList(chunkGameData.GetTileList(TileType.Wall), syncChunkData.SyncWallTileDataList);
-		ConvertTileList(chunkGameData.GetTileList(TileType.Ore), syncChunkData.SyncOreTileDataList);
 		ConvertTileList(chunkGameData.GetTileList(TileType.Liquid), syncChunkData.SyncLiquidTileDataList);
 		ConvertTileList(chunkGameData.GetTileList(TileType.Foliage), syncChunkData.SyncFoliageTileDataList);
 
@@ -114,7 +112,6 @@ private ChunkGameData ConvertToGameChunkData(SyncChunkData syncChunkData)
 		(TileType.Terrain, syncChunkData.SyncTerrainTileDataList),
 		(TileType.Floor, syncChunkData.SyncFloorTileDataList),
 		(TileType.Wall, syncChunkData.SyncWallTileDataList),
-		(TileType.Ore, syncChunkData.SyncOreTileDataList),
 		(TileType.Liquid, syncChunkData.SyncLiquidTileDataList),
 		(TileType.Foliage, syncChunkData.SyncFoliageTileDataList),
 	};

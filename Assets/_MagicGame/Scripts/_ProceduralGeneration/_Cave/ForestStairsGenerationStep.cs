@@ -33,7 +33,6 @@ public class ForestStairsGenerationStep : GenerationStep
                 if(ChunkManager.Instance.IsWorldPosInBounds(neighborPosition))
                 {
                     ChunkManager.Instance.RemoveTileServerRpc(TileType.Wall, neighborPosition, BiomeType.Cave, false);
-                    ChunkManager.Instance.RemoveTileServerRpc(TileType.Ore, neighborPosition, BiomeType.Cave, false);
                 }
             }
         }

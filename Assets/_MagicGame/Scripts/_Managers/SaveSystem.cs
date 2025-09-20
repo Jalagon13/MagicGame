@@ -139,7 +139,6 @@ public class SaveSystem : MonoBehaviour
 				(kvp.Value.GetTileList(TileType.Terrain), chunkData.GroundTiles),
 				(kvp.Value.GetTileList(TileType.Floor), chunkData.FloorTiles),
 				(kvp.Value.GetTileList(TileType.Wall), chunkData.WallTiles),
-				(kvp.Value.GetTileList(TileType.Ore), chunkData.OreTiles),
 				(kvp.Value.GetTileList(TileType.Liquid), chunkData.LiquidTiles),
 				(kvp.Value.GetTileList(TileType.Foliage), chunkData.FoliageTiles),
 			};
@@ -242,7 +241,6 @@ public List<(int WorldObjectId, Vector2Int Position)> RetrieveBiomeTransitionWor
         {
             if (GameDataRegistry.Instance.GetResourceDataFromResourceId(data.Id).ResourcePrefab is BiomeTransitionObject)
             {
-                Debug.Log($"Found BiomeTransitionObject: ID-{data.Id} at {data.Pos}");
                 transitionDataList.Add((data.Id, data.Pos));
             }
         }

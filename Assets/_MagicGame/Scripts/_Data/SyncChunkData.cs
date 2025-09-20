@@ -11,7 +11,6 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 	public List<GenericGameObjectSyncData> SyncTerrainTileDataList;
 	public List<GenericGameObjectSyncData> SyncFloorTileDataList;
 	public List<GenericGameObjectSyncData> SyncWallTileDataList;
-	public List<GenericGameObjectSyncData> SyncOreTileDataList;
 	public List<GenericGameObjectSyncData> SyncLiquidTileDataList;
 	public List<GenericGameObjectSyncData> SyncFoliageTileDataList;
 	
@@ -24,7 +23,6 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 			   SyncTerrainTileDataList.Equals(other.SyncTerrainTileDataList) &&
 			   SyncFloorTileDataList.Equals(other.SyncFloorTileDataList) &&
 			   SyncWallTileDataList.Equals(other.SyncWallTileDataList) && 
-			   SyncOreTileDataList.Equals(other.SyncOreTileDataList) &&
 			   SyncLiquidTileDataList.Equals(other.SyncLiquidTileDataList) &&
 			   SyncFoliageTileDataList.Equals(other.SyncFoliageTileDataList) &&
 			   SyncObjectAssetDataList.Equals(other.SyncObjectAssetDataList) &&
@@ -38,7 +36,6 @@ public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 		SerializeAgnosticDataList(serializer, ref SyncTerrainTileDataList);
 		SerializeAgnosticDataList(serializer, ref SyncFloorTileDataList);
 		SerializeAgnosticDataList(serializer, ref SyncWallTileDataList);
-		SerializeAgnosticDataList(serializer, ref SyncOreTileDataList);
 		SerializeAgnosticDataList(serializer, ref SyncLiquidTileDataList);
 		SerializeAgnosticDataList(serializer, ref SyncFoliageTileDataList);
 		SerializeWorldObjectDataList(serializer, ref SyncObjectAssetDataList);
