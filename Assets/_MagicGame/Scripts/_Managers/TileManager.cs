@@ -22,7 +22,6 @@ public class TileManager : NetworkBehaviour
 
 	[field: SerializeField] public Tilemap FloorTm { get; private set; }
 	[field: SerializeField] public Tilemap WallTm { get; private set; }
-	[field: SerializeField] public Tilemap OreTm { get; private set; }
 	[field: SerializeField] public Tilemap FoliageTm { get; private set; }
 	[field: SerializeField] public TerrainTileRenderer TerrainTileRenderer { get; private set; }
 	[field: SerializeField] public UpperWallTm UpperWallTm { get; private set; }
@@ -46,21 +45,18 @@ public class TileManager : NetworkBehaviour
 	private void WorldManager_OnBiomeTransitionStart(object sender, EventArgs e)
 	{
 		WallTm.GetComponent<TilemapCollider2D>().enabled = false;
-		OreTm.GetComponent<TilemapRenderer>().enabled = false;
 		UpperWallTm.EnableTilemapCollider(false);
 
 		// Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
 		TerrainTileRenderer.ClearAllTerrainTiles();
 		FloorTm.ClearAllTiles();
 		WallTm.ClearAllTiles();
-		OreTm.ClearAllTiles();
 		FoliageTm.ClearAllTiles();
 	}
 
 	private void WorldManager_OnBiomeTransitionEnd(object sender, EventArgs e)
     {
 		WallTm.GetComponent<TilemapCollider2D>().enabled = true;
-		OreTm.GetComponent<TilemapRenderer>().enabled = true;
 		UpperWallTm.EnableTilemapCollider(true);
 	}
 

@@ -184,31 +184,6 @@ public class UpperWallTm : MonoBehaviour
         }
         
         _upperWallTm.SetTile(upperTilePosition, tile);
-
-        Vector3Int oreTilePosition = new Vector3Int(upperTilePosition.x, upperTilePosition.y - 1, 0);
-        if (TileManager.Instance.OreTm.HasTile(oreTilePosition))
-        {
-            TileBase oreBaseTile = TileManager.Instance.OreTm.GetTile(oreTilePosition);
-            TileDataSO oreTileSO = GameDataRegistry.Instance.GetTileDataFromTileBase(oreBaseTile);
-
-            Tile oreTile = ScriptableObject.CreateInstance<Tile>();
-            switch (topTileType)
-            {
-                case TopTileType.Single:
-                    oreTile.sprite = oreTileSO.TopTileSingle;
-                    break;
-                case TopTileType.Right:
-                    oreTile.sprite = oreTileSO.TopTileRight;
-                    break;
-                case TopTileType.Left:
-                    oreTile.sprite = oreTileSO.TopTileLeft;
-                    break;
-                case TopTileType.Center:
-                    oreTile.sprite = oreTileSO.TopTileCenter;
-                    break;
-            }
-            _upperOreWallTm.SetTile(upperTilePosition, oreTile);
-        }
     }
 
     private void OnDestroy()

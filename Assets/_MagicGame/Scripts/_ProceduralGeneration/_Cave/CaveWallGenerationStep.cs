@@ -3,9 +3,14 @@ using UnityEngine;
 public class CaveWallGenerationStep : GenerationStep
 {
     [field: Header("Threshold Values")]
-    [field: SerializeField] public float CheeseCaveThreshold { get; private set; } = 0.375f;
-    [field: SerializeField] public float SpaghettiCaveThresholdMin { get; private set; } = 0.45f;
-    [field: SerializeField] public float SpaghettiCaveThresholdMax { get; private set; } = 0.6f;
+    [field: SerializeField] 
+    public float CheeseCaveThreshold { get; private set; } = 0.375f;
+    
+    [field: SerializeField] 
+    public float SpaghettiCaveThresholdMin { get; private set; } = 0.45f;
+    
+    [field: SerializeField] 
+    public float SpaghettiCaveThresholdMax { get; private set; } = 0.6f;
 
     public override void Execute(BaseGenerationData genData)
     {

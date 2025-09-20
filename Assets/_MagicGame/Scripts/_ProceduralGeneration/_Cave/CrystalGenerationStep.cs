@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class CrystalGenerationStep : GenerationStep
 {
+    // NTFS: Figure out how I want to generate these crystals later
 
     public override void Execute(BaseGenerationData genData)
     {

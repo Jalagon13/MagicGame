@@ -3,9 +3,14 @@ using UnityEngine;
 
 public class CaveGenerator : MonoBehaviour
 {
-    [field: SerializeField] public CaveGenerationData CaveGenerationData { get; private set; }
-    [field: SerializeField] public GenerationStep[] GenerationSteps { get; private set; }
-    [field: SerializeField] public List<NoiseMapSO> NoiseMapsToApplySeed { get; private set; }
+    [field: SerializeField] 
+    public CaveGenerationData CaveGenerationData { get; private set; }
+    
+    [field: SerializeField] 
+    public GenerationStep[] GenerationSteps { get; private set; }
+    
+    [field: SerializeField] 
+    public List<NoiseMapSO> NoiseMapsToApplySeed { get; private set; }
 
     public void GenerateCave()
     {

@@ -10,7 +10,7 @@ public class CaveGenerationData : BaseGenerationData
     public TileDataSO StoneWallTile { get; private set; }
     
     [field: SerializeField] 
-    public TileDataSO CoboltOreTile { get; private set; }
+    public TileDataSO SilverOreTile { get; private set; }
 
     [field: Header("Resource Objects")]
     [field: SerializeField] 

@@ -115,7 +115,7 @@ public class OreGenerationStep : GenerationStep
                 {
                     if (oreMask[x, y])
                     {
-                        caveGenData.SetTileData(x, y, caveGenData.CoboltOreTile);
+                        caveGenData.SetTileData(x, y, caveGenData.SilverOreTile);
                     }
                 }
             }
