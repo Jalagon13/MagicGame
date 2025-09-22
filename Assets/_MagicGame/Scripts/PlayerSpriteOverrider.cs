@@ -60,6 +60,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
         UpdateSpriteSheet();
     }
 
+    // NTFS: Need to make this work for the arm sprite as well
     private void LateUpdate()
     {
         if (_spriteSheetLookup == null || _playerPartRenderer.sprite == null)
@@ -141,6 +142,9 @@ public class PlayerSpriteOverrider : NetworkBehaviour
                     break;
                 case ArmorType.Legs:
                     armorSheet = armorItem.ArmorSprites.LegsSprites;
+                    break;
+                default: // Default is if there is no head, chest, legs, it must be using the arm sprites
+                    armorSheet = armorItem.ArmorSprites.ArmSprites;
                     break;
             }
         }
