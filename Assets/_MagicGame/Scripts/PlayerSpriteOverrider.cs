@@ -7,15 +7,9 @@ public class PlayerSpriteOverrider : NetworkBehaviour
 {
     [field: SerializeField]
     public ArmorType ArmorType { get; private set; }
-
-    [field: SerializeField]
-    public bool UseArmSheet { get; private set; }
-
-    [field: SerializeField]
-    public bool IsAimingArmSprite { get; private set; }
-
-    [field: SerializeField]
-    public Sprite DefaultAimArmSprite { get; private set; }
+    
+    [SerializeField] 
+    private bool _isArmSprite;
 
     [SerializeField, Tooltip("Renderer for armor overlay (if used)")]
     private SpriteRenderer _overlaySpriteRenderer;
@@ -60,7 +54,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
         UpdateSpriteSheet();
     }
 
-    // NTFS: Need to make this work for the arm sprite as well
+    // NTFS: Need to make this work for the arm sprite as well. Not sure why it is not working
     private void LateUpdate()
     {
         if (_spriteSheetLookup == null || _playerPartRenderer.sprite == null)
@@ -126,7 +120,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
 
         Texture2D armorSheet = null;
 
-        if (UseArmSheet)
+        if(_isArmSprite)
         {
             armorSheet = armorItem.ArmorSprites.ArmSprites;
         }
@@ -143,16 +137,13 @@ public class PlayerSpriteOverrider : NetworkBehaviour
                 case ArmorType.Legs:
                     armorSheet = armorItem.ArmorSprites.LegsSprites;
                     break;
-                default: // Default is if there is no head, chest, legs, it must be using the arm sprites
-                    armorSheet = armorItem.ArmorSprites.ArmSprites;
-                    break;
             }
         }
 
-        UnityEngine.Object[] data = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(armorSheet));
+        Object[] data = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(armorSheet));
         _spriteSheetLookup = new Dictionary<string, Sprite>();
 
-        foreach (UnityEngine.Object obj in data)
+        foreach (Object obj in data)
         {
             if (obj is Sprite sprite)
             {
@@ -200,11 +191,6 @@ public class PlayerSpriteOverrider : NetworkBehaviour
 
     private void ClearRenderers()
     {
-        if (IsAimingArmSprite)
-        {
-            _playerPartRenderer.sprite = DefaultAimArmSprite;
-        }
-
         if (_overlaySpriteRenderer != null)
         {
             _overlaySpriteRenderer.sprite = null;

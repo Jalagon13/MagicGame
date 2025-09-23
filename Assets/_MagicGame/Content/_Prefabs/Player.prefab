@@ -32,9 +32,9 @@ Transform:
   m_Children:
   - {fileID: 4909420609810358321}
   - {fileID: 166573449608164960}
-  - {fileID: 1474419281066781438}
-  - {fileID: 1668921152149292333}
   - {fileID: 5430783778306472901}
+  - {fileID: 1668921152149292333}
+  - {fileID: 1474419281066781438}
   - {fileID: 4302369951305684658}
   - {fileID: 7789935702021618490}
   - {fileID: 5908567600357599322}
@@ -15173,9 +15173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   <ArmorType>k__BackingField: 1
-  <UseArmSheet>k__BackingField: 0
-  <IsAimingArmSprite>k__BackingField: 0
-  <DefaultAimArmSprite>k__BackingField: {fileID: 0}
+  _isArmSprite: 0
   _overlaySpriteRenderer: {fileID: 5695732598896056094}
 --- !u!1 &1438025013999114850
 GameObject:
@@ -41706,9 +41704,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   <ArmorType>k__BackingField: 1
-  <UseArmSheet>k__BackingField: 1
-  <IsAimingArmSprite>k__BackingField: 1
-  <DefaultAimArmSprite>k__BackingField: {fileID: 62975214361606658, guid: ce52d1f6752c24ca5a5e54389c4e6e85, type: 3}
+  _isArmSprite: 0
   _overlaySpriteRenderer: {fileID: 1733194653294423320}
 --- !u!1 &6606371943454639754
 GameObject:
@@ -41904,9 +41900,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   <ArmorType>k__BackingField: 0
-  <UseArmSheet>k__BackingField: 0
-  <IsAimingArmSprite>k__BackingField: 0
-  <DefaultAimArmSprite>k__BackingField: {fileID: 0}
+  _isArmSprite: 0
   _overlaySpriteRenderer: {fileID: 4009000224146117701}
 --- !u!1 &7342286539496265529
 GameObject:
@@ -42257,9 +42251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   <ArmorType>k__BackingField: 1
-  <UseArmSheet>k__BackingField: 1
-  <IsAimingArmSprite>k__BackingField: 0
-  <DefaultAimArmSprite>k__BackingField: {fileID: 0}
+  _isArmSprite: 1
   _overlaySpriteRenderer: {fileID: 531527126554460597}
 --- !u!1 &8124755335223201993
 GameObject:
@@ -52322,9 +52314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   <ArmorType>k__BackingField: 2
-  <UseArmSheet>k__BackingField: 0
-  <IsAimingArmSprite>k__BackingField: 0
-  <DefaultAimArmSprite>k__BackingField: {fileID: 0}
+  _isArmSprite: 0
   _overlaySpriteRenderer: {fileID: 7587446253654776281}
 --- !u!1 &8878217645742658734
 GameObject:
