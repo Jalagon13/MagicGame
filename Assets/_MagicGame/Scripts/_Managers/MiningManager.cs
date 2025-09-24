@@ -30,7 +30,7 @@ public class MiningManager : MonoBehaviour
     }
     
     [SerializeField] 
-    private float _timeBetweenMiningSounds = 0.225f, _delayBetweenPlacingAndMining = 0.2f, _breakCooldownDuration = 0.075f;
+    private float _timeBetweenMiningSounds = 0.225f/* , _delayBetweenPlacingAndMining = 0.2f */, _breakCooldownDuration = 0.075f;
 
     private MiningSpellItemSO _currentMiningSpellItemSO;
     public MiningSpellItemSO CurrentMiningSpellItemSO => _currentMiningSpellItemSO;

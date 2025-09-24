@@ -64,6 +64,8 @@ public class HotbarManager : MonoBehaviour
 
 	private void GameInput_OnSlotSelected(object sender, GameInput.SlotSelectedEventArgs e)
 	{
+		if(InventoryManager.MOUSE_HAS_ITEM) return;
+	
 		_focusInventoryItem = InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SelectedSlotIndex];
 		
 		if(_focusInventoryItem == null || _focusInventoryItem.Item == null)
@@ -78,6 +80,8 @@ public class HotbarManager : MonoBehaviour
 
 	private void GameInput_OnScroll(object sender, GameInput.SlotSelectedEventArgs e)
 	{
+		if (InventoryManager.MOUSE_HAS_ITEM) return;
+
 		_focusInventoryItem = InventoryManager.Instance.GetInventoryModel().InventoryItems[e.SelectedSlotIndex];
 		
 		if(_focusInventoryItem == null || _focusInventoryItem.Item == null)

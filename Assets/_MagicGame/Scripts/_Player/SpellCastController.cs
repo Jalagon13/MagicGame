@@ -135,7 +135,7 @@ public class SpellCastController
         bool hasEnoughMana = _spellCooldownSystem.CanCastSpell(_selectedWandInventoryItem.GetSelectedSpell());
         bool hasAllCastingMaterials = _selectedWandInventoryItem.GetSelectedSpell().CastingMaterials.Count == 0 ||
           InventoryManager.Instance.HasAllIngredients(_selectedWandInventoryItem.GetSelectedSpell().CastingMaterials);
-
+          
         return !isOverUI && !isOverInteractable && hasEnoughMana && playerIsAlive && hasAllCastingMaterials &&
         primaryHeldDown && !isCasting && !postCastDelayTimerRunning && !isLoadingBiome && !SpellWheelUI.SpellWheelOpen;
     }
