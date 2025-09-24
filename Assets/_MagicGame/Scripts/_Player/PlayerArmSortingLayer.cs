@@ -98,7 +98,7 @@ public class PlayerArmSortingLayer : MonoBehaviour
 
 	private void PutSpriteFront()
 	{
-		_sortingGroup.sortingOrder = 1;
+		_sortingGroup.sortingOrder = 10; // NTFS: 10 instead of 1 so it can be rendered above the arm sprites
 	}
 	
 	private void PutSpriteBack()
