@@ -27,10 +27,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
         {
             _thisPlayer = transform.root.GetComponent<Player>();
         }
-    }
 
-    private void Start()
-    {
         if (_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
         {
             ArmorSlotUI.OnArmorUpdated += OnArmorUpdated;
@@ -86,7 +83,10 @@ public class PlayerSpriteOverrider : NetworkBehaviour
             if (_spriteSheetLookup.TryGetValue(baseSpriteName, out Sprite overrideSprite))
             {
                 _playerPartRenderer.sprite = overrideSprite;
-                if (_overlaySpriteRenderer != null) _overlaySpriteRenderer.sprite = null;
+                if (_overlaySpriteRenderer != null)
+                {
+                    _overlaySpriteRenderer.sprite = null;
+                }
             }
         }
     }
@@ -157,7 +157,7 @@ public class PlayerSpriteOverrider : NetworkBehaviour
 
     private void ApplyFirstSprite(ArmorItemSO armorItem)
     {
-        // On equip, immediately sync overlay with current animation frame if overlay armor
+        // On equip, immediately sync overlay or non-overlay with current animation frame if possible
         if (_spriteSheetLookup == null || _spriteSheetLookup.Count == 0) return;
 
         if (armorItem.OverlayArmor && _overlaySpriteRenderer != null && _playerPartRenderer.sprite != null)
@@ -167,24 +167,18 @@ public class PlayerSpriteOverrider : NetworkBehaviour
             {
                 _overlaySpriteRenderer.sprite = overlaySprite;
             }
-            else
-            {
-                // fallback to first sprite
-                foreach (var sprite in _spriteSheetLookup.Values)
-                {
-                    _overlaySpriteRenderer.sprite = sprite;
-                    break;
-                }
-            }
         }
         else
         {
-            // Not overlay: just set first sprite to player part renderer
-            foreach (var sprite in _spriteSheetLookup.Values)
+            if (_playerPartRenderer.sprite != null)
             {
-                _playerPartRenderer.sprite = sprite;
-                break;
+                string baseSpriteName = _playerPartRenderer.sprite.name;
+                if (_spriteSheetLookup.TryGetValue(baseSpriteName, out Sprite overrideSprite))
+                {
+                    _playerPartRenderer.sprite = overrideSprite;
+                }
             }
+
             if (_overlaySpriteRenderer != null) _overlaySpriteRenderer.sprite = null;
         }
     }

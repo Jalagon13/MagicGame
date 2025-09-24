@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
 using DG.Tweening;
+using UnityEditor;
 
 public class PlayerHand : NetworkBehaviour
 {
@@ -38,21 +39,74 @@ public class PlayerHand : NetworkBehaviour
 	public NetworkVariable<CardinalDirection> AimDirection { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<CardinalDirection> CastingDirection { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 	public NetworkVariable<CardinalDirection> SwingDirection { get; private set; } = new(CardinalDirection.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	private NetworkVariable<ushort> _armorEquippedId = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+	
+	private Sprite _originalArmSprite;
 
 	private void Awake()
 	{
 		HideArm();
 		
+		_originalArmSprite = _armGO.GetComponent<SpriteRenderer>().sprite;
 		_thisPlayer = transform.root.GetComponent<Player>();
 		_thisPlayer.SelectedItemId.OnValueChanged += OnItemIdChanged;
+
+		if (_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
+		{
+			ArmorSlotUI.OnArmorUpdated += OnArmorUpdated;
+		}
+
+		_armorEquippedId.OnValueChanged += OnArmorEquippedIdChanged;
 	}
 
 	public override void OnDestroy()
 	{
 		_thisPlayer.SelectedItemId.OnValueChanged -= OnItemIdChanged;
+
+		if (_thisPlayer.OwnerClientId == NetworkManager.LocalClientId)
+		{
+			ArmorSlotUI.OnArmorUpdated -= OnArmorUpdated;
+		}
+
+		_armorEquippedId.OnValueChanged -= OnArmorEquippedIdChanged;
 	}
 
-    private void Update()
+	private void OnArmorUpdated(object sender, ArmorSlotUI.ArmorEquipDataEventArgs e)
+	{
+		if (e.ArmorType != ArmorType.Chest) return;
+
+		_armorEquippedId.Value = e.ArmorItemData != null
+			? GameDataRegistry.Instance.GetItemIdFromItemData(e.ArmorItemData)
+			: GameDataRegistry.INVALID_ID;
+	}
+
+	private void OnArmorEquippedIdChanged(ushort previousValue, ushort newValue)
+	{
+		SpriteRenderer armSR = _armGO.GetComponent<SpriteRenderer>();
+
+		if (newValue == GameDataRegistry.INVALID_ID)
+		{
+			armSR.sprite = _originalArmSprite;
+			return;
+		}
+	
+		ArmorItemSO armorItem = GameDataRegistry.Instance.GetItemDataFromItemId(newValue) as ArmorItemSO;
+		UnityEngine.Object[] data = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(armorItem.ArmorSprites.ArmSprites));
+		
+		foreach (UnityEngine.Object obj in data)
+		{
+			if (obj is Sprite sprite)
+			{
+				if(sprite.name == armSR.sprite.name)
+				{
+					armSR.sprite = sprite;
+					break;
+				}
+			}
+		}
+	}
+
+	private void Update()
 	{
 		if (IsOwner)
 		{

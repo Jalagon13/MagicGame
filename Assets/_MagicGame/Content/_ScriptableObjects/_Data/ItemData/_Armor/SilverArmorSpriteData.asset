@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa7ebde4e2eb54f43bdbc348cfff7041, type: 3}
-  m_Name: SilverArmorSprites
+  m_Name: SilverArmorSpriteData
   m_EditorClassIdentifier: 
   <HeadSprites>k__BackingField: {fileID: 2800000, guid: 31552640ae2e04a0c85fc2f6bc52cf92, type: 3}
   <ArmSprites>k__BackingField: {fileID: 2800000, guid: 6b698011d618244c1b81bea32c7a0c4f, type: 3}
