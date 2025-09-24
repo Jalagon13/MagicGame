@@ -3936,7 +3936,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timeBetweenMiningSounds: 0.225
-  _delayBetweenPlacingAndMining: 0.2
   _breakCooldownDuration: 0.075
 --- !u!224 &467162359 stripped
 RectTransform:
