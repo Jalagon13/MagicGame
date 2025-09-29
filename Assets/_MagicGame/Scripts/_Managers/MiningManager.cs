@@ -17,15 +17,16 @@ public class MiningManager : MonoBehaviour
         public Vector3Int BreakTargetPosition;
         public BiomeType Biome;
         public TileDataSO TileData;
+        public ResourceDataSO ResourceData;
         public float TotalMiningTime;
 
-        public MiningStartedEventArgs(Vector3Int breakTargetPosition, BiomeType biome, TileDataSO tileData, float totalMiningTime)
+        public MiningStartedEventArgs(Vector3Int breakTargetPosition, BiomeType biome, TileDataSO tileData, ResourceDataSO resourceData, float totalMiningTime)
         {
             BreakTargetPosition = breakTargetPosition;
             Biome = biome;
             TileData = tileData;
             TotalMiningTime = totalMiningTime;
-            TileData = tileData;
+            ResourceData = resourceData;
         }
     }
     
@@ -107,7 +108,7 @@ public class MiningManager : MonoBehaviour
         if (ResourceManager.Instance.TryToFindResourceObject(pos, out ResourceObject ro) && ro.Data.CanBeDestroyed)
         {
             _currentMiningCoroutine = StartCoroutine(MiningSequence(
-                ro.Data.Hardness, null,
+                ro.Data.Hardness, null, ro.Data,
                 () =>
                 {
                     // First, play the mining sound
@@ -138,7 +139,7 @@ public class MiningManager : MonoBehaviour
             TileDataSO tileData = GameDataRegistry.Instance.GetTileDataFromTileBase(TileManager.Instance.WallTm.GetTile(wallPos));
             
             _currentMiningCoroutine = StartCoroutine(MiningSequence(
-                tileData.Hardness, tileData,
+                tileData.Hardness, tileData, null,
                 () =>
                 {
                     // First, play the mining sound
@@ -155,12 +156,12 @@ public class MiningManager : MonoBehaviour
         return false;
     }
 
-    private IEnumerator MiningSequence(float hardness, TileDataSO tileData, Action playMiningSound, Action handleDestruction)
+    private IEnumerator MiningSequence(float hardness, TileDataSO tileData, ResourceDataSO resourceData, Action playMiningSound, Action handleDestruction)
     {
         float totalTicks = hardness * 30f / Mathf.Max(_currentMiningSpellItemSO.MiningPower, 0.1f);
         float totalMiningTime = totalTicks * 0.05f;
 
-        OnMiningStarted?.Invoke(this, new MiningStartedEventArgs(_lastCheckedTilePosition.HasValue ? (Vector3Int)_lastCheckedTilePosition.Value : Vector3Int.zero, Player.Instance.CurrentBiome.Value, tileData, totalMiningTime));
+        OnMiningStarted?.Invoke(this, new MiningStartedEventArgs(_lastCheckedTilePosition.HasValue ? (Vector3Int)_lastCheckedTilePosition.Value : Vector3Int.zero, Player.Instance.CurrentBiome.Value, tileData, resourceData, totalMiningTime));
 
         float elapsedTime = 0f;
         float nextSoundTime = 0f;

@@ -176,11 +176,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rsc_mana_crystal
+      name: rsc_vis_crystal_ignis
       rect:
         serializedVersion: 2
-        x: 0
-        y: 48
+        x: 32
+        y: 64
         width: 16
         height: 16
       alignment: 6
@@ -505,6 +505,336 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: rsc_vis_crystal_terra
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 64
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0010c828fb8a844a290d607f3c41bf0b
+      internalID: -62330258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rsc_vis_crystal_aqua
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0b8b896f2de14393aaf9d560a1a07e7
+      internalID: 1613972743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rsc_vis_crystal_aer
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 64
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c89bb70646754c2496a691ab94b6a6d
+      internalID: -1471492270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_vis_ignis_01
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 58
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 648858e3d69644c15a4d90a7f5dcb396
+      internalID: -1538324123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_vis_ignis_02
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 58
+        width: 4
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d9944297551542b3a926b89d1035240
+      internalID: 217398703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_vis_ignis_03
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 58
+        width: 5
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee767f18ee7dc436999f9101edb32dc6
+      internalID: 1108194387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_vis_terra_01
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 58
+        width: 5
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 398befd74ee0c4751bfdbc3084403d06
+      internalID: -317975482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_vis_terra_02
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 59
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a5e4cf9f286a4ea7941b3692eee0207
+      internalID: 375192432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_vis_terra_03
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 59
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05cb3c871d5ca41b1ba3c1752364e43f
+      internalID: -875128066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_vis_aqua_01
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 56
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: efa949e35d56a4055b49b019a50203e4
+      internalID: 456575072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_vis_aqua_02
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 57
+        width: 5
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2f57fd28a4644116af11178b08de1ac
+      internalID: 147858353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_vis_aqua_03
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 58
+        width: 5
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c1112864ce9345ad8b6006433e4f369
+      internalID: 1055551217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_vis_aer_01
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 59
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8a7a1a97ad6445bd8ec275e6fe671e2
+      internalID: -1428815898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_vis_aer_02
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 57
+        width: 5
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35d338e4e883d446db9eec69aeea5dd9
+      internalID: -1563335662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gibs_vis_aer_03
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 57
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 858f96e2dfa9d4837bb2aa4f6b2a2040
+      internalID: -1051996472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -519,6 +849,18 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      gibs_vis_aer_01: -1428815898
+      gibs_vis_aer_02: -1563335662
+      gibs_vis_aer_03: -1051996472
+      gibs_vis_aqua_01: 456575072
+      gibs_vis_aqua_02: 147858353
+      gibs_vis_aqua_03: 1055551217
+      gibs_vis_ignis_01: -1538324123
+      gibs_vis_ignis_02: 217398703
+      gibs_vis_ignis_03: 1108194387
+      gibs_vis_terra_01: -317975482
+      gibs_vis_terra_02: 375192432
+      gibs_vis_terra_03: -875128066
       rsc_campfire: 1706644685
       rsc_candle: -597264530
       rsc_cauldron: -410619020
@@ -529,7 +871,6 @@ TextureImporter:
       rsc_door_open_lat: 797665262
       rsc_door_open_mer: 1158298151
       rsc_forge: -1474684095
-      rsc_mana_crystal: -1761981032
       rsc_research_table: -443529757
       rsc_spindle: 250863300
       rsc_stairs_to_cave: -1882313086
@@ -537,6 +878,10 @@ TextureImporter:
       rsc_stone: -153397541
       rsc_tall_grass: -1310281842
       rsc_target_dummy: 1783913889
+      rsc_vis_crystal_aer: -1471492270
+      rsc_vis_crystal_aqua: 1613972743
+      rsc_vis_crystal_ignis: -1761981032
+      rsc_vis_crystal_terra: -62330258
       rsc_work_bench: 1014094090
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

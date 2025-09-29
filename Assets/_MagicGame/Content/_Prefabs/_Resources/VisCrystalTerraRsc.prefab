@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 154920837247502213, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Name
-      value: VisCrystalIgnisRsc
+      value: VisCrystalTerraRsc
       objectReference: {fileID: 0}
     - target: {fileID: 257096646587651372, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_LocalScale.x
@@ -79,7 +79,7 @@ PrefabInstance:
     - target: {fileID: 4568372498246112416, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: _resourceData
       value: 
-      objectReference: {fileID: 11400000, guid: 81b473b1f08af425b971c01b723339fe, type: 2}
+      objectReference: {fileID: 11400000, guid: d65744843c4914a3fa455ba0701daed7, type: 2}
     - target: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Size.x
       value: 0.78
@@ -91,7 +91,7 @@ PrefabInstance:
     - target: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1761981032, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
+      objectReference: {fileID: -62330258, guid: 957379ada62d74934ae7b46a99d260e3, type: 3}
     - target: {fileID: 6272191239398136905, guid: 89e525ca894d0443e8c24c3ad755db05, type: 3}
       propertyPath: m_Color.b
       value: 1

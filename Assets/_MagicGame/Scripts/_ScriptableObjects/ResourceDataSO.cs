@@ -35,4 +35,19 @@ public class ResourceDataSO : ScriptableObject
     public EventReference ResourceDestroyed;
     [Tooltip("Sound played when the resource is placed")]
     public EventReference PlaceSound;
+    
+    [field: SerializeField] 
+    public List<Sprite> MiningParticleSprites { get; private set; }
+
+    public Sprite GetRandomMiningParticleSprite()
+    {
+        if (MiningParticleSprites == null || MiningParticleSprites.Count == 0)
+        {
+            Debug.LogWarning("No mining particle sprites assigned.");
+            return null;
+        }
+
+        int randomIndex = Random.Range(0, MiningParticleSprites.Count);
+        return MiningParticleSprites[randomIndex];
+    }
 }

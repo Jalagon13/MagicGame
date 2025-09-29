@@ -14,6 +14,7 @@ public class BreakingVisual : NetworkBehaviour
     private NetworkVariable<float> _totalMiningTime = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private NetworkVariable<BiomeType> _ownerBiome = new(BiomeType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private NetworkVariable<ushort> _tileBreakingId = new(GameDataRegistry.INVALID_ID, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<ushort> _rscBreakingId = new(GameDataRegistry.INVALID_ID, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private Animator _breakingAnimator;
     private SpriteRenderer _breakingSr;
     private int _sortingOrder;
@@ -38,6 +39,7 @@ public class BreakingVisual : NetworkBehaviour
 
         _isVisible.OnValueChanged += OnVisibleChanged;
         _tileBreakingId.OnValueChanged += OnTileBreakingIdChanged;
+        _rscBreakingId.OnValueChanged += OnRscBreakingIdChanged;
     }
 
     public override void OnNetworkDespawn()
@@ -50,6 +52,7 @@ public class BreakingVisual : NetworkBehaviour
 
         _isVisible.OnValueChanged -= OnVisibleChanged;
         _tileBreakingId.OnValueChanged -= OnTileBreakingIdChanged;
+        _rscBreakingId.OnValueChanged -= OnRscBreakingIdChanged;
     }
 
     private void MiningStopped(object sender, EventArgs e)
@@ -92,6 +95,10 @@ public class BreakingVisual : NetworkBehaviour
         {
             _tileBreakingId.Value = GameDataRegistry.Instance.GetTileIdFromTileData(e.TileData);
         }
+        else if(e.ResourceData != null)
+        {
+            _rscBreakingId.Value = GameDataRegistry.Instance.GetResourceIdFromResourceData(e.ResourceData);
+        }
 
         if (e.TileData != null)
         {
@@ -133,6 +140,7 @@ public class BreakingVisual : NetworkBehaviour
         _isVisible.Value = true;
     }
 
+    // NTFS: This is really weird I should probably refactor this to make tile and rsc the same data type or something but it works for now
     private void OnTileBreakingIdChanged(ushort previousValue, ushort newValue)
     {
         TileDataSO tileData = GameDataRegistry.Instance.GetTileDataFromTileId(newValue);
@@ -147,6 +155,29 @@ public class BreakingVisual : NetworkBehaviour
                 tsa.SetSprite(i, tileData.GetRandomMiningParticleSprite());
             }
             
+            _hitParticles.gameObject.SetActive(true);
+        }
+        else
+        {
+            _hitParticles.Stop();
+            _hitParticles.gameObject.SetActive(false);
+        }
+    }
+
+    private void OnRscBreakingIdChanged(ushort previousValue, ushort newValue)
+    {
+        ResourceDataSO resourceData = GameDataRegistry.Instance.GetResourceDataFromResourceId(newValue);
+        if (resourceData != null)
+        {
+            Debug.Log($"Changing resource breaking ID from {previousValue} to {newValue}");
+            var tsa = _hitParticles.textureSheetAnimation;
+            tsa.enabled = true;
+            tsa.mode = ParticleSystemAnimationMode.Sprites;
+            for (int i = 0; i < tsa.spriteCount; i++)
+            {
+                tsa.SetSprite(i, resourceData.GetRandomMiningParticleSprite());
+            }
+
             _hitParticles.gameObject.SetActive(true);
         }
         else

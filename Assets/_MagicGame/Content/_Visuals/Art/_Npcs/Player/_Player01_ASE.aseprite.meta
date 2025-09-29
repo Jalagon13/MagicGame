@@ -129,7 +129,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: Frame_0
     originalName: 
-    pivot: {x: 0.7857143, y: -0.023255816}
+    pivot: {x: 0.7586207, y: -0.022988506}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -137,8 +137,8 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 28
-      height: 86
+      width: 29
+      height: 87
     spriteID: 932f18512250e47a8964ffb5727c465c
     spriteBone: []
     spriteOutline: []
@@ -150,16 +150,16 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 4}
   - name: Frame_1
     originalName: 
-    pivot: {x: 0.8148148, y: -0.023255816}
+    pivot: {x: 0.7857143, y: -0.011494253}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
-      x: 40
-      y: 4
-      width: 27
-      height: 86
+      x: 4
+      y: 99
+      width: 28
+      height: 87
     spriteID: f66e23e4576d0489bbc3c45c41ad138b
     spriteBone: []
     spriteOutline: []
@@ -168,19 +168,19 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 40, y: 4}
+    uvTransform: {x: 4, y: 99}
   - name: Frame_2
     originalName: 
-    pivot: {x: 0.84615386, y: -0.023255816}
+    pivot: {x: 0.8148148, y: -0.011494253}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
-      x: 75
-      y: 4
-      width: 26
-      height: 86
+      x: 41
+      y: 99
+      width: 27
+      height: 87
     spriteID: 530c92cd7c8a34bd6afe3934ef8ae9fa
     spriteBone: []
     spriteOutline: []
@@ -189,19 +189,19 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 75, y: 4}
+    uvTransform: {x: 41, y: 99}
   - name: Frame_3
     originalName: 
-    pivot: {x: 0.7857143, y: -0.023255816}
+    pivot: {x: 0.7857143, y: -0.022988506}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
-      x: 4
-      y: 98
+      x: 41
+      y: 4
       width: 28
-      height: 86
+      height: 87
     spriteID: 0b79ab32a4ba24f17b1c045e8aadec07
     spriteBone: []
     spriteOutline: []
@@ -210,19 +210,19 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 98}
+    uvTransform: {x: 41, y: 4}
   - name: Frame_4
     originalName: 
-    pivot: {x: 0.8148148, y: -0.023255816}
+    pivot: {x: 0.8148148, y: -0.011494253}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
-      x: 40
-      y: 98
+      x: 77
+      y: 4
       width: 27
-      height: 86
+      height: 87
     spriteID: 0bc7686c094dc4a208d143e1b3c78f8c
     spriteBone: []
     spriteOutline: []
@@ -231,7 +231,7 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 40, y: 98}
+    uvTransform: {x: 77, y: 4}
   spriteSheetImportData: []
   tileSetImportData: []
   asepriteLayers:
@@ -253,26 +253,26 @@ ScriptedImporter:
       cellRect:
         x: -14
         y: 2
-        width: 28
-        height: 86
+        width: 29
+        height: 87
       spriteId: 932f18512250e47a8964ffb5727c465c
     - name: Frame_1
       frameIndex: 1
       additiveSortOrder: 0
       cellRect:
         x: -14
-        y: 2
-        width: 27
-        height: 86
+        y: 1
+        width: 28
+        height: 87
       spriteId: f66e23e4576d0489bbc3c45c41ad138b
     - name: Frame_2
       frameIndex: 2
       additiveSortOrder: 0
       cellRect:
         x: -14
-        y: 2
-        width: 26
-        height: 86
+        y: 1
+        width: 27
+        height: 87
       spriteId: 530c92cd7c8a34bd6afe3934ef8ae9fa
     - name: Frame_3
       frameIndex: 3
@@ -281,16 +281,16 @@ ScriptedImporter:
         x: -14
         y: 2
         width: 28
-        height: 86
+        height: 87
       spriteId: 0b79ab32a4ba24f17b1c045e8aadec07
     - name: Frame_4
       frameIndex: 4
       additiveSortOrder: 0
       cellRect:
         x: -14
-        y: 2
+        y: 1
         width: 27
-        height: 86
+        height: 87
       spriteId: 0bc7686c094dc4a208d143e1b3c78f8c
     linkedCells: []
     tileCells: []
