@@ -7,7 +7,7 @@ using Unity.Netcode;
 using UnityEditor.EditorTools;
 using UnityEngine;
 
-public class LingeringLightning : ServerSpell
+public class ShockStream : ServerSpell
 {
     [field: Header("Lingering Lightning")]
     [field: SerializeField] 
@@ -27,7 +27,7 @@ public class LingeringLightning : ServerSpell
     
     [SerializeField] 
     private SpriteRenderer _zoneSpriteRenderer;
-
+    
     public NetworkVariable<Vector2> BeamStart { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Vector2> BeamEnd { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<bool> BeamOn { get; private set; } = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -35,11 +35,13 @@ public class LingeringLightning : ServerSpell
     private List<DamageReceiver> _potentialTargetsToLockOnTo = new();
     private Timer _damageTimer;
     private EventInstance _sustainedElectricitySoundEventInstance;
+    private SpellCaster _spellCaster;
 
     private bool _hadTargetLastFrame = false;
 
     protected override void OnSpellExecute()
     {
+        _spellCaster = SpellCasterNetworkObject.GetComponent<SpellCaster>();
         _damageTimer = new Timer(0.1f);
     }
 
@@ -56,6 +58,7 @@ public class LingeringLightning : ServerSpell
             _damageTimer.Tick(Time.deltaTime);
             _potentialTargetsToLockOnTo.Clear();
 
+            transform.position = _spellCaster.SpellSpawnTransform.position;
             Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, Range, CollisionMask);
 
             foreach (var col in collisions)
@@ -131,7 +134,7 @@ public class LingeringLightning : ServerSpell
     {
         BeamOn.OnValueChanged += BeamOnChanged;
 
-        _zoneSpriteRenderer.transform.localScale = new(Range * 2, Range * 2, 1);
+        // _zoneSpriteRenderer.transform.localScale = new(Range * 2, Range * 2, 1);
         _sustainedElectricitySoundEventInstance = SoundManager.Instance.CreateInstance(SustainedElectricitySound);
     }
 

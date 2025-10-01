@@ -2093,7 +2093,7 @@ Camera:
   far clip plane: 5000
   field of view: 9.75
   orthographic: 1
-  orthographic size: 14
+  orthographic size: 13
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -2583,6 +2583,9 @@ MonoBehaviour:
   <StairsToForest>k__BackingField: {fileID: 5150323723629226184, guid: 751f13ce30c9145419bf57f41f494fef, type: 3}
   <StairsToCave>k__BackingField: {fileID: 5150323723629226184, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
   <VisCrystalIgnis>k__BackingField: {fileID: 7010316107804073469, guid: d9fedaf391dbb40288bf4e3f30c5d5a5, type: 3}
+  <VisCrystalAqua>k__BackingField: {fileID: 7010316107804073469, guid: cdb4cf8ad960344919aece16fca50db8, type: 3}
+  <VisCrystalTerra>k__BackingField: {fileID: 7010316107804073469, guid: 348a9ff36abe244ca8935e65433c63c4, type: 3}
+  <VisCrystalAer>k__BackingField: {fileID: 7010316107804073469, guid: 325d06f0a6ffa4097a7f6384ac354a95, type: 3}
   SpaghettiCaveNM: {fileID: 11400000, guid: c621735f7aae34658a8101ebe324437c, type: 2}
   CheeseCaveNM: {fileID: 11400000, guid: fb24aaaf205ca41ac928db4d742f1f5c, type: 2}
   OreGenNM: {fileID: 11400000, guid: e05079a8f761b4e5e8f0f7f3c492221d, type: 2}
@@ -7155,24 +7158,19 @@ MonoBehaviour:
     <MagicArray>k__BackingField:
     - {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
     - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+    - {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
   _startingItems:
   - Item: {fileID: 11400000, guid: 9d30c9caf7d4c41fe97ee1850d87c8df, type: 2}
     Quantity: 1
   - Item: {fileID: 11400000, guid: 5ed72337ffce74fdca523240f091195a, type: 2}
     Quantity: 1
-  - Item: {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
-    Quantity: 1
   - Item: {fileID: 11400000, guid: fb47e0ebfac0e450ea82b16fdc393a9b, type: 2}
     Quantity: 100
-  - Item: {fileID: 11400000, guid: a446ad3687760455aabee48fe233433e, type: 2}
-    Quantity: 1
-  - Item: {fileID: 11400000, guid: ec4a6fa66410745918edadb13423b3ee, type: 2}
-    Quantity: 1
-  - Item: {fileID: 11400000, guid: aa0e76fcdcf124101898bc97c089b57c, type: 2}
-    Quantity: 1
   - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
     Quantity: 100
   - Item: {fileID: 11400000, guid: 128b887eb5a144b6c8c4d6b1ad559dcf, type: 2}
+    Quantity: 100
+  - Item: {fileID: 11400000, guid: fe14886186b414dc8a0cca5f83f3fdb9, type: 2}
     Quantity: 100
 --- !u!1 &849543217
 GameObject:
@@ -13284,7 +13282,7 @@ MonoBehaviour:
     CustomLookAtTarget: 0
   Lens:
     FieldOfView: 9.75
-    OrthographicSize: 14
+    OrthographicSize: 13
     NearClipPlane: 0.1
     FarClipPlane: 5000
     Dutch: 0
@@ -15761,6 +15759,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Description>k__BackingField: 
+  _crystalSpawnThreshold: 0.0175
 --- !u!224 &2078334444 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}

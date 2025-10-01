@@ -35,14 +35,16 @@ MonoBehaviour:
       Data4: 1298307303
     Path: event:/Magic/Zap2
   <CastTime>k__BackingField: 0.3
-  <Cooldown>k__BackingField: 3
-  <Damage>k__BackingField: 6
-  <Knockback>k__BackingField: 8
+  <Cooldown>k__BackingField: 1
+  <Damage>k__BackingField: 14
+  <Knockback>k__BackingField: 0
   <BounceCount>k__BackingField: 0
   <PierceCount>k__BackingField: 0
   <Lifetime>k__BackingField: 3
   <Speed>k__BackingField: 0
-  <HasteMultiplier>k__BackingField: -0.6
+  <HasteMultiplier>k__BackingField: -0.3
   <Scatter>k__BackingField: 0
   <HoldToCast>k__BackingField: 1
-  <CastingMaterials>k__BackingField: []
+  <CastingMaterials>k__BackingField:
+  - Item: {fileID: 11400000, guid: fe14886186b414dc8a0cca5f83f3fdb9, type: 2}
+    Quantity: 1

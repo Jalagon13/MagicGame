@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
   m_Name: TeleportBoltSpell
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Teleport Bolt
+  <InGameName>k__BackingField: 
+  <StringID>k__BackingField: 
   <UiDisplay>k__BackingField: {fileID: 1055845359, guid: 6b31da2f94c4a4f20b4c4f66b75905fc, type: 3}
   <GoldValue>k__BackingField: 100
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
   <SpellPrefab>k__BackingField: {fileID: 433218415224276779, guid: 7b76a216d688c40859abed843d362a5f, type: 3}
-  <SpellUIDisplaySprite>k__BackingField: {fileID: 1055845359, guid: 6b31da2f94c4a4f20b4c4f66b75905fc, type: 3}
   <ChargeVFX>k__BackingField: {fileID: 8285152488836000937, guid: 8175636c29a52422d8069d30cf23c5b6, type: 3}
   <SpellOnCastSound>k__BackingField:
     Guid:
@@ -34,11 +34,10 @@ MonoBehaviour:
       Data3: 1963841471
       Data4: 1725148628
     Path: event:/Magic/MagicWoosh
-  <ManaDrainProbability>k__BackingField: 0.489
   <CastTime>k__BackingField: 0.2
   <Cooldown>k__BackingField: 0.5
   <Damage>k__BackingField: 0
-  <Knockback>k__BackingField: 3
+  <Knockback>k__BackingField: 1
   <BounceCount>k__BackingField: 0
   <PierceCount>k__BackingField: 0
   <Lifetime>k__BackingField: 0.65
@@ -46,3 +45,4 @@ MonoBehaviour:
   <HasteMultiplier>k__BackingField: -0.25
   <Scatter>k__BackingField: 2
   <HoldToCast>k__BackingField: 0
+  <CastingMaterials>k__BackingField: []
