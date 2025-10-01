@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DigitalRuby.LightningBolt;
 using FMOD.Studio;
 using FMODUnity;
 using Unity.Netcode;
@@ -18,15 +19,14 @@ public class ShockStream : ServerSpell
     [field: Tooltip("Lifetime of particle system per distance for the beam")]
     [field: SerializeField] 
     public float LifetimePerDistanceUnit { get; private set; } = 0.05f;
-    [field: SerializeField] 
-    public ParticleSystem LightningStream { get; private set; }
+    
+    [SerializeField] 
+    private LightningBoltScript _lightningStream;
+    
     [field: SerializeField] 
     public EventReference DamageSound { get; private set; }
     [field: SerializeField] 
     public EventReference SustainedElectricitySound { get; private set; }
-    
-    [SerializeField] 
-    private SpriteRenderer _zoneSpriteRenderer;
     
     public NetworkVariable<Vector2> BeamStart { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Vector2> BeamEnd { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -42,6 +42,7 @@ public class ShockStream : ServerSpell
     protected override void OnSpellExecute()
     {
         _spellCaster = SpellCasterNetworkObject.GetComponent<SpellCaster>();
+        _lightningStream.gameObject.SetActive(false);
         _damageTimer = new Timer(0.1f);
     }
 
@@ -116,13 +117,13 @@ public class ShockStream : ServerSpell
             if (hasTargetNow && !_hadTargetLastFrame)
             {
                 _sustainedElectricitySoundEventInstance.start();
-                LightningStream.Play();
+                _lightningStream.gameObject.SetActive(true);
                 BeamOn.Value = true;
             }
             else if (!hasTargetNow && _hadTargetLastFrame)
             {
                 _sustainedElectricitySoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                LightningStream.Stop();
+                _lightningStream.gameObject.SetActive(false);
                 BeamOn.Value = false;
             }
 
@@ -143,26 +144,7 @@ public class ShockStream : ServerSpell
         // Calculate direction and distance
         if (BeamOn.Value)
         {
-            Vector2 direction = BeamEnd.Value - BeamStart.Value;
-            float distance = direction.magnitude;
-
-            // Set lifetime based on distance
-            var main = LightningStream.main;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(distance * LifetimePerDistanceUnit);
-
-            // Rotate the particle system to face the direction of the beam
-            if (direction != Vector2.zero)
-            {
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                LightningStream.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
-                LightningStream.transform.position = BeamStart.Value;
-            }
-        }
-        else
-        {
-            var main = LightningStream.main;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(0.01f);
-            LightningStream.transform.position = BeamStart.Value;
+            _lightningStream.SetPositions(BeamStart.Value, BeamEnd.Value);
         }
     }
 
@@ -171,18 +153,18 @@ public class ShockStream : ServerSpell
         BeamOn.OnValueChanged -= BeamOnChanged;    
         
         _sustainedElectricitySoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        LightningStream.Stop();
+        _lightningStream.gameObject.SetActive(false);
     }
 
     private void BeamOnChanged(bool previousValue, bool newValue)
     {
         if (newValue)
         {
-            LightningStream.Play();
+            _lightningStream.gameObject.SetActive(true);
         }
         else
         {
-            LightningStream.Stop();
+            _lightningStream.gameObject.SetActive(false);
         }
     }
 }
