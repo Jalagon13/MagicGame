@@ -1,4 +1,5 @@
 using System;
+using DigitalRuby.LightningBolt;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
@@ -6,17 +7,20 @@ using UnityEngine;
 public class SpellSpawnPoint : MonoBehaviour
 {
     [SerializeField] 
-    private EventReference _sustainedExtractionRaySound;
+    private LightningBoltScript _lightningStream;
 
+    [SerializeField] 
+    private EventReference _sustainedExtractionRaySound;
+    
     private EventInstance _sustainedExtractionRaySoundEventInstance;
-    private ParticleSystem _miningParticleSystem;
-    private MagicCircle _magicCircle;
+    private ParticleSystem _beginningParticles, _endParticles;
     private bool _isMining;
 
     private void Awake()
     {
-        _magicCircle = transform.GetChild(0).GetComponent<MagicCircle>();
-        _miningParticleSystem = transform.GetChild(1).GetComponent<ParticleSystem>();
+        _beginningParticles = transform.GetChild(1).GetComponent<ParticleSystem>();
+        _endParticles = transform.GetChild(2).GetComponent<ParticleSystem>();
+        _lightningStream.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -38,12 +42,22 @@ public class SpellSpawnPoint : MonoBehaviour
         if (_isMining)
         {
             MiningSpellItemSO miningSpellItemSO = MiningManager.Instance.CurrentMiningSpellItemSO;
-            if(miningSpellItemSO == null) return;
-        
-            var main = _miningParticleSystem.main;
-            float distance = Vector3.Distance(transform.position, ActionManager.MouseWorldPosition);
-            distance = Mathf.Clamp(distance, 0f, miningSpellItemSO.MiningRange);
-            main.startLifetime = distance / main.startSpeed.constant;
+            if (miningSpellItemSO == null) return;
+
+            float miningRange = miningSpellItemSO.MiningRange;
+            Vector3 direction = (Vector3)ActionManager.MouseWorldPosition - transform.position;
+            if (direction.magnitude > miningRange)
+            {
+                // Clamp the target position to the mining range
+                Vector3 clampedPosition = transform.position + direction.normalized * miningRange;
+                _lightningStream.SetPositions(transform.position, clampedPosition);
+                _endParticles.transform.position = clampedPosition;
+            }
+            else
+            {
+                _lightningStream.SetPositions(transform.position, ActionManager.MouseWorldPosition);
+                _endParticles.transform.position = ActionManager.MouseWorldPosition;
+            }
         }
     }
 
@@ -51,15 +65,17 @@ public class SpellSpawnPoint : MonoBehaviour
     {
         _isMining = true;
         _sustainedExtractionRaySoundEventInstance.start();
-        _magicCircle.StartAnimation(0.25f);
-        _miningParticleSystem.Play();
+        _lightningStream.gameObject.SetActive(true);
+        _beginningParticles.Play();
+        _endParticles.Play();
     }
 
     private void OnDetectMineablesStopped(object sender, System.EventArgs e)
     {
         _isMining = false;
         _sustainedExtractionRaySoundEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        _miningParticleSystem.Stop();
-        _magicCircle.StopAnimation(false);
+        _lightningStream.gameObject.SetActive(false);
+        _beginningParticles.Stop();
+        _endParticles.Stop();
     }
 }

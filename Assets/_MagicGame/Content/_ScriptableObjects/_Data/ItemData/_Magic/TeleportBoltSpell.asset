@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40a359a69cab54cce8ccedb1cb9b800f, type: 3}
   m_Name: TeleportBoltSpell
   m_EditorClassIdentifier: 
-  <InGameName>k__BackingField: 
-  <StringID>k__BackingField: 
+  <InGameName>k__BackingField: Teleport Bolt
+  <StringID>k__BackingField: teleportbolt
   <UiDisplay>k__BackingField: {fileID: 1055845359, guid: 6b31da2f94c4a4f20b4c4f66b75905fc, type: 3}
   <GoldValue>k__BackingField: 100
   <Stackable>k__BackingField: 0
@@ -35,7 +35,7 @@ MonoBehaviour:
       Data4: 1725148628
     Path: event:/Magic/MagicWoosh
   <CastTime>k__BackingField: 0.2
-  <Cooldown>k__BackingField: 0.5
+  <Cooldown>k__BackingField: 8
   <Damage>k__BackingField: 0
   <Knockback>k__BackingField: 1
   <BounceCount>k__BackingField: 0

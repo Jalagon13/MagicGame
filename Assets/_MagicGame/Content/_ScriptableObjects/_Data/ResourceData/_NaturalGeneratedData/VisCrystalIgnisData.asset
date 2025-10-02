@@ -16,7 +16,7 @@ MonoBehaviour:
   PassThrough: 0
   CanBeDestroyed: 1
   ResourcePrefab: {fileID: 7010316107804073469, guid: d9fedaf391dbb40288bf4e3f30c5d5a5, type: 3}
-  Hardness: 2
+  Hardness: 0.5
   Table:
   - Item: {fileID: 11400000, guid: 128b887eb5a144b6c8c4d6b1ad559dcf, type: 2}
     Min: 3

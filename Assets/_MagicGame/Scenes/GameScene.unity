@@ -7157,7 +7157,7 @@ MonoBehaviour:
     Quantity: 1
     <MagicArray>k__BackingField:
     - {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
-    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+    - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
     - {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
   _startingItems:
   - Item: {fileID: 11400000, guid: 9d30c9caf7d4c41fe97ee1850d87c8df, type: 2}
