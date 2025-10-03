@@ -26,7 +26,7 @@ public class PlayerHealthStatUI : MonoBehaviour
 			Player.Instance.ServerCharacter.NetHealthState.OnHitPointsChanged -= Player_OnPlayerHealthUpdated;
 		}
 	}
-
+	
 	private void Player_OnAnyPlayerSpawned(object sender, Player.PlayerIdEventArgs e)
 	{
 		if(Player.Instance != null)

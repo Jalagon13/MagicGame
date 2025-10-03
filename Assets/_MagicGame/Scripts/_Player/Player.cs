@@ -6,6 +6,11 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(SpellCaster))]
+[RequireComponent(typeof(DamageReceiver))]
+[RequireComponent(typeof(ServerCharacter))]
+[RequireComponent(typeof(PlayerNetworkVisibility))]
+[RequireComponent(typeof(Collider2D))]
 public class Player : NetworkBehaviour
 {	
 	public static event EventHandler<PlayerIdEventArgs> OnAnyPlayerSpawned;
@@ -99,6 +104,7 @@ public class Player : NetworkBehaviour
     private void UpdateCollisionDetection(BiomeType previousValue, BiomeType newValue)
     {
         _playerCollisionDetector.SetBiome(newValue);
+
     }
 
     private void GameInput_OnFKeyPressed(object sender, EventArgs e)
