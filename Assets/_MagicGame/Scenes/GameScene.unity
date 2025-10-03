@@ -3707,10 +3707,10 @@ Transform:
   m_Children:
   - {fileID: 832159822}
   - {fileID: 1813096623}
+  - {fileID: 1616656745}
   - {fileID: 2018757677}
   - {fileID: 876396786}
   - {fileID: 462286018}
-  - {fileID: 1616656745}
   - {fileID: 1655249452}
   - {fileID: 1007229085}
   - {fileID: 333420534}
@@ -11949,9 +11949,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _biomeSpawnParamsSO: {fileID: 11400000, guid: 2f81c418ac26f4ee3ab2b2720b649634, type: 2}
-  _enableSpawning: 0
+  _enableSpawning: 1
   _startSpawnDelay: 1
+  _npcSpawnData:
+    <AllSpawnRules>k__BackingField:
+    - <Biome>k__BackingField: 1
+      <SpawnsPerMinute>k__BackingField: 30
+      <MaxNpcSlotAmount>k__BackingField: 6
+      <HasDayNightCycle>k__BackingField: 1
+      <CharacterSpawnData>k__BackingField:
+      - <CharacterData>k__BackingField: {fileID: 11400000, guid: 83e7f42dea9e944ceace0cac02e79f10, type: 2}
+        <RelativeSpawnWeight>k__BackingField: 50
+        <SpawnCondition>k__BackingField: 0
 --- !u!224 &1618469497 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}

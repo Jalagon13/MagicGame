@@ -13,24 +13,38 @@ public class NpcManager : NetworkBehaviour
 	public static int NO_SPAWN_ZONE_WIDTH = 35; // Camera Frustum
 	public static int NO_SPAWN_ZONE_HEIGHT = 20; // Camera Frustum
 	
-	[SerializeField] private BiomeSpawnParamsSO _biomeSpawnParamsSO;
-	[SerializeField] private bool _enableSpawning = true;
-	[SerializeField] private float _startSpawnDelay;
+	[SerializeField] 
+	private bool _enableSpawning = true;
 	
-	// public NetworkVariable<float> NpcSlots { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+	[SerializeField] 
+	private float _startSpawnDelay;
+	
+	[SerializeField] 
+	private NpcSpawnData _npcSpawnData;
+	
 	private readonly float _tickTime = 1f / 60f; // 60 ticks per second
 	private readonly int _maxSpawnAttempts = 50;
 	private Transform _localPlayerTransform;
-	private float _npcSlots = 0;
+	private float _currentNpcCapacity = 0;
 	
 	private void Awake()
-	{
+	{ 
 		Instance = this;
 		
 		if(NetworkManager != null)
 		{
 			NetworkManager.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
 		}
+	}
+
+	public override void OnDestroy()
+	{
+		if(NetworkManager != null)
+		{
+			NetworkManager.OnClientConnectedCallback -= NetworkManager_OnClientConnectedCallback;
+		}
+		
+		base.OnDestroy();
 	}
 
     private void NetworkManager_OnClientConnectedCallback(ulong clientId)
@@ -45,46 +59,50 @@ public class NpcManager : NetworkBehaviour
 	public void TryToSpawnNpc()
 	{
 		if(!_enableSpawning) return;
+		if(_localPlayerTransform == null) return;
 	
-		// Calculate the current spawn chance modifier and adjust spawn rate based on the modifier
-		float spawnModifier = GetSpawnModifier();
-		float spawnRate = 1 / (_biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().SpawnRateDenominator * spawnModifier);
+		BiomeSpawnRule spawnRule = _npcSpawnData.GetSpawnRules(Player.Instance.CurrentBiome.Value);
 		
-		// Try to spawn an enemy if we're below the max number of NPC slots
-		if (_npcSlots < _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount && UnityEngine.Random.value < spawnRate)
+		// Check if we're at max capacity
+		if (_currentNpcCapacity >= spawnRule.MaxNpcSlotAmount) return;
+		
+		// Calculate spawn probability per tick (Terraria-style)
+		float spawnModifier = GetSpawnModifier();
+		float spawnsPerMinute = spawnRule.SpawnsPerMinute;
+		
+		// Convert spawns per minute to probability per tick
+		// If we want X spawns per minute and we tick 60 times per second (3600 times per minute)
+		// Then probability per tick = X / 3600 * modifier
+		float spawnProbability = (spawnsPerMinute / 3600f) * spawnModifier;
+		
+		// Roll for spawn attempt
+		if (UnityEngine.Random.value < spawnProbability)
 		{
-			// Try to find a valid spawn spot and spawn an entity on the first one found
-			int spawnAttempts = 0;
-			
-			while(spawnAttempts < _maxSpawnAttempts)
+			// Try to find a valid spawn spot (Terraria-style: limited attempts per tick)
+			for (int attempt = 0; attempt < _maxSpawnAttempts; attempt++)
 			{
-				if(_localPlayerTransform == null)
-				{
-					break;
-				}
-				
 				Vector2 potentialSpawnPoint = GetRandomTileInSpawnArea(); 
 				
 				if(SpawnSpotIsValid(potentialSpawnPoint))
 				{
-					float remainingNpcSlotSpace = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount - _npcSlots;
-					NpcSpawnData npcToSpawn = _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().GetRandomNpc();
+					float remainingNpcSlotSpace = spawnRule.MaxNpcSlotAmount - _currentNpcCapacity;
+					CharacterSpawnData npcToSpawn = _npcSpawnData.SelectRandomNpc(spawnRule.Biome);
 					
-					// if(npcToSpawn.NpcData.SlotAmount <= remainingNpcSlotSpace)
-					// {
-					// 	// SpawnNpc(potentialSpawnPoint, npcToSpawn.NpcData);
-					// 	break;
-					// }
+					if(npcToSpawn.CharacterData.SlotAmount <= remainingNpcSlotSpace)
+					{
+						SpawnNpc(potentialSpawnPoint, npcToSpawn.CharacterData);
+						return; // Successfully spawned, exit
+					}
 				}
-				
-				spawnAttempts++;
 			}
+			// If we get here, we rolled for a spawn but couldn't find a valid spot
+			// This is normal in Terraria - spawns can fail due to invalid terrain
 		}
 	}
 	
 	public void SpawnNpc(Vector2 spawnPosition, CharacterDataSO npcData)
 	{
-		_npcSlots += npcData.SlotAmount;
+		_currentNpcCapacity += npcData.SlotAmount;
 		ushort id = GameDataRegistry.Instance.GetCharacterIdFromCharacterData(npcData);
 		SpawnNpcServerRpc(Player.Instance.CurrentBiome.Value, id, NetworkManager.LocalClientId, spawnPosition, npcData.SlotAmount);
 	}
@@ -108,7 +126,7 @@ public class NpcManager : NetworkBehaviour
 	[Rpc(SendTo.SpecifiedInParams, RequireOwnership = false)]
     public void DecrementNpcSlotsClientRpc(float slotAmount, RpcParams rpcParams = default)
     {
-        _npcSlots -= slotAmount;
+        _currentNpcCapacity -= slotAmount;
     }
 
     private bool SpawnSpotIsValid(Vector2 potentialSpawnPoint)
@@ -132,8 +150,8 @@ public class NpcManager : NetworkBehaviour
 
 		foreach (Collider2D col in colliders)
 		{
-			// if (col.TryGetComponent(out WorldObject clickable) || col.TryGetComponent(out Npc npc))
-			// 	return false;
+			if (col.TryGetComponent(out ResourceObject rsc) || col.TryGetComponent(out NpcNetworkVisibility npc))
+				return false;
 		}
 
 		return true;
@@ -175,9 +193,6 @@ public class NpcManager : NetworkBehaviour
 	
 	private Vector2 GetRandomTileInSpawnArea()
 	{
-		// Set a different random seed every time the game starts
-		UnityEngine.Random.InitState(DateTime.Now.Millisecond);
-
 		// Define the spawn bounds around the player
 		float width = OUTER_SPAWN_ZONE_WIDTH - 1.25f; // Full width of the spawn rectangle minus a little bit so the entity does not spawn out of bounds
 		float height = OUTER_SPAWN_ZONE_HEIGHT - 1.25f; // Full height of the spawn rectangle minus a little bit so the entity does not spawn out of bounds
@@ -201,35 +216,30 @@ public class NpcManager : NetworkBehaviour
 	
 	private float GetSpawnModifier()
 	{
-		float activeRatio = _npcSlots / _biomeSpawnParamsSO.GetCurrentBiomeSpawnRule().MaxNpcSlotAmount;
+		float activeRatio = _currentNpcCapacity / _npcSpawnData.GetSpawnRules(Player.Instance.CurrentBiome.Value).MaxNpcSlotAmount;
 
+		// Terraria-style: More mobs = lower spawn rate, fewer mobs = higher spawn rate
 		if (activeRatio < 0.2f)
 		{
-			return 0.6f;
+			return 1.5f; // 50% faster when area is mostly empty
 		}
 		else if (activeRatio < 0.4f)
 		{
-			return 0.7f;
+			return 1.3f; // 30% faster when area is 20-40% full
 		}
 		else if (activeRatio < 0.6f)
 		{
-			return 0.8f;
+			return 1.1f; // 10% faster when area is 40-60% full
 		}
 		else if (activeRatio < 0.8f)
 		{
-			return 0.9f;
+			return 0.9f; // 10% slower when area is 60-80% full
 		}
-
-		return 1f;
-	}
-
-	public override void OnDestroy()
-	{
-		if(NetworkManager != null)
+		else if (activeRatio < 0.95f)
 		{
-			NetworkManager.OnClientConnectedCallback -= NetworkManager_OnClientConnectedCallback;
+			return 0.5f; // 50% slower when area is 80-95% full
 		}
-		
-		base.OnDestroy();
+
+		return 0.1f; // 90% slower when area is nearly full
 	}
 }

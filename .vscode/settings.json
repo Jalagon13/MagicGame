@@ -56,5 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "FableForge.sln"
+    "dotnet.defaultSolution": "FableForge.sln",
+    "chatgpt.openOnStartup": false
 }
