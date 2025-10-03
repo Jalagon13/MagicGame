@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
+public enum SingleBiomeType
+{
+    None = 0,
+    Forest = 1,
+    Cave = 2,
+}
+
+[Serializable]
 public class NpcSpawnData
 {
     [field: SerializeField]
@@ -10,9 +18,12 @@ public class NpcSpawnData
 
     public BiomeSpawnRule GetSpawnRules(BiomeType biomeType)
     {
+        // Convert BiomeType to SingleBiomeType for comparison
+        SingleBiomeType singleBiomeType = (SingleBiomeType)biomeType;
+        
         foreach (var rule in AllSpawnRules)
         {
-            if (rule.Biome == biomeType)
+            if (rule.Biome == singleBiomeType)
                 return rule;
         }
 
@@ -56,7 +67,7 @@ public class NpcSpawnData
 public class BiomeSpawnRule
 {
     [field: SerializeField]
-    public BiomeType Biome { get; private set; }
+    public SingleBiomeType Biome { get; private set; }
     
     [field: SerializeField, Tooltip("How many NPCs spawn per minute in this biome"), Range(0f, 60f)]
     public float SpawnsPerMinute { get; private set; }

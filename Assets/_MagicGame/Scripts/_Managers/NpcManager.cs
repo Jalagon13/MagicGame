@@ -58,8 +58,7 @@ public class NpcManager : NetworkBehaviour
 	
 	public void TryToSpawnNpc()
 	{
-		if(!_enableSpawning) return;
-		if(_localPlayerTransform == null) return;
+		if(!_enableSpawning || _localPlayerTransform == null || GameWorld.Instance.IsLoadingBiome) return;
 	
 		BiomeSpawnRule spawnRule = _npcSpawnData.GetSpawnRules(Player.Instance.CurrentBiome.Value);
 		
@@ -86,7 +85,7 @@ public class NpcManager : NetworkBehaviour
 				if(SpawnSpotIsValid(potentialSpawnPoint))
 				{
 					float remainingNpcSlotSpace = spawnRule.MaxNpcSlotAmount - _currentNpcCapacity;
-					CharacterSpawnData npcToSpawn = _npcSpawnData.SelectRandomNpc(spawnRule.Biome);
+					CharacterSpawnData npcToSpawn = _npcSpawnData.SelectRandomNpc((BiomeType)spawnRule.Biome);
 					
 					if(npcToSpawn.CharacterData.SlotAmount <= remainingNpcSlotSpace)
 					{

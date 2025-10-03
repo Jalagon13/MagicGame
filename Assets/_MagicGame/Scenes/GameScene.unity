@@ -11961,6 +11961,14 @@ MonoBehaviour:
       - <CharacterData>k__BackingField: {fileID: 11400000, guid: 83e7f42dea9e944ceace0cac02e79f10, type: 2}
         <RelativeSpawnWeight>k__BackingField: 50
         <SpawnCondition>k__BackingField: 0
+    - <Biome>k__BackingField: 2
+      <SpawnsPerMinute>k__BackingField: 30
+      <MaxNpcSlotAmount>k__BackingField: 6
+      <HasDayNightCycle>k__BackingField: 1
+      <CharacterSpawnData>k__BackingField:
+      - <CharacterData>k__BackingField: {fileID: 11400000, guid: 83e7f42dea9e944ceace0cac02e79f10, type: 2}
+        <RelativeSpawnWeight>k__BackingField: 50
+        <SpawnCondition>k__BackingField: 0
 --- !u!224 &1618469497 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729166915590701029, guid: e5e80fe6165aebe4898d7d7c08d89c29, type: 3}
