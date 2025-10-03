@@ -7,7 +7,7 @@ public class CharacterStats
     public Stat Defense { get; }
     public Stat MovementSpeed { get; }
 
-    private List<Buff> _activeBuffs = new();
+    private readonly List<Buff> _activeBuffs = new();
 
     public CharacterStats(CharacterDataSO data)
     {

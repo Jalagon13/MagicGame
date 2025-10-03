@@ -25,6 +25,8 @@ public class ServerCharacterMovement : NetworkBehaviour
     private Knockback _knockback;
     private Vector2 _velocity;
     public Vector2 Velocity => _velocity;
+
+    public bool IsMoving => _rigidbody2D.linearVelocity.sqrMagnitude > 0.0001f;
     
     private Vector2 _desiredDirection;
     public Vector2 DesiredDirection => _desiredDirection;

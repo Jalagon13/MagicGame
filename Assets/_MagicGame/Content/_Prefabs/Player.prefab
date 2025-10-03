@@ -9885,6 +9885,7 @@ GameObject:
   - component: {fileID: 1645875197371293612}
   - component: {fileID: 598476479702786246}
   - component: {fileID: 7639844761049611922}
+  - component: {fileID: 4617094901655456390}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -10176,6 +10177,27 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _serverCharacter: {fileID: 8141412508225569808}
   _spellSpawnTransform: {fileID: 4196058989623954390}
+--- !u!114 &4617094901655456390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815970926421098775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7dca2b4c80df473c938b6ec74a6cda7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _maxHunger: 100
+  _decayWhileMovingSeconds: 1
+  _decayWhileIdleSeconds: 3
+  _starvationDamageIntervalSeconds: 2
+  Hunger:
+    m_InternalValue: 0
+  State:
+    m_InternalValue: 0
 --- !u!1 &1038443598187688652
 GameObject:
   m_ObjectHideFlags: 0
