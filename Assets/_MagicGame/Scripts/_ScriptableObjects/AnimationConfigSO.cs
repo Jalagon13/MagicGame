@@ -1,13 +1,16 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-public class AnimationConfigSO
+namespace ProjectWizard
 {
-    public AnimationClip SideMoveClip;
-    public AnimationClip SideIdleClip;
-    public AnimationClip FrontMoveClip;
-    public AnimationClip FrontIdleClip;
-    public AnimationClip BackMoveClip;
-    public AnimationClip BackIdleClip;
+    [Serializable]
+    public class AnimationConfigSO
+    {
+        public AnimationClip SideMoveClip;
+        public AnimationClip SideIdleClip;
+        public AnimationClip FrontMoveClip;
+        public AnimationClip FrontIdleClip;
+        public AnimationClip BackMoveClip;
+        public AnimationClip BackIdleClip;
+    }
 }

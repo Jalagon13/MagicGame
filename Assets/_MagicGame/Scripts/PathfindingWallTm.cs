@@ -1,16 +1,19 @@
 using UnityEngine;
 
-public class PathfindingWallTm : MonoBehaviour
+namespace ProjectWizard
 {
-    public BiomeType Biome { get; private set; }
-    
-    public void SetBiome(BiomeType biome)
+    public class PathfindingWallTm : MonoBehaviour
     {
-        Biome = biome;
-    }
-    
-    public bool BiomeSameAs(BiomeType biome)
-    {
-        return Biome == biome;
+        public BiomeType Biome { get; private set; }
+
+        public void SetBiome(BiomeType biome)
+        {
+            Biome = biome;
+        }
+
+        public bool BiomeSameAs(BiomeType biome)
+        {
+            return Biome == biome;
+        }
     }
 }

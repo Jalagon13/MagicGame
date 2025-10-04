@@ -1,31 +1,34 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Mining Spell", menuName = "Create Item/New Mining Spell")]
-public class MiningSpellItemSO : ItemDataSO
+namespace ProjectWizard
 {
-    [field: SerializeField] 
-    public int MiningPower { get; private set; } = 1;
-    
-    [field: SerializeField] 
-    public float MiningRange { get; private set; } = 4;
-
-    public override InventoryItem CreateInventoryItem(int quantity)
+    [CreateAssetMenu(fileName = "New Mining Spell", menuName = "Create Item/New Mining Spell")]
+    public class MiningSpellItemSO : ItemDataSO
     {
-        return new InventoryItem(this, quantity);
-    }
+        [field: SerializeField]
+        public int MiningPower { get; private set; } = 1;
 
-    public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
-    {
-        return _baseActionCooldown;
-    }
+        [field: SerializeField]
+        public float MiningRange { get; private set; } = 4;
 
-    public override string GetDescription()
-    {
-        return string.Empty;
-    }
+        public override InventoryItem CreateInventoryItem(int quantity)
+        {
+            return new InventoryItem(this, quantity);
+        }
 
-    public bool PlayerWithinMiningRangeOfMouse()
-    {
-        return Vector2.Distance(Player.Instance.transform.position, ActionManager.MouseWorldPosition) <= MiningRange;
+        public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
+        {
+            return _baseActionCooldown;
+        }
+
+        public override string GetDescription()
+        {
+            return string.Empty;
+        }
+
+        public bool PlayerWithinMiningRangeOfMouse()
+        {
+            return Vector2.Distance(Player.Instance.transform.position, ActionManager.MouseWorldPosition) <= MiningRange;
+        }
     }
 }

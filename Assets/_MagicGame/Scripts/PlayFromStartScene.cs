@@ -2,34 +2,38 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[InitializeOnLoad]
-public static class PlayFromStartScene
+
+namespace ProjectWizard
 {
-	static PlayFromStartScene()
+	[InitializeOnLoad]
+	public static class PlayFromStartScene
 	{
-		EditorApplication.playModeStateChanged += LoadStartScene;
-	}
-
-	private static void LoadStartScene(PlayModeStateChange state)
-	{
-		// Check if entering Play Mode
-		if (state == PlayModeStateChange.EnteredPlayMode)
+		static PlayFromStartScene()
 		{
-			// Define your desired starting scene
-			string startSceneName = "MainMenuScene";
+			EditorApplication.playModeStateChanged += LoadStartScene;
+		}
 
-			// Check if the active scene is not the desired start scene
-			if (SceneManager.GetActiveScene().name != startSceneName)
+		private static void LoadStartScene(PlayModeStateChange state)
+		{
+			// Check if entering Play Mode
+			if (state == PlayModeStateChange.EnteredPlayMode)
 			{
-				// Load the starting scene
-				Scene startScene = SceneManager.GetSceneByName(startSceneName);
-				if (startScene != null)
+				// Define your desired starting scene
+				string startSceneName = "MainMenuScene";
+
+				// Check if the active scene is not the desired start scene
+				if (SceneManager.GetActiveScene().name != startSceneName)
 				{
-					SceneManager.LoadScene(startSceneName);
-				}
-				else
-				{
-					Debug.LogError($"Scene '{startSceneName}' not found! Make sure it's in the build settings.");
+					// Load the starting scene
+					Scene startScene = SceneManager.GetSceneByName(startSceneName);
+					if (startScene != null)
+					{
+						SceneManager.LoadScene(startSceneName);
+					}
+					else
+					{
+						Debug.LogError($"Scene '{startSceneName}' not found! Make sure it's in the build settings.");
+					}
 				}
 			}
 		}

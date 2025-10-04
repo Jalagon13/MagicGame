@@ -4,83 +4,86 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+namespace ProjectWizard
 {
-    [field: SerializeField] public Image ItemImage { get; private set; }
-
-    private ItemDataSO _itemToBuy;
-    private bool _hovered;
-
-    public void Initialize(ItemDataSO itemToBuy)
+    public class BuySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        _itemToBuy = itemToBuy;
-        if(_hovered)
+        [field: SerializeField] public Image ItemImage { get; private set; }
+
+        private ItemDataSO _itemToBuy;
+        private bool _hovered;
+
+        public void Initialize(ItemDataSO itemToBuy)
         {
-            // This is here just so it stops the yellow message 
+            _itemToBuy = itemToBuy;
+            if (_hovered)
+            {
+                // This is here just so it stops the yellow message 
+            }
+
+            ItemImage.color = new Vector4(1, 1, 1, 1);
+            ItemImage.sprite = itemToBuy.UiDisplay;
         }
 
-        ItemImage.color = new Vector4(1, 1, 1, 1);
-        ItemImage.sprite = itemToBuy.UiDisplay;
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (!GoldManager.Instance.CanAfford(_itemToBuy.GoldValue)) return;
-
-        if (eventData.button == PointerEventData.InputButton.Left)
+        public void OnPointerClick(PointerEventData eventData)
         {
-            if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.HasItem)
+            if (!GoldManager.Instance.CanAfford(_itemToBuy.GoldValue)) return;
+
+            if (eventData.button == PointerEventData.InputButton.Left)
             {
-                if(InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item.InGameName == _itemToBuy.InGameName)
+                if (InventoryManager.Instance.GetMouseItem().MouseInventoryItem.HasItem)
                 {
+                    if (InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item.InGameName == _itemToBuy.InGameName)
+                    {
+                        InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity++;
+                        SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.Instance.transform.position);
+                        GoldManager.Instance.RemoveGold(_itemToBuy.GoldValue);
+                        InventoryManager.Instance.GetInventoryModel().UpdateInventory();
+                    }
+                }
+                else
+                {
+                    InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _itemToBuy;
                     InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity++;
                     SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.Instance.transform.position);
                     GoldManager.Instance.RemoveGold(_itemToBuy.GoldValue);
                     InventoryManager.Instance.GetInventoryModel().UpdateInventory();
                 }
             }
-            else 
-            {
-                InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Item = _itemToBuy;
-                InventoryManager.Instance.GetMouseItem().MouseInventoryItem.Quantity++;
-                SoundManager.Instance.PlayOneShot(FMODEvents.Instance.GoldPickup, Player.Instance.transform.position);
-                GoldManager.Instance.RemoveGold(_itemToBuy.GoldValue);
-                InventoryManager.Instance.GetInventoryModel().UpdateInventory();
-            }
         }
-    }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (!InventoryManager.MOUSE_HAS_ITEM)
+        public void OnPointerEnter(PointerEventData eventData)
         {
-            _hovered = true;
-
-            Tooltip.ShowNew();
-
-            switch (_itemToBuy)
+            if (!InventoryManager.MOUSE_HAS_ITEM)
             {
-                case WandItemSO wandItemSO:
-                    SpellItemSO[] magicArray = new SpellItemSO[0];
-                    Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);
-                    break;
-                case SpellItemSO spellItemSO:
-                    Tooltip.SpellDisplay(spellItemSO, fontSize: 12f);
-                    break;
-                default:
-                    int quantity = 1;
-                    string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
-                    string itemText = $"{_itemToBuy.InGameName} {quantityString}<br>Cost: {_itemToBuy.GoldValue} Gold<br>{_itemToBuy.GetDescription()}";
+                _hovered = true;
 
-                    Tooltip.JustText(itemText, Color.white, fontSize: 12f);
-                    break;
+                Tooltip.ShowNew();
+
+                switch (_itemToBuy)
+                {
+                    case WandItemSO wandItemSO:
+                        SpellItemSO[] magicArray = new SpellItemSO[0];
+                        Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);
+                        break;
+                    case SpellItemSO spellItemSO:
+                        Tooltip.SpellDisplay(spellItemSO, fontSize: 12f);
+                        break;
+                    default:
+                        int quantity = 1;
+                        string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
+                        string itemText = $"{_itemToBuy.InGameName} {quantityString}<br>Cost: {_itemToBuy.GoldValue} Gold<br>{_itemToBuy.GetDescription()}";
+
+                        Tooltip.JustText(itemText, Color.white, fontSize: 12f);
+                        break;
+                }
             }
         }
-    }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        _hovered = false;
-        Tooltip.HideUI();
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            _hovered = false;
+            Tooltip.HideUI();
+        }
     }
 }

@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TallGrassGenerationStep : GenerationStep
+
+namespace ProjectWizard
+{
+    public class TallGrassGenerationStep : GenerationStep
 {
     [field: SerializeField] public float MinGrassDistance { get; private set; }
     [field: SerializeField] public float MaxGrassDistance { get; private set; }
@@ -26,4 +29,5 @@ public class TallGrassGenerationStep : GenerationStep
             }
         }
     }
+}
 }

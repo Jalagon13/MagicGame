@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ForestStairsGenerationStep : GenerationStep
+
+namespace ProjectWizard
+{
+    public class ForestStairsGenerationStep : GenerationStep
 {
     public override void Execute(BaseGenerationData genData)
     {
@@ -37,4 +40,5 @@ public class ForestStairsGenerationStep : GenerationStep
             }
         }
     }
+}
 }

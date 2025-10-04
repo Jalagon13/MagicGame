@@ -1,67 +1,70 @@
 using UnityEngine;
 
-public class PlayerSpellCastingState : BaseState
+namespace ProjectWizard
 {
-    private PlayerStateMachine _ctx;
-    private GameObject _clientChargeVfx;
-
-    public PlayerSpellCastingState(AIState key, StateMachine context) : base(key, context)
+    public class PlayerSpellCastingState : BaseState
     {
-        IsSuperState = true;
-        _ctx = Context as PlayerStateMachine;
-    }
+        private PlayerStateMachine _ctx;
+        private GameObject _clientChargeVfx;
 
-    protected override void EnterState(AIStateData stateData)
-    {
-        // Debug.Log($"Player entering spell casting");
-        float hasteMultiplier = Player.Instance.SpellCastController.SelectedWandInventoryItem.GetSelectedSpell().HasteMultiplier;
+        public PlayerSpellCastingState(AIState key, StateMachine context) : base(key, context)
+        {
+            IsSuperState = true;
+            _ctx = Context as PlayerStateMachine;
+        }
 
-        Buff castingMoveBuff = new(
-            _ctx.ServerCharacter.Stats.MovementSpeed,
-            new StatModifier(hasteMultiplier, StatModifierType.Percent, _ctx.SpellCaster)/* ,
+        protected override void EnterState(AIStateData stateData)
+        {
+            // Debug.Log($"Player entering spell casting");
+            float hasteMultiplier = Player.Instance.SpellCastController.SelectedWandInventoryItem.GetSelectedSpell().HasteMultiplier;
+
+            Buff castingMoveBuff = new(
+                _ctx.ServerCharacter.Stats.MovementSpeed,
+                new StatModifier(hasteMultiplier, StatModifierType.Percent, _ctx.SpellCaster)/* ,
             _spellToCast.CastTime */);
-        
-        _ctx.ServerCharacter.Stats.AddBuff(castingMoveBuff);
-    }
 
-    public override void UpdateState()
-    {
-
-    }
-
-    public override void CheckSwitchStates()
-    {
-        if(!_ctx.SpellCaster.IsCasting.Value)
-        {
-            SwitchState(new AIStateData(AIState.Grounded));
+            _ctx.ServerCharacter.Stats.AddBuff(castingMoveBuff);
         }
-        else if(_ctx.ServerCharacter.LifeState == LifeState.Dead)
+
+        public override void UpdateState()
         {
-            SwitchState(new AIStateData(AIState.Dead));
+
         }
-    }
 
-    public override void ExitState()
-    {
-        _ctx.ServerCharacter.Stats.RemoveBuffsFromSource(_ctx.SpellCaster);
-    }
+        public override void CheckSwitchStates()
+        {
+            if (!_ctx.SpellCaster.IsCasting.Value)
+            {
+                SwitchState(new AIStateData(AIState.Grounded));
+            }
+            else if (_ctx.ServerCharacter.LifeState == LifeState.Dead)
+            {
+                SwitchState(new AIStateData(AIState.Dead));
+            }
+        }
 
-    public override void ClientEnterState(AIStateData stateData)
-    {
-        SpellItemSO spellToCast = GameDataRegistry.Instance.GetItemDataFromItemId((ushort)stateData.Amount) as SpellItemSO;
+        public override void ExitState()
+        {
+            _ctx.ServerCharacter.Stats.RemoveBuffsFromSource(_ctx.SpellCaster);
+        }
 
-        _clientChargeVfx = Object.Instantiate(spellToCast.ChargeVFX, _ctx.SpellCaster.SpellSpawnTransform);
-        _clientChargeVfx.transform.localPosition = Vector3.zero;
-        _clientChargeVfx.GetComponent<MagicCircle>().StartAnimation(spellToCast.Cooldown);
-    }
+        public override void ClientEnterState(AIStateData stateData)
+        {
+            SpellItemSO spellToCast = GameDataRegistry.Instance.GetItemDataFromItemId((ushort)stateData.Amount) as SpellItemSO;
 
-    public override void ClientUpdateState(AIStateData stateData)
-    {
-        
-    }
-    
-    public override void ClientExitState(AIStateData stateData)
-    {
-        _clientChargeVfx?.GetComponent<MagicCircle>().StopAnimation(true);
+            _clientChargeVfx = Object.Instantiate(spellToCast.ChargeVFX, _ctx.SpellCaster.SpellSpawnTransform);
+            _clientChargeVfx.transform.localPosition = Vector3.zero;
+            _clientChargeVfx.GetComponent<MagicCircle>().StartAnimation(spellToCast.Cooldown);
+        }
+
+        public override void ClientUpdateState(AIStateData stateData)
+        {
+
+        }
+
+        public override void ClientExitState(AIStateData stateData)
+        {
+            _clientChargeVfx?.GetComponent<MagicCircle>().StopAnimation(true);
+        }
     }
 }

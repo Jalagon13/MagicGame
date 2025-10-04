@@ -6,218 +6,221 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public struct TileVisibility
+namespace ProjectWizard
 {
-	public int Visibility; // 0 = transparent, 1 = opaque
-	
-	public TileVisibility(int visibility)
-	{
-		Visibility = visibility;
-	}
-}
-
-public class TileManager : NetworkBehaviour
-{
-	public static TileManager Instance;
-
-	[field: SerializeField] public Tilemap FloorTm { get; private set; }
-	[field: SerializeField] public Tilemap WallTm { get; private set; }
-	[field: SerializeField] public Tilemap FoliageTm { get; private set; }
-	[field: SerializeField] public TerrainTileRenderer TerrainTileRenderer { get; private set; }
-	[field: SerializeField] public UpperWallTm UpperWallTm { get; private set; }
-	[field: SerializeField] public TileDestructionFeedbacks TileDestructionFeedbacks { get; private set; }
-
-
-	private void Awake()
-	{
-		WallTm.GetComponent<TilemapCollider2D>().enabled = false;
-
-		Instance = this;
-	}
-	
-	private void Start()
-	{
-		ChunkManager.Instance.OnLoadChunk += ChunkManager_OnLoadChunk;
-		GameWorld.Instance.OnBiomeTransitionStart += WorldManager_OnBiomeTransitionStart;
-		GameWorld.Instance.OnBiomeTransitionEnd += WorldManager_OnBiomeTransitionEnd;
-	}
-	
-	private void WorldManager_OnBiomeTransitionStart(object sender, EventArgs e)
-	{
-		WallTm.GetComponent<TilemapCollider2D>().enabled = false;
-		UpperWallTm.EnableTilemapCollider(false);
-
-		// Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
-		TerrainTileRenderer.ClearAllTerrainTiles();
-		FloorTm.ClearAllTiles();
-		WallTm.ClearAllTiles();
-		FoliageTm.ClearAllTiles();
-	}
-
-	private void WorldManager_OnBiomeTransitionEnd(object sender, EventArgs e)
+    public struct TileVisibility
     {
-		WallTm.GetComponent<TilemapCollider2D>().enabled = true;
-		UpperWallTm.EnableTilemapCollider(true);
-	}
+        public int Visibility; // 0 = transparent, 1 = opaque
 
-    private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)
-	{
-		// Create a list of lists to hold all the different tile layers
-		var allTileLayers = new List<List<TileGameData>>
-		{
-			e.Chunk.GetTileList(TileType.Terrain),
-			e.Chunk.GetTileList(TileType.Liquid),
-			e.Chunk.GetTileList(TileType.Floor),
-			e.Chunk.GetTileList(TileType.Wall),
-			e.Chunk.GetTileList(TileType.Foliage),
-		};
+        public TileVisibility(int visibility)
+        {
+            Visibility = visibility;
+        }
+    }
 
-		// Iterate through each list and set the tiles on the tilemap
-		foreach (var tileLayer in allTileLayers)
-		{
-			foreach (TileGameData tile in tileLayer)
-			{
-				var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
-				RenderTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType, false);
-			}
-		}
-	}
+    public class TileManager : NetworkBehaviour
+    {
+        public static TileManager Instance;
 
-	public bool HasTile(Vector3Int position, TileType tileType, out TileDataSO tileSO)
-	{
-		tileSO = null;
+        [field: SerializeField] public Tilemap FloorTm { get; private set; }
+        [field: SerializeField] public Tilemap WallTm { get; private set; }
+        [field: SerializeField] public Tilemap FoliageTm { get; private set; }
+        [field: SerializeField] public TerrainTileRenderer TerrainTileRenderer { get; private set; }
+        [field: SerializeField] public UpperWallTm UpperWallTm { get; private set; }
+        [field: SerializeField] public TileDestructionFeedbacks TileDestructionFeedbacks { get; private set; }
 
-		switch (tileType)
-		{
-			case TileType.Terrain:
-			case TileType.Liquid:
-				if (TerrainTileRenderer.HasTile(position))
-				{
-					tileSO = TerrainTileRenderer.GetTileData(position);
-					return true;
-				}
-				break;
-			case TileType.Floor:
-				if (FloorTm.HasTile(position))
-				{
-					tileSO = FloorTm.GetTile<TileDataSO>(position);
-					return true;
-				}
-				break;
-			case TileType.Wall:
-				if (WallTm.HasTile(position))
-				{
-					tileSO = WallTm.GetTile<TileDataSO>(position);
-					return true;
-				}
-				break;
-			case TileType.Foliage:
-				if (FoliageTm.HasTile(position))
-				{
-					tileSO = FoliageTm.GetTile<TileDataSO>(position);
-					return true;
-				}
-				break;
-		}
 
-		return false;
-	}
+        private void Awake()
+        {
+            WallTm.GetComponent<TilemapCollider2D>().enabled = false;
 
-	[Rpc(SendTo.ClientsAndHost)]
-	public void HandleTileVisualClientRpc(Vector3Int pos, ushort syncTileId, TileType syncTileType, BiomeType biome, bool playDestroyFeedbacks)
-	{
-	    if (Player.Instance.CurrentBiome.Value != biome) return;
+            Instance = this;
+        }
 
-		if(syncTileId == GameDataRegistry.INVALID_ID)
-		{
-		    RenderTile(pos, null, syncTileType, playDestroyFeedbacks);
-		}
-		else
-		{
-			TileDataSO tileToPlace = GameDataRegistry.Instance.GetTileDataFromTileId(syncTileId);
-			RenderTile(pos, tileToPlace, syncTileType, playDestroyFeedbacks);
-		}
+        private void Start()
+        {
+            ChunkManager.Instance.OnLoadChunk += ChunkManager_OnLoadChunk;
+            GameWorld.Instance.OnBiomeTransitionStart += WorldManager_OnBiomeTransitionStart;
+            GameWorld.Instance.OnBiomeTransitionEnd += WorldManager_OnBiomeTransitionEnd;
+        }
 
-	    Lightmap.Instance.UpdateLightMap();
-	}
+        private void WorldManager_OnBiomeTransitionStart(object sender, EventArgs e)
+        {
+            WallTm.GetComponent<TilemapCollider2D>().enabled = false;
+            UpperWallTm.EnableTilemapCollider(false);
 
-	public void RenderTile(Vector3Int tilePos, TileDataSO tileSO, TileType tileType, bool playDestroyFeedbacks)
-	{
-		TileDataSO previousTile = null;
-	
-		switch (tileType)
-		{
-			case TileType.Terrain:
-			case TileType.Liquid:
-				previousTile = TerrainTileRenderer.GetTileData(tilePos);
-				TerrainTileRenderer.SetTerrainTileData(tilePos, tileSO);
-				break;
-			case TileType.Floor:
-				previousTile = FloorTm.GetTile<TileDataSO>(tilePos);
-				FloorTm.SetTile(tilePos, tileSO);
-				break;
-			case TileType.Wall:
-				previousTile = WallTm.GetTile<TileDataSO>(tilePos);
-				WallTm.SetTile(tilePos, tileSO);
-				break;
-			case TileType.Foliage:
-				previousTile = FoliageTm.GetTile<TileDataSO>(tilePos);
-				FoliageTm.SetTile(tilePos, tileSO);
-				break;
-		}
-		
-		if(tileSO == null && (tileType == TileType.Wall))
-		{
-			UpperWallTm.DeleteUpperWallTile(tilePos);
-		}
-		else if (tileSO != null && (tileType == TileType.Wall) && !GameWorld.Instance.IsLoadingBiome)
-		{
-			UpperWallTm.TryToRenderSurroundingUpperWallTiles(tilePos);
-		}
-		
-		if(playDestroyFeedbacks && previousTile != null && tileSO == null)
-		{
-		    // Spawn destroy feedbacks prefab that automatically deletes itself when done playing
-		    var go = Instantiate(TileDestructionFeedbacks.gameObject, tilePos, Quaternion.identity);
-		    go.GetComponent<TileDestructionFeedbacks>().PlayDestroyFeedbacks(previousTile);
-		}
-	}
+            // Adding this because newly created tiles for some reason are not clearing with the naturally generated tiles... weird.
+            TerrainTileRenderer.ClearAllTerrainTiles();
+            FloorTm.ClearAllTiles();
+            WallTm.ClearAllTiles();
+            FoliageTm.ClearAllTiles();
+        }
 
-	public void DestroyTile(Vector2Int tilePos, ushort tileId, BiomeType biome, bool playDestroyFeedbacks)
-	{
-		TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromTileId(tileId);
-		var tileList = GetTileListFromType(tileSO.TileType, tilePos, biome);
-		
-		if (tileList == null)
-		{
-		    Debug.LogError($"tileList for {tileSO.TileType} is null");
-		    return;
-		}
+        private void WorldManager_OnBiomeTransitionEnd(object sender, EventArgs e)
+        {
+            WallTm.GetComponent<TilemapCollider2D>().enabled = true;
+            UpperWallTm.EnableTilemapCollider(true);
+        }
 
-		for (int i = tileList.Count - 1; i >= 0; i--)
-		{
-			if (tileList[i].TilePosition == tilePos)
-			{
-				var spawnPos = new Vector2(tileList[i].TilePosition.x + 0.5f, tileList[i].TilePosition.y + 0.5f);
-				LootTable.SpawnLoot(tileSO.ItemDropTable, spawnPos, biome);
-				ChunkManager.Instance.RemoveTileServerRpc(tileSO.TileType, tileList[i].TilePosition, biome, playDestroyFeedbacks);
-				SoundManager.Instance.PlayOneShot(tileSO.DestroySound, spawnPos);
-				return;
-			}
-		}
-	}
+        private void ChunkManager_OnLoadChunk(object sender, ChunkManager.ChunkEventArgs e)
+        {
+            // Create a list of lists to hold all the different tile layers
+            var allTileLayers = new List<List<TileGameData>>
+        {
+            e.Chunk.GetTileList(TileType.Terrain),
+            e.Chunk.GetTileList(TileType.Liquid),
+            e.Chunk.GetTileList(TileType.Floor),
+            e.Chunk.GetTileList(TileType.Wall),
+            e.Chunk.GetTileList(TileType.Foliage),
+        };
 
-	private List<TileGameData> GetTileListFromType(TileType tileType, Vector2Int tilePos, BiomeType biome)
-	{
-		var chunk = ChunkManager.Instance.GetChunkFromAnyWorldPos(tilePos, biome);
-		return chunk.GetTileList(tileType);
-	}
+            // Iterate through each list and set the tiles on the tilemap
+            foreach (var tileLayer in allTileLayers)
+            {
+                foreach (TileGameData tile in tileLayer)
+                {
+                    var tilePosV3Int = new Vector3Int(tile.TilePosition.x, tile.TilePosition.y);
+                    RenderTile(tilePosV3Int, tile.TileSO, tile.TileSO.TileType, false);
+                }
+            }
+        }
 
-	public override void OnDestroy()
-	{
-		base.OnDestroy();
-		ChunkManager.Instance.OnLoadChunk -= ChunkManager_OnLoadChunk;
-		GameWorld.Instance.OnBiomeTransitionStart -= WorldManager_OnBiomeTransitionStart;
-		GameWorld.Instance.OnBiomeTransitionEnd -= WorldManager_OnBiomeTransitionEnd;
-	}
+        public bool HasTile(Vector3Int position, TileType tileType, out TileDataSO tileSO)
+        {
+            tileSO = null;
+
+            switch (tileType)
+            {
+                case TileType.Terrain:
+                case TileType.Liquid:
+                    if (TerrainTileRenderer.HasTile(position))
+                    {
+                        tileSO = TerrainTileRenderer.GetTileData(position);
+                        return true;
+                    }
+                    break;
+                case TileType.Floor:
+                    if (FloorTm.HasTile(position))
+                    {
+                        tileSO = FloorTm.GetTile<TileDataSO>(position);
+                        return true;
+                    }
+                    break;
+                case TileType.Wall:
+                    if (WallTm.HasTile(position))
+                    {
+                        tileSO = WallTm.GetTile<TileDataSO>(position);
+                        return true;
+                    }
+                    break;
+                case TileType.Foliage:
+                    if (FoliageTm.HasTile(position))
+                    {
+                        tileSO = FoliageTm.GetTile<TileDataSO>(position);
+                        return true;
+                    }
+                    break;
+            }
+
+            return false;
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        public void HandleTileVisualClientRpc(Vector3Int pos, ushort syncTileId, TileType syncTileType, BiomeType biome, bool playDestroyFeedbacks)
+        {
+            if (Player.Instance.CurrentBiome.Value != biome) return;
+
+            if (syncTileId == GameDataRegistry.INVALID_ID)
+            {
+                RenderTile(pos, null, syncTileType, playDestroyFeedbacks);
+            }
+            else
+            {
+                TileDataSO tileToPlace = GameDataRegistry.Instance.GetTileDataFromTileId(syncTileId);
+                RenderTile(pos, tileToPlace, syncTileType, playDestroyFeedbacks);
+            }
+
+            Lightmap.Instance.UpdateLightMap();
+        }
+
+        public void RenderTile(Vector3Int tilePos, TileDataSO tileSO, TileType tileType, bool playDestroyFeedbacks)
+        {
+            TileDataSO previousTile = null;
+
+            switch (tileType)
+            {
+                case TileType.Terrain:
+                case TileType.Liquid:
+                    previousTile = TerrainTileRenderer.GetTileData(tilePos);
+                    TerrainTileRenderer.SetTerrainTileData(tilePos, tileSO);
+                    break;
+                case TileType.Floor:
+                    previousTile = FloorTm.GetTile<TileDataSO>(tilePos);
+                    FloorTm.SetTile(tilePos, tileSO);
+                    break;
+                case TileType.Wall:
+                    previousTile = WallTm.GetTile<TileDataSO>(tilePos);
+                    WallTm.SetTile(tilePos, tileSO);
+                    break;
+                case TileType.Foliage:
+                    previousTile = FoliageTm.GetTile<TileDataSO>(tilePos);
+                    FoliageTm.SetTile(tilePos, tileSO);
+                    break;
+            }
+
+            if (tileSO == null && (tileType == TileType.Wall))
+            {
+                UpperWallTm.DeleteUpperWallTile(tilePos);
+            }
+            else if (tileSO != null && (tileType == TileType.Wall) && !GameWorld.Instance.IsLoadingBiome)
+            {
+                UpperWallTm.TryToRenderSurroundingUpperWallTiles(tilePos);
+            }
+
+            if (playDestroyFeedbacks && previousTile != null && tileSO == null)
+            {
+                // Spawn destroy feedbacks prefab that automatically deletes itself when done playing
+                var go = Instantiate(TileDestructionFeedbacks.gameObject, tilePos, Quaternion.identity);
+                go.GetComponent<TileDestructionFeedbacks>().PlayDestroyFeedbacks(previousTile);
+            }
+        }
+
+        public void DestroyTile(Vector2Int tilePos, ushort tileId, BiomeType biome, bool playDestroyFeedbacks)
+        {
+            TileDataSO tileSO = GameDataRegistry.Instance.GetTileDataFromTileId(tileId);
+            var tileList = GetTileListFromType(tileSO.TileType, tilePos, biome);
+
+            if (tileList == null)
+            {
+                Debug.LogError($"tileList for {tileSO.TileType} is null");
+                return;
+            }
+
+            for (int i = tileList.Count - 1; i >= 0; i--)
+            {
+                if (tileList[i].TilePosition == tilePos)
+                {
+                    var spawnPos = new Vector2(tileList[i].TilePosition.x + 0.5f, tileList[i].TilePosition.y + 0.5f);
+                    LootTable.SpawnLoot(tileSO.ItemDropTable, spawnPos, biome);
+                    ChunkManager.Instance.RemoveTileServerRpc(tileSO.TileType, tileList[i].TilePosition, biome, playDestroyFeedbacks);
+                    SoundManager.Instance.PlayOneShot(tileSO.DestroySound, spawnPos);
+                    return;
+                }
+            }
+        }
+
+        private List<TileGameData> GetTileListFromType(TileType tileType, Vector2Int tilePos, BiomeType biome)
+        {
+            var chunk = ChunkManager.Instance.GetChunkFromAnyWorldPos(tilePos, biome);
+            return chunk.GetTileList(tileType);
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            ChunkManager.Instance.OnLoadChunk -= ChunkManager_OnLoadChunk;
+            GameWorld.Instance.OnBiomeTransitionStart -= WorldManager_OnBiomeTransitionStart;
+            GameWorld.Instance.OnBiomeTransitionEnd -= WorldManager_OnBiomeTransitionEnd;
+        }
+    }
 }

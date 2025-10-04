@@ -6,60 +6,63 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using AdvancedTooltips.Core;
 
-[RequireComponent(typeof(Image))]
-public class Tab : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
-{	
-	[SerializeField] private string _tabDisplayName;
-	[SerializeField] private TabGroup _tabGroup;
-	[SerializeField] private UnityEvent _onTabSelected;
-	[SerializeField] private UnityEvent _onTabDeselected;
-	
-	private Image _background;
-	private bool _hovered;
-	
-	public Image Background => _background;
-	
-	private void Awake()
-	{
-		_background = GetComponent<Image>();
-		_tabGroup.Subscribe(this);
-	}
-	
-	private void OnDisable()
-	{
-		if(_hovered)
-		{
-			Tooltip.HideUI();
-		}
-	}
-	
-	public void OnPointerClick(PointerEventData eventData)
-	{
-		_tabGroup.OnTabSelected(this);
-	}
+namespace ProjectWizard
+{
+    [RequireComponent(typeof(Image))]
+    public class Tab : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    {
+        [SerializeField] private string _tabDisplayName;
+        [SerializeField] private TabGroup _tabGroup;
+        [SerializeField] private UnityEvent _onTabSelected;
+        [SerializeField] private UnityEvent _onTabDeselected;
 
-	public void OnPointerEnter(PointerEventData eventData)
-	{
-		_tabGroup.OnTabEnter(this);
-		Tooltip.ShowNew();
-		Tooltip.JustText(_tabDisplayName, Color.white, fontSize: 12f);
-		_hovered = true;
-	}
+        private Image _background;
+        private bool _hovered;
 
-	public void OnPointerExit(PointerEventData eventData)
-	{
-		_tabGroup.OnTabExit(this);
-		Tooltip.HideUI();
-		_hovered = false;
-	}
-	
-	public void Select()
-	{
-		_onTabSelected?.Invoke();
-	}
-	
-	public void Deselect()
-	{
-		_onTabDeselected?.Invoke();
-	}
+        public Image Background => _background;
+
+        private void Awake()
+        {
+            _background = GetComponent<Image>();
+            _tabGroup.Subscribe(this);
+        }
+
+        private void OnDisable()
+        {
+            if (_hovered)
+            {
+                Tooltip.HideUI();
+            }
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            _tabGroup.OnTabSelected(this);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            _tabGroup.OnTabEnter(this);
+            Tooltip.ShowNew();
+            Tooltip.JustText(_tabDisplayName, Color.white, fontSize: 12f);
+            _hovered = true;
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            _tabGroup.OnTabExit(this);
+            Tooltip.HideUI();
+            _hovered = false;
+        }
+
+        public void Select()
+        {
+            _onTabSelected?.Invoke();
+        }
+
+        public void Deselect()
+        {
+            _onTabDeselected?.Invoke();
+        }
+    }
 }

@@ -2,7 +2,10 @@ using System;
 using UnityEngine;
 
 // Facilitates passing generation data to forest chunks
-public class ForestGenerationData : BaseGenerationData
+
+namespace ProjectWizard
+{
+    public class ForestGenerationData : BaseGenerationData
 {
     [field: Header("Terrain Tiles")]
     [field: SerializeField] public TileDataSO GrassTerrainTile { get; private set; }
@@ -21,4 +24,5 @@ public class ForestGenerationData : BaseGenerationData
     [field: SerializeField] public NoiseMapSO ForestTallGrassNM { get; private set; }
 
     protected override BiomeType _biomeType => BiomeType.Forest;
+}
 }

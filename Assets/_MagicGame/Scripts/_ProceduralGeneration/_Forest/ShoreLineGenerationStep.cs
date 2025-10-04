@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShoreLineGenerationStep : GenerationStep
+
+namespace ProjectWizard
+{
+    public class ShoreLineGenerationStep : GenerationStep
 {
     [field: SerializeField] public int Width { get; private set; }
 
@@ -41,4 +44,5 @@ public class ShoreLineGenerationStep : GenerationStep
             forestGenData.SetTileData(shoreTile.x, shoreTile.y, forestGenData.SandTerrainTile);
         }
     }
+}
 }

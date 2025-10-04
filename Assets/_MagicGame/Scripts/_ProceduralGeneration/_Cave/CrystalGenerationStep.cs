@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public class CrystalGenerationStep : GenerationStep
+
+namespace ProjectWizard
+{
+    public class CrystalGenerationStep : GenerationStep
 {
     [SerializeField] private float _crystalSpawnThreshold = 0.025f;
 
@@ -53,4 +56,5 @@ public class CrystalGenerationStep : GenerationStep
             }
         }
     }
+}
 }

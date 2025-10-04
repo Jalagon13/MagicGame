@@ -3,4 +3,9 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class CollectTag : NetworkBehaviour { }
+
+namespace ProjectWizard
+{
+	public class CollectTag : NetworkBehaviour { }
+
+}

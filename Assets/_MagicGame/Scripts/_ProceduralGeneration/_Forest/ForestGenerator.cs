@@ -2,7 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Facilitates broad step by step process to generate forest
-public class ForestGenerator : MonoBehaviour
+
+namespace ProjectWizard
+{
+    public class ForestGenerator : MonoBehaviour
 {
     [field: SerializeField] 
     public ForestGenerationData ForestGenerationData { get; private set; }
@@ -39,4 +42,5 @@ public class ForestGenerator : MonoBehaviour
         SaveSystem.Instance.AddBiomeToMemorySessionTracker(BiomeType.Forest);
         ChunkManager.IS_GENERATING_BIOME = false;
     }
+}
 }

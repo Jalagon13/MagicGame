@@ -8,94 +8,98 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
 
-public class Relay : MonoBehaviour
+
+namespace ProjectWizard
 {
-	private bool _createdRelay;
-	private bool _joinedRelay;
-	private bool _isOffline;
-
-	private async void Start()
+	public class Relay : MonoBehaviour
 	{
-		var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+		private bool _createdRelay;
+		private bool _joinedRelay;
+		private bool _isOffline;
 
-		// Detect offline mode
-		_isOffline = Application.internetReachability == NetworkReachability.NotReachable;
-
-		if (_isOffline)
+		private async void Start()
 		{
-			Debug.LogWarning("No internet connection. Starting in offline mode...");
+			var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
 
-			transport.SetConnectionData("0.0.0.0", 7777); 
+			// Detect offline mode
+			_isOffline = Application.internetReachability == NetworkReachability.NotReachable;
 
-			Loader.IsHost = true;
-			Loader.Load(Loader.Scene.GameScene);
-			return;
-		}
-
-		// If Online, use unity services
-		try
-		{
-			await UnityServices.InitializeAsync();
-
-			AuthenticationService.Instance.SignedIn += () =>
+			if (_isOffline)
 			{
-				Debug.Log("Signed in " + AuthenticationService.Instance.PlayerId);
-			};
+				Debug.LogWarning("No internet connection. Starting in offline mode...");
 
-			await AuthenticationService.Instance.SignInAnonymouslyAsync();
+				transport.SetConnectionData("0.0.0.0", 7777); 
+
+				Loader.IsHost = true;
+				Loader.Load(Loader.Scene.GameScene);
+				return;
+			}
+
+			// If Online, use unity services
+			try
+			{
+				await UnityServices.InitializeAsync();
+
+				AuthenticationService.Instance.SignedIn += () =>
+				{
+					Debug.Log("Signed in " + AuthenticationService.Instance.PlayerId);
+				};
+
+				await AuthenticationService.Instance.SignInAnonymouslyAsync();
+			}
+			catch (System.Exception e)
+			{
+				Debug.LogError($"Unity Services failed to initialize: {e.Message}");
+			}
 		}
-		catch (System.Exception e)
+
+		public async void CreateRelay()
 		{
-			Debug.LogError($"Unity Services failed to initialize: {e.Message}");
+			if (_createdRelay || _isOffline) return;
+
+			try
+			{
+				_createdRelay = true;
+
+				Allocation allocation = await RelayService.Instance.CreateAllocationAsync(7);
+				string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+				GUIUtility.systemCopyBuffer = joinCode;
+				Debug.Log(allocation.Region);
+				Debug.Log("Join Code: " + joinCode);
+
+				var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+				transport.SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, "dtls"));
+
+				Loader.IsHost = true;
+				Loader.Load(Loader.Scene.GameScene);
+			}
+			catch (RelayServiceException e)
+			{
+				Debug.LogError(e);
+			}
 		}
-	}
 
-	public async void CreateRelay()
-	{
-		if (_createdRelay || _isOffline) return;
-
-		try
+		public async void JoinRelay(string joinCode)
 		{
-			_createdRelay = true;
+			if (_joinedRelay || _isOffline) return;
 
-			Allocation allocation = await RelayService.Instance.CreateAllocationAsync(7);
-			string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-			GUIUtility.systemCopyBuffer = joinCode;
-			Debug.Log(allocation.Region);
-			Debug.Log("Join Code: " + joinCode);
+			try
+			{
+				_joinedRelay = true;
 
-			var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-			transport.SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, "dtls"));
+				Debug.Log($"Joining Relay with {joinCode}");
+				JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
 
-			Loader.IsHost = true;
-			Loader.Load(Loader.Scene.GameScene);
-		}
-		catch (RelayServiceException e)
-		{
-			Debug.LogError(e);
-		}
-	}
+				var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+				transport.SetRelayServerData(AllocationUtils.ToRelayServerData(joinAllocation, "dtls"));
 
-	public async void JoinRelay(string joinCode)
-	{
-		if (_joinedRelay || _isOffline) return;
-
-		try
-		{
-			_joinedRelay = true;
-
-			Debug.Log($"Joining Relay with {joinCode}");
-			JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
-
-			var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-			transport.SetRelayServerData(AllocationUtils.ToRelayServerData(joinAllocation, "dtls"));
-
-			Loader.IsHost = false;
-			Loader.Load(Loader.Scene.GameScene);
-		}
-		catch (RelayServiceException e)
-		{
-			Debug.LogError(e);
+				Loader.IsHost = false;
+				Loader.Load(Loader.Scene.GameScene);
+			}
+			catch (RelayServiceException e)
+			{
+				Debug.LogError(e);
+			}
 		}
 	}
 }

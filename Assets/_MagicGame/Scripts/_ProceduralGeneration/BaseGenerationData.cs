@@ -1,51 +1,54 @@
 using UnityEngine;
 
-public abstract class BaseGenerationData : MonoBehaviour
+namespace ProjectWizard
 {
-
-    [HideInInspector] 
-    public ushort[,] MostFrontRenderedTileMatrix = new ushort[ChunkManager.BIOME_SIDE_LENGTH, ChunkManager.BIOME_SIDE_LENGTH];
-    
-    [HideInInspector] 
-    public string MapGenerationSeed;
-    
-    protected abstract BiomeType _biomeType { get; }
-    public BiomeType Biome => _biomeType;
-
-    public virtual void ResetData()
+    public abstract class BaseGenerationData : MonoBehaviour
     {
-        ChunkManager.Instance.GetChunksFromBiome(_biomeType).Clear();
 
-        int chunkSideAmount = ChunkManager.BIOME_SIDE_LENGTH / ChunkManager.CHUNK_SIZE;
-        for (int chunkX = 0; chunkX < chunkSideAmount; chunkX++)
+        [HideInInspector]
+        public ushort[,] MostFrontRenderedTileMatrix = new ushort[ChunkManager.BIOME_SIDE_LENGTH, ChunkManager.BIOME_SIDE_LENGTH];
+
+        [HideInInspector]
+        public string MapGenerationSeed;
+
+        protected abstract BiomeType _biomeType { get; }
+        public BiomeType Biome => _biomeType;
+
+        public virtual void ResetData()
         {
-            for (int chunkY = 0; chunkY < chunkSideAmount; chunkY++)
+            ChunkManager.Instance.GetChunksFromBiome(_biomeType).Clear();
+
+            int chunkSideAmount = ChunkManager.BIOME_SIDE_LENGTH / ChunkManager.CHUNK_SIZE;
+            for (int chunkX = 0; chunkX < chunkSideAmount; chunkX++)
             {
-                Vector2Int chunkCoord = new(chunkX, chunkY);
-                ChunkGameData chunkGameData = new(ChunkManager.CHUNK_SIZE, chunkCoord);
-                ChunkManager.Instance.GetChunksFromBiome(_biomeType).Add(chunkCoord, chunkGameData);
+                for (int chunkY = 0; chunkY < chunkSideAmount; chunkY++)
+                {
+                    Vector2Int chunkCoord = new(chunkX, chunkY);
+                    ChunkGameData chunkGameData = new(ChunkManager.CHUNK_SIZE, chunkCoord);
+                    ChunkManager.Instance.GetChunksFromBiome(_biomeType).Add(chunkCoord, chunkGameData);
+                }
             }
+
+            Debug.Log($"Resetting data for biome: {_biomeType}, count: {ChunkManager.Instance.GetChunksFromBiome(_biomeType).Count}, chunks HashCode: {ChunkManager.Instance.GetChunksFromBiome(_biomeType).GetHashCode()}");
         }
-        
-        Debug.Log($"Resetting data for biome: {_biomeType}, count: {ChunkManager.Instance.GetChunksFromBiome(_biomeType).Count}, chunks HashCode: {ChunkManager.Instance.GetChunksFromBiome(_biomeType).GetHashCode()}");
-    }
 
-    public virtual void SetTileData(int x, int y, TileDataSO tileData)
-    {
-        Vector2Int pos = new Vector2Int(x, y);
-        ChunkManager.Instance.GetChunkFromAnyWorldPos(pos, _biomeType).AddTileData(pos, tileData);
-        MostFrontRenderedTileMatrix[x, y] = GameDataRegistry.Instance.GetTileIdFromTileData(tileData);
-    }
+        public virtual void SetTileData(int x, int y, TileDataSO tileData)
+        {
+            Vector2Int pos = new Vector2Int(x, y);
+            ChunkManager.Instance.GetChunkFromAnyWorldPos(pos, _biomeType).AddTileData(pos, tileData);
+            MostFrontRenderedTileMatrix[x, y] = GameDataRegistry.Instance.GetTileIdFromTileData(tileData);
+        }
 
-    public virtual void SetResourceobjectData(int x, int y, ushort rscId, CardinalDirection dir)
-    {
-        ChunkManager.Instance.AddResourceDataToChunkServerRpc(new Vector2Int(x, y), rscId, _biomeType, dir);
-    }
+        public virtual void SetResourceobjectData(int x, int y, ushort rscId, CardinalDirection dir)
+        {
+            ChunkManager.Instance.AddResourceDataToChunkServerRpc(new Vector2Int(x, y), rscId, _biomeType, dir);
+        }
 
-    public bool IsInBounds(int x, int y)
-    {
-        int width = MostFrontRenderedTileMatrix.GetLength(0);
-        int height = MostFrontRenderedTileMatrix.GetLength(1);
-        return x >= 0 && x < width && y >= 0 && y < height;
+        public bool IsInBounds(int x, int y)
+        {
+            int width = MostFrontRenderedTileMatrix.GetLength(0);
+            int height = MostFrontRenderedTileMatrix.GetLength(1);
+            return x >= 0 && x < width && y >= 0 && y < height;
+        }
     }
 }

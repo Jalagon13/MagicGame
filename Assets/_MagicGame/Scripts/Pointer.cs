@@ -4,53 +4,58 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public static class Pointer
+
+namespace ProjectWizard
 {
-    // gets data on raycast of all gameobject's layers and returns true if finds a gameobject of layerNum
-    public static bool IsOverUI ()
-    {
-        PointerEventData eventDataCurrentPosition = new(EventSystem.current)
-        {
-            position = Mouse.current.position.ReadValue()
-        };
+	public static class Pointer
+	{
+	    // gets data on raycast of all gameobject's layers and returns true if finds a gameobject of layerNum
+	    public static bool IsOverUI ()
+	    {
+	        PointerEventData eventDataCurrentPosition = new(EventSystem.current)
+	        {
+	            position = Mouse.current.position.ReadValue()
+	        };
 
-        List<RaycastResult> results = new();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+	        List<RaycastResult> results = new();
+	        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
 
-        foreach (RaycastResult raycastResult in results)
-        {
-            if (raycastResult.gameObject.layer == 5)
-                return true;
-        }
+	        foreach (RaycastResult raycastResult in results)
+	        {
+	            if (raycastResult.gameObject.layer == 5)
+	                return true;
+	        }
 
-        return false;
-    }
+	        return false;
+	    }
     
-    public static bool IsOverInteractable()
-    {
-        PointerEventData eventDataCurrentPosition = new(EventSystem.current)
-        {
-            position = Mouse.current.position.ReadValue()
-        };
+	    public static bool IsOverInteractable()
+	    {
+	        PointerEventData eventDataCurrentPosition = new(EventSystem.current)
+	        {
+	            position = Mouse.current.position.ReadValue()
+	        };
 
-        List<RaycastResult> results = new();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+	        List<RaycastResult> results = new();
+	        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
 
-        foreach (RaycastResult raycastResult in results)
-        {
-            if (raycastResult.gameObject.layer == 13)
-                return true;
-        }
+	        foreach (RaycastResult raycastResult in results)
+	        {
+	            if (raycastResult.gameObject.layer == 13)
+	                return true;
+	        }
 
-        return false;
-    }
+	        return false;
+	    }
     
-    public static bool IsOverTopTile()
-    {
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        Collider2D[] colliders = Physics2D.OverlapPointAll(mousePosition);
+	    public static bool IsOverTopTile()
+	    {
+	        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+	        Collider2D[] colliders = Physics2D.OverlapPointAll(mousePosition);
 
-        return TileManager.Instance.UpperWallTm.IsOverTopTile(mousePosition);
-    }
+	        return TileManager.Instance.UpperWallTm.IsOverTopTile(mousePosition);
+	    }
+	}
+
+
 }
-

@@ -1,8 +1,13 @@
 using UnityEngine;
 
-public abstract class GenerationStep : MonoBehaviour
+
+namespace ProjectWizard
 {
-    [field: SerializeField, TextArea(15, 20)] public string Description { get; private set; }
+	public abstract class GenerationStep : MonoBehaviour
+	{
+	    [field: SerializeField, TextArea(15, 20)] public string Description { get; private set; }
     
-    public abstract void Execute(BaseGenerationData genData);
+	    public abstract void Execute(BaseGenerationData genData);
+	}
+
 }

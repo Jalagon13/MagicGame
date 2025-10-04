@@ -1,38 +1,41 @@
 using UnityEngine;
 
-public class InGameMenuInstantiateHandler : MonoBehaviour
+namespace ProjectWizard
 {
-    private InGameMenuReferenceHolder _inGameMenuReferenceHolder;
-    
-    private void Awake()
+    public class InGameMenuInstantiateHandler : MonoBehaviour
     {
-        _inGameMenuReferenceHolder = GetComponent<InGameMenuReferenceHolder>();
-    }
-    
-    public GameObject InstantiateCustomMenu(GameObject customMenuPrefab)
-    {
-        GameObject customMenuUI = Instantiate(customMenuPrefab, transform);
-        return customMenuUI;
-    }
+        private InGameMenuReferenceHolder _inGameMenuReferenceHolder;
 
-    public ChestMenuUI InstantiateChestMenu()
-    {
-        GameObject chestMenuUI = Instantiate(_inGameMenuReferenceHolder.ChestMenuPrefab, transform);
+        private void Awake()
+        {
+            _inGameMenuReferenceHolder = GetComponent<InGameMenuReferenceHolder>();
+        }
 
-        return chestMenuUI.GetComponent<ChestMenuUI>();
-    }
+        public GameObject InstantiateCustomMenu(GameObject customMenuPrefab)
+        {
+            GameObject customMenuUI = Instantiate(customMenuPrefab, transform);
+            return customMenuUI;
+        }
 
-    public SpellbookInspectorMenuUI InstantiateWandInspectorMenu()
-    {
-        GameObject wandInspectorMenuUI = Instantiate(_inGameMenuReferenceHolder.WandInspectorMenuPrefab, transform);
+        public ChestMenuUI InstantiateChestMenu()
+        {
+            GameObject chestMenuUI = Instantiate(_inGameMenuReferenceHolder.ChestMenuPrefab, transform);
 
-        return wandInspectorMenuUI.GetComponent<SpellbookInspectorMenuUI>();
-    }
+            return chestMenuUI.GetComponent<ChestMenuUI>();
+        }
 
-    public NpcMenuUI InstantiateNpcMenu()
-    {
-        GameObject npcMenuUI = Instantiate(_inGameMenuReferenceHolder.NpcMenuPrefab, transform);
+        public SpellbookInspectorMenuUI InstantiateWandInspectorMenu()
+        {
+            GameObject wandInspectorMenuUI = Instantiate(_inGameMenuReferenceHolder.WandInspectorMenuPrefab, transform);
 
-        return npcMenuUI.GetComponent<NpcMenuUI>();
+            return wandInspectorMenuUI.GetComponent<SpellbookInspectorMenuUI>();
+        }
+
+        public NpcMenuUI InstantiateNpcMenu()
+        {
+            GameObject npcMenuUI = Instantiate(_inGameMenuReferenceHolder.NpcMenuPrefab, transform);
+
+            return npcMenuUI.GetComponent<NpcMenuUI>();
+        }
     }
 }

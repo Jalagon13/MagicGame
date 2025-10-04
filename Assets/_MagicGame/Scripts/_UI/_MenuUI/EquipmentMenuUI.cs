@@ -2,64 +2,67 @@ using System;
 using AdvancedTooltips.Core;
 using UnityEngine;
 
-public class EquipmentMenuUI : MonoBehaviour
+namespace ProjectWizard
 {
-	[SerializeField] private ArmorSlotUI _helmetArmorSlotUI;
-	[SerializeField] private ArmorSlotUI _chestplateArmorSlotUI;
-	[SerializeField] private ArmorSlotUI _leggingsArmorSlotUI;
+    public class EquipmentMenuUI : MonoBehaviour
+    {
+        [SerializeField] private ArmorSlotUI _helmetArmorSlotUI;
+        [SerializeField] private ArmorSlotUI _chestplateArmorSlotUI;
+        [SerializeField] private ArmorSlotUI _leggingsArmorSlotUI;
 
-	private void OnEnable()
-	{
-		if(InventoryManager.Instance == null) return;
-		
-		InventoryManager.Instance.OnInventorySlotShiftLeftClicked += OnInventorySlotShiftLeftClicked_EquipShortcut;
-	}
+        private void OnEnable()
+        {
+            if (InventoryManager.Instance == null) return;
 
-	private void OnDisable()
-	{
-		if (InventoryManager.Instance == null) return;
+            InventoryManager.Instance.OnInventorySlotShiftLeftClicked += OnInventorySlotShiftLeftClicked_EquipShortcut;
+        }
 
-		InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= OnInventorySlotShiftLeftClicked_EquipShortcut;
-	}
+        private void OnDisable()
+        {
+            if (InventoryManager.Instance == null) return;
 
-	private void OnInventorySlotShiftLeftClicked_EquipShortcut(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
-	{
-		if(ChestManager.Instance.IsChestOpen) return;
-	
-		if (e.InventoryItem.Item is ArmorItemSO armorItemSO)
-		{
-			switch (armorItemSO.ArmorType)
-			{
-				case ArmorType.Head:
-					HandleArmorEquipOrSwap(_helmetArmorSlotUI, armorItemSO, e.SlotIndex);
-					break;
-				case ArmorType.Chest:
-					HandleArmorEquipOrSwap(_chestplateArmorSlotUI, armorItemSO, e.SlotIndex);
-					break;
-				case ArmorType.Legs:
-					HandleArmorEquipOrSwap(_leggingsArmorSlotUI, armorItemSO, e.SlotIndex);
-					break;
-			}
-		}
-	}
+            InventoryManager.Instance.OnInventorySlotShiftLeftClicked -= OnInventorySlotShiftLeftClicked_EquipShortcut;
+        }
 
-	private void HandleArmorEquipOrSwap(ArmorSlotUI armorSlotUI, ArmorItemSO armorItemSO, int slotIndex)
-	{
-		if (armorSlotUI.ArmorEquipped())
-		{
-			// If armor is already equipped, swap it with the new armor
-			InventoryManager.Instance.GetInventoryModel().InventoryItems[slotIndex].Item = armorSlotUI.SwapArmor(armorItemSO);
-			InventoryManager.Instance.GetInventoryModel().InventoryItems[slotIndex].Quantity = 1;
-			InventoryManager.Instance.ShowInventoryItemTooltip(InventoryManager.Instance.GetInventoryModel().InventoryItems[slotIndex]);
-		}
-		else
-		{
-			// If no armor is equipped, equip the new armor
-			armorSlotUI.EquipArmor(armorItemSO);
-			InventoryManager.Instance.GetInventoryModel().InventoryItems[slotIndex] = new();
-			Tooltip.HideUI();
-		}
-		
-		InventoryManager.Instance.GetInventoryModel().UpdateInventory();
-	}
+        private void OnInventorySlotShiftLeftClicked_EquipShortcut(object sender, InventoryManager.ShortCutInventoryItemEventArgs e)
+        {
+            if (ChestManager.Instance.IsChestOpen) return;
+
+            if (e.InventoryItem.Item is ArmorItemSO armorItemSO)
+            {
+                switch (armorItemSO.ArmorType)
+                {
+                    case ArmorType.Head:
+                        HandleArmorEquipOrSwap(_helmetArmorSlotUI, armorItemSO, e.SlotIndex);
+                        break;
+                    case ArmorType.Chest:
+                        HandleArmorEquipOrSwap(_chestplateArmorSlotUI, armorItemSO, e.SlotIndex);
+                        break;
+                    case ArmorType.Legs:
+                        HandleArmorEquipOrSwap(_leggingsArmorSlotUI, armorItemSO, e.SlotIndex);
+                        break;
+                }
+            }
+        }
+
+        private void HandleArmorEquipOrSwap(ArmorSlotUI armorSlotUI, ArmorItemSO armorItemSO, int slotIndex)
+        {
+            if (armorSlotUI.ArmorEquipped())
+            {
+                // If armor is already equipped, swap it with the new armor
+                InventoryManager.Instance.GetInventoryModel().InventoryItems[slotIndex].Item = armorSlotUI.SwapArmor(armorItemSO);
+                InventoryManager.Instance.GetInventoryModel().InventoryItems[slotIndex].Quantity = 1;
+                InventoryManager.Instance.ShowInventoryItemTooltip(InventoryManager.Instance.GetInventoryModel().InventoryItems[slotIndex]);
+            }
+            else
+            {
+                // If no armor is equipped, equip the new armor
+                armorSlotUI.EquipArmor(armorItemSO);
+                InventoryManager.Instance.GetInventoryModel().InventoryItems[slotIndex] = new();
+                Tooltip.HideUI();
+            }
+
+            InventoryManager.Instance.GetInventoryModel().UpdateInventory();
+        }
+    }
 }

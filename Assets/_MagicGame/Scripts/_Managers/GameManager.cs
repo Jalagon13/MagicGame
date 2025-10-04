@@ -10,186 +10,189 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
-public class GameManager : NetworkBehaviour
+namespace ProjectWizard
 {
-	public static GameManager Instance { get; private set; }
+    public class GameManager : NetworkBehaviour
+    {
+        public static GameManager Instance { get; private set; }
 
-	public event EventHandler<BreadCrumbEventArgs> OnSpawnBreadCrumbPrefab;
-	public class BreadCrumbEventArgs : EventArgs
-	{
-		public GameObject SpawnedBreadCrumbPrefab;
-	}
+        public event EventHandler<BreadCrumbEventArgs> OnSpawnBreadCrumbPrefab;
+        public class BreadCrumbEventArgs : EventArgs
+        {
+            public GameObject SpawnedBreadCrumbPrefab;
+        }
 
-	[SerializeField] private BiomeType _startingBiome;
-	
-	[Title("Item Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
-	[SerializeField] private GameObject _itemBasePrefab;
-	[SerializeField] private GameObject _playerPrefab;
-	
-	private void Awake()
-	{
-		Instance = this;
-	}
-	
-	#region Scene Functions
-	private void OnEnable()
-	{
-		SceneManager.sceneLoaded += OnSceneLoaded;
-	}
+        [SerializeField] private BiomeType _startingBiome;
 
-	private void OnDisable()
-	{
-		SceneManager.sceneLoaded -= OnSceneLoaded;
-	}
+        [Title("Item Settings", null, TitleAlignments.Centered, HorizontalLine = true, Bold = true)]
+        [SerializeField] private GameObject _itemBasePrefab;
+        [SerializeField] private GameObject _playerPrefab;
 
-	// This function is called whenever a scene has finished loading
-	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-	{
-		if(NetworkManager.Singleton == null) return;
+        private void Awake()
+        {
+            Instance = this;
+        }
 
-		// Prevent duplicate subscriptions
-		NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-		NetworkManager.Singleton.OnClientConnectedCallback -= Pathfinding_OnClientConnected;
-		NetworkManager.Singleton.OnClientDisconnectCallback -= Pathfinding_OnClientDisconnected;
+        #region Scene Functions
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
 
-		NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-		NetworkManager.Singleton.OnClientConnectedCallback += Pathfinding_OnClientConnected;
-		NetworkManager.Singleton.OnClientDisconnectCallback += Pathfinding_OnClientDisconnected;
-		
-		if(Loader.IsHost)
-		{
-			NetworkManager.Singleton.StartHost();
-		}
-		else
-		{
-			NetworkManager.Singleton.StartClient();
-		}
-	}
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
 
-	private void Pathfinding_OnClientConnected(ulong obj)
-	{
-		Pathfinding.Instance.OnClientConnected(obj);
-	}
+        // This function is called whenever a scene has finished loading
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (NetworkManager.Singleton == null) return;
 
-	private void Pathfinding_OnClientDisconnected(ulong obj)
-	{
-		Pathfinding.Instance.OnClientDisconnected(obj);
-	}
+            // Prevent duplicate subscriptions
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+            NetworkManager.Singleton.OnClientConnectedCallback -= Pathfinding_OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback -= Pathfinding_OnClientDisconnected;
 
-	private void OnClientConnected(ulong clientId)
-	{
-		if(NetworkManager.LocalClientId != clientId) return;
-	
-		LoadBiomeClientRpc(_startingBiome, RpcTarget.Single(clientId, RpcTargetUse.Persistent));
-	}
-	
-	[Rpc(SendTo.SpecifiedInParams, RequireOwnership = false)]
-	private void LoadBiomeClientRpc(BiomeType biome, RpcParams rpcParams = default)
-	{
-		if(NetworkManager.LocalClientId != rpcParams.Receive.SenderClientId) return;
-	
-		GameWorld.Instance.LoadBiome(_startingBiome, Player.Instance.transform.position);
-	}
-	
-	#endregion
-	
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+            NetworkManager.Singleton.OnClientConnectedCallback += Pathfinding_OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback += Pathfinding_OnClientDisconnected;
 
-	#region Item Functions
-	
-	public void SpawnItem(InventoryItem inventoryItem, Vector2 spawnPos, BiomeType biome, Vector2 velocity = default, float startingZAxis = 0f)
-	{
-		if(inventoryItem == null)
-		{
-			Debug.LogWarning($"Warning, item can't be spawned because it is null");
-			return;
-		}
-	
-		SyncItemData syncItemData = new SyncItemData
-		{
-			ItemId = GameDataRegistry.Instance.GetItemIdFromItemData(inventoryItem.Item),
-			Quantity = (ushort)inventoryItem.Quantity,
-			MagicArray = inventoryItem is WandInventoryItem wandInventoryItem ? wandInventoryItem.MagicArray.Select(x => x != null ? GameDataRegistry.Instance.GetItemIdFromItemData(x) : ushort.MaxValue).ToList() : new List<ushort>(),
-			SelectedSpellIndex = inventoryItem is WandInventoryItem wandItem ? wandItem.SelectedSpellIndex : -1
-		};
-		
-		SpawnItemServerRpc(syncItemData, spawnPos, biome, velocity, startingZAxis);
-	}
+            if (Loader.IsHost)
+            {
+                NetworkManager.Singleton.StartHost();
+            }
+            else
+            {
+                NetworkManager.Singleton.StartClient();
+            }
+        }
 
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void SpawnItemServerRpc(SyncItemData syncItemData, Vector2 spawnPos, BiomeType biome, Vector2 velocity, float startingZAxis)
-	{
-		GameObject itemGameObject = Instantiate(_itemBasePrefab, spawnPos, Quaternion.identity);
-		
-		NetworkObject itemNetworkObject = itemGameObject.GetComponent<NetworkObject>();
-		itemNetworkObject.SpawnWithObservers = false;
-		itemNetworkObject.Spawn(true);
-		
-		Item item = itemGameObject.GetComponent<Item>();
-		item.Initialize(syncItemData, biome, velocity, startingZAxis);
-	}
-	
-	public void DestroyItem(Item itemToDestroy)
-	{
-		DestroyItemServerRpc(itemToDestroy.NetworkObject);
-	}
-	
-	[Rpc(SendTo.Server, RequireOwnership = false)]
-	private void DestroyItemServerRpc(NetworkObjectReference itemNetworkObjectReference)
-	{
-		itemNetworkObjectReference.TryGet(out NetworkObject itemNetworkObject);
-		Item item = itemNetworkObject.GetComponent<Item>();
-		
-		item.DestroySelf();
-	}
+        private void Pathfinding_OnClientConnected(ulong obj)
+        {
+            Pathfinding.Instance.OnClientConnected(obj);
+        }
 
-	#endregion
+        private void Pathfinding_OnClientDisconnected(ulong obj)
+        {
+            Pathfinding.Instance.OnClientDisconnected(obj);
+        }
 
-	#region Damage Number Functions
+        private void OnClientConnected(ulong clientId)
+        {
+            if (NetworkManager.LocalClientId != clientId) return;
 
-	private Gradient _gradient;
-	private GradientColorKey[] _colorKey;
-	private GradientAlphaKey[] _alphaKey;
+            LoadBiomeClientRpc(_startingBiome, RpcTarget.Single(clientId, RpcTargetUse.Persistent));
+        }
 
-	public void PlayDamageNumbers(int amount, Vector2 position, BiomeType biome, Color color)
-	{
-		if (biome == Player.Instance.CurrentBiome.Value)
-		{
-			MMF_Player damageNumberFeedbacks = transform.GetChild(0).GetComponent<MMF_Player>();
-			MMF_FloatingText floatingText = damageNumberFeedbacks.GetFeedbackOfType<MMF_FloatingText>();
+        [Rpc(SendTo.SpecifiedInParams, RequireOwnership = false)]
+        private void LoadBiomeClientRpc(BiomeType biome, RpcParams rpcParams = default)
+        {
+            if (NetworkManager.LocalClientId != rpcParams.Receive.SenderClientId) return;
 
-			floatingText.Value = amount.ToString();
-			
-			// we setup some fancy colors
-			_gradient = new Gradient();
-			// Populate the color keys at the relative time 0 and 1 (0 and 100%)
-			_colorKey = new GradientColorKey[2];
-			_colorKey[0].color = color;
-			_colorKey[0].time = 0.0f;
-			_colorKey[1].color = color;
-			_colorKey[1].time = 1.0f;
-			// Populate the alpha  keys at relative time 0 and 1  (0 and 100%)
-			_alphaKey = new GradientAlphaKey[2];
-			_alphaKey[0].alpha = 0.0f;
-			_alphaKey[0].time = 0.0f;
-			_alphaKey[1].alpha = 1.0f;
-			_alphaKey[1].time = 1.0f;
-			_gradient.SetKeys(_colorKey, _alphaKey);
+            GameWorld.Instance.LoadBiome(_startingBiome, Player.Instance.transform.position);
+        }
 
-			floatingText.ForceColor = true;
-			floatingText.AnimateColorGradient = _gradient;
-			
-			damageNumberFeedbacks.transform.position = position;
-			damageNumberFeedbacks.PlayFeedbacks(position);
-		}
-	}
-	
-	#endregion
-	
-	public void InvokeSpawnBreadCrumbEvent(GameObject breadCrumb)
-	{
-		OnSpawnBreadCrumbPrefab?.Invoke(this, new BreadCrumbEventArgs
-		{
-		   SpawnedBreadCrumbPrefab = breadCrumb 
-		});
-	}
+        #endregion
+
+
+        #region Item Functions
+
+        public void SpawnItem(InventoryItem inventoryItem, Vector2 spawnPos, BiomeType biome, Vector2 velocity = default, float startingZAxis = 0f)
+        {
+            if (inventoryItem == null)
+            {
+                Debug.LogWarning($"Warning, item can't be spawned because it is null");
+                return;
+            }
+
+            SyncItemData syncItemData = new SyncItemData
+            {
+                ItemId = GameDataRegistry.Instance.GetItemIdFromItemData(inventoryItem.Item),
+                Quantity = (ushort)inventoryItem.Quantity,
+                MagicArray = inventoryItem is WandInventoryItem wandInventoryItem ? wandInventoryItem.MagicArray.Select(x => x != null ? GameDataRegistry.Instance.GetItemIdFromItemData(x) : ushort.MaxValue).ToList() : new List<ushort>(),
+                SelectedSpellIndex = inventoryItem is WandInventoryItem wandItem ? wandItem.SelectedSpellIndex : -1
+            };
+
+            SpawnItemServerRpc(syncItemData, spawnPos, biome, velocity, startingZAxis);
+        }
+
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        private void SpawnItemServerRpc(SyncItemData syncItemData, Vector2 spawnPos, BiomeType biome, Vector2 velocity, float startingZAxis)
+        {
+            GameObject itemGameObject = Instantiate(_itemBasePrefab, spawnPos, Quaternion.identity);
+
+            NetworkObject itemNetworkObject = itemGameObject.GetComponent<NetworkObject>();
+            itemNetworkObject.SpawnWithObservers = false;
+            itemNetworkObject.Spawn(true);
+
+            Item item = itemGameObject.GetComponent<Item>();
+            item.Initialize(syncItemData, biome, velocity, startingZAxis);
+        }
+
+        public void DestroyItem(Item itemToDestroy)
+        {
+            DestroyItemServerRpc(itemToDestroy.NetworkObject);
+        }
+
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        private void DestroyItemServerRpc(NetworkObjectReference itemNetworkObjectReference)
+        {
+            itemNetworkObjectReference.TryGet(out NetworkObject itemNetworkObject);
+            Item item = itemNetworkObject.GetComponent<Item>();
+
+            item.DestroySelf();
+        }
+
+        #endregion
+
+        #region Damage Number Functions
+
+        private Gradient _gradient;
+        private GradientColorKey[] _colorKey;
+        private GradientAlphaKey[] _alphaKey;
+
+        public void PlayDamageNumbers(int amount, Vector2 position, BiomeType biome, Color color)
+        {
+            if (biome == Player.Instance.CurrentBiome.Value)
+            {
+                MMF_Player damageNumberFeedbacks = transform.GetChild(0).GetComponent<MMF_Player>();
+                MMF_FloatingText floatingText = damageNumberFeedbacks.GetFeedbackOfType<MMF_FloatingText>();
+
+                floatingText.Value = amount.ToString();
+
+                // we setup some fancy colors
+                _gradient = new Gradient();
+                // Populate the color keys at the relative time 0 and 1 (0 and 100%)
+                _colorKey = new GradientColorKey[2];
+                _colorKey[0].color = color;
+                _colorKey[0].time = 0.0f;
+                _colorKey[1].color = color;
+                _colorKey[1].time = 1.0f;
+                // Populate the alpha  keys at relative time 0 and 1  (0 and 100%)
+                _alphaKey = new GradientAlphaKey[2];
+                _alphaKey[0].alpha = 0.0f;
+                _alphaKey[0].time = 0.0f;
+                _alphaKey[1].alpha = 1.0f;
+                _alphaKey[1].time = 1.0f;
+                _gradient.SetKeys(_colorKey, _alphaKey);
+
+                floatingText.ForceColor = true;
+                floatingText.AnimateColorGradient = _gradient;
+
+                damageNumberFeedbacks.transform.position = position;
+                damageNumberFeedbacks.PlayFeedbacks(position);
+            }
+        }
+
+        #endregion
+
+        public void InvokeSpawnBreadCrumbEvent(GameObject breadCrumb)
+        {
+            OnSpawnBreadCrumbPrefab?.Invoke(this, new BreadCrumbEventArgs
+            {
+                SpawnedBreadCrumbPrefab = breadCrumb
+            });
+        }
+    }
 }

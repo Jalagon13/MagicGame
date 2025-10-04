@@ -6,53 +6,56 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
-public class ActionManager : MonoBehaviour
+namespace ProjectWizard
 {
-	public static ActionManager Instance { get; private set; }
-	public static Vector2 MouseWorldPosition { get; private set; }
-	public static Vector2 PlayerToMouseDirNormalized { get; private set; }
-	public static Vector3Int MouseTilePosition { get; private set; }
-	
-	private Timer _itemActionTimer;
-	private Transform _mouseTriggerTf;
+    public class ActionManager : MonoBehaviour
+    {
+        public static ActionManager Instance { get; private set; }
+        public static Vector2 MouseWorldPosition { get; private set; }
+        public static Vector2 PlayerToMouseDirNormalized { get; private set; }
+        public static Vector3Int MouseTilePosition { get; private set; }
 
-	private void Awake()
-	{
-		Instance = this;
-		_mouseTriggerTf = transform.GetChild(1).transform;
-		_mouseTriggerTf.parent = null;
+        private Timer _itemActionTimer;
+        private Transform _mouseTriggerTf;
 
-		_itemActionTimer = new Timer(0.25f);
-	}
+        private void Awake()
+        {
+            Instance = this;
+            _mouseTriggerTf = transform.GetChild(1).transform;
+            _mouseTriggerTf.parent = null;
 
-	private void Update()
-	{
-		if (Player.Instance == null) return;
+            _itemActionTimer = new Timer(0.25f);
+        }
 
-		MouseWorldPosition = (Vector2)Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-		MouseTilePosition = Vector3Int.FloorToInt(MouseWorldPosition);
-		PlayerToMouseDirNormalized = (MouseWorldPosition - (Vector2)Player.Instance.transform.position).normalized;
-		_mouseTriggerTf.position = MouseWorldPosition;
+        private void Update()
+        {
+            if (Player.Instance == null) return;
 
-		TickTimers(Time.deltaTime);
-		HandleItemActionExecutions();
-	}
+            MouseWorldPosition = (Vector2)Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            MouseTilePosition = Vector3Int.FloorToInt(MouseWorldPosition);
+            PlayerToMouseDirNormalized = (MouseWorldPosition - (Vector2)Player.Instance.transform.position).normalized;
+            _mouseTriggerTf.position = MouseWorldPosition;
 
-	private void HandleItemActionExecutions()
-	{
-		if(Player.Instance == null || Player.Instance.ServerCharacter.LifeState == LifeState.Dead || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled()) return;
+            TickTimers(Time.deltaTime);
+            HandleItemActionExecutions();
+        }
 
-		if (GameInput.Instance.GetPrimaryHeldDown() && InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem))
-		{
-			if(_itemActionTimer.RemainingSeconds <= 0)
-			{
-				_itemActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.Instance.PlayerHand);
-			}
-		}
-	}
+        private void HandleItemActionExecutions()
+        {
+            if (Player.Instance == null || Player.Instance.ServerCharacter.LifeState == LifeState.Dead || Pointer.IsOverUI() || !GameInput.Instance.GetInputsEnabled()) return;
 
-	private void TickTimers(float deltaTile)
-	{
-		_itemActionTimer.Tick(deltaTile);
-	}
+            if (GameInput.Instance.GetPrimaryHeldDown() && InventoryManager.Instance.SelectedItemExists(out InventoryItem selectedInventoryItem))
+            {
+                if (_itemActionTimer.RemainingSeconds <= 0)
+                {
+                    _itemActionTimer.RemainingSeconds = selectedInventoryItem.Item.ExecuteItemAction(selectedInventoryItem, Player.Instance.PlayerHand);
+                }
+            }
+        }
+
+        private void TickTimers(float deltaTile)
+        {
+            _itemActionTimer.Tick(deltaTile);
+        }
+    }
 }

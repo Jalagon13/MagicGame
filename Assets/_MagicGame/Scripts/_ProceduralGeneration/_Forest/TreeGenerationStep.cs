@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeGenerationStep : GenerationStep
+
+namespace ProjectWizard
+{
+    public class TreeGenerationStep : GenerationStep
 {
     [field: SerializeField] public float MinTreeDistance { get; private set; } = 3f;
     [field: SerializeField] public float MaxTreeDistance { get; private set; } = 8.5f;
@@ -27,4 +30,5 @@ public class TreeGenerationStep : GenerationStep
             }
         }
     }
+}
 }

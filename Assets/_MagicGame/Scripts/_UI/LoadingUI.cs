@@ -1,30 +1,33 @@
 using System;
 using UnityEngine;
 
-public class LoadingUI : MonoBehaviour
+namespace ProjectWizard
 {
-    private void Start()
+    public class LoadingUI : MonoBehaviour
     {
-        GameWorld.Instance.OnBiomeTransitionStart += Show;
-        GameWorld.Instance.OnBiomeTransitionEnd += Hide;
-        
-        gameObject.SetActive(true);
-    }
+        private void Start()
+        {
+            GameWorld.Instance.OnBiomeTransitionStart += Show;
+            GameWorld.Instance.OnBiomeTransitionEnd += Hide;
 
-    private void Show(object sender, EventArgs e)
-    {
-        gameObject.SetActive(true);
-    }
+            gameObject.SetActive(true);
+        }
 
-    private void Hide(object sender, EventArgs e)
-    {
-        Lightmap.Instance.UpdateLightMap();
-        gameObject.SetActive(false);
-    }
+        private void Show(object sender, EventArgs e)
+        {
+            gameObject.SetActive(true);
+        }
 
-    private void OnDestroy()
-    {
-        GameWorld.Instance.OnBiomeTransitionStart -= Show;
-        GameWorld.Instance.OnBiomeTransitionEnd -= Hide;
+        private void Hide(object sender, EventArgs e)
+        {
+            Lightmap.Instance.UpdateLightMap();
+            gameObject.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            GameWorld.Instance.OnBiomeTransitionStart -= Show;
+            GameWorld.Instance.OnBiomeTransitionEnd -= Hide;
+        }
     }
 }

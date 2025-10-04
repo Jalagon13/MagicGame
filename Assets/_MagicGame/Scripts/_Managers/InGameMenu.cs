@@ -2,109 +2,112 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(InGameMenuReferenceHolder))]
-public class InGameMenu : MonoBehaviour
+namespace ProjectWizard
 {
-    public static InGameMenu Instance { get; private set; }
-    public event EventHandler OnMenuClose;
-    public event EventHandler OnMenuOpen;
-    
-    [field: SerializeField] public GameObject DefaultCraftingMenu { get; private set; }
-    
-    private InGameMenuReferenceHolder _menuReferenceHolder;
-    private InGameMenuInstantiateHandler _instantiateHandler;
-    private bool _menuOpen => transform.childCount > 0;
-    
-    private void Awake()
+    [RequireComponent(typeof(InGameMenuReferenceHolder))]
+    public class InGameMenu : MonoBehaviour
     {
-        Instance = this;
-        
-        _menuReferenceHolder = GetComponent<InGameMenuReferenceHolder>();
-        _instantiateHandler = GetComponent<InGameMenuInstantiateHandler>();
-    }
-    
-    private void Start()
-    {
-        GameInput.Instance.OnInventoryToggle += OnInventoryToggleOff;
-    }
+        public static InGameMenu Instance { get; private set; }
+        public event EventHandler OnMenuClose;
+        public event EventHandler OnMenuOpen;
 
-    private void OnInventoryToggleOff(object sender, GameInput.OnToggleInventoryEventArgs e)
-    {
-        if (e.InventoryOpen)
+        [field: SerializeField] public GameObject DefaultCraftingMenu { get; private set; }
+
+        private InGameMenuReferenceHolder _menuReferenceHolder;
+        private InGameMenuInstantiateHandler _instantiateHandler;
+        private bool _menuOpen => transform.childCount > 0;
+
+        private void Awake()
         {
-            if (!_menuOpen)
+            Instance = this;
+
+            _menuReferenceHolder = GetComponent<InGameMenuReferenceHolder>();
+            _instantiateHandler = GetComponent<InGameMenuInstantiateHandler>();
+        }
+
+        private void Start()
+        {
+            GameInput.Instance.OnInventoryToggle += OnInventoryToggleOff;
+        }
+
+        private void OnInventoryToggleOff(object sender, GameInput.OnToggleInventoryEventArgs e)
+        {
+            if (e.InventoryOpen)
             {
-                DefaultCraftingMenu.SetActive(true);
+                if (!_menuOpen)
+                {
+                    DefaultCraftingMenu.SetActive(true);
+                }
+            }
+            else
+            {
+                ClearOldMenu();
             }
         }
-        else
+
+        public void OpenCraftingMenu(GameObject craftingMenuUI, GameObject menuSourceGO)
         {
             ClearOldMenu();
+
+            GameObject menu = _instantiateHandler.InstantiateCustomMenu(craftingMenuUI);
+
+            _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
+            DefaultCraftingMenu.SetActive(false);
+            OnMenuOpen?.Invoke(this, EventArgs.Empty);
         }
-    }
-    
-    public void OpenCraftingMenu(GameObject craftingMenuUI, GameObject menuSourceGO)
-    {
-        ClearOldMenu();
 
-        GameObject menu = _instantiateHandler.InstantiateCustomMenu(craftingMenuUI);
+        public void OpenChestMenu(List<InventoryItem> localChestItemData, GameObject menuSourceGO, Vector2Int chestPosition)
+        {
+            ClearOldMenu();
 
-        _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
-        DefaultCraftingMenu.SetActive(false);
-        OnMenuOpen?.Invoke(this, EventArgs.Empty);
-    }
-    
-    public void OpenChestMenu(List<InventoryItem> localChestItemData, GameObject menuSourceGO, Vector2Int chestPosition)
-    {
-        ClearOldMenu();
-        
-        ChestMenuUI chestMenuUI = _instantiateHandler.InstantiateChestMenu();
-        chestMenuUI.PopulateChestMenuUI(localChestItemData, chestPosition);
+            ChestMenuUI chestMenuUI = _instantiateHandler.InstantiateChestMenu();
+            chestMenuUI.PopulateChestMenuUI(localChestItemData, chestPosition);
 
-        _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
-        DefaultCraftingMenu.SetActive(false);
-        OnMenuOpen?.Invoke(this, EventArgs.Empty);
-    }
-    
-    public void OpenSpellbookInspectorMenu(WandInventoryItem wand)
-    {
-        ClearOldMenu();
-        
-        SpellbookInspectorMenuUI spellbookInspectorMenuUI = _instantiateHandler.InstantiateWandInspectorMenu();
-        spellbookInspectorMenuUI.PlaceSelectedWand(wand);
+            _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
+            DefaultCraftingMenu.SetActive(false);
+            OnMenuOpen?.Invoke(this, EventArgs.Empty);
+        }
 
-        _menuReferenceHolder.SetMenuSourceGO(Player.Instance.gameObject);
-        DefaultCraftingMenu.SetActive(false);
-        OnMenuOpen?.Invoke(this, EventArgs.Empty);
-    }
-    
-    public void OpenNpcMenu(List<ItemDataSO> itemsToSell, GameObject menuSourceGO)
-    {
-        ClearOldMenu();
-        
-        NpcMenuUI npcMenuUI = _instantiateHandler.InstantiateNpcMenu();
-        npcMenuUI.SetItemsToSell(itemsToSell);
-        npcMenuUI.InitializeSellSlots();
+        public void OpenSpellbookInspectorMenu(WandInventoryItem wand)
+        {
+            ClearOldMenu();
 
-        _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
-        DefaultCraftingMenu.SetActive(false);
-        OnMenuOpen?.Invoke(this, EventArgs.Empty);
-    }
-    
-    public void InvokeOnMenuClose()
-    {
-        DefaultCraftingMenu.SetActive(true);
-        OnMenuClose?.Invoke(this, EventArgs.Empty);
-    }
+            SpellbookInspectorMenuUI spellbookInspectorMenuUI = _instantiateHandler.InstantiateWandInspectorMenu();
+            spellbookInspectorMenuUI.PlaceSelectedWand(wand);
 
-    public void ClearOldMenu()
-    {
-        DefaultCraftingMenu.SetActive(true);
-        _menuReferenceHolder.ClearOldMenu();
-    }
-    
-    private void OnDestroy()
-    {
-        GameInput.Instance.OnInventoryToggle -= OnInventoryToggleOff;
+            _menuReferenceHolder.SetMenuSourceGO(Player.Instance.gameObject);
+            DefaultCraftingMenu.SetActive(false);
+            OnMenuOpen?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void OpenNpcMenu(List<ItemDataSO> itemsToSell, GameObject menuSourceGO)
+        {
+            ClearOldMenu();
+
+            NpcMenuUI npcMenuUI = _instantiateHandler.InstantiateNpcMenu();
+            npcMenuUI.SetItemsToSell(itemsToSell);
+            npcMenuUI.InitializeSellSlots();
+
+            _menuReferenceHolder.SetMenuSourceGO(menuSourceGO);
+            DefaultCraftingMenu.SetActive(false);
+            OnMenuOpen?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void InvokeOnMenuClose()
+        {
+            DefaultCraftingMenu.SetActive(true);
+            OnMenuClose?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void ClearOldMenu()
+        {
+            DefaultCraftingMenu.SetActive(true);
+            _menuReferenceHolder.ClearOldMenu();
+        }
+
+        private void OnDestroy()
+        {
+            GameInput.Instance.OnInventoryToggle -= OnInventoryToggleOff;
+        }
     }
 }

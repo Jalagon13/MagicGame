@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public class LandWaterGenerationStep : GenerationStep
+
+namespace ProjectWizard
+{
+    public class LandWaterGenerationStep : GenerationStep
 {
     [field: Header("Terrain Threshold Values")]
     [field: SerializeField, Range(0, 1)] public float RiverLowerThreshold { get; private set; }
@@ -28,4 +31,5 @@ public class LandWaterGenerationStep : GenerationStep
             }
         }
     }
+}
 }

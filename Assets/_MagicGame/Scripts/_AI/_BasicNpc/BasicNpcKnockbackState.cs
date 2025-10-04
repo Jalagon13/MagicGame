@@ -1,71 +1,75 @@
 using UnityEngine;
 
-public class BasicNpcKnockbackState : BaseState
+
+namespace ProjectWizard
 {
-    private BasicNpcStateMachine _ctx;
+	public class BasicNpcKnockbackState : BaseState
+	{
+	    private BasicNpcStateMachine _ctx;
 
-    public BasicNpcKnockbackState(AIState key, StateMachine context) : base(key, context)
-    {
-        _ctx = Context as BasicNpcStateMachine;
-    }
+	    public BasicNpcKnockbackState(AIState key, StateMachine context) : base(key, context)
+	    {
+	        _ctx = Context as BasicNpcStateMachine;
+	    }
 
-    protected override void EnterState(AIStateData stateData)
-    {
-        // Debug.Log($"Basic Npc Knockback State");
-        Vector2 knockbackDirection = _ctx.ServerCharacter.Inflicter != null
-            ? (_ctx.ServerCharacter.transform.position - _ctx.ServerCharacter.Inflicter.transform.position).normalized
-            : Vector2.zero;
+	    protected override void EnterState(AIStateData stateData)
+	    {
+	        // Debug.Log($"Basic Npc Knockback State");
+	        Vector2 knockbackDirection = _ctx.ServerCharacter.Inflicter != null
+	            ? (_ctx.ServerCharacter.transform.position - _ctx.ServerCharacter.Inflicter.transform.position).normalized
+	            : Vector2.zero;
 
-        _ctx.ServerCharacter.Movement.SetDesiredDirection(knockbackDirection);
-    }
+	        _ctx.ServerCharacter.Movement.SetDesiredDirection(knockbackDirection);
+	    }
 
-    public override void ExitState()
-    {
+	    public override void ExitState()
+	    {
         
-    }
+	    }
 
-    public override void UpdateState()
-    {
+	    public override void UpdateState()
+	    {
         
-    }
+	    }
 
-    public override void CheckSwitchStates()
-    {
-        if (_ctx.ServerCharacter.MovementState.Value == MovementState.Idle)
-        {
-            if (_ctx.IsAngry)
-            {
-                SwitchState(new AIStateData(AIState.Pursuing));
-                return;
-            }
-            else if (_ctx.CharacterData.WillFleeWhenProvoked)
-            {
-                SwitchState(new AIStateData(AIState.Fleeing));
-                return;
-            }
-            else
-            {
-                SwitchState(new AIStateData(AIState.Idle));
-                return;
-            }
-        }
-        else if (_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
-        {
-            if(_ctx.IsAngry)
-            {
-                SwitchState(new AIStateData(AIState.Pursuing));
-                return;
-            }
-            else if(_ctx.CharacterData.WillFleeWhenProvoked)
-            {
-                SwitchState(new AIStateData(AIState.Fleeing));
-                return;
-            }
-            else
-            {
-                SwitchState(new AIStateData(AIState.Moving));
-                return;
-            }
-        }
-    }
+	    public override void CheckSwitchStates()
+	    {
+	        if (_ctx.ServerCharacter.MovementState.Value == MovementState.Idle)
+	        {
+	            if (_ctx.IsAngry)
+	            {
+	                SwitchState(new AIStateData(AIState.Pursuing));
+	                return;
+	            }
+	            else if (_ctx.CharacterData.WillFleeWhenProvoked)
+	            {
+	                SwitchState(new AIStateData(AIState.Fleeing));
+	                return;
+	            }
+	            else
+	            {
+	                SwitchState(new AIStateData(AIState.Idle));
+	                return;
+	            }
+	        }
+	        else if (_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
+	        {
+	            if(_ctx.IsAngry)
+	            {
+	                SwitchState(new AIStateData(AIState.Pursuing));
+	                return;
+	            }
+	            else if(_ctx.CharacterData.WillFleeWhenProvoked)
+	            {
+	                SwitchState(new AIStateData(AIState.Fleeing));
+	                return;
+	            }
+	            else
+	            {
+	                SwitchState(new AIStateData(AIState.Moving));
+	                return;
+	            }
+	        }
+	    }
+	}
 }

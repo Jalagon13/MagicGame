@@ -1,46 +1,49 @@
 using UnityEngine;
 
-public class PlayerGroundedState : BaseState
+namespace ProjectWizard
 {
-    private PlayerStateMachine _ctx;
-
-    public PlayerGroundedState(AIState key, StateMachine context) : base(key, context)
+    public class PlayerGroundedState : BaseState
     {
-        _ctx = Context as PlayerStateMachine;
-        IsSuperState = true;
-        SetSubState(AIState.Idle);
-    }
+        private PlayerStateMachine _ctx;
 
-    protected override void EnterState(AIStateData stateData)
-    {
-        // Debug.Log("Player entering grounded");
-
-    }
-
-    public override void UpdateState()
-    {
-        
-    }
-
-    public override void CheckSwitchStates()
-    {
-        if(_ctx.HeldItem is SwordItemSO && _ctx.SwingCooldownTimer.PercentRemaining <= 0 && GameInput.Instance.GetPrimaryHeldDown() && !Pointer.IsOverUI() && !Pointer.IsOverInteractable())
+        public PlayerGroundedState(AIState key, StateMachine context) : base(key, context)
         {
-            SwitchState(new AIStateData(AIState.Attacking));
+            _ctx = Context as PlayerStateMachine;
+            IsSuperState = true;
+            SetSubState(AIState.Idle);
         }
-        else if(_ctx.SpellCaster.IsCasting.Value)
-        {
-            SwitchState(new AIStateData(AIState.SpellCasting, GameDataRegistry.Instance.GetItemIdFromItemData(Player.Instance.SpellCastController.SelectedWandInventoryItem.GetSelectedSpell())));
-        }
-        else if(_ctx.ServerCharacter.LifeState == LifeState.Dead)
-        {
-            Vector3 payload = new(_ctx.ServerCharacter.InflicterToTargetDirection.x, _ctx.ServerCharacter.InflicterToTargetDirection.y, _ctx.ServerCharacter.KnockbackForceFromInflicter);
-            SwitchState(new AIStateData(AIState.Dead, payload));
-        }
-    }
 
-    public override void ExitState()
-    {
-        
+        protected override void EnterState(AIStateData stateData)
+        {
+            // Debug.Log("Player entering grounded");
+
+        }
+
+        public override void UpdateState()
+        {
+
+        }
+
+        public override void CheckSwitchStates()
+        {
+            if (_ctx.HeldItem is SwordItemSO && _ctx.SwingCooldownTimer.PercentRemaining <= 0 && GameInput.Instance.GetPrimaryHeldDown() && !Pointer.IsOverUI() && !Pointer.IsOverInteractable())
+            {
+                SwitchState(new AIStateData(AIState.Attacking));
+            }
+            else if (_ctx.SpellCaster.IsCasting.Value)
+            {
+                SwitchState(new AIStateData(AIState.SpellCasting, GameDataRegistry.Instance.GetItemIdFromItemData(Player.Instance.SpellCastController.SelectedWandInventoryItem.GetSelectedSpell())));
+            }
+            else if (_ctx.ServerCharacter.LifeState == LifeState.Dead)
+            {
+                Vector3 payload = new(_ctx.ServerCharacter.InflicterToTargetDirection.x, _ctx.ServerCharacter.InflicterToTargetDirection.y, _ctx.ServerCharacter.KnockbackForceFromInflicter);
+                SwitchState(new AIStateData(AIState.Dead, payload));
+            }
+        }
+
+        public override void ExitState()
+        {
+
+        }
     }
 }

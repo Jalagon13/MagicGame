@@ -3,6 +3,8 @@ namespace AdvancedTooltips.Core
 	using AdvancedTooltips.ContentTypesHandlers;
 	using TMPro;
 	using UnityEngine;
+	using ProjectWizard;
+	
 	/// <summary>
 	/// There should be only one of this script on scene
 	/// </summary>

@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CaveGenerator : MonoBehaviour
+
+namespace ProjectWizard
+{
+    public class CaveGenerator : MonoBehaviour
 {
     [field: SerializeField] 
     public CaveGenerationData CaveGenerationData { get; private set; }
@@ -37,4 +40,5 @@ public class CaveGenerator : MonoBehaviour
         
         ChunkManager.IS_GENERATING_BIOME = false;
     }
+}
 }

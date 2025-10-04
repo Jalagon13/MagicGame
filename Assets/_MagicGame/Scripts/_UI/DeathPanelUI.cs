@@ -2,63 +2,66 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class DeathPanelUI : MonoBehaviour
+namespace ProjectWizard
 {
-    [SerializeField] private float _delayBeforeShowingUI = 1.5f;
-
-    private GameObject _uiElements;
-
-    private void Awake()
+    public class DeathPanelUI : MonoBehaviour
     {
-        _uiElements = transform.GetChild(0).gameObject;
-        Player.OnAnyPlayerSpawned += RegisterDeathPanelLogic;
-        Hide(); 
-    }
-    
-    private void OnDestroy()
-    {
-        Player.OnAnyPlayerSpawned -= RegisterDeathPanelLogic;
-        if (Player.Instance != null)
+        [SerializeField] private float _delayBeforeShowingUI = 1.5f;
+
+        private GameObject _uiElements;
+
+        private void Awake()
         {
-            Player.Instance.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
+            _uiElements = transform.GetChild(0).gameObject;
+            Player.OnAnyPlayerSpawned += RegisterDeathPanelLogic;
+            Hide();
         }
-    }
 
-    private void RegisterDeathPanelLogic(object sender, Player.PlayerIdEventArgs e)
-    {
-        if (Player.Instance != null)
+        private void OnDestroy()
         {
-            Player.Instance.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
+            Player.OnAnyPlayerSpawned -= RegisterDeathPanelLogic;
+            if (Player.Instance != null)
+            {
+                Player.Instance.ServerCharacter.NetLifeState.LifeState.OnValueChanged -= OnPlayerLifeStateChanged;
+            }
         }
-    }
 
-    private void OnPlayerLifeStateChanged(LifeState previousValue, LifeState newValue)
-    {
-        if(previousValue == LifeState.Alive && newValue == LifeState.Dead)
+        private void RegisterDeathPanelLogic(object sender, Player.PlayerIdEventArgs e)
         {
-            StartCoroutine(DeathPanelUIRoutine());
+            if (Player.Instance != null)
+            {
+                Player.Instance.ServerCharacter.NetLifeState.LifeState.OnValueChanged += OnPlayerLifeStateChanged;
+            }
         }
-    }
-    
-    private IEnumerator DeathPanelUIRoutine()
-    {
-        yield return new WaitForSeconds(_delayBeforeShowingUI);
-        Show();
-    }    
-    
-    public void OnRespawnButtonPressed()
-    {
-        Hide();
-        Player.Instance.Respawn();
-    }
-    
-    private void Show()
-    {
-        _uiElements.SetActive(true);
-    }
-    
-    private void Hide()
-    {
-        _uiElements.SetActive(false);
+
+        private void OnPlayerLifeStateChanged(LifeState previousValue, LifeState newValue)
+        {
+            if (previousValue == LifeState.Alive && newValue == LifeState.Dead)
+            {
+                StartCoroutine(DeathPanelUIRoutine());
+            }
+        }
+
+        private IEnumerator DeathPanelUIRoutine()
+        {
+            yield return new WaitForSeconds(_delayBeforeShowingUI);
+            Show();
+        }
+
+        public void OnRespawnButtonPressed()
+        {
+            Hide();
+            Player.Instance.Respawn();
+        }
+
+        private void Show()
+        {
+            _uiElements.SetActive(true);
+        }
+
+        private void Hide()
+        {
+            _uiElements.SetActive(false);
+        }
     }
 }

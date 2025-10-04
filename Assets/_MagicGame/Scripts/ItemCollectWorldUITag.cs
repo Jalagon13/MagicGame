@@ -1,3 +1,8 @@
 using UnityEngine;
 
-public class ItemCollectWorldUITag : MonoBehaviour {}
+
+namespace ProjectWizard
+{
+	public class ItemCollectWorldUITag : MonoBehaviour {}
+
+}

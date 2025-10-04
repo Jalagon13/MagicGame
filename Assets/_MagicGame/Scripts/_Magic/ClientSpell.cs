@@ -2,48 +2,51 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ClientSpell : NetworkBehaviour
+namespace ProjectWizard
 {
-    [SerializeField] 
-    private ServerSpell _serverSpell;
-    
-    [SerializeField] 
-    private GameObject _visualization;
-    public GameObject Visualization => _visualization;
-
-    public override void OnNetworkSpawn()
+    public class ClientSpell : NetworkBehaviour
     {
-        if (!IsClient) return;
-        
-        _serverSpell.SpellStateNV.OnValueChanged += HandleSpellStateChange;
-    }
+        [SerializeField]
+        private ServerSpell _serverSpell;
 
-    public override void OnNetworkDespawn()
-    {
-        if (!IsClient) return;
+        [SerializeField]
+        private GameObject _visualization;
+        public GameObject Visualization => _visualization;
 
-        _serverSpell.SpellStateNV.OnValueChanged -= HandleSpellStateChange;
-    }
-
-    private void Update()
-    {
-        if (!IsClient) return;
-
-        if(_serverSpell.SpellStateNV.Value == SpellState.Casting)
+        public override void OnNetworkSpawn()
         {
-            _serverSpell?.OnClientSpellUpdate(this);
+            if (!IsClient) return;
+
+            _serverSpell.SpellStateNV.OnValueChanged += HandleSpellStateChange;
         }
-    }
 
-    private void HandleSpellStateChange(SpellState previousValue, SpellState newValue)
-    {
-        if(previousValue == SpellState.Charging && newValue == SpellState.Casting)
+        public override void OnNetworkDespawn()
         {
-            _serverSpell.ClientSpellStart(this);
+            if (!IsClient) return;
+
+            _serverSpell.SpellStateNV.OnValueChanged -= HandleSpellStateChange;
         }
-        else if(previousValue == SpellState.Casting && newValue == SpellState.Stopping)
+
+        private void Update()
         {
-            _serverSpell.OnClientSpellStop(this);
+            if (!IsClient) return;
+
+            if (_serverSpell.SpellStateNV.Value == SpellState.Casting)
+            {
+                _serverSpell?.OnClientSpellUpdate(this);
+            }
+        }
+
+        private void HandleSpellStateChange(SpellState previousValue, SpellState newValue)
+        {
+            if (previousValue == SpellState.Charging && newValue == SpellState.Casting)
+            {
+                _serverSpell.ClientSpellStart(this);
+            }
+            else if (previousValue == SpellState.Casting && newValue == SpellState.Stopping)
+            {
+                _serverSpell.OnClientSpellStop(this);
+            }
         }
     }
 }

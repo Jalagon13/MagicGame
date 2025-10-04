@@ -2,32 +2,37 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChestObject : ResourceObject
+
+namespace ProjectWizard
 {
-	[field: SerializeField] public WorldInput WorldInput { get; private set; }
-
-	private void Start()
+	public class ChestObject : ResourceObject
 	{
-		if(Player.Instance.IsHost)
-		{
-			ChestManager.Instance.TryToCreateEmptyChestData(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value);
-		}
-		
-		GameInput.Instance.OnSecondaryActionStarted += GameInput_OnSecondaryActionStarted;
-	}
+		[field: SerializeField] public WorldInput WorldInput { get; private set; }
 
-	private void GameInput_OnSecondaryActionStarted(object sender, EventArgs e)
-	{
-		var centerOfChestPosition = new Vector2(transform.position.x + 0.5f, transform.position.y + 0.5f);
-		
-		if(WorldInput.IsMouseOverIndputDetector() && PlayerInRangeOfPosition(centerOfChestPosition))
+		private void Start()
 		{
-			ChestManager.Instance.RequestChestData(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value, gameObject);
+			if(Player.Instance.IsHost)
+			{
+				ChestManager.Instance.TryToCreateEmptyChestData(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value);
+			}
+		
+			GameInput.Instance.OnSecondaryActionStarted += GameInput_OnSecondaryActionStarted;
 		}
-	}
+
+		private void GameInput_OnSecondaryActionStarted(object sender, EventArgs e)
+		{
+			var centerOfChestPosition = new Vector2(transform.position.x + 0.5f, transform.position.y + 0.5f);
+		
+			if(WorldInput.IsMouseOverIndputDetector() && PlayerInRangeOfPosition(centerOfChestPosition))
+			{
+				ChestManager.Instance.RequestChestData(Vector2Int.FloorToInt(transform.position), Player.Instance.CurrentBiome.Value, gameObject);
+			}
+		}
 	
-	private void OnDestroy()
-	{
-		GameInput.Instance.OnSecondaryActionStarted -= GameInput_OnSecondaryActionStarted;
+		private void OnDestroy()
+		{
+			GameInput.Instance.OnSecondaryActionStarted -= GameInput_OnSecondaryActionStarted;
+		}
 	}
+
 }

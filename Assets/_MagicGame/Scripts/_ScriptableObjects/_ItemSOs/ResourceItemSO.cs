@@ -1,25 +1,28 @@
 using System.Text;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Resource Item", menuName = "Create Item/New Resource Item")]
-public class ResourceItemSO : ItemDataSO
+namespace ProjectWizard
 {
-    public override InventoryItem CreateInventoryItem(int quantity)
+    [CreateAssetMenu(fileName = "New Resource Item", menuName = "Create Item/New Resource Item")]
+    public class ResourceItemSO : ItemDataSO
     {
-    	return new InventoryItem(this, quantity);
-    }
+        public override InventoryItem CreateInventoryItem(int quantity)
+        {
+            return new InventoryItem(this, quantity);
+        }
 
-    public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
-    {
-        return _baseActionCooldown;
-    }
+        public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
+        {
+            return _baseActionCooldown;
+        }
 
-    public override string GetDescription()
-    {
-        StringBuilder description = new();
-        description.Append($"Crafting Material<br>");
-        description.Append($"{GetDescriptionBreak()}");
+        public override string GetDescription()
+        {
+            StringBuilder description = new();
+            description.Append($"Crafting Material<br>");
+            description.Append($"{GetDescriptionBreak()}");
 
-        return description.ToString();
+            return description.ToString();
+        }
     }
 }

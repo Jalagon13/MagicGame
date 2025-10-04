@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CaveEntranceGenerationStep : GenerationStep
+
+namespace ProjectWizard
+{
+    public class CaveEntranceGenerationStep : GenerationStep
 {
     [field: SerializeField] public float MinCaveEntranceDistance { get; private set; } = 20f;
     [field: SerializeField] public float MaxCaveEntranceDistance { get; private set; } = 40f;
@@ -25,4 +28,5 @@ public class CaveEntranceGenerationStep : GenerationStep
             }
         }
     }
+}
 }

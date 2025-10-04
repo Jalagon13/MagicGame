@@ -1,38 +1,42 @@
 using UnityEngine;
 
-public class BasicNpcGroundedState : BaseState
+
+namespace ProjectWizard
 {
-    private BasicNpcStateMachine _ctx;
+	public class BasicNpcGroundedState : BaseState
+	{
+	    private BasicNpcStateMachine _ctx;
 
-    public BasicNpcGroundedState(AIState key, StateMachine context) : base(key, context)
-    {
-        _ctx = context as BasicNpcStateMachine;
-        IsSuperState = true; // This is a super state
-        SetSubState(AIState.Idle); // Default sub state is idle
-    }
+	    public BasicNpcGroundedState(AIState key, StateMachine context) : base(key, context)
+	    {
+	        _ctx = context as BasicNpcStateMachine;
+	        IsSuperState = true; // This is a super state
+	        SetSubState(AIState.Idle); // Default sub state is idle
+	    }
 
-    protected override void EnterState(AIStateData stateData)
-    {
-        // Logic for entering the grounded state
-    }
+	    protected override void EnterState(AIStateData stateData)
+	    {
+	        // Logic for entering the grounded state
+	    }
 
-    public override void UpdateState()
-    {
-        // Logic for updating the grounded state
-        if(_ctx.ServerCharacter.NetLifeState.LifeState.Value == LifeState.Dead)
-        {
-            Vector3 payload = new(_ctx.ServerCharacter.InflicterToTargetDirection.x, _ctx.ServerCharacter.InflicterToTargetDirection.y, _ctx.ServerCharacter.KnockbackForceFromInflicter);
-            SwitchState(new AIStateData(AIState.Dead, payload));
-        }
-    }
+	    public override void UpdateState()
+	    {
+	        // Logic for updating the grounded state
+	        if(_ctx.ServerCharacter.NetLifeState.LifeState.Value == LifeState.Dead)
+	        {
+	            Vector3 payload = new(_ctx.ServerCharacter.InflicterToTargetDirection.x, _ctx.ServerCharacter.InflicterToTargetDirection.y, _ctx.ServerCharacter.KnockbackForceFromInflicter);
+	            SwitchState(new AIStateData(AIState.Dead, payload));
+	        }
+	    }
 
-    public override void ExitState()
-    {
-        // Logic for exiting the grounded state
-    }
+	    public override void ExitState()
+	    {
+	        // Logic for exiting the grounded state
+	    }
 
-    public override void CheckSwitchStates()
-    {
-        // Logic to check if we should switch to another state
-    }
+	    public override void CheckSwitchStates()
+	    {
+	        // Logic to check if we should switch to another state
+	    }
+	}
 }

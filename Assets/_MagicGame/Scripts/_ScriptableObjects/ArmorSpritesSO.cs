@@ -1,10 +1,13 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ArmorSpritesSO", menuName = "Create ArmorSpritesSO")]
-public class ArmorSpritesSO : ScriptableObject
+namespace ProjectWizard
 {
-    [field: SerializeField] public Texture2D HeadSprites { get; private set; }
-    [field: SerializeField] public Texture2D ArmSprites { get; private set; }
-    [field: SerializeField] public Texture2D ChestSprites { get; private set; }
-    [field: SerializeField] public Texture2D LegsSprites { get; private set; }
+    [CreateAssetMenu(fileName = "ArmorSpritesSO", menuName = "Create ArmorSpritesSO")]
+    public class ArmorSpritesSO : ScriptableObject
+    {
+        [field: SerializeField] public Texture2D HeadSprites { get; private set; }
+        [field: SerializeField] public Texture2D ArmSprites { get; private set; }
+        [field: SerializeField] public Texture2D ChestSprites { get; private set; }
+        [field: SerializeField] public Texture2D LegsSprites { get; private set; }
+    }
 }

@@ -1,17 +1,21 @@
 using UnityEngine;
 using Unity.Netcode;
 
-public enum LifeState
+namespace ProjectWizard
 {
-    Alive,
-    IFrame,
-    Dead
+    public enum LifeState
+    {
+        Alive,
+        IFrame,
+        Dead
+    }
+
+    public class NetworkLifeState : NetworkBehaviour
+    {
+        [SerializeField]
+        private NetworkVariable<LifeState> _lifeState = new NetworkVariable<LifeState>();
+
+        public NetworkVariable<LifeState> LifeState => _lifeState;
+    }
 }
 
-public class NetworkLifeState : NetworkBehaviour
-{
-   [SerializeField] 
-   private NetworkVariable<LifeState> _lifeState = new NetworkVariable<LifeState>();
-   
-   public NetworkVariable<LifeState> LifeState => _lifeState;
-}

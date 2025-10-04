@@ -1,43 +1,46 @@
 using UnityEngine;
 
-public class PlayerKnockbackedState : BaseState
+namespace ProjectWizard
 {
-    private PlayerStateMachine _ctx;
-
-	public PlayerKnockbackedState(AIState key, StateMachine context) : base(key, context)
-	{
-        _ctx = Context as PlayerStateMachine;
-	}
-
-    protected override void EnterState(AIStateData stateData)
+    public class PlayerKnockbackedState : BaseState
     {
-        // Debug.Log("Player entering knockbacked");
-    }
+        private PlayerStateMachine _ctx;
 
-    public override void UpdateState()
-    {
-        
-    }
-
-    public override void CheckSwitchStates()
-    {
-        if (_ctx.ServerCharacter.MovementState.Value == MovementState.Idle)
+        public PlayerKnockbackedState(AIState key, StateMachine context) : base(key, context)
         {
-            SwitchState(new AIStateData(AIState.Idle));
+            _ctx = Context as PlayerStateMachine;
         }
-        else if (_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
+
+        protected override void EnterState(AIStateData stateData)
         {
-            SwitchState(new AIStateData(AIState.Moving));
+            // Debug.Log("Player entering knockbacked");
         }
-    }
 
-    public override void ExitState()
-    {
-        
-    }
+        public override void UpdateState()
+        {
 
-    public override void ClientEnterState(AIStateData stateData)
-    {
-        // NTFS: Maybe add client side wind particles here
+        }
+
+        public override void CheckSwitchStates()
+        {
+            if (_ctx.ServerCharacter.MovementState.Value == MovementState.Idle)
+            {
+                SwitchState(new AIStateData(AIState.Idle));
+            }
+            else if (_ctx.ServerCharacter.MovementState.Value == MovementState.Moving)
+            {
+                SwitchState(new AIStateData(AIState.Moving));
+            }
+        }
+
+        public override void ExitState()
+        {
+
+        }
+
+        public override void ClientEnterState(AIStateData stateData)
+        {
+            // NTFS: Maybe add client side wind particles here
+        }
     }
 }

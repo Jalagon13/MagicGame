@@ -2,28 +2,31 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class GoldUI : MonoBehaviour
+namespace ProjectWizard
 {
-    [SerializeField] private TextMeshProUGUI _goldText;
-    
-    private void Start()
+    public class GoldUI : MonoBehaviour
     {
-        UpdateText(GoldManager.Instance.StartingGold);
-        GoldManager.Instance.OnGoldChanged += UpdateGoldUI;
-    }
+        [SerializeField] private TextMeshProUGUI _goldText;
 
-    private void UpdateGoldUI(object sender, GoldManager.GoldEventArgs e)
-    {
-        UpdateText(e.CurrentGold);
-    }
-    
-    private void UpdateText(int goldAmount)
-    {
-        _goldText.text = $"{goldAmount}";
-    }
+        private void Start()
+        {
+            UpdateText(GoldManager.Instance.StartingGold);
+            GoldManager.Instance.OnGoldChanged += UpdateGoldUI;
+        }
 
-    private void OnDestroy()
-    {
-        GoldManager.Instance.OnGoldChanged -= UpdateGoldUI;
+        private void UpdateGoldUI(object sender, GoldManager.GoldEventArgs e)
+        {
+            UpdateText(e.CurrentGold);
+        }
+
+        private void UpdateText(int goldAmount)
+        {
+            _goldText.text = $"{goldAmount}";
+        }
+
+        private void OnDestroy()
+        {
+            GoldManager.Instance.OnGoldChanged -= UpdateGoldUI;
+        }
     }
 }

@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public interface IDamageable
+namespace ProjectWizard
 {
-    void ReceiveHP(ServerCharacter inflicter, int HP, bool playKnockback, float knockback = -1);
-    ulong NetworkObjectId { get; }
+    public interface IDamageable
+    {
+        void ReceiveHP(ServerCharacter inflicter, int HP, bool playKnockback, float knockback = -1);
+        ulong NetworkObjectId { get; }
+    }
 }

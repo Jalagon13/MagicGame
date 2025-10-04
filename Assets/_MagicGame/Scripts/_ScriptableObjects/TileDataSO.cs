@@ -5,47 +5,50 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[System.Serializable]
-public enum TileType
+namespace ProjectWizard
 {
-	Terrain, Floor, Wall, Liquid, Foliage
-}
+    [System.Serializable]
+    public enum TileType
+    {
+        Terrain, Floor, Wall, Liquid, Foliage
+    }
 
-[CreateAssetMenu(fileName = "New TileSO", menuName = "Tiles/TileSO", order = 1)]
-public class TileDataSO : RuleTile
-{
-	[field: Header("TileData Properties")]
-	[Tooltip("Name of the resource world object")]
-	public string StringID;
-	[field: SerializeField] public TileType TileType { get; private set; }
-	[field: SerializeField] public float Hardness { get; private set; } = 0.65f;
-	[field: SerializeField] public List<Loot> ItemDropTable { get; private set; }
-	
-	[field: Header("Game Feel")]
-	[field: SerializeField] public EventReference MiningSound { get; private set; }
-	[field: SerializeField] public EventReference PlaceSound { get; private set; }
-	[field: SerializeField] public EventReference DestroySound { get; private set; }
-	[field: SerializeField] public List<Sprite> MiningParticleSprites { get; private set; }
+    [CreateAssetMenu(fileName = "New TileSO", menuName = "Tiles/TileSO", order = 1)]
+    public class TileDataSO : RuleTile
+    {
+        [field: Header("TileData Properties")]
+        [Tooltip("Name of the resource world object")]
+        public string StringID;
+        [field: SerializeField] public TileType TileType { get; private set; }
+        [field: SerializeField] public float Hardness { get; private set; } = 0.65f;
+        [field: SerializeField] public List<Loot> ItemDropTable { get; private set; }
 
-	[field: Header("Top Tiles (For Walls Only)")]
-	[field: SerializeField] public Sprite TopTileSingle { get; private set; }
-	[field: SerializeField] public Sprite TopTileLeft { get; private set; }
-	[field: SerializeField] public Sprite TopTileCenter { get; private set; }
-	[field: SerializeField] public Sprite TopTileRight { get; private set; }
-	
-	[field: Header("Dual Grid Properties (probably make this its own class)")]
-	[field: SerializeField] public Material DualGridFillTileMaterial { get; private set; }
-	[field: SerializeField] public TileBase[] DualGridTiles { get; private set; }
-	
-	public Sprite GetRandomMiningParticleSprite()
-	{
-	    if (MiningParticleSprites == null || MiningParticleSprites.Count == 0)
-	    {
-	        Debug.LogWarning("No mining particle sprites assigned.");
-	        return null;
-	    }
+        [field: Header("Game Feel")]
+        [field: SerializeField] public EventReference MiningSound { get; private set; }
+        [field: SerializeField] public EventReference PlaceSound { get; private set; }
+        [field: SerializeField] public EventReference DestroySound { get; private set; }
+        [field: SerializeField] public List<Sprite> MiningParticleSprites { get; private set; }
 
-	    int randomIndex = Random.Range(0, MiningParticleSprites.Count);
-	    return MiningParticleSprites[randomIndex];
-	}
+        [field: Header("Top Tiles (For Walls Only)")]
+        [field: SerializeField] public Sprite TopTileSingle { get; private set; }
+        [field: SerializeField] public Sprite TopTileLeft { get; private set; }
+        [field: SerializeField] public Sprite TopTileCenter { get; private set; }
+        [field: SerializeField] public Sprite TopTileRight { get; private set; }
+
+        [field: Header("Dual Grid Properties (probably make this its own class)")]
+        [field: SerializeField] public Material DualGridFillTileMaterial { get; private set; }
+        [field: SerializeField] public TileBase[] DualGridTiles { get; private set; }
+
+        public Sprite GetRandomMiningParticleSprite()
+        {
+            if (MiningParticleSprites == null || MiningParticleSprites.Count == 0)
+            {
+                Debug.LogWarning("No mining particle sprites assigned.");
+                return null;
+            }
+
+            int randomIndex = Random.Range(0, MiningParticleSprites.Count);
+            return MiningParticleSprites[randomIndex];
+        }
+    }
 }

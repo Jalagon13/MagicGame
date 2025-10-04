@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OreGenerationStep : GenerationStep
+
+namespace ProjectWizard
+{
+    public class OreGenerationStep : GenerationStep
 {
     [Header("Ore Blob Generation")]
     [SerializeField] 
@@ -123,4 +126,5 @@ public class OreGenerationStep : GenerationStep
 
         oreMask = null;
     }
+}
 }

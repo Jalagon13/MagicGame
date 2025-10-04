@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public class CaveWallGenerationStep : GenerationStep
+
+namespace ProjectWizard
+{
+    public class CaveWallGenerationStep : GenerationStep
 {
     [field: Header("Threshold Values")]
     [field: SerializeField] 
@@ -30,4 +33,5 @@ public class CaveWallGenerationStep : GenerationStep
             }
         }
     }
+}
 }
