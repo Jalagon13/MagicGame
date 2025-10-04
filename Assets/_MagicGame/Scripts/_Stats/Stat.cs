@@ -1,52 +1,55 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stat
+namespace ProjectWizard
 {
-    private List<StatModifier> _modifiers = new();
-    private bool _dirty = true;
-    private float _finalValue;
-
-    public float BaseValue { get; }
-    public int AsIntValue => Mathf.RoundToInt(GetValue());
-
-    public Stat(float baseValue)
+    public class Stat
     {
-        BaseValue = baseValue;
-    }
+        private List<StatModifier> _modifiers = new();
+        private bool _dirty = true;
+        private float _finalValue;
 
-    public void AddModifier(StatModifier mod)
-    {
-        _modifiers.Add(mod);
-        _dirty = true;
-    }
+        public float BaseValue { get; }
+        public int AsIntValue => Mathf.RoundToInt(GetValue());
 
-    public void RemoveModifier(StatModifier mod)
-    {
-        _modifiers.Remove(mod);
-        _dirty = true;
-    }
-
-    public float GetValue()
-    {
-        if (_dirty) Recalculate();
-        return _finalValue;
-    }
-
-    private void Recalculate()
-    {
-        float flat = 0;
-        float percent = 1f;
-
-        foreach (var mod in _modifiers)
+        public Stat(float baseValue)
         {
-            if (mod.Type == StatModifierType.Flat)
-                flat += mod.Value;
-            else if (mod.Type == StatModifierType.Percent)
-                percent += mod.Value;
+            BaseValue = baseValue;
         }
 
-        _finalValue = (BaseValue + flat) * percent;
-        _dirty = false;
+        public void AddModifier(StatModifier mod)
+        {
+            _modifiers.Add(mod);
+            _dirty = true;
+        }
+
+        public void RemoveModifier(StatModifier mod)
+        {
+            _modifiers.Remove(mod);
+            _dirty = true;
+        }
+
+        public float GetValue()
+        {
+            if (_dirty) Recalculate();
+            return _finalValue;
+        }
+
+        private void Recalculate()
+        {
+            float flat = 0;
+            float percent = 1f;
+
+            foreach (var mod in _modifiers)
+            {
+                if (mod.Type == StatModifierType.Flat)
+                    flat += mod.Value;
+                else if (mod.Type == StatModifierType.Percent)
+                    percent += mod.Value;
+            }
+
+            _finalValue = (BaseValue + flat) * percent;
+            _dirty = false;
+        }
     }
 }
