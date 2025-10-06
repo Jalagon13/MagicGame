@@ -10,7 +10,7 @@ namespace ProjectWizard
         public const string RESTORATION_COOLDOWN_SOURCE = "RestorationCooldown";
 
         public RestorationCooldownDebuff(Stat stat, float duration)
-            : base(stat, new StatModifier(0f, StatModifierType.Flat, RESTORATION_COOLDOWN_SOURCE), duration)
+            : base(stat, new StatModifier(0f, StatModifierType.Flat, RESTORATION_COOLDOWN_SOURCE), "Restoration Cooldown Debuff", duration)
         {
         }
 

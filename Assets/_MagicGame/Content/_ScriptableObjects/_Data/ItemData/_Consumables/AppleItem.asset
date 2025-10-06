@@ -14,15 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <InGameName>k__BackingField: Apple
   <StringID>k__BackingField: apple
-  <UiDisplay>k__BackingField: {fileID: 0}
+  <UiDisplay>k__BackingField: {fileID: 21300012, guid: 358b5d9f23bc9413e87c9948acc67ee1, type: 3}
   <GoldValue>k__BackingField: 0
   <Stackable>k__BackingField: 1
   <Description>k__BackingField: 
   <ConsumeSound>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -1900711158
+      Data2: 1230544862
+      Data3: -453350209
+      Data4: 967977714
+    Path: event:/LeafCrunch
   <HealthGain>k__BackingField: 0
+  <RestorationCooldownDuration>k__BackingField: 60
+  <Buffs>k__BackingField:
+  - statType: 2
+    modifierType: 1
+    modifierValue: 0.5
+    duration: 5
+    buffName: Speed Test Buff
+    buffIcon: {fileID: 21300012, guid: 358b5d9f23bc9413e87c9948acc67ee1, type: 3}
+    iconColor: {r: 1, g: 1, b: 1, a: 1}
+    description: 

@@ -9,12 +9,10 @@ namespace ProjectWizard
 	{
 	    private enum TopTileType { Single, Right, Left, Center }
 	    private Tilemap _upperWallTm;
-	    private Tilemap _upperOreWallTm;
 
 	    private void Awake()
 	    {
 	        _upperWallTm = GetComponent<Tilemap>();
-	        _upperOreWallTm = transform.parent.transform.GetChild(1).GetComponent<Tilemap>();
 	    }
 
 	    private void Start()
@@ -41,14 +39,12 @@ namespace ProjectWizard
 	    public void EnableTilemapCollider(bool v)
 	    {
 	        _upperWallTm.GetComponent<TilemapCollider2D>().enabled = v;
-	        _upperOreWallTm.GetComponent<TilemapRenderer>().enabled = v;
 	    }
     
 	    public void DeleteUpperWallTile(Vector3Int tilePos)
 	    {
 	        Vector3Int upperPosition = new Vector3Int(tilePos.x, tilePos.y + 1, 0);
 	        _upperWallTm.SetTile(upperPosition, null);
-	        _upperOreWallTm.SetTile(upperPosition, null);
 
 	        for (int dx = -1; dx <= 1; dx++)
 	        {
@@ -83,7 +79,6 @@ namespace ProjectWizard
 	    public void ClearAllTopTiles()
 	    {
 	        _upperWallTm.ClearAllTiles();
-	        _upperOreWallTm.ClearAllTiles();
 	    }
 
 	    private void RefreshUpperWallTiles(object sender, EventArgs e)
@@ -165,7 +160,6 @@ namespace ProjectWizard
 	            if (baseTileId == lowerTileId)
 	            {
 	                _upperWallTm.SetTile(baseTilePosition, null);
-	                _upperOreWallTm.SetTile(baseTilePosition, null);
 	            }
 	        }
     

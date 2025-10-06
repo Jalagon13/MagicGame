@@ -48,6 +48,7 @@ namespace ProjectWizard
                 buff.Tick(deltaTime);
                 if (buff.IsExpired)
                 {
+                    Debug.Log($"Buff {buff.BuffName} has expired and will be removed.");
                     buff.Remove();
                     _activeBuffs.RemoveAt(i);
                 }

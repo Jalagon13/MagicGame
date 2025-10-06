@@ -82,7 +82,12 @@ namespace ProjectWizard
             _armorEquipped = armorItem;
 
             // NTFS: Need to incorporate method for custom special buffs for full armor sets being worn
-            Buff defenseBuff = new(Player.Instance.ServerCharacter.Stats.Defense, new StatModifier(_armorEquipped.DefenseAmount, StatModifierType.Flat, this, true));
+            Buff defenseBuff = new(
+                Player.Instance.ServerCharacter.Stats.Defense,
+                new StatModifier(_armorEquipped.DefenseAmount, StatModifierType.Flat, this, true),
+                "Armor Defense Buff",
+                null
+            );
             Player.Instance.ServerCharacter.Stats.AddBuff(defenseBuff);
             OnArmorUpdated?.Invoke(this, new ArmorEquipDataEventArgs(_armorType, _armorEquipped));
 

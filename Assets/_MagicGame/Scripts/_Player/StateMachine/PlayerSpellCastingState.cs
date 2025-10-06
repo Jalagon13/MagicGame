@@ -20,8 +20,10 @@ namespace ProjectWizard
 
             Buff castingMoveBuff = new(
                 _ctx.ServerCharacter.Stats.MovementSpeed,
-                new StatModifier(hasteMultiplier, StatModifierType.Percent, _ctx.SpellCaster)/* ,
-            _spellToCast.CastTime */);
+                new StatModifier(hasteMultiplier, StatModifierType.Percent, _ctx.SpellCaster),
+                "CastingMoveBuff", // Provide a suitable buff name
+                null // Or provide a duration if needed, e.g. _spellToCast.CastTime
+            );
 
             _ctx.ServerCharacter.Stats.AddBuff(castingMoveBuff);
         }

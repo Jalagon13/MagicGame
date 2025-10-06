@@ -4,21 +4,22 @@ using System.Collections.Generic;
 
 namespace ProjectWizard
 {
+    // NTFS: UNDER CONSTRUCTION WILL FINISH ANOTHER TIME!
     [CreateAssetMenu(fileName = "New Consumable", menuName = "Create Item/New Consumable")]
     public class ConsumableItemSO : ItemDataSO
     {
         [field: SerializeField] public EventReference ConsumeSound { get; private set; }
 
         [Header("Health Restoration")]
-        [field: Tooltip("Health gained when consumed")]
-        [field: SerializeField] public int HealthGain { get; private set; }
+        [field: SerializeField, Tooltip("Health gained when consumed")]
+        public int HealthGain { get; private set; }
 
-        [field: Tooltip("Duration of restoration cooldown in seconds (prevents health restoration from other consumables)")]
-        [field: SerializeField] public float RestorationCooldownDuration { get; private set; } = 60f;
+        [field: SerializeField, Tooltip("Duration of restoration cooldown in seconds (prevents health restoration from other consumables)")]
+        public float RestorationCooldownDuration { get; private set; }
 
         [Header("Buffs")]
-        [field: Tooltip("List of buffs this consumable applies")]
-        [field: SerializeField] public List<BuffConfiguration> Buffs { get; private set; } = new List<BuffConfiguration>();
+        [field: SerializeField, Tooltip("List of buffs this consumable applies")]
+        public List<BuffConfiguration> Buffs { get; private set; } = new List<BuffConfiguration>();
 
         public override float ExecuteItemAction(InventoryItem inventoryItem, PlayerHand playerHand)
         {
@@ -47,13 +48,16 @@ namespace ProjectWizard
                 var targetStat = characterStats.GetStatByType(buffConfig.statType);
                 if (targetStat != null)
                 {
+                    // Use the appropriate value based on modifier type
+                    float value = buffConfig.modifierType == StatModifierType.Flat ? buffConfig.flatValue : buffConfig.percentValue;
+
                     var modifier = new StatModifier(
-                        buffConfig.modifierValue,
+                        value,
                         buffConfig.modifierType,
                         this // Use this consumable as the source
                     );
 
-                    var buff = new Buff(targetStat, modifier, buffConfig.duration > 0 ? buffConfig.duration : null);
+                    var buff = new Buff(targetStat, modifier, buffConfig.buffName, buffConfig.duration > 0 ? buffConfig.duration : null);
                     characterStats.AddBuff(buff);
                     gainedStat = true;
                 }
