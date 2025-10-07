@@ -14,13 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <InGameName>k__BackingField: Wood Sword
   <StringID>k__BackingField: woodsword
-  <UiDisplay>k__BackingField: {fileID: 86968822, guid: 539b6686a978c4c08845afe71ddfe566, type: 3}
+  <UiDisplay>k__BackingField: {fileID: 517902985880779990, guid: 539b6686a978c4c08845afe71ddfe566, type: 3}
   <GoldValue>k__BackingField: 5
   <Stackable>k__BackingField: 0
   <Description>k__BackingField: 
-  <ToolType>k__BackingField: 2
-  <MiningPower>k__BackingField: 1
-  <MiningRange>k__BackingField: 4
   <Damage>k__BackingField: 12
   <Knockback>k__BackingField: 6
   <DetectionBetweenHitsDuration>k__BackingField: 0.05

@@ -14,12 +14,13 @@ namespace ProjectWizard
         
         foreach (var (transitionObjectId, forestTransitionObjectPosition) in forestTransitionObjectData)
         {
-            ushort stairsId = GameDataRegistry.Instance.GetResourceIdFromResourceData(caveGenData.StairsToCave.Data);
+            ushort stairsToCaveId = GameDataRegistry.Instance.GetResourceIdFromResourceData(caveGenData.StairsToCave.Data);
+            ushort stairsToForestId = GameDataRegistry.Instance.GetResourceIdFromResourceData(caveGenData.StairsToForest.Data);
 
-            if (transitionObjectId == stairsId)
+            if (transitionObjectId == stairsToCaveId)
             {
                 DeleteNeighborWallsAroundPoint(forestTransitionObjectPosition);
-                caveGenData.SetResourceobjectData(forestTransitionObjectPosition.x, forestTransitionObjectPosition.y, stairsId, CardinalDirection.North);
+                caveGenData.SetResourceobjectData(forestTransitionObjectPosition.x, forestTransitionObjectPosition.y, stairsToForestId, CardinalDirection.North);
             }
         }
     }
