@@ -8,7 +8,7 @@ namespace ProjectWizard
     {
         private PlayerStateMachine _ctx;
         private float _swingCd;
-        private SwordItemSO _toolItemSO;
+        private ToolItemSO _toolItemSO;
         private CardinalDirection _swingDirection;
 
         public PlayerAttackState(AIState key, StateMachine context) : base(key, context)
@@ -20,7 +20,7 @@ namespace ProjectWizard
         protected override void EnterState(AIStateData stateData)
         {
             // Debug.Log("Player entering swing");
-            _toolItemSO = _ctx.HeldItem as SwordItemSO;
+            _toolItemSO = _ctx.HeldItem as ToolItemSO;
             _swingCd = _toolItemSO.SwingCooldown;
             _swingDirection = _ctx.PlayerRef.PlayerHand.AimDirection.Value;
 

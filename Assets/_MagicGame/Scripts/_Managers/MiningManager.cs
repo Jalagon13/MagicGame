@@ -35,8 +35,8 @@ namespace ProjectWizard
         [SerializeField]
         private float _timeBetweenMiningSounds = 0.225f/* , _delayBetweenPlacingAndMining = 0.2f */, _breakCooldownDuration = 0.075f;
 
-        private MiningSpellItemSO _currentMiningSpellItemSO;
-        public MiningSpellItemSO CurrentMiningSpellItemSO => _currentMiningSpellItemSO;
+        private ToolItemSO _currentToolItemSO;
+        public ToolItemSO CurrentToolItemSO => _currentToolItemSO;
 
         private const float _timesPerSecond = 30f;
         private readonly float _intervalSeconds = 1f / _timesPerSecond;
@@ -75,9 +75,65 @@ namespace ProjectWizard
             _breakCooldownTimer.Tick(Time.deltaTime);
         }
 
+        private void DetectMiningInput(object sender, GameInput.OnPrimaryOrSecondaryActionEventArgs e)
+        {
+            if (_currentToolItemSO == null) return;
+
+            SetState(e.IsHeldDown ? MiningState.Detecting : MiningState.Idle);
+        }
+
+        private void DetectMiningSpell(object sender, HotbarManager.OnFocusItemSetEventArgs e)
+        {
+            ItemDataSO itemData = GameDataRegistry.Instance.GetItemDataFromItemId(e.SelectedItemId);
+            if (itemData == null || (_currentToolItemSO != null && itemData.StringID == _currentToolItemSO.StringID)) return;
+
+            if (itemData is ToolItemSO toolItemSO)
+            {
+                _currentToolItemSO = toolItemSO;
+                if (GameInput.Instance.GetPrimaryHeldDown())
+                {
+                    SetState(MiningState.Detecting);
+                }
+            }
+            else
+            {
+                _currentToolItemSO = null;
+                SetState(MiningState.Idle);
+            }
+        }
+
+        private void SetState(MiningState newState)
+        {
+            if (_currentState == newState) return;
+
+            // Stop detection loop
+            CancelInvoke(nameof(CheckForMineables));
+
+            _currentState = newState;
+
+            if (_currentState == MiningState.Detecting)
+            {
+                OnDetectMineablesStarted?.Invoke(this, EventArgs.Empty);
+                InvokeRepeating(nameof(CheckForMineables), 0f, _intervalSeconds);
+            }
+            else
+            {
+                OnDetectMineablesStopped?.Invoke(this, EventArgs.Empty);
+
+                if (_currentMiningCoroutine != null)
+                {
+                    StopCoroutine(_currentMiningCoroutine);
+                    _currentMiningCoroutine = null;
+                    OnMiningStopped?.Invoke(this, EventArgs.Empty);
+                }
+
+                _lastCheckedTilePosition = null;
+            }
+        }
+
         private void CheckForMineables()
         {
-            if (_currentMiningSpellItemSO == null || !_currentMiningSpellItemSO.PlayerWithinMiningRangeOfMouse() || _breakCooldownTimer.RemainingSeconds > 0)
+            if (_currentToolItemSO == null || _breakCooldownTimer.RemainingSeconds > 0)
                 return;
 
             Vector2Int currentPos = (Vector2Int)ActionManager.MouseTilePosition;
@@ -160,7 +216,7 @@ namespace ProjectWizard
 
         private IEnumerator MiningSequence(float hardness, TileDataSO tileData, ResourceDataSO resourceData, Action playMiningSound, Action handleDestruction)
         {
-            float totalTicks = hardness * 30f / Mathf.Max(_currentMiningSpellItemSO.MiningPower, 0.1f);
+            float totalTicks = hardness * 30f / Mathf.Max(_currentToolItemSO.MiningPower, 0.1f);
             float totalMiningTime = totalTicks * 0.05f;
 
             OnMiningStarted?.Invoke(this, new MiningStartedEventArgs(_lastCheckedTilePosition.HasValue ? (Vector3Int)_lastCheckedTilePosition.Value : Vector3Int.zero, Player.Instance.CurrentBiome.Value, tileData, resourceData, totalMiningTime));
@@ -175,7 +231,7 @@ namespace ProjectWizard
             while (elapsedTime < totalMiningTime)
             {
                 // Check if player is still within mining range
-                if (_currentMiningSpellItemSO == null || !_currentMiningSpellItemSO.PlayerWithinMiningRangeOfMouse())
+                if (_currentToolItemSO == null)
                 {
                     OnMiningStopped?.Invoke(this, EventArgs.Empty);
                     _currentMiningCoroutine = null;
@@ -198,62 +254,6 @@ namespace ProjectWizard
             handleDestruction();
             OnMiningStopped?.Invoke(this, EventArgs.Empty);
             _currentMiningCoroutine = null;
-        }
-
-        private void DetectMiningInput(object sender, GameInput.OnPrimaryOrSecondaryActionEventArgs e)
-        {
-            if (_currentMiningSpellItemSO == null) return;
-
-            SetState(e.IsHeldDown ? MiningState.Detecting : MiningState.Idle);
-        }
-
-        private void DetectMiningSpell(object sender, HotbarManager.OnFocusItemSetEventArgs e)
-        {
-            ItemDataSO itemData = GameDataRegistry.Instance.GetItemDataFromItemId(e.SelectedItemId);
-            if (itemData == null || (_currentMiningSpellItemSO != null && itemData.StringID == _currentMiningSpellItemSO.StringID)) return;
-
-            if (itemData is MiningSpellItemSO miningSpellItemSO)
-            {
-                _currentMiningSpellItemSO = miningSpellItemSO;
-                if (GameInput.Instance.GetPrimaryHeldDown())
-                {
-                    SetState(MiningState.Detecting);
-                }
-            }
-            else
-            {
-                _currentMiningSpellItemSO = null;
-                SetState(MiningState.Idle);
-            }
-        }
-
-        private void SetState(MiningState newState)
-        {
-            if (_currentState == newState) return;
-
-            // Stop detection loop
-            CancelInvoke(nameof(CheckForMineables));
-
-            _currentState = newState;
-
-            if (_currentState == MiningState.Detecting)
-            {
-                OnDetectMineablesStarted?.Invoke(this, EventArgs.Empty);
-                InvokeRepeating(nameof(CheckForMineables), 0f, _intervalSeconds);
-            }
-            else
-            {
-                OnDetectMineablesStopped?.Invoke(this, EventArgs.Empty);
-
-                if (_currentMiningCoroutine != null)
-                {
-                    StopCoroutine(_currentMiningCoroutine);
-                    _currentMiningCoroutine = null;
-                    OnMiningStopped?.Invoke(this, EventArgs.Empty);
-                }
-
-                _lastCheckedTilePosition = null;
-            }
         }
     }
 }

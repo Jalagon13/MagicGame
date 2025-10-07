@@ -122,7 +122,7 @@ namespace ProjectWizard
                 }
             }
 
-            if ((_heldItem is WandItemSO || _heldItem is SpellItemSO || _heldItem is MiningSpellItemSO) && !IsSwinging && CastingDirection.Value != CardinalDirection.None)
+            if ((_heldItem is WandItemSO || _heldItem is SpellItemSO) && !IsSwinging && CastingDirection.Value != CardinalDirection.None)
             {
                 _armPivotGO.transform.rotation = Quaternion.AngleAxis(AngleToMouse.Value, Vector3.forward);
                 SetPivotPosition(CastingDirection.Value);
@@ -133,7 +133,7 @@ namespace ProjectWizard
         {
             _heldItem = GameDataRegistry.Instance.GetItemDataFromItemId(newValue);
 
-            _isHoldingWandOrSpell = _heldItem is WandItemSO || _heldItem is SpellItemSO || _heldItem is MiningSpellItemSO;
+            _isHoldingWandOrSpell = _heldItem is WandItemSO || _heldItem is SpellItemSO;
             if (_isHoldingWandOrSpell)
             {
                 float originalY = Mathf.Abs(SpellSpawnTransform.localPosition.y);
@@ -162,11 +162,11 @@ namespace ProjectWizard
 
         private void RefreshItemSprite()
         {
-            _itemHeldSR.flipX = _heldItem is WandItemSO || _heldItem is SwordItemSO;
+            _itemHeldSR.flipX = _heldItem is WandItemSO || _heldItem is ToolItemSO;
             _itemHeldSR.sprite = _heldItem switch
             {
                 WandItemSO wand => wand.UiDisplay,
-                SwordItemSO tool => tool.UiDisplay,
+                ToolItemSO tool => tool.UiDisplay,
                 _ => null
             };
         }
