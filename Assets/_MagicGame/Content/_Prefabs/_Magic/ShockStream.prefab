@@ -238,8 +238,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _clientSpell: {fileID: 5811481957146022158}
   <Range>k__BackingField: 3.5
-  <TimeBetweenDamage>k__BackingField: 0.3
-  <LifetimePerDistanceUnit>k__BackingField: 0.05
+  <TimeBetweenDamage>k__BackingField: 0.25
   _lightningStream: {fileID: 9130910378944018275}
   <DamageSound>k__BackingField:
     Guid:

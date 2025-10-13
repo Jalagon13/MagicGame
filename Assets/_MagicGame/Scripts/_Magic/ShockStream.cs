@@ -18,10 +18,6 @@ namespace ProjectWizard
         [field: SerializeField]
         public float TimeBetweenDamage { get; private set; } = 0.25f;
 
-        [field: Tooltip("Lifetime of particle system per distance for the beam")]
-        [field: SerializeField]
-        public float LifetimePerDistanceUnit { get; private set; } = 0.05f;
-
         [SerializeField]
         private LightningBoltScript _lightningStream;
 

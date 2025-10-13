@@ -11833,7 +11833,7 @@ MonoBehaviour:
   _npcSpawnData:
     <AllSpawnRules>k__BackingField:
     - <Biome>k__BackingField: 1
-      <SpawnsPerMinute>k__BackingField: 30
+      <SpawnsPerMinute>k__BackingField: 0
       <MaxNpcSlotAmount>k__BackingField: 6
       <HasDayNightCycle>k__BackingField: 1
       <CharacterSpawnData>k__BackingField:
@@ -11841,7 +11841,7 @@ MonoBehaviour:
         <RelativeSpawnWeight>k__BackingField: 50
         <SpawnCondition>k__BackingField: 0
     - <Biome>k__BackingField: 2
-      <SpawnsPerMinute>k__BackingField: 30
+      <SpawnsPerMinute>k__BackingField: 0
       <MaxNpcSlotAmount>k__BackingField: 6
       <HasDayNightCycle>k__BackingField: 1
       <CharacterSpawnData>k__BackingField:
@@ -12360,7 +12360,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1686029314
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13265,7 +13265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackerSettings:
     BindingMode: 1
-    PositionDamping: {x: 0, y: 0, z: 0}
+    PositionDamping: {x: 0.1, y: 0.1, z: 0}
     AngularDampingMode: 0
     RotationDamping: {x: 0, y: 0, z: 0}
     QuaternionDamping: 1
