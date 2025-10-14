@@ -17,6 +17,7 @@ namespace ProjectWizard
     {
         [field: SerializeField] public ToolType ToolType { get; private set; }
         [field: SerializeField] public int MiningPower { get; private set; } = 1;
+        [field: SerializeField] public float MiningRange { get; private set; } = 3;
         [field: SerializeField] public int Damage { get; private set; } = 4;
         [field: SerializeField] public int Knockback { get; private set; } = 6;
         [field: SerializeField] public float ColliderLength { get; private set; } = 1f;
@@ -41,6 +42,11 @@ namespace ProjectWizard
         public override InventoryItem CreateInventoryItem(int quantity)
         {
             return new InventoryItem(this, quantity);
+        }
+
+        public bool PlayerWithinMiningRangeOfMouse()
+        {
+            return Vector2.Distance(Player.Instance.transform.position, ActionManager.MouseWorldPosition) <= MiningRange;
         }
     }
 }

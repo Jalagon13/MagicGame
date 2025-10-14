@@ -86,7 +86,6 @@ namespace ProjectWizard
 
             // local player start up code here, maybe input
             GameInput.Instance.OnMove += GameInput_OnPlayerMove;
-            GameInput.Instance.OnFKeyPressed += GameInput_OnFKeyPressed;
             HotbarManager.Instance.OnFocusSlotUpdated += HotbarManager_OnSelectedItemUpdated;
             CurrentBiome.OnValueChanged += UpdateCollisionDetection;
         }
@@ -96,7 +95,6 @@ namespace ProjectWizard
             if (IsClient && !_serverCharacter.Data.IsNpc && _serverCharacter.IsOwner)
             {
                 GameInput.Instance.OnMove -= GameInput_OnPlayerMove;
-                GameInput.Instance.OnFKeyPressed -= GameInput_OnFKeyPressed;
                 HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnSelectedItemUpdated;
                 CurrentBiome.OnValueChanged -= UpdateCollisionDetection;
                 _spellCastController.Dispose();
@@ -107,16 +105,6 @@ namespace ProjectWizard
         {
             _playerCollisionDetector.SetBiome(newValue);
 
-        }
-
-        private void GameInput_OnFKeyPressed(object sender, EventArgs e)
-        {
-            if (TryGetComponent(out DamageReceiver damageReceiver))
-            {
-                if (ServerCharacter.LifeState != LifeState.Alive) return;
-                Debug.Log($"Player took damage TEST");
-                damageReceiver.ReceiveHP(_serverCharacter, -25, false);
-            }
         }
 
         private void Update()

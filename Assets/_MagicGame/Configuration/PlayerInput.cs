@@ -128,7 +128,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SwapHands"",
+                    ""name"": ""ToggleMiningMode"",
                     ""type"": ""Button"",
                     ""id"": ""dc166370-62e3-4aec-a602-7c4621b9c311"",
                     ""expectedControlType"": """",
@@ -245,11 +245,11 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""740fa904-1312-41a2-b10f-a0e39deb88b1"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": ""Hold"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SwapHands"",
+                    ""action"": ""ToggleMiningMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -516,7 +516,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_PrimaryAction = m_Player.FindAction("PrimaryAction", throwIfNotFound: true);
         m_Player_SecondaryAction = m_Player.FindAction("SecondaryAction", throwIfNotFound: true);
         m_Player_ToggleInventory = m_Player.FindAction("ToggleInventory", throwIfNotFound: true);
-        m_Player_SwapHands = m_Player.FindAction("SwapHands", throwIfNotFound: true);
+        m_Player_ToggleMiningMode = m_Player.FindAction("ToggleMiningMode", throwIfNotFound: true);
         m_Player_Esc = m_Player.FindAction("Esc", throwIfNotFound: true);
         m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
         m_Player_Space = m_Player.FindAction("Space", throwIfNotFound: true);
@@ -617,7 +617,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_PrimaryAction;
     private readonly InputAction m_Player_SecondaryAction;
     private readonly InputAction m_Player_ToggleInventory;
-    private readonly InputAction m_Player_SwapHands;
+    private readonly InputAction m_Player_ToggleMiningMode;
     private readonly InputAction m_Player_Esc;
     private readonly InputAction m_Player_Shift;
     private readonly InputAction m_Player_Space;
@@ -649,9 +649,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @ToggleInventory => m_Wrapper.m_Player_ToggleInventory;
         /// <summary>
-        /// Provides access to the underlying input action "Player/SwapHands".
+        /// Provides access to the underlying input action "Player/ToggleMiningMode".
         /// </summary>
-        public InputAction @SwapHands => m_Wrapper.m_Player_SwapHands;
+        public InputAction @ToggleMiningMode => m_Wrapper.m_Player_ToggleMiningMode;
         /// <summary>
         /// Provides access to the underlying input action "Player/Esc".
         /// </summary>
@@ -702,9 +702,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ToggleInventory.started += instance.OnToggleInventory;
             @ToggleInventory.performed += instance.OnToggleInventory;
             @ToggleInventory.canceled += instance.OnToggleInventory;
-            @SwapHands.started += instance.OnSwapHands;
-            @SwapHands.performed += instance.OnSwapHands;
-            @SwapHands.canceled += instance.OnSwapHands;
+            @ToggleMiningMode.started += instance.OnToggleMiningMode;
+            @ToggleMiningMode.performed += instance.OnToggleMiningMode;
+            @ToggleMiningMode.canceled += instance.OnToggleMiningMode;
             @Esc.started += instance.OnEsc;
             @Esc.performed += instance.OnEsc;
             @Esc.canceled += instance.OnEsc;
@@ -737,9 +737,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ToggleInventory.started -= instance.OnToggleInventory;
             @ToggleInventory.performed -= instance.OnToggleInventory;
             @ToggleInventory.canceled -= instance.OnToggleInventory;
-            @SwapHands.started -= instance.OnSwapHands;
-            @SwapHands.performed -= instance.OnSwapHands;
-            @SwapHands.canceled -= instance.OnSwapHands;
+            @ToggleMiningMode.started -= instance.OnToggleMiningMode;
+            @ToggleMiningMode.performed -= instance.OnToggleMiningMode;
+            @ToggleMiningMode.canceled -= instance.OnToggleMiningMode;
             @Esc.started -= instance.OnEsc;
             @Esc.performed -= instance.OnEsc;
             @Esc.canceled -= instance.OnEsc;
@@ -1013,12 +1013,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnToggleInventory(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "SwapHands" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "ToggleMiningMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSwapHands(InputAction.CallbackContext context);
+        void OnToggleMiningMode(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Esc" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

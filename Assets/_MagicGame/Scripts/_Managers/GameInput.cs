@@ -13,8 +13,8 @@ namespace ProjectWizard
         public event EventHandler OnShiftStarted;
         public event EventHandler OnSpaceStarted;
         public event EventHandler OnSpaceCanceled;
-        public event EventHandler OnFKeyPressed;
         public event EventHandler OnSecondaryActionStarted;
+        public event EventHandler OnToggleMiningMode;
         public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnPrimaryAction;
         public event EventHandler<OnPrimaryOrSecondaryActionEventArgs> OnSecondaryAction;
         public class OnPrimaryOrSecondaryActionEventArgs : EventArgs
@@ -66,7 +66,7 @@ namespace ProjectWizard
             _playerInput.Player.SecondaryAction.started += PlayerInput_SecondaryActionStarted;
             _playerInput.Player.SecondaryAction.performed += PlayerInput_SecondaryAction;
             _playerInput.Player.SecondaryAction.canceled += PlayerInput_SecondaryActionCanceled;
-            _playerInput.Player.SwapHands.started += PlayerInput_FKeyPressed;
+            _playerInput.Player.ToggleMiningMode.started += PlayerInput_OnToggleMiningMode;
             _playerInput.Player.Shift.started += PlayerInput_ShiftStart;
             _playerInput.Player.Shift.canceled += PlayerInput_ShiftCanceled;
             _playerInput.Player.Space.started += PlayerInput_SpaceStarted;
@@ -162,9 +162,9 @@ namespace ProjectWizard
             _shiftHeldDown = false;
         }
 
-        private void PlayerInput_FKeyPressed(InputAction.CallbackContext context)
+        private void PlayerInput_OnToggleMiningMode(InputAction.CallbackContext context)
         {
-            OnFKeyPressed?.Invoke(this, EventArgs.Empty);
+            OnToggleMiningMode?.Invoke(this, EventArgs.Empty);
         }
 
         private void PlayerInput_SecondaryActionStarted(InputAction.CallbackContext context)

@@ -31,7 +31,7 @@ namespace ProjectWizard
                 ResourceData = resourceData;
             }
         }
-
+        
         [SerializeField]
         private float _timeBetweenMiningSounds = 0.225f/* , _delayBetweenPlacingAndMining = 0.2f */, _breakCooldownDuration = 0.075f;
 
@@ -51,6 +51,13 @@ namespace ProjectWizard
         private Vector2Int? _lastCheckedTilePosition = null;
         private Coroutine _currentMiningCoroutine;
         private Timer _breakCooldownTimer;
+        
+        private MiningMode _currentMiningMode = MiningMode.Manual;
+        private enum MiningMode
+        {
+            Manual,
+            Smart
+        }
 
         private void Awake()
         {
@@ -62,17 +69,26 @@ namespace ProjectWizard
         {
             HotbarManager.Instance.OnFocusSlotUpdated += DetectMiningSpell;
             GameInput.Instance.OnPrimaryAction += DetectMiningInput;
+            GameInput.Instance.OnToggleMiningMode += ToggleMiningMode;
         }
 
         private void OnDestroy()
         {
             HotbarManager.Instance.OnFocusSlotUpdated -= DetectMiningSpell;
             GameInput.Instance.OnPrimaryAction -= DetectMiningInput;
+            GameInput.Instance.OnToggleMiningMode -= ToggleMiningMode;
         }
 
         private void Update()
         {
             _breakCooldownTimer.Tick(Time.deltaTime);
+        }
+
+        private void ToggleMiningMode(object sender, EventArgs e)
+        {
+            _currentMiningMode = _currentMiningMode == MiningMode.Manual ? MiningMode.Smart : MiningMode.Manual;
+            Debug.Log($"Toggling mining mode to {_currentMiningMode}");
+            
         }
 
         private void DetectMiningInput(object sender, GameInput.OnPrimaryOrSecondaryActionEventArgs e)
@@ -131,12 +147,140 @@ namespace ProjectWizard
             }
         }
 
+        // NTFS: refine the smart mining mode later it kind of sucks right now but it works
         private void CheckForMineables()
         {
             if (_currentToolItemSO == null || _breakCooldownTimer.RemainingSeconds > 0)
                 return;
 
-            Vector2Int currentPos = (Vector2Int)ActionManager.MouseTilePosition;
+            Vector2Int currentPos;
+
+            if (_currentMiningMode == MiningMode.Smart)
+            {
+                Vector2Int playerTilePos = Vector2Int.FloorToInt(Player.Instance.transform.position);
+                Vector2Int mouseTilePos = (Vector2Int)ActionManager.MouseTilePosition;
+
+                Vector2 targetPoint;
+
+                if (_currentToolItemSO.PlayerWithinMiningRangeOfMouse())
+                {
+                    targetPoint = mouseTilePos;
+                }
+                else
+                {
+                    Vector2 playerWorldPos = Player.Instance.transform.position;
+                    Vector2 mouseWorldPos = ActionManager.MouseWorldPosition;
+                    Vector2 dir = (mouseWorldPos - playerWorldPos).normalized;
+                    float range = _currentToolItemSO.MiningRange;
+                    targetPoint = playerWorldPos + dir * range;
+                }
+
+                Vector2Int targetTilePos = Vector2Int.RoundToInt(targetPoint);
+
+                // Thick Bresenham-style line to create connected 1-tile-wide path including diagonals
+                Vector2Int current = playerTilePos;
+                Vector2Int delta = new Vector2Int(Mathf.Abs(targetTilePos.x - playerTilePos.x), Mathf.Abs(targetTilePos.y - playerTilePos.y));
+                int stepX = playerTilePos.x < targetTilePos.x ? 1 : -1;
+                int stepY = playerTilePos.y < targetTilePos.y ? 1 : -1;
+
+                int err = delta.x - delta.y;
+                int prevErr = err;
+
+                Vector2Int foundWallTile = targetTilePos;
+                bool found = false;
+
+                while (true)
+                {
+                    // Check current tile for wall
+                    if (TileManager.Instance.WallTm.HasTile((Vector3Int)current))
+                    {
+                        foundWallTile = current;
+                        found = true;
+                        break;
+                    }
+
+                    if (current == targetTilePos)
+                        break;
+
+                    int e2 = 2 * err;
+                    bool movedDiagonally = false;
+
+                    if (e2 > -delta.y && e2 < delta.x)
+                    {
+                        // Moving diagonally
+                        movedDiagonally = true;
+                    }
+
+                    if (e2 > -delta.y)
+                    {
+                        err -= delta.y;
+                        current.x += stepX;
+                    }
+                    if (e2 < delta.x)
+                    {
+                        err += delta.x;
+                        current.y += stepY;
+                    }
+
+                    // If moved diagonally, also check the neighbor tile to maintain connectivity
+                    if (movedDiagonally)
+                    {
+                        // Determine which neighbor to check for connectivity
+                        // Choose the tile along the axis with smaller delta or previous step axis
+                        Vector2Int neighbor;
+
+                        int deltaX = delta.x;
+                        int deltaY = delta.y;
+
+                        if (deltaX < deltaY)
+                        {
+                            // Move horizontally neighbor
+                            neighbor = new Vector2Int(current.x - stepX, current.y);
+                        }
+                        else if (deltaY < deltaX)
+                        {
+                            // Move vertically neighbor
+                            neighbor = new Vector2Int(current.x, current.y - stepY);
+                        }
+                        else
+                        {
+                            // If equal, use previous error to decide
+                            if (prevErr > err)
+                            {
+                                neighbor = new Vector2Int(current.x - stepX, current.y);
+                            }
+                            else
+                            {
+                                neighbor = new Vector2Int(current.x, current.y - stepY);
+                            }
+                        }
+
+                        prevErr = err;
+
+                        if (TileManager.Instance.WallTm.HasTile((Vector3Int)neighbor))
+                        {
+                            foundWallTile = neighbor;
+                            found = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        prevErr = err;
+                    }
+                }
+
+                currentPos = found ? foundWallTile : targetTilePos;
+            }
+            else
+            {
+                if (!_currentToolItemSO.PlayerWithinMiningRangeOfMouse())
+                    return;
+
+                currentPos = (Vector2Int)ActionManager.MouseTilePosition;
+            }
+            
+            Debug.Log($"Checking for mineables at {currentPos}");
 
             // Start a new mining sequence if we're on a new tile or if the current mining coroutine has ended
             if (_lastCheckedTilePosition == null || currentPos != _lastCheckedTilePosition.Value || _currentMiningCoroutine == null)
@@ -231,7 +375,7 @@ namespace ProjectWizard
             while (elapsedTime < totalMiningTime)
             {
                 // Check if player is still within mining range
-                if (_currentToolItemSO == null)
+                if (_currentToolItemSO == null || (_currentMiningMode != MiningMode.Smart && !_currentToolItemSO.PlayerWithinMiningRangeOfMouse()))
                 {
                     OnMiningStopped?.Invoke(this, EventArgs.Empty);
                     _currentMiningCoroutine = null;

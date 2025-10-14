@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SwapHands",
+                    "name": "ToggleMiningMode",
                     "type": "Button",
                     "id": "dc166370-62e3-4aec-a602-7c4621b9c311",
                     "expectedControlType": "",
@@ -159,11 +159,11 @@
                 {
                     "name": "",
                     "id": "740fa904-1312-41a2-b10f-a0e39deb88b1",
-                    "path": "<Keyboard>/f",
-                    "interactions": "Hold",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SwapHands",
+                    "action": "ToggleMiningMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
