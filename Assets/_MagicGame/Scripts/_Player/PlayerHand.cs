@@ -24,8 +24,6 @@ namespace ProjectWizard
         private GameObject _armPivotGO;
         [SerializeField]
         private GameObject _armGO;
-        [SerializeField] 
-        private GameObject _colliderPivotGO;
 
         [SerializeField]
         private SpriteRenderer _itemHeldSR;
@@ -127,7 +125,6 @@ namespace ProjectWizard
             if ((_heldItem is WandItemSO || _heldItem is SpellItemSO) && !IsSwinging && CastingDirection.Value != CardinalDirection.None)
             {
                 _armPivotGO.transform.rotation = Quaternion.AngleAxis(AngleToMouse.Value, Vector3.forward);
-                _colliderPivotGO.transform.rotation = Quaternion.AngleAxis(AngleToMouse.Value, Vector3.forward);
                 SetPivotPosition(CastingDirection.Value);
             }
         }
