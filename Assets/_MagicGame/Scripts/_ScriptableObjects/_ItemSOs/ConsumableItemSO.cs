@@ -2,7 +2,7 @@ using FMODUnity;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     // NTFS: UNDER CONSTRUCTION WILL FINISH ANOTHER TIME!
     [CreateAssetMenu(fileName = "New Consumable", menuName = "Create Item/New Consumable")]

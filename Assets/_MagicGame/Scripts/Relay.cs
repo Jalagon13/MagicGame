@@ -9,7 +9,7 @@ using Unity.Services.Relay.Models;
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class Relay : MonoBehaviour
 	{

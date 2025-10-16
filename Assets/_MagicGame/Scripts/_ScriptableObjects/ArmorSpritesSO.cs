@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [CreateAssetMenu(fileName = "ArmorSpritesSO", menuName = "Create ArmorSpritesSO")]
     public class ArmorSpritesSO : ScriptableObject

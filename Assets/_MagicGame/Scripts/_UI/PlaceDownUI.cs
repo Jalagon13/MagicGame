@@ -1,7 +1,7 @@
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class PlaceDownUI : MonoBehaviour
     {

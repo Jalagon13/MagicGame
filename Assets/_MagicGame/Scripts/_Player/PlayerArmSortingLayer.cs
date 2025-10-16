@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class PlayerArmSortingLayer : MonoBehaviour
     {

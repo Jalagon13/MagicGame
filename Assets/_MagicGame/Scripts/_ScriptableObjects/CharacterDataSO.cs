@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using FMODUnity;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [CreateAssetMenu(fileName = "New Character Data", menuName = "Data/CharacterData")]
     public class CharacterDataSO : ScriptableObject

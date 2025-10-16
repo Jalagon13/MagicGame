@@ -8,7 +8,7 @@ namespace AdvancedTooltips.Core
 	using TMPro;
 	using UnityEngine;
 	using UnityEngine.UI;
-	using ProjectWizard;
+	using ProjectTinker;
 
 	public static class Tooltip
 	{

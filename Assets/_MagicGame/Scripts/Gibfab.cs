@@ -5,7 +5,7 @@ using MoreMountains.Feedbacks;
 using UnityEngine.Events;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class Gibfab : MonoBehaviour
 	{

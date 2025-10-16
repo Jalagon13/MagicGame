@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	// Class to store chunk data including tiles and world assets
 	public class ChunkGameData

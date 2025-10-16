@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	// This class is the "manifestation" of the item that gets passed around in actual inventory slots
 	[Serializable]

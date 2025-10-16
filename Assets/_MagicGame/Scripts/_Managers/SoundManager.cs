@@ -4,7 +4,7 @@ using FMOD.Studio;
 using Unity.Netcode;
 using System;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public enum Ambience
     {

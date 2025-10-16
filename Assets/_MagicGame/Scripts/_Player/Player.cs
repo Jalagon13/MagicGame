@@ -6,7 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [RequireComponent(typeof(SpellCaster))]
     [RequireComponent(typeof(DamageReceiver))]

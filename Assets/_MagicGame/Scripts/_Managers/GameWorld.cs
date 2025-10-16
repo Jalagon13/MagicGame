@@ -6,7 +6,7 @@ using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [Flags]
     public enum BiomeType // NTFS: When adding new IDs remember to put the value to the next power of 2 for the [Flags] to work properly

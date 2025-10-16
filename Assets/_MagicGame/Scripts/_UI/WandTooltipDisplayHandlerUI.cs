@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class WandTooltipDisplayHandlerUI : MonoBehaviour
     {

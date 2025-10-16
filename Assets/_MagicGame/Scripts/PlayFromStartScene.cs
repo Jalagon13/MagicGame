@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	[InitializeOnLoad]
 	public static class PlayFromStartScene

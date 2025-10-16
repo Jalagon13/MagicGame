@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	[System.Serializable]
 	public class BiomeFileData 

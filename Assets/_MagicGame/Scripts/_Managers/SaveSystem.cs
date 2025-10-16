@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class SaveSystem : MonoBehaviour
     {

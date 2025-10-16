@@ -2,7 +2,7 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class PlayerNetworkVisibility : NetworkBehaviour
     {

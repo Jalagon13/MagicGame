@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public enum AIState
 	{

@@ -1,5 +1,5 @@
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public enum StatModifierType
     {

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class BreadCrumb : MonoBehaviour
 	{

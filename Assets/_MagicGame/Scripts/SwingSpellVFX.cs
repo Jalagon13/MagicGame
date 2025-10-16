@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class SwingSpellVFX : MonoBehaviour
 	{

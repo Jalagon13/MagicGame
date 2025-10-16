@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public struct SyncChunkData : IEquatable<SyncChunkData>, INetworkSerializable
 	{

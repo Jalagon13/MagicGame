@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     /// <summary>
     /// <see cref="ClientCharacter"/> is responsible for displaying a character on the client's screen based on state information sent by the server.

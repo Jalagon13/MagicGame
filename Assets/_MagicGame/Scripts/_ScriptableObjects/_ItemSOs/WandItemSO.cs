@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [CreateAssetMenu(fileName = "New Wand", menuName = "Create Item/New Wand")]
     public class WandItemSO : ItemDataSO

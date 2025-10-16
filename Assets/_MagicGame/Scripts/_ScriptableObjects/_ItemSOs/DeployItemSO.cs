@@ -8,7 +8,7 @@ using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [CreateAssetMenu(fileName = "New Deployable", menuName = "Create Item/New Deployable")]
     public class DeployItemSO : ItemDataSO

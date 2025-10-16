@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class ActionManager : MonoBehaviour
     {

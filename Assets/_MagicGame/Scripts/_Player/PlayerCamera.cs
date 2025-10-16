@@ -5,7 +5,7 @@ using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class PlayerCamera : NetworkBehaviour
     {

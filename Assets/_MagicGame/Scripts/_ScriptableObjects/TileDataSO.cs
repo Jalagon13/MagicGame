@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [System.Serializable]
     public enum TileType

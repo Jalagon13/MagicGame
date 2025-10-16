@@ -8,7 +8,7 @@ using Unity.Netcode;
 using UnityEditor.EditorTools;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class ShockStream : ServerSpell
     {

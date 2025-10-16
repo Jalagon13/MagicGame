@@ -4,7 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class MagicCircle : MonoBehaviour
 	{

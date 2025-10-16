@@ -1,7 +1,7 @@
 using System.Text;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public enum ArmorType { Head, Chest, Legs }
 

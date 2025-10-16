@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public struct SyncSpellData : IEquatable<SyncSpellData>, INetworkSerializable
 	{

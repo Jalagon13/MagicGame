@@ -2,7 +2,7 @@ using UnityEngine;
 using Unity.Netcode.Components;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	[DisallowMultipleComponent] // Prevents you from adding the ClientNetworkTransform to the object more than once.
 	public class ClientNetworkTransform : NetworkTransform

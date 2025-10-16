@@ -3,7 +3,7 @@ using UnityEngine;
 
 // Facilitates broad step by step process to generate forest
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class ForestGenerator : MonoBehaviour
 {

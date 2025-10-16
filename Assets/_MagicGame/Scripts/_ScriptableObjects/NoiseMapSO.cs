@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [CreateAssetMenu()]
     public class NoiseMapSO : ScriptableObject

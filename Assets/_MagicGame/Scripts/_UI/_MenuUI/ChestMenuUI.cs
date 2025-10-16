@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class ChestMenuUI : MonoBehaviour
     {

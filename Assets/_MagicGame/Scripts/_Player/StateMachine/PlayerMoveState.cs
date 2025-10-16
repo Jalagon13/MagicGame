@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class PlayerMoveState : BaseState
     {

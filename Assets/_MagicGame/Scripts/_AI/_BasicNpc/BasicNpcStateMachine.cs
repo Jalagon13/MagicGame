@@ -6,7 +6,7 @@ using System;
 using System.Collections;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	// Wanders until it finds a player or breadcrumb to move to
 	public class BasicNpcStateMachine : StateMachine

@@ -2,7 +2,7 @@ using MoreMountains.Tools;
 using TMPro;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class PlayerCastTimeUI : MonoBehaviour
     {

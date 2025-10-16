@@ -1,7 +1,7 @@
 using System.Text;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [CreateAssetMenu(fileName = "New Resource Item", menuName = "Create Item/New Resource Item")]
     public class ResourceItemSO : ItemDataSO

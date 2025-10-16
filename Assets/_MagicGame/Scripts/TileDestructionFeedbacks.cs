@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     // THIS: Maybe no this might not be the most high priority thing I need to do everything works well right now that would take a long time to rework this into an abstract system
     // I think I'll just rework this class to specifically be useful for tile destruction and I'll think about making an abstract class later. 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using ProjectWizard;
+using ProjectTinker;
 
 [CustomEditor(typeof(NoiseMapSO))]
 public class NoiseMapDataEditor : Editor

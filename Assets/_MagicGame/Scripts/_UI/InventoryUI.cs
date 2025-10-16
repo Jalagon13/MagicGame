@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using AdvancedTooltips.Core;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class InventoryUI : MonoBehaviour
     {

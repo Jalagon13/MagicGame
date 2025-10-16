@@ -4,7 +4,7 @@ using MoreMountains.Feedbacks;
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class ResourceFeedbacks : MonoBehaviour
 	{

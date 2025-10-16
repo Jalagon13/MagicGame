@@ -7,7 +7,7 @@ using UnityEngine.Rendering;
 using DG.Tweening;
 using UnityEditor;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class PlayerHand : NetworkBehaviour
     {

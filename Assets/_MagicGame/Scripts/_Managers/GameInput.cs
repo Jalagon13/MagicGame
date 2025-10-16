@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class GameInput : NetworkBehaviour
     {

@@ -6,7 +6,7 @@ using MoreMountains.Feedbacks;
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	[SelectionBase]
 	public class ResourceObject : MonoBehaviour // Base class for every "physical" asset in the world

@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class ChunkManager : NetworkBehaviour
     {

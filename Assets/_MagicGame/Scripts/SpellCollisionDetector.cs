@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	[RequireComponent(typeof(CollisionDetector))]
 	public class SpellCollisionDetector : NetworkBehaviour

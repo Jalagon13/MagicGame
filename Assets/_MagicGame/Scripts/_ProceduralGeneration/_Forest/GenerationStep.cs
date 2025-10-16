@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public abstract class GenerationStep : MonoBehaviour
 	{

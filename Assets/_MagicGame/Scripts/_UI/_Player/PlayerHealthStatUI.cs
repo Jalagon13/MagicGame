@@ -7,7 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class PlayerHealthStatUI : MonoBehaviour
     {

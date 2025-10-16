@@ -2,7 +2,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class SelfHeal : ServerSpell
     {

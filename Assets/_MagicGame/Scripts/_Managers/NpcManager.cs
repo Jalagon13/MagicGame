@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEditor.U2D.Animation;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class NpcManager : NetworkBehaviour
     {

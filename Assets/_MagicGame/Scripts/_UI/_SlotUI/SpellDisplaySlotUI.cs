@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class SpellDisplaySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {

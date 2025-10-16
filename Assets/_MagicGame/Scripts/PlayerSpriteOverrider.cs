@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class PlayerSpriteOverrider : NetworkBehaviour
 	{

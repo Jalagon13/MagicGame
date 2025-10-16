@@ -6,7 +6,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class ServerSpriteAnimHandler : NetworkBehaviour
     {

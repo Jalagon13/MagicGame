@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public static class Loader
 	{

@@ -2,7 +2,7 @@ using System;
 using AdvancedTooltips.Core;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class EquipmentMenuUI : MonoBehaviour
     {

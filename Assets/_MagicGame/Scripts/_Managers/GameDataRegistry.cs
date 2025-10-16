@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class GameDataRegistry : MonoBehaviour
     {

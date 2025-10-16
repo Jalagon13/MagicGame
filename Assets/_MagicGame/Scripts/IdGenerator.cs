@@ -1,7 +1,7 @@
 using System;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public static class IdGenerator
 	{

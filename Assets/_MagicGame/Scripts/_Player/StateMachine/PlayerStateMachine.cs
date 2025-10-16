@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using FMOD.Studio;
 using UnityEditor.ShaderGraph.Internal;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public enum CardinalDirection
     {

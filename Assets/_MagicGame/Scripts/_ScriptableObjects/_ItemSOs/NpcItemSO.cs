@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Tilemaps;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [CreateAssetMenu(fileName = "New Npc Item", menuName = "Create Item/New NPC Item")]
     public class NpcItemSO : ItemDataSO

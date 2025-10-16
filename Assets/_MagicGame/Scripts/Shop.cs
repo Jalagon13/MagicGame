@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class Shop : NetworkBehaviour
 	{

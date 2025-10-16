@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [Serializable]
     public class AnimationConfigSO

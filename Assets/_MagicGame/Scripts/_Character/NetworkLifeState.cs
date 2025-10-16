@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public enum LifeState
     {

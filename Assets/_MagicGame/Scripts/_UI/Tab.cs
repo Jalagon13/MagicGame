@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using AdvancedTooltips.Core;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [RequireComponent(typeof(Image))]
     public class Tab : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler

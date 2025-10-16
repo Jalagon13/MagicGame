@@ -5,7 +5,7 @@ using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [CreateAssetMenu(fileName = "New Tile Item", menuName = "Create Item/New Tile Item")]
     public class TileItemSO : ItemDataSO

@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public static class Pointer
 	{

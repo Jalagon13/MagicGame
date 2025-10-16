@@ -5,7 +5,7 @@ using FMODUnity;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [CreateAssetMenu(fileName = "New Spell", menuName = "Create Item/New Spell")]
     public class SpellItemSO : ItemDataSO

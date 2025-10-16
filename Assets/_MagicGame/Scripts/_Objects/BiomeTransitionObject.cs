@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class BiomeTransitionObject : ResourceObject
 	{

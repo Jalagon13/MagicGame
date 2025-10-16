@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     // Brainstorm
     // For each tool they can be created at runtime and depending on the tool can hold the IDs of the components used to craft it.

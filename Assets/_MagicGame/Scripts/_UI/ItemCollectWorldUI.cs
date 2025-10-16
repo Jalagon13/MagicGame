@@ -5,7 +5,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     // Facilitates destination of item collect plate
     public class ItemCollectWorldUI : MonoBehaviour

@@ -4,7 +4,7 @@ using AdvancedTooltips.Core;
 using TMPro;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class SpellbookInspectorMenuUI : MonoBehaviour
     {

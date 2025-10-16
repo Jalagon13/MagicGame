@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Linq;
 using FMODUnity;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public enum ToolType
     {

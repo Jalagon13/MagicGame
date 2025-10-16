@@ -4,7 +4,7 @@ using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     // This script manages a group of tabs and their associated content.
     public class TabGroup : MonoBehaviour

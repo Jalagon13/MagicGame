@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [System.Serializable]
     public class BuffConfiguration

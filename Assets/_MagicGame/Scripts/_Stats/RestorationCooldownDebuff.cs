@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     /// <summary>
     /// Special debuff that prevents health restoration from consumables

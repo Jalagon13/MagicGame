@@ -4,7 +4,7 @@ using FMODUnity;
 using UnityEngine;
 using EventHandler = System.EventHandler;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class MiningManager : MonoBehaviour
     {

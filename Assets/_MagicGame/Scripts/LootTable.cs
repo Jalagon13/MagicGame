@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	[Serializable]
 	public class Loot 

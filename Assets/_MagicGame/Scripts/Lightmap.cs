@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class Lightmap : MonoBehaviour
 	{

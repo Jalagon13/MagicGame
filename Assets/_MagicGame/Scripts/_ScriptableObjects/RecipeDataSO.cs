@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [CreateAssetMenu(fileName = "New Recipe", menuName = "Crafting/New Recipe")]
     public class RecipeDataSO : ScriptableObject

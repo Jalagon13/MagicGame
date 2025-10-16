@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     [RequireComponent(typeof(InGameMenuReferenceHolder))]
     public class InGameMenu : MonoBehaviour

@@ -3,7 +3,7 @@ using UnityEngine;
 
 // Facilitates passing generation data to forest chunks
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class ForestGenerationData : BaseGenerationData
 {

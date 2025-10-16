@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class GoldManager : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 using Unity.Netcode.Components;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class OwnerNetworkAnimator : NetworkAnimator
 	{

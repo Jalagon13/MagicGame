@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using TMPro; // If you're using TextMeshPro for UI
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class PingDisplay : MonoBehaviour
     {

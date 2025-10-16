@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class FireBolt : ProjectileSpell
     {

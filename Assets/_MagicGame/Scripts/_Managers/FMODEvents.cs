@@ -1,7 +1,7 @@
 using UnityEngine;
 using FMODUnity;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class FMODEvents : MonoBehaviour
     {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MEC;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public static class AnimStateManager
     {

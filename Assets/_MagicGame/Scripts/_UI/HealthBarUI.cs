@@ -3,7 +3,7 @@ using MoreMountains.Tools;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class HealthBarUI : MonoBehaviour
     {

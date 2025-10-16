@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
     public class HotbarSlotsUI : MonoBehaviour
     {

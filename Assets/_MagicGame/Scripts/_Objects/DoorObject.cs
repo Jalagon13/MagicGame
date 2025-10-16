@@ -3,7 +3,7 @@ using FMODUnity;
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class DoorObject : ResourceObject
 	{

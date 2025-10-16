@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	/// <summary>
 	/// Utility struct to linearly interpolate between two Vector3 values. Allows for flexible linear interpolations

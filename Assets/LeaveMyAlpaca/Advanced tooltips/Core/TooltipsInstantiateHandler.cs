@@ -3,7 +3,7 @@ namespace AdvancedTooltips.Core
 	using AdvancedTooltips.ContentTypesHandlers;
 	using TMPro;
 	using UnityEngine;
-	using ProjectWizard;
+	using ProjectTinker;
 	
 	/// <summary>
 	/// There should be only one of this script on scene

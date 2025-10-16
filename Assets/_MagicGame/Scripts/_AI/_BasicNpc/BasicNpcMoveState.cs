@@ -5,7 +5,7 @@ using MoreMountains.Tools;
 using UnityEngine;
 
 
-namespace ProjectWizard
+namespace ProjectTinker
 {
 	public class BasicNpcMoveState : BaseState
 	{
