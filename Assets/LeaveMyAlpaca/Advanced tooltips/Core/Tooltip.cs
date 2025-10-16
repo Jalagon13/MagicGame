@@ -121,44 +121,6 @@ namespace AdvancedTooltips.Core
 			}
 		}
 		
-		public static void WandDisplay(WandItemSO wand, SpellItemSO[] magicArray, Transform customLayout = null, float fontSize = 10)
-		{
-			WandTooltipDisplayHandlerUI script = _instantiateHandler.InstantiateWandTooltipDisplay(customLayout);
-			script.WandName.text = wand.InGameName;
-			script.WandIcon.sprite = wand.UiDisplay;
-			
-			JustText($"<br>Value: {wand.GoldValue} Gold"
-			+ $"<br>{wand.Capacity}   capacity", Color.white, fontSize: fontSize, customLayout: script.StatLayout);
-			
-			for (int i = 0; i < magicArray.Length; i++)
-			{
-				WandInventorySlotUI wandSlot = _instantiateHandler.InstantiateWandInvSlotUI(customLayout: script.MagicLayout);
-				
-				if(magicArray[i] != null)
-				{
-					wandSlot.SpellIcon.sprite = magicArray[i].UiDisplay;
-				}
-				else
-				{
-					wandSlot.SpellIcon.sprite = null;
-					wandSlot.SpellIcon.color = Vector4.zero;
-				}
-			}
-		}
-		
-		public static void SpellDisplay(SpellItemSO spell, Transform customLayout = null, float fontSize = 10)
-		{
-			WandTooltipDisplayHandlerUI script = _instantiateHandler.InstantiateWandTooltipDisplay(customLayout);
-			script.WandName.text = spell.InGameName;
-			script.WandIcon.sprite = spell.UiDisplay;
-
-			JustText($"<br>Value: {spell.GoldValue} Gold<br>" + spell.GetDescription(), Color.white, fontSize: fontSize, customLayout: script.StatLayout);
-			JustText($"{spell.Cooldown} s   cast delay"
-			+ $"<br>{spell.Damage}   damage"
-			+ $"<br>{spell.Knockback}   knockback"
-			+ $"<br>{spell.Speed}   speed", Color.white, fontSize: fontSize, customLayout: script.StatLayout);
-		}
-		
 		public static void CraftingRecipeDisplay(RecipeDataSO recipeSO, Transform customLayout = null, float fontSize = 10, float iconScale = 1)
 		{
 			JustText($"{recipeSO.OutputItem.InGameName} Recipe for ({recipeSO.OutputAmount}):<br>", Color.white, fontSize: fontSize);

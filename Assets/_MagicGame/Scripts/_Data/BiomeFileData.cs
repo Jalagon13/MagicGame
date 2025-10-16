@@ -30,7 +30,7 @@ namespace ProjectTinker
 		public int SlotIndex;
 		public ushort ItemId; // Unique ID of the item
 		public int Quantity; // Quantity of the item
-		public int SelectedSpellIndex; // For wands, the index of the selected spell
+		public int SelectedSpellIndex; // Probably use this and Magic Array to be converted to another use case for the tool part system
 		public List<ushort> MagicArray;
 	}
 

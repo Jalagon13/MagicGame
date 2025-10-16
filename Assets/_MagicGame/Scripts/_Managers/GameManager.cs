@@ -110,8 +110,6 @@ namespace ProjectTinker
             {
                 ItemId = GameDataRegistry.Instance.GetItemIdFromItemData(inventoryItem.Item),
                 Quantity = (ushort)inventoryItem.Quantity,
-                MagicArray = inventoryItem is WandInventoryItem wandInventoryItem ? wandInventoryItem.MagicArray.Select(x => x != null ? GameDataRegistry.Instance.GetItemIdFromItemData(x) : ushort.MaxValue).ToList() : new List<ushort>(),
-                SelectedSpellIndex = inventoryItem is WandInventoryItem wandItem ? wandItem.SelectedSpellIndex : -1
             };
 
             SpawnItemServerRpc(syncItemData, spawnPos, biome, velocity, startingZAxis);

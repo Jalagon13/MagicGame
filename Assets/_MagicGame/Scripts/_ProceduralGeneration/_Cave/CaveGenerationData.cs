@@ -21,18 +21,6 @@ namespace ProjectTinker
         [field: SerializeField]
         public ResourceObject StairsToCave { get; private set; }
 
-        [field: SerializeField]
-        public ResourceObject VisCrystalIgnis { get; private set; }
-
-        [field: SerializeField]
-        public ResourceObject VisCrystalAqua { get; private set; }
-
-        [field: SerializeField]
-        public ResourceObject VisCrystalTerra { get; private set; }
-
-        [field: SerializeField]
-        public ResourceObject VisCrystalAer { get; private set; }
-
         [field: Header("Noise Maps")]
         [field: SerializeField]
         public NoiseMapSO SpaghettiCaveNM;

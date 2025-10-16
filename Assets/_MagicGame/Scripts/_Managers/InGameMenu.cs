@@ -68,18 +68,6 @@ namespace ProjectTinker
             OnMenuOpen?.Invoke(this, EventArgs.Empty);
         }
 
-        public void OpenSpellbookInspectorMenu(WandInventoryItem wand)
-        {
-            ClearOldMenu();
-
-            SpellbookInspectorMenuUI spellbookInspectorMenuUI = _instantiateHandler.InstantiateWandInspectorMenu();
-            spellbookInspectorMenuUI.PlaceSelectedWand(wand);
-
-            _menuReferenceHolder.SetMenuSourceGO(Player.Instance.gameObject);
-            DefaultCraftingMenu.SetActive(false);
-            OnMenuOpen?.Invoke(this, EventArgs.Empty);
-        }
-
         public void OpenNpcMenu(List<ItemDataSO> itemsToSell, GameObject menuSourceGO)
         {
             ClearOldMenu();

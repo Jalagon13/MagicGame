@@ -35,7 +35,6 @@ namespace ProjectTinker
 
         private Player _thisPlayer;
         private ItemDataSO _heldItem;
-        private bool _isHoldingWandOrSpell;
 
         public NetworkVariable<float> AngleToMouse { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<CardinalDirection> AimDirection { get; private set; } = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -115,17 +114,6 @@ namespace ProjectTinker
                 Vector3 direction = ActionManager.MouseWorldPosition - (Vector2)transform.position;
                 AngleToMouse.Value = NormalizeAngle(Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 AimDirection.Value = DetermineCardinalDirection(AngleToMouse.Value);
-
-                if (_isHoldingWandOrSpell && !IsSwinging)
-                {
-                    CastingDirection.Value = DetermineCardinalDirection(AngleToMouse.Value);
-                }
-            }
-
-            if ((_heldItem is WandItemSO || _heldItem is SpellItemSO) && !IsSwinging && CastingDirection.Value != CardinalDirection.None)
-            {
-                _armPivotGO.transform.rotation = Quaternion.AngleAxis(AngleToMouse.Value, Vector3.forward);
-                SetPivotPosition(CastingDirection.Value);
             }
         }
 
@@ -133,39 +121,24 @@ namespace ProjectTinker
         {
             _heldItem = GameDataRegistry.Instance.GetItemDataFromItemId(newValue);
 
-            _isHoldingWandOrSpell = _heldItem is WandItemSO || _heldItem is SpellItemSO;
-            if (_isHoldingWandOrSpell)
+            HideArm();
+            if (IsOwner)
             {
-                float originalY = Mathf.Abs(SpellSpawnTransform.localPosition.y);
-                float newY = _heldItem is WandItemSO ? -originalY : originalY;
-                SpellSpawnTransform.localPosition = new Vector3(SpellSpawnTransform.localPosition.x, newY, SpellSpawnTransform.localPosition.z);
-                ShowArm();
-            }
-            else
-            {
-                HideArm();
-                if (IsOwner)
+                CastingDirection.Value = CardinalDirection.None;
+                if (_thisPlayer.ServerCharacter.MovementState.Value == MovementState.Idle)
                 {
-                    CastingDirection.Value = CardinalDirection.None;
-                    if (_thisPlayer.ServerCharacter.MovementState.Value == MovementState.Idle)
-                    {
-                        _thisPlayer.ServerCharacter.CardinalDirection.Value = CastingDirection.Value;
-                    }
+                    _thisPlayer.ServerCharacter.CardinalDirection.Value = CastingDirection.Value;
                 }
             }
 
-            if (!IsSwinging)
-            {
-                RefreshItemSprite();
-            }
+            RefreshItemSprite();
         }
 
         private void RefreshItemSprite()
         {
-            _itemHeldSR.flipX = _heldItem is WandItemSO || _heldItem is ToolItemSO;
+            _itemHeldSR.flipX = _heldItem is ToolItemSO;
             _itemHeldSR.sprite = _heldItem switch
             {
-                WandItemSO wand => wand.UiDisplay,
                 ToolItemSO tool => tool.UiDisplay,
                 _ => null
             };
@@ -207,25 +180,8 @@ namespace ProjectTinker
                 SoundManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerMeleeSwing, transform.root.transform.position);
                 _armPivotGO.transform.DORotateQuaternion(endRotation, duration).SetEase(Ease.OutSine).OnComplete(() =>
                 {
-                    if (_heldItem is WandItemSO)
-                    {
-                        if (IsOwner)
-                        {
-                            SwingDirection.Value = CardinalDirection.None;
-                            CastingDirection.Value = DetermineCardinalDirection(AngleToMouse.Value);
-                            if (_thisPlayer.ServerCharacter.MovementState.Value == MovementState.Idle)
-                            {
-                                _thisPlayer.ServerCharacter.CardinalDirection.Value = CastingDirection.Value;
-                            }
-                        }
-                        RefreshItemSprite();
-                        ShowArm();
-                    }
-                    else
-                    {
-                        SwingDirection.Value = CardinalDirection.None;
-                        HideArm();
-                    }
+                    SwingDirection.Value = CardinalDirection.None;
+                    HideArm();
 
                     MeleeCollider.EndSwing();
                     IsSwinging = false;

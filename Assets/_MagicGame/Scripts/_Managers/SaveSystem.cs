@@ -182,23 +182,11 @@ namespace ProjectTinker
                 {
                     if (chestData.Value[i] != null)
                     {
-                        List<ushort> magicArray = new();
-
-                        if (chestData.Value[i] is WandInventoryItem wandInventoryItem)
-                        {
-                            for (int j = 0; j < wandInventoryItem.MagicArray.Length; j++)
-                            {
-                                magicArray.Add(wandInventoryItem.MagicArray[j] != null ? GameDataRegistry.Instance.GetItemIdFromItemData(wandInventoryItem.MagicArray[j]) : GameDataRegistry.INVALID_ID);
-                            }
-                        }
-
                         chestItemsToSerialize.Add(new ItemFileData
                         {
                             SlotIndex = i,
                             ItemId = GameDataRegistry.Instance.GetItemIdFromItemData(chestData.Value[i].Item),
                             Quantity = chestData.Value[i].Quantity,
-                            SelectedSpellIndex = chestData.Value[i] is WandInventoryItem wandInvItem ? wandInvItem.SelectedSpellIndex : -1,
-                            MagicArray = magicArray
                         });
                     }
                 }
@@ -371,25 +359,7 @@ namespace ProjectTinker
                 foreach (ItemFileData item in chestData.ChestItems)
                 {
                     ItemDataSO itemToAdd = GameDataRegistry.Instance.GetItemDataFromItemId(item.ItemId);
-
-                    if (itemToAdd is WandItemSO wandItemSO)
-                    {
-                        WandInventoryItem wandInventoryItem = new WandInventoryItem(itemToAdd, item.Quantity, wandItemSO.Capacity, item.SelectedSpellIndex);
-
-                        for (int i = 0; i < item.MagicArray.Count; i++)
-                        {
-                            if (item.MagicArray[i] != ushort.MaxValue)
-                            {
-                                wandInventoryItem.SetMagic(GameDataRegistry.Instance.GetItemDataFromItemId(item.MagicArray[i]) as SpellItemSO, i);
-                            }
-                        }
-
-                        chestItemsGameData[item.SlotIndex] = wandInventoryItem;
-                    }
-                    else
-                    {
-                        chestItemsGameData[item.SlotIndex] = new InventoryItem(itemToAdd, item.Quantity);
-                    }
+                    chestItemsGameData[item.SlotIndex] = new InventoryItem(itemToAdd, item.Quantity);
                 }
 
                 ChestManager.Instance.AddChestEntry(chestData.ChestPosition, chestItemsGameData, biomeToLoad);

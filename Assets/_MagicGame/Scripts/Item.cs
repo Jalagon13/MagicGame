@@ -143,23 +143,9 @@ namespace ProjectTinker
 			ItemDataSO itemSO = GameDataRegistry.Instance.GetItemDataFromItemId(syncItemData.ItemId);
 		
 			InventoryItem inventoryItem = new();
-		
-			if(itemSO is WandItemSO wandItemSO)
-			{
-				WandInventoryItem wandInventoryItem = new(itemSO, syncItemData.Quantity, wandItemSO.Capacity, syncItemData.SelectedSpellIndex);
-			
-				for (int i = 0; i < wandInventoryItem.MagicArray.Length; i++)
-				{
-					wandInventoryItem.SetMagic(GameDataRegistry.Instance.GetItemDataFromItemId(syncItemData.MagicArray[i]) as SpellItemSO, i);
-				}
-			
-				inventoryItem = wandInventoryItem;
-			}
-			else
-			{
-				inventoryItem = new InventoryItem(itemSO, syncItemData.Quantity);
-			}
-		
+
+			inventoryItem = new InventoryItem(itemSO, syncItemData.Quantity);
+
 			InventoryManager.Instance.AddItem(inventoryItem);
 			GameManager.Instance.DestroyItem(this);
 		}

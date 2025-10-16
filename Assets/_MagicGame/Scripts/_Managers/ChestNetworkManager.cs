@@ -9,7 +9,7 @@ namespace ProjectTinker
     {
         public ushort ItemId;
         public int Quantity;
-        public List<ushort> MagicArray;
+        public List<ushort> MagicArray; // Keep these because I will probably use this ushort array for tool parts later
         public int SelectedSpellIndex;
 
         public bool Equals(SyncItemData other)
@@ -170,33 +170,11 @@ namespace ProjectTinker
             Debug.Log(chestItemDataToConvert == null);
             foreach (InventoryItem invItem in chestItemDataToConvert)
             {
-                List<ushort> magicArray = new();
-
-                int selectedSpellIndex = -1;
-
-                if (invItem is WandInventoryItem wandInventoryItem)
-                {
-                    Debug.Log($"Found a wand to convert {wandInventoryItem.Item.InGameName}");
-
-                    for (int i = 0; i < wandInventoryItem.MagicArray.Length; i++)
-                    {
-                        magicArray.Add(wandInventoryItem.MagicArray[i] != null ? GameDataRegistry.Instance.GetItemIdFromItemData(wandInventoryItem.MagicArray[i]) : ushort.MaxValue);
-                    }
-
-                    selectedSpellIndex = wandInventoryItem.SelectedSpellIndex;
-                }
-
-                if (magicArray.Count > 0)
-                {
-                    Debug.Log("Sending a magic array with something in it");
-                }
 
                 syncChestData.Add(new SyncItemData
                 {
                     ItemId = GameDataRegistry.Instance.GetItemIdFromItemData(invItem.Item),
                     Quantity = invItem.Quantity,
-                    MagicArray = magicArray,
-                    SelectedSpellIndex = selectedSpellIndex
                 });
             }
 
@@ -210,32 +188,7 @@ namespace ProjectTinker
             foreach (SyncItemData syncItem in syncChestData)
             {
                 InventoryItem invItem = new(GameDataRegistry.Instance.GetItemDataFromItemId(syncItem.ItemId), syncItem.Quantity);
-
-                if (invItem.Item is WandItemSO wandItemSO)
-                {
-                    var wandInventoryItem = new WandInventoryItem(GameDataRegistry.Instance.GetItemDataFromItemId(syncItem.ItemId), syncItem.Quantity, wandItemSO.Capacity, syncItem.SelectedSpellIndex);
-
-                    Debug.Log($"Found a wand to turn to game data {invItem.Item.InGameName}");
-
-                    for (int i = 0; i < syncItem.MagicArray.Count; i++)
-                    {
-                        if (syncItem.MagicArray[i] >= 0)
-                        {
-                            wandInventoryItem.SetMagic(GameDataRegistry.Instance.GetItemDataFromItemId(syncItem.MagicArray[i]) as SpellItemSO, i);
-                        }
-                    }
-
-                    if (syncItem.SelectedSpellIndex >= 0 && syncItem.SelectedSpellIndex < wandItemSO.Capacity)
-                    {
-                        wandInventoryItem.SetSelectedSpellIndex(syncItem.SelectedSpellIndex);
-                    }
-
-                    chestItemData.Add(wandInventoryItem);
-                }
-                else
-                {
-                    chestItemData.Add(invItem);
-                }
+                chestItemData.Add(invItem);
             }
 
             return chestItemData;

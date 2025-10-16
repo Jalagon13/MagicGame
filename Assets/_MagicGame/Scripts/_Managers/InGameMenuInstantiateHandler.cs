@@ -24,13 +24,6 @@ namespace ProjectTinker
             return chestMenuUI.GetComponent<ChestMenuUI>();
         }
 
-        public SpellbookInspectorMenuUI InstantiateWandInspectorMenu()
-        {
-            GameObject wandInspectorMenuUI = Instantiate(_inGameMenuReferenceHolder.WandInspectorMenuPrefab, transform);
-
-            return wandInspectorMenuUI.GetComponent<SpellbookInspectorMenuUI>();
-        }
-
         public NpcMenuUI InstantiateNpcMenu()
         {
             GameObject npcMenuUI = Instantiate(_inGameMenuReferenceHolder.NpcMenuPrefab, transform);

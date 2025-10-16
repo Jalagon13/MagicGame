@@ -28,9 +28,6 @@ namespace ProjectTinker
         private Player _playerRef;
         public Player PlayerRef => _playerRef;
 
-        private SpellCaster _spellCaster;
-        public SpellCaster SpellCaster => _spellCaster;
-
         public PlayerStateMachine(ServerCharacter serverCharacter)
         {
             // This constructor gets played on all client machines
@@ -45,7 +42,6 @@ namespace ProjectTinker
             // Super States
             _states[AIState.Grounded] = new PlayerGroundedState(AIState.Grounded, this);
             _states[AIState.Attacking] = new PlayerAttackState(AIState.Attacking, this);
-            _states[AIState.SpellCasting] = new PlayerSpellCastingState(AIState.SpellCasting, this);
             _states[AIState.Dead] = new PlayerDeadState(AIState.Dead, this);
 
             _currentState = _states[AIState.Grounded];
@@ -54,11 +50,6 @@ namespace ProjectTinker
             {
                 _playerRef = player;
                 _playerRef.SelectedItemId.OnValueChanged += OnSelectedItemIdChanged;
-            }
-
-            if (_serverCharacter.TryGetComponent(out SpellCaster spellCaster))
-            {
-                _spellCaster = spellCaster;
             }
         }
 

@@ -35,16 +35,7 @@ namespace ProjectTinker
             }
             else if (eventData.button == PointerEventData.InputButton.Right)
             {
-                if (_item.HasItem && _item is WandInventoryItem wandInventoryItem)
-                {
-                    _inventoryAssociatedWith[_inventoryIndex] = new();
-
-                    InGameMenu.Instance.OpenSpellbookInspectorMenu(wandInventoryItem);
-                }
-                else
-                {
-                    InventoryManager.Instance.InventorySlotRightClicked(_inventoryIndex, _inventoryAssociatedWith);
-                }
+                InventoryManager.Instance.InventorySlotRightClicked(_inventoryIndex, _inventoryAssociatedWith);
             }
         }
 
@@ -81,24 +72,11 @@ namespace ProjectTinker
 
                 Tooltip.ShowNew();
 
-                switch (_item.Item)
-                {
+                int quantity = _inventoryAssociatedWith[_inventoryIndex].Quantity;
+                string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
+                string itemText = $"{_item.Item.InGameName} {quantityString}<br>Value: {_item.Item.GoldValue} Gold<br>{_item.Item.GetDescription()}";
 
-                    case WandItemSO wandItemSO:
-                        SpellItemSO[] magicArray = (_inventoryAssociatedWith[_inventoryIndex] as WandInventoryItem).MagicArray;
-                        Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);
-                        break;
-                    case SpellItemSO spellItemSO:
-                        Tooltip.SpellDisplay(spellItemSO, fontSize: 12f);
-                        break;
-                    default:
-                        int quantity = _inventoryAssociatedWith[_inventoryIndex].Quantity;
-                        string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
-                        string itemText = $"{_item.Item.InGameName} {quantityString}<br>Value: {_item.Item.GoldValue} Gold<br>{_item.Item.GetDescription()}";
-
-                        Tooltip.JustText(itemText, Color.white, fontSize: 12f);
-                        break;
-                }
+                Tooltip.JustText(itemText, Color.white, fontSize: 12f);
             }
         }
 

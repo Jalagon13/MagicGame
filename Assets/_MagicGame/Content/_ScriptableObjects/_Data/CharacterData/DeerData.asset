@@ -47,15 +47,7 @@ MonoBehaviour:
   StringID: deer
   NpcPrefab: {fileID: 6994879136395803702, guid: 76e6b789865fd4c36b4f8a08b98df0ac, type: 3}
   LootTable:
-  - Item: {fileID: 11400000, guid: cc794b3ff79a04281acef56156ee7eb8, type: 2}
-    Min: 1
-    Max: 2
-    Chance: 100
-  - Item: {fileID: 11400000, guid: b1ef818a3b6974596ba2183158e148af, type: 2}
-    Min: 1
-    Max: 2
-    Chance: 25
-  - Item: {fileID: 11400000, guid: 7085c09076ff64c65815502e952be852, type: 2}
+  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
     Min: 1
     Max: 2
     Chance: 25

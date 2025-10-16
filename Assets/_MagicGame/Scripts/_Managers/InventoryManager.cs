@@ -444,26 +444,10 @@ namespace ProjectTinker
 
             Tooltip.ShowNew();
 
-            switch (inventoryItem)
-            {
-                case WandInventoryItem wandInventoryItem:
-                    SpellItemSO[] magicArray = wandInventoryItem.MagicArray;
-                    Tooltip.WandDisplay(wandInventoryItem.Item as WandItemSO, magicArray, fontSize: 12f);
-                    break;
-                default:
-                    if (inventoryItem.Item is SpellItemSO spellItemSO)
-                    {
-                        Tooltip.SpellDisplay(spellItemSO, fontSize: 12f);
-                    }
-                    else
-                    {
-                        string quantityString = inventoryItem.Quantity > 1 ? $"[{inventoryItem.Quantity}]" : string.Empty;
-                        string itemText = $"{inventoryItem.Item.InGameName} {quantityString}<br>{inventoryItem.Item.GetDescription()}";
+            string quantityString = inventoryItem.Quantity > 1 ? $"[{inventoryItem.Quantity}]" : string.Empty;
+            string itemText = $"{inventoryItem.Item.InGameName} {quantityString}<br>{inventoryItem.Item.GetDescription()}";
 
-                        Tooltip.JustText(itemText, Color.white, fontSize: 12f);
-                    }
-                    break;
-            }
+            Tooltip.JustText(itemText, Color.white, fontSize: 12f);
         }
 
         public void PlayClickFeedbacks()

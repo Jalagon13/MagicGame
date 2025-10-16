@@ -60,23 +60,11 @@ namespace ProjectTinker
 
                 Tooltip.ShowNew();
 
-                switch (_itemToBuy)
-                {
-                    case WandItemSO wandItemSO:
-                        SpellItemSO[] magicArray = new SpellItemSO[0];
-                        Tooltip.WandDisplay(wandItemSO, magicArray, fontSize: 12f);
-                        break;
-                    case SpellItemSO spellItemSO:
-                        Tooltip.SpellDisplay(spellItemSO, fontSize: 12f);
-                        break;
-                    default:
-                        int quantity = 1;
-                        string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
-                        string itemText = $"{_itemToBuy.InGameName} {quantityString}<br>Cost: {_itemToBuy.GoldValue} Gold<br>{_itemToBuy.GetDescription()}";
+                int quantity = 1;
+                string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
+                string itemText = $"{_itemToBuy.InGameName} {quantityString}<br>Cost: {_itemToBuy.GoldValue} Gold<br>{_itemToBuy.GetDescription()}";
 
-                        Tooltip.JustText(itemText, Color.white, fontSize: 12f);
-                        break;
-                }
+                Tooltip.JustText(itemText, Color.white, fontSize: 12f);
             }
         }
 

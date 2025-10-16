@@ -16,7 +16,6 @@ namespace ProjectTinker
 	    // Super States
 	    Grounded,
 	    Attacking,
-	    SpellCasting,
 	    Dead, // Used for player death animation as well as npc death animation cleanup stuff before formally despawning
 
 	    // Sub States

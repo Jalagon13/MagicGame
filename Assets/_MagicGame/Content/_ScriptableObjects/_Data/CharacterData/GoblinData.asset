@@ -47,7 +47,7 @@ MonoBehaviour:
   StringID: goblin
   NpcPrefab: {fileID: 911098680259452641, guid: 8400ae4f3ed2f487fb0bbb1a07a80f0f, type: 3}
   LootTable:
-  - Item: {fileID: 11400000, guid: fe14886186b414dc8a0cca5f83f3fdb9, type: 2}
+  - Item: {fileID: 11400000, guid: 46cffa0751b4c461698ac78a0ceadec7, type: 2}
     Min: 1
     Max: 2
     Chance: 100

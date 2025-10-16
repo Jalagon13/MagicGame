@@ -30,10 +30,6 @@ namespace ProjectTinker
             {
                 SwitchState(new AIStateData(AIState.Attacking));
             }
-            else if (_ctx.SpellCaster.IsCasting.Value)
-            {
-                SwitchState(new AIStateData(AIState.SpellCasting, GameDataRegistry.Instance.GetItemIdFromItemData(Player.Instance.SpellCastController.SelectedWandInventoryItem.GetSelectedSpell())));
-            }
             else if (_ctx.ServerCharacter.LifeState == LifeState.Dead)
             {
                 Vector3 payload = new(_ctx.ServerCharacter.InflicterToTargetDirection.x, _ctx.ServerCharacter.InflicterToTargetDirection.y, _ctx.ServerCharacter.KnockbackForceFromInflicter);

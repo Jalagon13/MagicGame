@@ -46,11 +46,7 @@ MonoBehaviour:
   SlotAmount: 0.5
   StringID: pixie
   NpcPrefab: {fileID: 911098680259452641, guid: 2ea8fc6c5eed84386a995f5f8f46a35f, type: 3}
-  LootTable:
-  - Item: {fileID: 11400000, guid: 128b887eb5a144b6c8c4d6b1ad559dcf, type: 2}
-    Min: 1
-    Max: 1
-    Chance: 100
+  LootTable: []
   HurtSound:
     Guid:
       Data1: 3190678

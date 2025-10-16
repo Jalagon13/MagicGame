@@ -8,7 +8,6 @@ using UnityEngine.InputSystem;
 
 namespace ProjectTinker
 {
-    [RequireComponent(typeof(SpellCaster))]
     [RequireComponent(typeof(DamageReceiver))]
     [RequireComponent(typeof(ServerCharacter))]
     [RequireComponent(typeof(PlayerNetworkVisibility))]
@@ -55,15 +54,8 @@ namespace ProjectTinker
 
         private DamageReceiver _damageReceiver;
 
-        private SpellCastController _spellCastController;
-        public SpellCastController SpellCastController => _spellCastController;
-
-        private SpellCaster _spellCaster;
-        public SpellCaster SpellCaster => _spellCaster;
-
         private void Awake()
         {
-            _spellCaster = GetComponent<SpellCaster>();
             _damageReceiver = GetComponent<DamageReceiver>();
             _serverCharacter = GetComponent<ServerCharacter>();
             _playerNetworkVisibility = GetComponent<PlayerNetworkVisibility>();
@@ -75,7 +67,6 @@ namespace ProjectTinker
             Instance = this;
             CurrentBiome.Value = BiomeType.None; // Initialize it to none and the GameManager sets it to the correct biome on start at the time of writing this comment
 
-            _spellCastController = new SpellCastController(this);
             _spawnBiome = BiomeType.Forest;
             _spawnPoint = transform.position;
 
@@ -97,7 +88,6 @@ namespace ProjectTinker
                 GameInput.Instance.OnMove -= GameInput_OnPlayerMove;
                 HotbarManager.Instance.OnFocusSlotUpdated -= HotbarManager_OnSelectedItemUpdated;
                 CurrentBiome.OnValueChanged -= UpdateCollisionDetection;
-                _spellCastController.Dispose();
             }
         }
 
@@ -110,9 +100,6 @@ namespace ProjectTinker
         private void Update()
         {
             if (!IsOwner) return;
-
-            _spellCaster.SetCastingPoint(ActionManager.MouseWorldPosition);
-            _spellCastController?.SpellCastControllerUpdate();
 
             // Breadcrumb stuff
             Vector2Int newTilePosition = new(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
