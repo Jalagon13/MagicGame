@@ -2582,10 +2582,10 @@ MonoBehaviour:
   <SilverOreTile>k__BackingField: {fileID: 11400000, guid: 4f8bf3351009c45c4a6ad868dd7eccbd, type: 2}
   <StairsToForest>k__BackingField: {fileID: 5150323723629226184, guid: 751f13ce30c9145419bf57f41f494fef, type: 3}
   <StairsToCave>k__BackingField: {fileID: 5150323723629226184, guid: d486dbafb74344fbb99c566098694a5f, type: 3}
-  <VisCrystalIgnis>k__BackingField: {fileID: 7010316107804073469, guid: d9fedaf391dbb40288bf4e3f30c5d5a5, type: 3}
-  <VisCrystalAqua>k__BackingField: {fileID: 7010316107804073469, guid: cdb4cf8ad960344919aece16fca50db8, type: 3}
-  <VisCrystalTerra>k__BackingField: {fileID: 7010316107804073469, guid: 348a9ff36abe244ca8935e65433c63c4, type: 3}
-  <VisCrystalAer>k__BackingField: {fileID: 7010316107804073469, guid: 325d06f0a6ffa4097a7f6384ac354a95, type: 3}
+  <VisCrystalIgnis>k__BackingField: {fileID: 0}
+  <VisCrystalAqua>k__BackingField: {fileID: 0}
+  <VisCrystalTerra>k__BackingField: {fileID: 0}
+  <VisCrystalAer>k__BackingField: {fileID: 0}
   SpaghettiCaveNM: {fileID: 11400000, guid: c621735f7aae34658a8101ebe324437c, type: 2}
   CheeseCaveNM: {fileID: 11400000, guid: fb24aaaf205ca41ac928db4d742f1f5c, type: 2}
   OreGenNM: {fileID: 11400000, guid: e05079a8f761b4e5e8f0f7f3c492221d, type: 2}
@@ -7154,10 +7154,10 @@ MonoBehaviour:
   _spawnWandItems: 1
   _startWandItems:
   - Item: {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
-    Quantity: 1
+    Quantity: 0
     <MagicArray>k__BackingField:
+    - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
     - {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
-    - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
     - {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
   _startingItems:
   - Item: {fileID: 11400000, guid: 9d30c9caf7d4c41fe97ee1850d87c8df, type: 2}
@@ -13398,9 +13398,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 972f69593af20477f9d902436320d533, type: 2}
   - {fileID: 11400000, guid: 4f9eaf08ec277459e99a321c73aa23c7, type: 2}
   _itemData:
-  - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
-  - {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
-  - {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
   - {fileID: 11400000, guid: 5849721283c6441cbaa36b109972e84d, type: 2}
   - {fileID: 11400000, guid: fe14886186b414dc8a0cca5f83f3fdb9, type: 2}
   - {fileID: 11400000, guid: 128b887eb5a144b6c8c4d6b1ad559dcf, type: 2}
@@ -13420,15 +13417,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0d0c117ace8794e798947bdfaa1c52ef, type: 2}
   - {fileID: 11400000, guid: d42e1f6278c094b24b5037d421650f40, type: 2}
   - {fileID: 11400000, guid: 9d30c9caf7d4c41fe97ee1850d87c8df, type: 2}
-  - {fileID: 11400000, guid: e093a3dcacdab4399a512dd59c3b1e0e, type: 2}
-  - {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
   - {fileID: 11400000, guid: c01e4d82c8a0740d69e43942586bb41e, type: 2}
   - {fileID: 11400000, guid: ec4a6fa66410745918edadb13423b3ee, type: 2}
   - {fileID: 11400000, guid: a446ad3687760455aabee48fe233433e, type: 2}
   - {fileID: 11400000, guid: aa0e76fcdcf124101898bc97c089b57c, type: 2}
   - {fileID: 11400000, guid: 4a9169e0ff97940fe85b3384da6e9fe8, type: 2}
-  - {fileID: 11400000, guid: c4927bf03814a4704890caffd32c85df, type: 2}
   - {fileID: 11400000, guid: ef1fb7446e3be498595fa6d04e240043, type: 2}
+  - {fileID: 11400000, guid: 8a94caf038b3743e6a5d2764970c7b36, type: 2}
+  - {fileID: 11400000, guid: 52c1fc0b1d13c434cbce671925c88828, type: 2}
+  - {fileID: 11400000, guid: 35c33fbf20e644d0e9b3a31a939c1a8e, type: 2}
+  - {fileID: 11400000, guid: 707534f5dccb44e25ad97ad2583c45e3, type: 2}
 --- !u!1 &1832040324
 GameObject:
   m_ObjectHideFlags: 0
@@ -15744,7 +15742,7 @@ MonoBehaviour:
   - {fileID: 767011084}
   - {fileID: 1532492750}
   - {fileID: 621504238}
-  - {fileID: 2064736211}
+  - {fileID: 0}
   - {fileID: 698152855}
   <NoiseMapsToApplySeed>k__BackingField:
   - {fileID: 11400000, guid: fb24aaaf205ca41ac928db4d742f1f5c, type: 2}
