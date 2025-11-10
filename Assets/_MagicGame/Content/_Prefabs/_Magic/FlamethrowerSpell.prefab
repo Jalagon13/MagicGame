@@ -283,7 +283,7 @@ MonoBehaviour:
   _flameBreathParticles: {fileID: 2258063264293897275}
   _maxNpcsThatCanBeDamaged: 5
   _timeBetweenDamage: 0.075
-  _cooldownBetweenPasses: 0.175
+  _cooldownBetweenPasses: 0.0875
 --- !u!1001 &8444543763256995114
 PrefabInstance:
   m_ObjectHideFlags: 0

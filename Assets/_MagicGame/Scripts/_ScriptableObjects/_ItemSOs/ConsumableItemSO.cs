@@ -40,28 +40,32 @@ namespace ProjectWizard
                     var cooldownDebuff = RestorationCooldownDebuff.CreateCooldownDebuff(RestorationCooldownDuration);
                     characterStats.AddBuff(cooldownDebuff);
                 }
+                else
+                {
+                    Debug.LogError($"If consumable {name} restores health, it must have a positive RestorationCooldownDuration.");
+                }
             }
 
             // Apply all configured buffs
-            foreach (var buffConfig in Buffs)
-            {
-                var targetStat = characterStats.GetStatByType(buffConfig.statType);
-                if (targetStat != null)
-                {
-                    // Use the appropriate value based on modifier type
-                    float value = buffConfig.modifierType == StatModifierType.Flat ? buffConfig.flatValue : buffConfig.percentValue;
+            // foreach (var buffConfig in Buffs)
+            // {
+            //     var targetStat = characterStats.GetStatByType(buffConfig.statType);
+            //     if (targetStat != null)
+            //     {
+            //         // Use the appropriate value based on modifier type
+            //         float value = buffConfig.modifierType == StatModifierType.Flat ? buffConfig.flatValue : buffConfig.percentValue;
 
-                    var modifier = new StatModifier(
-                        value,
-                        buffConfig.modifierType,
-                        this // Use this consumable as the source
-                    );
+            //         var modifier = new StatModifier(
+            //             value,
+            //             buffConfig.modifierType,
+            //             this // Use this consumable as the source
+            //         );
 
-                    var buff = new Buff(targetStat, modifier, buffConfig.buffName, buffConfig.duration > 0 ? buffConfig.duration : null);
-                    characterStats.AddBuff(buff);
-                    gainedStat = true;
-                }
-            }
+            //         var buff = new Buff(targetStat, modifier, buffConfig.buffName, buffConfig.duration > 0 ? buffConfig.duration : null);
+            //         characterStats.AddBuff(buff);
+            //         gainedStat = true;
+            //     }
+            // }
 
             if (gainedStat)
             {

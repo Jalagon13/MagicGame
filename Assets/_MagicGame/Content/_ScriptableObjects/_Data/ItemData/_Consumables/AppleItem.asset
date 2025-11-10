@@ -25,14 +25,6 @@ MonoBehaviour:
       Data3: -453350209
       Data4: 967977714
     Path: event:/LeafCrunch
-  <HealthGain>k__BackingField: 0
-  <RestorationCooldownDuration>k__BackingField: 60
-  <Buffs>k__BackingField:
-  - statType: 2
-    modifierType: 1
-    modifierValue: 0.5
-    duration: 5
-    buffName: Speed Test Buff
-    buffIcon: {fileID: 21300012, guid: 358b5d9f23bc9413e87c9948acc67ee1, type: 3}
-    iconColor: {r: 1, g: 1, b: 1, a: 1}
-    description: 
+  <HealthGain>k__BackingField: 15
+  <RestorationCooldownDuration>k__BackingField: 3
+  <Buffs>k__BackingField: []
